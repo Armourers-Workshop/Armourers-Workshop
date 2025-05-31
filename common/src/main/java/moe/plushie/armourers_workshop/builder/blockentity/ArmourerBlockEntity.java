@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldBlockUpdateTask;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
@@ -26,13 +27,14 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
@@ -67,6 +69,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     protected SkinType skinType = SkinTypes.ARMOR_HEAD;
     protected SkinProperties skinProperties = SkinProperties.EMPTY;
     protected EntityTextureDescriptor textureDescriptor = EntityTextureDescriptor.EMPTY;
+    protected EntityTextureDescriptor.Model textureModel = EntityTextureDescriptor.Model.STEVE;
 
     protected SkinPaintData paintData;
 
@@ -81,6 +84,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         this.skinType = serializer.read(CodingKeys.SKIN_TYPE);
         this.skinProperties = serializer.read(CodingKeys.SKIN_PROPERTIES);
         this.textureDescriptor = serializer.read(CodingKeys.PLAYER_TEXTURE);
+        this.textureModel = serializer.read(CodingKeys.PLAYER_TEXTURE_MODEL);
         this.flags = serializer.read(CodingKeys.FLAGS);
         this.version = serializer.read(CodingKeys.VERSION);
         this.paintData = serializer.read(CodingKeys.PAINT_DATA);
@@ -95,6 +99,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         serializer.write(CodingKeys.SKIN_TYPE, skinType);
         serializer.write(CodingKeys.SKIN_PROPERTIES, skinProperties);
         serializer.write(CodingKeys.PLAYER_TEXTURE, textureDescriptor);
+        serializer.write(CodingKeys.PLAYER_TEXTURE_MODEL, textureModel);
         serializer.write(CodingKeys.FLAGS, flags);
         serializer.write(CodingKeys.VERSION, version);
         serializer.write(CodingKeys.PAINT_DATA, paintData);
@@ -159,6 +164,17 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
 
     public void setTextureDescriptor(EntityTextureDescriptor textureDescriptor) {
         this.textureDescriptor = textureDescriptor;
+        BlockUtils.combine(this, this::sendBlockUpdates);
+    }
+
+    public EntityTextureDescriptor.Model getTextureModel() {
+        return textureModel;
+    }
+
+    public void setTextureModel(EntityTextureDescriptor.Model textureModel) {
+        var boxes = getBoundingBoxes();
+        this.textureModel = textureModel;
+        this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
@@ -246,6 +262,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return skinType.isTool();
     }
 
+    @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || !player.isSecondaryUseActive()) {
@@ -272,9 +289,9 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (paintData == null) {
             return;
         }
-        var textureModel = BoundingBox.MODEL;
-        var srcBox = textureModel.get(srcPart);
-        var destBox = textureModel.get(destPart);
+        var boundingModel = getBoundingModel();
+        var srcBox = boundingModel.get(srcPart);
+        var destBox = boundingModel.get(destPart);
         if (srcBox != null && destBox != null) {
             WorldUtils.copyPaintData(paintData, srcBox, destBox, mirror);
             BlockUtils.combine(this, this::sendBlockUpdates);
@@ -291,8 +308,8 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
             return;
         }
         // we just need to clear the paint data for the current part type.
-        var textureModel = BoundingBox.MODEL;
-        var srcBox = textureModel.get(partType);
+        var boundingModel = getBoundingModel();
+        var srcBox = boundingModel.get(partType);
         if (srcBox != null) {
             WorldUtils.clearPaintData(paintData, srcBox);
             BlockUtils.combine(this, this::sendBlockUpdates);
@@ -413,13 +430,24 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         }));
     }
 
+    public OpenVector2i getTexturePos(SkinPartType partType, OpenVector3i offset, OpenDirection dir) {
+        var boundingModel = getBoundingModel();
+        var box = boundingModel.get(partType);
+        if (box == null) {
+            return null;
+        }
+        var rect = box.getBounds();
+        return box.get(rect.x() + offset.x(), rect.y() + offset.y(), rect.z() + offset.z(), dir);
+    }
+
+
     private Collection<BoundingBox> getBoundingBoxes() {
         var boxes = new ArrayList<BoundingBox>();
         for (var partType : skinType.getParts()) {
             if (shouldAddBoundingBoxes(partType)) {
                 var offset = partType.getOffset();
                 var bounds = partType.getBuildingSpace();
-                var rect = new OpenRectangle3i(partType.getGuideSpace());
+                var rect = partType.getGuideSpace(textureModel);
                 rect = rect.offset(-offset.x(), -offset.y() - bounds.minY(), offset.z());
                 boxes.add(new BoundingBox(partType, rect));
             }
@@ -443,8 +471,15 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return boxes;
     }
 
-    public Direction getFacing() {
-        return getBlockState().getOptionalValue(ArmourerBlock.FACING).orElse(Direction.NORTH);
+    private EntityTextureModel getBoundingModel() {
+        if (textureModel == EntityTextureDescriptor.Model.ALEX) {
+            return BoundingBox.SLIME_MODEL;
+        }
+        return BoundingBox.MODEL;
+    }
+
+    public OpenDirection getFacing() {
+        return getBlockState().getOptionalValue(ArmourerBlock.FACING).map(AbstractDirection::wrap).orElse(OpenDirection.NORTH);
     }
 
     public CubeTransform getTransform() {
@@ -457,6 +492,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         public static final IDataSerializerKey<SkinType> SKIN_TYPE = IDataSerializerKey.create("SkinType", SkinTypes.CODEC, SkinTypes.UNKNOWN);
         public static final IDataSerializerKey<SkinProperties> SKIN_PROPERTIES = IDataSerializerKey.create("SkinProperties", SkinProperties.CODEC, SkinProperties.EMPTY, SkinProperties.EMPTY::copy);
         public static final IDataSerializerKey<EntityTextureDescriptor> PLAYER_TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
+        public static final IDataSerializerKey<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
         public static final IDataSerializerKey<SkinPaintData> PAINT_DATA = IDataSerializerKey.create("PaintData", DataSerializers.COMPRESSED_PAINT_DATA, null);
         public static final IDataSerializerKey<Integer> FLAGS = IDataSerializerKey.create("Flags", IDataCodec.INT, 0);
         public static final IDataSerializerKey<Integer> VERSION = IDataSerializerKey.create("DataVersion", IDataCodec.INT, 0);

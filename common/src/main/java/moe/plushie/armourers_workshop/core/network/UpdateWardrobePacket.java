@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.GenericProperties;
@@ -69,7 +68,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         return new UpdateWardrobePacket(wardrobe, Type.SYNC, serializer.getTag(), null);
     }
 
-    public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, ISkinPaintColor color) {
+    public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, SkinPaintColor color) {
         var compoundNBT = new CompoundTag();
         compoundNBT.putInt("Slot", slot);
         compoundNBT.putInt("Color", color.getRawValue());

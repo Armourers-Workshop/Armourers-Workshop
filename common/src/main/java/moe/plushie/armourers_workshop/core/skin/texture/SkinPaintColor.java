@@ -16,7 +16,7 @@ public class SkinPaintColor implements ISkinPaintColor {
             .maximumSize(2048)
             .build();
 
-    public static final IDataCodec<SkinPaintColor> CODEC = IDataCodec.INT.alternative(IDataCodec.STRING, SkinPaintColor::parseColor).xmap(SkinPaintColor::of, ISkinPaintColor::getRawValue);
+    public static final IDataCodec<SkinPaintColor> CODEC = IDataCodec.INT.alternative(IDataCodec.STRING, SkinPaintColor::parseColor).xmap(SkinPaintColor::of, SkinPaintColor::getRawValue);
 
     protected final int value;
     protected final int rgb;
@@ -26,13 +26,6 @@ public class SkinPaintColor implements ISkinPaintColor {
         this.value = value;
         this.paintType = paintType;
         this.rgb = rgb;
-    }
-
-    public static SkinPaintColor of(ISkinPaintColor paintColor) {
-        if (paintColor instanceof SkinPaintColor paintColor1) {
-            return paintColor1;
-        }
-        return of(paintColor.getRawValue());
     }
 
     public static SkinPaintColor of(int value) {

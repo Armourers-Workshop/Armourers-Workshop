@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
@@ -21,6 +20,7 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
+import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
@@ -68,7 +68,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     public static final EntityDataAccessor<Boolean> DATA_EXTRA_RENDERER = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> DATA_NO_GRAVITY = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<EntityTextureDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE);
-    public static final EntityDataAccessor<EntityTextureModel.Type> DATA_TEXTURE_MODEL = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE_MODEL);
+    public static final EntityDataAccessor<EntityTextureDescriptor.Model> DATA_TEXTURE_MODEL = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE_MODEL);
 
     private boolean isDropEquipment = false;
     private AABB boundingBoxForCulling;
@@ -88,7 +88,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         builder.define(DATA_NO_GRAVITY, true); // default is no gravity
         builder.define(DATA_SCALE, 1.0f);
         builder.define(DATA_TEXTURE, EntityTextureDescriptor.EMPTY);
-        builder.define(DATA_TEXTURE_MODEL, EntityTextureModel.Type.STEVE);
+        builder.define(DATA_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
     }
 
     @Override
@@ -321,11 +321,11 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         entityData.set(DATA_TEXTURE, newValue);
     }
 
-    public EntityTextureModel.Type getTextureModel() {
+    public EntityTextureDescriptor.Model getTextureModel() {
         return entityData.get(DATA_TEXTURE_MODEL);
     }
 
-    public void setTextureModel(EntityTextureModel.Type newValue) {
+    public void setTextureModel(EntityTextureDescriptor.Model newValue) {
         entityData.set(DATA_TEXTURE_MODEL, newValue);
     }
 
@@ -420,7 +420,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         public static final IDataSerializerKey<Boolean> NO_GRAVITY = IDataSerializerKey.create("NoGravity", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Float> SCALE = IDataSerializerKey.create("Scale", IDataCodec.FLOAT, 1.0f);
         public static final IDataSerializerKey<EntityTextureDescriptor> TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
-        public static final IDataSerializerKey<EntityTextureModel.Type> TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", EntityTextureModel.Type.CODEC, EntityTextureModel.Type.STEVE);
+        public static final IDataSerializerKey<EntityTextureDescriptor.Model> TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
         public static final IDataSerializerKey<CompoundTag> POSE = IDataSerializerKey.create("Pose", IDataCodec.COMPOUND_TAG, new CompoundTag());
 
         public static final IDataSerializerKey<Rotations> POSE_HEAD = IDataSerializerKey.create("Head", EntityData.ROTATIONS_CODEC, DEFAULT_HEAD_POSE);

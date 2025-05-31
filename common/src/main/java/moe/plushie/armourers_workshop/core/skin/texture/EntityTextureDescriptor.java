@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class EntityTextureDescriptor implements IDataSerializable.Immutable {
 
-    public static final EntityTextureDescriptor EMPTY = new EntityTextureDescriptor(Source.NONE, null, null);
+    public static final EntityTextureDescriptor EMPTY = new EntityTextureDescriptor(null, null, null);
 
     public static final UUID NIL_UUID = new UUID(0, 0);
 
@@ -53,7 +53,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
             this.value = info.name;
         }
         if (this.value == null && this.profile == null) {
-            this.source = Source.NONE;
+            this.source = null;
         }
     }
 
@@ -88,24 +88,16 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
 
     @Override
     public void serialize(IDataSerializer serializer) {
-        switch (source) {
-            case URL:
-                if (value != null) {
-                    serializer.write(CodingKeys.URL, value);
-                }
-                break;
-            case USER:
-                if (value != null) {
-                    serializer.write(CodingKeys.USER, new UserInfo(value));
-                }
-                break;
-            case NONE:
-                break;
+        if (source == Source.URL && value != null) {
+            serializer.write(CodingKeys.URL, value);
+        }
+        if (source == Source.USER && value != null) {
+            serializer.write(CodingKeys.USER, new UserInfo(value));
         }
     }
 
     public boolean isEmpty() {
-        return source == Source.NONE;
+        return source == null;
     }
 
     @Nullable
@@ -131,10 +123,12 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         return profile;
     }
 
+    @Nullable
     public String getValue() {
         return value;
     }
 
+    @Nullable
     public Source getSource() {
         return source;
     }
@@ -158,7 +152,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         public static final IDataSerializerKey<String> NAME = IDataSerializerKey.create("Name", IDataCodec.STRING, "");
     }
 
-    public static class UserInfo implements IDataSerializable.Immutable {
+    private static class UserInfo implements IDataSerializable.Immutable {
 
         public static final IDataCodec<UserInfo> CODEC = IDataCodec.COMPOUND_TAG.serializer(UserInfo::new);
 
@@ -179,8 +173,12 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     public enum Source {
-        NONE,
         USER,
         URL
+    }
+
+    public enum Model {
+        STEVE,
+        ALEX
     }
 }

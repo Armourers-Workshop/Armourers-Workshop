@@ -2,22 +2,22 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
 import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
-public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
+public class SkinCubeBlockRenderer<T extends BlockEntity & IBlockPaintable> extends AbstractBlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
@@ -68,7 +68,7 @@ public class SkinCubeBlockRenderer<T extends BlockEntity & IPaintable> extends A
         }
         var alpha = (int) (markerAlpha * 255);
         var builder = bufferSource.getBuffer(SkinRenderType.IMAGE_MARKER);
-        for (var direction : Direction.values()) {
+        for (var direction : OpenDirection.values()) {
             if (!entity.shouldChangeColor(direction) || !entity.hasColor(direction)) {
                 continue;
             }

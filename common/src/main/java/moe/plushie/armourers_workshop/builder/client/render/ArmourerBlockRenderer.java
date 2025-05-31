@@ -46,6 +46,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         }
         var skinType = entity.getSkinType();
         var skinProperties = entity.getSkinProperties();
+        var textureModel = entity.getTextureModel();
 
         // when the player has some special texture, we must override to renderer.
         var playerTexture = textureProvider.displayTextureLocation;
@@ -73,7 +74,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         for (var partType : skinType.getParts()) {
             var origin = partType.getOffset();
             var rect = partType.getBuildingSpace();
-            var rect2 = partType.getGuideSpace();
+            var rect2 = partType.getGuideSpace(textureModel);
 
             var r = 0.5f;
             var g = 0.5f;
@@ -102,7 +103,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
             // render guide model
             if (!isModelOverridden) {
-                var guideRenderer = rendererManager.getRenderer(partType);
+                var guideRenderer = rendererManager.getRenderer(textureModel, partType);
                 if (guideRenderer != null) {
                     poseStack.pushPose();
                     poseStack.translate(0, -rect2.minY(), 0);

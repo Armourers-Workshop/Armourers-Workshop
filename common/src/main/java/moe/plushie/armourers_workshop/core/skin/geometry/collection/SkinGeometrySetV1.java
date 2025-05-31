@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.collection;
 
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
@@ -42,7 +41,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             return;
         }
         // convert to this version.
-        var paintColors = new ISkinPaintColor[6];
+        var paintColors = new SkinPaintColor[6];
         stream.writeInt(geometries.size());
         for (var geometry : Collections.collect(geometries, SkinCube.class)) {
             // id/x/y/z + r/g/b/t * 6

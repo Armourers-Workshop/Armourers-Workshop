@@ -9,11 +9,11 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
@@ -63,7 +63,7 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
     }
 
     public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        for (var dir : Direction.values()) {
+        for (var dir : OpenDirection.values()) {
             var paintColor = blockPaintColor.getOrDefault(dir, SkinPaintColor.WHITE);
             ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);
         }

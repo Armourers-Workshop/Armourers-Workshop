@@ -1,22 +1,21 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockItem;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -31,14 +30,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvider, IPaintToolPicker {
+public class SkinCubeItem extends AbstractBlockItem implements IItemPaintable, IPaintToolPicker {
 
     public SkinCubeItem(Block block, Properties properties) {
         super(block, properties);
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         var itemStack = context.getItemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
             setItemColor(itemStack, provider.getColor());
@@ -66,19 +65,19 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
         super.appendHoverText(itemStack, tooltips, context);
         var paintColor = getItemColors(itemStack);
         if (paintColor != null && paintColor.isPureColor()) {
-            tooltips.addAll(ColorUtils.getColorTooltips(paintColor.get(Direction.NORTH), true));
+            tooltips.addAll(ColorUtils.getColorTooltips(paintColor.get(OpenDirection.NORTH), true));
         }
     }
 
     @Override
-    public void setItemColor(ItemStack itemStack, ISkinPaintColor paintColor) {
+    public void setItemColor(ItemStack itemStack, SkinPaintColor paintColor) {
         var entityTag = new CompoundTag();
         var oldEntityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (oldEntityTag != null) {
             entityTag.merge(oldEntityTag);
         }
         entityTag.putString(Constants.Key.ID, TypedRegistry.findKey(getBlock()).toString());
-        var color = new BlockPaintColor((SkinPaintColor) paintColor);
+        var color = new BlockPaintColor(paintColor);
         var serializer = new TagSerializer();
         color.serialize(serializer);
         entityTag.put(Constants.Key.COLOR, serializer.getTag());
@@ -87,7 +86,7 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemColorProvide
     }
 
     @Override
-    public ISkinPaintColor getItemColor(ItemStack itemStack) {
+    public SkinPaintColor getItemColor(ItemStack itemStack) {
         return itemStack.getOrDefault(ModDataComponents.TOOL_COLOR.get(), SkinPaintColor.WHITE);
     }
 

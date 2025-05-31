@@ -1,24 +1,23 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IPaintToolPicker {
+public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemPaintable, IPaintToolPicker {
 
     public BottleItem(Properties properties) {
         super(properties);
@@ -41,7 +40,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         var itemStack = context.getItemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
             setItemColor(itemStack, provider.getColor());
@@ -60,12 +59,12 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     }
 
     @Override
-    public void setItemColor(ItemStack itemStack, ISkinPaintColor paintColor) {
-        itemStack.set(ModDataComponents.TOOL_COLOR.get(), (SkinPaintColor) paintColor);
+    public void setItemColor(ItemStack itemStack, SkinPaintColor paintColor) {
+        itemStack.set(ModDataComponents.TOOL_COLOR.get(), paintColor);
     }
 
     @Override
-    public ISkinPaintColor getItemColor(ItemStack itemStack) {
+    public SkinPaintColor getItemColor(ItemStack itemStack) {
         return itemStack.get(ModDataComponents.TOOL_COLOR.get());
     }
 

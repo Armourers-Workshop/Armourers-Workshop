@@ -1,32 +1,30 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
-import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenRotation;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 import java.util.Map;
 
-public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPaintable {
+public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlockPaintable {
 
     protected OpenVector3i guide = OpenVector3i.ZERO;
     protected BlockPos parent = null;
@@ -45,7 +43,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         parent = serializer.read(CodingKeys.REFER);
         guide = serializer.read(CodingKeys.OFFSET);
         partType = serializer.read(CodingKeys.PART_TYPE);
-        customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
+        customRenderer = Arrays.stream(OpenDirection.values()).anyMatch(this::shouldChangeColor);
         cachedParentBlockEntity = null;
     }
 
@@ -94,7 +92,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         if (blockEntity == null) {
             return false;
         }
-        for (var dir : Direction.values()) {
+        for (var dir : OpenDirection.values()) {
             var paintColor = getArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir));
             if (paintColor != SkinPaintColor.CLEAR) {
                 return true;
@@ -104,13 +102,13 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     }
 
     @Override
-    public boolean shouldChangeColor(Direction direction) {
+    public boolean shouldChangeColor(OpenDirection direction) {
         // we can't change the side color of the face without finding the texture.
         return getTexturePos(getParentBlockEntity(), direction) != null;
     }
 
     @Override
-    public ISkinPaintColor getColor(Direction direction) {
+    public SkinPaintColor getColor(OpenDirection direction) {
         var blockEntity = getParentBlockEntity();
         var texturePos = getTexturePos(blockEntity, direction);
         var color = getArmourerTextureColor(blockEntity, texturePos);
@@ -126,18 +124,18 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
     }
 
     @Override
-    public void setColor(Direction direction, ISkinPaintColor color) {
+    public void setColor(OpenDirection direction, SkinPaintColor color) {
         // ?
     }
 
     @Override
-    public void setColors(Map<Direction, ISkinPaintColor> colors) {
+    public void setColors(Map<OpenDirection, SkinPaintColor> colors) {
         var blockEntity = getParentBlockEntity();
-        colors.forEach((dir, color) -> setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), (SkinPaintColor) color));
+        colors.forEach((dir, color) -> setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), color));
     }
 
     @Override
-    public boolean hasColor(Direction direction) {
+    public boolean hasColor(OpenDirection direction) {
         // bounding box can't support none paint type.
         return getColor(direction) != SkinPaintColor.CLEAR;
     }
@@ -147,8 +145,8 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         if (blockEntity == null || getLevel() == null) {
             return;
         }
-        for (var dir : Direction.values()) {
-            this.setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), SkinPaintColor.CLEAR);
+        for (var dir : OpenDirection.values()) {
+            setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), SkinPaintColor.CLEAR);
         }
     }
 
@@ -180,18 +178,21 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IPai
         return SkinPaintColor.CLEAR;
     }
 
-    private OpenVector2i getTexturePos(ArmourerBlockEntity blockEntity, Direction direction) {
-        return BoundingBox.getTexturePos(partType, guide, getResolvedDirection(blockEntity, direction));
+    private OpenVector2i getTexturePos(ArmourerBlockEntity blockEntity, OpenDirection direction) {
+        if (blockEntity == null) {
+            return null;
+        }
+        return blockEntity.getTexturePos(partType, guide, getResolvedDirection(blockEntity, direction));
     }
 
-    private Direction getResolvedDirection(ArmourerBlockEntity blockEntity, Direction dir) {
+    private OpenDirection getResolvedDirection(ArmourerBlockEntity blockEntity, OpenDirection dir) {
         if (blockEntity == null) {
             return dir;
         }
         return switch (blockEntity.getFacing()) {
-            case SOUTH -> Rotation.CLOCKWISE_180.rotate(dir); // rotate 180° get facing north direction.
-            case WEST -> Rotation.CLOCKWISE_90.rotate(dir); // rotate 90° get facing north direction.
-            case EAST -> Rotation.COUNTERCLOCKWISE_90.rotate(dir); // rotate -90° get facing north direction.
+            case SOUTH -> OpenRotation.CLOCKWISE_180.rotate(dir); // rotate 180° get facing north direction.
+            case WEST -> OpenRotation.CLOCKWISE_90.rotate(dir); // rotate 90° get facing north direction.
+            case EAST -> OpenRotation.COUNTERCLOCKWISE_90.rotate(dir); // rotate -90° get facing north direction.
             default -> dir;
         };
     }

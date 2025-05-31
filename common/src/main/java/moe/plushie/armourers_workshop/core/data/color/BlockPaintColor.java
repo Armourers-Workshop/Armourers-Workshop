@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.minecraft.core.Direction;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -65,7 +65,7 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
         this.paintColors = null;
     }
 
-    public void put(Direction dir, SkinPaintColor paintColor) {
+    public void put(OpenDirection dir, SkinPaintColor paintColor) {
         if (this.paintColors == null) {
             if (Objects.equals(this.paintColor, paintColor)) {
                 return; // not any changes.
@@ -83,11 +83,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
     }
 
 
-    public SkinPaintColor get(Direction dir) {
+    public SkinPaintColor get(OpenDirection dir) {
         return getOrDefault(dir, null);
     }
 
-    public SkinPaintColor getOrDefault(Direction dir, SkinPaintColor defaultValue) {
+    public SkinPaintColor getOrDefault(OpenDirection dir, SkinPaintColor defaultValue) {
         if (paintColor != null) {
             return paintColor;
         }
@@ -182,22 +182,22 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
 
     // Assume the mapping for facing to the north.
     public enum Side {
-        DOWN("Down", Direction.DOWN),
-        UP("Up", Direction.UP),
-        FRONT("Front", Direction.NORTH),
-        BACK("Back", Direction.SOUTH),
-        LEFT("Left", Direction.WEST),
-        RIGHT("Right", Direction.EAST);
+        DOWN("Down", OpenDirection.DOWN),
+        UP("Up", OpenDirection.UP),
+        FRONT("Front", OpenDirection.NORTH),
+        BACK("Back", OpenDirection.SOUTH),
+        LEFT("Left", OpenDirection.WEST),
+        RIGHT("Right", OpenDirection.EAST);
 
         final String name;
-        final Direction direction;
+        final OpenDirection direction;
 
-        Side(String name, Direction direction) {
+        Side(String name, OpenDirection direction) {
             this.name = name;
             this.direction = direction;
         }
 
-        public static Side of(Direction direction) {
+        public static Side of(OpenDirection direction) {
             for (var value : values()) {
                 if (value.direction == direction) {
                     return value;
@@ -210,7 +210,7 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
             return name;
         }
 
-        public Direction getDirection() {
+        public OpenDirection getDirection() {
             return direction;
         }
     }

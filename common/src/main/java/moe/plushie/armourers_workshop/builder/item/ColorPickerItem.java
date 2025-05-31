@@ -2,28 +2,27 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemColorProvider, IPaintToolPicker, IBlockPaintViewer {
+public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemPaintable, IPaintToolPicker, IBlockPaintViewer {
 
     public ColorPickerItem(Properties properties) {
         super(properties);
@@ -48,13 +47,13 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
     }
 
     @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         var itemStack = context.getItemInHand();
-        if (blockEntity instanceof IPaintable paintable) {
+        if (blockEntity instanceof IBlockPaintable paintable) {
             if (!level.isClientSide()) {
                 return InteractionResult.CONSUME;
             }
-            var color = (SkinPaintColor) paintable.getColor(dir);
+            var color = paintable.getColor(dir);
             itemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
             var packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
             NetworkManager.sendToServer(packet);
@@ -102,8 +101,8 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
     }
 
     @Override
-    public void setItemColor(ItemStack itemStack, ISkinPaintColor paintColor) {
-        itemStack.set(ModDataComponents.TOOL_COLOR.get(), (SkinPaintColor) paintColor);
+    public void setItemColor(ItemStack itemStack, SkinPaintColor paintColor) {
+        itemStack.set(ModDataComponents.TOOL_COLOR.get(), paintColor);
     }
 
     @Override

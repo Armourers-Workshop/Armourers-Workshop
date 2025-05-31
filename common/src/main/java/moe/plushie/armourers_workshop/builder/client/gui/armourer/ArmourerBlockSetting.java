@@ -5,13 +5,13 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerClearDialog;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerCopyDialog;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerReplaceDialog;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -105,12 +105,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             }
             var source = new CompoundTag();
             var selector = dialog.getSelector();
-            if (selector.getItem() instanceof IItemColorProvider) {
+            if (selector.getItem() instanceof IItemPaintable) {
                 selector.save(level.registryAccess(), source);
             }
             var destination = new CompoundTag();
             var applier = dialog.getApplier();
-            if (applier.getItem() instanceof IItemColorProvider) {
+            if (applier.getItem() instanceof IItemPaintable) {
                 applier.save(level.registryAccess(), destination);
             }
             if (source.isEmpty() && destination.isEmpty()) {

@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.math.IVector3i;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -32,7 +30,6 @@ import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
@@ -188,7 +185,7 @@ public final class WorldUtils {
 
     private static void saveArmourBlockToList(Level level, CubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCube cube, ArrayList<SkinMarker> markerBlocks) {
         var blockEntity = level.getBlockEntity(pos);
-        if (!(blockEntity instanceof IPaintable target)) {
+        if (!(blockEntity instanceof IBlockPaintable target)) {
             return;
         }
         var blockState = blockEntity.getBlockState();
@@ -196,10 +193,10 @@ public final class WorldUtils {
 
         cube.setType(SkinGeometryTypes.byBlock(blockState.getBlock()));
         cube.setBoundingBox(new OpenRectangle3f(ix, iy, iz, 1, 1, 1));
-        for (var dir : Direction.values()) {
+        for (var dir : OpenDirection.values()) {
             var paintColor = target.getColor(dir);
             var resolvedDir = transform.invRotate(dir);
-            cube.setPaintColor(AbstractDirection.wrap(resolvedDir), SkinPaintColor.of(paintColor));
+            cube.setPaintColor(resolvedDir, paintColor);
         }
         if (marker != OptionalDirection.NONE) {
             var markFacing = transform.invRotate(marker.getDirection());
@@ -261,11 +258,11 @@ public final class WorldUtils {
         var targetBlock = geometryType.getBlock();
         var targetState = SkinCubeBlock.setMarker(targetBlock.defaultBlockState(), markerFacing);
 
-        var colors = new HashMap<Direction, ISkinPaintColor>();
+        var colors = new HashMap<OpenDirection, SkinPaintColor>();
         for (var dir : OpenDirection.values()) {
             var paintColor = cube.getPaintColor(dir);
-            var resolvedDir = OptionalDirection.of(getResolvedDirection(dir, mirror));
-            colors.put(transform.rotate(resolvedDir.getDirection()), paintColor);
+            var resolvedDir = getResolvedDirection(dir, mirror);
+            colors.put(transform.rotate(resolvedDir), paintColor);
         }
 
         targetCube.setBlockStateAndColors(targetState, colors);

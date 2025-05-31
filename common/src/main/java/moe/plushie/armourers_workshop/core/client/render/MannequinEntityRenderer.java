@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -38,7 +38,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
     private OpenResourceLocation texture;
     private BakedEntityTexture bakedTexture;
 
-    private EntityTextureModel.Type textureModel = EntityTextureModel.Type.STEVE;
+    private EntityTextureDescriptor.Model textureModel = EntityTextureDescriptor.Model.STEVE;
     private boolean enableChildRenderer = false;
 
     public MannequinEntityRenderer(Context context) {
@@ -113,12 +113,12 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
         return mannequinRenderer;
     }
 
-    private void applyTextureModel(EntityTextureModel.Type newValue) {
+    private void applyTextureModel(EntityTextureDescriptor.Model newValue) {
         if (textureModel == newValue) {
             return;
         }
         textureModel = newValue;
-        if (newValue == EntityTextureModel.Type.STEVE) {
+        if (newValue == EntityTextureDescriptor.Model.STEVE) {
             setModel(normalModel);
             replaceTo(slimArmorLayer, normalArmorLayer);
         } else {

@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
 import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +47,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     public static BlockState setMarker(BlockState blockState, OptionalDirection direction) {
         var dir = direction.getDirection();
         if (dir != null) {
-            return blockState.setValue(HAS_MARKER, true).setValue(MARKER, dir);
+            return blockState.setValue(HAS_MARKER, true).setValue(MARKER, AbstractDirection.unwrap(dir));
         }
         return blockState.setValue(HAS_MARKER, false);
     }
@@ -90,12 +92,12 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
         if (reader == null || blockPos == null) {
             return 0xffffffff;
         }
-        var direction = Direction.NORTH;
+        var direction = OpenDirection.NORTH;
         if (index > 0 && index < 7) {
-            direction = Direction.values()[index - 1];
+            direction = OpenDirection.values()[index - 1];
         }
         var blockEntity = reader.getBlockEntity(blockPos);
-        if (blockEntity instanceof IPaintable paintable) {
+        if (blockEntity instanceof IBlockPaintable paintable) {
             var paintColor = paintable.getColor(direction);
             if (paintColor != null) {
                 return paintColor.getRGB() | 0xff000000;

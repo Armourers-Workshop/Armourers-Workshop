@@ -8,14 +8,14 @@ import org.jetbrains.annotations.Nullable;
 public enum OptionalDirection {
 
     NONE,
-    DOWN(Direction.DOWN),
-    UP(Direction.UP),
-    NORTH(Direction.NORTH),
-    SOUTH(Direction.SOUTH),
-    WEST(Direction.WEST),
-    EAST(Direction.EAST);
+    DOWN(OpenDirection.DOWN),
+    UP(OpenDirection.UP),
+    NORTH(OpenDirection.NORTH),
+    SOUTH(OpenDirection.SOUTH),
+    WEST(OpenDirection.WEST),
+    EAST(OpenDirection.EAST);
 
-    final Direction direction;
+    final OpenDirection direction;
     final String name;
 
     OptionalDirection() {
@@ -23,16 +23,12 @@ public enum OptionalDirection {
         this.direction = null;
     }
 
-    OptionalDirection(Direction direction) {
+    OptionalDirection(OpenDirection direction) {
         this.name = direction.getName();
         this.direction = direction;
     }
 
     public static OptionalDirection of(OpenDirection direction) {
-        return of(AbstractDirection.unwrap(direction));
-    }
-
-    public static OptionalDirection of(Direction direction) {
         for (var dir : values()) {
             if (direction.equals(dir.getDirection())) {
                 return dir;
@@ -41,8 +37,12 @@ public enum OptionalDirection {
         return NONE;
     }
 
+    public static OptionalDirection of(Direction direction) {
+        return of(AbstractDirection.wrap(direction));
+    }
+
     @Nullable
-    public Direction getDirection() {
+    public OpenDirection getDirection() {
         return direction;
     }
 

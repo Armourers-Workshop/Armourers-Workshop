@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.builder.item.impl;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
@@ -50,7 +50,7 @@ public interface IPaintToolApplier {
         if (blockEntity instanceof IPaintToolSelector.Provider provider) {
             return provider.createPaintToolSelector(context);
         }
-        if (blockEntity instanceof IPaintable) {
+        if (blockEntity instanceof IBlockPaintable) {
             return createPaintToolSelector(context);
         }
         return null;

@@ -135,6 +135,7 @@ public class UpdateArmourerPacket extends CustomPacket {
         public static final auto SKIN_PROPERTIES = create(ArmourerBlockEntity::getSkinProperties, ArmourerBlockEntity::setSkinProperties, DataSerializers.SKIN_PROPERTIES, ModPermissions.ARMOURER_SETTING);
 
         public static final auto TEXTURE_DESCRIPTOR = create(ArmourerBlockEntity::getTextureDescriptor, ArmourerBlockEntity::setTextureDescriptor, DataSerializers.PLAYER_TEXTURE, ModPermissions.ARMOURER_SETTING);
+        public static final auto TEXTURE_MODEL = create(ArmourerBlockEntity::getTextureModel, ArmourerBlockEntity::setTextureModel, DataSerializers.PLAYER_TEXTURE_MODEL, ModPermissions.ARMOURER_SETTING);
 
         public static final auto ITEM_CLEAR = create(UpdateArmourerPacket::clearItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_CLEAR);
         public static final auto ITEM_COPY = create(UpdateArmourerPacket::copyItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_COPY);

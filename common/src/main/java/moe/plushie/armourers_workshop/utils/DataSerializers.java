@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.EntityCollisionShape;
@@ -21,7 +20,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -68,6 +66,7 @@ public class DataSerializers {
     public static final IDataCodec<IResourceLocation> RESOURCE_LOCATION = IDataCodec.STRING.xmap(OpenResourceLocation::parse, IResourceLocation::toString);
     public static final IDataCodec<OpenRectangle3f> BOUNDING_BOX = IDataCodec.FLOAT.listOf().xmap(OpenRectangle3f::new, OpenRectangle3f::toList);
     public static final IDataCodec<SkinPaintData> COMPRESSED_PAINT_DATA = IDataCodec.BYTE_BUFFER.xmap(DataSerializers::decompressPaintData, DataSerializers::compressPaintData);
+    public static final IDataCodec<EntityTextureDescriptor.Model> ENTITY_TEXTURE_MODEL = IDataCodec.INT.xmap(DataSerializers::parseTextureModel, EntityTextureDescriptor.Model::ordinal);
 
     public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
     public static final IEntitySerializer<Integer> INT = of(EntityDataSerializers.INT);
@@ -103,14 +102,14 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<ISkinPaintColor> PAINT_COLOR = new IEntitySerializer<ISkinPaintColor>() {
+    public static final IEntitySerializer<SkinPaintColor> PAINT_COLOR = new IEntitySerializer<SkinPaintColor>() {
         @Override
-        public void write(IFriendlyByteBuf buffer, ISkinPaintColor color) {
+        public void write(IFriendlyByteBuf buffer, SkinPaintColor color) {
             buffer.writeInt(color.getRawValue());
         }
 
         @Override
-        public ISkinPaintColor read(IFriendlyByteBuf buffer) {
+        public SkinPaintColor read(IFriendlyByteBuf buffer) {
             return SkinPaintColor.of(buffer.readInt());
         }
     };
@@ -128,16 +127,16 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<EntityTextureModel.Type> PLAYER_TEXTURE_MODEL = new IEntitySerializer<EntityTextureModel.Type>() {
+    public static final IEntitySerializer<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = new IEntitySerializer<EntityTextureDescriptor.Model>() {
 
         @Override
-        public void write(IFriendlyByteBuf buffer, EntityTextureModel.Type descriptor) {
+        public void write(IFriendlyByteBuf buffer, EntityTextureDescriptor.Model descriptor) {
             buffer.writeInt(descriptor.ordinal());
         }
 
         @Override
-        public EntityTextureModel.Type read(IFriendlyByteBuf buffer) {
-            return EntityTextureModel.Type.values()[buffer.readInt()];
+        public EntityTextureDescriptor.Model read(IFriendlyByteBuf buffer) {
+            return EntityTextureDescriptor.Model.values()[buffer.readInt()];
         }
     };
 
@@ -406,5 +405,13 @@ public class DataSerializers {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static EntityTextureDescriptor.Model parseTextureModel(int index) {
+        var values = EntityTextureDescriptor.Model.values();
+        if (index < values.length) {
+            return values[index];
+        }
+        return EntityTextureDescriptor.Model.STEVE;
     }
 }

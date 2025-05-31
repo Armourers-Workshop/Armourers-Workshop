@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -48,7 +48,7 @@ public class ColorMixerMenu extends AbstractBlockEntityMenu<ColorMixerBlockEntit
 
             @Override
             public boolean mayPlace(ItemStack itemStack) {
-                return slot == 0 && (itemStack.getItem() instanceof IItemColorProvider);
+                return slot == 0 && (itemStack.getItem() instanceof IItemPaintable);
             }
 
             @Override

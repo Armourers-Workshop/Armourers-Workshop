@@ -11,11 +11,11 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
@@ -216,7 +216,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
                 addSlot(new Slot(inventory, offset + i, placeholderX + i * 110, placeholderY) {
                     @Override
                     public boolean mayPlace(ItemStack itemStack) {
-                        return itemStack.getItem() instanceof IItemColorProvider;
+                        return itemStack.getItem() instanceof IItemPaintable;
                     }
                 });
             }

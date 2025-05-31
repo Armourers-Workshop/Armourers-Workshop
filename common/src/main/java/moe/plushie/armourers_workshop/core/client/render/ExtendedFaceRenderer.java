@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
-import net.minecraft.core.Direction;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 
 public class ExtendedFaceRenderer {
 
@@ -24,7 +24,7 @@ public class ExtendedFaceRenderer {
             {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},    // -x
     };
 
-    public static void renderMarker(int x, int y, int z, Direction direction, ISkinPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
+    public static void renderMarker(int x, int y, int z, OpenDirection direction, SkinPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
         if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
             return;
         }
@@ -44,7 +44,7 @@ public class ExtendedFaceRenderer {
         }
     }
 
-    public static void render2(int x, int y, int z, Direction direction, ISkinPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
+    public static void render2(int x, int y, int z, OpenDirection direction, SkinPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
         var entry = poseStack.last();
         var u = 0;
         var v = 0;

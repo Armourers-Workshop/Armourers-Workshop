@@ -2,11 +2,12 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,11 +22,11 @@ public class PaintingHighlightPlacementRenderer {
     public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
         var level = player.getLevel();
         var pos = traceResult.getBlockPos();
-        var direction = traceResult.getDirection();
+        var direction = AbstractDirection.wrap(traceResult.getDirection());
         var blockEntity = level.getBlockEntity(pos);
 
         // must select a paintable block to preview.
-        if (!(blockEntity instanceof IPaintable)) {
+        if (!(blockEntity instanceof IBlockPaintable)) {
             return;
         }
 

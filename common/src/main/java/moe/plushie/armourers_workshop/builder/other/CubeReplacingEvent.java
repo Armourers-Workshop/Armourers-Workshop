@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
-import net.minecraft.core.Direction;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -49,7 +48,7 @@ public class CubeReplacingEvent {
 
     public boolean accept(CubeWrapper cube) {
         // security check, we only can modify the paintable block.
-        if (!cube.is(IPaintable.class)) {
+        if (!cube.is(IBlockPaintable.class)) {
             return false;
         }
         // replace all block's to target block.
@@ -63,7 +62,7 @@ public class CubeReplacingEvent {
         // when specified block color we need to check matching.
         if (sourceBlockColor != null) {
             var diff = 0;
-            for (var dir : Direction.values()) {
+            for (var dir : OpenDirection.values()) {
                 var s = sourceBlockColor.getOrDefault(dir, SkinPaintColor.WHITE);
                 var t = cube.getColor(dir);
                 if (!Objects.equals(s, t)) {
@@ -81,7 +80,7 @@ public class CubeReplacingEvent {
 
     public void apply(CubeWrapper cube) {
         // security check, we only can modify the paintable block.
-        if (!cube.is(IPaintable.class)) {
+        if (!cube.is(IBlockPaintable.class)) {
             return;
         }
         var oldBlockChanges = blockChanges;
@@ -106,9 +105,9 @@ public class CubeReplacingEvent {
             return;
         }
         // we just need to replace the matching block colors.
-        var newColors = new HashMap<Direction, ISkinPaintColor>();
-        for (var dir : Direction.values()) {
-            var targetColor = (SkinPaintColor) cube.getColor(dir);
+        var newColors = new HashMap<OpenDirection, SkinPaintColor>();
+        for (var dir : OpenDirection.values()) {
+            var targetColor = cube.getColor(dir);
             if (sourceBlockColor != null) {
                 var sourceColor = sourceBlockColor.getOrDefault(dir, SkinPaintColor.WHITE);
                 if (!Objects.equals(sourceColor, targetColor)) {
@@ -172,10 +171,10 @@ public class CubeReplacingEvent {
         if (item instanceof SkinCubeItem cubeItem) {
             return cubeItem.getItemColors(itemStack);
         }
-        if (item instanceof IItemColorProvider provider) {
+        if (item instanceof IItemPaintable provider) {
             var paintColor = provider.getItemColor(itemStack);
             if (paintColor != null) {
-                return new BlockPaintColor((SkinPaintColor) paintColor);
+                return new BlockPaintColor(paintColor);
             }
         }
         return null;

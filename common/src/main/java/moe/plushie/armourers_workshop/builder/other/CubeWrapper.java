@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class CubeWrapper implements IPaintable {
+public class CubeWrapper implements IBlockPaintable {
 
     private final Consumer<CubeChanges> consumer;
     private final Level level;
@@ -26,7 +26,7 @@ public class CubeWrapper implements IPaintable {
 
     private Supplier<BlockState> state;
     private Supplier<BlockEntity> blockEntity;
-    private Supplier<IPaintable> target;
+    private Supplier<IBlockPaintable> target;
 
     private CubeChanges changes;
 
@@ -72,7 +72,7 @@ public class CubeWrapper implements IPaintable {
         this.lastChanges().setCompoundTag(nbt);
     }
 
-    public void setBlockStateAndColors(BlockState state, Map<Direction, ISkinPaintColor> colors) {
+    public void setBlockStateAndColors(BlockState state, Map<OpenDirection, SkinPaintColor> colors) {
         this.lastChanges().setBlockState(state);
         this.lastChanges().setColors(colors);
     }
@@ -100,7 +100,7 @@ public class CubeWrapper implements IPaintable {
     }
 
     @Override
-    public ISkinPaintColor getColor(Direction direction) {
+    public SkinPaintColor getColor(OpenDirection direction) {
         var target = getTarget();
         if (target != null) {
             return target.getColor(direction);
@@ -109,17 +109,17 @@ public class CubeWrapper implements IPaintable {
     }
 
     @Override
-    public void setColor(Direction direction, ISkinPaintColor color) {
+    public void setColor(OpenDirection direction, SkinPaintColor color) {
         lastChanges().setColor(direction, color);
     }
 
     @Override
-    public void setColors(Map<Direction, ISkinPaintColor> colors) {
+    public void setColors(Map<OpenDirection, SkinPaintColor> colors) {
         lastChanges().setColors(colors);
     }
 
     @Override
-    public boolean shouldChangeColor(Direction direction) {
+    public boolean shouldChangeColor(OpenDirection direction) {
         var target = getTarget();
         if (target != null) {
             return target.shouldChangeColor(direction);
@@ -138,11 +138,11 @@ public class CubeWrapper implements IPaintable {
         this.pos = pos;
     }
 
-    private IPaintable getTarget() {
+    private IBlockPaintable getTarget() {
         if (this.target != null) {
             return this.target.get();
         }
-        var target = Objects.safeCast(getBlockEntity(), IPaintable.class);
+        var target = Objects.safeCast(getBlockEntity(), IBlockPaintable.class);
         if (target != null) {
             this.target = () -> target;
             return target;

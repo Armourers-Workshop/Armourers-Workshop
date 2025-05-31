@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.part;
 import moe.plushie.armourers_workshop.api.skin.part.ISkinPartType;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
@@ -45,6 +46,10 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public OpenRectangle3i getGuideSpace() {
         return this.guideSpace;
+    }
+
+    public OpenRectangle3i getGuideSpace(EntityTextureDescriptor.Model model) {
+        return getGuideSpace();
     }
 
     @Override

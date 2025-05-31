@@ -19,7 +19,7 @@ public class ModEntitySerializers {
     public static final EntityDataSerializer<Float> FLOAT = EntityDataSerializers.FLOAT;
 
     public static final EntityDataSerializer<EntityTextureDescriptor> PLAYER_TEXTURE = of(DataSerializers.PLAYER_TEXTURE).build("player_texture");
-    public static final EntityDataSerializer<EntityTextureModel.Type> PLAYER_TEXTURE_MODEL = of(DataSerializers.PLAYER_TEXTURE_MODEL).build("player_texture_model");
+    public static final EntityDataSerializer<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = of(DataSerializers.PLAYER_TEXTURE_MODEL).build("player_texture_model");
 
     private static <T> IEntryBuilder<EntityDataSerializer<T>> of(IEntitySerializer<T> serializer) {
         return BuilderManager.getInstance().createEntitySerializerBuilder(serializer);

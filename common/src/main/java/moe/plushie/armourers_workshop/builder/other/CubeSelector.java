@@ -2,11 +2,12 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
@@ -108,9 +109,9 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     @Override
-    public void forEach(UseOnContext context, BiConsumer<BlockPos, Direction> consumer) {
+    public void forEach(UseOnContext context, BiConsumer<BlockPos, OpenDirection> consumer) {
         var level = context.getLevel();
-        var clickedFace = context.getClickedFace();
+        var clickedFace = AbstractDirection.wrap(context.getClickedFace());
         var dirs = resolvedDirections(clickedFace);
         forEach(level, clickedFace, targetPos -> {
             for (var dir : dirs) {
@@ -119,7 +120,7 @@ public class CubeSelector implements IPaintToolSelector {
         });
     }
 
-    private void forEach(Level level, Direction dir, Consumer<BlockPos> consumer) {
+    private void forEach(Level level, OpenDirection dir, Consumer<BlockPos> consumer) {
         switch (this.mode) {
             case ALL: {
                 for (var rect : rects) {
@@ -160,7 +161,7 @@ public class CubeSelector implements IPaintToolSelector {
         }
     }
 
-    private BlockPos resolvedPos(Direction dir, int i, int j) {
+    private BlockPos resolvedPos(OpenDirection dir, int i, int j) {
         return switch (dir) {
             case UP, DOWN -> blockPos.offset(j, 0, i);
             case NORTH, SOUTH -> blockPos.offset(i, j, 0);
@@ -168,11 +169,11 @@ public class CubeSelector implements IPaintToolSelector {
         };
     }
 
-    private Direction[] resolvedDirections(Direction clickedFace) {
+    private OpenDirection[] resolvedDirections(OpenDirection clickedFace) {
         if (!this.isApplyAllFaces) {
-            return new Direction[]{clickedFace};
+            return new OpenDirection[]{clickedFace};
         }
-        return Direction.values();
+        return OpenDirection.values();
     }
 
     private Object resolvedBlockInfo(Level level, BlockPos pos) {

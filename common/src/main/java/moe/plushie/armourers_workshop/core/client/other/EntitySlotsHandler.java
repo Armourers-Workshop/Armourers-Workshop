@@ -423,7 +423,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
                 var itemStack = lastSlots.get(SkinSlotType.getDyeSlotIndex(paintType));
                 var paintColor = itemStack.get(ModDataComponents.TOOL_COLOR.get());
                 if (paintColor != null) {
-                    dyeColors.put(paintType, SkinPaintColor.of(paintColor));
+                    dyeColors.put(paintType, paintColor);
                 }
             }
             if (!lastDyeColors.equals(dyeColors)) {

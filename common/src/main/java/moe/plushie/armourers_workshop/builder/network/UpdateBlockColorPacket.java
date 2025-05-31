@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.network;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
-import moe.plushie.armourers_workshop.api.common.IPaintable;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
@@ -67,7 +67,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
         }
     }
 
-    public BlockPos by(IPaintable target) {
+    public BlockPos by(IBlockPaintable target) {
         if (target instanceof BlockEntity blockEntity) {
             return blockEntity.getBlockPos();
         }

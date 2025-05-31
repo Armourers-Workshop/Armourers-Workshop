@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
@@ -199,7 +199,7 @@ public class ColorUtils {
         return HSBtoRGB(hsb[0], hsb[1], f / 255F);
     }
 
-    public static int getDisplayRGB(ISkinPaintColor paintColor) {
+    public static int getDisplayRGB(SkinPaintColor paintColor) {
         var paintType = paintColor.getPaintType();
         if (paintType == SkinPaintTypes.RAINBOW) {
             return getRainbowRGB();
@@ -239,7 +239,7 @@ public class ColorUtils {
         return color;
     }
 
-    public static ArrayList<Component> getColorTooltips(ISkinPaintColor color, boolean useDisplayColor) {
+    public static ArrayList<Component> getColorTooltips(SkinPaintColor color, boolean useDisplayColor) {
         var tooltips = new ArrayList<Component>();
         int rgb = color.getRGB();
         if (useDisplayColor) {

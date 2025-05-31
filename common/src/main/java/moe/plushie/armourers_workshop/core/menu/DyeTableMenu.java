@@ -142,7 +142,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
             var colorStack = inventory.getItem(i);
             var paintColor = colorStack.get(ModDataComponents.TOOL_COLOR.get());
             if (paintColor != null) {
-                newScheme.setColor(paintTypes[i], SkinPaintColor.of(paintColor));
+                newScheme.setColor(paintTypes[i], paintColor);
             }
         }
         var descriptor = SkinDescriptor.of(itemStack);

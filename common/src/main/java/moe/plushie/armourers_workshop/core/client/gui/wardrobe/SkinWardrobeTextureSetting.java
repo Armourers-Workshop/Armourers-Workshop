@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -30,16 +29,16 @@ import java.util.function.Consumer;
 public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implements UITextFieldDelegate {
 
     private final SkinWardrobe wardrobe;
-    private final HashMap<EntityTextureSource, String> defaultValues = new HashMap<>();
+    private final HashMap<EntityTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private final UITextField textField = new UITextField(new CGRect(83, 70, 165, 18));
 
-    private UIComboBox userComboView;
+    private UIComboBox sourceComboView;
     private UIComboBox modelComboView;
 
     private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
-    private EntityTextureSource lastUserType = EntityTextureSource.USER;
-    private EntityTextureModel.Type lastUserModel = EntityTextureModel.Type.STEVE;
+    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.STEVE;
+    private EntityTextureDescriptor.Source lastTextureSource = null;
 
     public SkinWardrobeTextureSetting(SkinWardrobe wardrobe) {
         super("wardrobe.man_texture");
@@ -51,12 +50,12 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     private void setup() {
         setupTextField();
         addCommonButton(83, 90, 100, 20, "set", this::submit);
-        userComboView = addComboBox(83, 27, 80, 14, "userType", lastUserType, this::applyUserType);
-        modelComboView = addComboBox(168, 27, 80, 14, "userModel", lastUserModel, this::applyUserModel);
+        sourceComboView = addComboBox(83, 27, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
+        modelComboView = addComboBox(168, 27, 80, 14, "textureModel", lastTextureModel, this::applyTextureModel);
     }
 
     public void setupTextField() {
-        var defaultValue = defaultValues.getOrDefault(lastUserType, "");
+        var defaultValue = defaultValues.getOrDefault(lastTextureSource, "");
         textField.setDelegate(this);
         textField.setMaxLength(1024);
         textField.setText(defaultValue);
@@ -69,33 +68,30 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         }
         defaultValues.clear();
         lastDescriptor = entity.getTextureDescriptor();
-        lastUserModel = entity.getTextureModel();
-        lastUserType = EntityTextureSource.of(lastDescriptor);
-        switch (lastUserType) {
-            case USER -> defaultValues.put(lastUserType, lastDescriptor.getName());
-            case URL -> defaultValues.put(lastUserType, lastDescriptor.getURL());
-        }
+        lastTextureModel = entity.getTextureModel();
+        lastTextureSource = entity.getTextureDescriptor().getSource();
+        defaultValues.put(lastTextureSource, lastDescriptor.getValue());
     }
 
-    private void applyUserType(EntityTextureSource newValue) {
-        if (lastUserType == newValue) {
+    private void applyTextureSource(EntityTextureDescriptor.Source newValue) {
+        if (lastTextureSource == newValue) {
             return;
         }
-        defaultValues.put(lastUserType, textField.text());
-        textField.setText(defaultValues.getOrDefault(newValue, ""));
+        defaultValues.put(lastTextureSource, textField.text());
+        textField.setText(Objects.flatMap(defaultValues.get(newValue), it -> it, ""));
         textField.resignFirstResponder();
         textField.setSelectedTextRange(new NSTextRange(textField.beginOfDocument()));
-        userComboView.setSelectedIndex(newValue.ordinal());
-        lastUserType = newValue;
+        sourceComboView.setSelectedIndex(newValue.ordinal());
+        lastTextureSource = newValue;
     }
 
-    private void applyUserModel(EntityTextureModel.Type newValue) {
-        if (lastUserModel == newValue) {
+    private void applyTextureModel(EntityTextureDescriptor.Model newValue) {
+        if (lastTextureModel == newValue) {
             return;
         }
         modelComboView.setSelectedIndex(newValue.ordinal());
         NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_TEXTURE_MODEL.buildPacket(wardrobe, newValue));
-        lastUserModel = newValue;
+        lastTextureModel = newValue;
     }
 
     private void submit(Object button) {
@@ -106,14 +102,12 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
-            lastUserType = null;
             lastDescriptor = newValue;
+            lastTextureSource = null;
             NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_TEXTURE.buildPacket(wardrobe, newValue));
             // update to use
-            var newUserType = EntityTextureSource.of(newValue);
-            var newUserValue = Objects.flatMap(newValue, EntityTextureDescriptor::getValue, "");
-            defaultValues.put(newUserType, newUserValue);
-            applyUserType(newUserType);
+            defaultValues.put(newValue.getSource(), newValue.getValue());
+            applyTextureSource(newValue.getSource());
         });
     }
 
@@ -152,27 +146,14 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     private EntityTextureDescriptor getTextureDescriptor() {
         var value = textField.text();
         if (Strings.isNotEmpty(value)) {
-            var userType = EntityTextureSource.values()[userComboView.selectedIndex()];
-            if (userType == EntityTextureSource.URL) {
+            var userType = EntityTextureDescriptor.Source.values()[sourceComboView.selectedIndex()];
+            if (userType == EntityTextureDescriptor.Source.URL) {
                 return EntityTextureDescriptor.fromURL(value);
             }
-            if (userType == EntityTextureSource.USER) {
+            if (userType == EntityTextureDescriptor.Source.USER) {
                 return EntityTextureDescriptor.fromName(value);
             }
         }
         return EntityTextureDescriptor.EMPTY;
-    }
-
-    private enum EntityTextureSource {
-        USER,
-        URL;
-
-        static EntityTextureSource of(EntityTextureDescriptor descriptor) {
-            return switch (descriptor.getSource()) {
-                case USER -> USER;
-                case URL -> URL;
-                default -> USER;
-            };
-        }
     }
 }

@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.action.NamedUserAction;
 import moe.plushie.armourers_workshop.builder.data.undo.action.SetBlockAction;
+import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.event.common.BlockEvent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -153,22 +154,22 @@ public final class BlockUtils {
 //    }
 
 
-    public static ArrayList<BlockPos> findTouchingBlockFaces(Level level, BlockPos pos, Direction facing, int radius, boolean restrictPlane) {
+    public static ArrayList<BlockPos> findTouchingBlockFaces(Level level, BlockPos pos, OpenDirection facing, int radius, boolean restrictPlane) {
         ArrayList<BlockPos> blockFaces = new ArrayList<>();
         ArrayList<BlockPos> openList = new ArrayList<>();
         HashSet<BlockPos> closedList = new HashSet<>();
 
-        BlockPos startPos = pos.relative(facing);
+        var startPos = pos.relative(AbstractDirection.unwrap(facing));
         openList.add(startPos);
 
-        Direction[] sides = Direction.values();
+        var sides = OpenDirection.values();
 
         boolean first = true;
 
         while (!openList.isEmpty()) {
             var loc = openList.remove(0);
             var blockEntity = level.getBlockEntity(loc);
-            if (blockEntity instanceof IPaintable) {
+            if (blockEntity instanceof IBlockPaintable) {
                 if (!restrictPlane) {
                     blockFaces.add(loc);
                 } else if (samePlane(loc, pos, facing)) {
@@ -176,7 +177,7 @@ public final class BlockUtils {
                 }
             }
             for (var side : sides) {
-                var sideLoc = loc.relative(side);
+                var sideLoc = loc.relative(AbstractDirection.unwrap(side));
                 if (closedList.contains(sideLoc)) {
                     continue;
                 }
@@ -206,7 +207,7 @@ public final class BlockUtils {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
                     var stateValid = level.getBlockEntity(pos.offset(ix - 1, iy - 1, iz - 1));
-                    if (stateValid instanceof IPaintable) {
+                    if (stateValid instanceof IBlockPaintable) {
                         return true;
                     }
                 }
@@ -215,7 +216,7 @@ public final class BlockUtils {
         return false;
     }
 
-    private static boolean samePlane(BlockPos src, BlockPos dst, Direction direction) {
+    private static boolean samePlane(BlockPos src, BlockPos dst, OpenDirection direction) {
         if (direction.getStepX() == 0 || src.getX() == dst.getX()) {
             if (direction.getStepY() == 0 || src.getY() == dst.getY()) {
                 return direction.getStepZ() == 0 || src.getZ() == dst.getZ();

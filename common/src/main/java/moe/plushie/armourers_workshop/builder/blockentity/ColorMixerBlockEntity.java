@@ -2,11 +2,10 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
-import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
+import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,8 +34,8 @@ public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPain
     }
 
     @Override
-    public void setColor(ISkinPaintColor color) {
-        this.color = (SkinPaintColor) color;
+    public void setColor(SkinPaintColor color) {
+        this.color = color;
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 

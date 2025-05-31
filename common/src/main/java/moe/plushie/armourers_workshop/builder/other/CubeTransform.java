@@ -4,21 +4,21 @@ import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenRotation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
 
 public class CubeTransform {
 
     public final Level level;
     public final BlockPos blockPos;
-    public final Direction direction;
-    public final Rotation rotation;
-    public final Rotation invRotation;
+    public final OpenDirection direction;
+    public final OpenRotation rotation;
+    public final OpenRotation invRotation;
     public final OpenQuaternionf rotationDegrees;
 
-    public CubeTransform(Level level, BlockPos blockPos, Direction direction) {
+    public CubeTransform(Level level, BlockPos blockPos, OpenDirection direction) {
         this.level = level;
         this.blockPos = blockPos;
         this.direction = direction;
@@ -27,16 +27,16 @@ public class CubeTransform {
         this.rotationDegrees = getRotationDegrees(direction);
     }
 
-    public static Rotation getRotation(Direction dir, boolean flags) {
+    public static OpenRotation getRotation(OpenDirection dir, boolean flags) {
         return switch (dir) {
-            case SOUTH -> Rotation.CLOCKWISE_180;
-            case WEST -> flags ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
-            case EAST -> flags ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
-            default -> Rotation.NONE;
+            case SOUTH -> OpenRotation.CLOCKWISE_180;
+            case WEST -> flags ? OpenRotation.CLOCKWISE_90 : OpenRotation.COUNTERCLOCKWISE_90;
+            case EAST -> flags ? OpenRotation.COUNTERCLOCKWISE_90 : OpenRotation.CLOCKWISE_90;
+            default -> OpenRotation.NONE;
         };
     }
 
-    public static OpenQuaternionf getRotationDegrees(Direction dir) {
+    public static OpenQuaternionf getRotationDegrees(OpenDirection dir) {
         return switch (dir) {
             case SOUTH -> new OpenQuaternionf(0, 180, 0, true);
             case WEST -> new OpenQuaternionf(0, 90, 0, true);
@@ -45,11 +45,11 @@ public class CubeTransform {
         };
     }
 
-    public Direction rotate(Direction dir) {
+    public OpenDirection rotate(OpenDirection dir) {
         return rotation.rotate(dir);
     }
 
-    public Direction invRotate(Direction dir) {
+    public OpenDirection invRotate(OpenDirection dir) {
         return invRotation.rotate(dir);
     }
 

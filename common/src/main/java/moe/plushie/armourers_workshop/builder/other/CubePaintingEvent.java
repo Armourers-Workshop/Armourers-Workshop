@@ -1,17 +1,16 @@
 package moe.plushie.armourers_workshop.builder.other;
 
-import moe.plushie.armourers_workshop.api.common.IPaintable;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -28,7 +27,7 @@ public class CubePaintingEvent {
 
     final IPaintToolAction action;
     final IPaintToolSelector selector;
-    final HashMap<Pair<BlockPos, Direction>, IPaintToolAction> overrides = new HashMap<>();
+    final HashMap<Pair<BlockPos, OpenDirection>, IPaintToolAction> overrides = new HashMap<>();
 
     private int targetCount = 0;
 
@@ -48,7 +47,7 @@ public class CubePaintingEvent {
             }
             var pos = buffer.readBlockPos();
             for (var i = 0; i < size; ++i) {
-                var dir = buffer.readEnum(Direction.class);
+                var dir = buffer.readEnum(OpenDirection.class);
                 var action = Action.fromBuffer(buffer);
                 overrides.put(Pair.of(pos, dir), action);
             }
@@ -59,7 +58,7 @@ public class CubePaintingEvent {
         this.selector.encode(buffer);
         Action.writeBuffer(action, buffer);
         // sort and write actions.
-        HashMap<BlockPos, HashMap<Direction, IPaintToolAction>> sorted = new HashMap<>();
+        var sorted = new HashMap<BlockPos, HashMap<OpenDirection, IPaintToolAction>>();
         this.overrides.forEach((pair, action) -> sorted.computeIfAbsent(pair.getKey(), k -> new HashMap<>()).put(pair.getValue(), action));
         sorted.forEach((pos, items) -> {
             buffer.writeByte(items.size());
@@ -77,7 +76,7 @@ public class CubePaintingEvent {
         var player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
             var cube = collector.getCube(target);
-            if (cube.is(IPaintable.class)) {
+            if (cube.is(IBlockPaintable.class)) {
                 targetCount += 1;
             }
             var action1 = action.build(level, target, dir, cube, player);
@@ -110,10 +109,10 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public abstract void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
+        public abstract void apply(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player);
 
         @Override
-        public Action build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public Action build(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player) {
             return this;
         }
 
@@ -122,10 +121,10 @@ public class CubePaintingEvent {
 
     public static abstract class MixedAction extends Action {
 
-        public abstract ISkinPaintColor resolve(BlockPos pos, Direction dir, ISkinPaintColor sourceColor);
+        public abstract SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor);
 
         @Override
-        public Action build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public Action build(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 var paintColor = provider.getColor(dir);
                 if (paintColor instanceof TexturedPaintColor) {
@@ -140,7 +139,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 provider.setColor(dir, resolve(pos, dir, provider.getColor(dir)));
             }
@@ -149,16 +148,16 @@ public class CubePaintingEvent {
 
     public static class SetAction extends Action {
 
-        final ISkinPaintColor destinationColor;
+        final SkinPaintColor destinationColor;
 
         final boolean usePaintColor;
         final boolean usePaintType;
 
-        public SetAction(ISkinPaintColor paintColor) {
+        public SetAction(SkinPaintColor paintColor) {
             this(paintColor, true, true);
         }
 
-        public SetAction(ISkinPaintColor paintColor, boolean usePaintColor, boolean usePaintType) {
+        public SetAction(SkinPaintColor paintColor, boolean usePaintColor, boolean usePaintType) {
             this.destinationColor = paintColor;
             this.usePaintColor = usePaintColor;
             this.usePaintType = usePaintType;
@@ -178,13 +177,13 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 provider.setColor(dir, resolve(pos, dir, provider));
             }
         }
 
-        public ISkinPaintColor resolve(BlockPos pos, Direction dir, IPaintable provider) {
+        public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, IBlockPaintable provider) {
             // when no needs processing required, ignore.
             if (usePaintType && usePaintColor) {
                 return destinationColor;
@@ -213,7 +212,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, OpenDirection dir, IBlockPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 if (level.getBlockEntity(pos) instanceof BoundingBoxBlockEntity) {
                     provider.setColor(dir, SkinPaintColor.CLEAR);
@@ -242,7 +241,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public ISkinPaintColor resolve(BlockPos pos, Direction dir, ISkinPaintColor sourceColor) {
+        public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
             int rgb = sourceColor.getRGB();
             rgb = ColorUtils.makeColorBighter(rgb, intensity);
             return sourceColor.withColor(rgb);
@@ -276,7 +275,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public ISkinPaintColor resolve(BlockPos pos, Direction dir, ISkinPaintColor sourceColor) {
+        public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
             int rgb = sourceColor.getRGB();
             if (this.isShadeOnly) {
                 rgb = ColorUtils.addShadeNoise(rgb, intensity, getRandom(pos, dir));
@@ -286,7 +285,7 @@ public class CubePaintingEvent {
             return sourceColor.withColor(rgb);
         }
 
-        private Random getRandom(BlockPos pos, Direction dir) {
+        private Random getRandom(BlockPos pos, OpenDirection dir) {
             // this needs to be executed on different computers,
             // so we need to make same generate the random results.
             random.setSeed(pos.asLong() + ((long) seed << dir.ordinal()));
@@ -296,14 +295,14 @@ public class CubePaintingEvent {
 
     public static class HueAction extends MixedAction {
 
-        final ISkinPaintColor destinationColor;
+        final SkinPaintColor destinationColor;
 
         final boolean changeHue;
         final boolean changeSaturation;
         final boolean changeBrightness;
         final boolean changePaintType;
 
-        public HueAction(ISkinPaintColor paintColor, boolean hue, boolean saturation, boolean brightness, boolean paintType) {
+        public HueAction(SkinPaintColor paintColor, boolean hue, boolean saturation, boolean brightness, boolean paintType) {
             this.destinationColor = paintColor;
             this.changeHue = hue;
             this.changeSaturation = saturation;
@@ -329,7 +328,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public ISkinPaintColor resolve(BlockPos pos, Direction dir, ISkinPaintColor sourceColor) {
+        public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
             float[] sourceHSB = ColorUtils.RGBtoHSB(sourceColor.getRGB());
             float[] destinationHSB = ColorUtils.RGBtoHSB(destinationColor.getRGB());
             if (!changeHue) {
@@ -352,9 +351,9 @@ public class CubePaintingEvent {
     public static class BlendingAction extends MixedAction {
 
         final int intensity;
-        final ISkinPaintColor destinationColor;
+        final SkinPaintColor destinationColor;
 
-        public BlendingAction(ISkinPaintColor destinationColor, int intensity) {
+        public BlendingAction(SkinPaintColor destinationColor, int intensity) {
             this.destinationColor = destinationColor;
             this.intensity = intensity;
         }
@@ -371,7 +370,7 @@ public class CubePaintingEvent {
         }
 
         @Override
-        public ISkinPaintColor resolve(BlockPos pos, Direction dir, ISkinPaintColor sourceColor) {
+        public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
             int destRGB = destinationColor.getRGB();
             int destR = ColorUtils.getRed(destRGB);
             int destG = ColorUtils.getGreen(destRGB);
