@@ -12,18 +12,16 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -34,9 +32,7 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
@@ -80,7 +76,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private void setup() {
         gradient = new CGGradient(UIColor.rgba(0x22888888), CGPoint.ZERO, UIColor.rgba(0x22CCCCCC), CGPoint.ZERO);
 
-        CGRect bounds = bounds();
+        var bounds = bounds();
         float minX = 2;
         float maxX = bounds.width - 2;
         float midX = minX + 185 + 2;
@@ -110,7 +106,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect bounds = bounds();
+        var bounds = bounds();
         skinInfoFrame = new CGRect(2, 34, 185, bounds.height - 54);
         previewFrame = new CGRect(189, 2, bounds.width - 189 - 2, bounds.height - 22);
         userFrame = new CGRect(2, 2, 185, 30);
@@ -122,7 +118,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (this.buttonUserSkins == null) {
             return;
         }
-        ServerUser user = GlobalSkinLibrary.getInstance().getUser();
+        var user = GlobalSkinLibrary.getInstance().getUser();
         this.buttonEditSkin.setHidden(true);
         if (entry != null && user.equals(entry.getUser())) {
             this.buttonEditSkin.setHidden(!user.hasPermission(ServerPermission.SKIN_OWNER_EDIT));
@@ -163,7 +159,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     public void drawUserbox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
         if (playerTexture.isEmpty()) {
-            ServerUser user = entry.getUser();
+            var user = entry.getUser();
             if (!user.getName().isEmpty()) {
                 playerTexture = EntityTextureDescriptor.fromName(user.getName());
             }
@@ -186,7 +182,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null) {
             float tx = rect.x;
             float ty = rect.y;
@@ -199,11 +195,11 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private UIButton addTextButton(float x, float y, float width, float height, String key, BiConsumer<SkinDetailLibraryPanel, UIControl> handler) {
-        NSString title = new NSString("");
+        var title = new NSString("");
         if (!key.isEmpty()) {
             title = getDisplayText(key);
         }
-        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        var button = new UIButton(new CGRect(x, y, width, height));
         button.setTitle(title, UIControl.State.NORMAL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -229,8 +225,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void reportSkinPre(UIControl button) {
-        ReportType[] reportTypes = ReportType.values();
-        ReportDialog dialog = new ReportDialog();
+        var reportTypes = ReportType.values();
+        var dialog = new ReportDialog();
         dialog.setTitle(getDisplayText("dialog.report_skin.title"));
         dialog.setMessageColor(new UIColor(0x7f0000));
         dialog.setMessage(getDisplayText("dialog.report_skin.label.report_warning"));
@@ -238,7 +234,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         dialog.setReportTypes(Collections.compactMap(reportTypes, t -> new NSString(TranslateUtils.title(t.getLangKey()))));
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
-                ReportType reportType = reportTypes[dialog.getReportType()];
+                var reportType = reportTypes[dialog.getReportType()];
                 reportSkin(dialog.getText(), reportType);
             }
         });
@@ -254,12 +250,12 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void downloadSkin(UIControl button) {
-        String skinId = entry.getId();
-        String idString = leftZeroPadding(skinId, 5);
-        String skinName = entry.getName();
-        File path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
-        File target = new File(path, makeFileNameValid(idString + " - " + skinName + ".armour"));
-        SkinDescriptor skinDescriptor = entry.getDescriptor();
+        var skinId = entry.getId();
+        var idString = leftZeroPadding(skinId, 5);
+        var skinName = entry.getName();
+        var path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
+        var target = new File(path, makeFileNameValid(idString + " - " + skinName + ".armour"));
+        var skinDescriptor = entry.getDescriptor();
         buttonDownload.setEnabled(false);
         // yep, we directly download and save in the local.
         GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), target, ((result, exception) -> {
@@ -300,7 +296,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (inputString.length() >= length) {
             return inputString;
         }
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         while (sb.length() < length - inputString.length()) {
             sb.append('0');
         }
@@ -342,7 +338,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private NSString getMessage() {
-        NSMutableString message = new NSMutableString("");
+        var message = new NSMutableString("");
 
         message.append(getDisplayText("title"));
         message.append("\n\n");
@@ -370,7 +366,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             message.append("\n\n");
         }
 
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
         if (bakedSkin != null && bakedSkin.getSkin() != null) {
             message.append(getDisplayText("author"));
             message.append(" ");
@@ -404,7 +400,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            IResourceLocation texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+            var texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
             context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64, 0);
             context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
         }

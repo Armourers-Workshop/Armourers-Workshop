@@ -147,11 +147,11 @@ public class ItemTooltipManager {
         if (!settings.isExportable()) {
             flags.add("NP");
         }
+        if (settings.isEncrypted()) {
+            flags.add("S");
+        }
         if (settings.isCompressed()) {
             flags.add("C");
-        }
-        if (settings.getSecurityData() != null) {
-            flags.add("S");
         }
         tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinSettings", flags.toString()));
     }

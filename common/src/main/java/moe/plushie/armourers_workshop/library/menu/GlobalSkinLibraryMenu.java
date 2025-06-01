@@ -62,7 +62,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLib
     }
 
     public void crafting() {
-        this.clearContainer(playerInventory.player, inventory);
+        clearContainer(playerInventory.player, inventory);
     }
 
     protected void addInputSlot(Container inventory, int slot, int x, int y) {

@@ -47,53 +47,45 @@ public class SkinSettings {
     }
 
 
-    public void setEditable(boolean isEditable) {
-        if (isEditable) {
-            flags &= ~0x01;
-        } else {
-            flags |= 0x01;
-        }
+    public void setEditable(boolean newValue) {
+        setFlag(0, !newValue);
     }
 
     public boolean isEditable() {
-        return (flags & 0x01) == 0;
+        return !getFlag(0);
     }
 
-    public void setSavable(boolean isSavable) {
-        if (isSavable) {
-            flags &= ~0x02;
-        } else {
-            flags |= 0x02;
-        }
+    public void setSavable(boolean newValue) {
+        setFlag(1, !newValue);
     }
 
     public boolean isSavable() {
-        return (flags & 0x02) == 0;
+        return !getFlag(1);
     }
 
-    public void setExportable(boolean isExportable) {
-        if (isExportable) {
-            flags &= ~0x04;
-        } else {
-            flags |= 0x04;
-        }
+    public void setExportable(boolean newValue) {
+        setFlag(2, !newValue);
     }
 
     public boolean isExportable() {
-        return (flags & 0x04) == 0;
+        return !getFlag(2);
     }
 
 
-    public void setCompressed(boolean isCompressed) {
-        if (isCompressed) {
-            flags |= 0x10;
-        } else {
-            flags &= ~0x10;
-        }
+    public void setEncrypted(boolean newValue) {
+        setFlag(3, newValue);
+    }
+
+    public boolean isEncrypted() {
+        return getFlag(3) || getSecurityData() != null;
+    }
+
+    public void setCompressed(boolean newValue) {
+        setFlag(4, newValue);
     }
 
     public boolean isCompressed() {
-        return (flags & 0x10) != 0;
+        return getFlag(4);
     }
 
     public void setPreviewMode(boolean isPreviewMode) {
@@ -148,7 +140,7 @@ public class SkinSettings {
         properties.put("editable", isEditable());
         properties.put("savable", isSavable());
         properties.put("exportable", isExportable());
-        properties.put("encrypted", getSecurityData() != null);
+        properties.put("encrypted", isEncrypted());
         properties.put("compressed", isCompressed());
         if (collisionBox != null && !collisionBox.isEmpty()) {
             properties.put("collisionBox", collisionBox);
@@ -157,6 +149,18 @@ public class SkinSettings {
             properties.putAll(itemTransforms);
         }
         return properties.toString();
+    }
+
+    private void setFlag(int bit, boolean value) {
+        if (value) {
+            flags |= 1 << bit;
+        } else {
+            flags &= ~(1 << bit);
+        }
+    }
+
+    private boolean getFlag(int bit) {
+        return (flags & (1 << bit)) != 0;
     }
 
     public SkinSettings copy() {
@@ -170,11 +174,12 @@ public class SkinSettings {
 
     public SkinSettings copyWithOptions(SkinFileOptions options) {
         var settings = copy();
-        settings.setEditable(options.getEditable(settings.isEditable()));
-        settings.setSavable(options.getSavable(settings.isSavable()));
-        settings.setExportable(options.getExportable(settings.isExportable()));
+        settings.setEditable(options.getEditable(isEditable()));
+        settings.setSavable(options.getSavable(isSavable()));
+        settings.setExportable(options.getExportable(isExportable()));
+        settings.setEncrypted(options.getEncrypted(isEncrypted())); // set old security state.
         settings.setCompressed(options.isCompressed());
-        settings.setSecurityData(options.getSecurityData());
+        settings.setSecurityData(options.getSecurityData()); // set new security data.
         return settings;
     }
 

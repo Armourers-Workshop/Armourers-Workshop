@@ -40,8 +40,8 @@ public class SkinFileOptions {
         return serializer.read(CodingKeys.FILE_VERSION);
     }
 
-    public void setEditable(boolean isEditable) {
-        serializer.write(CodingKeys.IS_EDITABLE, isEditable);
+    public void setEditable(boolean newValue) {
+        serializer.write(CodingKeys.IS_EDITABLE, newValue);
     }
 
     public boolean getEditable(boolean defaultValue) {
@@ -56,8 +56,8 @@ public class SkinFileOptions {
         return getEditable(true);
     }
 
-    public void setSavable(boolean isSavable) {
-        serializer.write(CodingKeys.IS_SAVABLE, isSavable);
+    public void setSavable(boolean newValue) {
+        serializer.write(CodingKeys.IS_SAVABLE, newValue);
     }
 
     public boolean getSavable(boolean defaultValue) {
@@ -72,8 +72,8 @@ public class SkinFileOptions {
         return getSavable(true);
     }
 
-    public void setExportable(boolean isExportable) {
-        serializer.write(CodingKeys.IS_EXPORTABLE, isExportable);
+    public void setExportable(boolean newValue) {
+        serializer.write(CodingKeys.IS_EXPORTABLE, newValue);
     }
 
     public boolean getExportable(boolean defaultValue) {
@@ -89,8 +89,24 @@ public class SkinFileOptions {
     }
 
 
-    public void setCompressed(boolean compressed) {
-        serializer.write(CodingKeys.IS_COMPRESSED, compressed);
+    public void setEncrypted(boolean newValue) {
+        serializer.write(CodingKeys.IS_ENCRYPTED, newValue);
+    }
+
+    public boolean getEncrypted(boolean defaultValue) {
+        var value = serializer.read(CodingKeys.IS_ENCRYPTED);
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
+    }
+
+    public boolean isEncrypted() {
+        return getEncrypted(false);
+    }
+
+    public void setCompressed(boolean newValue) {
+        serializer.write(CodingKeys.IS_COMPRESSED, newValue);
     }
 
     public boolean getCompressed(boolean defaultValue) {
@@ -145,6 +161,7 @@ public class SkinFileOptions {
         public static final IDataSerializerKey<Boolean> IS_EDITABLE = IDataSerializerKey.create("Editable", IDataCodec.BOOL, null);
         public static final IDataSerializerKey<Boolean> IS_SAVABLE = IDataSerializerKey.create("Savable", IDataCodec.BOOL, null);
         public static final IDataSerializerKey<Boolean> IS_EXPORTABLE = IDataSerializerKey.create("Exportable", IDataCodec.BOOL, null);
+        public static final IDataSerializerKey<Boolean> IS_ENCRYPTED = IDataSerializerKey.create("Encrypted", IDataCodec.BOOL, null);
         public static final IDataSerializerKey<Boolean> IS_COMPRESSED = IDataSerializerKey.create("Compressed", IDataCodec.BOOL, null);
 
         public static final IDataSerializerKey<String> SECURITY_KEY = IDataSerializerKey.create("SecurityKey", IDataCodec.STRING, null);

@@ -46,7 +46,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     private UIButton buttonUpload;
     private UICheckBox fileOptionsBox;
 
-    private String error = null;
+    private NSString error = null;
     private boolean isUploading = false;
 
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
@@ -180,31 +180,33 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         var descriptor = SkinDescriptor.of(getInputStack());
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         if (bakedSkin == null) {
-            onUploadFailed("Skin missing.");
+            onUploadFailed(getDisplayText("error.notSkin"));
             return;
         }
-
         if (Strings.isBlank(textName.text())) {
-            onUploadFailed("Skin name missing.");
+            onUploadFailed(getDisplayText("error.notSkinName"));
             return;
         }
-
+        // we can't upload a readonly skin.
         var uploadOptions = getUploadOptions(bakedSkin.getSkin());
+        if (bakedSkin.getSkin().getSettings().isEncrypted()) {
+            onUploadFailed(getDisplayText("error.notSupported"));
+            return;
+        }
         if (isUploading) {
             return;
         }
-
         this.isUploading = true;
         // we need to check this user the global skin upload permission in the server first.
         NetworkManager.sendToServer(new UploadSkinPrePacket(), (result, exception) -> Minecraft.getInstance().execute(() -> {
             if (exception != null || result == null || !result) {
-                onUploadFailed("You not permission to uploads skin in this server to global skin library.");
+                onUploadFailed(getDisplayText("error.notPermission"));
                 return;
             }
             // upload now
             library.uploadSkin(textName.text().trim(), textDescription.text().trim(), bakedSkin.getSkin(), uploadOptions, (result1, exception1) -> {
                 if (exception1 != null) {
-                    onUploadFailed(exception1.toString());
+                    onUploadFailed(new NSString(exception1.toString()));
                 } else {
                     onUploadFinish();
                 }
@@ -231,7 +233,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         NetworkManager.sendToServer(new UploadSkinPacket());
     }
 
-    private void onUploadFailed(String message) {
+    private void onUploadFailed(NSString message) {
         error = message;
         isUploading = false;
         if (warningLabel != null) {
@@ -244,8 +246,8 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         message.append(getDisplayText("label.upload_warning"));
         message.append("\n\n");
 
-        if (Strings.isNotBlank(error)) {
-            message.append("§cError: " + error + "§r");
+        if (error != null) {
+            message.append("§cError: " + error.contents() + "§r");
             message.append("\n\n");
         }
         return message;

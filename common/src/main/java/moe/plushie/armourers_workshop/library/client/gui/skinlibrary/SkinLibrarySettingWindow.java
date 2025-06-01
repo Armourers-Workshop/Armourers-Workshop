@@ -60,6 +60,7 @@ public class SkinLibrarySettingWindow extends ConfirmDialog {
         options.setEditable(values.get(Option.IS_EDITABLE));
         options.setSavable(values.get(Option.IS_SAVABLE));
         options.setExportable(values.get(Option.IS_EXPORTABLE));
+        options.setEncrypted(false); // new file never keep encrypted state.
         options.setCompressed(values.get(Option.IS_COMPRESSED));
         if (values.get(Option.IS_ENCRYPTED)) {
             var selectedIndex = values.get(Option.ENCRYPTED_MODE);
