@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.SimpleContainer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
-import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
-import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.api.EnvType;
@@ -71,7 +70,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private BlockPos reference = BlockPos.ZERO;
     private OpenRectangle3i collisionShape = OpenRectangle3i.ZERO;
 
-    private NonNullItemList items;
+    private SimpleContainer container;
     private List<BlockPos> refers;
     private List<SkinMarker> markers;
 
@@ -237,13 +236,13 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public NonNullItemList getItems() {
-        return getOrCreateItems();
+    public int getContainerSize() {
+        return 9 * 9;
     }
 
     @Override
-    public int getContainerSize() {
-        return 9 * 9;
+    protected SimpleContainer getContainer() {
+        return getOrCreateItems();
     }
 
     @Nullable
@@ -424,11 +423,11 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
 
-    private NonNullItemList getOrCreateItems() {
-        if (items == null) {
-            items = new NonNullItemList(getContainerSize());
+    private SimpleContainer getOrCreateItems() {
+        if (container == null) {
+            container = new SimpleContainer(getContainerSize());
         }
-        return items;
+        return container;
     }
 
     public <V> Optional<V> getValueFromParent(Function<SkinnableBlockEntity, V> getter) {

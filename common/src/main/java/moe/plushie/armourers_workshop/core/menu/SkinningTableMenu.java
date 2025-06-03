@@ -17,7 +17,7 @@ public class SkinningTableMenu extends AbstractBlockEntityMenu<SkinningTableBloc
 
     public SkinningTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
-        this.inventory = blockEntity.getInventory();
+        this.inventory = blockEntity.getContainer();
         this.addPlayerSlots(playerInventory, 8, 94);
         this.addInputSlot(inventory, 1, 37, 22);
         this.addInputSlot(inventory, 2, 37, 58);

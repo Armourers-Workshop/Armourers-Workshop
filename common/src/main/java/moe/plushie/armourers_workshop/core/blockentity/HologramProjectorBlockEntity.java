@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.data.SimpleContainer;
 import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
@@ -13,7 +14,6 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
-import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         builder.put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new OpenVector3f(0, 0, 0));
     });
 
-    private final NonNullItemList items = new NonNullItemList(1);
+    private final SimpleContainer container = new SimpleContainer(1);
 
     private OpenQuaternionf renderRotations;
 
@@ -66,7 +66,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void readAdditionalData(IDataSerializer serializer) {
-        items.deserialize(serializer);
+        container.deserialize(serializer);
         modelAngle = serializer.read(CodingKeys.ANGLE);
         modelOffset = serializer.read(CodingKeys.OFFSET);
         rotationSpeed = serializer.read(CodingKeys.ROTATION_SPEED);
@@ -80,7 +80,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void writeAdditionalData(IDataSerializer serializer) {
-        items.serialize(serializer);
+        container.serialize(serializer);
         serializer.write(CodingKeys.ANGLE, modelAngle);
         serializer.write(CodingKeys.OFFSET, modelOffset);
         serializer.write(CodingKeys.ROTATION_SPEED, rotationSpeed);
@@ -130,7 +130,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     protected boolean isRunningForState(BlockState state) {
         var level = getLevel();
-        if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
+        if (level != null && !SkinDescriptor.of(container.getItem(0)).isEmpty()) {
             return switch (powerMode) {
                 case 1 -> level.hasNeighborSignal(getBlockPos());
                 case 2 -> !level.hasNeighborSignal(getBlockPos());
@@ -166,8 +166,8 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    protected NonNullItemList getItems() {
-        return this.items;
+    protected SimpleContainer getContainer() {
+        return container;
     }
 
     @Override
@@ -179,11 +179,6 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     @Override
     public boolean canPlaceItem(int i, ItemStack itemStack) {
         return !SkinDescriptor.of(itemStack).isEmpty();
-    }
-
-    @Override
-    public int getContainerSize() {
-        return 1;
     }
 
     public OpenVector3f getRotationSpeed() {

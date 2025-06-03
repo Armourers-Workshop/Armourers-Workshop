@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
+import moe.plushie.armourers_workshop.core.data.SimpleContainer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SkinningTableBlockEntity extends UpdatableContainerBlockEntity {
+public class SkinningTableBlockEntity extends UpdatableBlockEntity {
 
-    private final NonNullItemList items = new NonNullItemList(3);
+    private final SimpleContainer container = new SimpleContainer(3);
 
     private SkinDescriptor.Options options = SkinDescriptor.Options.DEFAULT;
 
@@ -20,13 +20,13 @@ public class SkinningTableBlockEntity extends UpdatableContainerBlockEntity {
 
     @Override
     public void readAdditionalData(IDataSerializer serializer) {
-        items.deserialize(serializer);
+        container.deserialize(serializer);
         options = serializer.read(CodingKeys.OPTIONS);
     }
 
     @Override
     public void writeAdditionalData(IDataSerializer serializer) {
-        items.serialize(serializer);
+        container.serialize(serializer);
         serializer.write(CodingKeys.OPTIONS, options);
     }
 
@@ -38,14 +38,8 @@ public class SkinningTableBlockEntity extends UpdatableContainerBlockEntity {
         return options;
     }
 
-    @Override
-    protected NonNullItemList getItems() {
-        return items;
-    }
-
-    @Override
-    public int getContainerSize() {
-        return 3;
+    public SimpleContainer getContainer() {
+        return container;
     }
 
     private static class CodingKeys {

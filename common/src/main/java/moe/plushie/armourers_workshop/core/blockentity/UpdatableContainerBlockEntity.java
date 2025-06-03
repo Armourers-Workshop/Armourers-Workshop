@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
+import moe.plushie.armourers_workshop.core.data.SimpleContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,44 +17,42 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
 
     @Override
     public boolean isEmpty() {
-        return getItems().stream().allMatch(ItemStack::isEmpty);
+        return getContainer().isEmpty();
     }
 
     @Override
     public ItemStack getItem(int i) {
-        return getItems().get(i);
+        return getContainer().getItem(i);
     }
 
     @Override
     public ItemStack removeItem(int i, int j) {
-        var itemStack = ContainerHelper.removeItem(getItems(), i, j);
+        var itemStack = getContainer().removeItem(i, j);
         if (!itemStack.isEmpty()) {
-            this.setContainerChanged();
+            setContainerChanged();
         }
         return itemStack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int i) {
-        return ContainerHelper.takeItem(getItems(), i);
+        return getContainer().removeItemNoUpdate(i);
     }
 
     @Override
     public void setItem(int i, ItemStack itemStack) {
-        getItems().set(i, itemStack);
-        if (itemStack.getCount() > this.getMaxStackSize()) {
-            itemStack.setCount(this.getMaxStackSize());
-        }
-        this.setContainerChanged();
+        getContainer().setItem(i, itemStack);
+        setContainerChanged();
     }
 
     @Override
     public boolean stillValid(Player player) {
-        if (getLevel() == null) {
+        var level = getLevel();
+        if (level == null) {
             return false;
         }
         var pos = getBlockPos();
-        var blockEntity = getLevel().getBlockEntity(pos);
+        var blockEntity = level.getBlockEntity(pos);
         if (blockEntity != this) {
             return false;
         }
@@ -64,14 +61,20 @@ public abstract class UpdatableContainerBlockEntity extends UpdatableBlockEntity
 
     @Override
     public void clearContent() {
-        getItems().clear();
+        getContainer().clearContent();
+        setContainerChanged();
     }
+
+    @Override
+    public int getContainerSize() {
+        return getContainer().getContainerSize();
+    }
+
+    protected abstract SimpleContainer getContainer();
 
     protected void setContainerChanged() {
         setChanged();
     }
-
-    protected abstract NonNullItemList getItems();
 
     @Override
     public Container getInventory() {
