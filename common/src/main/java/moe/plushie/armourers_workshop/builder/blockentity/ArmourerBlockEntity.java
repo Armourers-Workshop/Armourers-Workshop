@@ -124,12 +124,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return skinType;
     }
 
-    public void setSkinType(SkinType skinType) {
-        if (this.skinType == skinType) {
+    public void setSkinType(SkinType newValue) {
+        if (this.skinType == newValue) {
             return;
         }
         var boxes = getBoundingBoxes();
-        this.skinType = skinType;
+        this.skinType = newValue;
         this.setPaintData(null);
         this.remakeSkinProperties();
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), true);
@@ -140,9 +140,9 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return skinProperties;
     }
 
-    public void setSkinProperties(SkinProperties skinProperties) {
+    public void setSkinProperties(SkinProperties newValue) {
         var boxes = getBoundingBoxes();
-        this.skinProperties = skinProperties;
+        this.skinProperties = newValue;
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
@@ -162,8 +162,8 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return textureDescriptor;
     }
 
-    public void setTextureDescriptor(EntityTextureDescriptor textureDescriptor) {
-        this.textureDescriptor = textureDescriptor;
+    public void setTextureDescriptor(EntityTextureDescriptor newValue) {
+        this.textureDescriptor = newValue;
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
@@ -171,9 +171,10 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return textureModel;
     }
 
-    public void setTextureModel(EntityTextureDescriptor.Model textureModel) {
+    public void setTextureModel(EntityTextureDescriptor.Model newValue) {
         var boxes = getBoundingBoxes();
-        this.textureModel = textureModel;
+        this.textureModel = newValue;
+        this.remakePaintData(newValue);
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
@@ -187,7 +188,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
             return;
         }
         if (paintData != null) {
-            this.paintData = SkinPaintData.v2();
+            this.paintData = createPaintData(textureModel);
             this.paintData.copyFrom(paintData);
         } else {
             this.paintData = null;
@@ -204,7 +205,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
 
     public void setPaintColor(OpenVector2i pos, SkinPaintColor paintColor) {
         if (this.paintData == null) {
-            this.paintData = SkinPaintData.v2();
+            this.paintData = createPaintData(textureModel);
         }
         this.paintData.setColor(pos, paintColor.getRawValue());
         this.setChanged();
@@ -293,7 +294,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         var srcBox = boundingModel.get(srcPart);
         var destBox = boundingModel.get(destPart);
         if (srcBox != null && destBox != null) {
-            WorldUtils.copyPaintData(paintData, srcBox, destBox, mirror);
+            WorldUtils.copyPaintData(paintData, srcBox, paintData, destBox, mirror);
             BlockUtils.combine(this, this::sendBlockUpdates);
         }
     }
@@ -373,6 +374,15 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         this.skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavour);
     }
 
+    private void remakePaintData(EntityTextureDescriptor.Model model) {
+        if (paintData == null) {
+            return;
+        }
+        var newPaintData = createPaintData(model);
+        newPaintData.copyFrom(paintData);
+        paintData = newPaintData;
+    }
+
     private boolean shouldAddBoundingBoxes(SkinPartType partType) {
         if (isUseHelper()) {
             return isShowHelper();
@@ -382,7 +392,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
 
     private void remakeBoundingBoxes(Collection<BoundingBox> oldBoxes, Collection<BoundingBox> newBoxes, boolean forced) {
         // we only remake bounding box on the server side.
-        Level level = getLevel();
+        var level = getLevel();
         if (level == null || level.isClientSide()) {
             return;
         }
@@ -436,7 +446,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (box == null) {
             return null;
         }
-        var rect = box.getBounds();
+        var rect = box.bounds();
         return box.get(rect.x() + offset.x(), rect.y() + offset.y(), rect.z() + offset.z(), dir);
     }
 
@@ -473,9 +483,14 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
 
     private EntityTextureModel getBoundingModel() {
         if (textureModel == EntityTextureDescriptor.Model.ALEX) {
-            return BoundingBox.SLIME_MODEL;
+            return BoundingBox.SLIM_MODEL;
         }
         return BoundingBox.MODEL;
+    }
+
+    private SkinPaintData createPaintData(EntityTextureDescriptor.Model model) {
+        var slim = (model == EntityTextureDescriptor.Model.ALEX);
+        return SkinPaintData.v2(slim);
     }
 
     public OpenDirection getFacing() {

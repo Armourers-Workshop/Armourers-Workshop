@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.BooleanSupplier;
 
-public class SkinDescriptor implements IDataSerializable.Immutable, ISkinDescriptor {
+public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immutable {
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 

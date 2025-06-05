@@ -179,10 +179,10 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     }
 
     private OpenVector2i getTexturePos(ArmourerBlockEntity blockEntity, OpenDirection direction) {
-        if (blockEntity == null) {
-            return null;
+        if (blockEntity != null) {
+            return blockEntity.getTexturePos(partType, guide, getResolvedDirection(blockEntity, direction));
         }
-        return blockEntity.getTexturePos(partType, guide, getResolvedDirection(blockEntity, direction));
+        return null;
     }
 
     private OpenDirection getResolvedDirection(ArmourerBlockEntity blockEntity, OpenDirection dir) {

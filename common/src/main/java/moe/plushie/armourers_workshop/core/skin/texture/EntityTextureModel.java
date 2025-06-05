@@ -192,8 +192,12 @@ public class EntityTextureModel {
             return null;
         }
 
-        public OpenRectangle3i getBounds() {
+        public OpenRectangle3i bounds() {
             return rect;
+        }
+
+        public boolean mirror() {
+            return mirror;
         }
 
         private boolean isInside(int x, int y, int z) {

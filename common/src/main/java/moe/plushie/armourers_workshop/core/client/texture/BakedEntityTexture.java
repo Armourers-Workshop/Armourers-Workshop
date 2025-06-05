@@ -65,7 +65,7 @@ public class BakedEntityTexture {
         for (var entry : EntityTextureModel.of(width, height, slim).entrySet()) {
             var box = entry.getValue();
             var part = allParts.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
-            allBounds.put(entry.getKey(), box.getBounds());
+            allBounds.put(entry.getKey(), box.bounds());
             box.forEach((texture, x, y, z, dir) -> {
                 int color = accessor.getRGB(texture.x(), texture.y());
                 if (SkinPaintColor.isOpaque(color)) {

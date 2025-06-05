@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements UITextFieldDelegate, ISkinLibraryListener {
+public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements ISkinLibraryListener, UITextFieldDelegate {
 
     private final UICheckBox fileOptionsBox = new UICheckBox(CGRect.ZERO);
     private final UIButton actionButton = new UIButton(CGRect.ZERO);

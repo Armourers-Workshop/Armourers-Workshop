@@ -66,12 +66,12 @@ public class ChunkSerializers {
 
         @Override
         public Skin read(ChunkDataInputStream stream, Void obj) throws IOException {
-            var context = stream.getContext();
+            var context = stream.context();
             var skinType = stream.readType(SkinTypes::byName);
             return stream.readChunk(it -> {
                 // we need to check the secret key is correct first.
                 var settings = it.read(SKIN_SETTINGS);
-                if (settings.getSecurityData() != null && !settings.getSecurityData().equals(context.getSecurityData())) {
+                if (settings.getSecurityData() != null && !settings.getSecurityData().equals(context.securityData())) {
                     throw new IOException("Can't decrypt skin by the security key.");
                 }
                 var fileData = it.read(SKIN_FILE_DATA);
@@ -86,7 +86,7 @@ public class ChunkSerializers {
                 builder.animations(it.read(SKIN_ANIMATION_DATA));
                 builder.blobs(it.readBlobs());
                 builder.id(geometryData.getId());
-                builder.version(context.getFileVersion());
+                builder.version(context.fileVersion());
                 return builder.build();
             });
         }
@@ -96,11 +96,11 @@ public class ChunkSerializers {
             var context = stream.getContext();
             stream.writeType(skin.getType());
             stream.writeChunk(it -> {
-                var fileData = context.getFileProvider();
-                var paletteData = context.getPaletteProvider();
+                var fileData = context.fileProvider();
+                var paletteData = context.paletteProvider();
                 var geometryData = new ChunkGeometryData(skin.getId(), paletteData);
                 it.write(SKIN_PROPERTIES, skin.getProperties());
-                it.write(SKIN_SETTINGS, skin.getSettings().copyWithOptions(context.getOptions()));
+                it.write(SKIN_SETTINGS, skin.getSettings().copyWithOptions(context.options()));
                 it.write(SKIN_PALETTE_DATA, paletteData);
                 it.write(SKIN_PAINT_DATA, skin.getPaintData());
                 it.write(SKIN_GEOMETRY_DATA, geometryData);
@@ -195,7 +195,7 @@ public class ChunkSerializers {
 
         @Override
         public ChunkGeometryData read(ChunkDataInputStream stream, Void obj) throws IOException {
-            var palette = stream.getPaletteProvider();
+            var palette = stream.paletteProvider();
             var geometryData = new ChunkGeometryData(Skin.Builder.generateId(), palette);
             geometryData.readFromStream(stream);
             return geometryData;
@@ -241,7 +241,7 @@ public class ChunkSerializers {
 
         @Override
         public ChunkPaletteData read(ChunkDataInputStream stream, Void file) throws IOException {
-            var palette = stream.getPaletteProvider();
+            var palette = stream.paletteProvider();
             palette.readFromStream(stream);
             return palette;
         }
@@ -272,7 +272,7 @@ public class ChunkSerializers {
 
         @Override
         public ChunkFileData read(ChunkDataInputStream stream, Void obj) throws IOException {
-            var file = stream.getFileProvider();
+            var file = stream.fileProvider();
             file.readFromStream(stream);
             return file;
         }
@@ -375,13 +375,13 @@ public class ChunkSerializers {
     }
 
     public static Skin readFromStream(IInputStream stream, ChunkContext context) throws IOException {
-        var stream1 = new ChunkDataInputStream(stream.getInputStream(), context, null);
+        var stream1 = new ChunkDataInputStream(stream.inputStream(), context, null);
         return SKIN.read(stream1, null);
     }
 
     public static Pair<SkinType, SkinProperties> readInfoFromStream(IInputStream stream, ChunkContext context) throws IOException {
         var allows = Collections.newList(ChunkType.PROPERTIES.getName(), ChunkType.SKIN_SETTINGS.getName());
-        var stream1 = new ChunkDataInputStream(stream.getInputStream(), context, allows::contains);
+        var stream1 = new ChunkDataInputStream(stream.inputStream(), context, allows::contains);
         return SKIN_INFO.read(stream1, null);
     }
 

@@ -81,8 +81,8 @@ public class SkinDynamicTexture extends DynamicTexture {
     }
 
     private void applyPaintColor(NativeImage mergedImage) {
-        for (var iy = 0; iy < paintData.getHeight(); ++iy) {
-            for (var ix = 0; ix < paintData.getWidth(); ++ix) {
+        for (var iy = 0; iy < paintData.height(); ++iy) {
+            for (var ix = 0; ix < paintData.width(); ++ix) {
                 var color = paintData.getColor(ix, iy);
                 if (SkinPaintColor.isOpaque(color)) {
                     var r = color >> 16 & 0xff;

@@ -138,27 +138,27 @@ public class ChunkContext {
         return enableFastEncoder;
     }
 
-    public int getFileVersion() {
+    public int fileVersion() {
         return options.getFileVersion();
     }
 
-    public String getSecurityData() {
+    public String securityData() {
         return options.getSecurityData();
     }
 
-    public String getSecurityKey() {
+    public String securityKey() {
         return options.getSecurityKey();
     }
 
-    public ChunkFileData getFileProvider() {
+    public ChunkFileData fileProvider() {
         return fileProvider;
     }
 
-    public ChunkPaletteData getPaletteProvider() {
+    public ChunkPaletteData paletteProvider() {
         return paletteProvider;
     }
 
-    public SkinFileOptions getOptions() {
+    public SkinFileOptions options() {
         return options;
     }
 }

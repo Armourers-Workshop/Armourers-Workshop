@@ -361,8 +361,8 @@ public class DataSerializers {
 
     public static void dropItemStack(Level level, double x, double y, double z, ItemStack itemStack) {
         double d0 = EntityType.ITEM.getWidth();
-        double d1 = 1.0D - d0;
-        double d2 = d0 / 2.0D;
+        double d1 = 1.0 - d0;
+        double d2 = d0 / 2.0;
         double d3 = Math.floor(x) + RANDOM.nextDouble() * d1 + d2;
         double d4 = Math.floor(y) + RANDOM.nextDouble() * d1;
         double d5 = Math.floor(z) + RANDOM.nextDouble() * d1 + d2;
@@ -370,7 +370,7 @@ public class DataSerializers {
         while (!itemStack.isEmpty()) {
             ItemEntity itementity = new ItemEntity(level, d3, d4, d5, itemStack.split(RANDOM.nextInt(21) + 10));
             float f = 0.05F;
-            itementity.setDeltaMovement(RANDOM.nextGaussian() * (double) 0.05F, RANDOM.nextGaussian() * (double) 0.05F + (double) 0.2F, RANDOM.nextGaussian() * (double) 0.05F);
+            itementity.setDeltaMovement(RANDOM.nextGaussian() * 0.05f, RANDOM.nextGaussian() * 0.05f + 0.2f, RANDOM.nextGaussian() * 0.05f);
             level.addFreshEntity(itementity);
         }
     }
@@ -378,9 +378,9 @@ public class DataSerializers {
     public static SkinPaintData decompressPaintData(ByteBuffer buffer) {
         var inputStream = new ByteArrayInputStream(buffer.array());
         try (var dataStream = new DataInputStream(new GZIPInputStream(inputStream))) {
-            var paintData = SkinPaintData.v2();
+            var paintData = SkinPaintData.v2(false);
             var length = dataStream.readInt();
-            var colors = paintData.getData();
+            var colors = paintData.bytes();
             for (int i = 0; i < length; ++i) {
                 if (i < colors.length) {
                     colors[i] = dataStream.readInt();
@@ -395,7 +395,7 @@ public class DataSerializers {
     public static ByteBuffer compressPaintData(SkinPaintData paintData) {
         var outputStream = new ByteArrayOutputStream();
         try (var dataStream = new DataOutputStream(new GZIPOutputStream(outputStream))) {
-            var colors = paintData.getData();
+            var colors = paintData.bytes();
             dataStream.writeInt(colors.length);
             for (int color : colors) {
                 dataStream.writeInt(color);

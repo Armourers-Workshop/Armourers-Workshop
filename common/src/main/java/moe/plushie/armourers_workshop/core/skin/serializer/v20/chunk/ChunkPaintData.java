@@ -7,62 +7,43 @@ import java.io.IOException;
 public class ChunkPaintData {
 
     public SkinPaintData readFromStream(ChunkDataInputStream stream) throws IOException {
-        int flags = stream.readVarInt();
-        int totalWidth = stream.readVarInt();
-        int totalHeight = stream.readVarInt();
-        var paintData = _paintData(flags, totalWidth, totalHeight);
+        int options = stream.readInt();
+        int width = stream.readVarInt();
+        int height = stream.readVarInt();
+        var paintData = _createPaintData(options, width, height);
         if (paintData == null) {
             return null; // we can't support it.
         }
-        var palette = stream.getPaletteProvider();
-        while (true) {
-            int width = stream.readVarInt();
-            if (width == 0) {
-                break;
-            }
-            int height = stream.readVarInt();
-            for (int y = 0; y < height; ++y) {
-                for (int x = 0; x < width; ++x) {
-                    paintData.setColor(x, y, palette.readColor(stream));
-                }
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                paintData.setColor(x, y, stream.readInt());
             }
         }
         return paintData;
     }
 
     public void writeToStream(SkinPaintData paintData, ChunkDataOutputStream stream) throws IOException {
-        int flags = _flags(paintData);
-        stream.writeVarInt(flags);
-        stream.writeVarInt(paintData.getWidth());
-        stream.writeVarInt(paintData.getHeight());
-        // TODO: we need to support writing only part of the data.
-        int width = paintData.getWidth();
-        int height = paintData.getHeight();
+        int options = 0;
+        int width = paintData.width();
+        int height = paintData.height();
+        stream.writeInt(options);
         stream.writeVarInt(width);
         stream.writeVarInt(height);
-        var palette = stream.getPaletteProvider();
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                stream.writeVariable(palette.writeColor(paintData.getColor(x, y)));
+                stream.writeInt(paintData.getColor(x, y));
             }
         }
-        stream.writeVarInt(0);
-        stream.writeVarInt(0);
     }
 
-    private int _flags(SkinPaintData paintData) {
-        // 0x80 slim
-        return 0;
-    }
-
-    private SkinPaintData _paintData(int flags, int width, int height) {
+    private SkinPaintData _createPaintData(int options, int width, int height) {
         // v1 skin texture.
         if (width == SkinPaintData.TEXTURE_OLD_WIDTH && height == SkinPaintData.TEXTURE_OLD_HEIGHT) {
             return SkinPaintData.v1();
         }
         // v2 skin texture.
         if (width == SkinPaintData.TEXTURE_WIDTH && height == SkinPaintData.TEXTURE_HEIGHT) {
-            return SkinPaintData.v2();
+            return SkinPaintData.v2(false);
         }
         // v3 custom texture.
         return null;

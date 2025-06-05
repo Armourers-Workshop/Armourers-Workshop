@@ -62,7 +62,7 @@ public final class SkinSerializerV13 implements IOSerializer {
         stream.writeString(TAG_SKIN_PAINT_HEADER);
         if (skin.getPaintData() != null) {
             stream.writeBoolean(true);
-            int[] colors = skin.getPaintData().getData();
+            int[] colors = skin.getPaintData().bytes();
             for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(colors[i]);
             }
@@ -145,12 +145,11 @@ public final class SkinSerializerV13 implements IOSerializer {
             ModLog.error("Error loading skin paint header.");
         }
 
-        // TODO: support v2 texture
         SkinPaintData paintData = null;
-        boolean hasPaintData = stream.readBoolean();
+        var hasPaintData = stream.readBoolean();
         if (hasPaintData) {
             paintData = SkinPaintData.v1();
-            int[] colors = paintData.getData();
+            var colors = paintData.bytes();
             for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                 colors[i] = stream.readInt();
             }
@@ -160,8 +159,8 @@ public final class SkinSerializerV13 implements IOSerializer {
             ModLog.error("Error loading skin paint footer.");
         }
 
-        int size = stream.readByte();
-        ArrayList<SkinPart> parts = new ArrayList<>();
+        var size = stream.readByte();
+        var parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
             if (!stream.readString().equals(TAG_SKIN_PART_HEADER)) {
                 ModLog.error("Error loading skin part header.");

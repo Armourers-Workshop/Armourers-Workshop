@@ -9,7 +9,7 @@ import java.util.Objects;
 public class BoundingBox extends OpenRectangle3i {
 
     public static final EntityTextureModel MODEL = EntityTextureModel.STAVE_V2;
-    public static final EntityTextureModel SLIME_MODEL = EntityTextureModel.ALEX_V2;
+    public static final EntityTextureModel SLIM_MODEL = EntityTextureModel.ALEX_V2;
 
     private final SkinPartType partType;
 

@@ -30,7 +30,7 @@ public class ChunkAnimationData {
 
     public void readFromStream(ChunkInputStream stream) throws IOException {
         // TODO: remove in the future (22-refactor-file).
-        if (stream.getFileVersion() < 22) {
+        if (stream.fileVersion() < 22) {
             animations.addAll(LegacyHelperV20.readFromStream(stream));
             return;
         }
@@ -210,7 +210,7 @@ public class ChunkAnimationData {
             @Override
             public SkinAnimationPoint.Sound readFromStream(ChunkInputStream stream) throws IOException {
                 // TODO: remove in the future (23-builtin-sound).
-                if (stream.getFileVersion() < 23) {
+                if (stream.fileVersion() < 23) {
                     var effect = stream.readString();
                     var file = stream.readFile();
                     var sound = new SkinSoundData(file.getName(), file.getBytes(), SkinSoundProperties.EMPTY);

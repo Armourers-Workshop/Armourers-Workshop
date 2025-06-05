@@ -7,20 +7,20 @@ import java.io.IOException;
 public interface ChunkInputStream extends IInputStream {
 
     default ChunkFile readFile() throws IOException {
-        return getFileProvider().readItem(this);
+        return fileProvider().readItem(this);
     }
 
-    ChunkContext getContext();
+    ChunkContext context();
 
-    default int getFileVersion() {
-        return getContext().getFileVersion();
+    default int fileVersion() {
+        return context().fileVersion();
     }
 
-    default ChunkFileData getFileProvider() {
-        return getContext().getFileProvider();
+    default ChunkFileData fileProvider() {
+        return context().fileProvider();
     }
 
-    default ChunkPaletteData getPaletteProvider() {
-        return getContext().getPaletteProvider();
+    default ChunkPaletteData paletteProvider() {
+        return context().paletteProvider();
     }
 }

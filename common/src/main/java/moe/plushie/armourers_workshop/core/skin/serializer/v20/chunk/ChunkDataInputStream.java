@@ -31,12 +31,12 @@ public class ChunkDataInputStream implements ChunkInputStream {
     }
 
     @Override
-    public DataInputStream getInputStream() {
+    public DataInputStream inputStream() {
         return stream;
     }
 
     @Override
-    public ChunkContext getContext() {
+    public ChunkContext context() {
         return context;
     }
 }

@@ -36,7 +36,7 @@ public class ChunkReader {
             }
             builder.buffer = stream.readBytes(builder.getBodySize());
             readFooter(builder);
-            entries.add(builder.build(stream.getContext()));
+            entries.add(builder.build(stream.context()));
         }
     }
 

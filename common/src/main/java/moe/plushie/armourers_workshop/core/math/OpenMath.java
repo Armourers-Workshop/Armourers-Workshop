@@ -37,6 +37,14 @@ public class OpenMath {
         return value > (double) i ? i + 1 : i;
     }
 
+    public static int roundi(float value) {
+        return Math.round(value);
+    }
+
+    public static int roundi(double value) {
+        return (int) Math.round(value);
+    }
+
 
     public static float sqrt(float r) {
         return (float) Math.sqrt(r);

@@ -59,17 +59,17 @@ public class ChunkParticleData {
 
     public void readFromStream(ChunkInputStream stream) throws IOException {
         var file = stream.readFile();
-        var context = stream.getContext();
+        var context = stream.context();
         var inputStream = new DataInputStream(new ByteBufInputStream(file.getBytes()));
         this.particle = readContentFromStream(file.getName(), new ChunkInputStream() {
 
             @Override
-            public DataInputStream getInputStream() {
+            public DataInputStream inputStream() {
                 return inputStream;
             }
 
             @Override
-            public ChunkContext getContext() {
+            public ChunkContext context() {
                 return context;
             }
         });

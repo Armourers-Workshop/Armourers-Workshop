@@ -76,7 +76,7 @@ public final class SkinSerializerV12 implements IOSerializer {
         if (skin.getPaintData() != null) {
             stream.writeBoolean(true);
             // TODO: Support v2 skin
-            int[] colors = skin.getPaintData().getData();
+            int[] colors = skin.getPaintData().bytes();
             for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(colors[i]);
             }
@@ -97,14 +97,14 @@ public final class SkinSerializerV12 implements IOSerializer {
 
     @Override
     public Skin readFromStream(IInputStream stream, SkinFileOptions options) throws IOException {
-        int fileVersion = options.getFileVersion();
+        var fileVersion = options.getFileVersion();
         if (fileVersion > 12) {
-            String header = stream.readString();
+            var header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
                 ModLog.error("Error loading skin header.");
             }
 
-            String propsHeader = stream.readString();
+            var propsHeader = stream.readString();
             if (!propsHeader.equals(TAG_SKIN_PROPS_HEADER)) {
                 ModLog.error("Error loading skin props header.");
             }
@@ -114,9 +114,9 @@ public final class SkinSerializerV12 implements IOSerializer {
         boolean loadedProps = true;
         IOException e = null;
         if (fileVersion < 12) {
-            String authorName = stream.readString();
-            String customName = stream.readString();
-            String tags = "";
+            var authorName = stream.readString();
+            var customName = stream.readString();
+            var tags = "";
             if (!(fileVersion < 4)) {
                 tags = stream.readString();
             }
@@ -138,12 +138,12 @@ public final class SkinSerializerV12 implements IOSerializer {
         }
 
         if (fileVersion > 12) {
-            String propsFooter = stream.readString();
+            var propsFooter = stream.readString();
             if (!propsFooter.equals(TAG_SKIN_PROPS_FOOTER)) {
                 ModLog.error("Error loading skin props footer.");
             }
 
-            String typeHeader = stream.readString();
+            var typeHeader = stream.readString();
             if (!typeHeader.equals(TAG_SKIN_TYPE_HEADER)) {
                 ModLog.error("Error loading skin type header.");
             }
@@ -162,7 +162,7 @@ public final class SkinSerializerV12 implements IOSerializer {
             if (loadedProps) {
                 skinType = stream.readType(SkinTypes::byName);
             } else {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 do {
                     sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
                 } while (!sb.toString().endsWith("armourers:"));
@@ -179,7 +179,7 @@ public final class SkinSerializerV12 implements IOSerializer {
         }
 
         if (fileVersion > 12) {
-            String typeFooter = stream.readString();
+            var typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_TYPE_FOOTER)) {
                 ModLog.error("Error loading skin type footer.");
             }
@@ -190,41 +190,40 @@ public final class SkinSerializerV12 implements IOSerializer {
         }
 
         if (fileVersion > 12) {
-            String typeFooter = stream.readString();
+            var typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_PAINT_HEADER)) {
                 ModLog.error("Error loading skin paint header.");
             }
         }
 
-        // TODO: support v2 texture
         SkinPaintData paintData = null;
         if (fileVersion > 7) {
-            boolean hasPaintData = stream.readBoolean();
+            var hasPaintData = stream.readBoolean();
             if (hasPaintData) {
                 paintData = SkinPaintData.v1();
-                int[] colors = paintData.getData();
+                int[] colors = paintData.bytes();
                 for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                     colors[i] = stream.readInt();
                 }
             }
         }
         if (fileVersion > 12) {
-            String typeFooter = stream.readString();
+            var typeFooter = stream.readString();
             if (!typeFooter.equals(TAG_SKIN_PAINT_FOOTER)) {
                 ModLog.error("Error loading skin paint footer.");
             }
         }
 
-        int size = stream.readByte();
+        var size = stream.readByte();
         var parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
             if (fileVersion > 12) {
-                String partHeader = stream.readString();
+                var partHeader = stream.readString();
                 if (!partHeader.equals(TAG_SKIN_PART_HEADER)) {
                     ModLog.error("Error loading skin part header.");
                 }
             }
-            SkinPart part = partSerializer.loadSkinPart(stream, fileVersion);
+            var part = partSerializer.loadSkinPart(stream, fileVersion);
             if (fileVersion > 12) {
                 String partFooter = stream.readString();
                 if (!partFooter.equals(TAG_SKIN_PART_FOOTER)) {

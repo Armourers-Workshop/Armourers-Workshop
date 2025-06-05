@@ -3,11 +3,10 @@ package moe.plushie.armourers_workshop.builder.other;
 import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
-import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
-import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -21,6 +20,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
@@ -76,19 +76,15 @@ public final class WorldUtils {
                 }
             }
         }
-        // TODO: support v2 texture
-        // because old skin not support v2 texture format,
-        // so downgrade v2 to v1 texture format.
-        if (paintData != null) {
-            var resolvedPaintData = SkinPaintData.v1();
-            resolvedPaintData.copyFrom(paintData);
-            paintData = resolvedPaintData;
-        }
 
         var builder = new Skin.Builder(skinType);
         builder.properties(skinProps);
         builder.paintData(paintData);
         builder.parts(parts);
+        // the paint data (v2) requires file versions 20.
+        if (paintData != null) {
+            builder.version(SkinSerializer.Versions.V20);
+        }
         var skin = builder.build();
 
         // check if there are any blocks in the build guides.
@@ -268,39 +264,12 @@ public final class WorldUtils {
         targetCube.setBlockStateAndColors(targetState, colors);
     }
 
-    public static void copyPaintData(SkinPaintData paintData, EntityTextureModel.Box srcBox, EntityTextureModel.Box destBox, boolean isMirrorX) {
-        var srcX = srcBox.getBounds().x();
-        var srcY = srcBox.getBounds().y();
-        var srcZ = srcBox.getBounds().z();
-        var destX = destBox.getBounds().x();
-        var destY = destBox.getBounds().y();
-        var destZ = destBox.getBounds().z();
-        var destWidth = destBox.getBounds().width();
-        var colors = new HashMap<OpenVector2i, Integer>();
-        srcBox.forEach((texture, x, y, z, dir) -> {
-            var ix = x - srcX;
-            var iy = y - srcY;
-            var iz = z - srcZ;
-            if (isMirrorX) {
-                ix = destWidth - ix - 1;
-                dir = getResolvedDirection(dir, true);
-            }
-            var newTexture = destBox.get(ix + destX, iy + destY, iz + destZ, dir);
-            if (newTexture == null) {
-                return;
-            }
-            var color = paintData.getColor(texture);
-            if (SkinPaintColor.isOpaque(color)) {
-                // a special case is to use the mirror to swap the part texture,
-                // we will copy the color to the map and then applying it when read finish.
-                colors.put(newTexture, color);
-            }
-        });
-        colors.forEach(paintData::setColor);
+    public static void copyPaintData(SkinPaintData srcData, EntityTextureModel.Box srcBox, SkinPaintData destData, EntityTextureModel.Box destBox, boolean isMirrorX) {
+        srcData.copyTo(srcBox, destData, destBox, isMirrorX);
     }
 
-    public static void clearPaintData(SkinPaintData paintData, EntityTextureModel.Box srcBox) {
-        srcBox.forEach((texturePos, x, y, z, dir) -> paintData.setColor(texturePos, 0));
+    public static void clearPaintData(SkinPaintData srcData, EntityTextureModel.Box srcBox) {
+        srcBox.forEach((texturePos, x, y, z, dir) -> srcData.setColor(texturePos, 0));
     }
 
     public static void replaceCubes(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, CubeReplacingEvent event) {

@@ -94,7 +94,7 @@ public class BakedGeometryQuads {
         if (paintData == null) {
             return allQuads;
         }
-        for (var entry : EntityTextureModel.of(paintData.getWidth(), paintData.getHeight(), false).entrySet()) {
+        for (var entry : EntityTextureModel.of(paintData.width(), paintData.height(), paintData.slim()).entrySet()) {
             var box = entry.getValue();
             var faces = new ArrayList<SkinGeometryFace>();
             box.forEach((texture, x, y, z, dir) -> {
@@ -109,7 +109,7 @@ public class BakedGeometryQuads {
                 faces.add(new SkinCubeFace(id, SkinGeometryTypes.BLOCK_SOLID, SkinGeometryOptions.EMPTY, transform, null, shape, dir, paintColor, 255));
             });
             if (!faces.isEmpty()) {
-                var quads = new BakedGeometryQuads(OpenVoxelShape.box(box.getBounds()), new ColorDescriptor(), new SkinUsedCounter());
+                var quads = new BakedGeometryQuads(OpenVoxelShape.box(box.bounds()), new ColorDescriptor(), new SkinUsedCounter());
                 quads.loadFaces(faces);
                 allQuads.add(entry.getKey(), OpenTransform3f.IDENTITY, quads);
             }

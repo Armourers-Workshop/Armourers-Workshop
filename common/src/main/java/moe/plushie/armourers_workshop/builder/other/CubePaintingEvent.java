@@ -277,7 +277,7 @@ public class CubePaintingEvent {
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
             int rgb = sourceColor.getRGB();
-            if (this.isShadeOnly) {
+            if (isShadeOnly) {
                 rgb = ColorUtils.addShadeNoise(rgb, intensity, getRandom(pos, dir));
             } else {
                 rgb = ColorUtils.addColorNoise(rgb, intensity, getRandom(pos, dir));
@@ -329,8 +329,8 @@ public class CubePaintingEvent {
 
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
-            float[] sourceHSB = ColorUtils.RGBtoHSB(sourceColor.getRGB());
-            float[] destinationHSB = ColorUtils.RGBtoHSB(destinationColor.getRGB());
+            var sourceHSB = ColorUtils.RGBtoHSB(sourceColor.getRGB());
+            var destinationHSB = ColorUtils.RGBtoHSB(destinationColor.getRGB());
             if (!changeHue) {
                 destinationHSB[0] = sourceHSB[0];
             }

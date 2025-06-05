@@ -79,9 +79,10 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
 
     private void saveArmourItemWithProfile(GameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
         var skinParts = new ArrayList<SkinPart>();
-        var skinProperties = new SkinProperties();
+        var properties = new SkinProperties();
         var partIndexs = "";
         SkinPaintData paintData = null;
+        int paintDataVersion = 0;
         int skinIndex = 0;
         for (var itemStack : getInputStacks()) {
             var descriptor = SkinDescriptor.of(itemStack);
@@ -100,14 +101,14 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 var part = skin.getParts().get(partIndex);
                 skinParts.add(part);
             }
-            // TODO: IMP
             if (skin.getPaintData() != null) {
+                var oldPaintData = skin.getPaintData();
                 if (paintData == null) {
-                    paintData = SkinPaintData.v2();
+                    paintData = SkinPaintData.v2(oldPaintData.slim());
                 }
                 for (var partType : skin.getType().getParts()) {
                     if (partType instanceof ISkinPartTypeTextured texType) {
-                        mergePaintPart(texType, paintData, skin.getPaintData());
+                        mergePaintPart(oldPaintData, paintData, texType);
                     }
                 }
             }
@@ -119,9 +120,9 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             // TODO: refactor
             for (var entry : skin.getProperties().entrySet()) {
                 if (entry.getKey().startsWith("wings")) {
-                    skinProperties.put(entry.getKey() + skinIndex, entry.getValue());
+                    properties.put(entry.getKey() + skinIndex, entry.getValue());
                 } else {
-                    skinProperties.put(entry.getKey(), entry.getValue());
+                    properties.put(entry.getKey(), entry.getValue());
                 }
             }
             skinIndex++;
@@ -135,17 +136,17 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             paintData = resolvedPaintData;
         }
         if (!skinParts.isEmpty()) {
-            skinProperties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
-            skinProperties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+            properties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
+            properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
             // in the offline server the `player.getStringUUID()` is not real player uuid.
             if (profile.getId() != null) {
-                skinProperties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
+                properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
             }
-            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.getItemName());
-            skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.getItemFlavour());
+            properties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.getItemName());
+            properties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.getItemFlavour());
             // build
             var builder = new Skin.Builder(SkinTypes.OUTFIT);
-            builder.properties(skinProperties);
+            builder.properties(properties);
             builder.paintData(paintData);
             builder.parts(skinParts);
             var skin = builder.build();
@@ -190,7 +191,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         return Iterables.transform(Iterables.skip(Iterables.limit(slots, slots.size() - 1), 36), Slot::getItem);
     }
 
-    private void mergePaintPart(ISkinPartTypeTextured texType, SkinPaintData desPaint, SkinPaintData srcPaint) {
+    private void mergePaintPart(SkinPaintData srcData, SkinPaintData destData, ISkinPartTypeTextured texType) {
         var pos = texType.getTextureSkinPos();
 
         var width = (texType.getTextureModelSize().x() * 2) + (texType.getTextureModelSize().z() * 2);
@@ -200,9 +201,9 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             for (var iy = 0; iy < height; iy++) {
                 var x = pos.x() + ix;
                 var y = pos.y() + iy;
-                var color = srcPaint.getColor(x, y);
+                var color = srcData.getColor(x, y);
                 if (SkinPaintColor.isOpaque(color)) {
-                    desPaint.setColor(x, y, color);
+                    destData.setColor(x, y, color);
                 }
             }
         }

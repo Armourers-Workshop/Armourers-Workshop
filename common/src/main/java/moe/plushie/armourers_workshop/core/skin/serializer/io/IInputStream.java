@@ -37,22 +37,22 @@ public interface IInputStream {
         return () -> stream;
     }
 
-    DataInputStream getInputStream();
+    DataInputStream inputStream();
 
     default void skipBytes(int len) throws IOException {
-        getInputStream().skipBytes(len);
+        inputStream().skipBytes(len);
     }
 
     default void read(byte[] b) throws IOException {
-        getInputStream().readFully(b);
+        inputStream().readFully(b);
     }
 
     default void read(byte[] b, int off, int len) throws IOException {
-        getInputStream().readFully(b, off, len);
+        inputStream().readFully(b, off, len);
     }
 
     default void read(FloatBuffer buffer) throws IOException {
-        var stream = getInputStream();
+        var stream = inputStream();
         int position = buffer.position();
         int limit = buffer.limit();
         for (int index = position; index < limit; ++index) {
@@ -62,7 +62,7 @@ public interface IInputStream {
 
     default ByteBuf readBytes(int limit) throws IOException {
         // we can't directly create a big buffers, it's easy to be hacked.
-        var inputStream = getInputStream();
+        var inputStream = inputStream();
         var buffers = new ArrayList<byte[]>();
         int remaining = limit;
         while (remaining > 0) {
@@ -75,31 +75,31 @@ public interface IInputStream {
     }
 
     default byte readByte() throws IOException {
-        return getInputStream().readByte();
+        return inputStream().readByte();
     }
 
     default boolean readBoolean() throws IOException {
-        return getInputStream().readBoolean();
+        return inputStream().readBoolean();
     }
 
     default short readShort() throws IOException {
-        return getInputStream().readShort();
+        return inputStream().readShort();
     }
 
     default int readInt() throws IOException {
-        return getInputStream().readInt();
+        return inputStream().readInt();
     }
 
     default long readLong() throws IOException {
-        return getInputStream().readLong();
+        return inputStream().readLong();
     }
 
     default float readFloat() throws IOException {
-        return getInputStream().readFloat();
+        return inputStream().readFloat();
     }
 
     default double readDouble() throws IOException {
-        return getInputStream().readDouble();
+        return inputStream().readDouble();
     }
 
     default int readFixedInt(int usedBytes) throws IOException {
@@ -119,7 +119,7 @@ public interface IInputStream {
     }
 
     default String readString() throws IOException {
-        int size = getInputStream().readUnsignedShort();
+        int size = inputStream().readUnsignedShort();
         return readString(size);
     }
 
@@ -128,12 +128,12 @@ public interface IInputStream {
             return "";
         }
         byte[] bytes = new byte[len];
-        getInputStream().readFully(bytes, 0, len);
+        inputStream().readFully(bytes, 0, len);
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
     default int readVarInt() throws IOException {
-        var inputStream = getInputStream();
+        var inputStream = inputStream();
         byte b;
         int i = 0;
         int j = 0;
@@ -187,7 +187,7 @@ public interface IInputStream {
     }
 
     default OpenVector3i readVector3i() throws IOException {
-        var stream = getInputStream();
+        var stream = inputStream();
         int x = stream.readInt();
         int y = stream.readInt();
         int z = stream.readInt();
@@ -195,7 +195,7 @@ public interface IInputStream {
     }
 
     default OpenVector3f readVector3f() throws IOException {
-        var stream = getInputStream();
+        var stream = inputStream();
         float x = stream.readFloat();
         float y = stream.readFloat();
         float z = stream.readFloat();
@@ -203,7 +203,7 @@ public interface IInputStream {
     }
 
     default OpenRectangle3i readRectangle3i() throws IOException {
-        var stream = getInputStream();
+        var stream = inputStream();
         int x = stream.readInt();
         int y = stream.readInt();
         int z = stream.readInt();
@@ -214,7 +214,7 @@ public interface IInputStream {
     }
 
     default OpenRectangle3f readRectangle3f() throws IOException {
-        var stream = getInputStream();
+        var stream = inputStream();
         float x = stream.readFloat();
         float y = stream.readFloat();
         float z = stream.readFloat();
@@ -257,6 +257,6 @@ public interface IInputStream {
     }
 
     default CompoundTag readCompoundTag() throws IOException {
-        return TagSerializer.parse(getInputStream());
+        return TagSerializer.parse(inputStream());
     }
 }
