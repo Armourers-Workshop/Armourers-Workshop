@@ -10,6 +10,10 @@
     "ForgeCuriosAddonMixin",
     "ForgeTacZeroItemRenderMixin",
     "ForgeClientScreenRenderMixin",
+    "dynamiclight/ForgeRyoamicLightsEntityHandlerMixin",
+    "dynamiclight/ForgeRyoamicLightsItemHandlerMixin",
+    "dynamiclight/ForgeLambDynamicLightsEntityHandlerMixin",
+    "dynamiclight/ForgeLambDynamicLightsItemHandlerMixin",
     "backpack/ForgeMrcrayfishBackpackRendererMixin",
     "backpack/ForgeTravelersBackpackRendererMixin",
     "backpack/ForgeSophisticatedBackpackRendererMixin"

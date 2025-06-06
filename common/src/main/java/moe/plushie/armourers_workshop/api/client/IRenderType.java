@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public interface IRenderType extends Supplier<RenderType> {
 
-    boolean isGrowing();
+    boolean isEmissive();
 
     boolean isTranslucent();
 

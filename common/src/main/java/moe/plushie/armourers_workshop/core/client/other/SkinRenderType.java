@@ -67,10 +67,10 @@ public abstract class SkinRenderType implements IRenderType {
         return BLOCK_FACE_SOLID;
     }
 
-    public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isGrowing, boolean isCull) {
+    public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isEmissive, boolean isCull) {
         // select a variant container.
         var variants = CUSTOM_FACE_SOLID_VARIANTS;
-        if (isGrowing) {
+        if (isEmissive) {
             variants = CUSTOM_FACE_LIGHTING_VARIANTS;
         }
         var key = String.format("%s/%s", name, texture.getPath());
@@ -83,9 +83,9 @@ public abstract class SkinRenderType implements IRenderType {
         });
     }
 
-    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isGrowing) {
+    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isEmissive) {
         // ..
-        if (isGrowing) {
+        if (isEmissive) {
             if (type == SkinGeometryTypes.CUBE) {
                 return customFace("aw_cube_lighting", SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, texture, true, false);
             }
@@ -153,37 +153,6 @@ public abstract class SkinRenderType implements IRenderType {
         }
         return 0;
     }
-
-//    public static boolean isGrowing(IRenderType renderType) {
-//        // do fast hitting.
-//        if (renderType == BLOCK_FACE_LIGHTING || renderType == BLOCK_FACE_LIGHTING_TRANSLUCENT) {
-//            return true;
-//        }
-//        // do fast missing.
-//        if (renderType == BLOCK_FACE_SOLID || renderType == BLOCK_FACE_TRANSLUCENT) {
-//            return false;
-//        }
-//        return CUSTOM_FACE_LIGHTING_VARIANTS.containsValue(renderType);
-//    }
-//
-//    public static boolean isTranslucent(IRenderType renderType) {
-//        // do fast hitting.
-//        if (renderType == BLOCK_FACE_TRANSLUCENT || renderType == BLOCK_FACE_LIGHTING_TRANSLUCENT) {
-//            return true;
-//        }
-//        // do fast missing.
-//        if (renderType == BLOCK_FACE_SOLID || renderType == BLOCK_FACE_LIGHTING) {
-//            return false;
-//        }
-//        if (DataContainer.get(renderType, USING_TRANSLUCENT)) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    public static boolean isUsingIndex(IRenderType renderType) {
-//        return DataContainer.get(renderType, USING_INDEX);
-//    }
 
     private static IRenderTypeBuilder _entity(SkinVertexFormat format, IResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();

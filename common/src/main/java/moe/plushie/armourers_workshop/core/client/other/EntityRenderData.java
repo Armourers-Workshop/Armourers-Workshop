@@ -39,6 +39,7 @@ public class EntityRenderData extends EntitySlotsHandler<Entity> {
         return super.isLimitLimbs();
     }
 
+
     public void setRenderPatch(EntityRenderPatch<? super Entity> renderPatch) {
         this.renderPatch = renderPatch;
     }

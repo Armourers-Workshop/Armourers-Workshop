@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class AbstractRenderType extends SkinRenderType implements IAssociatedContainerProvider {
 
-    private boolean isGrowing = false;
+    private boolean isEmissive = false;
     private boolean isOutline = false;
 
     private Target target = Target.MAIN;
@@ -56,8 +56,8 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
     }
 
     @Override
-    public boolean isGrowing() {
-        return isGrowing;
+    public boolean isEmissive() {
+        return isEmissive;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
 
         @Override
         public IRenderTypeBuilder emissive() {
-            updater.add(t -> t.isGrowing = true);
+            updater.add(t -> t.isEmissive = true);
             return this;
         }
 

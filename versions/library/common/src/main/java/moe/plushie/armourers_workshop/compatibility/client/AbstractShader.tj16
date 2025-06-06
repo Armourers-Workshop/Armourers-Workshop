@@ -71,7 +71,7 @@ public class AbstractShader extends Shader {
         }
 
         // when the outline color required, we need to modify the lightmap texture attribute by `glVertexAttribPointer`.
-        if (!object.isGrowing()) {
+        if (!object.isEmissive()) {
             var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.getLightmap());
             lightBuffer.ensureCapacity(maxVertexCount);
             lightBuffer.bind();

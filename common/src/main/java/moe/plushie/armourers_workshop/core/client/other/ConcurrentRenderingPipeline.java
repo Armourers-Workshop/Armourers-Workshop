@@ -189,8 +189,8 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public boolean isGrowing() {
-            return compiledTask.isGrowing;
+        public boolean isEmissive() {
+            return compiledTask.isEmissive;
         }
 
         @Override

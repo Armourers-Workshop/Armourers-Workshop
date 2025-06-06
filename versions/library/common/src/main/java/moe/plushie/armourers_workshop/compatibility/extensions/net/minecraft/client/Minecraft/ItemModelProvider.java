@@ -1,0 +1,21 @@
+package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.client.Minecraft;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.18, )")
+@Extension
+public class ItemModelProvider {
+
+    public static BakedModel getItemModel(@This Minecraft minecraft, ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity, int flags) {
+        return minecraft.getItemRenderer().getModel(itemStack, level, entity, flags);
+    }
+}

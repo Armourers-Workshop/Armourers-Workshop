@@ -227,6 +227,11 @@ public final class SkinBakery implements ISkinLibraryListener {
             bakedPart.getQuads().forEach((renderType, it) -> renderInfo.add(renderType));
         });
 
+        // collect light info from the all child parts.
+        if (renderInfo.hasEmissive() && ModConfig.enableDynamicLightHandler()) {
+            renderInfo.setLuminance(BakedLuminanceCalculator.apply(bakedParts));
+        }
+
         usedCounter.addPaintType(colorInfo.getPaintTypes());
 
         var totalTime = System.currentTimeMillis() - startTime;
@@ -242,7 +247,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         complete.accept(bakedSkin);
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
 
-        // if bake speed too fast, cause system I/O too high.
+        // if bake speed too fast, will cause system I/O too high.
         if (totalTime < 250) {
             sleep(100);
         }

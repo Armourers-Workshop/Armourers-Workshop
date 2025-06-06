@@ -6,6 +6,9 @@ public class BakedRenderInfo {
 
     private boolean hasSolid = false;
     private boolean hasTranslucent = false;
+    private boolean hasEmissive = false;
+
+    private int luminance = 0;
 
     public void add(IRenderType renderType) {
         if (renderType.isTranslucent()) {
@@ -13,6 +16,17 @@ public class BakedRenderInfo {
         } else {
             hasSolid = true;
         }
+        if (renderType.isEmissive()) {
+            hasEmissive = true;
+        }
+    }
+
+    public void setLuminance(int luminance) {
+        this.luminance = luminance;
+    }
+
+    public int getLuminance() {
+        return luminance;
     }
 
     public boolean hasSolid() {
@@ -21,5 +35,9 @@ public class BakedRenderInfo {
 
     public boolean hasTranslucent() {
         return hasTranslucent;
+    }
+
+    public boolean hasEmissive() {
+        return hasEmissive;
     }
 }

@@ -27,6 +27,8 @@ dependencies {
     modOptionalCompileOnly project.mrcrayfishbackpack_api_version
     modOptionalCompileOnly project.travelersbackpack_api_version
     modOptionalCompileOnly project.sophisticatedbackpack_api_version
+    modOptionalCompileOnly project.ryoamicLights_api_version
+    modOptionalCompileOnly project.lambdynamiclights_api_version
 
     //modLocalRuntime "maven.modrinth:sqlite-jdbc:3.41.2.1+20230506"
     //modLocalRuntime "maven.modrinth:mysql-jdbc:8.0.33+20230506"

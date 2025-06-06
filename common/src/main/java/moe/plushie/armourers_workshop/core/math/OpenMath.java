@@ -160,6 +160,21 @@ public class OpenMath {
         return value;
     }
 
+    public static float min(float a, float b, float c) {
+        return Math.min(a, Math.min(b, c));
+    }
+
+    public static double min(double a, double b, double c) {
+        return Math.min(a, Math.min(b, c));
+    }
+
+    public static float max(float a, float b, float c) {
+        return Math.max(a, Math.max(b, c));
+    }
+
+    public static double max(double a, double b, double c) {
+        return Math.max(a, Math.max(b, c));
+    }
 
     public static float lerp(float position, float a, float b) {
         return fma(position, b - a, a);

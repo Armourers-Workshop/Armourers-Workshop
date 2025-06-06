@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +20,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
-public class SkinOverriddenManager {
+public class SkinOverriddenManager<T> {
 
     private static final List<EquipmentSlot> ARMOUR_EQUIPMENT_SLOTS = Collections.immutableList(builder -> {
         builder.add(EquipmentSlot.HEAD);
@@ -140,35 +139,35 @@ public class SkinOverriddenManager {
         disabledEquipmentSlotsByProperties.clear();
     }
 
-    public void willRender(Entity entity) {
+    public void willRender(T source) {
         for (var slotType : ARMOUR_EQUIPMENT_SLOTS) {
             if (!overrideEquipment(slotType) || disabledEquipmentItems.containsKey(slotType)) {
                 continue;
             }
-            var itemStack = setItem(entity, slotType, ItemStack.EMPTY);
+            var itemStack = setItem(source, slotType, ItemStack.EMPTY);
             disabledEquipmentItems.put(slotType, itemStack);
         }
     }
 
-    public void didRender(Entity entity) {
+    public void didRender(T source) {
         for (var slotType : ARMOUR_EQUIPMENT_SLOTS) {
             if (!disabledEquipmentItems.containsKey(slotType)) {
                 continue;
             }
             var itemStack = disabledEquipmentItems.remove(slotType);
-            setItem(entity, slotType, itemStack);
+            setItem(source, slotType, itemStack);
         }
     }
 
-    private ItemStack setItem(Entity entity, EquipmentSlot slotType, ItemStack itemStack) {
+    private ItemStack setItem(T source, EquipmentSlot slotType, ItemStack itemStack) {
         // for the player, using `setItemSlot` will cause play sound.
-        if (entity instanceof Player player) {
+        if (source instanceof Player player) {
             var inventory = player.getInventory();
             var itemStack1 = inventory.armor.get(slotType.getIndex());
             inventory.armor.set(slotType.getIndex(), itemStack);
             return itemStack1;
         }
-        if (entity instanceof LivingEntity livingEntity) {
+        if (source instanceof LivingEntity livingEntity) {
             var itemStack1 = livingEntity.getItemBySlot(slotType);
             livingEntity.setItemSlot(slotType, itemStack);
             return itemStack1;

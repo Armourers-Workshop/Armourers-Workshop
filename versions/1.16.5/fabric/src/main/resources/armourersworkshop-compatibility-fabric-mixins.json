@@ -8,6 +8,10 @@
     "FabricClientScreenRenderMixin",
     "FabricScreenMixin",
     "FabricTrinketsAddonMixin",
+    "dynamiclight/FabricRyoamicLightsEntityHandlerMixin",
+    "dynamiclight/FabricRyoamicLightsItemHandlerMixin",
+    "dynamiclight/FabricLambDynamicLightsEntityHandlerMixin",
+    "dynamiclight/FabricLambDynamicLightsItemHandlerMixin",
     "backpack/FabricTravelersBackpackRendererMixin"
   ],
   "mixins": [

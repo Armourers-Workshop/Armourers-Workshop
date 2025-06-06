@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.mixin;
 
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.init.client.ClientDynamicLightHandler;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;
@@ -8,11 +10,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Available("[1.16, )")
 @Mixin(ClientLevel.class)
 public class ClientEntityTickMixin {
+
+    @Inject(method = "tickNonPassenger", at = @At("HEAD"))
+    private void aw2$tickNonPassengerPre(Entity entity, CallbackInfo ci) {
+        ClientDynamicLightHandler.startTick(entity);
+    }
 
     @Inject(method = "tickNonPassenger", at = @At("RETURN"))
     private void aw2$tickNonPassenger(Entity entity, CallbackInfo ci) {
         ClientWardrobeHandler.tick(entity);
+    }
+
+    @Inject(method = "tickNonPassenger", at = @At("TAIL"))
+    private void aw2$tickNonPassengerPost(Entity entity, CallbackInfo ci) {
+        ClientDynamicLightHandler.endTick(entity);
     }
 }

@@ -10,6 +10,11 @@
     "FabricGuiGraphicsMixin",
     "FabricRecipeComponentMixin",
     "FabricTrinketsAddonMixin",
+    "dynamiclight/FabricRyoamicLightsEntityHandlerMixin",
+    "dynamiclight/FabricRyoamicLightsItemHandlerMixin",
+    "dynamiclight/FabricLambDynamicLightsEntityHandlerMixin",
+    "dynamiclight/FabricLambDynamicLightsItemHandlerMixin",
+    "dynamiclight/FabricSodiumDynamicLightsItemHandlerMixin",
     "backpack/FabricMrcrayfishBackpackRendererMixin",
     "backpack/FabricTravelersBackpackRendererMixin",
     "backpack/FabricSophisticatedBackpackRendererMixin"

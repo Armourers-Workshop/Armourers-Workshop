@@ -38,6 +38,7 @@ public class ModConfigSpec {
                 define("multipassSkinRendering", true, "When enabled skin will render in multiple passes to reduce visual artifacts.", "Disabling this will improve skin rendering performance at the cost of visual quality.").bind(v -> multipassSkinRendering = v, () -> multipassSkinRendering);
                 defineInRange("lodDistance", 32.0, 8.0, 128.0, "Distance away that skins will have lod applied to them.").bind(v -> lodDistance = v, () -> lodDistance);
                 defineInRange("maxLodLevels", 4, 0, 4, "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.").bind(v -> maxLodLevels = v, () -> maxLodLevels);
+                defineInRange("skinDynamicLight", -1, -1, 15, "Determines how luminance of dynamic lighting when the skin contains growing channels.", "-1 = auto (based skin cubes)", "0 = disabled", "1 ~ 15 = fixed luminance").bind(v -> skinDynamicLight = v, () -> skinDynamicLight);
             });
             defineCategory("cache", "Change (memory use/IO access) ratio by changing setting in this category.", () -> {
                 // Skin cache

@@ -25,6 +25,7 @@ public class ModConfig {
         public static double lodDistance = 32;
         public static boolean multipassSkinRendering = true;
         public static int maxLodLevels = 4;
+        public static int skinDynamicLight = 14; // -1 auto, 0 disable, 1-15 fixed
         public static int prefersSeatHoldingTick = 60;
 
         // Misc
@@ -57,6 +58,7 @@ public class ModConfig {
         public static float ploOffset = -0.01f;
 
         public static boolean enablePartSubdivide = false;
+        public static boolean enableDynamicLightHandler = false;
         public static boolean enableShaderDebug = false;
         public static boolean enableResourceDebug = false;
         public static boolean enableAnimationDebug = false;
@@ -208,5 +210,9 @@ public class ModConfig {
         }
         // 0 auto(reserve), 1 disable, 2 enable
         return flags == 2;
+    }
+
+    public static boolean enableDynamicLightHandler() {
+        return Client.enableDynamicLightHandler && Client.skinDynamicLight != 0;
     }
 }

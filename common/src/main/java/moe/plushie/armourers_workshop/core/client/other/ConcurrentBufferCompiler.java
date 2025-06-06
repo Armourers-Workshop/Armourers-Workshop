@@ -238,7 +238,7 @@ public class ConcurrentBufferCompiler {
 
     public static class Pass {
 
-        final boolean isGrowing;
+        final boolean isEmissive;
         final boolean isTranslucent;
         final boolean isOutline;
         final boolean isUsingIndex;
@@ -264,7 +264,7 @@ public class ConcurrentBufferCompiler {
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
-            this.isGrowing = renderType.isGrowing();
+            this.isEmissive = renderType.isEmissive();
             this.isTranslucent = renderType.isTranslucent();
             this.isOutline = isOutline;
             this.isUsingIndex = renderType.mode() == IVertexFormat.Mode.QUADS;

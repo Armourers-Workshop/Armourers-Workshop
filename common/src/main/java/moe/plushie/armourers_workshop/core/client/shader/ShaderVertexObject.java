@@ -36,7 +36,7 @@ public interface ShaderVertexObject {
 
     IRenderType getType();
 
-    boolean isGrowing();
+    boolean isEmissive();
 
     boolean isTranslucent();
 

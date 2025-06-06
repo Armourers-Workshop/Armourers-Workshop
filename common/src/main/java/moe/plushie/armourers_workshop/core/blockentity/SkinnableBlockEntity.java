@@ -348,7 +348,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         return getProperty(SkinProperty.BLOCK_LADDER);
     }
 
-    public boolean isGrowing() {
+    public boolean isEmissive() {
         return getProperty(SkinProperty.BLOCK_GLOWING);
     }
 

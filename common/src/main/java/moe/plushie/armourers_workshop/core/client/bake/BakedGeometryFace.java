@@ -232,6 +232,14 @@ public class BakedGeometryFace {
         return priority;
     }
 
+    public ITransform3f getTransform() {
+        return transform;
+    }
+
+    public List<? extends SkinGeometryVertex> getVertices() {
+        return vertices;
+    }
+
     public IRenderType getRenderType() {
         return renderType;
     }

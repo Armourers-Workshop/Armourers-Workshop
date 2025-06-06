@@ -1,4 +1,5 @@
 # release mod_version "minecraft_version"
+set -e
 
 mod_version=$1
 minecraft_supportd_versions="1.16.5 1.18.2 1.19.2 1.20.1 1.21.1"
@@ -12,8 +13,6 @@ if [[ "$1" == "" ]]; then
   done
   exit 0
 fi
-
-set -e
 
 mkdir -p "$release_path"
 mkdir -p "$release_path/dev"

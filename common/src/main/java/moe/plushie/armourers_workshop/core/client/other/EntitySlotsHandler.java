@@ -65,7 +65,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
 
     private final Ticket loadTicket = Ticket.wardrobe();
     private final AnimationManager animationManager;
-    private final SkinOverriddenManager overriddenManager;
+    private final SkinOverriddenManager<T> overriddenManager;
+    private final SkinLuminanceManager<T> luminanceManager;
 
     private final DataContainer dataStorage = new DataContainer();
     private final SkinAttachmentContainer attachmentStorage = new SkinAttachmentContainer();
@@ -82,7 +83,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         this.wardrobeProvider = wardrobeProvider;
         // initialize the animation manager and overridden manager.
         this.animationManager = new AnimationManager(entity);
-        this.overriddenManager = new SkinOverriddenManager();
+        this.overriddenManager = new SkinOverriddenManager<>();
+        this.luminanceManager = new SkinLuminanceManager<>();
     }
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
@@ -114,6 +116,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         wardrobeProvider.load(wardrobe, this::loadSkin);
 
         loadSkinInfos();
+        loadSkinLightInfos(source);
         loadArmourEquipments(source);
         loadSkinAnimations(source);
         loadMissingSkinIfNeeded();
@@ -191,6 +194,15 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             }
             activeSkins.put(entry.getDescriptor(), skin);
         }
+    }
+
+    private void loadSkinLightInfos(T source) {
+        int luminance = 0;
+        for (var skin : activeSkins.values()) {
+            var info = skin.getRenderInfo();
+            luminance = Math.max(luminance, info.getLuminance());
+        }
+        luminanceManager.update(luminance);
     }
 
     private void loadArmourEquipments(T source) {
@@ -310,8 +322,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return isLimitLimbs;
     }
 
-    public SkinOverriddenManager getOverriddenManager() {
+    public SkinOverriddenManager<T> getOverriddenManager() {
         return overriddenManager;
+    }
+
+    public SkinLuminanceManager<T> getLuminanceManager() {
+        return luminanceManager;
     }
 
     public boolean shouldRenderExtra() {

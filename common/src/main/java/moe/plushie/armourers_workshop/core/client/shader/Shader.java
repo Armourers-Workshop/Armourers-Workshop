@@ -122,7 +122,7 @@ public abstract class Shader {
     protected OpenMatrix4f getLightmapTextureMatrix(ShaderVertexObject object) {
         // We specified the fully lighting when create the vertex,
         // so we don't need any change when growing is required.
-        if (object.isGrowing()) {
+        if (object.isEmissive()) {
             return OpenMatrix4f.identity();
         }
         // a special matrix, function is reset location of the texture.
