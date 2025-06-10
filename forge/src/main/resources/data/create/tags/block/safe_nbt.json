@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "armourers_workshop:skinnable",
+    "armourers_workshop:hologram-projector",
+    "armourers_workshop:dye-table",
+    "armourers_workshop:skinning-table",
+    "armourers_workshop:skin-library-creative",
+    "armourers_workshop:skin-library",
+    "armourers_workshop:skin-library-global",
+    "armourers_workshop:outfit-maker",
+    "armourers_workshop:colour-mixer",
+    "armourers_workshop:armourer",
+    "armourers_workshop:advanced-skin-builder",
+    "armourers_workshop:skin-cube",
+    "armourers_workshop:skin-cube-glass",
+    "armourers_workshop:skin-cube-glowing",
+    "armourers_workshop:skin-cube-glass-glowing",
+    "armourers_workshop:bounding-box"
+  ]
+}
