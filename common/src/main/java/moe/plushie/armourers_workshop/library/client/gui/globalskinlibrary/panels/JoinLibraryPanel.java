@@ -57,7 +57,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         label.setFrame(contentView.bounds().insetBy(5, 5, 5, 5));
         label.setNumberOfLines(0);
         label.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
-        label.setTextColor(new UIColor(0x333333));
+        label.setTextColor(new UIColor(0xff333333));
         label.setDelegate(this);
         contentView.addSubview(label);
 

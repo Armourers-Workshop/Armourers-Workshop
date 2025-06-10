@@ -228,7 +228,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         var reportTypes = ReportType.values();
         var dialog = new ReportDialog();
         dialog.setTitle(getDisplayText("dialog.report_skin.title"));
-        dialog.setMessageColor(new UIColor(0x7f0000));
+        dialog.setMessageColor(new UIColor(0xff7f0000));
         dialog.setMessage(getDisplayText("dialog.report_skin.label.report_warning"));
         dialog.setPlaceholder(getDisplayText("dialog.report_skin.optional_message"));
         dialog.setReportTypes(Collections.compactMap(reportTypes, t -> new NSString(TranslateUtils.title(t.getLangKey()))));

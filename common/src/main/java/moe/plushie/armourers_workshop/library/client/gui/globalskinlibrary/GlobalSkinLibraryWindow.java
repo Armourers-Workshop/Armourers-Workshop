@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary;
 
+import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
@@ -65,8 +66,9 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     public GlobalSkinLibraryWindow(GlobalSkinLibraryMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
+        this.setContents(new CGGradient(UIColor.rgba(0xc0101010), UIColor.rgba(0xd0101010)));
         this.setFrame(new CGRect(0, 0, 640, 480));
-        this.titleView.setTextColor(new UIColor(0xCCCCCC));
+        this.titleView.setTextColor(new UIColor(0xffcccccc));
         this.inventoryView.setHidden(true);
     }
 
@@ -130,6 +132,11 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         }
         GlobalSkinLibrary.getInstance().auth2();
         panels.forEach(AbstractLibraryPanel::tick);
+    }
+
+    @Override
+    public boolean shouldRenderBackground() {
+        return false;
     }
 
     private <T extends AbstractLibraryPanel> T addPanel(Supplier<T> provider) {

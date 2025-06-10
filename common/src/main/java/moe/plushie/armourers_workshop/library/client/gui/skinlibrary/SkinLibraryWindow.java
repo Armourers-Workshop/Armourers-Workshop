@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.client.gui.skinlibrary;
 
+import com.apple.library.coregraphics.CGGradient;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
@@ -89,6 +90,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
 
     public SkinLibraryWindow(SkinLibraryMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
+        this.setContents(new CGGradient(UIColor.rgba(0xc0101010), UIColor.rgba(0xd0101010)));
         this.setFrame(new CGRect(0, 0, 640, 480));
         this.libraryManager.addListener(this);
         this.selectedLibrary = libraryManager.getLocalSkinLibrary();
@@ -108,7 +110,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         super.init();
         var rect = bounds().insetBy(23, 5, 5, 5);
 
-        titleView.setTextColor(new UIColor(0xcccccc));
+        titleView.setTextColor(new UIColor(0xffcccccc));
 
         setupInputView(rect);
         setupInventoryView(rect);
@@ -269,6 +271,11 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         });
     }
 
+    @Override
+    public boolean shouldRenderBackground() {
+        return false;
+    }
+
     public void reloadStatus() {
         boolean isFile = selectedFile != null && (!selectedFile.isDirectory() || !selectedFile.getName().equals(".."));
         boolean isLoadable = isFile && !selectedFile.isDirectory();
@@ -343,7 +350,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     private void addFolder(UIControl sender) {
         var dialog = new InputDialog();
         dialog.setTitle(getDisplayText("dialog.newFolder.title"));
-        dialog.setMessageColor(new UIColor(0xff5555));
+        dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setPlaceholder(getDisplayText("dialog.newFolder.enterFolderName"));
         dialog.setMessage(getDisplayText("dialog.newFolder.invalidFolderName"));
         dialog.setConfirmText(getDisplayText("dialog.newFolder.create"));
@@ -414,7 +421,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         }
         var dialog = new ConfirmDialog();
         dialog.setTitle(getDisplayText("dialog.delete.title"));
-        dialog.setMessageColor(new UIColor(0xff5555));
+        dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.delete"));
         dialog.setCancelText(getDisplayText("dialog.delete.close"));
         dialog.setMessage(getDisplayText("dialog.delete.deleteFile", selectedFile.getName()));
@@ -448,7 +455,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         var dialog = new ConfirmDialog();
         dialog.setTitle(getDisplayText("dialog.overwrite.title"));
         dialog.setMessage(getDisplayText("dialog.overwrite.overwriteFile", FileUtils.getBaseName(path)));
-        dialog.setMessageColor(new UIColor(0xff5555));
+        dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.overwrite.ok"));
         dialog.setCancelText(getDisplayText("dialog.overwrite.close"));
         dialog.showInView(this, () -> {
@@ -462,7 +469,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         var dialog = new ConfirmDialog();
         dialog.setTitle(NSString.localizedString("common.text.error"));
         dialog.setMessage(message);
-        dialog.setMessageColor(new UIColor(0xff5555));
+        dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.showInView(this);
     }
 

@@ -60,7 +60,7 @@ public class MenuWindow<M extends AbstractContainerMenu> extends UIWindow implem
     }
 
     protected void setBackgroundView(UIImage image) {
-        UIView backgroundView = new UIView(bounds());
+        var backgroundView = new UIView(bounds());
         backgroundView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         backgroundView.setContents(image);
         insertViewAtIndex(backgroundView, 0);

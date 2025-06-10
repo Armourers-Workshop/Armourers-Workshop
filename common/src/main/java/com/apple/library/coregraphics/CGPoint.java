@@ -8,6 +8,7 @@ import java.util.Objects;
 public class CGPoint implements InterpolableImpl<CGPoint> {
 
     public static final CGPoint ZERO = new CGPoint(0, 0);
+    public static final CGPoint ONE = new CGPoint(1, 1);
 
     public float x;
     public float y;

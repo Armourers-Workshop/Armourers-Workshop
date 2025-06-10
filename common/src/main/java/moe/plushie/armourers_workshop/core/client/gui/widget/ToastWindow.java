@@ -33,7 +33,7 @@ public class ToastWindow extends UIWindow {
         this.setContents(UIImage.of(getDefaultTexture()).resizable(160, 32).build());
         this.titleLabel.setFrame(new CGRect(30, 7, frame.width - 30 - 5, 9));
         this.titleLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
-        this.titleLabel.setTextColor(new UIColor(0xffff00));
+        this.titleLabel.setTextColor(new UIColor(0xffffff00));
         this.addSubview(titleLabel);
         this.messageLabel.setFrame(new CGRect(30, 18, frame.width - 30 - 5, 9));
         this.messageLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);

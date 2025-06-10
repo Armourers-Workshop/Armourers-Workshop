@@ -113,7 +113,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
             offset = 0;
         }
         leftCard.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleHeight);
-        leftCard.setBackgroundColor(new UIColor(0x1d1d1d));
+        leftCard.setBackgroundColor(new UIColor(0xff1d1d1d));
         leftCard.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
         leftCard.setFrame(new CGRect(offset, 0, CARD_WIDTH, rect.height));
         addSubview(leftCard);
@@ -125,7 +125,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
             offset = CARD_WIDTH;
         }
         rightCard.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
-        rightCard.setBackgroundColor(new UIColor(0x1d1d1d));
+        rightCard.setBackgroundColor(new UIColor(0xff1d1d1d));
         rightCard.setTransform(CGAffineTransform.createScale(0.5f, 0.5f));
         rightCard.setFrame(new CGRect(rect.width - offset, 0, CARD_WIDTH, rect.height));
         addSubview(rightCard);

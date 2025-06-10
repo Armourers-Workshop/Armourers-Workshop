@@ -32,7 +32,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
         dialog.setTitle(new NSString(alertPacket.getTitle()));
         dialog.setMessage(new NSString(alertPacket.getMessage()));
         if (alertPacket.getType() == 1) {
-            dialog.setMessageColor(new UIColor(0xff5555));
+            dialog.setMessageColor(new UIColor(0xffff5555));
         }
         dialog.setConfirmText(new NSString(alertPacket.getConfirm()));
         dialog.sizeToFit();
