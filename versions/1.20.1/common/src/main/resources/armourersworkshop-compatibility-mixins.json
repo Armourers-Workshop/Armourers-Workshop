@@ -21,6 +21,7 @@
     "ModelBakeryMixin$BakeryPatch",
     "CameraMixin",
     "SoundManagerMixin",
+    "DynamicLightsOptifineMixin",
     "ClientEntityTickMixin",
     "patch/ArrowRendererMixin",
     "patch/BoatRendererMixin",
