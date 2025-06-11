@@ -25,7 +25,7 @@ public class ReportList extends UIScrollView {
     private final ArrayList<GuiDetailListItem> items = new ArrayList<>();
 
     protected int selectedIndex;
-    protected int contentHeight = 0;
+    protected float contentHeight = 0;
 
     protected UIFont font;
     protected IEventListener listener;
@@ -72,8 +72,8 @@ public class ReportList extends UIScrollView {
     }
 
     public void addItem(String... names) {
-        float width = bounds().width;
-        GuiDetailListItem item = new GuiDetailListItem(names);
+        var width = bounds().width();
+        var item = new GuiDetailListItem(names);
         item.layout(0, contentHeight, width - 2, 10);
         items.add(item);
         addSubview(item);
@@ -173,7 +173,7 @@ public class ReportList extends UIScrollView {
         return this;
     }
 
-    public int getContentHeight() {
+    public float getContentHeight() {
         return contentHeight;
     }
 
@@ -235,18 +235,18 @@ public class ReportList extends UIScrollView {
 
         public void layout(float x, float y, float itemWidth, float itemHeight) {
             wrappedTextLines.clear();
-            int xOffset = 0;
+            var xOffset = 0f;
             for (int i = 0; i < names.size(); i++) {
-                float columnWidth = 10;
-                NSString name = names.get(i);
-                GuiDetailListColumn column = getColumn(i);
+                var columnWidth = 10f;
+                var name = names.get(i);
+                var column = getColumn(i);
                 if (column != null) {
                     columnWidth = column.getWidth(itemWidth);
                     if (columnWidth == -1) {
                         columnWidth = itemWidth - 2 - xOffset;
                     }
                     if (!name.isEmpty()) {
-                        List<NSString> lines = name.split(font, columnWidth);
+                        var lines = name.split(font, columnWidth);
                         itemHeight = Math.max(itemHeight, lines.size() * 10);
                         wrappedTextLines.put(i, lines);
                     }
@@ -262,20 +262,20 @@ public class ReportList extends UIScrollView {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            int xOffset = 0;
+            var xOffset = 0f;
             for (int i = 0; i < names.size(); i++) {
-                float columnWidth = 10;
-                GuiDetailListColumn column = getColumn(i);
+                var columnWidth = 10f;
+                var column = getColumn(i);
                 if (column != null) {
                     columnWidth = column.getWidth(contentWidth);
                     if (columnWidth == -1) {
                         columnWidth = contentWidth - 2 - xOffset;
                     }
                     context.fillRect(xOffset, 0, xOffset + columnWidth, contentHeight, 0xCC808080);
-                    List<NSString> lines = wrappedTextLines.get(i);
+                    var lines = wrappedTextLines.get(i);
                     if (lines != null) {
                         int dy = 0;
-                        for (NSString line : lines) {
+                        for (var line : lines) {
                             context.drawText(line, 1 + xOffset, 1 + dy, 0xffffff);
                             dy += 10;
                         }

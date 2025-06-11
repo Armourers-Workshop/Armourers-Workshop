@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.data.PlayerTexture;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class OpenModelPartBuilder {
     }
 
     public static OpenModelPartBuilder player() {
-        return of(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT);
+        return of(EntityTextureModel.TEXTURE_WIDTH, EntityTextureModel.TEXTURE_HEIGHT);
     }
 
     public OpenModelPartBuilder uv(int u, int v) {

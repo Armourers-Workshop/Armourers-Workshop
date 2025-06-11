@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -152,7 +153,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {
             exception.printStackTrace();
-            complete.throwing(exception);
+            complete.abort(exception);
         }
     }
 
@@ -249,14 +250,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         // if bake speed too fast, will cause system I/O too high.
         if (totalTime < 250) {
-            sleep(100);
-        }
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception ignored) {
+            Executors.sleep(100);
         }
     }
 

@@ -20,6 +20,10 @@ import java.util.function.ToIntFunction;
 
 public class EntityTextureModel {
 
+    public static final int TEXTURE_WIDTH = 64;
+    public static final int TEXTURE_HEIGHT = 64;
+    public static final int TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
+
     public static final int TEXTURE_OLD_WIDTH = 64;
     public static final int TEXTURE_OLD_HEIGHT = 32;
     public static final int TEXTURE_OLD_SIZE = TEXTURE_OLD_WIDTH * TEXTURE_OLD_HEIGHT;

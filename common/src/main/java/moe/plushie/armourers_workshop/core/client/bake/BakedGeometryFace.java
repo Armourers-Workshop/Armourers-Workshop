@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform3f;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
@@ -125,7 +125,7 @@ public class BakedGeometryFace {
 
 
     private SkinPaintColor resolveTextureColor(OpenResourceLocation texture, SkinPartType partType) {
-        var bakedTexture = PlayerTextureLoader.getInstance().getTextureModel(texture);
+        var bakedTexture = EntityTextureLoader.getInstance().getTextureModel(texture);
         if (bakedTexture != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
             var shape = cubeVertex.getBoundingBox();
             var direction = cubeVertex.getDirection();

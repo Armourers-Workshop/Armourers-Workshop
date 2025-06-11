@@ -124,7 +124,7 @@ public class UIWindow extends UIView {
         _dispatcher(event).remove(target);
         // when remove mouse move event, the first responder maybe changes.
         if (event == UIControl.Event.MOUSE_MOVED) {
-            UIWindowManager windowManager = getWindowManager();
+            var windowManager = getWindowManager();
             if (windowManager != null) {
                 windowManager._setNeedsUpdateFocus();
             }
@@ -140,7 +140,7 @@ public class UIWindow extends UIView {
     }
 
     public UIView firstTooltipResponder() {
-        UIView view = hoveredTooltipResponder;
+        var view = hoveredTooltipResponder;
         while (view != null) {
             if (view.tooltip() != null) {
                 return view;
@@ -190,7 +190,7 @@ public class UIWindow extends UIView {
 
     private void _removeAllSubviews(UIView view) {
         while (!view.subviews().isEmpty()) {
-            UIView subview = view.subviews().get(0);
+            var subview = view.subviews().get(0);
             subview.removeFromSuperview();
             _removeAllSubviews(subview);
         }
@@ -541,7 +541,7 @@ public class UIWindow extends UIView {
                 var clipBox = UIScreen.convertRectFromView(bounds, view);
                 var cornerRadius = layer.cornerRadius();
                 if (cornerRadius != 0) {
-                    CGRect cornerBox = UIScreen.convertRectFromView(new CGRect(0, 0, cornerRadius, cornerRadius), view);
+                    var cornerBox = UIScreen.convertRectFromView(new CGRect(0, 0, cornerRadius, cornerRadius), view);
                     context.addClip(clipBox, cornerBox.width());
                 } else {
                     context.addClip(clipBox);

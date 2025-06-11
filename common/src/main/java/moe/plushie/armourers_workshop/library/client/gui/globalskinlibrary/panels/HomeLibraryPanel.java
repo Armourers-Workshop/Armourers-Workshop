@@ -60,7 +60,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         buildTitle(skinPanelTopRated, "topRated");
         buildTitle(skinPanelNeedRated, "needRated");
 
-        UIButton button = new UIButton(new CGRect(4, 6, 80, 16));
+        var button = new UIButton(new CGRect(4, 6, 80, 16));
         button.setTitle(getDisplayText("showAllSkins"), UIControl.State.NORMAL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
@@ -76,7 +76,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         float listTop = 20;
         float listLeft = 4;
         float width = bounds().width();
-        for (ServerItemList fileList : lists()) {
+        for (var fileList : lists()) {
             fileList.setFrame(new CGRect(listLeft, listTop + 20, width, 307));
             fileList.setItemSize(new CGSize(50, 50));
             fileList.setBackgroundColor(0);

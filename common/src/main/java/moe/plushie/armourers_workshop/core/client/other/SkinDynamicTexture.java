@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.platform.NativeImage;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.core.data.PlayerTexture;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,23 +20,23 @@ public class SkinDynamicTexture extends DynamicTexture {
 
     private final TextureManager textureManager;
     private SkinPaintData paintData;
-    private NativeImage downloadedImage;
+    private OpenNativeImage downloadedImage;
 
-    private IResourceLocation refer;
+    private OpenResourceLocation refer;
     private AbstractTexture referTexture;
 
     private boolean needsUpdate = true;
 
     public SkinDynamicTexture() {
-        super(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
+        super(EntityTextureModel.TEXTURE_WIDTH, EntityTextureModel.TEXTURE_HEIGHT, true);
         this.textureManager = Minecraft.getInstance().getTextureManager();
     }
 
-    public IResourceLocation getRefer() {
+    public OpenResourceLocation getRefer() {
         return refer;
     }
 
-    public void setRefer(IResourceLocation refer) {
+    public void setRefer(OpenResourceLocation refer) {
         if (!Objects.equals(this.refer, refer)) {
             this.refer = refer;
             this.referTexture = Objects.flatMap(refer, it -> textureManager.getTexture(it.toLocation()));
@@ -59,7 +59,7 @@ public class SkinDynamicTexture extends DynamicTexture {
     @Override
     public void upload() {
         var downloadedImage = getDownloadedImage();
-        var mergedImage = getPixels();
+        var mergedImage = OpenNativeImage.of(getPixels());
         if (mergedImage == null || downloadedImage == null) {
             return;
         }
@@ -80,29 +80,24 @@ public class SkinDynamicTexture extends DynamicTexture {
         });
     }
 
-    private void applyPaintColor(NativeImage mergedImage) {
+    private void applyPaintColor(OpenNativeImage mergedImage) {
         for (var iy = 0; iy < paintData.height(); ++iy) {
             for (var ix = 0; ix < paintData.width(); ++ix) {
                 var color = paintData.getColor(ix, iy);
                 if (SkinPaintColor.isOpaque(color)) {
-                    var r = color >> 16 & 0xff;
-                    var g = color >> 8 & 0xff;
-                    var b = color & 0xff;
-                    var fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
-                    mergedImage.setPixelRGBA(ix, iy, 0xff000000 | fixed);
+                    mergedImage.setPixel(ix, iy, color);
                 }
             }
         }
     }
 
-    private NativeImage getDownloadedImage() {
+    private OpenNativeImage getDownloadedImage() {
         if (downloadedImage != null) {
             return downloadedImage;
         }
         if (referTexture != null) {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, referTexture.getId());
-            downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
-            downloadedImage.downloadTexture(0, false);
+            downloadedImage = OpenNativeImage.of(0, EntityTextureModel.TEXTURE_WIDTH, EntityTextureModel.TEXTURE_HEIGHT);
         }
         return downloadedImage;
     }

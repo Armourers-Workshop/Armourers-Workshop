@@ -46,7 +46,7 @@ public class UITableView extends UIScrollView {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        float width = bounds().width();
+        var width = bounds().width();
         if (width != cachedWidth) {
             cachedWidth = width;
             reloadData();
@@ -65,7 +65,7 @@ public class UITableView extends UIScrollView {
             var rows = dataSource.tableViewNumberOfRowsInSection(this, section);
             var headerHeight = delegate.tableViewHeightForHeaderInSection(this, section);
             if (headerHeight != 0) {
-                UIView headerView = delegate.tableViewViewForHeaderInSection(this, section);
+                var headerView = delegate.tableViewViewForHeaderInSection(this, section);
                 if (headerView != null) {
                     headerView.setFrame(new CGRect(0, height, bounds.width, headerHeight));
                     entries.add(headerView);

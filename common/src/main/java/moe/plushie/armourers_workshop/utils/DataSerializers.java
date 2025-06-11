@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.EntityCollisionShape;
-import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -54,7 +53,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
@@ -206,7 +204,7 @@ public class DataSerializers {
         }
 
         private InputStream createInputStream(IFriendlyByteBuf buffer, boolean compress) throws Exception {
-            InputStream inputStream = new ByteBufInputStream(buffer.asByteBuf());
+            var inputStream = new ByteBufInputStream(buffer.asByteBuf());
             if (compress) {
                 return new GZIPInputStream(inputStream);
             }
@@ -214,7 +212,7 @@ public class DataSerializers {
         }
 
         private OutputStream createOutputStream(IFriendlyByteBuf buffer, boolean compress) throws Exception {
-            ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer.asByteBuf());
+            var outputStream = new ByteBufOutputStream(buffer.asByteBuf());
             if (compress) {
                 return new GZIPOutputStream(outputStream);
             }
@@ -232,8 +230,8 @@ public class DataSerializers {
             if (player == null || player.getLevel() == null) {
                 return null;
             }
-            int entityId = buffer.readInt();
-            Entity entity = player.getLevel().getEntity(entityId);
+            var entityId = buffer.readInt();
+            var entity = player.getLevel().getEntity(entityId);
             if (entity == null) {
                 for (Player player1 : player.getLevel().players()) {
                     if (player1.getId() == entityId) {
@@ -242,8 +240,8 @@ public class DataSerializers {
                     }
                 }
             }
-            SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-            EntityProfile serverProfile = ModEntityProfiles.getProfile(buffer.readResourceLocation());
+            var wardrobe = SkinWardrobe.of(entity);
+            var serverProfile = ModEntityProfiles.getProfile(buffer.readResourceLocation());
             if (wardrobe != null && serverProfile != null) {
                 // we need to maintain consistency of the entity profile,
                 // some strange mods(e.g.: taterzens) deliberately make the
@@ -256,7 +254,7 @@ public class DataSerializers {
 
     public static final IMenuSerializer<IGlobalPos> GLOBAL_POS = new IMenuSerializer<IGlobalPos>() {
         public void write(IFriendlyByteBuf buffer, Player player, IGlobalPos callable) {
-            Optional<BlockPos> pos1 = callable.evaluate((world, pos) -> pos);
+            var pos1 = callable.evaluate((world, pos) -> pos);
             buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
         }
 
@@ -264,7 +262,7 @@ public class DataSerializers {
             if (player == null || player.getLevel() == null) {
                 return null;
             }
-            BlockPos blockPos = buffer.readBlockPos();
+            var blockPos = buffer.readBlockPos();
             return IGlobalPos.create(player.getLevel(), blockPos);
         }
     };

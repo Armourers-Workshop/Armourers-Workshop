@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer;
 
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UICheckBox;
 import com.apple.library.uikit.UIColor;
@@ -13,7 +14,8 @@ import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -39,6 +41,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private final UICheckBox checkShowModelGuides = new UICheckBox(new CGRect(10, 160, 160, 9));
     private final UICheckBox checkShowHelper = new UICheckBox(new CGRect(10, 145, 190, 9));
 
+    private UIButton confirmView;
     private UIComboBox sourceComboView;
     private UIComboBox modelComboView;
 
@@ -78,7 +81,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         }
         addSubview(textField);
 
-        addCommonButton(10, 120, 100, 20, "set", this::submit);
+        confirmView = addCommonButton(10, 120, 100, 20, "set", this::submit);
 
         var label2 = new UILabel(new CGRect(10, 50, 160, 10));
         label2.setText(getDisplayText("label.textureSource"));
@@ -133,9 +136,15 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     private void submit(Object button) {
         textField.resignFirstResponder();
+        confirmView.setEnabled(false);
         // load texture info and then update to entity.
-        PlayerTextureLoader.getInstance().loadTextureDescriptor(getTextureDescriptor(), resolvedDescriptor -> {
-            var newValue = resolvedDescriptor.orElse(EntityTextureDescriptor.EMPTY);
+        EntityTextureLoader.getInstance().loadTexture(getTextureDescriptor(), (texture, exception) -> {
+            confirmView.setEnabled(true);
+            if (texture == null) {
+                UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
+                return;
+            }
+            var newValue = texture.getDescriptor();
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }

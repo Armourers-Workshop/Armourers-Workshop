@@ -25,8 +25,8 @@ public class ScreenImpl {
     }
 
     public static CGPoint nativeMousePos() {
-        double x = Minecraft.getInstance().mouseHandler.xpos();
-        double y = Minecraft.getInstance().mouseHandler.ypos();
+        var x = Minecraft.getInstance().mouseHandler.xpos();
+        var y = Minecraft.getInstance().mouseHandler.ypos();
         return new CGPoint((int) x, (int) y);
     }
 }

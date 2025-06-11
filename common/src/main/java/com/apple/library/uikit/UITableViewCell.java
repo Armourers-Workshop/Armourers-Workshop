@@ -19,7 +19,7 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        UITableView tableView = _tableView();
+        var tableView = _tableView();
         if (tableView != null) {
             tableView.selectRow(indexPath, true);
         }
@@ -27,7 +27,7 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
 
     @Override
     public void mouseEntered(UIEvent event) {
-        UITableView tableView = _tableView();
+        var tableView = _tableView();
         if (tableView != null && !isHighlighted) {
             tableView._highlightRow(indexPath);
         }
@@ -35,7 +35,7 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
 
     @Override
     public void mouseExited(UIEvent event) {
-        UITableView tableView = _tableView();
+        var tableView = _tableView();
         if (tableView != null && isHighlighted) {
             tableView._unhighlightRow(indexPath);
         }
@@ -70,7 +70,7 @@ public class UITableViewCell extends UIView implements HighlightedDisplayable {
         if (indexPath == null) {
             return null;
         }
-        UIView view = superview();
+        var view = superview();
         if (view instanceof UITableView tableView) {
             return tableView;
         }

@@ -79,8 +79,8 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void updateSkin(UIControl button) {
-        String name = textName.text().trim();
-        String description = textDescription.text().trim();
+        var name = textName.text().trim();
+        var description = textDescription.text().trim();
         if (name.isEmpty()) {
             ModLog.warn("Can't set the skin name to empty");
             return;
@@ -100,7 +100,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void removeSkinPre(UIControl button) {
-        ConfirmDialog dialog = new ConfirmDialog();
+        var dialog = new ConfirmDialog();
         dialog.setTitle(getDisplayText("dialog.delete.title"));
         dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.ok"));
@@ -131,7 +131,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private UITextField addTextField(float x, float y, float width, float height, String key) {
-        UITextField textField = new UITextField(new CGRect(x, y, width, height));
+        var textField = new UITextField(new CGRect(x, y, width, height));
         textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
         textField.setAutoresizingMask(AutoresizingMask.flexibleWidth);
@@ -140,7 +140,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private UITextView addTextView(float x, float y, float width, float height, String key) {
-        UITextView textField = new UITextView(new CGRect(x, y, width, height));
+        var textField = new UITextView(new CGRect(x, y, width, height));
         textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
         addSubview(textField);
@@ -148,7 +148,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     protected UILabel addLabel(float x, float y, float width, float height, NSString message) {
-        UILabel label = new UILabel(new CGRect(x, y, width, height));
+        var label = new UILabel(new CGRect(x, y, width, height));
         label.setText(message);
         label.setTextColor(UIColor.WHITE);
         label.setAutoresizingMask(AutoresizingMask.flexibleWidth);
@@ -157,7 +157,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     }
 
     private UIButton addTextButton(float x, float y, float width, float height, String key, BiConsumer<SkinEditLibraryPanel, UIControl> handler) {
-        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        var button = new UIButton(new CGRect(x, y, width, height));
         button.setTitle(getDisplayText(key), UIControl.State.NORMAL);
         button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
         button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);

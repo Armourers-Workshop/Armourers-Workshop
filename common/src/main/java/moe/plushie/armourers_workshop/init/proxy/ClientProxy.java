@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.client.sound.SmartSoundManager;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
@@ -144,6 +145,7 @@ public class ClientProxy {
             SkinPreloadManager.start();
             SmartSoundManager.getInstance().start();
             SmartTextureManager.getInstance().start();
+            EntityTextureLoader.getInstance().start();
         });
         EventBus.register(ClientPlayerEvent.LoggingOut.class, event -> {
             var player = event.getPlayer();
@@ -153,6 +155,7 @@ public class ClientProxy {
             SkinPreloadManager.stop();
             SkinBakery.stop();
             Tickets.invalidateAll();
+            EntityTextureLoader.getInstance().stop();
             SmartSoundManager.getInstance().stop();
             SmartTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();

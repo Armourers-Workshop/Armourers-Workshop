@@ -116,7 +116,7 @@ public class GlobalSkinLibrary extends ServerSession {
                 updateUser(request("/connect", a2m("uuid", parameters.get("uuid")), ServerUser::fromJSON));
                 handlerOut.accept(null);
             } catch (Exception exception1) {
-                handlerOut.throwing(exception1);
+                handlerOut.abort(exception1);
             }
         });
     }
@@ -154,10 +154,10 @@ public class GlobalSkinLibrary extends ServerSession {
                 if (!result.getSkins().isEmpty()) {
                     handler.accept(result.getSkins().get(0));
                 } else {
-                    handler.throwing(new RuntimeException("can't found the skin " + skinId));
+                    handler.abort(new RuntimeException("can't found the skin " + skinId));
                 }
             } else {
-                handler.throwing(exception);
+                handler.abort(exception);
             }
         });
     }
@@ -197,7 +197,7 @@ public class GlobalSkinLibrary extends ServerSession {
                 StreamUtils.transferTo(inputStream, new FileOutputStream(target));
                 handlerOut.accept(target);
             } catch (Exception exception) {
-                handlerOut.throwing(exception);
+                handlerOut.abort(exception);
             }
         });
     }

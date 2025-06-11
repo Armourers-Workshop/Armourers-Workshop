@@ -149,7 +149,7 @@ public class InputKeyImpl {
     }
 
     public static InputKeyImpl register(String name, InputConstants.Key key) {
-        InputKeyImpl impl = new InputKeyImpl(key);
+        var impl = new InputKeyImpl(key);
         NAMED_KEYS.put(name, impl);
         return impl;
     }

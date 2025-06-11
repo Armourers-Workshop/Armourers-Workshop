@@ -28,7 +28,7 @@ public class UIMenuPopoverView extends UIPopoverView {
 
     @Override
     public UIView hitTest(CGPoint point, UIEvent event) {
-        UIView hitView = super.hitTest(point, event);
+        var hitView = super.hitTest(point, event);
         if (hitView != null) {
             return hitView;
         }

@@ -8,13 +8,12 @@ import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
-import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -52,13 +51,13 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect bounds = bounds();
-        float x2 = bounds.width - 4;
+        var bounds = bounds();
+        var x2 = bounds.width - 4;
         for (UIButton button : rightButtons) {
             if (button.isHidden()) {
                 continue;
             }
-            CGRect frame = button.frame();
+            var frame = button.frame();
             button.setFrame(new CGRect(x2 - frame.width, (bounds.height - frame.height) / 2, frame.width, frame.height));
             x2 = button.frame().minX() - 2;
         }
@@ -78,7 +77,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         iconButtonInfo.setHidden(false);
         iconButtonModeration.setHidden(true);
 
-        ServerUser user = library.getUser();
+        var user = library.getUser();
         if (!user.isMember() && library.isConnected()) {
             iconButtonJoin.setHidden(false);
         }
@@ -101,7 +100,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         }
         var tx = 5.0f;
         var ty = 5.0f;
-        var texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+        var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
         context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64, 0);
         context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
 
@@ -121,7 +120,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (user.isAuthenticated()) {
             textColor = 0xAAFFAA;
         }
-        float lineHeight = UIFont.systemFont().lineHeight();
+        var lineHeight = UIFont.systemFont().lineHeight();
         context.drawText(profile, 24, (rect.height - lineHeight) / 2f, textColor);
     }
 

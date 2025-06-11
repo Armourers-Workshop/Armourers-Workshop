@@ -70,7 +70,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
     public void layoutSubviews() {
         super.layoutSubviews();
         var rect = bounds();
-        float h = rect.height;
+        var h = rect.height;
         titleView.setFrame(rect.insetBy(1, 1, 1, h + 1));
         handleView.setFrame(new CGRect(rect.width - h, 0, h, h));
         applyTableViewSize();
@@ -206,7 +206,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
         if (window != null) {
             window.addGlobalTarget(this, Event.MOUSE_LEFT_DOWN, (self, event) -> {
                 self.removeGlobalClickListener();
-                CGPoint point = event.locationInView(self);
+                var point = event.locationInView(self);
                 if (!self.pointInside(point, event)) {
                     self.setSelected(false);
                 }

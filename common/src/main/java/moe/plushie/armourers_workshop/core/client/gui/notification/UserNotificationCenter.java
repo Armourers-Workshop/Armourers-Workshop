@@ -66,8 +66,8 @@ public class UserNotificationCenter {
 
     public static void showToast(Exception exception, NSString title, Object icon) {
         NSString message;
-        if (exception instanceof TranslatableException) {
-            message = new NSString(((TranslatableException) exception).getComponent());
+        if (exception instanceof TranslatableException exception1) {
+            message = new NSString(exception1.getComponent());
         } else {
             message = new NSString(exception.getMessage());
         }

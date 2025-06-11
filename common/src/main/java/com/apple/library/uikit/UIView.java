@@ -73,7 +73,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void removeFromSuperview() {
-        UIView superview = this.superview();
+        var superview = this.superview();
         if (superview == null) {
             return;
         }
@@ -250,7 +250,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void setCenter(CGPoint center) {
-        CGPoint oldValue = _center;
+        var oldValue = _center;
         if (_center.equals(center)) {
             return;
         }
@@ -260,7 +260,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void setBounds(CGRect bounds) {
-        CGRect oldValue = bounds();
+        var oldValue = bounds();
         if (oldValue.equals(bounds)) {
             return;
         }
@@ -284,7 +284,7 @@ public class UIView extends UIResponder implements ViewImpl {
         // we don't need fully checks of the identity transform,
         // just needs to reduce transform apply calls.
         if (_transform != CGAffineTransform.IDENTITY) {
-            CGSize size = frame.size();
+            var size = frame.size();
             size.apply(_invertedTransform());
             bounds.width = size.width;
             bounds.height = size.height;
@@ -294,7 +294,7 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     public void setTransform(CGAffineTransform transform) {
-        CGAffineTransform oldValue = _transform;
+        var oldValue = _transform;
         if (_transform.equals(transform)) {
             return;
         }
@@ -366,7 +366,7 @@ public class UIView extends UIResponder implements ViewImpl {
 
     public void setAutoresizingMask(int autoresizingMask) {
         _autoresizingMask = autoresizingMask;
-        UIView superview = superview();
+        var superview = superview();
         if (superview != null) {
             superview._setAutoresizingFlagsDirty();
         }
@@ -405,7 +405,7 @@ public class UIView extends UIResponder implements ViewImpl {
 
     private void _setDirty() {
         _flags.isDirty = true;
-        UIView superview = superview();
+        var superview = superview();
         if (superview != null && !superview._flags.isDirty) {
             superview._setDirty();
         }
@@ -437,14 +437,14 @@ public class UIView extends UIResponder implements ViewImpl {
     }
 
     private void _resizeWithOldSuperviewSize(CGRect oldParentValue, CGRect newParentValue) {
-        int mask = autoresizingMask();
+        var mask = autoresizingMask();
         if (mask == 0) {
             return;
         }
-        CGRect frame = frame();
-        float[] h = _applyAutoresizingMask(frame.x, frame.width, newParentValue.width, oldParentValue.width, mask);
-        float[] v = _applyAutoresizingMask(frame.y, frame.height, newParentValue.height, oldParentValue.height, mask >> 3);
-        CGRect newFrame = new CGRect(h[0], v[0], h[1], v[1]);
+        var frame = frame();
+        var h = _applyAutoresizingMask(frame.x, frame.width, newParentValue.width, oldParentValue.width, mask);
+        var v = _applyAutoresizingMask(frame.y, frame.height, newParentValue.height, oldParentValue.height, mask >> 3);
+        var newFrame = new CGRect(h[0], v[0], h[1], v[1]);
         if (!newFrame.equals(frame)) {
             setFrame(newFrame);
         }
@@ -453,7 +453,7 @@ public class UIView extends UIResponder implements ViewImpl {
     private void _sizeDidChange() {
         // when the size changes, we need call the this.layoutSubview() and superview.layoutSubviews()
         setNeedsLayout();
-        UIView superview = superview();
+        var superview = superview();
         if (superview != null) {
             superview.setNeedsLayout();
         }

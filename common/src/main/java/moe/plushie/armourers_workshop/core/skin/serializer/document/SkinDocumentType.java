@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.document;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryEntry;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class SkinDocumentType implements IRegistryEntry {
     private final SkinType skinType;
     private final ArrayList<SkinPartType> skinPartTypes;
 
-    private IResourceLocation registryName;
+    private OpenResourceLocation registryName;
 
     public SkinDocumentType(String category, SkinType type) {
         this.category = category;
@@ -61,12 +61,12 @@ public class SkinDocumentType implements IRegistryEntry {
         return skinPartTypes;
     }
 
-    public void setRegistryName(IResourceLocation registryName) {
+    public void setRegistryName(OpenResourceLocation registryName) {
         this.registryName = registryName;
     }
 
     @Override
-    public IResourceLocation getRegistryName() {
+    public OpenResourceLocation getRegistryName() {
         return registryName;
     }
 

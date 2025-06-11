@@ -46,7 +46,7 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
     public void broadcastChanges() {
         super.broadcastChanges();
         if (playerInventory.player instanceof ServerPlayer) {
-            SkinLibraryManager.Server server = SkinLibraryManager.getServer();
+            var server = SkinLibraryManager.getServer();
             if (libraryVersion != server.getVersion()) {
                 server.sendTo((ServerPlayer) playerInventory.player);
                 libraryVersion = server.getVersion();

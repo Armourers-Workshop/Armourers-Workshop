@@ -32,18 +32,18 @@ public class UIMenuController {
     }
 
     public void showMenu(UIView fromView, CGPoint fromPoint) {
-        UIWindow window = fromView.window();
+        var window = fromView.window();
         if (window == null) {
             return;
         }
-        MenuListView listView = new MenuListView(this, menuItems());
-        CGSize size = listView.sizeThatFits(window.bounds().size());
+        var listView = new MenuListView(this, menuItems());
+        var size = listView.sizeThatFits(window.bounds().size());
         listView.setBounds(new CGRect(CGPoint.ZERO, size));
         listView.setAutoresizingMask(UIView.AutoresizingMask.flexibleRightMargin | UIView.AutoresizingMask.flexibleBottomMargin);
         listView.setContents(UIImage.of(ModTextures.MENUS).uv(0, 0).fixed(44, 44).clip(4, 4, 4, 4).build());
         listView.setTransform(transform());
-        CGSize size1 = size.applying(transform());
-        CGPoint center = fromView.convertPointToView(fromPoint, window).copy();
+        var size1 = size.applying(transform());
+        var center = fromView.convertPointToView(fromPoint, window).copy();
         if (center.x + size1.width > window.bounds().maxX()) {
             center.x -= size1.width;
         }
@@ -129,7 +129,7 @@ public class UIMenuController {
 
         public MenuSeparatorView() {
             super(new CGRect(0, 0, 16, 7));
-            UIView lineView = new UIView(bounds().insetBy(3, 5, 3.5f, 5));
+            var lineView = new UIView(bounds().insetBy(3, 5, 3.5f, 5));
             lineView.setBackgroundColor(AppearanceImpl.MENU_SEPARATOR_COLOR);
             lineView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
             addSubview(lineView);
@@ -154,11 +154,11 @@ public class UIMenuController {
             menuItems.stream().sorted(Comparator.comparingInt(UIMenuItem::group)).forEachOrdered(menuItem -> {
                 // add separator when groups changed.
                 if (!contentCells.isEmpty() && lastGroup.get() != menuItem.group()) {
-                    UIView separatorView = new MenuSeparatorView();
+                    var separatorView = new MenuSeparatorView();
                     addSubview(separatorView);
                     contentCells.add(separatorView);
                 }
-                UIView cell = new MenuCell(menuController, menuItem);
+                var cell = new MenuCell(menuController, menuItem);
                 addSubview(cell);
                 contentCells.add(cell);
                 lastGroup.set(menuItem.group());

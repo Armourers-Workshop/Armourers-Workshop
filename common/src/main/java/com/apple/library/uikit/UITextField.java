@@ -73,8 +73,8 @@ public class UITextField extends UIControl implements TextInputTraits {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        CGRect bounds = bounds();
-        CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
+        var bounds = bounds();
+        var fixedBounds = bounds.insetBy(1, 1, 1, 1);
         if (isBordered) {
             context.fillRect(bounds, getBorderColor());
             context.fillRect(fixedBounds, getFillColor());
@@ -157,7 +157,7 @@ public class UITextField extends UIControl implements TextInputTraits {
         if (storage.isFocused() || !isEditable()) {
             return;
         }
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             if (!delegate.invoker().textFieldShouldBeginEditing(this)) {
                 return;
@@ -176,7 +176,7 @@ public class UITextField extends UIControl implements TextInputTraits {
         if (!delegate.invoker().textFieldShouldEndEditing(this)) {
             return;
         }
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             window.setFirstInputResponder(null);
         }
@@ -235,17 +235,17 @@ public class UITextField extends UIControl implements TextInputTraits {
     }
 
     private void sizeDidChange(CGRect rect, CGSize size) {
-        CGRect bounds = bounds().insetBy(contentInsets);
-        CGRect cursorRect = rect.insetBy(0, 0, 0, -5);
-        float offsetX = storage.offset.x;
-        float offsetY = (bounds.height - size.height) / 2;
-        float contentWidth = size.width + cursorRect.width;
-        CGRect visibleRect = bounds.offset(-offsetX, 0);
+        var bounds = bounds().insetBy(contentInsets);
+        var cursorRect = rect.insetBy(0, 0, 0, -5);
+        var offsetX = storage.offset.x;
+        var offsetY = (bounds.height - size.height) / 2;
+        var contentWidth = size.width + cursorRect.width;
+        var visibleRect = bounds.offset(-offsetX, 0);
         // 1. when the cursor pos not in the visible rect.
         // 2. when the display width exceeds the actual width.
         if (visibleRect.maxX() > contentWidth || !isSameRange(visibleRect, cursorRect)) {
-            float x1 = Math.min(cursorRect.x + visibleRect.width / 2, contentWidth);
-            float x0 = Math.max(x1 - visibleRect.width, 0);
+            var x1 = Math.min(cursorRect.x + visibleRect.width / 2, contentWidth);
+            var x0 = Math.max(x1 - visibleRect.width, 0);
             offsetX = contentInsets.left - x0;
         }
         storage.offset = new CGPoint(offsetX, contentInsets.top + offsetY + 1);

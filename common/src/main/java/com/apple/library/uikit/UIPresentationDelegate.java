@@ -100,8 +100,8 @@ public class UIPresentationDelegate implements ViewImpl {
     public <T extends InterpolableImpl<T>> T _valueForKeyPath(String keyPath, Function<UIView, T> getter) {
         var animation = animationForKey(keyPath);
         if (animation != null) {
-            double t = animation._currentTime(CATransaction.currentMediaTime());
-            double dur = animation.duration();
+            var t = animation._currentTime(CATransaction.currentMediaTime());
+            var dur = animation.duration();
             if (t < 0 || t >= dur) {
                 return getter.apply(view);
             }

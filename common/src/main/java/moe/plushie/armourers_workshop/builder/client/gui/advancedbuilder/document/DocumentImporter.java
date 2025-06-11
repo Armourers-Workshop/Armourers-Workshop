@@ -100,7 +100,7 @@ public class DocumentImporter {
                 }
                 Minecraft.getInstance().execute(() -> resultHandler.accept(apply(skin)));
             } catch (Exception e) {
-                Minecraft.getInstance().execute(() -> resultHandler.throwing(e));
+                Minecraft.getInstance().execute(() -> resultHandler.abort(e));
             }
         });
     }

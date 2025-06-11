@@ -27,7 +27,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private static final String URL_WIKI_FAQ = "https://github.com/Armourers-Workshop/Armourers-Workshop/wiki/FAQ";
     private static final String URL_VIDEO_UPDATE_JAVA = "https://youtu.be/xZfaXHulmKo";
 
-    private final ArrayList<NSString> pages = new ArrayList<>();
+    private final ArrayList<NSMutableString> pages = new ArrayList<>();
 
     private final UILabel label = new UILabel(CGRect.ZERO);
 
@@ -46,10 +46,10 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     }
 
     private void setup(CGRect rect) {
-        int recWidth = 318;
-        int recHeight = 180;
+        var recWidth = 318f;
+        var recHeight = 180f;
 
-        UIView contentView = new UIView(new CGRect((rect.width - recWidth) / 2, (rect.height - recHeight) / 2, recWidth, recHeight));
+        var contentView = new UIView(new CGRect((rect.width - recWidth) / 2, (rect.height - recHeight) / 2, recWidth, recHeight));
         contentView.setContents(ModTextures.defaultWindowImage());
         contentView.setAutoresizingMask(AutoresizingMask.flexibleTopMargin | AutoresizingMask.flexibleBottomMargin | AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleRightMargin);
         addSubview(contentView);
@@ -61,8 +61,8 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         label.setDelegate(this);
         contentView.addSubview(label);
 
-        CGRect frame = label.frame();
-        float buttonBottom = frame.maxY() - 16;
+        var frame = label.frame();
+        var buttonBottom = frame.maxY() - 16;
 
         buttonPrevious.setFrame(new CGRect(frame.minX(), buttonBottom, 16, 16));
         buttonPrevious.setTooltip(NSString.localizedString("common.button.previousPage"));
@@ -148,12 +148,12 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     private void remake() {
         pages.clear();
 
-        GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
+        var library = GlobalSkinLibrary.getInstance();
         if (!library.isValidJavaVersion()) {
-            String[] javaVersion = library.getJavaVersion();
-            NSString urlWikiFaq = getURLText(URL_WIKI_FAQ);
-            NSString urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
-            String update = javaVersion.length > 2 ? javaVersion[2] : "0";
+            var javaVersion = library.getJavaVersion();
+            var urlWikiFaq = getURLText(URL_WIKI_FAQ);
+            var urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
+            var update = javaVersion.length > 2 ? javaVersion[2] : "0";
             pages.add(concat(getDisplayText("old_java", javaVersion[0], update, urlWikiFaq, urlVideoUpdateJava)));
             return;
         }
@@ -165,7 +165,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         pages.add(concat(getDisplayText("message_5.title"), "\n\n", getDisplayText("message_5.text"), getURLText(URL_DISCORD)));
 
         if (Strings.isNotBlank(joinFailMessage)) {
-            NSMutableString message = (NSMutableString) pages.get(pages.size() - 1);
+            var message = pages.get(pages.size() - 1);
             message.append("\n\n");
             message.append("§cError: " + joinFailMessage + "§r");
             message.append("\n\n");
@@ -185,13 +185,13 @@ public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     }
 
     private NSMutableString concat(Object... keys) {
-        NSMutableString message = new NSMutableString("");
-        for (Object key : keys) {
-            if (key instanceof String) {
-                message.append((String) key);
+        var message = new NSMutableString("");
+        for (var key : keys) {
+            if (key instanceof String str) {
+                message.append(str);
             }
-            if (key instanceof NSString) {
-                message.append((NSString) key);
+            if (key instanceof NSString str) {
+                message.append(str);
             }
         }
         return message;

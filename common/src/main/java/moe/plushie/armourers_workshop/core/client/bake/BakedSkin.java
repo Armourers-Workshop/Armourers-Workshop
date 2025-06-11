@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.data.cache.PrimaryKey;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
@@ -100,7 +100,7 @@ public class BakedSkin {
         var resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> paintScheme.copy());
         // we can't bind textures to skin when the item stack rendering.
         if (PlaceholderManager.isPlaceholder(entity)) {
-            var resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
+            var resolvedTexture = EntityTextureLoader.getInstance().getTextureLocation(entity);
             if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
                 resolvedColorScheme.setTexture(resolvedTexture);
             }

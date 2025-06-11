@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -70,7 +70,7 @@ public class BakedSkinPart {
                 needsEntityTexture = true;
             }
         }
-        if (needsEntityTexture && PlayerTextureLoader.getInstance().getTextureModel(scheme.getTexture()) != null) {
+        if (needsEntityTexture && EntityTextureLoader.getInstance().getTextureModel(scheme.getTexture()) != null) {
             requirements.add(SkinPaintTypes.TEXTURE.getId());
             requirements.add(scheme.getTexture());
         }

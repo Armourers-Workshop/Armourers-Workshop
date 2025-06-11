@@ -94,7 +94,7 @@ public class CATransaction {
         }
 
         public void commit() {
-            double tp = CATransaction.currentMediaTime();
+            var tp = CATransaction.currentMediaTime();
             animations.forEach(it -> {
                 var ani = it.getKey();
                 if (ani.beginTime() == 0) {
@@ -111,8 +111,8 @@ public class CATransaction {
             while (iterator.hasNext()) {
                 var it = iterator.next();
                 var animation = it.getKey();
-                double t = animation._currentTime(tp);
-                double dur = animation.duration();
+                var t = animation._currentTime(tp);
+                var dur = animation.duration();
                 if (t >= dur) {
                     it.getValue().run();
                     iterator.remove();

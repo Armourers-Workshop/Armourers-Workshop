@@ -157,8 +157,8 @@ public class UIScrollView extends UIView {
     private CGPoint clamp(CGPoint point) {
         var rect = bounds();
         var edg = contentInsets;
-        float tx = Math.max(Math.min(point.x, contentSize.width - rect.width + edg.right), -edg.left);
-        float ty = Math.max(Math.min(point.y, contentSize.height - rect.height + edg.bottom), -edg.top);
+        var tx = Math.max(Math.min(point.x, contentSize.width - rect.width + edg.right), -edg.left);
+        var ty = Math.max(Math.min(point.y, contentSize.height - rect.height + edg.bottom), -edg.top);
         if (point.x == tx && point.y == ty) {
             return point;
         }

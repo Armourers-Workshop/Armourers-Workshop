@@ -1,39 +1,44 @@
-package moe.plushie.armourers_workshop.core.data;
+package moe.plushie.armourers_workshop.core.client.texture;
 
-import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class PlayerTexture {
+public class EntityTexture {
 
-    public static final int TEXTURE_WIDTH = 64;
-    public static final int TEXTURE_HEIGHT = 64;
+    public static final EntityTexture EMPTY = new EntityTexture(null, null, null);
 
-    public static final PlayerTexture DEFAULT = new PlayerTexture(null, null, null);
-
+    private final EntityTextureDescriptor descriptor;
     private final String url;
     private final OpenResourceLocation location;
 
-    private String model;
+    private String modelType;
 
     @Environment(EnvType.CLIENT)
     private BakedEntityTexture texture;
 
-    public PlayerTexture(String url, OpenResourceLocation location, String model) {
-//        this.profile = profile;
+    public EntityTexture(OpenResourceLocation location, String url, String modelType) {
+        this(EntityTextureDescriptor.EMPTY, location, url, modelType);
+    }
+
+    public EntityTexture(EntityTextureDescriptor descriptor, OpenResourceLocation location, String url, String modelType) {
+        this.descriptor = descriptor;
         this.location = location;
-        this.model = model;
+        this.modelType = modelType;
         this.url = url;
-//        this.texture = texture;
     }
 
-    public String getModel() {
-        return model;
+    public String getModelType() {
+        return modelType;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setModelType(String modelType) {
+        this.modelType = modelType;
+    }
+
+    public EntityTextureDescriptor getDescriptor() {
+        return descriptor;
     }
 
     public OpenResourceLocation getLocation() {

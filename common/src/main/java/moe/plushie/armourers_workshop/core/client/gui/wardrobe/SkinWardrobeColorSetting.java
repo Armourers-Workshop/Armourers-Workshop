@@ -11,7 +11,7 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
@@ -157,7 +157,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             if (location == null) {
                 return;
             }
-            var texture = PlayerTextureLoader.getInstance().getTextureModel(location);
+            var texture = EntityTextureLoader.getInstance().getTextureModel(location);
             if (texture != null) {
                 setColor(getColorFromTexture(texture));
             } else {

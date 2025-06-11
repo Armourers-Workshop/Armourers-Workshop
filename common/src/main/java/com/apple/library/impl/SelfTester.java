@@ -71,7 +71,7 @@ public class SelfTester {
     }
 
     private static void assertEqual(CGPoint p1, float x, float y) {
-        CGPoint p2 = new CGPoint(x, y);
+        var p2 = new CGPoint(x, y);
         if (p2.equals(p1)) {
             ModLog.debug("{} => {}", p1, p2);
         } else {

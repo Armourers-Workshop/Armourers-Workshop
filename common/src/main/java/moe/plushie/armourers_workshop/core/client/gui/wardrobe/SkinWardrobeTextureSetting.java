@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIColor;
@@ -10,7 +11,8 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
@@ -33,6 +35,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     private final UITextField textField = new UITextField(new CGRect(83, 70, 165, 18));
 
+    private UIButton confirmView;
     private UIComboBox sourceComboView;
     private UIComboBox modelComboView;
 
@@ -49,7 +52,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     private void setup() {
         setupTextField();
-        addCommonButton(83, 90, 100, 20, "set", this::submit);
+        confirmView = addCommonButton(83, 90, 100, 20, "set", this::submit);
         sourceComboView = addComboBox(83, 27, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
         modelComboView = addComboBox(168, 27, 80, 14, "textureModel", lastTextureModel, this::applyTextureModel);
     }
@@ -96,9 +99,15 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     private void submit(Object button) {
         textField.resignFirstResponder();
-        // load texture ifo and then update to entity.
-        PlayerTextureLoader.getInstance().loadTextureDescriptor(getTextureDescriptor(), resolvedDescriptor -> {
-            var newValue = resolvedDescriptor.orElse(EntityTextureDescriptor.EMPTY);
+        confirmView.setEnabled(false);
+        // load texture info and then update to entity.
+        EntityTextureLoader.getInstance().loadTexture(getTextureDescriptor(), (texture, exception) -> {
+            confirmView.setEnabled(true);
+            if (texture == null) {
+                UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
+                return;
+            }
+            var newValue = texture.getDescriptor();
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }

@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.compatibility.mixin;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
 import net.minecraft.client.renderer.texture.HttpTexture;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,6 +32,7 @@ public class HttpTextureMixin {
 
     @Inject(method = "load(Ljava/io/InputStream;)Lcom/mojang/blaze3d/platform/NativeImage;", at = @At(value = "RETURN"))
     private void aw2$loadCallback(CallbackInfoReturnable<NativeImage> ci) {
-        PlayerTextureLoader.getInstance().receivePlayerTexture(urlString, ci.getReturnValue(), slimModel);
+        var image = OpenNativeImage.of(ci.getReturnValue());
+        EntityTextureLoader.getInstance().receivePlayerTexture(urlString, image, slimModel);
     }
 }

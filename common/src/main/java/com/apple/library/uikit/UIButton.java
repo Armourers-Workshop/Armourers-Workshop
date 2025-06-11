@@ -81,7 +81,7 @@ public class UIButton extends UIControl {
 
     @Override
     public CGSize sizeThatFits(CGSize size) {
-        SimpleContentLayoutImpl layout = buildContentLayout(titleView.font(), CGRect.ZERO);
+        var layout = buildContentLayout(titleView.font(), CGRect.ZERO);
         return layout.contentSize();
     }
 
@@ -231,14 +231,14 @@ public class UIButton extends UIControl {
         titleColorContainer.setCurrentState(state);
         tooltipContainer.setCurrentState(state);
         // when image or title is changed, reload cache
-        NSString currentTitle = titleContainer.currentValue();
+        var currentTitle = titleContainer.currentValue();
         titleView.setTextColor(titleColorContainer.currentValue());
         if (!Objects.equals(currentTitle, cachedCurrentTitle)) {
             titleView.setText(currentTitle);
             titleView.setHidden(currentTitle == null);
             setNeedsRemakeLayouts();
         }
-        UIImage currentImage = imageContainer.currentValue();
+        var currentImage = imageContainer.currentValue();
         imageView.setImage(currentImage);
         if (!Objects.equals(imageSize(currentImage), imageSize(cachedCurrentImage))) {
             imageView.setHidden(currentImage == null);
@@ -261,7 +261,7 @@ public class UIButton extends UIControl {
         if (cachedIconRect != null && cachedTitleRect != null) {
             return;
         }
-        SimpleContentLayoutImpl layout = buildContentLayout(font, rect);
+        var layout = buildContentLayout(font, rect);
         cachedIconRect = layout.getOrDefault(0, CGRect.ZERO);
         if (cachedIconRect != null) {
             imageView.setFrame(cachedIconRect);
@@ -273,7 +273,7 @@ public class UIButton extends UIControl {
     }
 
     private SimpleContentLayoutImpl buildContentLayout(UIFont font, CGRect rect) {
-        SimpleContentLayoutImpl layout = new SimpleContentLayoutImpl();
+        var layout = new SimpleContentLayoutImpl();
         layout.add(imageSize(imageContainer.currentValue()), imageEdgeInsets, size -> new CGRect(CGPoint.ZERO, size));
         layout.add(titleContainer.currentValue(), titleEdgeInsets, text -> text.boundingRectWithFont(font).offset(0, 1));
         layout.applyHorizontalLayout(rect, contentEdgeInsets, horizontalAlignment, verticalAlignment);

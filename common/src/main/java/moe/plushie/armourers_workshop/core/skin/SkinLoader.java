@@ -136,14 +136,14 @@ public class SkinLoader {
             return null;
         }
         var entry = getOrCreateEntry(identifier);
-        resumeRequest(entry, Method.SYNC);
+        resume(entry, Method.SYNC);
         return entry.get();
     }
 
     public void loadSkin(String identifier, @Nullable IResultHandler<Skin> handler) {
         var entry = getOrCreateEntry(identifier);
         entry.listen(handler);
-        resumeRequest(entry, Method.ASYNC);
+        resume(entry, Method.ASYNC);
     }
 
     public SkinDescriptor loadSkinFromDB(String identifier, SkinPaintScheme scheme, boolean needCopy) {
@@ -267,7 +267,7 @@ public class SkinLoader {
         return entries.remove(identifier);
     }
 
-    private void resumeRequest(Entry entry, Method method) {
+    private void resume(Entry entry, Method method) {
         // the task although loading is completed,
         // but it is released for memory reasons,
         if (entry.isCompleted()) {

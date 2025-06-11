@@ -43,7 +43,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect bounds = bounds().insetBy(contentInsets);
+        var bounds = bounds().insetBy(contentInsets);
         storage.setBoundingSize(new CGSize(bounds.width, bounds.height));
     }
 
@@ -80,8 +80,8 @@ public class UITextView extends UIScrollView implements TextInputTraits {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        CGRect bounds = bounds();
-        CGRect fixedBounds = bounds.insetBy(1, 1, 1, 1);
+        var bounds = bounds();
+        var fixedBounds = bounds.insetBy(1, 1, 1, 1);
         if (isBordered) {
             context.fillRect(bounds, getBorderColor());
             context.fillRect(fixedBounds, getFillColor());
@@ -164,7 +164,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         if (storage.isFocused() || !isEditable()) {
             return;
         }
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             if (!delegate.invoker().textViewShouldBeginEditing(this)) {
                 return;
@@ -182,7 +182,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         if (!delegate.invoker().textViewShouldEndEditing(this)) {
             return;
         }
-        UIWindow window = window();
+        var window = window();
         if (window != null) {
             window.setFirstInputResponder(null);
         }
@@ -246,8 +246,8 @@ public class UITextView extends UIScrollView implements TextInputTraits {
         }
         if (needSyncCursor) {
             needSyncCursor = false;
-            CGRect box = convertRectToView(rect, superview());
-            CGRect frame = frame().insetBy(contentInsets);
+            var box = convertRectToView(rect, superview());
+            var frame = frame().insetBy(contentInsets);
             if (box.minY() < frame.minY() || box.maxY() > frame.maxY()) {
                 setContentOffset(new CGPoint(0, rect.y));
             }

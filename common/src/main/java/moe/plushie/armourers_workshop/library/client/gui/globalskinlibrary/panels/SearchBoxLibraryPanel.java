@@ -44,7 +44,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
     }
 
     private void setup() {
-        CGRect rect = bounds();
+        var rect = bounds();
         setupSearchField(new CGRect(5, 3, rect.width - 10 - 180 - 70 - 5, 16));
         setupSortView(new CGRect(rect.width - 180 - 70 - 5, 3, 90, 16));
         setupSkinListView(new CGRect(rect.width - 160, 3, 70, 16));
@@ -81,19 +81,19 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITex
     }
 
     private void setupSortView(CGRect rect) {
-        int selectedIndex = 0;
-        ArrayList<SearchColumnType> columnTypes1 = new ArrayList<>();
-        ArrayList<UIComboItem> items = new ArrayList<>();
-        for (SearchColumnType columnType : columnTypes) {
-            SearchOrderType orderType = orderTypes[columnTypes1.size() % 2];
-            NSMutableString title = new NSMutableString("");
+        var selectedIndex = 0;
+        var columnTypes1 = new ArrayList<SearchColumnType>();
+        var items = new ArrayList<UIComboItem>();
+        for (var columnType : columnTypes) {
+            var orderType = orderTypes[columnTypes1.size() % 2];
+            var title = new NSMutableString("");
             if (orderType == SearchOrderType.DESC) {
                 title.append("↑ "); // up
             } else {
                 title.append("↓ "); // down
             }
             title.append(NSString.localizedTableString("skin_search_column", columnType.toString().toLowerCase()));
-            UIComboItem item = new UIComboItem(title);
+            var item = new UIComboItem(title);
             if (columnType == this.columnType && orderType == this.orderType) {
                 selectedIndex = items.size();
             }

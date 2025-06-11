@@ -43,7 +43,7 @@ public class UILabel extends UIView {
     @Override
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
-        Map<String, ?> attributes = attributesAtPoint(event.locationInView(this));
+        var attributes = attributesAtPoint(event.locationInView(this));
         if (attributes != null) {
             delegate.invoker().labelWillClickAttributes(this, attributes);
         }
@@ -54,7 +54,7 @@ public class UILabel extends UIView {
         if (text == null) {
             return CGSize.ZERO;
         }
-        SimpleTextLayoutImpl textLayout = new SimpleTextLayoutImpl(text, font(), numberOfLines, lineSpacing, size.width);
+        var textLayout = new SimpleTextLayoutImpl(text, font(), numberOfLines, lineSpacing, size.width);
         return textLayout.contentSize();
     }
 
@@ -63,13 +63,13 @@ public class UILabel extends UIView {
         if (text == null) {
             return;
         }
-        UIFont font = font();
-        CGRect rect = bounds();
+        var font = font();
+        var rect = bounds();
         remakeTextLineIfNeeded(text, font, rect);
         if (cachedTextLayout == null || cachedTextLayout.isEmpty()) {
             return;
         }
-        float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
+        var dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (var line : cachedTextLayout.contents()) {
             var offset = line.offset;
             var dx = sel(rect, line.size.width, textHorizontalAlignment);
@@ -161,8 +161,8 @@ public class UILabel extends UIView {
         if (cachedTextLayout == null) {
             return null;
         }
-        CGRect rect = bounds();
-        float dy = sel(rect, cachedTextHeight, textVerticalAlignment);
+        var rect = bounds();
+        var dy = sel(rect, cachedTextHeight, textVerticalAlignment);
         for (var line : cachedTextLayout.contents()) {
             var offset = line.offset;
             var dx = sel(rect, line.size.width, textHorizontalAlignment);
@@ -196,7 +196,7 @@ public class UILabel extends UIView {
 
     private void remakeTextLineIfNeeded(NSString title, UIFont font, CGRect bounds) {
         // if the cache is still valid, we continue to use it.
-        float width = bounds.width;
+        var width = bounds.width;
         if (cachedTextLayout != null && cachedTextWidth == width) {
             return;
         }

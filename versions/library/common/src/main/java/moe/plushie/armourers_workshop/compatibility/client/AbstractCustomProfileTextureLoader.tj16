@@ -1,0 +1,40 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.Executors;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+
+@Available("[1.16, 1.21)")
+@Environment(EnvType.CLIENT)
+public class AbstractCustomProfileTextureLoader {
+
+    public static void load(GameProfile profile, ResultHandler handler) {
+        var timeout = 30000; // 30s
+        load(profile, System.currentTimeMillis() + timeout, handler);
+    }
+
+    private static void load(GameProfile profile, long endTime, ResultHandler handler) {
+        Minecraft.getInstance().getSkinManager().registerSkins(profile, (type, location, profileTexture) -> {
+            // in some cases will get a placeholder result (url is null),
+            // this means the game profile still loading phase,
+            // we need to try again in the request valid time.
+            var url = profileTexture.getUrl();
+            if (url == null && System.currentTimeMillis() < endTime) {
+                Executors.sleep(500); // 500ms
+                load(profile, endTime, handler);
+                return;
+            }
+            var modelType = profileTexture.getMetadata("model");
+            handler.accept(OpenResourceLocation.create(location), url, modelType);
+        }, true);
+    }
+
+    public interface ResultHandler {
+
+        void accept(OpenResourceLocation location, String url, String model);
+    }
+}

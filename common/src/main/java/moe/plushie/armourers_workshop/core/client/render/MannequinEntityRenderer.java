@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractLivi
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -69,7 +69,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends Abstract
             this.getChildRenderer().render(entity, f, partialTicks, poseStack, bufferSource, packedLightIn);
             return;
         }
-        var textureLoader = PlayerTextureLoader.getInstance();
+        var textureLoader = EntityTextureLoader.getInstance();
         this.texture = textureLoader.getTextureLocation(entity);
         this.bakedTexture = textureLoader.getTextureModel(texture);
         this.applyTextureModel(entity.getTextureModel());

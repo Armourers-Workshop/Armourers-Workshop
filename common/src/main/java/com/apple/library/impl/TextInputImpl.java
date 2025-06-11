@@ -2,7 +2,6 @@ package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.foundation.NSTextPosition;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
@@ -32,8 +31,8 @@ public class TextInputImpl {
 
     public boolean keyDown(int key) {
         // some methods may rely on this info.
-        boolean hasShiftDown = InputManagerImpl.hasShiftDown();
-        boolean hasControlDown = InputManagerImpl.hasControlDown();
+        var hasShiftDown = InputManagerImpl.hasShiftDown();
+        var hasControlDown = InputManagerImpl.hasControlDown();
         // each input causes the user cursor to reset, even if it doesn't.
         var userCursorRect = lastUserCursorRect;
         lastUserCursorRect = null;
@@ -158,7 +157,7 @@ public class TextInputImpl {
     }
 
     private void moveToNextLine(CGRect userCursorRect, int step, boolean selectMode) {
-        CGRect rect = storage.cursorRect();
+        var rect = storage.cursorRect();
         if (userCursorRect == null) {
             userCursorRect = rect;
         }
@@ -166,7 +165,7 @@ public class TextInputImpl {
             return;
         }
         lastUserCursorRect = userCursorRect;
-        NSTextPosition pos = storage.beginOfDocument();
+        var pos = storage.beginOfDocument();
         float ty = rect.midY() + rect.height * step;
         if (ty >= 0) {
             pos = storage.positionAtPoint(new CGPoint(userCursorRect.x, ty));
@@ -175,5 +174,4 @@ public class TextInputImpl {
             storage.moveCursorTo(pos, selectMode);
         }
     }
-
 }

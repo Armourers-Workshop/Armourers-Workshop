@@ -60,7 +60,7 @@ public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDel
     }
 
     public void reloadUI() {
-        NSMutableString message = new NSMutableString("\n\n\n");
+        var message = new NSMutableString("\n\n\n");
 
         if (stats != null) {
             message.append(getDisplayText("total_skins", stats.getTotalSkin()));

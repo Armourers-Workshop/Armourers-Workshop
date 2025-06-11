@@ -64,7 +64,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private void setup() {
-        CGRect rect = bounds();
+        var rect = bounds();
 
         resultTitle.setFrame(new CGRect(4, 2, rect.width - 64, 16));
         resultTitle.setTextColor(UIColor.WHITE);

@@ -22,8 +22,6 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
 
     public static final EntityTextureDescriptor EMPTY = new EntityTextureDescriptor(null, null, null);
 
-    public static final UUID NIL_UUID = new UUID(0, 0);
-
     private final static Cache<ItemStack, EntityTextureDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
             .expireAfterAccess(15, TimeUnit.SECONDS)

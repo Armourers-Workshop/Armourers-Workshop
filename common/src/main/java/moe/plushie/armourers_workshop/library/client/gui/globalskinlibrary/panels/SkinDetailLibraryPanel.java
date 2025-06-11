@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -400,7 +400,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            var texture = PlayerTextureLoader.getInstance().loadTextureLocation(playerTexture);
+            var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
             context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64, 0);
             context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
         }

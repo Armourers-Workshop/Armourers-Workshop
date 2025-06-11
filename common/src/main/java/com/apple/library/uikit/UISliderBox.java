@@ -1,6 +1,5 @@
 package com.apple.library.uikit;
 
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.AppearanceImpl;
@@ -56,7 +55,7 @@ public class UISliderBox extends UIControl {
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        CGRect rect = bounds();
+        var rect = bounds();
         if (rect.equals(cachedBounds)) {
             return;
         }
@@ -144,7 +143,7 @@ public class UISliderBox extends UIControl {
     }
 
     private void updateValueAction(UIControl control) {
-        double value = stepValue;
+        var value = stepValue;
         if (control == leftView) {
             value = -stepValue;
         }
@@ -154,12 +153,12 @@ public class UISliderBox extends UIControl {
     }
 
     private void updateValueWithEvent(UIEvent event) {
-        CGPoint point = event.locationInView(contentView);
-        double value = point.x / (double) contentView.bounds().width;
+        var point = event.locationInView(contentView);
+        var value = point.x / (double) contentView.bounds().width;
         if (Math.abs(value - 0.5) < 0.01) {
             value = 0.5; // attract to mid value.
         }
-        double resolvedValue = value * (maxValue - minValue);
+        var resolvedValue = value * (maxValue - minValue);
         resolvedValue = (int) (resolvedValue / stepValue) * stepValue;
         updateValue(minValue + resolvedValue);
     }
@@ -201,12 +200,12 @@ public class UISliderBox extends UIControl {
     }
 
     private CGRect getCursorRect() {
-        CGRect rect = contentView.bounds();
-        float width = rect.width;
-        float height = rect.height;
-        float valueWidth = middleView.frame().width;
-        double progress = (value - minValue) / (maxValue - minValue);
-        int x = (int) ((width - valueWidth) * progress);
+        var rect = contentView.bounds();
+        var width = rect.width;
+        var height = rect.height;
+        var valueWidth = middleView.frame().width;
+        var progress = (value - minValue) / (maxValue - minValue);
+        var x = (int) ((width - valueWidth) * progress);
         return new CGRect(x, 0, valueWidth, height);
     }
 

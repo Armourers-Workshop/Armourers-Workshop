@@ -240,12 +240,12 @@ public class SaveSkinPacket extends CustomPacket {
         }
 
         public static Target readFromStream(IFriendlyByteBuf buffer) {
-            String identifier = buffer.readUtf();
-            int index = identifier.indexOf(':');
+            var identifier = buffer.readUtf();
+            var index = identifier.indexOf(':');
             if (index < 0) {
                 throw new RuntimeException("illegal identifier!!!");
             }
-            String path = FileUtils.normalize(identifier.substring(index + 1), true); // security check
+            var path = FileUtils.normalize(identifier.substring(index + 1), true); // security check
             if (path != null) {
                 identifier = identifier.subSequence(0, index + 1) + path;
             }

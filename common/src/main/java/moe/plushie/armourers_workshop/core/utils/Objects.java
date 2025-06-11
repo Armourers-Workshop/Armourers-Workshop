@@ -42,6 +42,13 @@ public class Objects {
         return defaultValue;
     }
 
+    public static <S> S compactMap(S value, S defaultValue) {
+        if (value != null) {
+            return value;
+        }
+        return defaultValue;
+    }
+
     public static int hash(Object... values) {
         return Arrays.hashCode(values);
     }

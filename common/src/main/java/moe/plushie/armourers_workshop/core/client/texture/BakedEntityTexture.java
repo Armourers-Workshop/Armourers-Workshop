@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
-import com.mojang.blaze3d.platform.NativeImage;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
@@ -11,6 +9,8 @@ import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,7 +29,7 @@ public class BakedEntityTexture {
     private final HashMap<SkinPartType, OpenRectangle3i> allBounds = new HashMap<>();
 
     private String model;
-    private IResourceLocation resourceLocation;
+    private OpenResourceLocation resourceLocation;
 
     private boolean isSlimModel = false;
     private boolean isLoaded = false;
@@ -37,7 +37,7 @@ public class BakedEntityTexture {
     public BakedEntityTexture() {
     }
 
-    public BakedEntityTexture(IResourceLocation resourceLocation, boolean slim) {
+    public BakedEntityTexture(OpenResourceLocation resourceLocation, boolean slim) {
         this.isSlimModel = slim;
         this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
@@ -52,13 +52,8 @@ public class BakedEntityTexture {
         }
     }
 
-    public void loadImage(NativeImage image, boolean slim) {
-        this.loadColors(image.getWidth(), image.getHeight(), slim, (x, y) -> {
-            int color = image.getPixelRGBA(x, y);
-            int red = (color << 16) & 0xff0000;
-            int blue = (color >> 16) & 0x0000ff;
-            return (color & 0xff00ff00) | red | blue;
-        });
+    public void loadImage(OpenNativeImage image, boolean slim) {
+        this.loadColors(image.width(), image.height(), slim, image::getPixel);
     }
 
     private void loadColors(int width, int height, boolean slim, IColorAccessor accessor) {
@@ -106,11 +101,11 @@ public class BakedEntityTexture {
         return (v & 0xffff) << 16 | (u & 0xffff);
     }
 
-    public IResourceLocation getResourceLocation() {
+    public OpenResourceLocation getResourceLocation() {
         return resourceLocation;
     }
 
-    public void setResourceLocation(IResourceLocation location) {
+    public void setResourceLocation(OpenResourceLocation location) {
         this.resourceLocation = location;
     }
 

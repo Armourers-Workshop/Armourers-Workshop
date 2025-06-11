@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -68,7 +68,7 @@ public class ModContributors {
         if (entity instanceof MannequinEntity mannequin) {
             if (mannequin.isExtraRenderer()) {
                 var descriptor = mannequin.getTextureDescriptor();
-                return of(PlayerTextureLoader.getInstance().getGameProfile(descriptor));
+                return of(EntityTextureLoader.getInstance().getGameProfile(descriptor));
             }
             return null;
         }

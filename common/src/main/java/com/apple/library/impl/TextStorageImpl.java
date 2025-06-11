@@ -285,8 +285,8 @@ public class TextStorageImpl {
     }
 
     public String highlightedText() {
-        NSTextPosition startPos = min(cursorPos, highlightPos);
-        NSTextPosition endPos = max(cursorPos, highlightPos);
+        var startPos = min(cursorPos, highlightPos);
+        var endPos = max(cursorPos, highlightPos);
         return value.substring(startPos.value, endPos.value);
     }
 
@@ -305,8 +305,8 @@ public class TextStorageImpl {
     }
 
     public void checkCursorAndHighlightPos() {
-        NSTextPosition cursorPos1 = clamp(cursorPos, beginOfDocument(), endOfDocument());
-        NSTextPosition highlightPos1 = clamp(highlightPos, beginOfDocument(), endOfDocument());
+        var cursorPos1 = clamp(cursorPos, beginOfDocument(), endOfDocument());
+        var highlightPos1 = clamp(highlightPos, beginOfDocument(), endOfDocument());
         if (cursorPos1.equals(cursorPos) && highlightPos1.equals(highlightPos)) {
             return;
         }
@@ -335,7 +335,7 @@ public class TextStorageImpl {
         float maxHeight = 0;
         int lineIndex = 0;
 
-        NSRange selection = NSRange.of(cursorPos.value, highlightPos.value);
+        var selection = NSRange.of(cursorPos.value, highlightPos.value);
 
         var lines = split(value, selection, font, boundingSize.width);
         for (var line : lines) {

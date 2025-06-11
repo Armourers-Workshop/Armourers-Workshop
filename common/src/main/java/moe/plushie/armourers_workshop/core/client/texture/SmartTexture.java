@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.texture;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
@@ -12,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureProperties;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -22,12 +22,12 @@ import java.util.Map;
 
 public class SmartTexture extends ReferenceCounted {
 
-    private final IResourceLocation location;
+    private final OpenResourceLocation location;
 
     private final SkinTextureProperties properties;
     private final TextureAnimationController animationController;
 
-    private final Map<IResourceLocation, ByteBuf> textureBuffers;
+    private final Map<OpenResourceLocation, ByteBuf> textureBuffers;
 
     private final Map<SkinGeometryType, IRenderType> bindingRenderTypes = new LinkedHashMap<>();
 
@@ -67,7 +67,7 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public IResourceLocation getLocation() {
+    public OpenResourceLocation getLocation() {
         return location;
     }
 
@@ -88,7 +88,7 @@ public class SmartTexture extends ReferenceCounted {
         }
     }
 
-    private Map<IResourceLocation, ByteBuf> resolveTextureBuffers(IResourceLocation location, SkinTextureData provider) {
+    private Map<OpenResourceLocation, ByteBuf> resolveTextureBuffers(OpenResourceLocation location, SkinTextureData provider) {
         var path = FileUtils.removeExtension(location.getPath());
         var builder = new TextureBufferBuilder(provider.getProperties());
         builder.addData(location, provider);
@@ -105,7 +105,7 @@ public class SmartTexture extends ReferenceCounted {
 
     private static class TextureBufferBuilder {
 
-        private final Map<IResourceLocation, ByteBuf> buffers = new LinkedHashMap<IResourceLocation, ByteBuf>();
+        private final Map<OpenResourceLocation, ByteBuf> buffers = new LinkedHashMap<OpenResourceLocation, ByteBuf>();
 
         private final SkinTextureProperties parentProperties;
 
@@ -113,12 +113,12 @@ public class SmartTexture extends ReferenceCounted {
             this.parentProperties = parentProperties;
         }
 
-        public void addData(IResourceLocation location, SkinTextureData provider) {
+        public void addData(OpenResourceLocation location, SkinTextureData provider) {
             buffers.put(location, provider.getBuffer());
             addMeta(location, provider.getProperties());
         }
 
-        private void addMeta(IResourceLocation location, SkinTextureProperties properties) {
+        private void addMeta(OpenResourceLocation location, SkinTextureProperties properties) {
             var isBlurFilter = properties.isBlurFilter() || parentProperties.isBlurFilter();
             var isClampToEdge = properties.isClampToEdge() || parentProperties.isClampToEdge();
             if (!isBlurFilter && !isClampToEdge) {
@@ -131,7 +131,7 @@ public class SmartTexture extends ReferenceCounted {
             buffers.put(location.withPath(location.getPath() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
         }
 
-        public Map<IResourceLocation, ByteBuf> build() {
+        public Map<OpenResourceLocation, ByteBuf> build() {
             return buffers;
         }
     }

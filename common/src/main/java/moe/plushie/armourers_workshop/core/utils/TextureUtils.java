@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.client.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
@@ -15,9 +14,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
 
 @Environment(EnvType.CLIENT)
 public final class TextureUtils {
@@ -36,7 +32,7 @@ public final class TextureUtils {
     }
 
     public static OpenResourceLocation getPlayerTextureLocation(EntityTextureDescriptor descriptor) {
-        var bakedTexture = PlayerTextureLoader.getInstance().loadTexture(descriptor);
+        var bakedTexture = EntityTextureLoader.getInstance().loadTexture(descriptor);
         if (bakedTexture != null && bakedTexture.isDownloaded()) {
             return bakedTexture.getLocation();
         }
@@ -51,7 +47,7 @@ public final class TextureUtils {
     public static BakedEntityTexture getPlayerTextureModel(EntityTextureDescriptor descriptor) {
         var texture = getPlayerTextureLocation(descriptor);
         if (texture != null) {
-            return PlayerTextureLoader.getInstance().getTextureModel(texture);
+            return EntityTextureLoader.getInstance().getTextureModel(texture);
         }
         return null;
     }
@@ -62,13 +58,5 @@ public final class TextureUtils {
             return textureModel.getColor(texturePos);
         }
         return null;
-    }
-
-    public static NativeImage readTextureImage(ByteBuffer buffer) {
-        try {
-            return NativeImage.read(buffer.asReadOnlyBuffer());
-        } catch (IOException e) {
-            return new NativeImage(NativeImage.Format.RGBA, 128, 128, false);
-        }
     }
 }

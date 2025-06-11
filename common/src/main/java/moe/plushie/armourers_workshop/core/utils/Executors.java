@@ -39,4 +39,11 @@ public class Executors {
     public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
         return java.util.concurrent.Executors.newSingleThreadScheduledExecutor();
     }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception ignored) {
+        }
+    }
 }

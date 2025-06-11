@@ -83,9 +83,9 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         if (pageIndex == 0) {
             listReports.clearItems();
         }
-        ArrayList<String> names = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd MM:dd:HH");
-        for (Report skinReport : reports) {
+        var names = new ArrayList<String>();
+        var sdf = new SimpleDateFormat("yyyy-MM-dd MM:dd:HH");
+        for (var skinReport : reports) {
             names.add(sdf.format(skinReport.getDate()));
             names.add(String.valueOf(skinReport.getUserId()));
             names.add(String.valueOf(skinReport.getSkinId()));
@@ -101,7 +101,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     }
 
     private ReportList buildReportList() {
-        ReportList reportList = new ReportList(new CGRect(0, 0, 240, 120));
+        var reportList = new ReportList(new CGRect(0, 0, 240, 120));
         reportList.addColumn("date", 106);
         reportList.addColumn("userId", 40);
         reportList.addColumn("skinId", 40);

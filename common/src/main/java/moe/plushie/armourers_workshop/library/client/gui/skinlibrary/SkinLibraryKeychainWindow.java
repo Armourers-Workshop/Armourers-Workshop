@@ -33,7 +33,7 @@ public class SkinLibraryKeychainWindow {
                 var password = DataEncryptMethod.PASSWORD.key(dialog.value());
                 var inputSecurityData = DataEncryptMethod.PASSWORD.signature(password);
                 if (!securityData.equals(inputSecurityData)) {
-                    consumer.throwing(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalPassword"));
+                    consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalPassword"));
                     return;
                 }
                 var options = new SkinFileOptions();
@@ -47,7 +47,7 @@ public class SkinLibraryKeychainWindow {
         if (securityData.startsWith(DataEncryptMethod.AUTH.method() + ";")) {
             var setting = SkinLibraryManager.getClient().getSetting();
             if (!securityData.equals(setting.getPublicKey())) {
-                consumer.throwing(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalServer"));
+                consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalServer"));
                 return;
             }
             var options = new SkinFileOptions();
@@ -57,6 +57,6 @@ public class SkinLibraryKeychainWindow {
             return;
         }
         // no support
-        consumer.throwing(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalAlgorithm"));
+        consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalAlgorithm"));
     }
 }
