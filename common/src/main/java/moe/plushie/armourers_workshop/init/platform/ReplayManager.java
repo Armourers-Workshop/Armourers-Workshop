@@ -32,11 +32,11 @@ public class ReplayManager {
         if (!IS_REPLAYING) {
             return;
         }
-        switch (packet.getEvent()) {
+        switch (packet.event()) {
             case START_RECORDING: {
                 clean();
                 // if record an integrated server, we need to launch the data service.
-                var param = IFriendlyByteBuf.wrap(packet.getParameters());
+                var param = IFriendlyByteBuf.wrap(packet.parameters());
                 var distType = param.readEnum(OpenDistributionType.class);
                 if (distType.isIntegratedServer()) {
                     var dbPath = new File(param.readUtf());

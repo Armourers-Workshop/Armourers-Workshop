@@ -29,7 +29,7 @@ public class UserNotificationCenter {
     // show the message in to current screen.
     public static void showAlertFromServer(ExecuteAlertPacket alertPacket) {
         RenderSystem.recordRenderCall(() -> {
-            if ((alertPacket.getType() & 0x80000000) != 0) {
+            if ((alertPacket.type() & 0x80000000) != 0) {
                 var window = new ServerToastWindow(alertPacket);
                 window.showInScreen();
             } else {

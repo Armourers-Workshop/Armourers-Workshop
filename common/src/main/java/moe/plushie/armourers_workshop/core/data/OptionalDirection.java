@@ -24,13 +24,13 @@ public enum OptionalDirection {
     }
 
     OptionalDirection(OpenDirection direction) {
-        this.name = direction.getName();
+        this.name = direction.serializedName();
         this.direction = direction;
     }
 
     public static OptionalDirection of(OpenDirection direction) {
         for (var dir : values()) {
-            if (direction.equals(dir.getDirection())) {
+            if (direction.equals(dir.direction())) {
                 return dir;
             }
         }
@@ -42,7 +42,7 @@ public enum OptionalDirection {
     }
 
     @Nullable
-    public OpenDirection getDirection() {
+    public OpenDirection direction() {
         return direction;
     }
 

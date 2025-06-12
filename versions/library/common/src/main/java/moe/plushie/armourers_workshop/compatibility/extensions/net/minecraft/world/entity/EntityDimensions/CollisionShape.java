@@ -12,7 +12,7 @@ import manifold.ext.rt.api.This;
 public class CollisionShape {
 
     public static EntityDimensions withCollisionShape(@This EntityDimensions dimensions, EntityCollisionShape shape) {
-        var rect = shape.getRect();
+        var rect = shape.rect();
         float newWidth = rect.width();
         float newHeight = rect.height();
         return EntityDimensions.scalable(newWidth, newHeight).withEyeHeight(rect.y());

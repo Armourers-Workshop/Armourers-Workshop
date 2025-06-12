@@ -57,8 +57,8 @@ public class UpdateAnimationPacket extends CustomPacket {
             case PLAY: {
                 var animationManager = getTargetRenderData(player);
                 if (animationManager != null) {
-                    var name = value.getString("name");
-                    var properties = value.getCompound("properties");
+                    var name = value.getOptionalString("name").orElse("");
+                    var properties = value.getOptionalCompound("properties").orElseGet(CompoundTag::new);
                     ModLog.debug("play animation {}", value);
                     animationManager.play(name, TickUtils.animationTicks(), properties);
                 }
@@ -67,7 +67,7 @@ public class UpdateAnimationPacket extends CustomPacket {
             case STOP: {
                 var animationManager = getTargetRenderData(player);
                 if (animationManager != null) {
-                    String name = value.getString("name");
+                    var name = value.getOptionalString("name").orElse("");
                     ModLog.debug("stop animation {}", value);
                     animationManager.stop(name);
                 }
@@ -76,8 +76,8 @@ public class UpdateAnimationPacket extends CustomPacket {
             case MAPPING: {
                 var animationManager = getTargetRenderData(player);
                 if (animationManager != null) {
-                    String from = value.getString("from");
-                    String to = value.getString("to");
+                    var from = value.getOptionalString("from").orElse("");
+                    var to = value.getOptionalString("to").orElse("");
                     ModLog.debug("rewrite animation {} to {}", from, to);
                     animationManager.map(from, to);
                 }
@@ -91,11 +91,11 @@ public class UpdateAnimationPacket extends CustomPacket {
 
     private AnimationManager getTargetRenderData(Player player) {
         if (value.contains("entity")) {
-            int entityId = value.getInt("entity");
+            var entityId = value.getOptionalInt("entity").orElse(0);
             return AnimationManager.of(player.getLevel().getEntity(entityId));
         }
         if (value.contains("block")) {
-            var blockPos = BlockPos.of(value.getLong("block"));
+            var blockPos = BlockPos.of(value.getOptionalLong("block").orElse(0L));
             return AnimationManager.of(player.getLevel().getBlockEntity(blockPos));
         }
         return null;

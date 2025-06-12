@@ -58,7 +58,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     @Override
     public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         if (blockEntity instanceof IPaintProvider provider) {
-            setItemColor(context.getItemInHand(), provider.getColor());
+            setItemColor(context.getItemInHand(), provider.color());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -133,6 +133,6 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     @Override
     public boolean isFoil(ItemStack itemStack) {
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
-        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
+        return paintColor.paintType() != SkinPaintTypes.NORMAL;
     }
 }

@@ -67,19 +67,19 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         // manual sync this changes, because it changed by server.
         var synchronizer = new SkinDocumentSynchronizer(this, false);
         document.addListener(synchronizer);
-        node.setSkin(new SkinDescriptor(identifier, skin.getType()));
+        node.setSkin(new SkinDescriptor(identifier, skin.type()));
         document.removeListener(synchronizer);
-        if (skin.getItemTransforms() != null) {
-            importToSettings(skin.getItemTransforms(), node);
+        if (skin.itemTransforms() != null) {
+            importToSettings(skin.itemTransforms(), node);
         }
     }
 
     private void importToSettings(OpenItemTransforms itemTransforms, SkinDocumentNode node) {
         var newItemTransforms = new OpenItemTransforms();
-        if (document.getItemTransforms() != null) {
-            newItemTransforms.putAll(document.getItemTransforms());
+        if (document.itemTransforms() != null) {
+            newItemTransforms.putAll(document.itemTransforms());
         }
-        var overrideNames = SkinUtils.getItemOverrides(node.getType());
+        var overrideNames = SkinUtils.getItemOverrides(node.type());
         if (!overrideNames.isEmpty()) {
             overrideNames.forEach(name -> itemTransforms.forEach((type, transform) -> newItemTransforms.put(name + ";" + type, transform)));
         } else {
@@ -96,20 +96,20 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         BlockUtils.performBatch(() -> {
             var importer = new SkinDocumentImporter(document);
             document.reset();
-            document.setItemTransforms(skin.getItemTransforms());
+            document.setItemTransforms(skin.itemTransforms());
             importer.execute(identifier, skin);
         });
     }
 
     public void exportFromDocument(ServerPlayer player, GameProfile profile) {
         var exporter = new SkinDocumentExporter(document);
-        exporter.setItemTransforms(document.getItemTransforms());
+        exporter.setItemTransforms(document.itemTransforms());
         EnvironmentExecutor.runOnBackground(() -> () -> {
             try {
                 var skin = exporter.execute(player, profile);
                 player.server.execute(() -> {
                     var identifier = SkinLoader.getInstance().saveSkin("", skin);
-                    var descriptor = new SkinDescriptor(identifier, skin.getType());
+                    var descriptor = new SkinDescriptor(identifier, skin.type());
                     var itemStack = descriptor.asItemStack();
                     player.giveItem(itemStack);
                 });
@@ -120,7 +120,7 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
     }
 
     @Override
-    public SkinDocument getDocument() {
+    public SkinDocument document() {
         return document;
     }
 

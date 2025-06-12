@@ -107,7 +107,7 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
         @Override
         public <T> T getParameter(ILootContextParam<T> param) {
             var value = builder.getParameter(KEYS.get(param));
-            return param.getValueClass().cast(convert(value));
+            return param.valueType().cast(convert(value));
         }
 
         @Override
@@ -115,7 +115,7 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
         public <T> T getOptionalParameter(ILootContextParam<T> param) {
             var value = builder.getOptionalParameter(KEYS.get(param));
             if (value != null) {
-                return param.getValueClass().cast(convert(value));
+                return param.valueType().cast(convert(value));
             }
             return null;
         }

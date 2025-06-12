@@ -40,7 +40,7 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemPaintable, I
     public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         var itemStack = context.getItemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
-            setItemColor(itemStack, provider.getColor());
+            setItemColor(itemStack, provider.color());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -52,8 +52,8 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemPaintable, I
         var blockEntity = level.getBlockEntity(pos);
         var entityTag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (entityTag != null && blockEntity != null) {
-            CompoundTag newNBT = blockEntity.saveFullData(level.registryAccess());
-            newNBT.put(Constants.Key.COLOR, entityTag.getCompound(Constants.Key.COLOR));
+            var newNBT = blockEntity.saveFullData(level.registryAccess());
+            entityTag.getOptionalCompound(Constants.Key.COLOR).ifPresent(color -> newNBT.put(Constants.Key.COLOR, color));
             blockEntity.loadFullData(newNBT, level.registryAccess());
         }
         return super.updateCustomBlockEntityTag(pos, level, player, itemStack, blockState);
@@ -80,7 +80,7 @@ public class SkinCubeItem extends AbstractBlockItem implements IItemPaintable, I
         var color = new BlockPaintColor(paintColor);
         var serializer = new TagSerializer();
         color.serialize(serializer);
-        entityTag.put(Constants.Key.COLOR, serializer.getTag());
+        entityTag.put(Constants.Key.COLOR, serializer.tag());
         itemStack.set(ModDataComponents.TOOL_FLAGS.get(), 1);
         itemStack.set(ModDataComponents.BLOCK_ENTITY_DATA.get(), entityTag);
     }

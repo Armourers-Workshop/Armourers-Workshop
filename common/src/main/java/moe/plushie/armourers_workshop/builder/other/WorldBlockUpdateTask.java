@@ -47,17 +47,17 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
     }
 
     @Override
-    public Level getLevel() {
+    public Level level() {
         return level;
     }
 
     @Override
-    public BlockPos getBlockPos() {
+    public BlockPos blockPos() {
         return blockPos;
     }
 
     @Override
-    public BlockState getBlockState() {
+    public BlockState blockState() {
         return blockState;
     }
 

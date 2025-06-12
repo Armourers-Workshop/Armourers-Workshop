@@ -62,20 +62,20 @@ public class EntityProfile implements IDataSerializable.Immutable {
             return provider.apply(slotType);
         }
         if (slotType == SkinSlotType.DEFAULT) {
-            return slotType.getMaxSize();
+            return slotType.maxSize();
         }
         return 0;
     }
 
-    public Collection<SkinSlotType> getSlots() {
-        return supports.getSlots();
+    public Collection<SkinSlotType> slots() {
+        return supports.slots();
     }
 
-    public List<IResourceLocation> getTransformers() {
+    public List<IResourceLocation> transformers() {
         return transformers;
     }
 
-    public IResourceLocation getRegistryName() {
+    public IResourceLocation registryName() {
         return registryName;
     }
 
@@ -108,11 +108,11 @@ public class EntityProfile implements IDataSerializable.Immutable {
 
         public static final IDataSerializerKey<SupportMap> SLOTS = IDataSerializerKey.create("Slots", SupportMap.CODEC, new SupportMap(new HashMap<>()));
 
-        public static final Map<SkinSlotType, IDataSerializerKey<String>> ALL_SLOTS = Collections.immutableMap(builder -> {
+        public static final Map<SkinSlotType, IDataSerializerKey<String>> ALL_SLOTS = Collections.immutableMap(it -> {
             for (var slotType : SkinSlotType.values()) {
-                var name = slotType.getName();
+                var name = slotType.serializedName();
                 var key = IDataSerializerKey.create(name, IDataCodec.STRING, null);
-                builder.put(slotType, key);
+                it.put(slotType, key);
             }
         });
     }
@@ -130,11 +130,11 @@ public class EntityProfile implements IDataSerializable.Immutable {
         }
 
         public SupportMap(IDataSerializer serializer) {
-            this.supports = Collections.immutableMap(builder -> {
+            this.supports = Collections.immutableMap(it -> {
                 for (var entry : CodingKeys.ALL_SLOTS.entrySet()) {
                     var value = serializer.read(entry.getValue());
                     if (value != null) {
-                        builder.put(entry.getKey(), value);
+                        it.put(entry.getKey(), value);
                     }
                 }
             });
@@ -150,7 +150,7 @@ public class EntityProfile implements IDataSerializable.Immutable {
             }
         }
 
-        public Collection<SkinSlotType> getSlots() {
+        public Collection<SkinSlotType> slots() {
             return supports.keySet();
         }
 
@@ -162,9 +162,9 @@ public class EntityProfile implements IDataSerializable.Immutable {
             if (providers != null) {
                 return providers.get(slotType);
             }
-            providers = Collections.immutableMap(builder -> supports.forEach((slotType1, name) -> {
+            providers = Collections.immutableMap(it -> supports.forEach((slotType1, name) -> {
                 var provider = getProviderByName(name);
-                builder.put(slotType1, provider);
+                it.put(slotType1, provider);
             }));
             return providers.get(slotType);
         }

@@ -40,15 +40,15 @@ public class SkinTextureAnimation implements ISkinTextureAnimation {
         stream.writeBoolean(interpolate);
     }
 
-    public int getFrameTime() {
+    public int frameTime() {
         return frameTime;
     }
 
-    public int getFrameCount() {
+    public int frameCount() {
         return frameCount;
     }
 
-    public Mode getFrmaeMode() {
+    public Mode frmaeMode() {
         return frmaeMode;
     }
 
@@ -109,11 +109,11 @@ public class SkinTextureAnimation implements ISkinTextureAnimation {
             }
         }
 
-        public int getType() {
+        public int type() {
             return type;
         }
 
-        public int[] getFrames() {
+        public int[] frames() {
             return frames;
         }
 

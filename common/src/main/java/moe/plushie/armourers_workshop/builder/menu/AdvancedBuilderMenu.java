@@ -23,7 +23,7 @@ public class AdvancedBuilderMenu extends AbstractBlockEntityMenu<AdvancedBuilder
     }
 
     @Override
-    public SkinDocument getDocument() {
-        return blockEntity.getDocument();
+    public SkinDocument document() {
+        return blockEntity.document();
     }
 }

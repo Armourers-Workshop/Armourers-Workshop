@@ -99,7 +99,7 @@ public class SkinLibrarySettingWindow extends ConfirmDialog {
 
     private UICheckBox addOptionView(Option<Boolean> property) {
         var checkBox = new UICheckBox(new CGRect(8, contentHeight, bounds().width() - 16, 9));
-        checkBox.setTitle(NSString.localizedString("skin-library.setting." + property.getKey()));
+        checkBox.setTitle(NSString.localizedString("skin-library.setting." + property.key()));
         checkBox.setSelected(properties.get(property));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
             properties.put(property, sender.isSelected());

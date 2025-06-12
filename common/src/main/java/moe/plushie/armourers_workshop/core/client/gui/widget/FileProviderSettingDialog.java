@@ -38,7 +38,7 @@ public class FileProviderSettingDialog extends ConfirmDialog {
     protected void addCheckBox(SkinProperty<Boolean> property) {
         var oldValue = properties.get(property);
         var checkBox = new UICheckBox(new CGRect(0, 0, 80, 9));
-        checkBox.setTitle(getDisplayText(property.getKey()));
+        checkBox.setTitle(getDisplayText(property.key()));
         checkBox.setSelected(oldValue);
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, box) -> {
             var value = box.isSelected();
@@ -47,7 +47,7 @@ public class FileProviderSettingDialog extends ConfirmDialog {
         stackView.addArrangedSubview(checkBox);
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 

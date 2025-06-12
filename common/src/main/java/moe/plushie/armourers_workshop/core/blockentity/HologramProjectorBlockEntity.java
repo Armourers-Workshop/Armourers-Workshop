@@ -28,19 +28,19 @@ import java.util.Map;
 
 public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
-    private static final Map<?, OpenVector3f> FACING_TO_ROT = Collections.immutableMap(builder -> {
-        builder.put(Pair.of(AttachFace.CEILING, Direction.EAST), new OpenVector3f(180, 270, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.NORTH), new OpenVector3f(180, 180, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.WEST), new OpenVector3f(180, 90, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new OpenVector3f(180, 0, 0));
-        builder.put(Pair.of(AttachFace.WALL, Direction.EAST), new OpenVector3f(270, 0, 270));
-        builder.put(Pair.of(AttachFace.WALL, Direction.SOUTH), new OpenVector3f(270, 0, 180));
-        builder.put(Pair.of(AttachFace.WALL, Direction.WEST), new OpenVector3f(270, 0, 90));
-        builder.put(Pair.of(AttachFace.WALL, Direction.NORTH), new OpenVector3f(270, 0, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.EAST), new OpenVector3f(0, 270, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new OpenVector3f(0, 180, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.WEST), new OpenVector3f(0, 90, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new OpenVector3f(0, 0, 0));
+    private static final Map<?, OpenVector3f> FACING_TO_ROT = Collections.immutableMap(it -> {
+        it.put(Pair.of(AttachFace.CEILING, Direction.EAST), new OpenVector3f(180, 270, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.NORTH), new OpenVector3f(180, 180, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.WEST), new OpenVector3f(180, 90, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new OpenVector3f(180, 0, 0));
+        it.put(Pair.of(AttachFace.WALL, Direction.EAST), new OpenVector3f(270, 0, 270));
+        it.put(Pair.of(AttachFace.WALL, Direction.SOUTH), new OpenVector3f(270, 0, 180));
+        it.put(Pair.of(AttachFace.WALL, Direction.WEST), new OpenVector3f(270, 0, 90));
+        it.put(Pair.of(AttachFace.WALL, Direction.NORTH), new OpenVector3f(270, 0, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.EAST), new OpenVector3f(0, 270, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new OpenVector3f(0, 180, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.WEST), new OpenVector3f(0, 90, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new OpenVector3f(0, 0, 0));
     });
 
     private final SimpleContainer container = new SimpleContainer(1);
@@ -115,7 +115,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         }
     }
 
-    public int getPowerMode() {
+    public int powerMode() {
         return powerMode;
     }
 
@@ -245,7 +245,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (bakedSkin == null) {
             return null;
         }
-        var rect = bakedSkin.getRenderBounds();
+        var rect = bakedSkin.renderBounds();
         var f = 1 / 16f;
         var scale = getModelScale() * f;
         var modelRadius = 0.0f;

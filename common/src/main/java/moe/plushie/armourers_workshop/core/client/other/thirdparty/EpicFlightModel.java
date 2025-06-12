@@ -45,7 +45,7 @@ public class EpicFlightModel extends LinkedModel {
         this.transformer = transformer;
     }
 
-    public BakedArmatureTransformer getTransformer() {
+    public BakedArmatureTransformer transformer() {
         return transformer;
     }
 

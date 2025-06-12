@@ -51,11 +51,11 @@ public class ServerReplayPacket extends CustomPacket {
         ReplayManager.accept(this);
     }
 
-    public Event getEvent() {
+    public Event event() {
         return event;
     }
 
-    public ByteBuf getParameters() {
+    public ByteBuf parameters() {
         return parameters;
     }
 

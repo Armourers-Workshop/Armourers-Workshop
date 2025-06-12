@@ -82,7 +82,7 @@ public class PaletteBox extends UIControl {
         this.setNeedsLayout();
     }
 
-    public Palette getPalette() {
+    public Palette palette() {
         return palette;
     }
 
@@ -90,7 +90,7 @@ public class PaletteBox extends UIControl {
         this.palette = palette;
     }
 
-    public int getSelectedIndex() {
+    public int selectedIndex() {
         return selectedIndex;
     }
 

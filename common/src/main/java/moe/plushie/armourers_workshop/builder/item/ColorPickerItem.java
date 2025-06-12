@@ -72,7 +72,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
                 return InteractionResult.CONSUME;
             }
             if (!itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE)) {
-                newColor = newColor.withPaintType(provider.getColor().getPaintType());
+                newColor = newColor.withPaintType(provider.color().paintType());
             }
             provider.setColor(newColor);
             return InteractionResult.sidedSuccess(level.isClientSide());
@@ -121,7 +121,7 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemTintC
     @Override
     public boolean isFoil(ItemStack itemStack) {
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
-        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
+        return paintColor.paintType() != SkinPaintTypes.NORMAL;
     }
 
     @Override

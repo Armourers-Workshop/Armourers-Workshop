@@ -30,12 +30,12 @@ public class SkinningTableWindow extends MenuWindow<SkinningTableMenu> {
         settingView.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleBottomMargin);
         settingView.setContents(UIImage.of(ModTextures.SKINNING_TABLE).uv(228, 0).fixed(24, 16).build());
         settingView.addTarget(this, UIControl.Event.MOUSE_LEFT_UP, (self, sender) -> {
-            var alert = new SkinningTableSettingWindow(menu.getBlockEntity().getOptions());
+            var alert = new SkinningTableSettingWindow(menu.getBlockEntity().options());
             alert.setTitle(NSString.localizedString("skinning-table.setting.title"));
             alert.sizeToFit();
             alert.showInView(this, () -> {
                 if (!alert.isCancelled()) {
-                    NetworkManager.sendToServer(new UpdateSkinningTablePacket(menu.getBlockEntity(), alert.getOptions()));
+                    NetworkManager.sendToServer(new UpdateSkinningTablePacket(menu.getBlockEntity(), alert.options()));
                 }
             });
         });

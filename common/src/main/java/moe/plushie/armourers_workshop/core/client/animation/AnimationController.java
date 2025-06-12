@@ -45,16 +45,16 @@ public class AnimationController {
     private final boolean isRequiresVirtualMachine;
 
     public AnimationController(SkinAnimation animation, Map<String, SkinPartTransform> partTransforms) {
-        this.name = animation.getName();
+        this.name = animation.name();
         this.animation = animation;
 
-        this.loop = animation.getLoop();
-        this.duration = animation.getDuration();
+        this.loop = animation.loop();
+        this.duration = animation.duration();
 
         this.mode = calcMixMode(name);
 
         // create all animation.
-        animation.getKeyframes().forEach((partName, linkedValues) -> {
+        animation.keyframes().forEach((partName, linkedValues) -> {
             var partTransform = partTransforms.get(partName);
             if (partTransform != null) {
                 this.animators.add(new Animator.Bone(partName, AnimationController.toTime(duration), linkedValues, AnimatedTransform.of(partTransform), mode));
@@ -110,7 +110,7 @@ public class AnimationController {
         return Objects.toString(this, "name", name, "duration", duration, "loop", loop);
     }
 
-    public Collection<AnimatedTransform> getAffectedTransforms() {
+    public Collection<AnimatedTransform> affectedTransforms() {
         return Collections.compactMap(animators, it -> {
             if (it instanceof Animator.Bone bone) {
                 return bone.transform;
@@ -119,15 +119,15 @@ public class AnimationController {
         });
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public SkinAnimationLoop getLoop() {
+    public SkinAnimationLoop loop() {
         return loop;
     }
 
-    public double getDuration() {
+    public double duration() {
         return duration;
     }
 
@@ -180,7 +180,7 @@ public class AnimationController {
 
             @Override
             public void apply(float x, float y, float z, AnimatedPoint output) {
-                output.setTranslate(x, y, z);
+                output.setTranslation(x, y, z);
             }
         }
 
@@ -209,7 +209,7 @@ public class AnimationController {
         public Animator(String name, int duration, List<SkinAnimationKeyframe> linkedKeyframes) {
             var namedKeyframes = new LinkedHashMap<String, ArrayList<SkinAnimationKeyframe>>();
             for (var keyframe : linkedKeyframes) {
-                namedKeyframes.computeIfAbsent(keyframe.getKey(), key -> new ArrayList<>()).add(keyframe);
+                namedKeyframes.computeIfAbsent(keyframe.key(), key -> new ArrayList<>()).add(keyframe);
             }
             this.name = name;
             this.channels = Collections.compactMap(namedKeyframes.entrySet(), it -> createChannel(it.getKey(), duration, it.getValue()));
@@ -248,7 +248,7 @@ public class AnimationController {
             @Override
             public void apply(Channel<OpenVector3f> channel, int time, AnimationPlayState playState, ExecutionContext context) {
                 // when can't found next fragment, ignore.
-                var fragment = channel.getFragmentAtTime(time);
+                var fragment = channel.fragmentAtTime(time);
                 if (fragment == null) {
                     return;
                 }
@@ -302,10 +302,10 @@ public class AnimationController {
 
             @Override
             public void apply(Channel<Object> channel, int time, AnimationPlayState playState, ExecutionContext context) {
-                var fragment = channel.getFragmentAtTime(time);
+                var fragment = channel.fragmentAtTime(time);
                 var currentValue = Objects.flatMap(fragment, it -> it.startValue);
-                var effectState = playState.getEffect(channel.name);
-                if (effectState.getValue() == currentValue) {
+                var effectState = playState.effectByName(channel.name);
+                if (effectState.value() == currentValue) {
                     return; // not any change,
                 }
                 if (currentValue == null) {
@@ -339,7 +339,7 @@ public class AnimationController {
 
         public abstract Pair<OptimizedExpression<T>, OptimizedExpression<T>> compile(List<SkinAnimationPoint> points);
 
-        public Fragment<T> getFragmentAtTime(int time) {
+        public Fragment<T> fragmentAtTime(int time) {
             // fast hit caching?
             if (current != null && current.contains(time)) {
                 return current;
@@ -366,9 +366,9 @@ public class AnimationController {
         private List<Fragment<T>> createFragments(int duration, List<SkinAnimationKeyframe> keyframes) {
             var builders = new ArrayList<FragmentBuilder<T>>();
             for (var keyframe : keyframes) {
-                var time = AnimationController.toTime(keyframe.getTime());
-                var point = compile(keyframe.getPoints());
-                builders.add(new FragmentBuilder<T>(time, keyframe.getFunction(), point.getKey(), point.getValue()));
+                var time = AnimationController.toTime(keyframe.time());
+                var point = compile(keyframe.points());
+                builders.add(new FragmentBuilder<T>(time, keyframe.function(), point.getKey(), point.getValue()));
             }
             builders.sort(Comparator.comparingInt(it -> it.leftTime));
             if (!builders.isEmpty()) {
@@ -411,9 +411,9 @@ public class AnimationController {
                 var expressions = new ArrayList<Expression>();
                 for (var point : points) {
                     if (point instanceof SkinAnimationPoint.Bone bone) {
-                        expressions.add(compileExpression(bone.getX(), defaultValue));
-                        expressions.add(compileExpression(bone.getY(), defaultValue));
-                        expressions.add(compileExpression(bone.getZ(), defaultValue));
+                        expressions.add(compileExpression(bone.x(), defaultValue));
+                        expressions.add(compileExpression(bone.y(), defaultValue));
+                        expressions.add(compileExpression(bone.z(), defaultValue));
                     } else {
                         ModLog.warn("Not support point type: {}", point);
                         expressions.add(Constant.ZERO);
@@ -460,7 +460,7 @@ public class AnimationController {
 
             private OptimizedExpression<Object> compile0(SkinAnimationPoint point) {
                 if (point instanceof SkinAnimationPoint.Instruct instruct) {
-                    return new AnimationInstructHandler(compileExpression(OpenPrimitive.of(instruct.getScript()), 0));
+                    return new AnimationInstructHandler(compileExpression(OpenPrimitive.of(instruct.script()), 0));
                 }
                 if (point instanceof SkinAnimationPoint.Sound sound) {
                     return new AnimationSoundHandler(sound);

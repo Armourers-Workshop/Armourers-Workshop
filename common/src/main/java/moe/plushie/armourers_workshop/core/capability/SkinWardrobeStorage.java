@@ -37,9 +37,9 @@ public class SkinWardrobeStorage {
     public static void loadDataFixer(SkinWardrobe wardrobe, IDataSerializer serializer) {
         var version = serializer.read(CodingKeys.VERSION);
         if (version <= 0) {
-            var inventory = wardrobe.getInventory();
-            moveSlots(inventory, 67, SkinSlotType.DYE.getIndex(), 16, "align dye slots storage");
-            moveSlots(inventory, 57, SkinSlotType.OUTFIT.getIndex(), 10, "align outfit slots storage");
+            var inventory = wardrobe.inventory();
+            moveSlots(inventory, 67, SkinSlotType.DYE.index(), 16, "align dye slots storage");
+            moveSlots(inventory, 57, SkinSlotType.OUTFIT.index(), 10, "align outfit slots storage");
         }
     }
 
@@ -100,7 +100,7 @@ public class SkinWardrobeStorage {
         }
         var value = new ArrayList<Short>();
         slots.forEach((slotType, count) -> {
-            var index = slotType.getId() & 0xff;
+            var index = slotType.id() & 0xff;
             var encoded = index << 8 | count & 0xff;
             value.add((short) encoded);
         });

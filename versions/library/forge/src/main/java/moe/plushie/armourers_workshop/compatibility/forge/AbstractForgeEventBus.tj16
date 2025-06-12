@@ -17,12 +17,12 @@ import java.util.function.Function;
 @Available("[1.16, 1.18)")
 public class AbstractForgeEventBus {
 
-    private static final Map<IEventHandler.Priority, EventPriority> CONVERTER = Collections.immutableMap(builder -> {
-        builder.put(IEventHandler.Priority.HIGHEST, EventPriority.HIGHEST);
-        builder.put(IEventHandler.Priority.HIGH, EventPriority.HIGH);
-        builder.put(IEventHandler.Priority.NORMAL, EventPriority.NORMAL);
-        builder.put(IEventHandler.Priority.LOW, EventPriority.LOW);
-        builder.put(IEventHandler.Priority.LOWEST, EventPriority.LOWEST);
+    private static final Map<IEventHandler.Priority, EventPriority> CONVERTER = Collections.immutableMap(it -> {
+        it.put(IEventHandler.Priority.HIGHEST, EventPriority.HIGHEST);
+        it.put(IEventHandler.Priority.HIGH, EventPriority.HIGH);
+        it.put(IEventHandler.Priority.NORMAL, EventPriority.NORMAL);
+        it.put(IEventHandler.Priority.LOW, EventPriority.LOW);
+        it.put(IEventHandler.Priority.LOWEST, EventPriority.LOWEST);
     });
 
     private static final HashMap<Object, ArrayList<?>> LISTENERS = new HashMap<>();

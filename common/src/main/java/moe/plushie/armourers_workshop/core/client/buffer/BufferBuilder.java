@@ -13,7 +13,7 @@ public class BufferBuilder extends AbstractBufferBuilder {
         this.begin(renderType);
     }
 
-    public IRenderType getRenderType() {
+    public IRenderType renderType() {
         return renderType;
     }
 }

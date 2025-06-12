@@ -24,17 +24,17 @@ public class SkinType implements ISkinType {
     }
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return registryName.toString();
     }
 
     @Override
-    public OpenResourceLocation getRegistryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 
@@ -48,7 +48,7 @@ public class SkinType implements ISkinType {
     }
 
     @Override
-    public List<? extends SkinPartType> getParts() {
+    public List<? extends SkinPartType> parts() {
         return parts;
     }
 
@@ -70,7 +70,7 @@ public class SkinType implements ISkinType {
             this.slotType = slotType;
         }
 
-        public OpenEquipmentSlot getSlotType() {
+        public OpenEquipmentSlot slotType() {
             return slotType;
         }
     }

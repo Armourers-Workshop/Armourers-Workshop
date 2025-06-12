@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.math.OpenVector2f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureOptions;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 
 import java.io.IOException;
@@ -41,17 +40,17 @@ public abstract class ChunkColorSection {
         this.textureIndexBytes = textureUsedIndex;
     }
 
-    public abstract SkinPaintColor getColor(int index);
+    public abstract SkinPaintColor colorAt(int index);
 
-    public ChunkTextureData.TextureRef getTexture(OpenVector2f pos) {
-        var list = getTextureList(pos);
+    public ChunkTextureData.TextureRef textureRefAt(OpenVector2f pos) {
+        var list = textureListAt(pos);
         if (list != null) {
             return list.get(pos, this);
         }
         return null;
     }
 
-    protected abstract ChunkTextureData getTextureList(OpenVector2f pos);
+    protected abstract ChunkTextureData textureListAt(OpenVector2f pos);
 
     public boolean isResolved() {
         return resolved;
@@ -61,23 +60,23 @@ public abstract class ChunkColorSection {
         return usedBytes == 0;
     }
 
-    public int getStartIndex() {
+    public int startIndex() {
         return index;
     }
 
-    public int getEndIndex() {
+    public int endIndex() {
         return index + size;
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 
-    public int getUsedBytes() {
+    public int usedBytes() {
         return usedBytes;
     }
 
-    public SkinPaintType getPaintType() {
+    public SkinPaintType paintType() {
         return paintType;
     }
 
@@ -104,7 +103,7 @@ public abstract class ChunkColorSection {
                 }
                 // restore the parent -> child.
                 for (var parent : textureLists) {
-                    var variants = new ArrayList<>(parent.provider.getVariants());
+                    var variants = new ArrayList<>(parent.provider.variants());
                     for (var child : textureLists) {
                         if (parent.id == child.parentId) {
                             variants.add(child.provider);
@@ -128,16 +127,16 @@ public abstract class ChunkColorSection {
         }
 
         @Override
-        public SkinPaintColor getColor(int offset) {
+        public SkinPaintColor colorAt(int offset) {
             int value = 0;
             for (int i = 0; i < usedBytes; ++i) {
                 value = (value << 8) | (buffers[offset * usedBytes + i]) & 0xff;
             }
-            return SkinPaintColor.of(value, getPaintType());
+            return SkinPaintColor.of(value, paintType());
         }
 
         @Override
-        public ChunkTextureData getTextureList(OpenVector2f pos) {
+        public ChunkTextureData textureListAt(OpenVector2f pos) {
             if (textureLists == null) {
                 return null;
             }
@@ -184,7 +183,7 @@ public abstract class ChunkColorSection {
                     var list = lists.get(i);
                     // add into line
                     list.freeze(x, y, textureLists::get);
-                    var usedRect = list.getUsedRect();
+                    var usedRect = list.usedRect();
                     lineHeight = Math.max(lineHeight, usedRect.height());
                     x += usedRect.width() + 16f;
                     if (++col < columns) {
@@ -202,9 +201,9 @@ public abstract class ChunkColorSection {
         }
 
         @Override
-        public SkinPaintColor getColor(int offset) {
+        public SkinPaintColor colorAt(int offset) {
             int value = colorLists.get(offset);
-            return SkinPaintColor.of(value, getPaintType());
+            return SkinPaintColor.of(value, paintType());
         }
 
         public ColorRef putColor(int value) {
@@ -222,7 +221,7 @@ public abstract class ChunkColorSection {
         public ChunkTextureData.TextureRef putTexture(OpenVector2f uv, SkinTextureData provider) {
             // we're also adding all variant textures.
             var textureList = getOrCreateTextureList(provider);
-            Collections.eachTree(provider.getVariants(), SkinTextureData::getVariants, this::getOrCreateTextureList);
+            Collections.eachTree(provider.variants(), SkinTextureData::variants, this::getOrCreateTextureList);
             return textureList.add(uv, this);
         }
 
@@ -231,7 +230,7 @@ public abstract class ChunkColorSection {
         }
 
         @Override
-        protected ChunkTextureData getTextureList(OpenVector2f pos) {
+        protected ChunkTextureData textureListAt(OpenVector2f pos) {
             for (var list : textureLists.values()) {
                 if (list.contains(pos)) {
                     return list;
@@ -262,7 +261,7 @@ public abstract class ChunkColorSection {
 
         @Override
         public void writeToStream(ChunkOutputStream stream) throws IOException {
-            stream.writeFixedInt(section.getStartIndex() + value, section.colorIndexBytes);
+            stream.writeFixedInt(section.startIndex() + value, section.colorIndexBytes);
         }
 
         @Override

@@ -18,7 +18,7 @@ public class SkinDocumentCollider {
         var boxes = generateCollisionBox(node, new OpenPoseStack());
         var results = new LinkedHashMap<OpenVector3i, OpenRectangle3i>();
         for (var it : boxes) {
-            var box = it.getTransformedBoundingBox();
+            var box = it.transformedBoundingBox();
 
             var minX = OpenMath.floori(box.minX() + 8);
             var minY = OpenMath.floori(box.minY() + 8);
@@ -53,16 +53,16 @@ public class SkinDocumentCollider {
     private static ArrayList<OpenTransformedBoundingBox> generateCollisionBox(SkinDocumentNode node, OpenPoseStack poseStack) {
         var result = new ArrayList<OpenTransformedBoundingBox>();
 
-        if (node.getId().equals("float")) {
+        if (node.id().equals("float")) {
             return result;
         }
 
         poseStack.pushPose();
 
-        node.getTransform().apply(poseStack);
-        var skin = SkinLoader.getInstance().loadSkin(node.getSkin().getIdentifier());
+        node.transform().apply(poseStack);
+        var skin = SkinLoader.getInstance().loadSkin(node.skin().identifier());
         if (skin != null) {
-            for (var part : skin.getParts()) {
+            for (var part : skin.parts()) {
                 result.addAll(generateCollisionBox(part, poseStack));
             }
         }
@@ -78,16 +78,16 @@ public class SkinDocumentCollider {
     private static ArrayList<OpenTransformedBoundingBox> generateCollisionBox(SkinPart part, OpenPoseStack poseStack) {
         var result = new ArrayList<OpenTransformedBoundingBox>();
         poseStack.pushPose();
-        part.getTransform().apply(poseStack);
-        part.getGeometries().forEach(geometry -> {
+        part.transform().apply(poseStack);
+        part.geometries().forEach(geometry -> {
             poseStack.pushPose();
-            geometry.getTransform().apply(poseStack);
-            var aabb = geometry.getShape().aabb();
+            geometry.transform().apply(poseStack);
+            var aabb = geometry.shape().aabb();
             var tbb = new OpenTransformedBoundingBox(poseStack.last().pose().copy(), aabb);
             result.add(tbb);
             poseStack.popPose();
         });
-        part.getChildren().forEach(child -> {
+        part.children().forEach(child -> {
             result.addAll(generateCollisionBox(child, poseStack));
         });
         poseStack.popPose();

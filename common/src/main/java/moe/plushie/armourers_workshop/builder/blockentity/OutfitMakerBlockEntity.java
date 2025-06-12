@@ -38,7 +38,7 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
         }
     }
 
-    public String getItemName() {
+    public String itemName() {
         return itemName;
     }
 
@@ -47,7 +47,7 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public String getItemFlavour() {
+    public String itemFlavour() {
         return itemFlavour;
     }
 

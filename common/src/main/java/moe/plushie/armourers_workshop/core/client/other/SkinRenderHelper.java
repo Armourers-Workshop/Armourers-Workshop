@@ -21,7 +21,7 @@ public class SkinRenderHelper {
 
     public static int getRenderCount(BakedSkin bakedSkin) {
         int count = 0;
-        for (var part : bakedSkin.getParts()) {
+        for (var part : bakedSkin.parts()) {
             if (part.isVisible()) {
                 count += 1;
             }
@@ -30,9 +30,9 @@ public class SkinRenderHelper {
     }
 
     public static void apply(@Nullable Entity entity, BakedSkin bakedSkin, BakedArmature bakedArmature, SkinItemSource itemSource) {
-        for (var part : bakedSkin.getParts()) {
+        for (var part : bakedSkin.parts()) {
             boolean shouldRender = false;
-            if (bakedArmature != null && bakedArmature.getTransform(part) != null) {
+            if (bakedArmature != null && bakedArmature.transformByPart(part) != null) {
                 shouldRender = true;
             }
             if (shouldRender) {
@@ -43,7 +43,7 @@ public class SkinRenderHelper {
     }
 
     public static boolean shouldRenderPart(@Nullable Entity entity, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinItemSource itemSource) {
-        var partType = bakedPart.getType();
+        var partType = bakedPart.type();
         // hook part only render in hook entity.
         if (partType == SkinPartTypes.ITEM_FISHING_HOOK) {
             return isHookEntity(entity);
@@ -65,8 +65,8 @@ public class SkinRenderHelper {
             // we have some old skin that only contain arrow part,
             // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
-            if (itemSource.getDisplayContext() == OpenItemDisplayContext.NONE) {
-                return bakedPart.getChildren().size() == 1;
+            if (itemSource.displayContext() == OpenItemDisplayContext.NONE) {
+                return bakedPart.children().size() == 1;
             }
             return false;
         }
@@ -77,9 +77,9 @@ public class SkinRenderHelper {
             return false; // hook entity only render arrow part.
         }
         if (partType instanceof ICanUse canUse && entity instanceof LivingEntity livingEntity) {
-            var useTick = getUseTick(livingEntity, itemSource.getItem());
-            var useRange = canUse.getUseRange();
-            var tickRange = bakedSkin.getUseTickRange();
+            var useTick = getUseTick(livingEntity, itemSource.item());
+            var useRange = canUse.useRange();
+            var tickRange = bakedSkin.useTickRange();
             return useRange.contains(OpenMath.clamp(useTick, tickRange.lowerEndpoint(), tickRange.upperEndpoint()));
         }
         return true;

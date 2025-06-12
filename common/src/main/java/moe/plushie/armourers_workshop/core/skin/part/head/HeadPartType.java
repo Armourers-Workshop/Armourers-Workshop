@@ -18,12 +18,12 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
     }
 
     @Override
-    public OpenVector2i getTextureSkinPos() {
+    public OpenVector2i textureSkinPos() {
         return OpenVector2i.ZERO;
     }
 
     @Override
-    public OpenVector3i getTextureModelSize() {
+    public OpenVector3i textureModelSize() {
         return new OpenVector3i(8, 8, 8);
     }
 }

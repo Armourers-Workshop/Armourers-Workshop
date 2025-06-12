@@ -21,11 +21,11 @@ public class ChunkWriter {
     }
 
     public <V, T> void write(ChunkSerializer<V, T> serializer, @Nullable V value, T context) throws IOException {
-        var encoder = serializer.createEncoder(value, context, stream.getContext());
-        var condition = Condition.of(value, serializer.getDefaultValue());
+        var encoder = serializer.createEncoder(value, context, stream.context());
+        var condition = Condition.of(value, serializer.defaultValue());
         stream.ifTask(condition, () -> {
-            var name = serializer.getChunkType().getName();
-            var flags = serializer.getChunkFlags(value, stream.getContext());
+            var name = serializer.chunkType().serializedName();
+            var flags = serializer.getChunkFlags(value, stream.context());
             var sum = new Sum();
             stream.writeVariable(sum);
             stream.sumTask(sum, () -> {
@@ -40,9 +40,9 @@ public class ChunkWriter {
         if (blobs instanceof Collection<?> allBlobs) {
             for (var blob : allBlobs) {
                 if (blob instanceof Chunk chunk) {
-                    var name = chunk.getName();
-                    var flags = chunk.getFlags();
-                    stream.writeInt(chunk.getLength());
+                    var name = chunk.name();
+                    var flags = chunk.flags();
+                    stream.writeInt(chunk.length());
                     writeHeader(name, flags);
                     chunk.writeToStream(stream);
                     writeFooter(name, flags);
@@ -109,7 +109,7 @@ public class ChunkWriter {
         }
 
         @Override
-        public ChunkConditionResult getResult() {
+        public ChunkConditionResult result() {
             return result;
         }
     }

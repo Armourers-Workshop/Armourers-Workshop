@@ -27,11 +27,11 @@ public class ServerPermissions {
         };
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public EnumSet<ServerPermission> getActions() {
+    public EnumSet<ServerPermission> actions() {
         return actions;
     }
 

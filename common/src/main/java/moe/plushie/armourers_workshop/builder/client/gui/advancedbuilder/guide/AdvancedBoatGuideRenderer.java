@@ -11,12 +11,12 @@ import net.fabricmc.api.Environment;
 public class AdvancedBoatGuideRenderer extends AdvancedEntityGuideRenderer {
 
     @Override
-    public BakedArmature getArmature() {
+    public BakedArmature armature() {
         return BakedArmature.defaultBy(Armatures.BOAT);
     }
 
     @Override
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return new SkinTextureData(ModTextures.BOAT_DEFAULT.toString(), 128, 64);
     }
 }

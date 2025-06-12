@@ -18,7 +18,7 @@ public final class SkinTypes {
     private static final ArrayList<SkinType> ALL_SORTED_TYPES = new ArrayList<>();
     private static final LinkedHashMap<String, SkinType> ALL_TYPES = new LinkedHashMap<>();
 
-    public static final IDataCodec<SkinType> CODEC = IDataCodec.STRING.xmap(SkinTypes::byName, SkinType::getName);
+    public static final IDataCodec<SkinType> CODEC = IDataCodec.STRING.xmap(SkinTypes::byName, SkinType::name);
 
     public static final SkinType UNKNOWN = normal(255).part(SkinPartTypes.UNKNOWN).build("unknown");
 
@@ -103,7 +103,7 @@ public final class SkinTypes {
         }
 
         public Builder part(SkinType skinType) {
-            this.partTypes.addAll(skinType.getParts());
+            this.partTypes.addAll(skinType.parts());
             return this;
         }
 
@@ -120,17 +120,17 @@ public final class SkinTypes {
         public SkinType build(String name) {
             var type = factory.apply(this, name);
             type.setRegistryName(OpenResourceLocation.create("armourers", name));
-            if (type.getParts().isEmpty()) {
+            if (type.parts().isEmpty()) {
                 ModLog.warn("A mod tried to register a skin type no skin type parts.");
                 return type;
             }
-            if (ALL_TYPES.containsKey(type.getRegistryName().toString())) {
+            if (ALL_TYPES.containsKey(type.registryName().toString())) {
                 ModLog.warn("A mod tried to register a skin type with a registry name that is in use.");
                 return type;
             }
             ALL_SORTED_TYPES.add(type);
-            ALL_TYPES.put(type.getRegistryName().toString(), type);
-            ModLog.debug("Registering Skin '{}'", type.getRegistryName());
+            ALL_TYPES.put(type.registryName().toString(), type);
+            ModLog.debug("Registering Skin '{}'", type.registryName());
             return type;
         }
     }

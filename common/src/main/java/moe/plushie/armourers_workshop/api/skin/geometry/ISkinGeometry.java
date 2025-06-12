@@ -8,25 +8,25 @@ public interface ISkinGeometry {
     /**
      * Gets the geometry type.
      */
-    ISkinGeometryType getType();
+    ISkinGeometryType type();
 
     /**
      * Gets the geometry options.
      */
-    ISkinGeometryOptions getOptions();
+    ISkinGeometryOptions options();
 
     /**
      * Gets the geometry transform.
      */
-    ITransform3f getTransform();
+    ITransform3f transform();
 
     /**
      * Gets the geometry shape.
      */
-    IVoxelShape getShape();
+    IVoxelShape shape();
 
     /**
      * Gets the geometry all faces.
      */
-    Iterable<? extends ISkinGeometryFace> getFaces();
+    Iterable<? extends ISkinGeometryFace> faces();
 }

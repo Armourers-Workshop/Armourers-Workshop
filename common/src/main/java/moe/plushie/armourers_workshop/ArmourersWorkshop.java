@@ -77,9 +77,9 @@ public class ArmourersWorkshop {
     }
 
     public static OpenResourceLocation getItemIcon(SkinType skinType) {
-        if (skinType == SkinTypes.UNKNOWN || skinType.getRegistryName() == null) {
+        if (skinType == SkinTypes.UNKNOWN || skinType.registryName() == null) {
             return null;
         }
-        return ModConstants.key("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
+        return ModConstants.key("textures/item/template/" + skinType.registryName().path() + ".png");
     }
 }

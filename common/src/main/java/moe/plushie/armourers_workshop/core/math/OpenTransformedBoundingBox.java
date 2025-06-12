@@ -40,10 +40,10 @@ public class OpenTransformedBoundingBox {
 
     }
 
-    public ArrayList<OpenVector3f> getVertices() {
+    public ArrayList<OpenVector3f> vertices() {
         if (vertices == null) {
             vertices = _vertexs(boundingBox);
-            for (OpenVector3f v : vertices) {
+            for (var v : vertices) {
                 v.transform(transform);
             }
         }
@@ -56,22 +56,22 @@ public class OpenTransformedBoundingBox {
 //        ArrayList<Vector3f> v2 = box.getVertices();
 //
 //        return GJK.BodiesIntersect(v2, v1);
-        return getTransformedBoundingBox().intersects(box);
+        return transformedBoundingBox().intersects(box);
     }
 
     //    public boolean intersects(float d, float e, float f, float g, float h, float i) {
 //        return getTransformedBoundingBox().intersects(d, e, f, g, h, i);
 //    }
 //
-    public OpenMatrix4f getTransform() {
+    public OpenMatrix4f transform() {
         return transform;
     }
 
-    public OpenAxisAlignedBoundingBox getBoundingBox() {
+    public OpenAxisAlignedBoundingBox boundingBox() {
         return boundingBox;
     }
 
-    public OpenAxisAlignedBoundingBox getTransformedBoundingBox() {
+    public OpenAxisAlignedBoundingBox transformedBoundingBox() {
         if (transformedBoundingBox == null) {
             transformedBoundingBox = boundingBox.transforming(transform);
         }

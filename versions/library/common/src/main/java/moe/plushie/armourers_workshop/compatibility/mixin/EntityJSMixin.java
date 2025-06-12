@@ -13,6 +13,6 @@ public class EntityJSMixin {
 
     @Unique
     public SkinWardrobeJS getWardrobe() {
-        return EntityDataStorage.of(Entity.class.cast(this)).getWardrobeJS().orElse(null);
+        return EntityDataStorage.of(Entity.class.cast(this)).wardrobeJS().orElse(null);
     }
 }

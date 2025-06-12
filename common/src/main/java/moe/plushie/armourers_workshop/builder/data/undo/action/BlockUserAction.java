@@ -18,14 +18,14 @@ public abstract class BlockUserAction implements IUserAction {
 
     @Override
     public void prepare() throws RuntimeException {
-        var blockEntity = getBlockEntity();
+        var blockEntity = blockEntity();
         if (blockEntity == null) {
             var pos = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new ActionRuntimeException(Component.translatable("chat.armourers_workshop.undo.missingBlock", pos));
         }
     }
 
-    public BlockEntity getBlockEntity() {
+    public BlockEntity blockEntity() {
         if (level != null) {
             return level.getBlockEntity(blockPos);
         }

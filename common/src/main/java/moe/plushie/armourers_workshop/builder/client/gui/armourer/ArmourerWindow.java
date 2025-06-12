@@ -65,7 +65,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
     @Override
     public void screenWillTick() {
         super.screenWillTick();
-        int lastVersion = blockEntity.getVersion();
+        int lastVersion = blockEntity.version();
         if (this.lastVersion != lastVersion) {
             tabView.tabs().forEach(tab -> {
                 if (tab.contentView() instanceof ArmourerBaseSetting setting) {
@@ -90,7 +90,7 @@ public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
 
     private TabView.EntryBuilder addTab(ArmourerBaseSetting contentView) {
         contentView.init();
-        return tabView.addContentView(contentView).setTooltip(contentView.getTitle());
+        return tabView.addContentView(contentView).setTooltip(contentView.title());
     }
 
     private UIImage tabIcon(int u, int v, int frame, int speed) {

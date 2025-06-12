@@ -9,7 +9,7 @@ public class AllayHeadJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        var modelPart = model.getPart("root");
+        var modelPart = model.partByName("root");
         if (modelPart == null) {
             return transform;
         }

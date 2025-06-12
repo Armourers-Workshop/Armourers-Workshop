@@ -31,7 +31,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
         }
     }
 
-    public int getGroup() {
+    public int group() {
         return group;
     }
 
@@ -45,7 +45,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
     }
 
     public boolean shouldRenderInventory() {
-        return getGroup() == 1;
+        return group() == 1;
     }
 
     protected void addSkinSlots(Container inventory, int group, int width, int height) {
@@ -69,7 +69,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
 
         @Override
         public boolean isActive() {
-            return getGroup() == group;
+            return group() == group;
         }
     }
 }

@@ -95,7 +95,7 @@ public class BlockBenchExporter {
 
     public Skin export() throws IOException {
         // build bone tree of the outliner.
-        var rootBone = new Bone(pack, pack.getRootOutliner(), null);
+        var rootBone = new Bone(pack, pack.rootOutliner(), null);
 
         // convert to rendering coordinate.
         var poseStack = new OpenPoseStack();
@@ -117,23 +117,23 @@ public class BlockBenchExporter {
         });
 
         // load the all used textures into texture set.
-        var textureSet = new TextureSet(pack.getResolution(), pack.getTextures(), usedTextureIds);
+        var textureSet = new TextureSet(pack.resolution(), pack.textures(), usedTextureIds);
 
         // export root bone to root part.
         var rootPart = exportRootPart(rootBone, textureSet);
 
         // export all item transforms to skin item transforms if needs.
-        if (pack.getItemTransforms() != null) {
-            var itemTransforms = exportItemTransforms(pack.getItemTransforms());
+        if (pack.itemTransforms() != null) {
+            var itemTransforms = exportItemTransforms(pack.itemTransforms());
             settings.setItemTransforms(itemTransforms);
         }
 
         // export all animations to skin animation.
-        var animations = exportAnimations(pack.getAnimations());
+        var animations = exportAnimations(pack.animations());
 
         // build the skin.
         var builder = new Skin.Builder(SkinTypes.ADVANCED);
-        builder.parts(rootPart.getChildren());
+        builder.parts(rootPart.children());
         builder.settings(settings);
         builder.properties(properties);
         builder.animations(animations);
@@ -144,9 +144,9 @@ public class BlockBenchExporter {
     protected SkinPart exportRootPart(Bone bone, TextureSet textureSet) {
         // move all ungroup cubes to the new part.
         var rootPart = exportPart(bone, textureSet);
-        if (!rootPart.getGeometries().isEmpty()) {
+        if (!rootPart.geometries().isEmpty()) {
             var builder = new SkinPart.Builder(SkinPartTypes.ADVANCED);
-            builder.geometries(rootPart.getGeometries());
+            builder.geometries(rootPart.geometries());
             rootPart.addPart(builder.build());
         }
         return rootPart;
@@ -224,7 +224,7 @@ public class BlockBenchExporter {
                 var normal = it2.normal;
                 var textureCoords = it2.textureCoords;
                 vertices.add(new SkinGeometryVertex(vertexId, position, normal, textureCoords));
-                TextureResolution.applyBoundary(texturePos.getProvider(), textureCoords.x(), textureCoords.y());
+                TextureResolution.applyBoundary(texturePos.provider(), textureCoords.x(), textureCoords.y());
             });
             faces.add(new SkinMeshFace(faceId, type, options, transform, texturePos, vertices));
             defaultTexturePos[0] = texturePos;
@@ -237,14 +237,14 @@ public class BlockBenchExporter {
         var fullItemTransforms = new LinkedHashMap<>(transforms);
         var itemTransforms = new OpenItemTransforms();
         for (var value : OpenItemDisplayContext.values()) {
-            if (!fullItemTransforms.containsKey(value.getName())) {
-                fullItemTransforms.put(value.getName(), new BlockBenchDisplay(OpenVector3f.ZERO, OpenVector3f.ZERO, OpenVector3f.ONE));
+            if (!fullItemTransforms.containsKey(value.serializedName())) {
+                fullItemTransforms.put(value.serializedName(), new BlockBenchDisplay(OpenVector3f.ZERO, OpenVector3f.ZERO, OpenVector3f.ONE));
             }
         }
         fullItemTransforms.forEach((name, transform) -> {
-            var translation = transform.getTranslation().scaling(-1, -1, 1);
-            var rotation = transform.getRotation().scaling(-1, -1, 1);
-            var scale = transform.getScale();
+            var translation = transform.translation().scaling(-1, -1, 1);
+            var rotation = transform.rotation().scaling(-1, -1, 1);
+            var scale = transform.scale();
             var transform1 = OpenTransform3f.create(translation, rotation, scale);
             // for identity transform, since it's the default value, we don't need to save it.
             if (!transform1.isIdentity()) {
@@ -263,12 +263,12 @@ public class BlockBenchExporter {
 
     protected List<SkinAnimation> exportAnimations(List<BlockBenchAnimation> allAnimations) {
         var results = new ArrayList<SkinAnimation>();
-        var animator = new Animator(getVirtualMachine());
+        var animator = new Animator(virtualMachine());
         allAnimations.forEach(animation -> {
-            var name = animation.getName();
-            var duration = animation.getDuration();
-            var loop = animator.convertToAnimationLoop(animation.getLoop());
-            var values = animator.exportAnimationKeyframes(animation.getAnimators());
+            var name = animation.name();
+            var duration = animation.duration();
+            var loop = animator.convertToAnimationLoop(animation.loop());
+            var values = animator.exportAnimationKeyframes(animation.animators());
             if (values.isEmpty()) {
                 return;
             }
@@ -289,7 +289,7 @@ public class BlockBenchExporter {
         this.offset = offset;
     }
 
-    public OpenVector3f getOffset() {
+    public OpenVector3f offset() {
         return offset;
     }
 
@@ -297,7 +297,7 @@ public class BlockBenchExporter {
         this.displayOffset = displayOffset;
     }
 
-    public OpenVector3f getDisplayOffset() {
+    public OpenVector3f displayOffset() {
         return displayOffset;
     }
 
@@ -309,15 +309,15 @@ public class BlockBenchExporter {
         return isCulling;
     }
 
-    public SkinSettings getSettings() {
+    public SkinSettings settings() {
         return settings;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
-    public MolangVirtualMachine getVirtualMachine() {
+    public MolangVirtualMachine virtualMachine() {
         return virtualMachine;
     }
 
@@ -342,17 +342,17 @@ public class BlockBenchExporter {
 
         // https://github.com/JannisX11/blockbench/blob/master/js/io/formats/bedrock.js#L781
         public Bone(BlockBenchPack pack, BlockBenchOutliner outliner, @Nullable Bone parent) {
-            this.id = outliner.getUUID();
-            this.name = outliner.getName();
+            this.id = outliner.uuid();
+            this.name = outliner.name();
             this.mirror = false;
 
-            this.origin = outliner.getOrigin();
-            this.pivot = outliner.getOrigin();
-            this.rotation = outliner.getRotation();
+            this.origin = outliner.origin();
+            this.pivot = outliner.origin();
+            this.rotation = outliner.rotation();
 
             this.parent = parent;
 
-            for (var child : outliner.getChildren()) {
+            for (var child : outliner.children()) {
                 // is a exportable bone?
                 if (child instanceof BlockBenchOutliner childOutliner) {
                     if (childOutliner.allowExport()) {
@@ -415,15 +415,15 @@ public class BlockBenchExporter {
         public boolean mirror = false;
 
         public Cube(BlockBenchCube cube) {
-            this.origin = cube.getFrom();
-            this.size = cube.getTo().subtracting(cube.getFrom());
-            this.inflate = cube.getInflate();
+            this.origin = cube.from();
+            this.size = cube.to().subtracting(cube.from());
+            this.inflate = cube.inflate();
 
-            this.pivot = cube.getOrigin();
-            this.rotation = cube.getRotation();
+            this.pivot = cube.origin();
+            this.rotation = cube.rotation();
 
             this.uv = TextureUV.createUV(cube);
-            this.renderOrder = cube.getRenderOrder();
+            this.renderOrder = cube.renderOrder();
         }
 
         public void transform(OpenPoseStack poseStack) {
@@ -453,11 +453,11 @@ public class BlockBenchExporter {
         public final List<MeshFace> faces = new ArrayList<>();
 
         public Mesh(BlockBenchMesh mesh) {
-            this.origin = mesh.getOrigin();
-            this.pivot = mesh.getOrigin();
-            this.rotation = mesh.getRotation();
-            this.renderOrder = mesh.getRenderOrder();
-            for (var entry : mesh.getFaces().entrySet()) {
+            this.origin = mesh.origin();
+            this.pivot = mesh.origin();
+            this.rotation = mesh.rotation();
+            this.renderOrder = mesh.renderOrder();
+            for (var entry : mesh.faces().entrySet()) {
                 try {
                     faces.add(new MeshFace(entry.getKey(), entry.getValue(), mesh));
                 } catch (Exception ignored) {
@@ -496,10 +496,10 @@ public class BlockBenchExporter {
 
         public MeshFace(String id, BlockBenchMeshFace face, BlockBenchMesh mesh) {
             this.id = id;
-            this.textureId = face.getTextureId();
-            for (var vertexId : face.getVertices()) {
-                var position = mesh.getVertices().get(vertexId);
-                var textureCoords = face.getUV().get(vertexId);
+            this.textureId = face.textureId();
+            for (var vertexId : face.vertices()) {
+                var position = mesh.vertices().get(vertexId);
+                var textureCoords = face.uv().get(vertexId);
                 vertices.add(new MeshVertex(id + "/" + vertexId, position, OpenVector3f.ZERO, textureCoords));
             }
             if (vertices.size() < 3) {
@@ -604,9 +604,9 @@ public class BlockBenchExporter {
         public OpenVector3f rotation;
 
         public Locator(BlockBenchLocator locator) {
-            this.name = locator.getName();
-            this.origin = locator.getPosition();
-            this.rotation = locator.getRotation();
+            this.name = locator.name();
+            this.origin = locator.position();
+            this.rotation = locator.rotation();
         }
 
         public void transform(OpenPoseStack poseStack) {
@@ -626,10 +626,10 @@ public class BlockBenchExporter {
         public Map<String, List<SkinAnimationKeyframe>> exportAnimationKeyframes(List<BlockBenchAnimator> animators) {
             var results = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
             for (var animator : animators) {
-                var keyframes = results.computeIfAbsent(animator.getName(), k -> new ArrayList<>());
-                for (var keyframe : animator.getKeyframes()) {
-                    var time = keyframe.getTime();
-                    var channel = keyframe.getName();
+                var keyframes = results.computeIfAbsent(animator.name(), k -> new ArrayList<>());
+                for (var keyframe : animator.keyframes()) {
+                    var time = keyframe.time();
+                    var channel = keyframe.name();
                     var function = convertToAnimationFunction(keyframe);
                     var points = exportAnimationPoints(keyframe, animator);
                     if (!points.isEmpty()) {
@@ -641,9 +641,9 @@ public class BlockBenchExporter {
         }
 
         public List<SkinAnimationPoint> exportAnimationPoints(BlockBenchKeyframe keyframe, BlockBenchAnimator animator) {
-            var type = animator.getType();
-            var channel = keyframe.getName();
-            return Collections.compactMap(keyframe.getPoints(), it -> exportAnimationPoint(type, channel, it));
+            var type = animator.type();
+            var channel = keyframe.name();
+            return Collections.compactMap(keyframe.points(), it -> exportAnimationPoint(type, channel, it));
         }
 
         protected SkinAnimationPoint exportAnimationPoint(String type, String channel, Map<String, OpenPrimitive> point) {
@@ -751,8 +751,8 @@ public class BlockBenchExporter {
         }
 
         public static SkinAnimationFunction convertToAnimationFunction(BlockBenchKeyframe keyframe) {
-            return switch (keyframe.getInterpolation()) {
-                case "bezier" -> SkinAnimationFunction.bezier(keyframe.getParameters());
+            return switch (keyframe.interpolation()) {
+                case "bezier" -> SkinAnimationFunction.bezier(keyframe.parameters());
                 case "linear" -> SkinAnimationFunction.linear();
                 case "step" -> SkinAnimationFunction.step();
                 case "smooth" -> SkinAnimationFunction.smooth();
@@ -931,23 +931,23 @@ public class BlockBenchExporter {
         public SkinTextureData loadTextureData(BlockBenchTexture texture) throws IOException {
             var data = resolveTextureData(texture);
             var variants = new ArrayList<SkinTextureData>();
-            var parentName = texture.getName().replaceAll(PATTERN, "$1$3");
-            var parentAttributes = getTextureAttributes(texture.getName());
+            var parentName = texture.name().replaceAll(PATTERN, "$1$3");
+            var parentAttributes = getTextureAttributes(texture.name());
             // single texture model: bedrock_entity/bedrock_entity_old/geckolib_armour/geckolib_entity/geckolib_block/modded_entity/optifine_entity
             // some models only support single texture, so load additional textures by special file names.
             for (var childTexture : inputs) {
-                var childName = childTexture.getName().replaceAll(PATTERN, "$1$3");
+                var childName = childTexture.name().replaceAll(PATTERN, "$1$3");
                 if (!childName.equals(parentName) || childTexture == texture) {
                     continue;
                 }
-                var childAttributes = getTextureAttributes(childTexture.getName());
+                var childAttributes = getTextureAttributes(childTexture.name());
                 if (!childAttributes.containsAll(parentAttributes)) {
                     continue;
                 }
                 var childData = resolveTextureData(childTexture);
-                if (data.getProperties().isEmissive()) {
+                if (data.properties().isEmissive()) {
                     // when the parent texture is emissive texture, the child texture must is emissive texture.
-                    childData.getProperties().setEmissive(true);
+                    childData.properties().setEmissive(true);
                 }
                 variants.add(childData);
             }
@@ -974,7 +974,7 @@ public class BlockBenchExporter {
             for (var dir : OpenDirection.values()) {
                 var pos = skyBox.getTexture(dir);
                 if (pos != null) {
-                    TextureResolution.applyBoundary(pos.getProvider(), pos.getU(), pos.getV());
+                    TextureResolution.applyBoundary(pos.provider(), pos.u(), pos.v());
                 }
             }
             return skyBox;
@@ -998,11 +998,11 @@ public class BlockBenchExporter {
         }
 
         private SkinTextureData resolveTextureData(BlockBenchTexture texture) throws IOException {
-            var textureData = loadedTextures.get(texture.getUUID());
+            var textureData = loadedTextures.get(texture.uuid());
             if (textureData != null) {
                 return textureData;
             }
-            var str = texture.getSource();
+            var str = texture.source();
             var parts = str.split(";base64,");
             if (parts.length != 2) {
                 throw new IOException("error.bb.loadModel.textureNotSupported");
@@ -1013,15 +1013,15 @@ public class BlockBenchExporter {
             var animation = resolveTextureAnimation(texture, imageFrame);
             var properties = resolveTextureProperties(texture);
             properties.setTranslucent(hasTranslucentChannel(imageBytes));
-            textureData = new SkinTextureData(texture.getName(), size.width(), size.height(), animation, properties);
+            textureData = new SkinTextureData(texture.name(), size.width(), size.height(), animation, properties);
             textureData.load(Unpooled.wrappedBuffer(imageBytes));
-            loadedTextures.put(texture.getUUID(), textureData);
+            loadedTextures.put(texture.uuid(), textureData);
             return textureData;
         }
 
         private int resolveTextureFrame(BlockBenchTexture texture, byte[] imageBytes) throws IOException {
             // in new version block bench provides image size.
-            var imageSize = texture.getImageSize();
+            var imageSize = texture.imageSize();
             if (imageSize == null) {
                 var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
                 imageSize = new OpenSize2f(image.getWidth(), image.getHeight());
@@ -1046,9 +1046,9 @@ public class BlockBenchExporter {
             var width = resolution.width();
             var height = resolution.height();
             // in new version block bench provides texture size.
-            if (texture.getTextureSize() != null) {
-                width = texture.getTextureSize().width();
-                height = texture.getTextureSize().height();
+            if (texture.textureSize() != null) {
+                width = texture.textureSize().width();
+                height = texture.textureSize().height();
             }
             if (frameCount > 1) {
                 height *= frameCount;
@@ -1058,17 +1058,17 @@ public class BlockBenchExporter {
 
         private SkinTextureAnimation resolveTextureAnimation(BlockBenchTexture texture, int frameCount) {
             if (frameCount > 1) {
-                var time = texture.getFrameTime() * 50; // 1/20s
-                var interpolate = texture.getFrameInterpolate();
-                var mode = texture.getFrameMode();
+                var time = texture.frameTime() * 50; // 1/20s
+                var interpolate = texture.frameInterpolate();
+                var mode = texture.frameMode();
                 return new SkinTextureAnimation(time, frameCount, mode, interpolate);
             }
             return SkinTextureAnimation.EMPTY;
         }
 
         private SkinTextureProperties resolveTextureProperties(BlockBenchTexture texture) {
-            var properties = texture.getProperties();
-            for (var attrib : getTextureAttributes(texture.getName())) {
+            var properties = texture.properties();
+            for (var attrib : getTextureAttributes(texture.name())) {
                 switch (attrib) {
                     case "n" -> properties.setNormal(true);
                     case "e" -> properties.setEmissive(true);
@@ -1134,21 +1134,21 @@ public class BlockBenchExporter {
         public static TextureUV createUV(BlockBenchCube element) {
             // box texture
             if (element.isBoxUV() && !element.isMirrorUV() && isAlignedSize(element)) {
-                var uv = new TextureUV(element.getUVOffset());
-                element.getFaces().forEach((dir, face) -> {
-                    uv.setDefaultTextureId(face.getTextureId());
-                    uv.setRotation(dir, face.getRotation());
+                var uv = new TextureUV(element.uvOffset());
+                element.faces().forEach((dir, face) -> {
+                    uv.setDefaultTextureId(face.textureId());
+                    uv.setRotation(dir, face.rotation());
                 });
                 return uv;
             }
             // per-face texture
             var uv = new TextureUV(null);
             uv.setDefaultTextureId(-1); // default not use any texture.
-            element.getFaces().forEach((dir, face) -> {
-                if (face.getTextureId() < 0) {
+            element.faces().forEach((dir, face) -> {
+                if (face.textureId() < 0) {
                     return;
                 }
-                var rect = face.getRect();
+                var rect = face.rect();
                 if (dir == OpenDirection.UP) {
                     var fixedRect = rect.copy();
                     fixedRect.setX(rect.maxX());
@@ -1164,15 +1164,15 @@ public class BlockBenchExporter {
                     rect = fixedRect;
                 }
                 uv.put(dir, rect);
-                uv.setRotation(dir, face.getRotation());
-                uv.setTextureId(dir, face.getTextureId());
+                uv.setRotation(dir, face.rotation());
+                uv.setTextureId(dir, face.textureId());
             });
             return uv;
         }
 
         // If the element is not a aligned size, the texture box needs to be rounded down.
         public static boolean isAlignedSize(BlockBenchCube element) {
-            var size = element.getFrom().subtracting(element.getTo());
+            var size = element.from().subtracting(element.to());
             return (size.x() % 1 == 0) && (size.y() % 1 == 0) && (size.z() % 1 == 0);
         }
 
@@ -1251,7 +1251,7 @@ public class BlockBenchExporter {
 
         public static void apply(SkinTextureData data) {
             var base = by(data);
-            var variants = data.getVariants();
+            var variants = data.variants();
             if (variants.isEmpty()) {
                 data.setVariants(Collections.emptyList());
                 return;
@@ -1284,13 +1284,13 @@ public class BlockBenchExporter {
             });
             var newVariants = new ArrayList<>(secondaryTextures.values());
             newVariants.remove(data);
-            newVariants.addAll(data.getVariants());
+            newVariants.addAll(data.variants());
             data.setVariants(newVariants);
         }
 
         public static int by(SkinTextureData data) {
             int key = 0;
-            var properties = data.getProperties();
+            var properties = data.properties();
             if (properties.isEmissive()) {
                 key |= 0x10;
             }
@@ -1305,8 +1305,8 @@ public class BlockBenchExporter {
 
         public static void applyBoundary(SkinTextureData textureProvider, float u, float v) {
             // the uv is over boundary?
-            if (u < 0 || v < 0 || u > textureProvider.getWidth() || v > textureProvider.getHeight()) {
-                var properties = (SkinTextureProperties) textureProvider.getProperties();
+            if (u < 0 || v < 0 || u > textureProvider.width() || v > textureProvider.height()) {
+                var properties = (SkinTextureProperties) textureProvider.properties();
                 properties.setClampToEdge(true);
             }
         }

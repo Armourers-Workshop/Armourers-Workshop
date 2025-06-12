@@ -4,5 +4,5 @@ import java.util.Collection;
 
 public interface ICanOverride {
 
-    Collection<String> getItemOverrides();
+    Collection<String> itemOverrides();
 }

@@ -31,7 +31,7 @@ public class MannequinToolItem extends ConfigurableToolItem {
                 var config = new CompoundTag();
                 var newItemStack = itemStack.copy();
                 mannequinEntity.saveMannequinToolData(config);
-                config.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+                config.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.registryName().toString());
                 newItemStack.set(ModDataComponents.ENTITY_DATA.get(), config);
                 player.setItemInHand(hand, newItemStack);
                 return InteractionResult.sidedSuccess(player.getLevel().isClientSide());

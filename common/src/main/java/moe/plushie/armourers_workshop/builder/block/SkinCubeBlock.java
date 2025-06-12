@@ -45,7 +45,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     public static BlockState setMarker(BlockState blockState, OptionalDirection direction) {
-        var dir = direction.getDirection();
+        var dir = direction.direction();
         if (dir != null) {
             return blockState.setValue(HAS_MARKER, true).setValue(MARKER, AbstractDirection.unwrap(dir));
         }

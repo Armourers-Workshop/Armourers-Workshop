@@ -37,7 +37,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
             return;
         }
         renderData.tick(entity);
-        var renderingTasks = renderData.getAllSkins();
+        var renderingTasks = renderData.allSkins();
         if (renderingTasks.isEmpty()) {
             return;
         }
@@ -54,7 +54,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         }
 
         var blockState = entity.getBlockState();
-        var renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.renderPatch();
         var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
 
         poseStack.pushPose();
@@ -67,32 +67,32 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
 
         renderPatch.activate(entity, partialTicks, overLight, overlay, poseStack);
 
-        var pluginContext = renderPatch.getPluginContext();
-        var renderingContext = renderPatch.getRenderingContext();
+        var pluginContext = renderPatch.pluginContext();
+        var renderingContext = renderPatch.renderingContext();
 
-        renderingContext.setOverlay(pluginContext.getOverlay());
-        renderingContext.setLightmap(pluginContext.getLightmap());
-        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
-        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+        renderingContext.setOverlay(pluginContext.overlay());
+        renderingContext.setLightmap(pluginContext.lightmap());
+        renderingContext.setPartialTicks(pluginContext.partialTicks());
+        renderingContext.setAnimationTicks(pluginContext.animationTicks());
 
         renderingContext.setPoseStack(poseStack);
         renderingContext.setBufferSource(bufferSource);
         renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
 
         for (var entry : renderingTasks) {
-            var itemSource = SkinItemSource.create(entry.getItemStack());
-            var bakedSkin = entry.getSkin();
-            var bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
-            var rect = bakedSkin.getRenderBounds();
+            var itemSource = SkinItemSource.create(entry.itemStack());
+            var bakedSkin = entry.skin();
+            var bakedArmature = BakedArmature.defaultBy(bakedSkin.type());
+            var rect = bakedSkin.renderBounds();
 
             renderingContext.setItemSource(itemSource);
-            renderingContext.setColorScheme(entry.getPaintScheme());
+            renderingContext.setColorScheme(entry.paintScheme());
             //renderPatch.setOverlay(entry.getOverrideOverlay(entity));
 
-            apply(entity, rect, renderingContext.getAnimationTicks(), poseStack, bufferSource);
+            apply(entity, rect, renderingContext.animationTicks(), poseStack, bufferSource);
 
             bakedSkin.setupAnim(mannequinEntity, bakedArmature, renderingContext);
-            var paintScheme = bakedSkin.resolve(mannequinEntity, entry.getPaintScheme());
+            var paintScheme = bakedSkin.resolve(mannequinEntity, entry.paintScheme());
             SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, paintScheme, renderingContext);
         }
 

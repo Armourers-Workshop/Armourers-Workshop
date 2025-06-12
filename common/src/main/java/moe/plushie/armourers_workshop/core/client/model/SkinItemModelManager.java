@@ -39,11 +39,11 @@ public class SkinItemModelManager {
     private final Map<SkinType, SkinItemModel> typedItemModels = new ConcurrentHashMap<>();
     private final Map<IResourceLocation, SkinItemModel> namedItemModels = new ConcurrentHashMap<>();
 
-    private final Map<IResourceLocation, SkinItemProperty> namedItemProperties = Collections.immutableMap(builder -> {
-        builder.put(ModConstants.key("is_skin"), handOnly("armourers_workshop:is_skin"));
-        builder.put(ModConstants.key("is_crossbow"), vanilla("armourers_workshop:is_crossbow"));
-        builder.put(ModConstants.key("is_blocking"), vanilla("minecraft:blocking"));
-        builder.put(ModConstants.key("is_throwing"), vanilla("minecraft:throwing"));
+    private final Map<IResourceLocation, SkinItemProperty> namedItemProperties = Collections.immutableMap(it -> {
+        it.put(ModConstants.key("is_skin"), handOnly("armourers_workshop:is_skin"));
+        it.put(ModConstants.key("is_crossbow"), vanilla("armourers_workshop:is_crossbow"));
+        it.put(ModConstants.key("is_blocking"), vanilla("minecraft:blocking"));
+        it.put(ModConstants.key("is_throwing"), vanilla("minecraft:throwing"));
     });
 
     public static SkinItemModelManager getInstance() {
@@ -57,7 +57,7 @@ public class SkinItemModelManager {
 
     public SkinItemModel getModel(SkinType skinType) {
         return typedItemModels.computeIfAbsent(skinType, it -> {
-            var id = ModConstants.key("skin/" + skinType.getRegistryName().getPath());
+            var id = ModConstants.key("skin/" + skinType.registryName().path());
             return namedItemModels.getOrDefault(id, missingModel);
         });
     }
@@ -125,7 +125,7 @@ public class SkinItemModelManager {
                 if (object == null) {
                     return;
                 }
-                var path = FileUtils.getRegistryName(location.getPath(), "models/");
+                var path = FileUtils.getRegistryName(location.path(), "models/");
                 var location1 = location.withPath(FileUtils.removeExtension(path));
                 var builder = builders.computeIfAbsent(location1, SimpleBuilder::new);
                 object.get("parent").ifPresent(it -> {

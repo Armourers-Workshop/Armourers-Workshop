@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.library.data.impl;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
-import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
 
@@ -12,7 +11,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
@@ -73,7 +71,7 @@ public class ServerRequest {
         return permission != null && permission.isSSLRequired();
     }
 
-    public String getPath() {
+    public String path() {
         return path;
     }
 
@@ -81,7 +79,7 @@ public class ServerRequest {
         this.permission = permission;
     }
 
-    public ServerPermission getPermission() {
+    public ServerPermission permission() {
         return permission;
     }
 

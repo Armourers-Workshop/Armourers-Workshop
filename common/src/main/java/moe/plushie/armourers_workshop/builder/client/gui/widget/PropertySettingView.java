@@ -36,7 +36,7 @@ public abstract class PropertySettingView extends UIView {
         this.stackView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         this.addSubview(stackView);
         for (var property : properties) {
-            if (property.getDefaultValue() instanceof Boolean) {
+            if (property.defaultValue() instanceof Boolean) {
                 addCheckBox(Objects.unsafeCast(property));
             }
             if (property == SkinProperty.OVERRIDE_ENTITY_SIZE_WIDTH) {
@@ -63,7 +63,7 @@ public abstract class PropertySettingView extends UIView {
 
     protected void addCheckBox(SkinProperty<Boolean> property) {
         var checkBox = new UICheckBox(new CGRect(0, 0, 80, 10));
-        checkBox.setTitle(getDisplayText(property.getKey()));
+        checkBox.setTitle(getDisplayText(property.key()));
         checkBox.setTitleColor(UIColor.WHITE);
         checkBox.setTitleColor(UIColor.GRAY, UIControl.State.DISABLED);
         checkBox.setSelected(getValue(property));
@@ -131,7 +131,7 @@ public abstract class PropertySettingView extends UIView {
     }
 
     private void setInventorySize(UIControl sender) {
-        var offset = inventoryBox.getOffset();
+        var offset = inventoryBox.offset();
         var width = (int) (offset.x / 10) + 1;
         var height = (int) (offset.y / 10) + 1;
         beginEditing();

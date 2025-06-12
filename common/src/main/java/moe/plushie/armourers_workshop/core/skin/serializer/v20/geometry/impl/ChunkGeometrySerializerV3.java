@@ -53,7 +53,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
 
         public Decoder(SkinGeometryType type, ChunkGeometrySlice slice) {
             this.type = type;
-            this.palette = slice.getPalette();
+            this.palette = slice.palette();
             this.slice = slice;
         }
 
@@ -67,12 +67,12 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public SkinGeometryType getType() {
+        public SkinGeometryType type() {
             return type;
         }
 
         @Override
-        public SkinGeometryOptions getOptions() {
+        public SkinGeometryOptions options() {
             if (slice.once(4)) {
                 options = new SkinGeometryOptions(slice.getTextureOptions(76));
             }
@@ -80,7 +80,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public OpenTransform3f getTransform() {
+        public OpenTransform3f transform() {
             if (slice.once(0)) {
                 transform = slice.getTransform(4);
             }
@@ -88,9 +88,9 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public SkinTexturePos getTexturePos() {
+        public SkinTexturePos texturePos() {
             if (slice.once(1)) {
-                getVertices();
+                vertices();
                 if (textureProvider != null) {
                     texturePos = new SkinTexturePos(0, 0, 0, 0, textureProvider);
                 }
@@ -99,14 +99,14 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public List<SkinMeshFace> getFaces() {
+        public List<SkinMeshFace> faces() {
             if (slice.once(2)) {
                 parseFaces();
             }
             return faces;
         }
 
-        public List<SkinGeometryVertex> getVertices() {
+        public List<SkinGeometryVertex> vertices() {
             if (slice.once(3)) {
                 parseVertices();
             }
@@ -119,13 +119,13 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
             int vertexCount = slice.getInt(68);
             int indexCount = slice.getInt(72);
 
-            int usedBytes = palette.getTextureIndexBytes();
+            int usedBytes = palette.textureIndexBytes();
             int offset = calcStride(usedBytes, vertexCount); // skip the vertex data.
 
-            var options = getOptions();
-            var vertices = getVertices();
-            var transform = getTransform();
-            var texturePos = getTexturePos();
+            var options = options();
+            var vertices = vertices();
+            var transform = transform();
+            var texturePos = texturePos();
 
             int cursor = 0;
             for (int i = 0; i < indexCount; i += 2) {
@@ -142,7 +142,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         //
         protected void parseVertices() {
             vertices.clear();
-            int usedBytes = palette.getTextureIndexBytes();
+            int usedBytes = palette.textureIndexBytes();
             int vertexCount = slice.getInt(68);
             for (int i = 0; i < vertexCount; i++) {
                 vertices.add(parseVertex(i, usedBytes));
@@ -173,8 +173,8 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         protected OpenVector2f parseTextureCoords(OpenVector2f uv) {
             var ref = palette.readTexture(uv);
             if (ref != null) {
-                textureProvider = ref.getProvider();
-                return ref.getPos();
+                textureProvider = ref.provider();
+                return ref.uv();
             }
             return OpenVector2f.ZERO;
         }
@@ -200,13 +200,13 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
             indices.clear();
             vertices.clear();
 
-            options = mesh.getOptions();
-            transform = mesh.getTransform();
-            texturePos = mesh.getTexturePos();
+            options = mesh.options();
+            transform = mesh.transform();
+            texturePos = mesh.texturePos();
 
             var groupedVertices = new LinkedHashMap<Integer, ArrayList<SkinGeometryVertex>>();
-            for (var face : mesh.getFaces()) {
-                var faceVertices = face.getVertices();
+            for (var face : mesh.faces()) {
+                var faceVertices = face.vertices();
                 groupedVertices.computeIfAbsent(faceVertices.size(), k -> new ArrayList<>()).addAll(faceVertices);
             }
 
@@ -233,9 +233,9 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
             stream.write(reserved, 0, 44);
             // vertices: vertex(12B) + normal(12B) + uv(VB)
             for (var vertex : vertices) {
-                stream.writeVector3f(vertex.getPosition());
-                stream.writeVector3f(vertex.getNormal());
-                stream.writeVariable(palette.writeTexture(vertex.getTextureCoords(), texturePos.getProvider()));
+                stream.writeVector3f(vertex.position());
+                stream.writeVector3f(vertex.normal());
+                stream.writeVariable(palette.writeTexture(vertex.textureCoords(), texturePos.provider()));
             }
             // indices: int(4B)
             for (var vertexId : indices) {

@@ -13,7 +13,7 @@ public interface LevelVariableBinding extends LambdaVariableBinding {
     @Override
     default Result evaluate(final ExecutionContext context) {
         if (context instanceof ContextSelector context1) {
-            var level = context1.getLevel();
+            var level = context1.level();
             if (level != null) {
                 var result = apply(level);
                 return Result.parse(result);

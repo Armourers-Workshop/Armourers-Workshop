@@ -34,7 +34,7 @@ public class PartItemList extends SkinPreviewList<PartItem> {
         super.renderItemContent(x, y, width, height, isHovered, entry, bufferSource, context);
     }
 
-    public SkinDescriptor getSelectedItem() {
+    public SkinDescriptor selectedItem() {
         return selectedItem;
     }
 
@@ -49,12 +49,12 @@ public class PartItemList extends SkinPreviewList<PartItem> {
 
     @Override
     protected SkinDescriptor getItemDescriptor(PartItem value) {
-        return value.getDescriptor();
+        return value.descriptor();
     }
 
     @Override
     protected int getItemBackgroundColor(PartItem entry, boolean isHovered) {
-        if (Objects.equal(getSelectedItem(), entry.getDescriptor()) && entry.hasSkin()) {
+        if (Objects.equal(selectedItem(), entry.descriptor()) && entry.hasSkin()) {
             return 0xE0777711;
         }
         return super.getItemBackgroundColor(entry, isHovered);
@@ -62,7 +62,7 @@ public class PartItemList extends SkinPreviewList<PartItem> {
 
     protected ItemStack getItemTooltip(PartItem entry, boolean isHovered) {
         if (isHovered && entry.hasItem()) {
-            return entry.getItemStack();
+            return entry.itemStack();
         }
         return null;
     }

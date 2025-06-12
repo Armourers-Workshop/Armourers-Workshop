@@ -4,13 +4,13 @@ import java.util.function.Supplier;
 
 public interface IDataSerializerKey<T> {
 
-    String getName();
+    String name();
 
-    T getDefault();
+    T defaultValue();
 
-    IDataCodec<T> getCodec();
+    IDataCodec<T> codec();
 
-    Supplier<T> getConstructor();
+    Supplier<T> constructor();
 
 
     static <T> IDataSerializerKey<T> create(String name, IDataCodec<T> codec) {
@@ -24,22 +24,22 @@ public interface IDataSerializerKey<T> {
     static <T> IDataSerializerKey<T> create(String name, IDataCodec<T> codec, T defaultValue, Supplier<T> constructor) {
         return new IDataSerializerKey<T>() {
             @Override
-            public String getName() {
+            public String name() {
                 return name;
             }
 
             @Override
-            public T getDefault() {
+            public T defaultValue() {
                 return defaultValue;
             }
 
             @Override
-            public IDataCodec<T> getCodec() {
+            public IDataCodec<T> codec() {
                 return codec;
             }
 
             @Override
-            public Supplier<T> getConstructor() {
+            public Supplier<T> constructor() {
                 return constructor;
             }
         };

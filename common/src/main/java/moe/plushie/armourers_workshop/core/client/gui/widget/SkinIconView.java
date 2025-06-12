@@ -40,7 +40,7 @@ public class SkinIconView extends UIControl {
         float th = rect.height;
         float si = Math.min(tw, th);
         var poseStack = context.state().ctm();
-        var colorScheme = descriptor.getPaintScheme();
+        var colorScheme = descriptor.paintScheme();
         var itemSource = SkinItemSource.EMPTY;
         var buffers = AbstractBufferSource.buffer();
         poseStack.pushPose();

@@ -29,7 +29,7 @@ public final class SkinExportManager {
             return null;
         }
         for (var skinExporter : SKIN_EXPORTERS) {
-            for (var ext : skinExporter.getExtensions()) {
+            for (var ext : skinExporter.extensions()) {
                 if (ext.equalsIgnoreCase(fileExtension)) {
                     return skinExporter;
                 }
@@ -53,10 +53,10 @@ public final class SkinExportManager {
         skinExporter.exportSkin(skin, filePath, filename, scale);
     }
 
-    public static Collection<String> getExporters() {
+    public static Collection<String> allExporters() {
         var exporters = new ArrayList<String>();
         for (var skinExporter : SKIN_EXPORTERS) {
-            exporters.addAll(skinExporter.getExtensions());
+            exporters.addAll(skinExporter.extensions());
         }
         return exporters;
     }

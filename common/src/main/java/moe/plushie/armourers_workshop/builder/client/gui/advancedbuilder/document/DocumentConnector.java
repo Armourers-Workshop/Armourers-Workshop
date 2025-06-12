@@ -24,14 +24,14 @@ public class DocumentConnector {
     private final ArrayList<Consumer<SkinDocumentSettings>> settingsListeners = new ArrayList<>();
     private final ArrayList<Consumer<SkinProperties>> propertiesListeners = new ArrayList<>();
 
-    public final DataProperty<String> name = registerNode(DataProperty::new, SkinDocumentNode::getName, SkinDocumentNode::setName);
-    public final DataProperty<SkinDescriptor> part = registerNode(DataProperty::new, SkinDocumentNode::getSkin, SkinDocumentNode::setSkin);
+    public final DataProperty<String> name = registerNode(DataProperty::new, SkinDocumentNode::name, SkinDocumentNode::setName);
+    public final DataProperty<SkinDescriptor> part = registerNode(DataProperty::new, SkinDocumentNode::skin, SkinDocumentNode::setSkin);
     public final DataProperty<Boolean> lock = registerNode(DataProperty::new, SkinDocumentNode::isLocked, Objects::hashCode);
 
-    public final Vector3fProperty location = registerNode(Vector3fProperty::new, SkinDocumentNode::getLocation, SkinDocumentNode::setLocation);
-    public final Vector3fProperty rotation = registerNode(Vector3fProperty::new, SkinDocumentNode::getRotation, SkinDocumentNode::setRotation);
-    public final Vector3fProperty scale = registerNode(Vector3fProperty::new, SkinDocumentNode::getScale, SkinDocumentNode::setScale);
-    public final Vector3fProperty pivot = registerNode(Vector3fProperty::new, SkinDocumentNode::getPivot, SkinDocumentNode::setPivot);
+    public final Vector3fProperty location = registerNode(Vector3fProperty::new, SkinDocumentNode::location, SkinDocumentNode::setLocation);
+    public final Vector3fProperty rotation = registerNode(Vector3fProperty::new, SkinDocumentNode::rotation, SkinDocumentNode::setRotation);
+    public final Vector3fProperty scale = registerNode(Vector3fProperty::new, SkinDocumentNode::scale, SkinDocumentNode::setScale);
+    public final Vector3fProperty pivot = registerNode(Vector3fProperty::new, SkinDocumentNode::pivot, SkinDocumentNode::setPivot);
 
     public final DataProperty<Boolean> enabled = registerNode(DataProperty::new, SkinDocumentNode::isEnabled, SkinDocumentNode::setEnabled);
     public final DataProperty<Boolean> mirror = registerNode(DataProperty::new, SkinDocumentNode::isMirror, SkinDocumentNode::setMirror);
@@ -114,14 +114,14 @@ public class DocumentConnector {
             }
         });
         property.addObserver((newValue) -> {
-            T oldValue = getter.apply(document.getSettings());
+            T oldValue = getter.apply(document.settings());
             if (!Objects.equal(oldValue, newValue)) {
-                setter.accept(document.getSettings(), newValue);
+                setter.accept(document.settings(), newValue);
             }
         });
         settingsListeners.add((node) -> {
             T oldValue = property.get();
-            T newValue = getter.apply(document.getSettings());
+            T newValue = getter.apply(document.settings());
             if (!Objects.equal(oldValue, newValue)) {
                 property.set(newValue);
             }

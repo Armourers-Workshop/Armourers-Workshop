@@ -92,7 +92,7 @@ public class SaveSkinPacket extends CustomPacket {
             abort(player, "load", "missing from skin loader");
             return;
         }
-        var library = SkinLibraryManager.getClient().getLocalSkinLibrary();
+        var library = SkinLibraryManager.getClient().localLibrary();
         library.save(destination.path, skin, destination.options);
     }
 
@@ -123,7 +123,7 @@ public class SaveSkinPacket extends CustomPacket {
                 accept(player, "load");
                 // TODO: fix db-link
                 var identifier = SkinLoader.getInstance().saveSkin(source.identifier, skin);
-                container.crafting(new SkinDescriptor(identifier, skin.getType()));
+                container.crafting(new SkinDescriptor(identifier, skin.type()));
             }
             return;
         }
@@ -138,14 +138,14 @@ public class SaveSkinPacket extends CustomPacket {
                 abort(player, "save", "missing from skin loader");
                 return;
             }
-            if (!skin.getSettings().isSavable()) {
+            if (!skin.settings().isSavable()) {
                 abort(player, "save", "save prohibited from the skin author");
                 return;
             }
             if (container.shouldSaveStack()) {
                 accept(player, "save");
                 SkinLoader.getInstance().removeSkin(destination.identifier); // remove skin cache.
-                server.getLibrary().save(destination.path, skin, destination.options);
+                server.library().save(destination.path, skin, destination.options);
                 container.crafting(null);
             }
             return;
@@ -160,7 +160,7 @@ public class SaveSkinPacket extends CustomPacket {
                 mode = Mode.DOWNLOAD;
                 // check the server skin is savable?
                 var skin = getSkin();
-                if (skin == null || !skin.getSettings().isSavable()) {
+                if (skin == null || !skin.settings().isSavable()) {
                     abort(player, "download", "download prohibited from the skin author");
                     return;
                 }
@@ -210,11 +210,11 @@ public class SaveSkinPacket extends CustomPacket {
     private SkinFileOptions resolveLoadOptions(SkinFileOptions options) {
         if (options != null) {
             var server = SkinLibraryManager.getServer();
-            if (server.isRunning() && Objects.equals(options.getSecurityData(), server.getPublicKey())) {
+            if (server.isRunning() && Objects.equals(options.securityData(), server.publicKey())) {
                 var fixedOptions = new SkinFileOptions();
                 fixedOptions.merge(options);
-                fixedOptions.setSecurityKey(DataEncryptMethod.AUTH.key(server.getPrivateKey()));
-                fixedOptions.setSecurityData(server.getPublicKey());
+                fixedOptions.setSecurityKey(DataEncryptMethod.AUTH.key(server.privateKey()));
+                fixedOptions.setSecurityData(server.publicKey());
                 return fixedOptions;
             }
         }
@@ -325,7 +325,7 @@ public class SaveSkinPacket extends CustomPacket {
 
         public static Payload loadWithOptions(String identifier, SkinFileOptions options) {
             // If the key is not provided, we need to transfer data without decrypt.
-            if (options != null && options.getSecurityData() != null && Objects.equals(options.getSecurityKey(), "")) {
+            if (options != null && options.securityData() != null && Objects.equals(options.securityKey(), "")) {
                 return DirectyPayload.create(identifier, options);
             }
             return Payload.create(identifier, options);

@@ -12,7 +12,7 @@ public class ArrowModelArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, Context context) {
-        var poseStack = context.getPoseStack();
+        var poseStack = context.poseStack();
         poseStack.rotate(OpenVector3f.XP.rotationDegrees(-45));
         poseStack.rotate(OpenVector3f.YP.rotationDegrees(-90));
         poseStack.translate(0, 0, -0.0625f); // 0, 0, -1

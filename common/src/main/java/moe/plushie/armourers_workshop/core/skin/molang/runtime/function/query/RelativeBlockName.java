@@ -35,10 +35,10 @@ public class RelativeBlockName extends EntityFunction {
         if (Math.abs(offsetX) > 8 || Math.abs(offsetY) > 8 || Math.abs(offsetZ) > 8) {
             return Result.NULL; // too far
         }
-        var block = entity.getRelativeBlock(offsetX, offsetY, offsetZ);
+        var block = entity.relativeBlock(offsetX, offsetY, offsetZ);
         if (block == null) {
             return Result.NULL; // can't found.
         }
-        return Result.valueOf(block.getId());
+        return Result.valueOf(block.id());
     }
 }

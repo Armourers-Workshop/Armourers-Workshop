@@ -38,7 +38,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
     private int contentHeight = 24; // 24 + n + 8
 
     public ConfigurableToolWindow(Component title, ArrayList<IConfigurableToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
-        super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(title));
+        super(ClientMenuScreen.createEmptyMenu(), ClientMenuScreen.createEmptyInventory(), new NSString(title));
         this.inventoryView.removeFromSuperview();
         this.setBackgroundView(ModTextures.defaultWindowImage());
         this.hand = hand;
@@ -63,7 +63,7 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     private UIView createOptionView(IConfigurableToolProperty<?> property) {
-        var name = NSString.localizedString("toolOptions." + property.getName());
+        var name = NSString.localizedString("toolOptions." + property.name());
         if (property instanceof BooleanToolProperty property1) {
             var checkBox = new UICheckBox(new CGRect(8, contentHeight, contentWidth - 16, 9));
             checkBox.setTitle(name);
@@ -85,8 +85,8 @@ public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
                 return formattedValue;
             });
             slider.setSmall(true);
-            slider.setMinValue(property1.getMinValue());
-            slider.setMaxValue(property1.getMaxValue());
+            slider.setMinValue(property1.minValue());
+            slider.setMaxValue(property1.maxValue());
             slider.setValue(itemStack.get(property1));
             slider.addTarget(this, UIControl.Event.EDITING_DID_END, (self, sender) -> {
                 int value = (int) ((UISliderBox) sender).value();

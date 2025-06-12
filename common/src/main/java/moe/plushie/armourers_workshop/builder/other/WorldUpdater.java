@@ -26,7 +26,7 @@ public class WorldUpdater {
     }
 
     public synchronized void submit(IWorldUpdateTask task) {
-        allTasks.computeIfAbsent(task.getLevel().dimension(), k -> new AutoMergeQueue()).push(task);
+        allTasks.computeIfAbsent(task.level().dimension(), k -> new AutoMergeQueue()).push(task);
     }
 
     public void tick(Level level) {
@@ -87,7 +87,7 @@ public class WorldUpdater {
         private final ArrayList<IWorldUpdateTask> tasks = new ArrayList<>();
 
         public void push(IWorldUpdateTask task) {
-            var blockPos = task.getBlockPos();
+            var blockPos = task.blockPos();
             var pendingTask = fastTable.get(blockPos);
             if (pendingTask == null) {
                 tasks.add(task);
@@ -105,7 +105,7 @@ public class WorldUpdater {
 
         public IWorldUpdateTask pop() {
             var task = tasks.remove(0);
-            var mergedTask = fastTable.remove(task.getBlockPos());
+            var mergedTask = fastTable.remove(task.blockPos());
             if (mergedTask != null) {
                 return mergedTask;
             }
@@ -124,8 +124,8 @@ public class WorldUpdater {
         private final ArrayList<IWorldUpdateTask> tasks = new ArrayList<>();
 
         public AutoMergeTask(IWorldUpdateTask task) {
-            this.level = task.getLevel();
-            this.blockPos = task.getBlockPos();
+            this.level = task.level();
+            this.blockPos = task.blockPos();
             this.tasks.add(task);
         }
 
@@ -137,7 +137,7 @@ public class WorldUpdater {
             var optimizedTasks = new ArrayList<IWorldUpdateTask>();
             BlockState lastBlockState = null;
             for (var task : tasks) {
-                var newBlockState = task.getBlockState();
+                var newBlockState = task.blockState();
                 if (!Objects.equals(newBlockState, lastBlockState)) {
                     lastBlockState = newBlockState;
                     optimizedTasks.clear();
@@ -151,17 +151,17 @@ public class WorldUpdater {
         }
 
         @Override
-        public Level getLevel() {
+        public Level level() {
             return level;
         }
 
         @Override
-        public BlockPos getBlockPos() {
+        public BlockPos blockPos() {
             return blockPos;
         }
 
         @Override
-        public BlockState getBlockState() {
+        public BlockState blockState() {
             return null;
         }
 

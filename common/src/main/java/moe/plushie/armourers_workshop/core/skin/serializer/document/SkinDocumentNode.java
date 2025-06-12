@@ -187,11 +187,11 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_NAME, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public String getName() {
+    public String name() {
         if (name != null) {
             return name;
         }
@@ -212,7 +212,7 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         this.cachedTypeName = null;
     }
 
-    public SkinPartType getType() {
+    public SkinPartType type() {
         return type;
     }
 
@@ -221,11 +221,11 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_SKIN, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public SkinDescriptor getSkin() {
+    public SkinDescriptor skin() {
         return skin;
     }
 
@@ -235,11 +235,11 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_LOCATION, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public OpenVector3f getLocation() {
+    public OpenVector3f location() {
         return location;
     }
 
@@ -249,11 +249,11 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_ROTATION, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
@@ -263,11 +263,11 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_SCALE, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public OpenVector3f getScale() {
+    public OpenVector3f scale() {
         return scale;
     }
 
@@ -277,16 +277,16 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_PIVOT, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
-    public OpenVector3f getPivot() {
+    public OpenVector3f pivot() {
         return pivot;
     }
 
 
-    public OpenTransform3f getTransform() {
+    public OpenTransform3f transform() {
         if (transform != null) {
             return transform;
         }
@@ -306,7 +306,7 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         return transform;
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 
@@ -315,7 +315,7 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_ENABLED, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
 
         }
     }
@@ -330,7 +330,7 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_MIRROR, value);
-            listener.documentDidUpdateNode(this, builder.getTag());
+            listener.documentDidUpdateNode(this, builder.tag());
         }
     }
 
@@ -372,7 +372,7 @@ public class SkinDocumentNode implements IDataSerializable.Immutable {
         this.children.forEach(it -> it.setListener(listener));
     }
 
-    protected SkinDocumentListener getListener() {
+    protected SkinDocumentListener listener() {
         return listener;
     }
 

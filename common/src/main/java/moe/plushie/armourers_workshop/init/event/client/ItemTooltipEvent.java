@@ -15,23 +15,23 @@ public interface ItemTooltipEvent {
 
     interface Gather {
 
-        ItemStack getItemStack();
+        ItemStack itemStack();
 
-        List<Component> getTooltips();
+        List<Component> tooltips();
 
-        ITooltipContext getContext();
+        ITooltipContext context();
     }
 
     interface Render {
 
-        ItemStack getItemStack();
+        ItemStack itemStack();
 
-        CGRect getFrame();
+        CGRect frame();
 
-        float getScreenWidth();
+        float screenWidth();
 
-        float getScreenHeight();
+        float screenHeight();
 
-        CGGraphicsContext getContext();
+        CGGraphicsContext context();
     }
 }

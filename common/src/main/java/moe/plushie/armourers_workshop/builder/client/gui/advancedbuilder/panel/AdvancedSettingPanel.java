@@ -164,15 +164,15 @@ public class AdvancedSettingPanel extends AdvancedPanel {
         scrollView.setFrame(bounds());
         scrollView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         insertViewAtIndex(scrollView, 0);
-        editor.getConnector().addListener(this::update);
+        editor.connector().addListener(this::update);
     }
 
     private void update(SkinDocumentNode node) {
-        if (properties == document.getProperties()) {
+        if (properties == document.properties()) {
             return;
         }
-        properties = document.getProperties();
-        addProperties(document.getType().getSkinType());
+        properties = document.properties();
+        addProperties(document.type().skinType());
     }
 
     private void addProperties(SkinType skinType) {

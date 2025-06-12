@@ -97,8 +97,8 @@ public class CommonProxy {
 
         EventBus.register(DataPackEvent.Sync.class, event -> {
             // when the data pack sync event, we will initialize context.
-            if (event.getPlayer() instanceof ServerPlayer player) {
-                ReplayManager.startRecording(event.getPlayer().getServer(), event.getPlayer());
+            if (event.player() instanceof ServerPlayer player) {
+                ReplayManager.startRecording(event.player().getServer(), event.player());
                 NetworkManager.sendTo(UpdateContextPacket.sync(player), player);
             }
         });

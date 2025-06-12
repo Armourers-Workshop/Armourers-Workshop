@@ -23,11 +23,11 @@ public class AnimationEffectState {
         this.result = result;
     }
 
-    public Object getValue() {
+    public Object value() {
         return this.value;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 

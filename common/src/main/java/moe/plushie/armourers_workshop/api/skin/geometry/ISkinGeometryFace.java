@@ -8,30 +8,30 @@ public interface ISkinGeometryFace {
     /**
      * Gets the geometry face id.
      */
-    int getId();
+    int id();
 
     /**
      * Gets the geometry type.
      */
-    ISkinGeometryType getType();
+    ISkinGeometryType type();
 
     /**
      * Gets the geometry options;
      */
-    ISkinGeometryOptions getOptions();
+    ISkinGeometryOptions options();
 
     /**
      * Gets the face transform.
      */
-    ITransform3f getTransform();
+    ITransform3f transform();
 
     /**
      * Get the face used texture key.
      */
-    ISkinTexturePos getTexturePos();
+    ISkinTexturePos texturePos();
 
     /**
      * Gets the all vertices of the face.
      */
-    Iterable<? extends ISkinGeometryVertex> getVertices();
+    Iterable<? extends ISkinGeometryVertex> vertices();
 }

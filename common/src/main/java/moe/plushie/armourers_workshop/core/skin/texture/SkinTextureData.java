@@ -53,17 +53,17 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
-    public float getWidth() {
+    public float width() {
         return width;
     }
 
     @Override
-    public float getHeight() {
+    public float height() {
         return height;
     }
 
@@ -72,7 +72,7 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     @Override
-    public SkinTextureAnimation getAnimation() {
+    public SkinTextureAnimation animation() {
         return animation;
     }
 
@@ -81,12 +81,12 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     @Override
-    public SkinTextureProperties getProperties() {
+    public SkinTextureProperties properties() {
         return properties;
     }
 
     @Override
-    public ByteBuf getBuffer() {
+    public ByteBuf buffer() {
         return bytes;
     }
 
@@ -95,7 +95,7 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     @Override
-    public List<SkinTextureData> getVariants() {
+    public List<SkinTextureData> variants() {
         return variants;
     }
 

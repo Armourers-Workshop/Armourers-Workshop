@@ -24,7 +24,7 @@ import java.util.Map;
 public class Skin implements ISkin {
 
     private final int id;
-    private final int version;
+    private final int fileVersion;
 
     private final SkinSettings settings;
     private final SkinProperties properties;
@@ -38,9 +38,9 @@ public class Skin implements ISkin {
 
     private Map<OpenVector3i, OpenRectangle3f> blockBounds;
 
-    protected Skin(int id, int version, SkinType type, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, List<SkinAnimation> animations, List<SkinPart> parts, Object blobs) {
+    protected Skin(int id, int fileVersion, SkinType type, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, List<SkinAnimation> animations, List<SkinPart> parts, Object blobs) {
         this.id = id;
-        this.version = version;
+        this.fileVersion = fileVersion;
         this.type = type;
         this.properties = properties;
         this.settings = settings;
@@ -51,19 +51,19 @@ public class Skin implements ISkin {
         this.parts = new ArrayList<>(parts);
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public SkinSettings getSettings() {
+    public SkinSettings settings() {
         return settings;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
-    public Map<OpenVector3i, OpenRectangle3f> getBlockBounds() {
+    public Map<OpenVector3i, OpenRectangle3f> blockBounds() {
         if (blockBounds != null) {
             return blockBounds;
         }
@@ -71,7 +71,7 @@ public class Skin implements ISkin {
         if (type != SkinTypes.BLOCK) {
             return blockBounds;
         }
-        var collisionBox = settings.getCollisionBox();
+        var collisionBox = settings.collisionBox();
         blockBounds.put(OpenVector3i.ZERO, OpenRectangle3f.ZERO);
         if (collisionBox != null) {
             for (var rect : collisionBox) {
@@ -89,8 +89,8 @@ public class Skin implements ISkin {
             }
             return blockBounds;
         }
-        for (var part : getParts()) {
-            var partBlockBounds = part.getBlockBounds();
+        for (var part : parts()) {
+            var partBlockBounds = part.blockBounds();
             if (partBlockBounds != null) {
                 blockBounds.putAll(partBlockBounds);
             }
@@ -98,80 +98,80 @@ public class Skin implements ISkin {
         return blockBounds;
     }
 
-    public int getModelCount() {
+    public int modelCount() {
         int count = 0;
         for (var part : parts) {
-            count += part.getModelCount();
+            count += part.modelCount();
         }
         return count;
     }
 
-    public int getPartCount() {
+    public int partCount() {
         return parts.size();
     }
 
     @Override
-    public SkinType getType() {
+    public SkinType type() {
         return type;
     }
 
     @Nullable
-    public SkinPaintData getPaintData() {
+    public SkinPaintData paintData() {
         return paintData;
     }
 
-    public SkinPreviewData getPreviewData() {
+    public SkinPreviewData previewData() {
         return previewData;
     }
 
     @Override
-    public List<SkinPart> getParts() {
+    public List<SkinPart> parts() {
         return parts;
     }
 
-    public List<SkinAnimation> getAnimations() {
+    public List<SkinAnimation> animations() {
         return animations;
     }
 
-    public OpenItemTransforms getItemTransforms() {
-        return settings.getItemTransforms();
+    public OpenItemTransforms itemTransforms() {
+        return settings.itemTransforms();
     }
 
-    public String getCustomName() {
+    public String customName() {
         return properties.get(SkinProperty.ALL_CUSTOM_NAME);
     }
 
-    public String getAuthorName() {
+    public String authorName() {
         return properties.get(SkinProperty.ALL_AUTHOR_NAME);
     }
 
-    public String getAuthorUUID() {
+    public String authorUUID() {
         return properties.get(SkinProperty.ALL_AUTHOR_UUID);
     }
 
-    public String getFlavourText() {
+    public String flavourText() {
         return properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
     }
 
-    public int getVersion() {
-        return version;
+    public int fileVersion() {
+        return fileVersion;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toString(this, "type", type.getRegistryName().toString(), "properties", properties, "settings", settings, "animations", animations, "paintData", paintData, "previewData", previewData);
-    }
-
-    public List<SkinMarker> getMarkers() {
+    public List<SkinMarker> markers() {
         var markers = new ArrayList<SkinMarker>();
         for (var part : parts) {
-            markers.addAll(part.getMarkers());
+            markers.addAll(part.markers());
         }
         return markers;
     }
 
-    public Object getBlobs() {
+    public Object blobs() {
         return blobs;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toString(this, "type", type.registryName().toString(), "properties", properties, "settings", settings, "animations", animations, "paintData", paintData, "previewData", previewData);
     }
 
     public static class Builder {

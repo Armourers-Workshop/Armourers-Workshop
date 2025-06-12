@@ -9,7 +9,7 @@ public class BlockEntityAnimationState extends EntityActionSet {
     @Nullable
     public static BlockEntityAnimationState of(@Nullable BlockEntity blockEntity) {
         if (blockEntity != null) {
-            return EntityDataStorage.of(blockEntity).getAnimationState().orElse(null);
+            return EntityDataStorage.of(blockEntity).animationState().orElse(null);
         }
         return null;
     }

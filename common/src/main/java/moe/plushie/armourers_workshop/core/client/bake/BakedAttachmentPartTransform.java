@@ -50,11 +50,11 @@ public class BakedAttachmentPartTransform {
     private static void collect(BakedSkinPart part, Stack<BakedSkinPart> parent, ArrayList<BakedAttachmentPartTransform> results) {
         parent.push(part);
         // this object is a locator?
-        if (part.getType() == SkinPartTypes.ADVANCED_LOCATOR) {
-            results.add(create(part.getName(), new ArrayList<>(parent)));
+        if (part.type() == SkinPartTypes.ADVANCED_LOCATOR) {
+            results.add(create(part.name(), new ArrayList<>(parent)));
         }
         // check the child tree.
-        for (var child : part.getChildren()) {
+        for (var child : part.children()) {
             collect(child, parent, results);
         }
         parent.pop();
@@ -71,12 +71,12 @@ public class BakedAttachmentPartTransform {
     }
 
     public void setup(@Nullable Entity entity, BakedArmature armature, SkinRenderContext context) {
-        var renderData = context.getRenderData();
+        var renderData = context.renderData();
         if (renderData == null) {
             return;
         }
-        var partialTicks = context.getPartialTicks();
-        var poseStack = context.getPoseStack();
+        var partialTicks = context.partialTicks();
+        var poseStack = context.poseStack();
         setup(entity, armature, partialTicks, poseStack, renderData);
     }
 
@@ -96,11 +96,11 @@ public class BakedAttachmentPartTransform {
 
     protected void apply(Entity entity, BakedArmature armature, float partialTicks, IPoseStack poseStack, EntityRenderData renderData) {
         for (var child : children) {
-            var jointTransform = armature.getTransform(child);
+            var jointTransform = armature.transformByPart(child);
             if (jointTransform != null) {
                 jointTransform.apply(poseStack);
             }
-            child.getTransform().apply(poseStack);
+            child.transform().apply(poseStack);
         }
 
         poseStack.scale(16, 16, 16);

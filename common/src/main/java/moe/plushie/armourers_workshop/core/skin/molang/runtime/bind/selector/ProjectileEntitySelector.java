@@ -4,11 +4,11 @@ public interface ProjectileEntitySelector {
 
     boolean isOnGround();
 
-    double getOnGroundTime();
+    double onGroundTime();
 
     boolean isSpectral();
 
-    Object getOwner();
+    Object owner();
 
     double distanceFromMove();
 }

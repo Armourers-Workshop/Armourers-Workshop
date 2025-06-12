@@ -25,19 +25,19 @@ public class SkinMeshFace extends SkinGeometryFace {
     }
 
     @Override
-    public SkinGeometryType getType() {
+    public SkinGeometryType type() {
         return type;
     }
 
     @Override
-    public SkinGeometryOptions getOptions() {
+    public SkinGeometryOptions options() {
         return options;
     }
 
     @Override
-    public float getPriority() {
+    public float priority() {
         var priority = 0;
-        return switch (options.getRenderOrder()) {
+        return switch (options.renderOrder()) {
             case 1 -> priority - 1000; // behind
             case 2 -> priority + 1000; // in_front
             default -> priority;
@@ -45,7 +45,7 @@ public class SkinMeshFace extends SkinGeometryFace {
     }
 
     @Override
-    public List<SkinGeometryVertex> getVertices() {
+    public List<SkinGeometryVertex> vertices() {
         return vertices;
     }
 }

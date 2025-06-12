@@ -34,7 +34,7 @@ public class TagSerializer extends AbstractDataSerializer {
     public static void writeToStream(IDataSerializable.Immutable value, OutputStream outputStream) throws IOException {
         var serializer = new TagSerializer();
         value.serialize(serializer);
-        writeToStream(serializer.getTag(), outputStream);
+        writeToStream(serializer.tag(), outputStream);
     }
 
     public static void writeToStream(CompoundTag compoundTag, OutputStream outputStream) throws IOException {
@@ -51,13 +51,13 @@ public class TagSerializer extends AbstractDataSerializer {
 
     public static CompoundTag parse(String contents) {
         try {
-            return TagParser.parseTag(contents);
+            return TagParser.parseCompoundFully(contents);
         } catch (Exception e) {
             return new CompoundTag();
         }
     }
 
-    public CompoundTag getTag() {
+    public CompoundTag tag() {
         return tag;
     }
 }

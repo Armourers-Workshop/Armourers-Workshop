@@ -30,7 +30,7 @@ public class SkinSlot extends Slot {
         return container.canPlaceItem(index, itemStack);
     }
 
-    public Collection<SkinSlotType> getSlotTypes() {
+    public Collection<SkinSlotType> slotTypes() {
         return slotTypes;
     }
 
@@ -39,7 +39,7 @@ public class SkinSlot extends Slot {
         if (backgroundPairs == null) {
             backgroundPairs = new ArrayList<>();
             for (var slotType : slotTypes) {
-                backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.getIconSprite().toLocation()));
+                backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.icon().toLocation()));
             }
         }
         int size = backgroundPairs.size();

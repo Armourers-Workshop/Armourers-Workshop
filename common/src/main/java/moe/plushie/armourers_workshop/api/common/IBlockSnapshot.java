@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface IBlockSnapshot {
 
-    BlockState getState();
+    BlockState state();
 
-    CompoundTag getTag();
+    CompoundTag tag();
 }

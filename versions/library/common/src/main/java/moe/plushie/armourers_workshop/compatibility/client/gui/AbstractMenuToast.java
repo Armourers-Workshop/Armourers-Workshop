@@ -15,16 +15,16 @@ public abstract class AbstractMenuToast implements Toast {
 
     public abstract void render(CGGraphicsContext context);
 
-    public abstract double getDuration();
+    public abstract double duration();
 
-    public OpenSize2i getScreenSize() {
+    public OpenSize2i screenSize() {
         return new OpenSize2i(width(), height());
     }
 
     @Override
     public final Visibility render(GuiGraphics guiGraphics, ToastComponent toast, long l) {
         render(AbstractGraphicsRenderer.of(guiGraphics, 0, 0, l));
-        double time = getDuration() * toast.getNotificationDisplayTimeMultiplier();
+        double time = duration() * toast.getNotificationDisplayTimeMultiplier();
         if (l >= time) {
             return Visibility.HIDE;
         }

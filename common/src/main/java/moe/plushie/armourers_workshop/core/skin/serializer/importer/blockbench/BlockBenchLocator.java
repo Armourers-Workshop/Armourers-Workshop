@@ -13,11 +13,11 @@ public class BlockBenchLocator extends BlockBenchElement {
         this.position = position;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
-    public OpenVector3f getPosition() {
+    public OpenVector3f position() {
         return position;
     }
 

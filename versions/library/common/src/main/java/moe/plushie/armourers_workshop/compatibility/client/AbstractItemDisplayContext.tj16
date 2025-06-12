@@ -8,16 +8,16 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 @Available("[1.16, 1.20)")
 public class AbstractItemDisplayContext {
 
-    private static final EnumMapper<OpenItemDisplayContext, ItemTransforms.TransformType> MAPPER = EnumMapper.create(OpenItemDisplayContext.NONE, ItemTransforms.TransformType.NONE, builder -> {
-        builder.add(OpenItemDisplayContext.NONE, ItemTransforms.TransformType.NONE);
-        builder.add(OpenItemDisplayContext.THIRD_PERSON_LEFT_HAND, ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND);
-        builder.add(OpenItemDisplayContext.THIRD_PERSON_RIGHT_HAND, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-        builder.add(OpenItemDisplayContext.FIRST_PERSON_LEFT_HAND, ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
-        builder.add(OpenItemDisplayContext.FIRST_PERSON_RIGHT_HAND, ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
-        builder.add(OpenItemDisplayContext.HEAD, ItemTransforms.TransformType.HEAD);
-        builder.add(OpenItemDisplayContext.GROUND, ItemTransforms.TransformType.GROUND);
-        builder.add(OpenItemDisplayContext.GUI, ItemTransforms.TransformType.GUI);
-        builder.add(OpenItemDisplayContext.FIXED, ItemTransforms.TransformType.FIXED);
+    private static final EnumMapper<OpenItemDisplayContext, ItemTransforms.TransformType> MAPPER = EnumMapper.create(OpenItemDisplayContext.NONE, ItemTransforms.TransformType.NONE, it -> {
+        it.put(OpenItemDisplayContext.NONE, ItemTransforms.TransformType.NONE);
+        it.put(OpenItemDisplayContext.THIRD_PERSON_LEFT_HAND, ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND);
+        it.put(OpenItemDisplayContext.THIRD_PERSON_RIGHT_HAND, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+        it.put(OpenItemDisplayContext.FIRST_PERSON_LEFT_HAND, ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
+        it.put(OpenItemDisplayContext.FIRST_PERSON_RIGHT_HAND, ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+        it.put(OpenItemDisplayContext.HEAD, ItemTransforms.TransformType.HEAD);
+        it.put(OpenItemDisplayContext.GROUND, ItemTransforms.TransformType.GROUND);
+        it.put(OpenItemDisplayContext.GUI, ItemTransforms.TransformType.GUI);
+        it.put(OpenItemDisplayContext.FIXED, ItemTransforms.TransformType.FIXED);
     });
 
     public static OpenItemDisplayContext wrap(ItemTransforms.TransformType transformType) {

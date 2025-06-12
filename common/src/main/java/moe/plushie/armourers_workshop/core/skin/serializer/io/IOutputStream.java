@@ -33,14 +33,14 @@ public interface IOutputStream {
         return () -> stream;
     }
 
-    DataOutputStream getOutputStream();
+    DataOutputStream outputStream();
 
     default void write(byte[] bytes) throws IOException {
-        getOutputStream().write(bytes);
+        outputStream().write(bytes);
     }
 
     default void write(byte[] b, int off, int len) throws IOException {
-        getOutputStream().write(b, off, len);
+        outputStream().write(b, off, len);
     }
 
     default void writeBytes(ByteBuf buf) throws IOException {
@@ -48,35 +48,35 @@ public interface IOutputStream {
     }
 
     default void writeBytes(ByteBuf buf, int limit) throws IOException {
-        buf.getBytes(0, getOutputStream(), limit);
+        buf.getBytes(0, outputStream(), limit);
     }
 
     default void writeByte(int v) throws IOException {
-        getOutputStream().writeByte(v);
+        outputStream().writeByte(v);
     }
 
     default void writeBoolean(boolean v) throws IOException {
-        getOutputStream().writeBoolean(v);
+        outputStream().writeBoolean(v);
     }
 
     default void writeShort(int v) throws IOException {
-        getOutputStream().writeShort(v);
+        outputStream().writeShort(v);
     }
 
     default void writeInt(int v) throws IOException {
-        getOutputStream().writeInt(v);
+        outputStream().writeInt(v);
     }
 
     default void writeLong(long v) throws IOException {
-        getOutputStream().writeLong(v);
+        outputStream().writeLong(v);
     }
 
     default void writeFloat(float v) throws IOException {
-        getOutputStream().writeFloat(v);
+        outputStream().writeFloat(v);
     }
 
     default void writeDouble(double v) throws IOException {
-        getOutputStream().writeDouble(v);
+        outputStream().writeDouble(v);
     }
 
     default void writeFixedInt(int value, int usedBytes) throws IOException {
@@ -97,7 +97,7 @@ public interface IOutputStream {
     default void writeString(String v) throws IOException {
         // yep, we just need write a length.
         if (v == null || v.isEmpty()) {
-            getOutputStream().writeShort(0);
+            outputStream().writeShort(0);
             return;
         }
         byte[] bytes = v.getBytes(StandardCharsets.UTF_8);
@@ -105,17 +105,17 @@ public interface IOutputStream {
         if (size > 65535) {
             throw new IOException("String is over the max length allowed.");
         }
-        getOutputStream().writeShort((short) size);
-        getOutputStream().write(bytes);
+        outputStream().writeShort((short) size);
+        outputStream().write(bytes);
     }
 
     default void writeString(String v, int len) throws IOException {
         byte[] bytes = v.getBytes(StandardCharsets.UTF_8);
-        getOutputStream().write(bytes, 0, len);
+        outputStream().write(bytes, 0, len);
     }
 
     default void writeVarInt(int i) throws IOException {
-        DataOutputStream outputStream = getOutputStream();
+        DataOutputStream outputStream = outputStream();
         while (true) {
             if ((i & 0xFFFFFF80) == 0) {
                 outputStream.writeByte(i);
@@ -184,21 +184,21 @@ public interface IOutputStream {
 
 
     default void writeVector3i(IVector3i vec) throws IOException {
-        var stream = getOutputStream();
+        var stream = outputStream();
         stream.writeInt(vec.x());
         stream.writeInt(vec.y());
         stream.writeInt(vec.z());
     }
 
     default void writeVector3f(IVector3f vec) throws IOException {
-        var stream = getOutputStream();
+        var stream = outputStream();
         stream.writeFloat(vec.x());
         stream.writeFloat(vec.y());
         stream.writeFloat(vec.z());
     }
 
     default void writeRectangle3i(IRectangle3i rect) throws IOException {
-        var stream = getOutputStream();
+        var stream = outputStream();
         stream.writeInt(rect.x());
         stream.writeInt(rect.y());
         stream.writeInt(rect.z());
@@ -208,7 +208,7 @@ public interface IOutputStream {
     }
 
     default void writeRectangle3f(IRectangle3f rect) throws IOException {
-        var stream = getOutputStream();
+        var stream = outputStream();
         stream.writeFloat(rect.x());
         stream.writeFloat(rect.y());
         stream.writeFloat(rect.z());
@@ -237,10 +237,10 @@ public interface IOutputStream {
 
 
     default void writeType(IRegistryEntry type) throws IOException {
-        writeString(type.getRegistryName().toString());
+        writeString(type.registryName().toString());
     }
 
     default void writeCompoundTag(CompoundTag value) throws IOException {
-        TagSerializer.writeToStream(value, getOutputStream());
+        TagSerializer.writeToStream(value, outputStream());
     }
 }

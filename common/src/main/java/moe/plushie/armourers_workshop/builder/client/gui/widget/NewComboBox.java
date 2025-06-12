@@ -118,7 +118,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
     public UIView tableViewViewForHeaderInSection(UITableView tableView, int section) {
         var sec = sections.get(section);
         var view = new UIButton(CGRect.ZERO);
-        view.setTitle(sec.getTitle(), State.NORMAL);
+        view.setTitle(sec.title(), State.NORMAL);
         view.setTitleColor(UIColor.WHITE, State.NORMAL);
         view.setHorizontalAlignment(NSTextAlignment.Horizontal.LEFT);
         view.setContentEdgeInsets(new UIEdgeInsets(0, 4, 0, 4));
@@ -180,7 +180,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
             return;
         }
         var item = section.get(indexPath.row);
-        var name = new NSMutableString(section.getTitle());
+        var name = new NSMutableString(section.title());
         name.append(" - ");
         name.append(item.title);
         titleView.setTitle(name, State.ALL);

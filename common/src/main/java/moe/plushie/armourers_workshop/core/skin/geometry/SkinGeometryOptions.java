@@ -24,7 +24,7 @@ public class SkinGeometryOptions implements ISkinGeometryOptions {
     }
 
     @Override
-    public int getRenderOrder() {
+    public int renderOrder() {
         return renderOrder;
     }
 

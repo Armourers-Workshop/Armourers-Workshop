@@ -8,7 +8,7 @@ public interface DataPackEvent {
 
     interface Reloading extends DataPackEvent {
 
-        DataPackType getType();
+        DataPackType type();
     }
 
     /**
@@ -24,6 +24,6 @@ public interface DataPackEvent {
          * @return The player to sync datapacks to. Null when syncing for all players.
          */
         @Nullable
-        Player getPlayer();
+        Player player();
     }
 }

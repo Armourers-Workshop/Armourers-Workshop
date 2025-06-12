@@ -39,7 +39,7 @@ public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMen
     private final ItemStack itemStack;
 
     public PaletteToolWindow(Component title, ItemStack itemStack, InteractionHand hand) {
-        super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(title));
+        super(ClientMenuScreen.createEmptyMenu(), ClientMenuScreen.createEmptyInventory(), new NSString(title));
         this.hand = hand;
         this.itemStack = itemStack;
         this.paintColorView.setPaintColor(getItemColor(itemStack));

@@ -21,30 +21,30 @@ public class SkinPartTransform implements ITransform {
     }
 
     public SkinPartTransform(SkinPart part, ITransform quadsTransform) {
-        this.parent = part.getTransform();
+        this.parent = part.transform();
         if (quadsTransform != null) {
             this.children.add(quadsTransform);
         }
-        var wingsTransform = getWingsTransform(part);
+        var wingsTransform = wingsTransform(part);
         if (wingsTransform != null) {
             this.children.add(wingsTransform);
         }
-        var partTransform = part.getTransform();
+        var partTransform = part.transform();
         if (partTransform != null) {
             this.children.add(partTransform);
         }
     }
 
-    private ITransform getWingsTransform(SkinPart part) {
-        var partType = part.getType();
+    private ITransform wingsTransform(SkinPart part) {
+        var partType = part.type();
         if (!(partType instanceof ICanRotation)) {
             return null;
         }
-        var markers = part.getMarkers();
+        var markers = part.markers();
         if (markers == null || markers.isEmpty()) {
             return null;
         }
-        return new WingPartTransform(partType, part.getProperties(), markers.iterator().next());
+        return new WingPartTransform(partType, part.properties(), markers.iterator().next());
     }
 
     @Override
@@ -73,11 +73,11 @@ public class SkinPartTransform implements ITransform {
         children.remove(transform);
     }
 
-    public List<ITransform> getChildren() {
+    public List<ITransform> children() {
         return children;
     }
 
-    public ITransform getParent() {
+    public ITransform parent() {
         return parent;
     }
 

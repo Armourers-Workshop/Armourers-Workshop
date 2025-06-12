@@ -48,10 +48,10 @@ public class ClientDynamicLightHandler {
         if (itemModel == null) {
             return;
         }
-        var descriptor = itemModel.getSourceSkin();
+        var descriptor = itemModel.sourceSkin();
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
         if (bakedSkin != null) {
-            cir.setReturnValue(bakedSkin.getRenderInfo().getLuminance());
+            cir.setReturnValue(bakedSkin.renderInfo().luminance());
         }
     }
 
@@ -62,7 +62,7 @@ public class ClientDynamicLightHandler {
         }
         var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
-            var manger = renderData.getLuminanceManager();
+            var manger = renderData.luminanceManager();
             if (manger.isEnabled()) {
                 return DataContainer.of(manger, builder);
             }
@@ -77,7 +77,7 @@ public class ClientDynamicLightHandler {
         }
         var renderData = BlockEntityRenderData.of(entity);
         if (renderData != null) {
-            var manager = renderData.getLuminanceManager();
+            var manager = renderData.luminanceManager();
             if (manager.isEnabled()) {
                 return DataContainer.of(manager, builder);
             }

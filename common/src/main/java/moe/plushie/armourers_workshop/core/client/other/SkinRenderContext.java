@@ -110,7 +110,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.lightmap = lightmap;
     }
 
-    public int getLightmap() {
+    @Override
+    public int lightmap() {
         return lightmap;
     }
 
@@ -118,7 +119,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.overlay = overlay;
     }
 
-    public int getOverlay() {
+    @Override
+    public int overlay() {
         return overlay;
     }
 
@@ -126,7 +128,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.partialTicks = partialTicks;
     }
 
-    public float getPartialTicks() {
+    @Override
+    public float partialTicks() {
         return partialTicks;
     }
 
@@ -134,7 +137,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.animationTicks = animationTicks;
     }
 
-    public double getAnimationTicks() {
+    @Override
+    public double animationTicks() {
         return animationTicks;
     }
 
@@ -142,7 +146,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.colorScheme = colorScheme;
     }
 
-    public SkinPaintScheme getColorScheme() {
+    public SkinPaintScheme colorScheme() {
         return colorScheme;
     }
 
@@ -150,7 +154,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.displayContext = displayContext;
     }
 
-    public OpenItemDisplayContext getDisplayContext() {
+    public OpenItemDisplayContext displayContext() {
         return displayContext;
     }
 
@@ -158,7 +162,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.displayBox = displayBox;
     }
 
-    public OpenVector3f getDisplayBox() {
+    public OpenVector3f displayBox() {
         return displayBox;
     }
 
@@ -166,7 +170,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.renderData = renderData;
     }
 
-    public EntityRenderData getRenderData() {
+    public EntityRenderData renderData() {
         return renderData;
     }
 
@@ -174,9 +178,9 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.animationManager = animationManager;
     }
 
-    public AnimationManager getAnimationManager() {
+    public AnimationManager animationManager() {
         if (renderData != null) {
-            return renderData.getAnimationManager();
+            return renderData.animationManager();
         }
         if (animationManager != null) {
             return animationManager;
@@ -193,7 +197,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         if (outlineColor != 0) {
             usedBufferSource = AbstractBufferSource.outline();
         }
-        var bufferBuilder = SkinVertexBufferBuilder.of(usedBufferSource, skin.getRenderInfo());
+        var bufferBuilder = SkinVertexBufferBuilder.of(usedBufferSource, skin.renderInfo());
         return bufferBuilder.getBuffer(skin);
     }
 
@@ -205,7 +209,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         this.outlineColor = outlineColor;
     }
 
-    public int getOutlineColor() {
+    @Override
+    public int outlineColor() {
         return outlineColor;
     }
 
@@ -215,9 +220,9 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     @Override
-    public float getRenderPriority() {
+    public float renderPriority() {
         if (itemSource != null) {
-            return itemSource.getRenderPriority();
+            return itemSource.renderPriority();
         }
         return 0;
     }
@@ -227,7 +232,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     @Override
-    public SkinItemSource getItemSource() {
+    public SkinItemSource itemSource() {
         if (this.itemSource != null) {
             return this.itemSource;
         }
@@ -247,7 +252,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     @Override
-    public IPoseStack getPoseStack() {
+    public IPoseStack poseStack() {
         return poseStack;
     }
 
@@ -256,7 +261,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     @Override
-    public IBufferSource getBufferSource() {
+    public IBufferSource bufferSource() {
         return bufferSource;
     }
 
@@ -265,7 +270,7 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     }
 
     @Override
-    public IPoseStack getModelViewStack() {
+    public IPoseStack modelViewStack() {
         return modelViewStack;
     }
 }

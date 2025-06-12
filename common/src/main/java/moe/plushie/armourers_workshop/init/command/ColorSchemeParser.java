@@ -23,11 +23,11 @@ public class ColorSchemeParser {
 
     private static final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> SUGGEST_NOTHING = SuggestionsBuilder::buildFuture;
 
-    private static final Map<String, SkinPaintType> DYE_TYPES = Collections.immutableMap(builder -> {
+    private static final Map<String, SkinPaintType> DYE_TYPES = Collections.immutableMap(it -> {
         for (int i = 0; i < 8; ++i) {
             var paintType = SkinPaintTypes.byId(i + 1);
-            var name = paintType.getRegistryName().getPath();
-            builder.put(name.replaceAll("_", ""), paintType);
+            var name = paintType.registryName().path();
+            it.put(name.replaceAll("_", ""), paintType);
         }
     });
 
@@ -69,7 +69,7 @@ public class ColorSchemeParser {
                 reader.skip();
                 reader.skipWhitespace();
                 suggestions = colorParser::fillSuggestions;
-                properties.put(property, colorParser.parse().getPaintColor());
+                properties.put(property, colorParser.parse().paintColor());
                 suggestions = this::suggestNextPropertyOrEnd;
                 if (!reader.canRead()) {
                     break;
@@ -96,7 +96,7 @@ public class ColorSchemeParser {
         return suggestions.apply(builder.createOffset(reader.getCursor()));
     }
 
-    public Map<SkinPaintType, SkinPaintColor> getProperties() {
+    public Map<SkinPaintType, SkinPaintColor> properties() {
         return properties;
     }
 

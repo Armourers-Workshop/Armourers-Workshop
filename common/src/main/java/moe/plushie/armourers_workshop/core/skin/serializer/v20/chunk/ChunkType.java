@@ -14,14 +14,14 @@ public enum ChunkType {
     MARKER("PRMK"),
     SKIN_SETTINGS("SET4");
 
-    private final String name;
+    private final String serializedName;
 
-    ChunkType(String name) {
-        this.name = name;
+    ChunkType(String serializedName) {
+        this.serializedName = serializedName;
     }
 
-    public String getName() {
-        return name;
+    public String serializedName() {
+        return serializedName;
     }
 }
 

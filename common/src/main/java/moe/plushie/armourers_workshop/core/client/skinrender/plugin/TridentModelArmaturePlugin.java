@@ -12,7 +12,7 @@ public class TridentModelArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, Context context) {
-        var poseStack = context.getPoseStack();
+        var poseStack = context.poseStack();
 
         poseStack.rotate(OpenVector3f.ZP.rotationDegrees(180));
         poseStack.rotate(OpenVector3f.YP.rotationDegrees(-90));

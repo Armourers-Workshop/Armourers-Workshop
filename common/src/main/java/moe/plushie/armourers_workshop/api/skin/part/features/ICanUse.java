@@ -4,5 +4,5 @@ import com.google.common.collect.Range;
 
 public interface ICanUse {
 
-    Range<Integer> getUseRange();
+    Range<Integer> useRange();
 }

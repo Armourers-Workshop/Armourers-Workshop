@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import net.minecraft.core.Direction;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class OpenModelPart {
         this.initialPose = Pose.ZERO;
     }
 
-    public Pose getInitialPose() {
+    public Pose initialPose() {
         return this.initialPose;
     }
 
@@ -178,7 +177,7 @@ public class OpenModelPart {
         public final float maxY;
         public final float maxZ;
 
-        public Cube(int i, int j, float f, float g, float h, float width, float height, float depth, float growX, float growY, float growZ, boolean mirror, float texWidth, float texHeight, Set<Direction> visibleFaces) {
+        public Cube(int i, int j, float f, float g, float h, float width, float height, float depth, float growX, float growY, float growZ, boolean mirror, float texWidth, float texHeight, Set<OpenDirection> visibleFaces) {
             this.minX = f;
             this.minY = g;
             this.minZ = h;
@@ -219,28 +218,28 @@ public class OpenModelPart {
             float ad = (float) j + depth;
             float ae = (float) j + depth + height;
             int faceIndex = 0;
-            if (visibleFaces.contains(Direction.DOWN)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex5, vertex, vertex2}, x, ac, y, ad, texWidth, texHeight, mirror, Direction.DOWN);
+            if (visibleFaces.contains(OpenDirection.DOWN)) {
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex5, vertex, vertex2}, x, ac, y, ad, texWidth, texHeight, mirror, OpenDirection.DOWN);
             }
 
-            if (visibleFaces.contains(Direction.UP)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex3, vertex4, vertex8, vertex7}, y, ad, z, ac, texWidth, texHeight, mirror, Direction.UP);
+            if (visibleFaces.contains(OpenDirection.UP)) {
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex3, vertex4, vertex8, vertex7}, y, ad, z, ac, texWidth, texHeight, mirror, OpenDirection.UP);
             }
 
-            if (visibleFaces.contains(Direction.WEST)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex, vertex5, vertex8, vertex4}, w, ad, x, ae, texWidth, texHeight, mirror, Direction.WEST);
+            if (visibleFaces.contains(OpenDirection.WEST)) {
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex, vertex5, vertex8, vertex4}, w, ad, x, ae, texWidth, texHeight, mirror, OpenDirection.WEST);
             }
 
-            if (visibleFaces.contains(Direction.NORTH)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex2, vertex, vertex4, vertex3}, x, ad, y, ae, texWidth, texHeight, mirror, Direction.NORTH);
+            if (visibleFaces.contains(OpenDirection.NORTH)) {
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex2, vertex, vertex4, vertex3}, x, ad, y, ae, texWidth, texHeight, mirror, OpenDirection.NORTH);
             }
 
-            if (visibleFaces.contains(Direction.EAST)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex2, vertex3, vertex7}, y, ad, aa, ae, texWidth, texHeight, mirror, Direction.EAST);
+            if (visibleFaces.contains(OpenDirection.EAST)) {
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex2, vertex3, vertex7}, y, ad, aa, ae, texWidth, texHeight, mirror, OpenDirection.EAST);
             }
 
-            if (visibleFaces.contains(Direction.SOUTH)) {
-                this.polygons[faceIndex] = new Polygon(new Vertex[]{vertex5, vertex6, vertex7, vertex8}, aa, ad, ab, ae, texWidth, texHeight, mirror, Direction.SOUTH);
+            if (visibleFaces.contains(OpenDirection.SOUTH)) {
+                this.polygons[faceIndex] = new Polygon(new Vertex[]{vertex5, vertex6, vertex7, vertex8}, aa, ad, ab, ae, texWidth, texHeight, mirror, OpenDirection.SOUTH);
             }
 
         }
@@ -291,7 +290,7 @@ public class OpenModelPart {
         public final Vertex[] vertices;
         public final OpenVector3f normal;
 
-        public Polygon(Vertex[] vertexes, float f, float g, float h, float i, float j, float k, boolean mirror, Direction direction) {
+        public Polygon(Vertex[] vertexes, float f, float g, float h, float i, float j, float k, boolean mirror, OpenDirection direction) {
             this.vertices = vertexes;
             float l = 0.0F / j;
             float m = 0.0F / k;
@@ -307,7 +306,7 @@ public class OpenModelPart {
                     vertexes[n - 1 - o] = vertex;
                 }
             }
-            this.normal = new OpenVector3f(direction.getStepX(), direction.getStepY(), direction.getStepZ());
+            this.normal = new OpenVector3f(direction.stepX(), direction.stepY(), direction.stepZ());
             if (mirror) {
                 this.normal.scale(-1.0f, 1.0f, 1.0f);
             }

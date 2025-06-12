@@ -44,7 +44,7 @@ public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IBlockP
 
     private boolean checkRendererFromColors() {
         for (var color : colors.values()) {
-            if (color.getPaintType() != SkinPaintTypes.NORMAL) {
+            if (color.paintType() != SkinPaintTypes.NORMAL) {
                 return true;
             }
         }

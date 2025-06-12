@@ -31,7 +31,7 @@ public class ChunkTextureData {
     }
 
     public ChunkTextureData(SkinTextureData provider) {
-        this.rect = new OpenRectangle2f(0, 0, provider.getWidth(), provider.getHeight());
+        this.rect = new OpenRectangle2f(0, 0, provider.width(), provider.height());
         this.usedRect = rect;
         this.provider = provider;
     }
@@ -51,8 +51,8 @@ public class ChunkTextureData {
         var animation = stream.readTextureAnimation();
         var properties = readAdditionalData(stream.readTextureProperties());
         var file = stream.readFile();
-        var provider = new SkinTextureData(file.getName(), width, height, animation, properties);
-        provider.load(file.getBytes());
+        var provider = new SkinTextureData(file.name(), width, height, animation, properties);
+        provider.load(file.bytes());
         this.provider = provider;
     }
 
@@ -67,14 +67,14 @@ public class ChunkTextureData {
         stream.writeFloat(rect.y());
         stream.writeFloat(rect.width());
         stream.writeFloat(rect.height());
-        stream.writeTextureAnimation(provider.getAnimation());
-        stream.writeTextureProperties(writeAdditionalData(provider.getProperties()));
-        stream.writeFile(ChunkFile.image(provider.getName(), provider.getBuffer()));
+        stream.writeTextureAnimation(provider.animation());
+        stream.writeTextureProperties(writeAdditionalData(provider.properties()));
+        stream.writeFile(ChunkFile.image(provider.name(), provider.buffer()));
     }
 
     public void freeze(float x, float y, Function<SkinTextureData, ChunkTextureData> childProvider) {
         // bind the child -> parent
-        Collections.compactMap(provider.getVariants(), childProvider).forEach(it -> it.parentId = this.id);
+        Collections.compactMap(provider.variants(), childProvider).forEach(it -> it.parentId = this.id);
 
         // alignment the coordinate 16x16.
         float minX = OpenMath.floori((usedRect.minX() - rect.minX()) / 16f) * 16f;
@@ -113,19 +113,19 @@ public class ChunkTextureData {
         this.id = id;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public OpenRectangle2f getRect() {
+    public OpenRectangle2f rect() {
         return rect;
     }
 
-    public OpenRectangle2f getUsedRect() {
+    public OpenRectangle2f usedRect() {
         return usedRect;
     }
 
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return provider;
     }
 
@@ -175,7 +175,7 @@ public class ChunkTextureData {
 
         @Override
         public void writeToStream(ChunkOutputStream stream) throws IOException {
-            var rect = list.getRect();
+            var rect = list.rect();
             stream.writeFixedFloat(rect.x() + uv.x(), section.textureIndexBytes);
             stream.writeFixedFloat(rect.y() + uv.y(), section.textureIndexBytes);
         }
@@ -185,19 +185,19 @@ public class ChunkTextureData {
             return section.isResolved() && list.isResolved();
         }
 
-        public float getU() {
+        public float u() {
             return uv.x();
         }
 
-        public float getV() {
+        public float v() {
             return uv.y();
         }
 
-        public OpenVector2f getPos() {
+        public OpenVector2f uv() {
             return uv;
         }
 
-        public SkinTextureData getProvider() {
+        public SkinTextureData provider() {
             return list.provider;
         }
     }

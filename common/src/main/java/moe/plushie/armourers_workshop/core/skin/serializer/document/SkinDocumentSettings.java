@@ -67,7 +67,7 @@ public class SkinDocumentSettings implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_HELPER_MODEL, value);
-            listener.documentDidChangeSettings(builder.getTag());
+            listener.documentDidChangeSettings(builder.tag());
         }
     }
 
@@ -80,7 +80,7 @@ public class SkinDocumentSettings implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_ORIGIN, value);
-            listener.documentDidChangeSettings(builder.getTag());
+            listener.documentDidChangeSettings(builder.tag());
         }
     }
 
@@ -93,11 +93,11 @@ public class SkinDocumentSettings implements IDataSerializable.Immutable {
         if (listener != null) {
             var builder = new TagSerializer();
             builder.write(CodingKeys.INC_ITEM_TRANSFORMS, itemTransforms);
-            listener.documentDidChangeSettings(builder.getTag());
+            listener.documentDidChangeSettings(builder.tag());
         }
     }
 
-    public OpenItemTransforms getItemTransforms() {
+    public OpenItemTransforms itemTransforms() {
         return itemTransforms;
     }
 

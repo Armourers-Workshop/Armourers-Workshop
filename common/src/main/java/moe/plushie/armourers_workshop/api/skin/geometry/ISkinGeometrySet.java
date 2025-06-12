@@ -22,13 +22,13 @@ public interface ISkinGeometrySet<T extends ISkinGeometry> extends Iterable<T> {
     /**
      * Gets the combined geometry shape.
      */
-    IVoxelShape getShape();
+    IVoxelShape shape();
 
     /**
      * Gets the contains geometry types.
      */
     @Nullable
-    Collection<? extends ISkinGeometryType> getSupportedTypes();
+    Collection<? extends ISkinGeometryType> supportedTypes();
 
 
     @NotNull

@@ -24,7 +24,7 @@ public class EntityCollisionShape {
         return new EntityCollisionShape(rect);
     }
 
-    public OpenRectangle3f getRect() {
+    public OpenRectangle3f rect() {
         return rect;
     }
 

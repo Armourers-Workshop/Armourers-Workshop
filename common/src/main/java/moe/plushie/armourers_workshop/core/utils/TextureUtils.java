@@ -34,7 +34,7 @@ public final class TextureUtils {
     public static OpenResourceLocation getPlayerTextureLocation(EntityTextureDescriptor descriptor) {
         var bakedTexture = EntityTextureLoader.getInstance().loadTexture(descriptor);
         if (bakedTexture != null && bakedTexture.isDownloaded()) {
-            return bakedTexture.getLocation();
+            return bakedTexture.location();
         }
 //        ClientPlayer player = Minecraft.getInstance().player;
 //        if (player != null) {

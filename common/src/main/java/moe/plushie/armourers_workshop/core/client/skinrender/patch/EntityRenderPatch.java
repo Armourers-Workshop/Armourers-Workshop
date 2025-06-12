@@ -25,7 +25,7 @@ public abstract class EntityRenderPatch<T extends Entity> {
     protected BakedArmatureTransformer transformer;
 
     public EntityRenderPatch(EntityRenderData renderData, EntityRendererContext context) {
-        this.version = context.getVersion();
+        this.version = context.version();
         this.pluginContext.setRenderData(renderData);
         this.renderingContext.setRenderData(renderData);
     }
@@ -35,7 +35,7 @@ public abstract class EntityRenderPatch<T extends Entity> {
         if (renderData == null) {
             return;
         }
-        var renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.renderPatch();
         var rendererContext = EntityRendererContext.of(entityRenderer);
         if (!clazz.isInstance(renderPatch) || !renderPatch.isValid(rendererContext)) {
             var renderPatch1 = factory.create(renderData, rendererContext);
@@ -55,7 +55,7 @@ public abstract class EntityRenderPatch<T extends Entity> {
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _apply(Class<?> clazz, T entity, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, Consumer<P> handler) {
         var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
-            var renderPatch = renderData.getRenderPatch();
+            var renderPatch = renderData.renderPatch();
             if (clazz.isInstance(renderPatch)) {
                 if (handler != null) {
                     handler.accept(Objects.unsafeCast(renderPatch));
@@ -68,7 +68,7 @@ public abstract class EntityRenderPatch<T extends Entity> {
     protected static <T extends Entity, P extends EntityRenderPatch<? super T>> void _deactivate(Class<?> clazz, T entity, Consumer<P> handler) {
         var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
-            var renderPatch = renderData.getRenderPatch();
+            var renderPatch = renderData.renderPatch();
             if (clazz.isInstance(renderPatch)) {
                 renderPatch.onDeactivate(entity);
                 if (handler != null) {
@@ -104,18 +104,18 @@ public abstract class EntityRenderPatch<T extends Entity> {
     }
 
     public boolean isValid(EntityRendererContext context) {
-        return version == context.getVersion();
+        return version == context.version();
     }
 
-    public BakedArmatureTransformer getTransformer() {
+    public BakedArmatureTransformer transformer() {
         return transformer;
     }
 
-    public DefaultArmaturePluginContext getPluginContext() {
+    public DefaultArmaturePluginContext pluginContext() {
         return pluginContext;
     }
 
-    public SkinRenderContext getRenderingContext() {
+    public SkinRenderContext renderingContext() {
         return renderingContext;
     }
 

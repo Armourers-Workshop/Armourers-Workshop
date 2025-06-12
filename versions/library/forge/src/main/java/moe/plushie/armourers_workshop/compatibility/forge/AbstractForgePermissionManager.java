@@ -60,7 +60,7 @@ public abstract class AbstractForgePermissionManager {
                 return PermissionAPI.getOfflinePermission(profile.getId(), node, makeContexts(context));
             }
         };
-        node.setInformation(nodeImpl.getName(), nodeImpl.getDescription());
+        node.setInformation(nodeImpl.name(), nodeImpl.description());
         PENDING.add(node);
         return nodeImpl;
     }

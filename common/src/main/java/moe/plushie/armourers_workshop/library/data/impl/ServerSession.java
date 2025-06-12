@@ -71,7 +71,7 @@ public abstract class ServerSession {
         // when the request required authorization,
         // we will try to switch to the https channel.
         if (request.isSSLRequired()) {
-            for (var baseURL : getBaseURLs()) {
+            for (var baseURL : baseURLs()) {
                 if (baseURL.startsWith("https://")) {
                     return baseURL;
                 }
@@ -84,14 +84,14 @@ public abstract class ServerSession {
     }
 
     protected String defaultBaseURL() {
-        var baseURLs = getBaseURLs();
+        var baseURLs = baseURLs();
         if (!baseURLs.isEmpty()) {
             return baseURLs.get(0);
         }
         return "";
     }
 
-    protected ArrayList<String> getBaseURLs() {
+    protected ArrayList<String> baseURLs() {
         // must load once.
         if (DEFAULT_URLs.isEmpty()) {
             try {

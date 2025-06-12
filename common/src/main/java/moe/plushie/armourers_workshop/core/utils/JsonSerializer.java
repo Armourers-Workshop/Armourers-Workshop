@@ -39,7 +39,7 @@ public class JsonSerializer {
     @Nullable
     public static IODataObject readFromResource(IResource resource) {
         try {
-            return readFromStream(resource.getInputStream());
+            return readFromStream(resource.inputStream());
         } catch (IOException exception) {
             return null;
         }

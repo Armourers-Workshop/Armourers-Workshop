@@ -63,22 +63,22 @@ public class SkinPart implements ISkinPart {
         this.properties = properties;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
-    public int getModelCount() {
+    public int modelCount() {
         return 0;
     }
 
-    public Map<OpenVector3i, OpenRectangle3f> getBlockBounds() {
+    public Map<OpenVector3i, OpenRectangle3f> blockBounds() {
         if (blockBounds != null) {
             return blockBounds;
         }
         var blockGrid = new HashMap<OpenVector3i, OpenRectangle3f>();
         blockBounds = new HashMap<>();
         geometries.forEach(geometry -> {
-            var boundingBox = geometry.getShape().bounds();
+            var boundingBox = geometry.shape().bounds();
             var x = boundingBox.x();
             var y = boundingBox.y();
             var z = boundingBox.z();
@@ -93,36 +93,36 @@ public class SkinPart implements ISkinPart {
     }
 
     @Nullable
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
-    public SkinPartType getType() {
+    public SkinPartType type() {
         return this.type;
     }
 
     @Override
-    public ITransform getTransform() {
+    public ITransform transform() {
         return transform;
     }
 
     @Override
-    public SkinGeometrySet<?> getGeometries() {
+    public SkinGeometrySet<?> geometries() {
         return geometries;
     }
 
     @Override
-    public List<SkinPart> getChildren() {
+    public List<SkinPart> children() {
         return children;
     }
 
     @Override
-    public List<SkinMarker> getMarkers() {
+    public List<SkinMarker> markers() {
         return markers;
     }
 
-    public Object getBlobs() {
+    public Object blobs() {
         return blobs;
     }
 
@@ -148,13 +148,13 @@ public class SkinPart implements ISkinPart {
         }
 
         public Builder copyFrom(SkinPart part) {
-            this.name(part.getName());
-            this.transform(part.getTransform());
-            this.geometries(part.getGeometries());
-            this.markers(part.getMarkers());
-            this.children(part.getChildren());
-            this.properties(part.getProperties());
-            this.blobs(part.getBlobs());
+            this.name(part.name());
+            this.transform(part.transform());
+            this.geometries(part.geometries());
+            this.markers(part.markers());
+            this.children(part.children());
+            this.properties(part.properties());
+            this.blobs(part.blobs());
             return this;
         }
 

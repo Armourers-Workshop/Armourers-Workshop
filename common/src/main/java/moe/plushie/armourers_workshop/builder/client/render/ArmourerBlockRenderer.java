@@ -44,9 +44,9 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         if (textureProvider == null) {
             return;
         }
-        var skinType = entity.getSkinType();
-        var skinProperties = entity.getSkinProperties();
-        var textureModel = entity.getTextureModel();
+        var skinType = entity.skinType();
+        var skinProperties = entity.skinProperties();
+        var textureModel = entity.textureModel();
 
         // when the player has some special texture, we must override to renderer.
         var playerTexture = textureProvider.displayTextureLocation;
@@ -71,10 +71,10 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         poseStack.scale(-1, -1, 1);
 
         var polygonOffset = 0f;
-        for (var partType : skinType.getParts()) {
-            var origin = partType.getOffset();
-            var rect = partType.getBuildingSpace();
-            var rect2 = partType.getGuideSpace(textureModel);
+        for (var partType : skinType.parts()) {
+            var origin = partType.offset();
+            var rect = partType.buildingSpace();
+            var rect2 = partType.guideSpace(textureModel);
 
             var r = 0.5f;
             var g = 0.5f;
@@ -134,7 +134,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 
     public void transform(IPoseStack poseStack, T entity) {
         poseStack.translate(0, 1, 0); // apply height offset
-        poseStack.rotate(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
+        poseStack.rotate(CubeTransform.getRotationDegrees(entity.facing())); // apply facing rotation
     }
 
     @Override
@@ -200,7 +200,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
             if (renderData == null) {
                 return null;
             }
-            if (renderData.getCustomTextureProvider() instanceof CustomTextureProvider textureProvider) {
+            if (renderData.customTextureProvider() instanceof CustomTextureProvider textureProvider) {
                 textureProvider.tick(blockEntity);
                 return textureProvider;
             }
@@ -223,8 +223,8 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
 //        }
 
         public void tick(ArmourerBlockEntity blockEntity) {
-            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.getTextureDescriptor()));
-            this.displayTexture.setPaintData(blockEntity.getPaintData());
+            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.textureDescriptor()));
+            this.displayTexture.setPaintData(blockEntity.paintData());
         }
 
         @Override

@@ -33,9 +33,9 @@ public class SmartTexture extends ReferenceCounted {
 
     public SmartTexture(SkinTextureData provider) {
         this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + ".png");
-        this.properties = provider.getProperties();
+        this.properties = provider.properties();
         this.textureBuffers = resolveTextureBuffers(location, provider);
-        this.animationController = new TextureAnimationController(provider.getAnimation());
+        this.animationController = new TextureAnimationController(provider.animation());
     }
 
     @Nullable
@@ -59,7 +59,7 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public IRenderType getRenderType(SkinGeometryType type) {
+    public IRenderType renderType(SkinGeometryType type) {
         return bindingRenderTypes.computeIfAbsent(type, it -> {
             var renderType = SkinRenderType.geometryFace(it, location, properties.isTranslucent(), properties.isEmissive());
             DataContainer.set(renderType, this);
@@ -67,11 +67,11 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public OpenResourceLocation getLocation() {
+    public OpenResourceLocation location() {
         return location;
     }
 
-    public TextureAnimationController getAnimationController() {
+    public TextureAnimationController animationController() {
         return animationController;
     }
 
@@ -89,14 +89,14 @@ public class SmartTexture extends ReferenceCounted {
     }
 
     private Map<OpenResourceLocation, ByteBuf> resolveTextureBuffers(OpenResourceLocation location, SkinTextureData provider) {
-        var path = FileUtils.removeExtension(location.getPath());
-        var builder = new TextureBufferBuilder(provider.getProperties());
+        var path = FileUtils.removeExtension(location.path());
+        var builder = new TextureBufferBuilder(provider.properties());
         builder.addData(location, provider);
-        for (var variant : provider.getVariants()) {
-            if (variant.getProperties().isNormal()) {
+        for (var variant : provider.variants()) {
+            if (variant.properties().isNormal()) {
                 builder.addData(location.withPath(path + "_n.png"), variant);
             }
-            if (variant.getProperties().isSpecular()) {
+            if (variant.properties().isSpecular()) {
                 builder.addData(location.withPath(path + "_s.png"), variant);
             }
         }
@@ -114,8 +114,8 @@ public class SmartTexture extends ReferenceCounted {
         }
 
         public void addData(OpenResourceLocation location, SkinTextureData provider) {
-            buffers.put(location, provider.getBuffer());
-            addMeta(location, provider.getProperties());
+            buffers.put(location, provider.buffer());
+            addMeta(location, provider.properties());
         }
 
         private void addMeta(OpenResourceLocation location, SkinTextureProperties properties) {
@@ -128,7 +128,7 @@ public class SmartTexture extends ReferenceCounted {
             var blur = String.valueOf(isBlurFilter);
             var clamp = String.valueOf(isClampToEdge);
             var meta = String.format("{\"texture\":{\"blur\":%s,\"clamp\":%s}}", blur, clamp);
-            buffers.put(location.withPath(location.getPath() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
+            buffers.put(location.withPath(location.path() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
         }
 
         public Map<OpenResourceLocation, ByteBuf> build() {

@@ -47,9 +47,9 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
         super.broadcastChanges();
         if (playerInventory.player instanceof ServerPlayer) {
             var server = SkinLibraryManager.getServer();
-            if (libraryVersion != server.getVersion()) {
+            if (libraryVersion != server.version()) {
                 server.sendTo((ServerPlayer) playerInventory.player);
-                libraryVersion = server.getVersion();
+                libraryVersion = server.version();
             }
         }
     }
@@ -77,29 +77,29 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
         });
     }
 
-    public ItemStack getInputStack() {
+    public ItemStack inputStack() {
         return inventory.getItem(0);
     }
 
-    public ItemStack getOutputStack() {
+    public ItemStack outputStack() {
         return inventory.getItem(1);
     }
 
-    public Player getPlayer() {
+    public Player player() {
         return playerInventory.player;
     }
 
     public boolean shouldSaveStack() {
-        return getOutputStack().isEmpty();
+        return outputStack().isEmpty();
     }
 
     public boolean shouldLoadStack() {
-        return getOutputStack().isEmpty() && !getInputStack().isEmpty() && getInputStack().is(ModItems.SKIN_TEMPLATE.get());
+        return outputStack().isEmpty() && !inputStack().isEmpty() && inputStack().is(ModItems.SKIN_TEMPLATE.get());
     }
 
     public void crafting(SkinDescriptor descriptor) {
         boolean consume = true;
-        var itemStack = getInputStack();
+        var itemStack = inputStack();
         var newItemStack = itemStack.copy();
         if (descriptor != null) {
             // only consumes the template

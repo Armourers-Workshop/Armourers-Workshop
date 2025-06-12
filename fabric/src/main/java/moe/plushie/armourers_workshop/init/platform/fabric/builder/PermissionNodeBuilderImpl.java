@@ -57,22 +57,22 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
             return true;
         }
 
-        public String getKey() {
+        public String key() {
             return key;
         }
 
         @Override
-        public Component getName() {
+        public Component name() {
             return Component.translatable("permission." + key);
         }
 
         @Override
-        public Component getDescription() {
+        public Component description() {
             return Component.translatable("permission." + key + ".desc");
         }
 
         @Override
-        public IResourceLocation getRegistryName() {
+        public IResourceLocation registryName() {
             return registryName;
         }
     }

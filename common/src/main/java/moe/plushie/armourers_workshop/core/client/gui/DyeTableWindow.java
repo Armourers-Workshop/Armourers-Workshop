@@ -47,11 +47,11 @@ public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
 
     @Override
     public void menuDidChange() {
-        var descriptor = SkinDescriptor.of(menu.getOutputStack());
+        var descriptor = SkinDescriptor.of(menu.outputStack());
         previewView.setSkin(descriptor);
         loadDyeSlots(descriptor, skin -> {
             if (skin != null) {
-                menu.reload(skin.getUsedCounter().getDyeTypes());
+                menu.reload(skin.usedCounter().dyeTypes());
             } else {
                 menu.reload(null);
             }
@@ -71,7 +71,7 @@ public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
         if (descriptor.isEmpty()) {
             handler.accept(null);
         } else {
-            SkinBakery.getInstance().loadSkin(descriptor.getIdentifier(), Ticket.list(), (skin, except) -> handler.accept(skin));
+            SkinBakery.getInstance().loadSkin(descriptor.identifier(), Ticket.list(), (skin, except) -> handler.accept(skin));
         }
     }
 }

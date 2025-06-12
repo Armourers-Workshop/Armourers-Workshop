@@ -12,17 +12,17 @@ public abstract class SkinGeometrySet<T extends SkinGeometry> implements ISkinGe
 
     protected int id = -1;
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public OpenVoxelShape getShape() {
+    public OpenVoxelShape shape() {
         var poseStack = new OpenPoseStack();
         var combinedShape = new OpenVoxelShape();
         for (var geometry : this) {
-            var shape = geometry.getShape();
-            var transform = geometry.getTransform();
+            var shape = geometry.shape();
+            var transform = geometry.transform();
             if (transform.isIdentity()) {
                 combinedShape.add(shape);
                 continue;
@@ -40,13 +40,13 @@ public abstract class SkinGeometrySet<T extends SkinGeometry> implements ISkinGe
 
     @Nullable
     @Override
-    public Collection<SkinGeometryType> getSupportedTypes() {
+    public Collection<SkinGeometryType> supportedTypes() {
         // we don't know the included cube types.
         return null;
     }
 
     @Override
     public String toString() {
-        return Objects.toString(this, "id", getId(), "size", size(), "types", getSupportedTypes());
+        return Objects.toString(this, "id", id(), "size", size(), "types", supportedTypes());
     }
 }

@@ -53,10 +53,10 @@ public class AbstractDataSerializer implements IDataSerializer {
 
     @Override
     public <T> T read(IDataSerializerKey<T> key) {
-        var name = key.getName();
+        var name = key.name();
         if (tag != null && tag.contains(name)) {
-            var codec = key.getCodec().codec();
-            var value = codec.decode(ops, tag.get(key.getName())).result();
+            var codec = key.codec().codec();
+            var value = codec.decode(ops, tag.get(key.name())).result();
             if (value.isPresent()) {
                 T value2 = value.get().getFirst();
                 if (value2 != null) {
@@ -64,11 +64,11 @@ public class AbstractDataSerializer implements IDataSerializer {
                 }
             }
         }
-        var constructor = key.getConstructor();
+        var constructor = key.constructor();
         if (constructor != null) {
             return constructor.get();
         }
-        return key.getDefault();
+        return key.defaultValue();
     }
 
     @Override
@@ -76,12 +76,12 @@ public class AbstractDataSerializer implements IDataSerializer {
         if (tag == null) {
             return;
         }
-        var defaultValue = key.getDefault();
+        var defaultValue = key.defaultValue();
         if (defaultValue == value || Objects.equals(defaultValue, value)) {
             return;
         }
-        var name = key.getName();
-        var codec = key.getCodec().codec();
+        var name = key.name();
+        var codec = key.codec().codec();
         codec.encodeStart(ops, value).result().ifPresent(it -> {
             // we need to merge new value into the item.
             tag.put(name, it);

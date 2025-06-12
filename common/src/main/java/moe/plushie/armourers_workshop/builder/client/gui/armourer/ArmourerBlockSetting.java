@@ -74,7 +74,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             nbt.putBoolean(Constants.Key.SKIN_CUBES, dialog.isClearBlocks());
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isClearPaints());
             nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
-            nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.getSelectedPartType().getRegistryName().toString());
+            nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.selectedPartType().registryName().toString());
             NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_CLEAR.buildPacket(blockEntity, nbt));
         });
     }
@@ -89,8 +89,8 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             var nbt = new CompoundTag();
             nbt.putBoolean(Constants.Key.MIRROR, dialog.isMirror());
             nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isCopyPaintData());
-            nbt.putString(Constants.Key.SOURCE, dialog.getSourcePartType().getRegistryName().toString());
-            nbt.putString(Constants.Key.DESTINATION, dialog.getDestinationPartType().getRegistryName().toString());
+            nbt.putString(Constants.Key.SOURCE, dialog.sourcePartType().registryName().toString());
+            nbt.putString(Constants.Key.DESTINATION, dialog.destinationPartType().registryName().toString());
             NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_COPY.buildPacket(blockEntity, nbt));
         });
     }
@@ -104,12 +104,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
                 return;
             }
             var source = new CompoundTag();
-            var selector = dialog.getSelector();
+            var selector = dialog.selector();
             if (selector.getItem() instanceof IItemPaintable) {
                 selector.save(level.registryAccess(), source);
             }
             var destination = new CompoundTag();
-            var applier = dialog.getApplier();
+            var applier = dialog.applier();
             if (applier.getItem() instanceof IItemPaintable) {
                 applier.save(level.registryAccess(), destination);
             }
@@ -126,14 +126,14 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     }
 
     public ArrayList<SkinPartType> getPartTypes(boolean usesAll) {
-        var skinType = blockEntity.getSkinType();
-        var skinProperties = blockEntity.getSkinProperties();
+        var skinType = blockEntity.skinType();
+        var skinProperties = blockEntity.skinProperties();
         var partTypes = new ArrayList<SkinPartType>();
         if (usesAll) {
             partTypes.add(0, SkinPartTypes.UNKNOWN);
         }
         if (skinType != SkinTypes.BLOCK) {
-            partTypes.addAll(skinType.getParts());
+            partTypes.addAll(skinType.parts());
         } else {
             if (skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK)) {
                 partTypes.add(SkinPartTypes.BLOCK_MULTI);

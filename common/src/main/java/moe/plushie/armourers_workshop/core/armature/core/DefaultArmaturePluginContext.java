@@ -20,7 +20,7 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
     }
 
     @Override
-    public int getOverlay() {
+    public int overlay() {
         return overlay;
     }
 
@@ -29,7 +29,7 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
     }
 
     @Override
-    public int getLightmap() {
+    public int lightmap() {
         return lightmap;
     }
 
@@ -42,12 +42,12 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
     }
 
     @Override
-    public double getAnimationTicks() {
+    public double animationTicks() {
         return animationTicks;
     }
 
     @Override
-    public float getPartialTicks() {
+    public float partialTicks() {
         return partialTicks;
     }
 
@@ -56,7 +56,7 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
     }
 
     @Override
-    public IPoseStack getPoseStack() {
+    public IPoseStack poseStack() {
         return poseStack;
     }
 
@@ -65,7 +65,7 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
         this.renderData = renderData;
     }
 
-    public EntityRenderData getRenderData() {
+    public EntityRenderData renderData() {
         return renderData;
     }
 }

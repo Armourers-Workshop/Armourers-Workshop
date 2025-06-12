@@ -22,7 +22,7 @@ public class SkinPaintType implements ISkinPaintType {
     }
 
     @Override
-    public OpenResourceLocation getRegistryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 
@@ -32,7 +32,7 @@ public class SkinPaintType implements ISkinPaintType {
     }
 
     @Override
-    public SkinTexturePos getTexturePos() {
+    public SkinTexturePos texturePos() {
         return texturePos;
     }
 
@@ -42,17 +42,17 @@ public class SkinPaintType implements ISkinPaintType {
     }
 
     @Override
-    public SkinDyeType getDyeType() {
+    public SkinDyeType dyeType() {
         return dyeType;
     }
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public int getIndex() {
+    public int ordinal() {
         return index;
     }
 

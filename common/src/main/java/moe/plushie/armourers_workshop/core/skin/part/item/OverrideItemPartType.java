@@ -15,7 +15,7 @@ public class OverrideItemPartType extends ItemPartType implements ICanOverride {
     }
 
     @Override
-    public Collection<String> getItemOverrides() {
+    public Collection<String> itemOverrides() {
         return overrides;
     }
 }

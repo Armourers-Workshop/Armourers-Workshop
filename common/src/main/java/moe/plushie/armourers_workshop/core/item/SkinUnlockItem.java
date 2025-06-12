@@ -25,13 +25,13 @@ public class SkinUnlockItem extends FlavouredItem {
         if (level.isClientSide()) {
             return InteractionResultHolder.success(itemStack);
         }
-        var skinType = slotType.getSkinType();
+        var skinType = slotType.skinType();
         var wardrobe = SkinWardrobe.of(player);
         if (wardrobe == null || skinType == null) {
             return InteractionResultHolder.fail(itemStack);
         }
         var skinName = TranslateUtils.Name.of(skinType);
-        if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
+        if (wardrobe.getUnlockedSize(slotType) >= slotType.maxSize()) {
             player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
             return InteractionResultHolder.fail(itemStack);
         }

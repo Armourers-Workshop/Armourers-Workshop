@@ -21,7 +21,7 @@ public class EntityRenderData extends EntitySlotsHandler<Entity> {
     @Nullable
     public static EntityRenderData of(@Nullable Entity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).getRenderData().orElse(null);
+            return EntityDataStorage.of(entity).renderData().orElse(null);
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class EntityRenderData extends EntitySlotsHandler<Entity> {
         this.renderPatch = renderPatch;
     }
 
-    public EntityRenderPatch<? super Entity> getRenderPatch() {
+    public EntityRenderPatch<? super Entity> renderPatch() {
         return renderPatch;
     }
 }

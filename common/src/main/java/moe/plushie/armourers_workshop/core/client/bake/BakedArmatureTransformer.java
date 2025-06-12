@@ -31,20 +31,20 @@ public class BakedArmatureTransformer {
     }
 
     public BakedArmatureTransformer(ArmatureTransformer armatureTransformer) {
-        this.armature = armatureTransformer.getArmature();
+        this.armature = armatureTransformer.armature();
         this.armatureTransformer = armatureTransformer;
-        this.transforms = armatureTransformer.getTransforms();
+        this.transforms = armatureTransformer.transforms();
     }
 
     public static BakedArmatureTransformer create(ArmatureTransformer transformer, EntityRenderer<?> entityRenderer) {
         if (transformer == null) {
             return null;
         }
-        var context = transformer.getContext();
-        var plugins = Collections.newList(transformer.getPlugins());
+        var context = transformer.context();
+        var plugins = Collections.newList(transformer.plugins());
         context.setEntityRenderer(entityRenderer);
         // we need tried load entity model from entity renderer.
-        if (context.getEntityModel() == null && entityRenderer instanceof IModelProvider<?> modelProvider) {
+        if (context.entityModel() == null && entityRenderer instanceof IModelProvider<?> modelProvider) {
             context.setEntityModel(modelProvider.getModel(null));
         }
         plugins.removeIf(plugin -> !plugin.freeze());
@@ -74,7 +74,7 @@ public class BakedArmatureTransformer {
 
     public void applyTo(BakedArmature bakedArmature) {
         // safe updates
-        if (bakedArmature.getArmature() == armature) {
+        if (bakedArmature.armature() == armature) {
             bakedArmature.setFilter(filter);
             bakedArmature.seTransforms(transforms);
         }
@@ -85,7 +85,7 @@ public class BakedArmatureTransformer {
         this.plugins.addAll(plugins);
     }
 
-    public Collection<ArmaturePlugin> getPlugins() {
+    public Collection<ArmaturePlugin> plugins() {
         return plugins;
     }
 
@@ -93,15 +93,15 @@ public class BakedArmatureTransformer {
         this.filter = filter;
     }
 
-    public IJointFilter getFilter() {
+    public IJointFilter filter() {
         return filter;
     }
 
-    public ArmatureTransformer getTransformer() {
+    public ArmatureTransformer transformer() {
         return armatureTransformer;
     }
 
-    public Armature getArmature() {
+    public Armature armature() {
         return armature;
     }
 }

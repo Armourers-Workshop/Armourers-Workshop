@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
-import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSIndexPath;
 import com.apple.library.foundation.NSString;
 import com.apple.library.impl.TooltipRenderer;
@@ -108,7 +107,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
     @Override
     public void tableViewDidSelectRow(UITableView tableView, NSIndexPath indexPath) {
         tableView.deselectRow(indexPath, false);
-        selectedItem = getEntry(indexPath.row);
+        selectedItem = entryAtIndex(indexPath.row);
         sendEvent(Event.VALUE_CHANGED);
     }
 
@@ -123,7 +122,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
     }
 
     @Nullable
-    public T getSelectedItem() {
+    public T selectedItem() {
         if (selectedItem != null) {
             return selectedItem.entry;
         }
@@ -175,15 +174,15 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
         return null;
     }
 
-    public SkinFile getItem(int index) {
-        var entry = getEntry(index);
+    public SkinFile itemAtIndex(int index) {
+        var entry = entryAtIndex(index);
         if (entry != null) {
             return entry.entry;
         }
         return null;
     }
 
-    private Entry getEntry(int index) {
+    private Entry entryAtIndex(int index) {
         if (index >= 0 && index < cells.size()) {
             return cells.get(index);
         }
@@ -203,11 +202,11 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
 
         public Entry(T entry) {
             super(CGRect.ZERO);
-            this.title = new NSString(entry.getName());
+            this.title = new NSString(entry.name());
             this.entry = entry;
-            if (!entry.isDirectory() && entry.getSkinIdentifier() != null) {
-                this.descriptor = new SkinDescriptor(entry.getSkinIdentifier(), entry.getSkinType(), SkinPaintScheme.EMPTY);
-                this.securityData = getSecurityData(entry.getSkinHeader());
+            if (!entry.isDirectory() && entry.skinIdentifier() != null) {
+                this.descriptor = new SkinDescriptor(entry.skinIdentifier(), entry.skinType(), SkinPaintScheme.EMPTY);
+                this.securityData = getSecurityData(entry.skinHeader());
             }
             this.iconView.setFrame(new CGRect(0, 0, 16, 14));
             this.addSubview(iconView);
@@ -255,7 +254,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
                 context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
                 return;
             }
-            var descriptor = getDescriptor();
+            var descriptor = descriptor();
             if (descriptor.isEmpty()) {
                 int u = 48;
                 context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
@@ -278,7 +277,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
                 context.drawTooltip(NSString.localizedString("skin-library.rollover.canNotPreview"), rect);
                 return;
             }
-            var bakedSkin = SkinBakery.getInstance().loadSkin(getDescriptor(), loadTicket);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor(), loadTicket);
             if (bakedSkin == null) {
                 return;
             }
@@ -308,7 +307,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
             }
         }
 
-        public SkinDescriptor getDescriptor() {
+        public SkinDescriptor descriptor() {
             // the server allow preview feature?
             if (!ModConfig.Common.allowLibraryPreviews) {
                 return SkinDescriptor.EMPTY;
@@ -322,7 +321,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
 
         public String getSecurityData(ISkinFileHeader header) {
             if (header != null) {
-                var properties = header.getProperties();
+                var properties = header.properties();
                 if (properties != null) {
                     return properties.get(SkinProperty.SECURITY_DATA);
                 }

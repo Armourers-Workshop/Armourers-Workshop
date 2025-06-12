@@ -18,7 +18,7 @@ public class SkinGeometryType implements ISkinGeometryType {
     }
 
     @Override
-    public OpenResourceLocation getRegistryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 
@@ -27,12 +27,12 @@ public class SkinGeometryType implements ISkinGeometryType {
     }
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public Block getBlock() {
+    public Block block() {
         return block.get();
     }
 

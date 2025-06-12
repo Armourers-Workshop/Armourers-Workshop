@@ -3,25 +3,25 @@ package moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector;
 public interface PlayerSelector {
 
 
-    double getElytraYaw();
+    double elytraYaw();
 
-    double getElytraPitch();
+    double elytraPitch();
 
-    double getElytraRoll();
+    double elytraRoll();
 
     boolean hasCape();
 
-    double getCapeFlapAmount();
+    double capeFlapAmount();
 
-    int getFoodLevel();
+    int foodLevel();
 
-    double getExperience();
+    double experience();
 
     boolean hasLeftShoulderParrot();
 
     boolean hasRightShoulderParrot();
 
-    int getLeftShoulderParrotVariant();
+    int leftShoulderParrotVariant();
 
-    int getRightShoulderParrotVariant();
+    int rightShoulderParrotVariant();
 }

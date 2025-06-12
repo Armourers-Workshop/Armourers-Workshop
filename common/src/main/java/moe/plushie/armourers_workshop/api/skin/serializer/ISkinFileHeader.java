@@ -5,11 +5,11 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 
 public interface ISkinFileHeader {
 
-    int getVersion();
+    int version();
 
-    int getLastModified();
+    int lastModified();
 
-    ISkinType getType();
+    ISkinType type();
 
-    ISkinProperties getProperties();
+    ISkinProperties properties();
 }

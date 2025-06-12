@@ -34,7 +34,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
             return;
         }
         renderData.tick(entity);
-        var renderingTasks = renderData.getAllSkins();
+        var renderingTasks = renderData.allSkins();
         if (renderingTasks.isEmpty()) {
             return;
         }
@@ -43,7 +43,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
         var blockState = entity.getBlockState();
         var rotations = entity.getRenderRotations(blockState);
 
-        var renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.renderPatch();
         var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
 
         poseStack.pushPose();
@@ -55,25 +55,25 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
         renderPatch.activate(entity, partialTicks, light, overlay, poseStack);
 
-        var pluginContext = renderPatch.getPluginContext();
-        var renderingContext = renderPatch.getRenderingContext();
+        var pluginContext = renderPatch.pluginContext();
+        var renderingContext = renderPatch.renderingContext();
 
-        renderingContext.setOverlay(pluginContext.getOverlay());
-        renderingContext.setLightmap(pluginContext.getLightmap());
-        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
-        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+        renderingContext.setOverlay(pluginContext.overlay());
+        renderingContext.setLightmap(pluginContext.lightmap());
+        renderingContext.setPartialTicks(pluginContext.partialTicks());
+        renderingContext.setAnimationTicks(pluginContext.animationTicks());
 
         renderingContext.setPoseStack(poseStack);
         renderingContext.setBufferSource(bufferSource);
         renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
 
         for (var entry : renderingTasks) {
-            var skin = entry.getSkin();
+            var skin = entry.skin();
             skin.setupAnim(mannequinEntity, armature, renderingContext);
-            var colorScheme = skin.resolve(mannequinEntity, entry.getPaintScheme());
+            var colorScheme = skin.resolve(mannequinEntity, entry.paintScheme());
             SkinRenderer.render(mannequinEntity, armature, skin, colorScheme, renderingContext);
             if (ModDebugger.skinnable) {
-                skin.getBlockBounds().forEach((pos, rect) -> {
+                skin.blockBounds().forEach((pos, rect) -> {
                     poseStack.pushPose();
                     poseStack.scale(-1, -1, 1);
                     poseStack.translate(pos.x() * 16f, pos.y() * 16f, pos.z() * 16f);

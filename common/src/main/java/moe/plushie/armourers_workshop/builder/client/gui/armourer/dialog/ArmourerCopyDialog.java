@@ -68,14 +68,14 @@ public class ArmourerCopyDialog extends ConfirmDialog {
         addSubview(label2);
     }
 
-    public SkinPartType getSourcePartType() {
+    public SkinPartType sourcePartType() {
         if (partTypes != null && sourcePartComboBox != null && sourcePartComboBox.selectedIndex() < partTypes.size()) {
             return partTypes.get(sourcePartComboBox.selectedIndex());
         }
         return SkinPartTypes.UNKNOWN;
     }
 
-    public SkinPartType getDestinationPartType() {
+    public SkinPartType destinationPartType() {
         if (partTypes != null && destinationPartComboBox != null && destinationPartComboBox.selectedIndex() < partTypes.size()) {
             return partTypes.get(destinationPartComboBox.selectedIndex());
         }

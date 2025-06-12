@@ -33,7 +33,7 @@ public class RelativeBlockHasAnyTag extends EntityFunction {
             return 0; // too far
         }
 
-        var block = entity.getRelativeBlock(offsetX, offsetY, offsetZ);
+        var block = entity.relativeBlock(offsetX, offsetY, offsetZ);
         if (block == null) {
             return 0; // can't found
         }

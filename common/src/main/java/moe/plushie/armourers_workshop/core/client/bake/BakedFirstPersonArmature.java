@@ -12,9 +12,9 @@ import java.util.Map;
 public class BakedFirstPersonArmature extends BakedArmature {
 
     private static final BakedFirstPersonArmature DEFAULT = new BakedFirstPersonArmature();
-    private static final Map<OpenItemDisplayContext, BakedFirstPersonArmature> VARIANTS = Collections.immutableMap(builder -> {
-        builder.put(OpenItemDisplayContext.FIRST_PERSON_LEFT_HAND, new BakedFirstPersonArmature("Arm_L", "Hand_L"));
-        builder.put(OpenItemDisplayContext.FIRST_PERSON_RIGHT_HAND, new BakedFirstPersonArmature("Arm_R", "Hand_R"));
+    private static final Map<OpenItemDisplayContext, BakedFirstPersonArmature> VARIANTS = Collections.immutableMap(it -> {
+        it.put(OpenItemDisplayContext.FIRST_PERSON_LEFT_HAND, new BakedFirstPersonArmature("Arm_L", "Hand_L"));
+        it.put(OpenItemDisplayContext.FIRST_PERSON_RIGHT_HAND, new BakedFirstPersonArmature("Arm_R", "Hand_R"));
     });
 
     private final HashSet<String> jointNames;
@@ -29,9 +29,9 @@ public class BakedFirstPersonArmature extends BakedArmature {
     }
 
     @Override
-    public IJoint getJoint(SkinPartType partType) {
-        var joint = super.getJoint(partType);
-        if (joint != null && !jointNames.isEmpty() && !jointNames.contains(joint.getName())) {
+    public IJoint jointByType(SkinPartType partType) {
+        var joint = super.jointByType(partType);
+        if (joint != null && !jointNames.isEmpty() && !jointNames.contains(joint.name())) {
             return null;
         }
         return joint;

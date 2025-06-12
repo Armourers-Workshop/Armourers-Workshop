@@ -8,7 +8,7 @@ public abstract class GenericValue<S, T> {
 
     public abstract void write(IFriendlyByteBuf buf);
 
-    public abstract GenericProperty<S, T> getProperty();
+    public abstract GenericProperty<S, T> property();
 
-    public abstract T getValue();
+    public abstract T value();
 }

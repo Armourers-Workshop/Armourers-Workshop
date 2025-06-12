@@ -10,6 +10,7 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,7 @@ public class ToastWindow extends UIWindow {
 
     public ToastWindow(CGRect frame) {
         super(frame);
-        this.setContents(UIImage.of(getDefaultTexture()).resizable(160, 32).build());
+        this.setContents(UIImage.of(defaultTexture()).resizable(160, 32).build());
         this.titleLabel.setFrame(new CGRect(30, 7, frame.width - 30 - 5, 9));
         this.titleLabel.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
         this.titleLabel.setTextColor(new UIColor(0xffffff00));
@@ -46,12 +47,12 @@ public class ToastWindow extends UIWindow {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
         // render item as icon.
-        if (getIcon() instanceof ItemStack itemStack) {
+        if (icon() instanceof ItemStack itemStack) {
             context.drawItem(itemStack, 8, 8);
             return;
         }
         // render texture as icon.
-        if (getIcon() instanceof CustomTexture texture) {
+        if (icon() instanceof CustomTexture texture) {
             context.drawImage(texture.image, iconRect.offset(texture.origin));
             return;
         }
@@ -96,22 +97,21 @@ public class ToastWindow extends UIWindow {
             this.updateIconRect();
             return;
         }
-        if (tag.contains("Skin")) {
-            var skinId = tag.getString("Skin");
+        tag.getOptionalString("Skin").ifPresent(skinId -> {
             var descriptor = new SkinDescriptor(skinId);
             this.icon = descriptor.asItemStack();
-        }
-        if (tag.contains("Image")) {
-            this.icon = new CustomTexture(tag);
-        }
+        });
+        tag.getOptionalString("Image").ifPresent(imageId -> {
+            this.icon = new CustomTexture(imageId, tag);
+        });
         var level = Minecraft.getInstance().level;
         if (tag.contains("id") && level != null) {
-            this.icon = ItemStack.parseOptional(level.registryAccess(), tag);
+            this.icon = ItemStack.parse(level.registryAccess(), tag).orElse(ItemStack.EMPTY);
         }
         this.updateIconRect();
     }
 
-    public Object getIcon() {
+    public Object icon() {
         return icon;
     }
 
@@ -119,11 +119,11 @@ public class ToastWindow extends UIWindow {
         this.duration = duration;
     }
 
-    public double getDuration() {
+    public double duration() {
         return duration;
     }
 
-    private IResourceLocation getDefaultTexture() {
+    private IResourceLocation defaultTexture() {
         return ModTextures.TOASTS;
     }
 
@@ -155,9 +155,9 @@ public class ToastWindow extends UIWindow {
         public final CGPoint origin;
         public final UIImage image;
 
-        public CustomTexture(CompoundTag tag) {
+        public CustomTexture(String id, CompoundTag tag) {
             int[] offset = {0, 0};
-            var builder = UIImage.of(OpenResourceLocation.parse(tag.getString("Image")));
+            var builder = UIImage.of(OpenResourceLocation.parse(id));
             apply(tag, "UV", 2, it -> builder.uv(it[0], it[1]));
             apply(tag, "Fixed", 2, it -> builder.fixed(it[0], it[1]));
             apply(tag, "Resizable", 2, it -> builder.resizable(it[0], it[1]));
@@ -173,16 +173,13 @@ public class ToastWindow extends UIWindow {
         }
 
         private void apply(CompoundTag tag, String key, int limit, Consumer<int[]> consumer) {
-            if (!tag.contains(key)) {
+            var list = tag.getOptionalList(key, Constants.TagFlags.INT).orElse(null);
+            if (list == null || list.size() < limit) {
                 return;
             }
-            var list = tag.getList(key, 3);
-            if (list.size() < limit) {
-                return;
-            }
-            int[] data = new int[list.size()];
+            var data = new int[list.size()];
             for (int i = 0; i < data.length; ++i) {
-                data[i] = list.getInt(i);
+                data[i] = list.getOptionalInt(i).orElse(0);
             }
             consumer.accept(data);
         }

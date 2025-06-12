@@ -94,7 +94,7 @@ public class HSBSliderBox extends UIControl {
         }
     }
 
-    public float getValue() {
+    public float value() {
         return values[type.ordinal()];
     }
 

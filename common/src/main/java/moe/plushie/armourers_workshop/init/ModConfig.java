@@ -185,10 +185,10 @@ public class ModConfig {
 
         // listen the config changes events.
         EventBus.register(LauncherConfigSetupEvent.class, event -> {
-            if (ModConfigSpec.CLIENT.equals(event.getSpec())) {
+            if (ModConfigSpec.CLIENT.equals(event.spec())) {
                 ModConfigSpec.CLIENT.reload();
             }
-            if (ModConfigSpec.COMMON.equals(event.getSpec())) {
+            if (ModConfigSpec.COMMON.equals(event.spec())) {
                 ModConfigSpec.COMMON.reload();
             }
         });

@@ -9,8 +9,8 @@ public class AllayBodyJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        var rootModelPart = model.getPart("root");
-        var bodyModelPart = model.getPart("body");
+        var rootModelPart = model.partByName("root");
+        var bodyModelPart = model.partByName("body");
         if (rootModelPart == null || bodyModelPart == null) {
             return transform;
         }

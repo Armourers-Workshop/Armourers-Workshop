@@ -28,7 +28,7 @@ public class SkinLibraryFile extends SkinFile implements ISkinLibrary.Entry {
 
     public boolean matches(String keywords, SkinType skinType) {
         // when skin type not matches, ignore.
-        if (skinType != SkinTypes.UNKNOWN && skinType != getSkinType()) {
+        if (skinType != SkinTypes.UNKNOWN && skinType != skinType()) {
             return false;
         }
         if (keywords != null && !keywords.isEmpty()) {
@@ -46,7 +46,7 @@ public class SkinLibraryFile extends SkinFile implements ISkinLibrary.Entry {
         int length = keyword.length();
         while (index < length) {
             int lastIndex = index;
-            for (String content : getSearchableContentList()) {
+            for (var content : searchableContentList()) {
                 int searchIndex = -1;
                 for (int offset = index; offset < length; ++offset) {
                     int ch = keyword.codePointAt(offset);
@@ -73,13 +73,13 @@ public class SkinLibraryFile extends SkinFile implements ISkinLibrary.Entry {
         return true;
     }
 
-    private Collection<String> getSearchableContentList() {
+    private Collection<String> searchableContentList() {
         if (searchableContentList != null) {
             return searchableContentList;
         }
         var values = new ArrayList<String>();
         values.add(FileUtils.removeExtension(path));
-        var properties = getSkinProperties();
+        var properties = skinProperties();
         if (properties != null) {
             values.add(properties.get(SkinProperty.ALL_CUSTOM_NAME));
             values.add(properties.get(SkinProperty.ALL_AUTHOR_NAME));

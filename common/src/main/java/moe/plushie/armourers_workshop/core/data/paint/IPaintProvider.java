@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 
 public interface IPaintProvider {
 
-    SkinPaintColor getColor();
+    SkinPaintColor color();
 
     void setColor(SkinPaintColor color);
 }

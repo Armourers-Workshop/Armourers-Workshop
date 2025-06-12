@@ -4,26 +4,26 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 
 public class AnimatedPoint {
 
-    protected final OpenVector3f translate = new OpenVector3f();
+    protected final OpenVector3f translation = new OpenVector3f();
     protected final OpenVector3f rotation = new OpenVector3f();
     protected final OpenVector3f scale = new OpenVector3f(1, 1, 1);
 
     protected int dirty = 0;
 
-    public void setTranslate(OpenVector3f value) {
-        setTranslate(value.x(), value.y(), value.z());
+    public void setTranslation(OpenVector3f value) {
+        setTranslation(value.x(), value.y(), value.z());
     }
 
-    public void setTranslate(float x, float y, float z) {
+    public void setTranslation(float x, float y, float z) {
         if (x != 0 || y != 0 || z != 0) {
-            translate.set(x, y, z);
+            translation.set(x, y, z);
             setDirty(0x10);
         }
     }
 
-    public OpenVector3f getTranslate() {
+    public OpenVector3f translation() {
         if ((dirty & 0x10) != 0) {
-            return translate;
+            return translation;
         }
         return OpenVector3f.ZERO;
     }
@@ -39,7 +39,7 @@ public class AnimatedPoint {
         }
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         if ((dirty & 0x20) != 0) {
             return rotation;
         }
@@ -57,7 +57,7 @@ public class AnimatedPoint {
         }
     }
 
-    public OpenVector3f getScale() {
+    public OpenVector3f scale() {
         if ((dirty & 0x40) != 0) {
             return scale;
         }

@@ -10,7 +10,7 @@ public class HorseBodyJointModifier extends JointModifier {
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         // ...
-        var modelPart = model.getPart("body");
+        var modelPart = model.partByName("body");
         if (modelPart == null) {
             return transform;
         }

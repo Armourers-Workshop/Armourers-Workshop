@@ -11,25 +11,25 @@ public interface ISkinPart {
     /**
      * Gets the part type.
      */
-    ISkinPartType getType();
+    ISkinPartType type();
 
     /**
      * Gets the transform.
      */
-    ITransform getTransform();
+    ITransform transform();
 
     /**
      * Gets the geometry set.
      */
-    ISkinGeometrySet<?> getGeometries();
+    ISkinGeometrySet<?> geometries();
 
     /**
      * Gets the children.
      */
-    Collection<? extends ISkinPart> getChildren();
+    Collection<? extends ISkinPart> children();
 
     /**
      * Gets the markers.
      */
-    Collection<? extends ISkinMarker> getMarkers();
+    Collection<? extends ISkinMarker> markers();
 }

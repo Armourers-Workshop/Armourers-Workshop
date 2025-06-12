@@ -15,8 +15,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class SkinnableWindow extends MenuWindow<SkinnableMenu> {
 
     public SkinnableWindow(SkinnableMenu container, Inventory inventory, NSString title) {
-        super(container, inventory, new NSString(container.getInventoryName()));
-        this.setFrame(new CGRect(0, 0, 176, container.getRow() * 18 + 124));
+        super(container, inventory, new NSString(container.name()));
+        this.setFrame(new CGRect(0, 0, 176, container.row() * 18 + 124));
         this.inventoryView.setStyle(PlayerInventoryView.Style.COMPACT);
         this.setup();
     }

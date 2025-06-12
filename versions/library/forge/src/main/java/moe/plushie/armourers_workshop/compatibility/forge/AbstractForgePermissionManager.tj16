@@ -25,10 +25,10 @@ public abstract class AbstractForgePermissionManager {
 
             @Override
             public boolean resolve(GameProfile profile, IPermissionContext context) {
-                return PermissionAPI.hasPermission(profile, getKey(), of(context));
+                return PermissionAPI.hasPermission(profile, key(), of(context));
             }
         };
-        PermissionAPI.registerNode(nodeImpl.getKey(), of(level), nodeImpl.getName().getContents());
+        PermissionAPI.registerNode(nodeImpl.key(), of(level), nodeImpl.name().getContents());
         return nodeImpl;
     }
 

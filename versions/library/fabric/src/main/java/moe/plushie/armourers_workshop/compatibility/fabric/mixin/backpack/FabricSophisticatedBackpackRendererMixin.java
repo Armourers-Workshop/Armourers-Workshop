@@ -24,7 +24,7 @@ public class FabricSophisticatedBackpackRendererMixin {
     @Inject(method = "renderBackpack", at = @At("HEAD"), cancellable = true, remap = false)
     private static void aw2$renderBackpack(EntityModel<?> parentModel, LivingEntity livingEntity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, ItemStack backpack, boolean wearsArmor, IBackpackModel model, CallbackInfo ci) {
         var renderData = EntityRenderData.of(livingEntity);
-        if (renderData != null && renderData.getOverriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
+        if (renderData != null && renderData.overriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
             ci.cancel();
         }
     }

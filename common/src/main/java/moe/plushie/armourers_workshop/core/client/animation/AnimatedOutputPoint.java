@@ -11,9 +11,9 @@ public class AnimatedOutputPoint extends AnimatedPoint {
     }
 
     @Override
-    public void setTranslate(float x, float y, float z) {
+    public void setTranslation(float x, float y, float z) {
         // always update and mark dirty, because relies on flags by method called.
-        translate.set(x, y, z);
+        translation.set(x, y, z);
         setDirty(0x10);
     }
 
@@ -39,7 +39,7 @@ public class AnimatedOutputPoint extends AnimatedPoint {
         }
     }
 
-    public AnimatedOutputMode getMode() {
+    public AnimatedOutputMode mode() {
         return mode;
     }
 }

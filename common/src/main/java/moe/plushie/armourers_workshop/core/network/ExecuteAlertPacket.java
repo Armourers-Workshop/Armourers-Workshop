@@ -46,23 +46,23 @@ public class ExecuteAlertPacket extends CustomPacket {
         UserNotificationCenter.showAlertFromServer(this);
     }
 
-    public Component getTitle() {
+    public Component title() {
         return title;
     }
 
-    public Component getMessage() {
+    public Component message() {
         return message;
     }
 
-    public Component getConfirm() {
+    public Component confirm() {
         return confirm;
     }
 
-    public CompoundTag getIcon() {
+    public CompoundTag icon() {
         return icon;
     }
 
-    public int getType() {
+    public int type() {
         return type;
     }
 }

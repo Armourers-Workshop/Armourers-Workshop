@@ -11,12 +11,12 @@ public class DefaultBabyJointModifier extends JointModifier {
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         return poseStack -> {
             transform.apply(poseStack);
-            var babyPose = model.getBabyPose();
+            var babyPose = model.babyPose();
             if (babyPose == null) {
                 return;
             }
-            var scale = babyPose.getHeadScale();
-            var offset = babyPose.getHeadOffset();
+            var scale = babyPose.headScale();
+            var offset = babyPose.headOffset();
             poseStack.scale(scale, scale, scale);
             poseStack.translate(offset.x() / 16f, offset.y() / 16f, offset.z() / 16f);
         };

@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
@@ -150,20 +151,20 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         }
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
         if (bakedSkin == null) {
-            missingSkins.add(descriptor.getIdentifier());
+            missingSkins.add(descriptor.identifier());
             return;
         }
         var slot = new EntitySlot(itemStack, descriptor, bakedSkin, wardrobeProvider.colorScheme, renderPriority, slotType);
         switch (slotType) {
             case IN_HELD -> {
                 // If held a skin of armor type, nothing happen
-                if (bakedSkin.getType().isTool() || bakedSkin.getType() == SkinTypes.ITEM) {
+                if (bakedSkin.type().isTool() || bakedSkin.type() == SkinTypes.ITEM) {
                     allSkins.add(slot);
                     itemSkins.add(slot);
                 }
             }
             case IN_EQUIPMENT, IN_WARDROBE -> {
-                if (bakedSkin.getType().isTool() || bakedSkin.getType() == SkinTypes.ITEM) {
+                if (bakedSkin.type().isTool() || bakedSkin.type() == SkinTypes.ITEM) {
                     allSkins.add(slot);
                     itemSkins.add(slot);
                 } else {
@@ -181,26 +182,26 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     private void loadSkinInfos() {
         for (var entry : allSkins) {
             // check all part status, some skin only one part, but overridden all the models/overlays
-            var skin = entry.getSkin();
-            var properties = skin.getSkin().getProperties();
+            var skin = entry.skin();
+            var properties = skin.skin().properties();
             overriddenManager.merge(properties);
             if (!isLimitLimbs) {
                 isLimitLimbs = properties.get(SkinProperty.LIMIT_LEGS_LIMBS);
             }
             // collect the skin and skin part type info.
-            lastSkinTypes.add(skin.getType());
-            for (var skinPart : skin.getParts()) {
-                lastSkinPartTypes.add(skinPart.getType());
+            lastSkinTypes.add(skin.type());
+            for (var skinPart : skin.parts()) {
+                lastSkinPartTypes.add(skinPart.type());
             }
-            activeSkins.put(entry.getDescriptor(), skin);
+            activeSkins.put(entry.descriptor(), skin);
         }
     }
 
     private void loadSkinLightInfos(T source) {
         int luminance = 0;
         for (var skin : activeSkins.values()) {
-            var info = skin.getRenderInfo();
-            luminance = Math.max(luminance, info.getLuminance());
+            var info = skin.renderInfo();
+            luminance = Math.max(luminance, info.luminance());
         }
         luminanceManager.update(luminance);
     }
@@ -213,7 +214,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         var isMannequinHand = source instanceof MannequinEntity;
         for (var itemStack : entityProvider1.armourSlots) {
             for (var slot : getItemSkins(itemStack, isMannequinHand)) {
-                if (slot.getSkinType() == SkinTypes.ITEM_BACKPACK) {
+                if (slot.skinType() == SkinTypes.ITEM_BACKPACK) {
                     armorSkins.add(slot);
                     overriddenManager.addProperty(SkinProperty.OVERRIDE_MODEL_BACKPACK);
                 }
@@ -254,7 +255,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     }
 
     private void loadSkinAnimation(EntitySlot slot) {
-        animatedSkins.put(slot.getDescriptor(), slot.getSkin());
+        animatedSkins.put(slot.descriptor(), slot.skin());
     }
 
     @Override
@@ -270,7 +271,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             return SkinDescriptor.EMPTY;
         }
         var target = SkinDescriptor.of(itemStack);
-        if (target.getType() == SkinTypes.BOAT || target.getType() == SkinTypes.ITEM_FISHING || target.getType() == SkinTypes.HORSE) {
+        if (target.type() == SkinTypes.BOAT || target.type() == SkinTypes.ITEM_FISHING || target.type() == SkinTypes.HORSE) {
             return SkinDescriptor.EMPTY;
         }
         return target;
@@ -290,7 +291,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         } else {
             // the item stack is embedded skin, find the baked skin for matched descriptor.
             for (var entry : itemSkins) {
-                if (entry.getDescriptor().equals(target)) {
+                if (entry.descriptor().equals(target)) {
                     return Collections.singletonList(entry);
                 }
             }
@@ -298,19 +299,19 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return Collections.emptyList();
     }
 
-    public List<EntitySlot> getItemSkins() {
+    public List<EntitySlot> itemSkins() {
         return itemSkins;
     }
 
-    public List<EntitySlot> getArmorSkins() {
+    public List<EntitySlot> armorSkins() {
         return armorSkins;
     }
 
-    public List<EntitySlot> getAllSkins() {
+    public List<EntitySlot> allSkins() {
         return allSkins;
     }
 
-    public SkinPaintScheme getColorScheme() {
+    public SkinPaintScheme colorScheme() {
         return wardrobeProvider.colorScheme;
     }
 
@@ -322,28 +323,28 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return isLimitLimbs;
     }
 
-    public SkinOverriddenManager<T> getOverriddenManager() {
+    public SkinOverriddenManager<T> overriddenManager() {
         return overriddenManager;
     }
 
-    public SkinLuminanceManager<T> getLuminanceManager() {
+    public SkinLuminanceManager<T> luminanceManager() {
         return luminanceManager;
+    }
+
+    public AnimationManager animationManager() {
+        return animationManager;
     }
 
     public boolean shouldRenderExtra() {
         return wardrobeProvider.enableExtraRenderer;
     }
 
-    public Collection<SkinType> getUsingTypes() {
+    public Collection<SkinType> usingTypes() {
         return lastSkinTypes;
     }
 
-    public Collection<SkinPartType> getUsingPartTypes() {
+    public Collection<SkinPartType> usingPartTypes() {
         return lastSkinPartTypes;
-    }
-
-    public AnimationManager getAnimationManager() {
-        return animationManager;
     }
 
     public void setAttachmentPose(SkinAttachmentType attachmentType, int index, SkinAttachmentPose pose) {
@@ -419,13 +420,13 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
                 return false;
             }
             var result = super.tick(wardrobe);
-            var flags = wardrobe.getFlags();
+            var flags = wardrobe.flags();
             if (!wardrobeFlags.equals(flags)) {
                 wardrobeFlags.clear();
                 wardrobeFlags.or(flags);
                 result = true;
             }
-            profile = wardrobe.getProfile();
+            profile = wardrobe.profile();
             return result;
         }
 
@@ -456,7 +457,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             if (wardrobe == null) {
                 return;
             }
-            for (var slotType : EquipmentSlot.values()) {
+            for (var slotType : OpenEquipmentSlot.values()) {
                 if (wardrobe.shouldRenderEquipment(slotType)) {
                     overriddenManager.removeEquipment(slotType);
                 } else {
@@ -474,12 +475,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             }
             // load normal skin, and the record used skin slots.
             var usedSlots = new HashSet<SkinSlotType>();
-            for (var slotType : profile.getSlots()) {
+            for (var slotType : profile.slots()) {
                 if (slotType == SkinSlotType.DYE) {
                     return;
                 }
-                for (int i = 0; i < slotType.getMaxSize(); ++i) {
-                    var itemStack = lastSlots.get(slotType.getIndex() + i);
+                for (int i = 0; i < slotType.maxSize(); ++i) {
+                    var itemStack = lastSlots.get(slotType.index() + i);
                     var descriptor = SkinDescriptor.of(itemStack);
                     if (!descriptor.isEmpty()) {
                         usedSlots.add(slotType); // mark the slot is used.
@@ -489,14 +490,14 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             }
             // load default skin when not user provided.
             var slotType = SkinSlotType.DEFAULT;
-            for (int i = 0; i < slotType.getMaxSize(); ++i) {
-                var itemStack = lastSlots.get(slotType.getIndex() + i);
+            for (int i = 0; i < slotType.maxSize(); ++i) {
+                var itemStack = lastSlots.get(slotType.index() + i);
                 var descriptor = SkinDescriptor.of(itemStack);
                 if (descriptor.isEmpty()) {
                     continue;
                 }
                 // when slot is used, ignore it.
-                var realSlotType = SkinSlotType.byType(descriptor.getType());
+                var realSlotType = SkinSlotType.byType(descriptor.type());
                 if (usedSlots.contains(realSlotType)) {
                     continue;
                 }
@@ -506,7 +507,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
 
         @Override
         protected void collect(SkinWardrobe wardrobe, List<ItemStack> collector) {
-            var inventory = wardrobe.getInventory();
+            var inventory = wardrobe.inventory();
             var size = inventory.getContainerSize();
             for (var index = 0; index < size; ++index) {
                 collector.add(inventory.getItem(index));

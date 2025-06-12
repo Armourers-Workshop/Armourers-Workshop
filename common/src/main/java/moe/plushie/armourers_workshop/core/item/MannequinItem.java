@@ -41,7 +41,7 @@ public class MannequinItem extends FlavouredItem {
         var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
         if (entityTag != null) {
             var entityData = new MannequinEntity.EntityData(entityTag);
-            return entityData.getScale();
+            return entityData.scale();
         }
         return 1.0f;
     }
@@ -66,7 +66,7 @@ public class MannequinItem extends FlavouredItem {
             }
             var clickedLocation = rayTraceResult.getLocation();
             entity.absMoveTo(clickedLocation.x(), clickedLocation.y(), clickedLocation.z(), 0.0f, 0.0f);
-            entity.setYBodyRot(rayTraceResult.getRotation());
+            entity.setYBodyRot(rayTraceResult.rotation());
 
             serverLevel.addFreshEntity(entity);
             serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
@@ -94,11 +94,11 @@ public class MannequinItem extends FlavouredItem {
     public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
         super.appendHoverText(itemStack, tooltips, context);
         var descriptor = EntityTextureDescriptor.of(itemStack);
-        if (descriptor.getName() != null) {
-            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.getName()));
+        if (descriptor.name() != null) {
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.name()));
         }
-        if (descriptor.getURL() != null) {
-            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.url", descriptor.getURL()));
+        if (descriptor.url() != null) {
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.url", descriptor.url()));
         }
     }
 }

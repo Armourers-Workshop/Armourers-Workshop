@@ -20,11 +20,11 @@ public class PartItem {
         this.itemStack = itemStack;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack itemStack() {
         return itemStack;
     }
 
-    public SkinDescriptor getDescriptor() {
+    public SkinDescriptor descriptor() {
         return descriptor;
     }
 

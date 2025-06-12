@@ -115,23 +115,23 @@ public class AdvancedRightCardPanel extends UIView implements TreeViewDelegate {
 
     @Override
     public void treeViewDidSelect(TreeView treeView, TreeNode nodeView) {
-        SkinDocumentNode node = (SkinDocumentNode) nodeView.getContents();
+        SkinDocumentNode node = (SkinDocumentNode) nodeView.contents();
         if (Objects.equal(this.selectedNode, node)) {
             return;
         }
         this.selectedNode = node;
-        this.editor.getConnector().update(node);
+        this.editor.connector().update(node);
     }
 
     @Override
     public Collection<UIMenuItem> treeViewShouldShowMenuForNode(TreeView treeView, TreeNode nodeView) {
-        var node = (SkinDocumentNode) nodeView.getContents();
+        var node = (SkinDocumentNode) nodeView.contents();
         return editor.getNodeMenuItems(node, treeView);
     }
 
     public void documentDidUpdateNode(SkinDocumentNode node, CompoundTag tag) {
         if (Objects.equal(this.selectedNode, node)) {
-            this.editor.getConnector().update(node);
+            this.editor.connector().update(node);
         }
     }
 
@@ -147,15 +147,15 @@ public class AdvancedRightCardPanel extends UIView implements TreeViewDelegate {
         this.minimapView.setMenuController(menuController);
     }
 
-    public UIMenuController getMenuController() {
-        return this.minimapView.getMenuController();
+    public UIMenuController menuController() {
+        return this.minimapView.menuController();
     }
 
-    public DocumentMinimapView getMinimapView() {
+    public DocumentMinimapView minimapView() {
         return minimapView;
     }
 
-    public DocumentTypeListView getTypeListView() {
+    public DocumentTypeListView typeListView() {
         return typeListView;
     }
 }

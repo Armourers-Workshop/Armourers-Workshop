@@ -4,20 +4,20 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface IResourceLocation {
 
-    String getNamespace();
+    String namespace();
 
-    String getPath();
+    String path();
 
     IResourceLocation withNamespace(String namespace);
 
     IResourceLocation withPath(String path);
 
     default ResourceLocation toLocation() {
-        return ResourceLocation.create(getNamespace(), getPath());
+        return ResourceLocation.create(namespace(), path());
     }
 
     default String toLanguageKey() {
-        return getNamespace() + "." + getPath();
+        return namespace() + "." + path();
     }
 
     default String toLanguageKey(String prefix) {

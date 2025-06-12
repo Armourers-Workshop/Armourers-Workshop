@@ -85,10 +85,10 @@ public final class SkinPartSerializerV12 {
     }
 
     public void saveSkinPart(SkinPart skinPart, IOutputStream stream) throws IOException {
-        stream.writeString(skinPart.getType().getRegistryName().toString());
-        SkinGeometrySetV1.writeToStream(skinPart.getGeometries(), stream);
-        stream.writeInt(skinPart.getMarkers().size());
-        for (SkinMarker marker : skinPart.getMarkers()) {
+        stream.writeString(skinPart.type().registryName().toString());
+        SkinGeometrySetV1.writeToStream(skinPart.geometries(), stream);
+        stream.writeInt(skinPart.markers().size());
+        for (SkinMarker marker : skinPart.markers()) {
             marker.writeToStream(stream);
         }
     }

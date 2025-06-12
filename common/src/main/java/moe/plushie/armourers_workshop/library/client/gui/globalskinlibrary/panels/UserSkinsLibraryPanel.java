@@ -32,11 +32,11 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
 
     @Override
     protected void doSearch(int pageIndex, int pageSize, SkinType searchType, IResultHandler<SearchResult> handler) {
-        GlobalSkinLibrary.getInstance().getUserSkinList(user.getId(), pageIndex, pageSize, searchType, handler);
+        GlobalSkinLibrary.getInstance().getUserSkinList(user.id(), pageIndex, pageSize, searchType, handler);
     }
 
     @Override
-    protected NSString getResultsTitle() {
+    protected NSString resultsTitle() {
         if (totalPages < 0) {
             return getDisplayText("label.searching");
         }
@@ -44,8 +44,8 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
             return getDisplayText("label.no_results");
         }
         String username = "unknown";
-        if (user != null && !user.getName().isEmpty()) {
-            username = user.getName();
+        if (user != null && !user.name().isEmpty()) {
+            username = user.name();
         }
         return getDisplayText("user_results", username, currentPage + 1, totalPages, totalResults);
     }

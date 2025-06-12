@@ -137,7 +137,7 @@ public class AdvancedHeaderView extends UIView implements UITextFieldDelegate {
         this.picker = picker;
     }
 
-    public Consumer<UIControl> getPicker() {
+    public Consumer<UIControl> picker() {
         return picker;
     }
 
@@ -148,7 +148,7 @@ public class AdvancedHeaderView extends UIView implements UITextFieldDelegate {
         this.partEmptyView.setHidden(!selectedPart.isEmpty());
     }
 
-    public SkinDescriptor getSelectedPart() {
+    public SkinDescriptor selectedPart() {
         return selectedPart;
     }
 }

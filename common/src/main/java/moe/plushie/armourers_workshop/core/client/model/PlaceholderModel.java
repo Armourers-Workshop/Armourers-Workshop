@@ -19,12 +19,12 @@ public class PlaceholderModel implements IModel {
     private final DataContainer storage = new DataContainer();
 
     @Override
-    public IModelBabyPose getBabyPose() {
+    public IModelBabyPose babyPose() {
         return null;
     }
 
     @Override
-    public Part getPart(String name) {
+    public Part partByName(String name) {
         return namedParts.computeIfAbsent(name, it -> {
             Part part = new Part(name);
             allParts.add(part);
@@ -33,12 +33,12 @@ public class PlaceholderModel implements IModel {
     }
 
     @Override
-    public Collection<? extends Part> getAllParts() {
+    public Collection<? extends Part> allParts() {
         return namedParts.values();
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<?> type() {
         return PlaceholderModel.class;
     }
 

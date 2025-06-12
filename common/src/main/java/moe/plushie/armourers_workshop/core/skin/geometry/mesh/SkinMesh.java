@@ -10,16 +10,16 @@ public abstract class SkinMesh extends SkinGeometry {
 
     protected SkinTexturePos texturePos;
 
-    public SkinTexturePos getTexturePos() {
+    public SkinTexturePos texturePos() {
         return texturePos;
     }
 
     @Override
-    public OpenVoxelShape getShape() {
+    public OpenVoxelShape shape() {
         var shape = new OpenVoxelShape();
-        getFaces().forEach(face -> face.getVertices().forEach(vertex -> shape.add(vertex.getPosition())));
+        faces().forEach(face -> face.vertices().forEach(vertex -> shape.add(vertex.position())));
         return OpenVoxelShape.box(shape.bounds());
     }
 
-    public abstract List<? extends SkinMeshFace> getFaces();
+    public abstract List<? extends SkinMeshFace> faces();
 }

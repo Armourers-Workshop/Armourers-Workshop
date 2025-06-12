@@ -43,16 +43,16 @@ public final class SkinSerializerV20 implements IOSerializer {
         stream.readInt(); // reserved data 2
         var context = ChunkGeometrySerializers.createDecodeContext(options);
         var pair = ChunkSerializers.readInfoFromStream(stream, context);
-        return SkinFileHeader.optimized(options.getFileVersion(), pair.getKey(), pair.getValue());
+        return SkinFileHeader.optimized(options.fileVersion(), pair.getKey(), pair.getValue());
     }
 
     @Override
     public boolean isSupportedVersion(SkinFileOptions options) {
-        return options.getFileVersion() >= FILE_MIN_VERSION;
+        return options.fileVersion() >= FILE_MIN_VERSION;
     }
 
     @Override
-    public int getVersion() {
+    public int fileVersion() {
         return FILE_LATEST_VERSION;
     }
 

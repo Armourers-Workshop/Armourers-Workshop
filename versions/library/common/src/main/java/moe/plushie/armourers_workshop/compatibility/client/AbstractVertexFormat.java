@@ -12,14 +12,14 @@ import net.fabricmc.api.Environment;
 public class AbstractVertexFormat implements IVertexFormat {
 
     private static final EnumMapper<IVertexFormat.Mode, VertexFormat.Mode> MAPPER = EnumMapper.create(IVertexFormat.Mode.LINES, VertexFormat.Mode.LINES, it -> {
-        it.add(IVertexFormat.Mode.LINES, VertexFormat.Mode.LINES);
-        it.add(IVertexFormat.Mode.LINE_STRIP, VertexFormat.Mode.LINE_STRIP);
-        it.add(IVertexFormat.Mode.DEBUG_LINES, VertexFormat.Mode.DEBUG_LINES);
-        it.add(IVertexFormat.Mode.DEBUG_LINE_STRIP, VertexFormat.Mode.DEBUG_LINE_STRIP);
-        it.add(IVertexFormat.Mode.TRIANGLES, VertexFormat.Mode.TRIANGLES);
-        it.add(IVertexFormat.Mode.TRIANGLE_STRIP, VertexFormat.Mode.TRIANGLE_STRIP);
-        it.add(IVertexFormat.Mode.TRIANGLE_FAN, VertexFormat.Mode.TRIANGLE_FAN);
-        it.add(IVertexFormat.Mode.QUADS, VertexFormat.Mode.QUADS);
+        it.put(IVertexFormat.Mode.LINES, VertexFormat.Mode.LINES);
+        it.put(IVertexFormat.Mode.LINE_STRIP, VertexFormat.Mode.LINE_STRIP);
+        it.put(IVertexFormat.Mode.DEBUG_LINES, VertexFormat.Mode.DEBUG_LINES);
+        it.put(IVertexFormat.Mode.DEBUG_LINE_STRIP, VertexFormat.Mode.DEBUG_LINE_STRIP);
+        it.put(IVertexFormat.Mode.TRIANGLES, VertexFormat.Mode.TRIANGLES);
+        it.put(IVertexFormat.Mode.TRIANGLE_STRIP, VertexFormat.Mode.TRIANGLE_STRIP);
+        it.put(IVertexFormat.Mode.TRIANGLE_FAN, VertexFormat.Mode.TRIANGLE_FAN);
+        it.put(IVertexFormat.Mode.QUADS, VertexFormat.Mode.QUADS);
     });
 
     private final VertexFormat impl;

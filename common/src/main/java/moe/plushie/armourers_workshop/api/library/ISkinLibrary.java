@@ -10,15 +10,15 @@ public interface ISkinLibrary {
 
     interface Entry {
 
-        String getName();
+        String name();
 
-        String getPath();
+        String path();
 
-        String getSkinIdentifier();
+        String skinIdentifier();
 
-        ISkinType getSkinType();
+        ISkinType skinType();
 
-        ISkinFileHeader getSkinHeader();
+        ISkinFileHeader skinHeader();
 
         boolean isDirectory();
 
@@ -27,10 +27,10 @@ public interface ISkinLibrary {
 
     interface Difference {
 
-        Collection<Entry> getAddedChanges();
+        Collection<Entry> addedChanges();
 
-        Collection<Entry> getRemovedChanges();
+        Collection<Entry> removedChanges();
 
-        Collection<Pair<Entry, Entry>> getUpdatedChanges();
+        Collection<Pair<Entry, Entry>> updatedChanges();
     }
 }

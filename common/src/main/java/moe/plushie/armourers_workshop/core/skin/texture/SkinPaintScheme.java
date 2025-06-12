@@ -94,12 +94,12 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
 
     public SkinPaintColor getResolvedColor(SkinPaintType paintType) {
         if (resolvedColors == null) {
-            resolvedColors = getResolvedColors();
+            resolvedColors = resolvedColors();
         }
         return resolvedColors.get(paintType);
     }
 
-    public OpenResourceLocation getTexture() {
+    public OpenResourceLocation texture() {
         return texture;
     }
 
@@ -107,7 +107,7 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         this.texture = texture;
     }
 
-    public SkinPaintScheme getReference() {
+    public SkinPaintScheme reference() {
         if (reference != null) {
             return reference;
         }
@@ -126,19 +126,19 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         }
     }
 
-    private HashMap<SkinPaintType, SkinPaintColor> getResolvedColors() {
+    private HashMap<SkinPaintType, SkinPaintColor> resolvedColors() {
         var resolvedColors = new HashMap<SkinPaintType, SkinPaintColor>();
         var dependencies = new HashMap<SkinPaintType, ArrayList<SkinPaintType>>();
         // build all reference dependencies
         if (reference != null) {
-            resolvedColors.putAll(reference.getResolvedColors());
+            resolvedColors.putAll(reference.resolvedColors());
         }
         // build all item dependencies
-        Collections.concat(colors.entrySet(), getReference().colors.entrySet()).forEach(e -> {
+        Collections.concat(colors.entrySet(), reference().colors.entrySet()).forEach(e -> {
             var paintType = e.getKey();
             var color = e.getValue();
-            if (color.getPaintType().getDyeType() != null) {
-                dependencies.computeIfAbsent(color.getPaintType(), k -> new ArrayList<>()).add(paintType);
+            if (color.paintType().dyeType() != null) {
+                dependencies.computeIfAbsent(color.paintType(), k -> new ArrayList<>()).add(paintType);
             } else {
                 resolvedColors.put(paintType, color);
             }
@@ -186,16 +186,16 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
 
     @Override
     public String toString() {
-        return "[" + getResolvedColors() + "]";
+        return "[" + resolvedColors() + "]";
     }
 
     private static class CodingKeys {
-        public static final Map<SkinPaintType, IDataSerializerKey<SkinPaintColor>> KEYS = Collections.immutableMap(builder -> {
+        public static final Map<SkinPaintType, IDataSerializerKey<SkinPaintColor>> KEYS = Collections.immutableMap(it -> {
             for (var paintType : SkinPaintTypes.values()) {
                 if (paintType != SkinPaintTypes.NONE) {
-                    var name = paintType.getRegistryName().toString();
+                    var name = paintType.registryName().toString();
                     var key = IDataSerializerKey.create(name, SkinPaintColor.CODEC, null);
-                    builder.put(paintType, key);
+                    it.put(paintType, key);
                 }
             }
         });

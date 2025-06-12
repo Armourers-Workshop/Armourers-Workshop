@@ -8,13 +8,13 @@ import net.minecraft.core.Direction;
 @Available("[1.16, )")
 public class AbstractDirection {
 
-    private static final EnumMapper<OpenDirection, Direction> MAPPER = EnumMapper.create(OpenDirection.NORTH, Direction.NORTH, builder -> {
-        builder.add(OpenDirection.DOWN, Direction.DOWN);
-        builder.add(OpenDirection.UP, Direction.UP);
-        builder.add(OpenDirection.NORTH, Direction.NORTH);
-        builder.add(OpenDirection.SOUTH, Direction.SOUTH);
-        builder.add(OpenDirection.WEST, Direction.WEST);
-        builder.add(OpenDirection.EAST, Direction.EAST);
+    private static final EnumMapper<OpenDirection, Direction> MAPPER = EnumMapper.create(OpenDirection.NORTH, Direction.NORTH, it -> {
+        it.put(OpenDirection.DOWN, Direction.DOWN);
+        it.put(OpenDirection.UP, Direction.UP);
+        it.put(OpenDirection.NORTH, Direction.NORTH);
+        it.put(OpenDirection.SOUTH, Direction.SOUTH);
+        it.put(OpenDirection.WEST, Direction.WEST);
+        it.put(OpenDirection.EAST, Direction.EAST);
     });
 
     public static OpenDirection wrap(Direction direction) {

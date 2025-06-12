@@ -35,7 +35,7 @@ public class PackResourceSet {
     public PackResource findResource(String regex) {
         var pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         for (var resource : resources) {
-            if (pattern.matcher(resource.getName()).find()) {
+            if (pattern.matcher(resource.name()).find()) {
                 return resource;
             }
         }
@@ -45,7 +45,7 @@ public class PackResourceSet {
     @Nullable
     public PackResource getResource(String name) {
         for (var resource : resources) {
-            if (resource.getName().equalsIgnoreCase(name)) {
+            if (resource.name().equalsIgnoreCase(name)) {
                 return resource;
             }
         }
@@ -79,12 +79,12 @@ public class PackResourceSet {
             var fileEntry = entry;
             resources.add(new PackResource() {
                 @Override
-                public String getName() {
+                public String name() {
                     return fileName;
                 }
 
                 @Override
-                public InputStream getInputStream() throws IOException {
+                public InputStream inputStream() throws IOException {
                     return file.getInputStream(fileEntry);
                 }
             });
@@ -101,12 +101,12 @@ public class PackResourceSet {
             var fileName = FileUtils.getRelativePath(entry, rootPath, true).substring(1);
             resources.add(new PackResource() {
                 @Override
-                public String getName() {
+                public String name() {
                     return fileName;
                 }
 
                 @Override
-                public InputStream getInputStream() throws IOException {
+                public InputStream inputStream() throws IOException {
                     return new FileInputStream(entry);
                 }
             });
@@ -123,12 +123,12 @@ public class PackResourceSet {
             var fileName = entry.getName();
             resources.add(new PackResource() {
                 @Override
-                public String getName() {
+                public String name() {
                     return fileName;
                 }
 
                 @Override
-                public InputStream getInputStream() throws IOException {
+                public InputStream inputStream() throws IOException {
                     return new FileInputStream(entry);
                 }
             });

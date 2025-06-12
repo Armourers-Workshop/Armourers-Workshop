@@ -17,13 +17,13 @@ import manifold.ext.rt.api.ThisClass;
 @Available("[1.16, 1.20)")
 public class Constructor {
 
-    private static final Map<AbstractBlockMaterial, Material> MATERIALS = Collections.immutableMap(builder -> {
-        builder.put(AbstractBlockMaterial.STONE, Material.STONE);
-        builder.put(AbstractBlockMaterial.GLASS, Material.GLASS);
+    private static final Map<AbstractBlockMaterial, Material> MATERIALS = Collections.immutableMap(it -> {
+        it.put(AbstractBlockMaterial.STONE, Material.STONE);
+        it.put(AbstractBlockMaterial.GLASS, Material.GLASS);
     });
 
-    private static final Map<AbstractBlockMaterialColor, MaterialColor> MATERIAL_COLORS = Collections.immutableMap(builder -> {
-        builder.put(AbstractBlockMaterialColor.NONE, MaterialColor.NONE);
+    private static final Map<AbstractBlockMaterialColor, MaterialColor> MATERIAL_COLORS = Collections.immutableMap(it -> {
+        it.put(AbstractBlockMaterialColor.NONE, MaterialColor.NONE);
     });
 
     @Extension

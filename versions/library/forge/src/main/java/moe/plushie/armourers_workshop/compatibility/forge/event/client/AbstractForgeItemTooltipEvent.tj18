@@ -20,17 +20,17 @@ public class AbstractForgeItemTooltipEvent {
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
         return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_GATHER.map(event -> new ItemTooltipEvent.Gather() {
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return event.getItemStack();
             }
 
             @Override
-            public List<Component> getTooltips() {
+            public List<Component> tooltips() {
                 return event.getToolTip();
             }
 
             @Override
-            public ITooltipContext getContext() {
+            public ITooltipContext context() {
                 return new AbstractTooltipContext<>(null, event.getFlags());
             }
         });
@@ -40,12 +40,12 @@ public class AbstractForgeItemTooltipEvent {
         return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER.map(event -> new ItemTooltipEvent.Render() {
 
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return event.getItemStack();
             }
 
             @Override
-            public CGRect getFrame() {
+            public CGRect frame() {
                 var font = event.getFont();
                 var tooltips = event.getComponents();
                 int mouseX = event.getX();
@@ -73,17 +73,17 @@ public class AbstractForgeItemTooltipEvent {
             }
 
             @Override
-            public float getScreenWidth() {
+            public float screenWidth() {
                 return event.getScreenWidth();
             }
 
             @Override
-            public float getScreenHeight() {
+            public float screenHeight() {
                 return event.getScreenHeight();
             }
 
             @Override
-            public CGGraphicsContext getContext() {
+            public CGGraphicsContext context() {
                 int mouseX = event.getX();
                 int mouseY = event.getY();
                 return AbstractGraphicsRenderer.of(null, event.getPoseStack(), mouseX, mouseY, 0);

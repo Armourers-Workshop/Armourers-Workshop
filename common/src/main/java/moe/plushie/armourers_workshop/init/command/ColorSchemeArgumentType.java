@@ -32,7 +32,7 @@ public class ColorSchemeArgumentType implements ArgumentType<SkinPaintScheme> {
     public SkinPaintScheme parse(final StringReader reader) throws CommandSyntaxException {
         var parser = new ColorSchemeParser(reader).parse();
         var colorScheme = new SkinPaintScheme();
-        for (var entry : parser.getProperties().entrySet()) {
+        for (var entry : parser.properties().entrySet()) {
             colorScheme.setColor(entry.getKey(), entry.getValue());
         }
         return colorScheme;

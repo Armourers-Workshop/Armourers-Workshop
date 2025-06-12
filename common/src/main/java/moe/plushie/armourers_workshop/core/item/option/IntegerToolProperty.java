@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.item.option;
 
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.nbt.CompoundTag;
 
-import java.util.Objects;
 
 public class IntegerToolProperty extends ToolProperty<Integer> {
 
@@ -18,10 +17,7 @@ public class IntegerToolProperty extends ToolProperty<Integer> {
 
     @Override
     public Integer get(CompoundTag nbt) {
-        if (nbt.contains(name, Constants.TagFlags.INT)) {
-            return nbt.getInt(name);
-        }
-        return empty();
+        return nbt.getOptionalInt(name).orElseGet(this::empty);
     }
 
     @Override
@@ -33,11 +29,11 @@ public class IntegerToolProperty extends ToolProperty<Integer> {
         }
     }
 
-    public int getMinValue() {
+    public int minValue() {
         return minValue;
     }
 
-    public int getMaxValue() {
+    public int maxValue() {
         return maxValue;
     }
 }

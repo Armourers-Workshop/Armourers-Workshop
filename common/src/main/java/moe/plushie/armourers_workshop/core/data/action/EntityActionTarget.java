@@ -19,23 +19,23 @@ public class EntityActionTarget {
         this.playCount = playCount;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public float getPriority() {
+    public float priority() {
         return priority;
     }
 
-    public List<EntityAction> getActions() {
+    public List<EntityAction> actions() {
         return actions;
     }
 
-    public double getTransitionDuration() {
+    public double transitionDuration() {
         return transitionDuration;
     }
 
-    public int getPlayCount() {
+    public int playCount() {
         return playCount;
     }
 

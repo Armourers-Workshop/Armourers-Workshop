@@ -52,7 +52,7 @@ public class SmartSoundManager {
             sound = new SmartSound(provider);
             sounds.put(provider, sound);
         }
-        return sound.getSoundEvent();
+        return sound.soundEvent();
     }
 
     public AbstractSoundManagerImpl getSoundManager() {
@@ -60,9 +60,9 @@ public class SmartSoundManager {
     }
 
     protected void uploadSound(SmartSound sound) {
-        var name = sound.getName();
-        var location = sound.getLocation();
-        var id = location.withPath(location.getPath().replaceFirst("sounds/(.+)\\.ogg", "$1"));
+        var name = sound.name();
+        var location = sound.location();
+        var id = location.withPath(location.path().replaceFirst("sounds/(.+)\\.ogg", "$1"));
         getSoundManager().aw2$register(location.toLocation(), AbstractSimpleSound.create(id.toLocation(), name));
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Sound '{}'", location);
@@ -70,7 +70,7 @@ public class SmartSoundManager {
     }
 
     protected void releaseSound(SmartSound sound) {
-        var location = sound.getLocation();
+        var location = sound.location();
         getSoundManager().aw2$unregister(location.toLocation());
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Unregistering Sound '{}'", location);

@@ -25,7 +25,7 @@ public class SkinFileOptions {
 
     public void merge(SkinFileOptions options) {
         if (options != null) {
-            var fileVersion = Math.max(getFileVersion(), options.getFileVersion());
+            var fileVersion = Math.max(fileVersion(), options.fileVersion());
             values.merge(options.values);
             setFileVersion(fileVersion);
         }
@@ -36,7 +36,7 @@ public class SkinFileOptions {
         serializer.write(CodingKeys.FILE_VERSION, fileVersion);
     }
 
-    public int getFileVersion() {
+    public int fileVersion() {
         return serializer.read(CodingKeys.FILE_VERSION);
     }
 
@@ -125,7 +125,7 @@ public class SkinFileOptions {
         serializer.write(CodingKeys.SECURITY_KEY, securityKey);
     }
 
-    public String getSecurityKey() {
+    public String securityKey() {
         return serializer.read(CodingKeys.SECURITY_KEY);
     }
 
@@ -133,7 +133,7 @@ public class SkinFileOptions {
         serializer.write(CodingKeys.SECURITY_DATA, securityData);
     }
 
-    public String getSecurityData() {
+    public String securityData() {
         return serializer.read(CodingKeys.SECURITY_DATA);
     }
 

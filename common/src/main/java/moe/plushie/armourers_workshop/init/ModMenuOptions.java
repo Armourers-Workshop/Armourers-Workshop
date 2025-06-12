@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -38,10 +37,7 @@ public class ModMenuOptions {
     }
 
     public String getString(String key, String defaultValue) {
-        if (values.contains(key)) {
-            return values.getString(key);
-        }
-        return defaultValue;
+        return values.getOptionalString(key).orElse(defaultValue);
     }
 
     public void putInt(String key, int value) {
@@ -54,10 +50,7 @@ public class ModMenuOptions {
     }
 
     public int getInt(String key, int defaultValue) {
-        if (values.contains(key)) {
-            return values.getInt(key);
-        }
-        return defaultValue;
+        return values.getOptionalInt(key).orElse(defaultValue);
     }
 
     public void putBoolean(String key, boolean value) {
@@ -66,10 +59,7 @@ public class ModMenuOptions {
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
-        if (values.contains(key)) {
-            return values.getBoolean(key);
-        }
-        return defaultValue;
+        return values.getOptionalBoolean(key).orElse(defaultValue);
     }
 
     public void putTag(String key, CompoundTag tag) {
@@ -78,10 +68,7 @@ public class ModMenuOptions {
     }
 
     public CompoundTag getTag(String key) {
-        if (values.contains(key, Constants.TagFlags.COMPOUND)) {
-            return values.getCompound(key);
-        }
-        return null;
+        return values.getOptionalCompound(key).orElse(null);
     }
 
     private void load() {

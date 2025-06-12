@@ -29,7 +29,7 @@ public class BakedArmature {
         this.finalTransforms = defaultTransforms;
         // initialized to default joint transform.
         for (int i = 0; i < defaultTransforms.length; ++i) {
-            this.defaultTransforms[i] = armature.getGlobalTransform(i);
+            this.defaultTransforms[i] = armature.globalTransformById(i);
         }
     }
 
@@ -53,48 +53,48 @@ public class BakedArmature {
         this.filter = filter;
     }
 
-    public IJointFilter getFilter() {
+    public IJointFilter filter() {
         return filter;
     }
 
 
-    public IJoint getJoint(SkinPartType partType) {
-        var joint = armature.getJoint(partType);
+    public IJoint jointByType(SkinPartType partType) {
+        var joint = armature.jointByType(partType);
         if (joint != null && filter != null && !filter.test(joint)) {
             return null;
         }
         return joint;
     }
 
-    public IJoint getJoint(BakedSkinPart bakedPart) {
-        var partType = bakedPart.getType();
+    public IJoint jointByPart(BakedSkinPart bakedPart) {
+        var partType = bakedPart.type();
         if (partType == SkinPartTypes.BIPPED_LEFT_WING) {
-            if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-                return getJoint(SkinPartTypes.BIPPED_LEFT_PHALANX);
+            if (bakedPart.properties().get(SkinProperty.WINGS_MATCHING_POSE)) {
+                return jointByType(SkinPartTypes.BIPPED_LEFT_PHALANX);
             }
         }
         if (partType == SkinPartTypes.BIPPED_RIGHT_WING) {
-            if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
-                return getJoint(SkinPartTypes.BIPPED_RIGHT_PHALANX);
+            if (bakedPart.properties().get(SkinProperty.WINGS_MATCHING_POSE)) {
+                return jointByType(SkinPartTypes.BIPPED_RIGHT_PHALANX);
             }
         }
-        return getJoint(partType);
+        return jointByType(partType);
     }
 
-    public IJointTransform getTransform(IJoint joint) {
+    public IJointTransform transformByJoint(IJoint joint) {
         if (joint != null) {
-            return finalTransforms[joint.getId()];
+            return finalTransforms[joint.id()];
         }
         return null;
     }
 
-    public IJointTransform getTransform(SkinPartType partType) {
-        return getTransform(getJoint(partType));
+    public IJointTransform transformByType(SkinPartType partType) {
+        return transformByJoint(jointByType(partType));
     }
 
-    public IJointTransform getTransform(BakedSkinPart bakedPart) {
-        var transform = getTransform(getJoint(bakedPart));
-        var transformModifier = bakedPart.getJointTransformModifier();
+    public IJointTransform transformByPart(BakedSkinPart bakedPart) {
+        var transform = transformByJoint(jointByPart(bakedPart));
+        var transformModifier = bakedPart.jointTransformModifier();
         if (transformModifier != null) {
             return transformModifier.apply(transform);
         }
@@ -109,11 +109,11 @@ public class BakedArmature {
         }
     }
 
-    public IJointTransform[] getTransforms() {
+    public IJointTransform[] transforms() {
         return finalTransforms;
     }
 
-    public Armature getArmature() {
+    public Armature armature() {
         return armature;
     }
 }

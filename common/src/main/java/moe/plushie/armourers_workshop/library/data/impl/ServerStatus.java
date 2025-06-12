@@ -21,27 +21,27 @@ public class ServerStatus {
         cpuUse = json.get("cpu_usage").floatValue();
     }
 
-    public int getTotalSkin() {
+    public int totalSkin() {
         return totalSkin;
     }
 
-    public int getDownloadsLastHour() {
+    public int downloadsLastHour() {
         return downloadsLastHour;
     }
 
-    public int getDownloadsLastDay() {
+    public int downloadsLastDay() {
         return downloadsLastDay;
     }
 
-    public int getDownloadsLastWeek() {
+    public int downloadsLastWeek() {
         return downloadsLastWeek;
     }
 
-    public float getMemUse() {
+    public float memUse() {
         return memUse;
     }
 
-    public float getCpuUse() {
+    public float cpuUse() {
         return cpuUse;
     }
 }

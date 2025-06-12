@@ -66,14 +66,14 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     }
 
     private void prepareDefaultValue() {
-        if (!(wardrobe.getEntity() instanceof MannequinEntity entity)) {
+        if (!(wardrobe.entity() instanceof MannequinEntity entity)) {
             return;
         }
         defaultValues.clear();
         lastDescriptor = entity.getTextureDescriptor();
         lastTextureModel = entity.getTextureModel();
-        lastTextureSource = entity.getTextureDescriptor().getSource();
-        defaultValues.put(lastTextureSource, lastDescriptor.getValue());
+        lastTextureSource = entity.getTextureDescriptor().source();
+        defaultValues.put(lastTextureSource, lastDescriptor.value());
     }
 
     private void applyTextureSource(EntityTextureDescriptor.Source newValue) {
@@ -107,7 +107,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
                 UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
                 return;
             }
-            var newValue = texture.getDescriptor();
+            var newValue = texture.descriptor();
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
@@ -115,8 +115,8 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
             lastTextureSource = null;
             NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_TEXTURE.buildPacket(wardrobe, newValue));
             // update to use
-            defaultValues.put(newValue.getSource(), newValue.getValue());
-            applyTextureSource(newValue.getSource());
+            defaultValues.put(newValue.source(), newValue.value());
+            applyTextureSource(newValue.source());
         });
     }
 

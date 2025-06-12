@@ -7,12 +7,12 @@ import net.minecraft.world.item.Items;
 public class ValentinesHandler implements Holiday.IHandler {
 
     @Override
-    public int getBackgroundColor() {
+    public int backgroundColor() {
         return 0xe5a2e5;
     }
 
     @Override
-    public int getForegroundColor() {
+    public int foregroundColor() {
         return 0x961596;
     }
 

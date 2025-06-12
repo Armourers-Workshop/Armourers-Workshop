@@ -15,10 +15,10 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
     private final TransformModel<LivingEntity> transformModelRef = new TransformModel<>(0.0f);
 
     public VillagerModelArmaturePlugin(ArmatureTransformerContext context) {
-        var model = context.getEntityModel();
+        var model = context.entityModel();
         var transformModel = AbstractModelHolder.of(transformModelRef);
-        sourcePart = model.getPart("head");
-        destinationPart = transformModel.getPart("head");
+        sourcePart = model.partByName("head");
+        destinationPart = transformModel.partByName("head");
         context.setEntityModel0(transformModel);
     }
 
@@ -27,11 +27,11 @@ public class VillagerModelArmaturePlugin extends ArmaturePlugin {
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }
-        transformModelRef.transformFrom(livingEntity, context.getPartialTicks());
+        transformModelRef.transformFrom(livingEntity, context.partialTicks());
         if (sourcePart != null && destinationPart != null) {
             var src = sourcePart.pose();
             var dest = destinationPart.pose();
-            dest.setRotation(src.getXRot(), src.getYRot(), src.getZRot());
+            dest.setRotation(src.xRot(), src.yRot(), src.zRot());
         }
     }
 }

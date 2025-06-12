@@ -44,7 +44,7 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
     }
 
     @Override
-    public Collection<SkinGeometryType> getSupportedTypes() {
+    public Collection<SkinGeometryType> supportedTypes() {
         return Collections.singleton(SkinGeometryTypes.CUBE);
     }
 
@@ -62,7 +62,7 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         }
 
         @Override
-        public SkinGeometryType getType() {
+        public SkinGeometryType type() {
             return type;
         }
 
@@ -99,12 +99,12 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
         }
 
         @Override
-        public SkinGeometryType getType() {
+        public SkinGeometryType type() {
             return type;
         }
 
         @Override
-        public List<SkinMeshFace> getFaces() {
+        public List<SkinMeshFace> faces() {
             return faces;
         }
     }

@@ -28,8 +28,8 @@ public class UserNotifications {
 //    }
 
     public static void sendSystemToast(Component message, CompoundTag tag, Player player) {
-        Component title = Component.translatable("commands.armourers_workshop.notify.title");
-        Component confirm = Component.translatable("commands.armourers_workshop.notify.confirm");
+        var title = Component.translatable("commands.armourers_workshop.notify.title");
+        var confirm = Component.translatable("commands.armourers_workshop.notify.confirm");
         sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0x80000000, tag), player);
     }
 

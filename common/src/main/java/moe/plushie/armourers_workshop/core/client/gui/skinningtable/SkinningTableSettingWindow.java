@@ -52,7 +52,7 @@ public class SkinningTableSettingWindow extends ConfirmDialog {
         setBounds(new CGRect(0, 0, bounds().width(), contentHeight + 30));
     }
 
-    public SkinDescriptor.Options getOptions() {
+    public SkinDescriptor.Options options() {
         return options.copy();
     }
 
@@ -94,7 +94,7 @@ public class SkinningTableSettingWindow extends ConfirmDialog {
 
                 @Override
                 public Boolean get(SkinDescriptor.Options options) {
-                    return options.getEmbeddedItemRenderer() == 2;
+                    return options.embeddedItemRenderer() == 2;
                 }
 
                 @Override

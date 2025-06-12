@@ -74,17 +74,17 @@ public class ClientProxy {
 
         MinecraftAuth.init(new MinecraftAuth.UserProvider() {
             @Override
-            public String getId() {
+            public String id() {
                 return Minecraft.getInstance().getUser().getUuid();
             }
 
             @Override
-            public String getName() {
+            public String name() {
                 return Minecraft.getInstance().getUser().getName();
             }
 
             @Override
-            public String getAccessToken() {
+            public String accessToken() {
                 return Minecraft.getInstance().getUser().getAccessToken();
             }
         });
@@ -133,7 +133,7 @@ public class ClientProxy {
 
         // register custom sprite
         EventBus.register(RegisterTextureEvent.class, event -> Stream.of(SkinSlotType.values()).forEach(slotType -> {
-            event.register(slotType.getIconSprite());
+            event.register(slotType.icon());
         }));
 
         EventBus.register(ClientPlayerEvent.LoggingIn.class, event -> {
@@ -160,8 +160,8 @@ public class ClientProxy {
             SmartTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();
             GlobalSkinLibrary.getInstance().disconnect();
-            SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
-            SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
+            SkinLibraryManager.getClient().publicLibrary().reset();
+            SkinLibraryManager.getClient().privateLibrary().reset();
             ModContext.reset();
             ModEntityProfiles.setCustomProfiles(Collections.emptyMap());
             ModConfigSpec.COMMON.apply(null);

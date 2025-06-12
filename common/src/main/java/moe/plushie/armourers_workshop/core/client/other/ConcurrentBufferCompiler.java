@@ -52,7 +52,7 @@ public class ConcurrentBufferCompiler {
     @Nullable
     public Group compile(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, boolean isOutline) {
         var options = createOptions(isOutline);
-        var key = Key.of(part.getId(), options, part.requirements(scheme));
+        var key = Key.of(part.id(), options, part.requirements(scheme));
         var group = CACHING.get(key);
         if (group != null) {
             if (group.isCompiled()) {
@@ -95,7 +95,7 @@ public class ConcurrentBufferCompiler {
             var scheme = task.scheme;
             var usingTypes = new HashSet<IRenderType>();
             var mergedTasks = new ArrayList<Pass>();
-            part.getQuads().forEach((renderType, quads) -> {
+            part.quads().forEach((renderType, quads) -> {
                 var builder = createBufferBuilder(renderType, quads.size(), task);
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
@@ -104,7 +104,7 @@ public class ConcurrentBufferCompiler {
                     poseStack1.popPose();
                 });
                 var renderedBuffer = builder.end();
-                var compiledTask = new Pass(builder.getRenderType(), renderedBuffer, part.getRenderPolygonOffset(), part.getType(), task.isOutline());
+                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), task.isOutline());
                 usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
@@ -219,7 +219,7 @@ public class ConcurrentBufferCompiler {
             this.bufferObject.release();
         }
 
-        public List<Pass> getPasses() {
+        public List<Pass> passes() {
             return mergedTasks;
         }
 

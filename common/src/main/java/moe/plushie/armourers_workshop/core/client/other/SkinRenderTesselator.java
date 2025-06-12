@@ -34,7 +34,7 @@ public class SkinRenderTesselator extends SkinRenderContext {
 
     public static SkinRenderTesselator create(BakedSkin bakedSkin) {
         var mannequin = PlaceholderManager.MANNEQUIN.get();
-        var bakedArmature = BakedArmature.defaultBy(bakedSkin.getType());
+        var bakedArmature = BakedArmature.defaultBy(bakedSkin.type());
         if (bakedArmature == null || mannequin == null || mannequin.getLevel() == null) {
             return null;
         }
@@ -43,20 +43,20 @@ public class SkinRenderTesselator extends SkinRenderContext {
 
     public int draw() {
         bakedSkin.setupAnim(mannequin, bakedArmature, this);
-        var paintScheme = bakedSkin.resolve(mannequin, getColorScheme());
+        var paintScheme = bakedSkin.resolve(mannequin, colorScheme());
         if (isUseItemTransforms()) {
-            var itemTransform = bakedSkin.getItemTransform();
-            itemTransform.apply(poseStack, getMannequin(), bakedSkin, this);
+            var itemTransform = bakedSkin.itemTransform();
+            itemTransform.apply(poseStack, mannequin(), bakedSkin, this);
         }
         SkinRenderer.render(mannequin, bakedArmature, bakedSkin, paintScheme, this);
         return SkinRenderHelper.getRenderCount(bakedSkin);
     }
 
-    public MannequinEntity getMannequin() {
+    public MannequinEntity mannequin() {
         return mannequin;
     }
 
-    public BakedSkin getSkin() {
+    public BakedSkin skin() {
         return bakedSkin;
     }
 }

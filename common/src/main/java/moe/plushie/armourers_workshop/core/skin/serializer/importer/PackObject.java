@@ -30,7 +30,7 @@ public class PackObject implements IODataObject {
         if (resource == null) {
             return null;
         }
-        try (var inputStream = new BufferedInputStream(resource.getInputStream())) {
+        try (var inputStream = new BufferedInputStream(resource.inputStream())) {
             return new PackObject(JsonSerializer.readFromStream(inputStream));
         } catch (Exception exception) {
             throw new IOException(exception);

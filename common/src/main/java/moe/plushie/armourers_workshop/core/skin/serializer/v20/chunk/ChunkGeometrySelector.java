@@ -17,7 +17,7 @@ public class ChunkGeometrySelector implements ChunkVariable {
 
     @Override
     public void writeToStream(ChunkOutputStream stream) throws IOException {
-        stream.writeInt(section.getIndex() + index);
+        stream.writeInt(section.index() + index);
         stream.writeInt(count);
     }
 
@@ -27,15 +27,15 @@ public class ChunkGeometrySelector implements ChunkVariable {
     }
 
 
-    public int getIndex() {
+    public int index() {
         return index;
     }
 
-    public int getCount() {
+    public int count() {
         return count;
     }
 
-    public ChunkGeometrySection getSection() {
+    public ChunkGeometrySection section() {
         return section;
     }
 }

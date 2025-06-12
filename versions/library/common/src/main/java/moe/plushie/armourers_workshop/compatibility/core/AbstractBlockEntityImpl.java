@@ -50,7 +50,7 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
     public final CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         var serializer = new TagSerializer(new CompoundTag(), provider);
         this.writeAdditionalData(serializer);
-        return serializer.getTag();
+        return serializer.tag();
     }
 }
 

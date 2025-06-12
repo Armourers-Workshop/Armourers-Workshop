@@ -53,11 +53,11 @@ import java.util.function.Function;
 
 public class ModCommands {
 
-    private static final Map<String, SkinPaintType> DYE_TYPES = Collections.immutableMap(builder -> {
+    private static final Map<String, SkinPaintType> DYE_TYPES = Collections.immutableMap(it -> {
         for (int i = 0; i < 8; ++i) {
             var paintType = SkinPaintTypes.byId(i + 1);
-            var name = paintType.getRegistryName().getPath();
-            builder.put(name.replaceAll("_", ""), paintType);
+            var name = paintType.registryName().path();
+            it.put(name.replaceAll("_", ""), paintType);
         }
     });
 
@@ -128,7 +128,7 @@ public class ModCommands {
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> skinFormats() {
-        return Commands.argument("format", ListArgumentType.list(SkinExportManager.getExporters()));
+        return Commands.argument("format", ListArgumentType.list(SkinExportManager.allExporters()));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> skinDying() {
@@ -162,18 +162,18 @@ public class ModCommands {
     static ArgumentBuilder<CommandSourceStack, ?> resizableSlotNames() {
         return Commands.argument("slot_name", new ListArgumentType(Collections.compactMap(SkinSlotType.values(), slotType -> {
             if (slotType.isResizable()) {
-                return slotType.getName();
+                return slotType.serializedName();
             }
             return null;
         })));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> slotNames() {
-        return Commands.argument("slot_name", new ListArgumentType(Collections.compactMap(SkinSlotType.values(), SkinSlotType::getName)));
+        return Commands.argument("slot_name", new ListArgumentType(Collections.compactMap(SkinSlotType.values(), SkinSlotType::serializedName)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> overrideTypes() {
-        return Commands.argument("skin_type", new ListArgumentType(Collections.compactMap(ItemOverrideType.values(), ItemOverrideType::getName)));
+        return Commands.argument("skin_type", new ListArgumentType(Collections.compactMap(ItemOverrideType.values(), ItemOverrideType::serializedName)));
     }
 
     static ArgumentBuilder<CommandSourceStack, ?> skins() {
@@ -191,7 +191,7 @@ public class ModCommands {
             if (!server.isRunning()) {
                 throw ERROR_NOT_RUNNING_IN_SERVER.create(null);
             }
-            var token = server.getPrivateKey();
+            var token = server.privateKey();
             context.getSource().sendSuccess(Component.translatable("commands.armourers_workshop.armourers.library.printToken", token), true);
             return 0;
         }
@@ -224,7 +224,7 @@ public class ModCommands {
                 int slot = SkinSlotType.getDyeSlotIndex(paintType);
                 var itemStack = new ItemStack(ModItems.BOTTLE.get());
                 itemStack.set(ModDataComponents.TOOL_COLOR.get(), paintColor);
-                var inventory = wardrobe.getInventory();
+                var inventory = wardrobe.inventory();
                 inventory.setItem(slot, itemStack);
                 wardrobe.broadcast();
             }
@@ -257,8 +257,8 @@ public class ModCommands {
                 if (containsNode(context, "slot")) {
                     slot = IntegerArgumentType.getInteger(context, "slot") - 1;
                 }
-                if (slot > slotType.getMaxSize()) {
-                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.getMaxSize());
+                if (slot > slotType.maxSize()) {
+                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.maxSize());
                 }
                 wardrobe.setItem(slotType, slot, itemStack);
                 wardrobe.broadcast();
@@ -282,8 +282,8 @@ public class ModCommands {
                 if (slotType == null) {
                     continue;
                 }
-                if (slot > slotType.getMaxSize()) {
-                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.getMaxSize());
+                if (slot > slotType.maxSize()) {
+                    throw ERROR_NOT_ENOUGH_SLOT.create(slotType.maxSize());
                 }
                 wardrobe.setItem(slotType, slot - 1, ItemStack.EMPTY);
                 wardrobe.broadcast();
@@ -300,7 +300,7 @@ public class ModCommands {
             }
             var player = context.getSource().getPlayerOrException();
             var itemStack = player.getMainHandItem();
-            var identifier = SkinDescriptor.of(itemStack).getIdentifier();
+            var identifier = SkinDescriptor.of(itemStack).identifier();
             var skin = SkinLoader.getInstance().loadSkin(identifier);
             if (skin == null) {
                 throw ERROR_MISSING_SKIN.create(identifier);
@@ -308,7 +308,7 @@ public class ModCommands {
             float resolvedScale = scale;
             CompoundTag tag = new CompoundTag();
             tag.putString("Skin", identifier);
-            if (!skin.getSettings().isExportable()) {
+            if (!skin.settings().isExportable()) {
                 player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.error.notExportInServer", identifier));
                 UserNotifications.sendSystemToast(Component.translatable("commands.armourers_workshop.armourers.error.notExportInServer", identifier), tag, player);
                 return 0;
@@ -338,7 +338,7 @@ public class ModCommands {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
             var identifier = TypedRegistry.findKey(itemStack.getItem());
-            var key = String.format("%s:%s", overrideType.getName(), identifier);
+            var key = String.format("%s:%s", overrideType.serializedName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {
                 if (ModConfig.Common.overrides.contains(key)) {
@@ -392,7 +392,7 @@ public class ModCommands {
                     continue;
                 }
                 int amount = IntegerArgumentType.getInteger(context, "amount");
-                wardrobe.setUnlockedSize(slotType, OpenMath.clamp(amount, 0, slotType.getMaxSize()));
+                wardrobe.setUnlockedSize(slotType, OpenMath.clamp(amount, 0, slotType.maxSize()));
                 wardrobe.broadcast();
             }
             return 1;

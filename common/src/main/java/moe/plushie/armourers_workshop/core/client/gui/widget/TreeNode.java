@@ -115,11 +115,11 @@ public class TreeNode {
         this.contents = contents;
     }
 
-    public Object getContents() {
+    public Object contents() {
         return contents;
     }
 
-    public TreeView getTreeView() {
+    public TreeView treeView() {
         return view;
     }
 

@@ -12,7 +12,7 @@ public enum AnimatedOutputMode {
         this.isMixMode = isMixMode;
     }
 
-    public int getPriority() {
+    public int priority() {
         return priority;
     }
 

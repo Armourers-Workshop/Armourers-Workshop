@@ -173,11 +173,11 @@ public class ReportList extends UIScrollView {
         return this;
     }
 
-    public float getContentHeight() {
+    public float contentHeight() {
         return contentHeight;
     }
 
-    public IEventListener getListener() {
+    public IEventListener listener() {
         return listener;
     }
 
@@ -202,7 +202,7 @@ public class ReportList extends UIScrollView {
             this.width = width;
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
 

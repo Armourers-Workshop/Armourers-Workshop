@@ -11,12 +11,12 @@ import net.fabricmc.api.Environment;
 public class AdvancedHorseGuideRenderer extends AdvancedEntityGuideRenderer {
 
     @Override
-    public BakedArmature getArmature() {
+    public BakedArmature armature() {
         return BakedArmature.defaultBy(Armatures.HORSE);
     }
 
     @Override
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return new SkinTextureData(ModTextures.HORSE_DEFAULT.toString(), 64, 64);
     }
 }

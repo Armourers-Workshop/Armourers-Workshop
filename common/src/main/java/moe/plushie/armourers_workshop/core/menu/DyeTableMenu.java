@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinDyeType;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
@@ -42,17 +41,17 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
     // only call at client side.
     public void reload(Set<SkinDyeType> dyeTypes) {
         if (dyeTypes != null) {
-            lockedPaintTypes = Collections.filter(paintTypes, it -> !dyeTypes.contains(it.getDyeType()));
+            lockedPaintTypes = Collections.filter(paintTypes, it -> !dyeTypes.contains(it.dyeType()));
         } else {
             lockedPaintTypes = new ArrayList<>();
         }
     }
 
-    public ItemStack getInputStack() {
+    public ItemStack inputStack() {
         return inventory.getItem(8);
     }
 
-    public ItemStack getOutputStack() {
+    public ItemStack outputStack() {
         return inventory.getItem(9);
     }
 
@@ -120,7 +119,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
             return;
         }
         var descriptor = SkinDescriptor.of(itemStack);
-        var scheme = descriptor.getPaintScheme();
+        var scheme = descriptor.paintScheme();
         for (int i = 0; i < paintTypes.length; ++i) {
             var colorStack = ItemStack.EMPTY;
             var paintColor = scheme.getColor(paintTypes[i]);
@@ -146,7 +145,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
             }
         }
         var descriptor = SkinDescriptor.of(itemStack);
-        if (newScheme.equals(descriptor.getPaintScheme())) {
+        if (newScheme.equals(descriptor.paintScheme())) {
             return; // not any changes.
         }
         descriptor = descriptor.withPaintScheme(newScheme);
@@ -167,7 +166,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         @Override
         public boolean mayPlace(ItemStack itemStack) {
             // when not have input, place will cause the bottle lost.
-            if (getInputStack().isEmpty()) {
+            if (inputStack().isEmpty()) {
                 return false;
             }
             return itemStack.getItem() instanceof BottleItem;
@@ -176,7 +175,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         @Override
         public void setChanged() {
             super.setChanged();
-            applySkin(getOutputStack());
+            applySkin(outputStack());
         }
 
         public boolean isLocked() {

@@ -33,7 +33,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
         // nop
     }
 
-    public MannequinModel<?> getMannequinModel() {
+    public MannequinModel<?> mannequinModel() {
         var entity = PlaceholderManager.MANNEQUIN.get();
         if (model == null && entity != null) {
             model = MannequinModel.placeholder();
@@ -46,7 +46,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
         return model;
     }
 
-    public ItemStack getPlayerMannequinItem() {
+    public ItemStack playerMannequinItem() {
         if (playerMannequinItem == null) {
             var player = EnvironmentManager.getPlayer();
             if (player == null) {
@@ -54,7 +54,7 @@ public class SkinItemRenderer extends AbstractItemStackRenderer {
             }
             var entityData = new MannequinEntity.EntityData();
             entityData.setTexture(EntityTextureDescriptor.fromProfile(player.getGameProfile()));
-            playerMannequinItem = entityData.getItemStack();
+            playerMannequinItem = entityData.itemStack();
         }
         return playerMannequinItem;
     }

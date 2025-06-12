@@ -114,12 +114,12 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     }
 
     @Override
-    public T getDefaultValue() {
+    public T defaultValue() {
         return defaultValue;
     }
 
     @Override
-    public String getKey() {
+    public String key() {
         return key;
     }
 

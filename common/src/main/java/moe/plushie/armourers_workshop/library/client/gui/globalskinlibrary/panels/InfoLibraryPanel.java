@@ -63,9 +63,9 @@ public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDel
         var message = new NSMutableString("\n\n\n");
 
         if (stats != null) {
-            message.append(getDisplayText("total_skins", stats.getTotalSkin()));
+            message.append(getDisplayText("total_skins", stats.totalSkin()));
             message.append("\n\n");
-            message.append(getDisplayText("download_count", stats.getDownloadsLastHour(), stats.getDownloadsLastDay(), stats.getDownloadsLastWeek()));
+            message.append(getDisplayText("download_count", stats.downloadsLastHour(), stats.downloadsLastDay(), stats.downloadsLastWeek()));
             message.append("\n\n");
         } else {
             if (failMessage != null) {

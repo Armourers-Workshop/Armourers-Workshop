@@ -20,7 +20,7 @@ public class InputMotionHandler {
 
     public static void sendUndo() {
         var isRedo = Screen.hasShiftDown();
-        if (ModKeyBindings.UNDO_KEY.getKeyModifier() == OpenKeyModifier.SHIFT) {
+        if (ModKeyBindings.UNDO_KEY.keyModifier() == OpenKeyModifier.SHIFT) {
             // If the player set shift key to undo key binding,
             // we will change the control key to redo key modifier.
             isRedo = Screen.hasControlDown();

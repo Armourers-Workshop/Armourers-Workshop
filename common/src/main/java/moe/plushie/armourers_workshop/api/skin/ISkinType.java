@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ISkinType extends IRegistryEntry {
 
-    int getId();
+    int id();
 
-    String getName();
+    String name();
 
-    List<? extends ISkinPartType> getParts();
+    List<? extends ISkinPartType> parts();
 
     boolean isTool();
 

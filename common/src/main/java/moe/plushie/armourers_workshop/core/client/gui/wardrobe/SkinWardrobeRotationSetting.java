@@ -119,7 +119,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void randomRotation(UIControl button) {
-        var parts = getRandomParts();
+        var parts = randomParts();
         for (var part : EntityPartView.Part.values()) {
             var rotations = parts.get(part);
             if (rotations != null) {
@@ -143,7 +143,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
         didUpdateValue(sliderX);
     }
 
-    private HashMap<EntityPartView.Part, Rotations> getRandomParts() {
+    private HashMap<EntityPartView.Part, Rotations> randomParts() {
         var random = new Random();
         // we get rotations from pre-defined json.
         if (InputManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {

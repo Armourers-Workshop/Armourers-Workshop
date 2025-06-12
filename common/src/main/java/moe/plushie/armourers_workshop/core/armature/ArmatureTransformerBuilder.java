@@ -87,7 +87,7 @@ public abstract class ArmatureTransformerBuilder {
     }
 
     protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
-        var model = context.getEntityModel();
+        var model = context.entityModel();
         var transform = IJointTransform.NONE;
         for (var modifier : modifiers) {
             transform = modifier.apply(joint, model, transform);
@@ -97,19 +97,19 @@ public abstract class ArmatureTransformerBuilder {
 
     protected abstract JointModifier buildJointTarget(String name, IODataObject parameters);
 
-    public ArrayList<IResourceLocation> getModels() {
+    public ArrayList<IResourceLocation> models() {
         return models;
     }
 
-    public ArrayList<IEntityTypeProvider<?>> getEntities() {
+    public ArrayList<IEntityTypeProvider<?>> entities() {
         return entities;
     }
 
-    public IResourceLocation getParent() {
+    public IResourceLocation parent() {
         return parent;
     }
 
-    public IResourceLocation getName() {
+    public IResourceLocation name() {
         return name;
     }
 
@@ -133,7 +133,7 @@ public abstract class ArmatureTransformerBuilder {
     private void _parseContent(IODataObject object) {
         // read all joint
         object.get("joint").entrySet().forEach(it -> {
-            var joint = armature.getJoint(it.getKey());
+            var joint = armature.jointByName(it.getKey());
             if (joint != null) {
                 jointModifiers.put(joint, _parseModelModifiers(it.getValue()));
             }
@@ -273,7 +273,7 @@ public abstract class ArmatureTransformerBuilder {
         if (name.equals("") || name.equals("*")) {
             joints = armature.allJoints();
         } else {
-            IJoint joint = armature.getJoint(name);
+            IJoint joint = armature.jointByName(name);
             if (joint == null) {
                 return;
             }

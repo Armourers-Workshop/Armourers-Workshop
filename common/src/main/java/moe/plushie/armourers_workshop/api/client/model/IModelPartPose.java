@@ -4,17 +4,17 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 
 public interface IModelPartPose {
 
-    float getX();
+    float x();
 
-    float getY();
+    float y();
 
-    float getZ();
+    float z();
 
-    float getXRot();
+    float xRot();
 
-    float getYRot();
+    float yRot();
 
-    float getZRot();
+    float zRot();
 
     void setPos(float x, float y, float z);
 

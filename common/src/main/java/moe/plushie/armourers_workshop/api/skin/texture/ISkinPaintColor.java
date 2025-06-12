@@ -4,19 +4,19 @@ public interface ISkinPaintColor {
 
     int getRGB();
 
-    int getRawValue();
+    int rawValue();
 
-    ISkinPaintType getPaintType();
+    ISkinPaintType paintType();
 
-    default int getRed() {
+    default int red() {
         return (getRGB() >> 16) & 0xff;
     }
 
-    default int getGreen() {
+    default int green() {
         return (getRGB() >> 8) & 0xff;
     }
 
-    default int getBlue() {
+    default int blue() {
         return getRGB() & 0xff;
     }
 

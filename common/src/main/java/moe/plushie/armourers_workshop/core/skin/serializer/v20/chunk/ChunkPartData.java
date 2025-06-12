@@ -77,11 +77,11 @@ public class ChunkPartData {
             var part = pair.getValue();
             stream.writeVarInt(id);
             stream.writeVarInt(relationship.getOrDefault(id, 0));
-            stream.writeString(part.getName());
-            stream.writeType(part.getType());
-            var transform = ChunkTransform.of(part.getTransform());
+            stream.writeString(part.name());
+            stream.writeType(part.type());
+            var transform = ChunkTransform.of(part.transform());
             transform.writeToStream(stream);
-            geometryData.writeReferenceToStream(part.getGeometries(), stream);
+            geometryData.writeReferenceToStream(part.geometries(), stream);
         }
         stream.writeChunk(ChunkPartWriter::new, it -> {
             for (var pair : pairs) {
@@ -94,7 +94,7 @@ public class ChunkPartData {
     private void eachPart(Collection<SkinPart> parts, Integer parent, BiFunction<Integer, SkinPart, Integer> consumer) {
         for (var part : parts) {
             var value = consumer.apply(parent, part);
-            eachPart(part.getChildren(), value, consumer);
+            eachPart(part.children(), value, consumer);
         }
     }
 }

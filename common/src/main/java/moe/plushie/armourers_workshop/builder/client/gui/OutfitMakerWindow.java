@@ -44,8 +44,8 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     public void init() {
         super.init();
 
-        setupTextField(nameTextField, blockEntity.getItemName(), "outfit-maker.skinName");
-        setupTextField(flavourTextField, blockEntity.getItemFlavour(), "outfit-maker.skinFlavour");
+        setupTextField(nameTextField, blockEntity.itemName(), "outfit-maker.skinName");
+        setupTextField(flavourTextField, blockEntity.itemFlavour(), "outfit-maker.skinFlavour");
 
         var offsets = new HashMap<Integer, CGPoint>();
         offsets.put(UIControl.State.NORMAL, new CGPoint(0, 0));

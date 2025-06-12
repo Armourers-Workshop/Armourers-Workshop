@@ -12,17 +12,17 @@ public class PlayerSelectorImpl<T extends Player> extends LivingEntitySelectorIm
     }
 
     @Override
-    public double getElytraYaw() {
+    public double elytraYaw() {
         return 0;
     }
 
     @Override
-    public double getElytraPitch() {
+    public double elytraPitch() {
         return 0;
     }
 
     @Override
-    public double getElytraRoll() {
+    public double elytraRoll() {
         return 0;
     }
 
@@ -32,17 +32,17 @@ public class PlayerSelectorImpl<T extends Player> extends LivingEntitySelectorIm
     }
 
     @Override
-    public double getCapeFlapAmount() {
+    public double capeFlapAmount() {
         return 0;
     }
 
     @Override
-    public int getFoodLevel() {
+    public int foodLevel() {
         return 0;
     }
 
     @Override
-    public double getExperience() {
+    public double experience() {
         return 0;
     }
 
@@ -57,12 +57,12 @@ public class PlayerSelectorImpl<T extends Player> extends LivingEntitySelectorIm
     }
 
     @Override
-    public int getLeftShoulderParrotVariant() {
+    public int leftShoulderParrotVariant() {
         return 0;
     }
 
     @Override
-    public int getRightShoulderParrotVariant() {
+    public int rightShoulderParrotVariant() {
         return 0;
     }
 

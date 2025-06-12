@@ -16,7 +16,7 @@ public class DocumentPasteboard {
         this.contents = contents;
     }
 
-    public SkinDocumentNode getContents() {
+    public SkinDocumentNode contents() {
         return contents;
     }
 }

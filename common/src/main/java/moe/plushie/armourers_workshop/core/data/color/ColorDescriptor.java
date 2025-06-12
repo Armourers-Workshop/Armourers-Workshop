@@ -12,12 +12,12 @@ public class ColorDescriptor {
     private final HashMap<SkinPaintType, Channel> channels = new HashMap<>();
 
     public void add(SkinPaintColor color) {
-        var paintType = color.getPaintType();
+        var paintType = color.paintType();
         if (shouldRecordChannel(paintType)) {
             var ch = channels.computeIfAbsent(paintType, k -> new Channel());
-            ch.red += color.getRed();
-            ch.green += color.getGreen();
-            ch.blue += color.getBlue();
+            ch.red += color.red();
+            ch.green += color.green();
+            ch.blue += color.blue();
             ch.total += 1;
             ch.setChanged();
         }
@@ -41,12 +41,12 @@ public class ColorDescriptor {
     public SkinPaintColor getAverageColor(SkinPaintType paintType) {
         var channel = channels.get(paintType);
         if (channel != null) {
-            return channel.getResolvedColor();
+            return channel.resolvedColor();
         }
         return null;
     }
 
-    public Set<SkinPaintType> getPaintTypes() {
+    public Set<SkinPaintType> paintTypes() {
         return channels.keySet();
     }
 
@@ -63,7 +63,7 @@ public class ColorDescriptor {
         if (paintType == SkinPaintTypes.TEXTURE) {
             return true;
         }
-        return paintType.getDyeType() != null;
+        return paintType.dyeType() != null;
     }
 
     private static class Channel {
@@ -77,7 +77,7 @@ public class ColorDescriptor {
             resolvedColor = null;
         }
 
-        SkinPaintColor getResolvedColor() {
+        SkinPaintColor resolvedColor() {
             if (resolvedColor != null) {
                 return resolvedColor;
             }

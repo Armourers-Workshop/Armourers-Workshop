@@ -51,7 +51,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
 
         private static final auto TYPE = GenericProperties.of(ColorMixerBlockEntity.class, UpdateColorMixerPacket::new);
 
-        public static final auto COLOR = create(ColorMixerBlockEntity::getColor, ColorMixerBlockEntity::setColor, DataSerializers.PAINT_COLOR);
+        public static final auto COLOR = create(ColorMixerBlockEntity::color, ColorMixerBlockEntity::setColor, DataSerializers.PAINT_COLOR);
 
         private static <T> Field<T> create(Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);

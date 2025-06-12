@@ -45,23 +45,23 @@ public class WingPartTransform implements ITransform {
 
     @Override
     public void apply(IPoseStack poseStack) {
-        var dir = marker.getDirection();
+        var dir = marker.direction();
         if (dir == null) {
             return;
         }
-        var point = marker.getPosition();
-        var angle = (float) getRotationDegrees();
+        var point = marker.position();
+        var angle = (float) rotationDegrees();
         var offset = new OpenVector3f(point.x() + 0.5f, point.y() + 0.5f, point.z() + 0.5f);
         if (!isMirror) {
             angle = -angle;
         }
 
         poseStack.translate(offset.x(), offset.y(), offset.z());
-        poseStack.rotate(getRotationMatrix(dir).rotationDegrees(angle));
+        poseStack.rotate(rotationMatrix(dir).rotationDegrees(angle));
         poseStack.translate(-offset.x(), -offset.y(), -offset.z());
     }
 
-    private double getRotationDegrees() {
+    private double rotationDegrees() {
         // not provided
         if (properties == null || properties.isEmpty()) {
             return 0;
@@ -95,7 +95,7 @@ public class WingPartTransform implements ITransform {
         return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 
-    private OpenVector3f getRotationMatrix(OpenDirection direction) {
+    private OpenVector3f rotationMatrix(OpenDirection direction) {
         return switch (direction) {
             case UP -> OpenVector3f.YP;
             case DOWN -> OpenVector3f.YN;

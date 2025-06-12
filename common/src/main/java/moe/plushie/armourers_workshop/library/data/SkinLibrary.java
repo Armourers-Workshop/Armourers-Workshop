@@ -74,7 +74,7 @@ public class SkinLibrary implements ISkinLibrary {
 
     public SkinLibraryFile get(String rootPath) {
         for (SkinLibraryFile file : files) {
-            if (file.getPath().equals(rootPath)) {
+            if (file.path().equals(rootPath)) {
                 return file;
             }
         }
@@ -119,15 +119,15 @@ public class SkinLibrary implements ISkinLibrary {
         if (basePath == null) {
             return;
         }
-        File file = new File(basePath, FileUtils.normalize(libraryFile.getPath()));
+        File file = new File(basePath, FileUtils.normalize(libraryFile.path()));
         if (!FileUtils.deleteQuietly(file)) {
             ModLog.error("can't remove file '{}'", file);
             return;
         }
         if (libraryFile.isDirectory()) {
-            ModLog.debug("remove '{}' folder and contents", libraryFile.getPath());
+            ModLog.debug("remove '{}' folder and contents", libraryFile.path());
         } else {
-            ModLog.debug("remove '{}' file", libraryFile.getPath());
+            ModLog.debug("remove '{}' file", libraryFile.path());
         }
         reload();
     }
@@ -136,8 +136,8 @@ public class SkinLibrary implements ISkinLibrary {
         if (basePath == null) {
             return;
         }
-        File file = new File(basePath, FileUtils.normalize(libraryFile.getPath()));
-        File targetFile = new File(basePath, FileUtils.normalize(path));
+        var file = new File(basePath, FileUtils.normalize(libraryFile.path()));
+        var targetFile = new File(basePath, FileUtils.normalize(path));
         if (targetFile.exists() && !FileUtils.deleteQuietly(targetFile)) {
             ModLog.error("can't remove file '{}'", file);
             return;
@@ -146,7 +146,7 @@ public class SkinLibrary implements ISkinLibrary {
             ModLog.error("can't rename file '{}'", file);
             return;
         }
-        ModLog.debug("move '{}' to '{}'", libraryFile.getPath(), path);
+        ModLog.debug("move '{}' to '{}'", libraryFile.path(), path);
         reload();
     }
 
@@ -169,7 +169,7 @@ public class SkinLibrary implements ISkinLibrary {
                 }
                 difference.added.remove(newFile);
                 difference.removed.remove(oldFile);
-                if (oldFile.getLastModified() != newFile.getLastModified()) {
+                if (oldFile.lastModified() != newFile.lastModified()) {
                     difference.changed.add(Pair.of(oldFile, newFile));
                 }
                 break;
@@ -189,7 +189,7 @@ public class SkinLibrary implements ISkinLibrary {
             fixedRootPath = rootPath + "/";
         }
         var removedChildDirs = new ArrayList<SkinLibraryFile>();
-        for (var file : getFiles()) {
+        for (var file : files()) {
             boolean isChild = file.isChildDirectory(fixedRootPath);
             boolean isMatches = file.matches(keyword, skinType);
             if (isMatches && isChild) {
@@ -198,8 +198,8 @@ public class SkinLibrary implements ISkinLibrary {
             }
             if (isMatches) {
                 // when found a matching file, we must re-add the removed directory back into file list.
-                String path = file.getPath();
-                removedChildDirs.removeIf(dir -> path.startsWith(dir.getPath()) && files.add(dir));
+                String path = file.path();
+                removedChildDirs.removeIf(dir -> path.startsWith(dir.path()) && files.add(dir));
                 continue;
             }
             if (isChild && file.isDirectory()) {
@@ -215,7 +215,7 @@ public class SkinLibrary implements ISkinLibrary {
         return files;
     }
 
-    public ArrayList<SkinLibraryFile> getFiles() {
+    public ArrayList<SkinLibraryFile> files() {
         synchronized (this) {
             return files;
         }
@@ -225,7 +225,7 @@ public class SkinLibrary implements ISkinLibrary {
         return isReady;
     }
 
-    public String getNamespace() {
+    public String namespace() {
         return domain.namespace();
     }
 
@@ -233,7 +233,7 @@ public class SkinLibrary implements ISkinLibrary {
         this.rootPath = rootPath;
     }
 
-    public String getRootPath() {
+    public String rootPath() {
         return rootPath;
     }
 
@@ -266,12 +266,12 @@ public class SkinLibrary implements ISkinLibrary {
 
         @Override
         public void rename(SkinLibraryFile file, String path) {
-            send(UpdateLibraryFilePacket.Mode.RENAME, file.getPath(), path);
+            send(UpdateLibraryFilePacket.Mode.RENAME, file.path(), path);
         }
 
         @Override
         public void delete(SkinLibraryFile file) {
-            send(UpdateLibraryFilePacket.Mode.DELETE, null, file.getPath());
+            send(UpdateLibraryFilePacket.Mode.DELETE, null, file.path());
         }
 
         private void send(UpdateLibraryFilePacket.Mode mode, String source, String destination) {
@@ -291,17 +291,17 @@ public class SkinLibrary implements ISkinLibrary {
         }
 
         @Override
-        public Collection<Entry> getAddedChanges() {
+        public Collection<Entry> addedChanges() {
             return added;
         }
 
         @Override
-        public Collection<Entry> getRemovedChanges() {
+        public Collection<Entry> removedChanges() {
             return removed;
         }
 
         @Override
-        public Collection<Pair<Entry, Entry>> getUpdatedChanges() {
+        public Collection<Pair<Entry, Entry>> updatedChanges() {
             return changed;
         }
     }

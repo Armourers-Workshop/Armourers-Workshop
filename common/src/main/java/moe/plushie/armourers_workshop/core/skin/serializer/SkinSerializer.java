@@ -36,14 +36,14 @@ public class SkinSerializer {
 
     public static void writeToStream(Skin skin, @Nullable SkinFileOptions options, IOutputStream stream) throws IOException {
         var options1 = new SkinFileOptions();
-        options1.setFileVersion(skin.getVersion());
+        options1.setFileVersion(skin.fileVersion());
         options1.merge(options); // merge if needed
         for (var serializer : REGISTERED_SERIALIZERS) {
             if (serializer.isSupportedVersion(options1)) {
                 if (serializer.isRequiresHeader()) {
                     stream.writeInt(Versions.HEADER);
                 }
-                stream.writeInt(serializer.getVersion());
+                stream.writeInt(serializer.fileVersion());
                 serializer.writeToStream(skin, stream, options1);
                 return;
             }

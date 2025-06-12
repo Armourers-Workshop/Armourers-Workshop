@@ -15,7 +15,7 @@ public class AbstractTooltipContext<T> implements ITooltipContext {
     }
 
     @Override
-    public TooltipFlag getFlags() {
+    public TooltipFlag flags() {
         return flag;
     }
 }

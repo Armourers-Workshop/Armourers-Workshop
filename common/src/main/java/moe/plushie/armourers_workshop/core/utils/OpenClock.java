@@ -10,7 +10,7 @@ public class OpenClock {
         this.offset = time - currentMilliseconds();
     }
 
-    public long getTime() {
+    public long time() {
         return offset + currentMilliseconds();
     }
 
@@ -22,6 +22,6 @@ public class OpenClock {
 
     @Override
     public String toString() {
-        return Objects.toString(this, "base", base, "time", getTime());
+        return Objects.toString(this, "base", base, "time", time());
     }
 }

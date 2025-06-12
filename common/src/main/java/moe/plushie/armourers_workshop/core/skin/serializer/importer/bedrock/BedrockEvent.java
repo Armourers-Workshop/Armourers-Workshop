@@ -18,23 +18,23 @@ public class BedrockEvent {
         this.particlePreExpression = particlePreExpression;
     }
 
-    public OpenExpression getExpression() {
+    public OpenExpression expression() {
         return expression;
     }
 
-    public String getSoundId() {
+    public String soundId() {
         return soundId;
     }
 
-    public String getParticleId() {
+    public String particleId() {
         return particleId;
     }
 
-    public String getParticleType() {
+    public String particleType() {
         return particleType;
     }
 
-    public OpenExpression getParticlePreExpression() {
+    public OpenExpression particlePreExpression() {
         return particlePreExpression;
     }
 

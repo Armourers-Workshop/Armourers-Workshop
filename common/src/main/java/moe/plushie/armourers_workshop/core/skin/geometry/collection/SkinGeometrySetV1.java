@@ -45,8 +45,8 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
         stream.writeInt(geometries.size());
         for (var geometry : Collections.collect(geometries, SkinCube.class)) {
             // id/x/y/z + r/g/b/t * 6
-            var blockPos = geometry.getBlockPos();
-            stream.writeByte(geometry.getType().getId());
+            var blockPos = geometry.blockPos();
+            stream.writeByte(geometry.type().id());
             stream.writeByte(blockPos.x());
             stream.writeByte(blockPos.y());
             stream.writeByte(blockPos.z());
@@ -56,7 +56,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             }
             for (int side = 0; side < 6; side++) {
                 var paintColor = paintColors[side];
-                stream.writeInt(paintColor.getRawValue());
+                stream.writeInt(paintColor.rawValue());
             }
         }
     }
@@ -118,7 +118,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             return this;
         }
 
-        public byte getId() {
+        public byte id() {
             return getByte(0);
         }
 
@@ -126,7 +126,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             setByte(0, id);
         }
 
-        public byte getX() {
+        public byte x() {
             return getByte(1);
         }
 
@@ -134,7 +134,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             setByte(1, value);
         }
 
-        public byte getY() {
+        public byte y() {
             return getByte(2);
         }
 
@@ -142,7 +142,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             setByte(2, value);
         }
 
-        public byte getZ() {
+        public byte z() {
             return getByte(3);
         }
 
@@ -150,27 +150,27 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             setByte(3, value);
         }
 
-        public void setR(int side, byte value) {
+        public void setRed(int side, byte value) {
             setByte(4 + side * 4, value);
         }
 
-        public byte getR(int side) {
+        public byte red(int side) {
             return getByte(4 + side * 4);
         }
 
-        public void setG(int side, byte value) {
+        public void setGreen(int side, byte value) {
             setByte(5 + side * 4, value);
         }
 
-        public byte getG(int side) {
+        public byte green(int side) {
             return getByte(5 + side * 4);
         }
 
-        public void setB(int side, byte value) {
+        public void setBlue(int side, byte value) {
             setByte(6 + side * 4, value);
         }
 
-        public byte getB(int side) {
+        public byte blue(int side) {
             return getByte(6 + side * 4);
         }
 
@@ -178,15 +178,15 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             setByte(7 + side * 4, value);
         }
 
-        public byte getPaintType(int side) {
+        public byte paintType(int side) {
             return getByte(7 + side * 4);
         }
 
         public int getRGB(int side) {
             int color = 0;
-            color |= (getR(side) & 0xff) << 16;
-            color |= (getG(side) & 0xff) << 8;
-            color |= (getB(side) & 0xff);
+            color |= (red(side) & 0xff) << 16;
+            color |= (green(side) & 0xff) << 8;
+            color |= (blue(side) & 0xff);
             return color;
         }
 
@@ -194,13 +194,13 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
             int r = (rgb >> 16) & 0xff;
             int g = (rgb >> 8) & 0xff;
             int b = rgb & 0xff;
-            setR(side, (byte) r);
-            setG(side, (byte) g);
-            setB(side, (byte) b);
+            setRed(side, (byte) r);
+            setGreen(side, (byte) g);
+            setBlue(side, (byte) b);
         }
 
         public int getColor(int side) {
-            int type = getPaintType(side);
+            int type = paintType(side);
             int rgb = getRGB(side);
             return (rgb & 0xffffff) | ((type & 0xff) << 24);
         }
@@ -215,27 +215,27 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
         }
 
         @Override
-        public OpenRectangle3f getBoundingBox() {
-            float x = getX();
-            float y = getY();
-            float z = getZ();
+        public OpenRectangle3f boundingBox() {
+            float x = x();
+            float y = y();
+            float z = z();
             return new OpenRectangle3f(x, y, z, 1, 1, 1);
         }
 
         @Override
         public void setType(SkinGeometryType type) {
-            setId((byte) type.getId());
+            setId((byte) type.id());
         }
 
         @Override
-        public SkinGeometryType getType() {
-            return SkinGeometryTypes.byId(getId());
+        public SkinGeometryType type() {
+            return SkinGeometryTypes.byId(id());
         }
 
         @Override
         public void setPaintColor(OpenDirection dir, SkinPaintColor paintColor) {
             int side = dir.get3DDataValue();
-            int type = paintColor.getPaintType().getId();
+            int type = paintColor.paintType().id();
             int rgb = paintColor.getRGB();
             setPaintType(side, (byte) type);
             setRGB(side, rgb);
@@ -244,7 +244,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
         @Override
         public SkinPaintColor getPaintColor(OpenDirection dir) {
             int side = dir.get3DDataValue();
-            int type = getPaintType(side);
+            int type = paintType(side);
             int rgb = getRGB(side);
             return SkinPaintColor.of(rgb, SkinPaintTypes.byId(type));
         }

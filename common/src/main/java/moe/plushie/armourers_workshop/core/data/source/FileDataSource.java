@@ -175,10 +175,10 @@ public abstract class FileDataSource {
         protected void insertNode(String id, Skin skin, int hash, byte[] bytes) throws SQLException {
             ModLog.debug("Save file '{}' into '{}'", id, name);
             insertStatement.setString(1, id);
-            insertStatement.setString(2, skin.getType().getRegistryName().toString());
-            insertStatement.setString(3, skin.getAuthorUUID());
-            insertStatement.setString(4, skin.getCustomName());
-            insertStatement.setString(5, skin.getFlavourText());
+            insertStatement.setString(2, skin.type().registryName().toString());
+            insertStatement.setString(3, skin.authorUUID());
+            insertStatement.setString(4, skin.customName());
+            insertStatement.setString(5, skin.flavourText());
             insertStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             insertStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
             insertStatement.setInt(8, hash);

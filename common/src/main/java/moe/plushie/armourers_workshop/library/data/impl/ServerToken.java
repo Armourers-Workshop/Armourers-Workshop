@@ -28,18 +28,18 @@ public class ServerToken {
     }
 
     public boolean isValid() {
-        return getRemainingTime() >= 0;
+        return remainingTime() >= 0;
     }
 
-    public String getValue() {
+    public String value() {
         return accessToken;
     }
 
-    public String getServerId() {
+    public String serverId() {
         return serverId;
     }
 
-    public long getRemainingTime() {
+    public long remainingTime() {
         return (receivedTime + (expiryTime * 1000L)) - System.currentTimeMillis();
     }
 }

@@ -215,16 +215,16 @@ public class ShapeTesselator {
 
     public static void stroke(OpenOrientedBoundingBox obb, int color, IPoseStack poseStack, IBufferSource bufferSource) {
         poseStack.pushPose();
-        poseStack.rotate(obb.getOrientation());
-        stroke(obb.getBoundingBox(), color, poseStack, bufferSource);
+        poseStack.rotate(obb.orientation());
+        stroke(obb.boundingBox(), color, poseStack, bufferSource);
         poseStack.popPose();
     }
 
     public static void stroke(OpenTransformedBoundingBox tbb, int color, IPoseStack poseStack, IBufferSource bufferSource) {
         poseStack.pushPose();
-        poseStack.multiply(tbb.getTransform());
-        poseStack.multiply(new OpenMatrix3f(tbb.getTransform()));
-        stroke(tbb.getBoundingBox(), color, poseStack, bufferSource);
+        poseStack.multiply(tbb.transform());
+        poseStack.multiply(new OpenMatrix3f(tbb.transform()));
+        stroke(tbb.boundingBox(), color, poseStack, bufferSource);
         poseStack.popPose();
     }
 

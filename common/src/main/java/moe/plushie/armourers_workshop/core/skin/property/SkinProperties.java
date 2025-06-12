@@ -31,32 +31,32 @@ public class SkinProperties extends OpenProperties implements ISkinProperties {
 
     @Override
     public <T> T get(ISkinProperty<T> property) {
-        var value = getOrDefault(property.getKey(), property.getDefaultValue());
+        var value = getOrDefault(property.key(), property.defaultValue());
         return Objects.unsafeCast(value);
     }
 
     @Override
     public <T> void put(ISkinProperty<T> property, T value) {
-        if (shouldRemoveDefaultValues() && Objects.equals(value, property.getDefaultValue())) {
-            remove(property.getKey());
+        if (shouldRemoveDefaultValues() && Objects.equals(value, property.defaultValue())) {
+            remove(property.key());
         } else {
-            put(property.getKey(), value);
+            put(property.key(), value);
         }
     }
 
     @Override
     public <T> void remove(ISkinProperty<T> property) {
-        remove(property.getKey());
+        remove(property.key());
     }
 
     @Override
     public <T> boolean containsKey(ISkinProperty<T> property) {
-        return containsKey(property.getKey());
+        return containsKey(property.key());
     }
 
     @Override
     public <T> boolean containsValue(ISkinProperty<T> property) {
-        return containsValue(property.getKey());
+        return containsValue(property.key());
     }
 
     public boolean shouldRemoveDefaultValues() {
@@ -106,7 +106,7 @@ public class SkinProperties extends OpenProperties implements ISkinProperties {
 
         @Override
         public <T> T get(ISkinProperty<T> property) {
-            var value = getOrDefault(resolveKey(property), property.getDefaultValue());
+            var value = getOrDefault(resolveKey(property), property.defaultValue());
             return Objects.unsafeCast(value);
         }
 
@@ -121,7 +121,7 @@ public class SkinProperties extends OpenProperties implements ISkinProperties {
         }
 
         private <T> String resolveKey(ISkinProperty<T> property) {
-            return property.getKey() + index;
+            return property.key() + index;
         }
     }
 

@@ -31,7 +31,7 @@ public class ColorArgumentType implements ArgumentType<SkinPaintColor> {
     @Override
     public SkinPaintColor parse(final StringReader reader) throws CommandSyntaxException {
         var parser = new ColorParser(reader).parse();
-        return parser.getPaintColor();
+        return parser.paintColor();
     }
 
     @Override

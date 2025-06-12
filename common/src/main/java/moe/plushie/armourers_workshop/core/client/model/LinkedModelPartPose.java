@@ -22,49 +22,49 @@ public class LinkedModelPartPose implements IModelPartPose {
     }
 
     @Override
-    public float getX() {
+    public float x() {
         if (pose != null) {
-            return pose.getX();
+            return pose.x();
         }
         return 0;
     }
 
     @Override
-    public float getY() {
+    public float y() {
         if (pose != null) {
-            return pose.getY();
+            return pose.y();
         }
         return 0;
     }
 
     @Override
-    public float getZ() {
+    public float z() {
         if (pose != null) {
-            return pose.getZ();
+            return pose.z();
         }
         return 0;
     }
 
     @Override
-    public float getXRot() {
+    public float xRot() {
         if (pose != null) {
-            return pose.getXRot();
+            return pose.xRot();
         }
         return 0;
     }
 
     @Override
-    public float getYRot() {
+    public float yRot() {
         if (pose != null) {
-            return pose.getYRot();
+            return pose.yRot();
         }
         return 0;
     }
 
     @Override
-    public float getZRot() {
+    public float zRot() {
         if (pose != null) {
-            return pose.getZRot();
+            return pose.zRot();
         }
         return 0;
     }

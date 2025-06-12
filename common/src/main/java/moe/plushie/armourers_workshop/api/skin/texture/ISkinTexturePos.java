@@ -4,25 +4,25 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ISkinTexturePos {
 
-    float getU();
+    float u();
 
-    float getV();
+    float v();
 
-    float getWidth();
+    float width();
 
-    float getHeight();
+    float height();
 
-    float getTotalWidth();
+    float totalWidth();
 
-    float getTotalHeight();
+    float totalHeight();
 
     @Nullable
-    default ISkinTextureOptions getOptions() {
+    default ISkinTextureOptions options() {
         return null;
     }
 
     @Nullable
-    default ISkinTextureProvider getProvider() {
+    default ISkinTextureProvider provider() {
         return null;
     }
 }

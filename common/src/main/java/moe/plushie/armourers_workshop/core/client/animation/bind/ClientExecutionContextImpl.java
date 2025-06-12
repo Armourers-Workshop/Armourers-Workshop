@@ -33,7 +33,7 @@ public class ClientExecutionContextImpl extends ExecutionContextImpl {
     }
 
     @Override
-    public LevelSelector getLevel() {
+    public LevelSelector level() {
         if (minecraft.level != null) {
             return levelSelector.apply(minecraft.level);
         }
@@ -41,13 +41,13 @@ public class ClientExecutionContextImpl extends ExecutionContextImpl {
     }
 
     @Override
-    public double getFPS() {
+    public double fps() {
         return minecraft.getFps();
     }
 
 
     @Override
-    public int getEntityCount() {
+    public int entityCount() {
         if (minecraft.level != null) {
             return minecraft.level.getEntityCount();
         }

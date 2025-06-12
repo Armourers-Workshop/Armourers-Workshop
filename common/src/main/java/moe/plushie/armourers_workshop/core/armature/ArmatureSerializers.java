@@ -94,7 +94,7 @@ public class ArmatureSerializers {
                 for (var dir : OpenDirection.values()) {
                     var key = textureBox.getTexture(dir);
                     if (key != null) {
-                        uvs.put(dir, new OpenRectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
+                        uvs.put(dir, new OpenRectangle2f(key.u(), key.v(), key.width(), key.height()));
                     }
                 }
                 return uvs;
@@ -103,7 +103,7 @@ public class ArmatureSerializers {
                 var textureData = new SkinTextureData("", 255, 255);
                 var textureBox = new SkinTextureBox(size.x(), size.y(), size.z(), false, null, textureData);
                 for (var dir : OpenDirection.values()) {
-                    var ob = object.get(dir.getName());
+                    var ob = object.get(dir.serializedName());
                     if (ob.size() >= 4) {
                         float u = ob.at(0).floatValue();
                         float v = ob.at(1).floatValue();
@@ -116,7 +116,7 @@ public class ArmatureSerializers {
                 for (var dir : OpenDirection.values()) {
                     var key = textureBox.getTexture(dir);
                     if (key != null) {
-                        uvs.put(dir, new OpenRectangle2f(key.getU(), key.getV(), key.getWidth(), key.getHeight()));
+                        uvs.put(dir, new OpenRectangle2f(key.u(), key.v(), key.width(), key.height()));
                     }
                 }
                 return uvs;

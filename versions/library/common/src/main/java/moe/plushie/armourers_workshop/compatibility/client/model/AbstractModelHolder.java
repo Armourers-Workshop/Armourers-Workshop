@@ -127,9 +127,9 @@ public class AbstractModelHolder {
         }
 
         @Override
-        public IModelBabyPose getBabyPose() {
+        public IModelBabyPose babyPose() {
             if (model != null && model.young) {
-                return super.getBabyPose();
+                return super.babyPose();
             }
             return null;
         }

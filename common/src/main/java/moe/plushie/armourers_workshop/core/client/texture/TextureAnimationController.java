@@ -22,7 +22,7 @@ public class TextureAnimationController {
     private final OpenMatrix4f[] frames;
 
     public TextureAnimationController(SkinTextureAnimation animation) {
-        this(animation.getFrameTime(), animation.getFrameCount(), animation.getFrmaeMode());
+        this(animation.frameTime(), animation.frameCount(), animation.frmaeMode());
     }
 
     public TextureAnimationController(int frameTime, int frameCount, SkinTextureAnimation.Mode frameMode) {
@@ -39,12 +39,12 @@ public class TextureAnimationController {
         // is custom?
         var storage = SmartTexture.of(renderType);
         if (storage != null) {
-            return storage.getAnimationController();
+            return storage.animationController();
         }
         return NONE;
     }
 
-    public OpenMatrix4f getTextureMatrix(double animationTime) {
+    public OpenMatrix4f textureMatrix(double animationTime) {
         if (frameCount != 0) {
             var idx = (int) (animationTime / frameTime);
             return frames[idx % frameCount];
@@ -80,8 +80,8 @@ public class TextureAnimationController {
             }
             return frames;
         }
-        if (mode.getFrames() != null) {
-            var indexes = mode.getFrames();
+        if (mode.frames() != null) {
+            var indexes = mode.frames();
             var frames = new OpenMatrix4f[indexes.length];
             for (var i = 0; i < indexes.length; ++i) {
                 frames[i] = _genTextureMatrix(OpenMath.clamp(indexes[i], 0, total - 1) / (float) total);

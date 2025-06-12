@@ -20,7 +20,7 @@ public class AdvancedLeftCardPanel extends UIView {
 
     public AdvancedLeftCardPanel(DocumentEditor editor, CGRect frame) {
         super(frame);
-        this.connector = editor.getConnector();
+        this.connector = editor.connector();
         this.setup(bounds());
     }
 

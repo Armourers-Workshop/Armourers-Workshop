@@ -32,7 +32,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
     @Override
     public int stride(SkinGeometryType geometryType, int options, ChunkPaletteData palette) {
         int faceCount = options & 0x0F;
-        return Decoder.calcStride(palette.getTextureIndexBytes(), faceCount);
+        return Decoder.calcStride(palette.textureIndexBytes(), faceCount);
     }
 
     @Override
@@ -63,9 +63,9 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
 
         public Decoder(SkinGeometryType type, ChunkGeometrySlice slice) {
             this.type = type;
-            this.palette = slice.getPalette();
+            this.palette = slice.palette();
             this.slice = slice;
-            this.faceCount = slice.getGeometryOptions() & 0x0F;
+            this.faceCount = slice.geometryOptions() & 0x0F;
         }
 
         public static int calcStride(int usedBytes, int size) {
@@ -79,12 +79,12 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public SkinGeometryType getType() {
+        public SkinGeometryType type() {
             return type;
         }
 
         @Override
-        public OpenRectangle3f getBoundingBox() {
+        public OpenRectangle3f boundingBox() {
             if (slice.once(0)) {
                 boundingBox = slice.getRectangle3f(0);
             }
@@ -92,7 +92,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public OpenTransform3f getTransform() {
+        public OpenTransform3f transform() {
             if (slice.once(1)) {
                 transform = slice.getTransform(24);
             }
@@ -136,7 +136,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
             texturePoss.clear();
             options = SkinGeometryOptions.EMPTY;
             SkinTextureBox textureBox = null;
-            int usedBytes = palette.getTextureIndexBytes();
+            int usedBytes = palette.textureIndexBytes();
             for (int i = 0; i < faceCount; ++i) {
                 int index = calcStride(usedBytes, i);
                 int face = slice.getByte(index);
@@ -166,11 +166,11 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                     if (ref == null) {
                         continue;
                     }
-                    var rect = getBoundingBox();
+                    var rect = boundingBox();
                     float width = rect.width();
                     float height = rect.height();
                     float depth = rect.depth();
-                    textureBox = new SkinTextureBox(width, height, depth, false, ref.getPos(), ref.getProvider());
+                    textureBox = new SkinTextureBox(width, height, depth, false, ref.uv(), ref.provider());
                 }
             }
             for (var dir : OpenDirection.values()) {
@@ -182,11 +182,11 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                     if (ref == null) {
                         continue;
                     }
-                    float u = ref.getU();
-                    float v = ref.getV();
+                    float u = ref.u();
+                    float v = ref.v();
                     float width = end.x() - start.x();
                     float height = end.y() - start.y();
-                    texturePoss.put(dir, new SkinTexturePos(u, v, width, height, opt, ref.getProvider()));
+                    texturePoss.put(dir, new SkinTexturePos(u, v, width, height, opt, ref.provider()));
                 } else if (textureBox != null) {
                     texturePoss.put(dir, textureBox.getTexture(dir));
                 }
@@ -212,27 +212,27 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                 if (value == null) {
                     continue;
                 }
-                var provider = value.getProvider();
+                var provider = value.provider();
                 if (value instanceof SkinTextureBox.Entry entry) {
-                    startValues.put(0x80, entry.getParent(), provider);
+                    startValues.put(0x80, entry.parent(), provider);
                     // box need options?
                     continue;
                 }
                 int face = 1 << dir.get3DDataValue();
-                float u = value.getU();
-                float v = value.getV();
-                float s = value.getWidth();
-                float t = value.getHeight();
+                float u = value.u();
+                float v = value.v();
+                float s = value.width();
+                float t = value.height();
                 startValues.put(face, new OpenVector2f(u, v), provider);
                 endValues.put(face, new OpenVector2f(u + s, v + t), provider);
-                if (value.getOptions() != null) {
-                    optionsValues.put(face, value.getOptions(), provider);
+                if (value.options() != null) {
+                    optionsValues.put(face, value.options(), provider);
                 }
             }
-            options = geometry.getOptions();
-            transform = geometry.getTransform();
-            boundingBox = geometry.getBoundingBox();
-            return getEstimatedTotal();
+            options = geometry.options();
+            transform = geometry.transform();
+            boundingBox = geometry.boundingBox();
+            return estimatedTotal();
         }
 
         @Override
@@ -266,7 +266,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
             optionsValues.clear();
         }
 
-        protected int getEstimatedTotal() {
+        protected int estimatedTotal() {
             int total = startValues.size() + endValues.size() + optionsValues.size();
             if (!options.isEmpty()) {
                 return total + 1; // a geometry options.

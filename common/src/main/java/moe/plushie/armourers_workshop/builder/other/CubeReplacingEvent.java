@@ -120,9 +120,9 @@ public class CubeReplacingEvent {
             if (keepColor) {
                 color = targetColor.getRGB();
             }
-            var paintType = newColor.getPaintType();
+            var paintType = newColor.paintType();
             if (keepPaintType) {
-                paintType = targetColor.getPaintType();
+                paintType = targetColor.paintType();
             }
             newColor = SkinPaintColor.of(color, paintType);
             newColors.put(dir, newColor);
@@ -138,10 +138,10 @@ public class CubeReplacingEvent {
             return;
         }
         CompoundTag newNBT = null;
-        var oldState = cube.getBlockState();
+        var oldState = cube.blockState();
         var newState = Blocks.AIR.defaultBlockState();
         if (destinationBlock != null) {
-            newNBT = cube.getBlockTag();
+            newNBT = cube.blockTag();
             newState = destinationBlock.defaultBlockState();
             for (var property : oldState.getProperties()) {
                 newState = applyBlockState(newState, oldState, property);

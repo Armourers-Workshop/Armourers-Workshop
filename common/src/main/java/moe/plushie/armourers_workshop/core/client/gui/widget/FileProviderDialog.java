@@ -101,18 +101,18 @@ public class FileProviderDialog extends ConfirmDialog {
         var alert = new FileProviderSettingDialog(properties);
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                this.properties = alert.getProperties();
+                this.properties = alert.properties();
             }
         });
     }
 
     private void selectFile(UIControl control) {
         var oldValue = selectedFile;
-        var newValue = fileList.getSelectedItem();
+        var newValue = fileList.selectedItem();
         selectedFile = newValue;
         confirmButton.setEnabled(newValue != null && !newValue.isDirectory());
         if (newValue != null && newValue.isDirectory() && oldValue == newValue) {
-            selectPath(newValue.getPath());
+            selectPath(newValue.path());
         }
     }
 
@@ -137,11 +137,11 @@ public class FileProviderDialog extends ConfirmDialog {
         Util.getPlatform().openFile(rootPath);
     }
 
-    public File getSelectedFile() {
+    public File selectedFile() {
         if (selectedFile == null || selectedFile.isDirectory()) {
             return null;
         }
-        return new File(rootPath, selectedFile.getPath());
+        return new File(rootPath, selectedFile.path());
     }
 
     private ArrayList<FileItem> getSkinFiles(File directory, boolean recursive) {
@@ -175,7 +175,7 @@ public class FileProviderDialog extends ConfirmDialog {
         return fileList;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
@@ -186,7 +186,7 @@ public class FileProviderDialog extends ConfirmDialog {
         }
 
         @Override
-        public String getSkinIdentifier() {
+        public String skinIdentifier() {
             return null;
         }
     }

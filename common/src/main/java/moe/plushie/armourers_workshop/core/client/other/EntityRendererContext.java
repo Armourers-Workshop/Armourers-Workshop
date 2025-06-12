@@ -62,7 +62,7 @@ public class EntityRendererContext {
         }
         // when the caller does not provide the entity model we need to query it from entity render.
         if (entityModel == null) {
-            entityModel = getEntityModel();
+            entityModel = entityModel();
         }
         // in the normal, the entityRenderer only have a model type,
         // but some mods(Custom NPC) generate dynamically models,
@@ -78,7 +78,7 @@ public class EntityRendererContext {
         this.entityType = entityType;
     }
 
-    public EntityType<?> getEntityType() {
+    public EntityType<?> entityType() {
         return entityType;
     }
 
@@ -101,18 +101,18 @@ public class EntityRendererContext {
         }
     }
 
-    public EntityProfile getEntityProfile() {
+    public EntityProfile entityProfile() {
         return entityProfile;
     }
 
-    public EntityModel<?> getEntityModel() {
+    public EntityModel<?> entityModel() {
         if (entityRenderer instanceof RenderLayerParent<?, ?> modelProvider) {
             return modelProvider.getModel();
         }
         return null;
     }
 
-    public int getVersion() {
+    public int version() {
         return version;
     }
 

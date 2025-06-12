@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector;
 
 public interface LevelSelector {
 
-    int getMoonPhase();
+    int moonPhase();
 
 
-    double getDays();
+    double days();
 
-    double getTimestamp();
+    double timestamp();
 
 
-    int getWeather();
+    int weather();
 
-    String getDimensionId();
+    String dimensionId();
 }

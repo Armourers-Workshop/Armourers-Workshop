@@ -16,7 +16,7 @@ public class SkinDocumentTypes {
 
     private static final LinkedHashMap<String, SkinDocumentType> ALL_TYPES = new LinkedHashMap<>();
 
-    public static final IDataCodec<SkinDocumentType> CODEC = IDataCodec.STRING.xmap(SkinDocumentTypes::byName, SkinDocumentType::getName);
+    public static final IDataCodec<SkinDocumentType> CODEC = IDataCodec.STRING.xmap(SkinDocumentTypes::byName, SkinDocumentType::name);
 
     public static final SkinDocumentType GENERAL_ARMOR_HEAD = register("general", SkinTypes.ARMOR_HEAD);
     public static final SkinDocumentType GENERAL_ARMOR_CHEST = register("general", SkinTypes.ARMOR_CHEST);
@@ -58,26 +58,26 @@ public class SkinDocumentTypes {
     }
 
     public static void forEach(BiConsumer<String, List<SkinDocumentType>> consumer) {
-        ArrayList<String> names = new ArrayList<>();
-        HashMap<String, List<SkinDocumentType>> sections = new HashMap<>();
+        var names = new ArrayList<String>();
+        var sections = new HashMap<String, List<SkinDocumentType>>();
 
         Function<String, List<SkinDocumentType>> builder = (name) -> {
             names.add(name);
             return new ArrayList<>();
         };
 
-        ALL_TYPES.forEach((key, it) -> sections.computeIfAbsent(it.getCategory(), builder).add(it));
+        ALL_TYPES.forEach((key, it) -> sections.computeIfAbsent(it.category(), builder).add(it));
 
-        for (String name : names) {
+        for (var name : names) {
             consumer.accept(name, sections.get(name));
         }
     }
 
 
     private static SkinDocumentType register(String category, SkinType skinType) {
-        SkinDocumentType advancedSkinType = new SkinDocumentType(category, skinType);
-        advancedSkinType.setRegistryName(skinType.getRegistryName());
-        ALL_TYPES.put(advancedSkinType.getRegistryName().toString(), advancedSkinType);
+        var advancedSkinType = new SkinDocumentType(category, skinType);
+        advancedSkinType.setRegistryName(skinType.registryName());
+        ALL_TYPES.put(advancedSkinType.registryName().toString(), advancedSkinType);
         return advancedSkinType;
     }
 }

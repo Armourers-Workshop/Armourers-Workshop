@@ -18,7 +18,7 @@ public class BiomeHasAnyTag extends EntityFunction {
 
     @Override
     public double compute(final EntitySelector entity, final ExecutionContext context) {
-        var biome = entity.getBiome();
+        var biome = entity.biome();
         if (biome == null) {
             return 0;
         }

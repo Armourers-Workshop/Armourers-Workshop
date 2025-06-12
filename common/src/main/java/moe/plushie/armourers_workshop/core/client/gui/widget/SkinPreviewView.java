@@ -38,7 +38,7 @@ public class SkinPreviewView extends UIControl {
         float tw = rect.width;
         float th = rect.height;
         var poseStack = context.state().ctm();
-        var colorScheme = descriptor.getPaintScheme();
+        var colorScheme = descriptor.paintScheme();
         var itemStack = ItemStack.EMPTY;
         var buffers = AbstractBufferSource.buffer();
         ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);

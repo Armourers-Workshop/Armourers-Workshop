@@ -91,17 +91,17 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
 
     public static class LootContextBuilder implements ILootContext {
 
-        private static final Map<ILootContextParam<?>, LootContextParam<?>> KEYS = Collections.immutableMap(builder -> {
-            builder.put(ILootContextParam.THIS_ENTITY, LootContextParams.THIS_ENTITY);
-            builder.put(ILootContextParam.LAST_DAMAGE_PLAYER, LootContextParams.LAST_DAMAGE_PLAYER);
-            builder.put(ILootContextParam.DAMAGE_SOURCE, LootContextParams.DAMAGE_SOURCE);
-            builder.put(ILootContextParam.ATTACKING_ENTITY, LootContextParams.KILLER_ENTITY);
-            builder.put(ILootContextParam.DIRECT_ATTACKING_ENTITY, LootContextParams.DIRECT_KILLER_ENTITY);
-            builder.put(ILootContextParam.ORIGIN, LootContextParams.ORIGIN);
-            builder.put(ILootContextParam.BLOCK_STATE, LootContextParams.BLOCK_STATE);
-            builder.put(ILootContextParam.BLOCK_ENTITY, LootContextParams.BLOCK_ENTITY);
-            builder.put(ILootContextParam.TOOL, LootContextParams.TOOL);
-            builder.put(ILootContextParam.EXPLOSION_RADIUS, LootContextParams.EXPLOSION_RADIUS);
+        private static final Map<ILootContextParam<?>, LootContextParam<?>> KEYS = Collections.immutableMap(it -> {
+            it.put(ILootContextParam.THIS_ENTITY, LootContextParams.THIS_ENTITY);
+            it.put(ILootContextParam.LAST_DAMAGE_PLAYER, LootContextParams.LAST_DAMAGE_PLAYER);
+            it.put(ILootContextParam.DAMAGE_SOURCE, LootContextParams.DAMAGE_SOURCE);
+            it.put(ILootContextParam.ATTACKING_ENTITY, LootContextParams.KILLER_ENTITY);
+            it.put(ILootContextParam.DIRECT_ATTACKING_ENTITY, LootContextParams.DIRECT_KILLER_ENTITY);
+            it.put(ILootContextParam.ORIGIN, LootContextParams.ORIGIN);
+            it.put(ILootContextParam.BLOCK_STATE, LootContextParams.BLOCK_STATE);
+            it.put(ILootContextParam.BLOCK_ENTITY, LootContextParams.BLOCK_ENTITY);
+            it.put(ILootContextParam.TOOL, LootContextParams.TOOL);
+            it.put(ILootContextParam.EXPLOSION_RADIUS, LootContextParams.EXPLOSION_RADIUS);
         });
 
         private final LootParams.Builder builder;
@@ -113,7 +113,7 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
         @Override
         public <T> T getParameter(ILootContextParam<T> param) {
             Object value = builder.getParameter(KEYS.get(param));
-            return param.getValueClass().cast(convert(value));
+            return param.valueType().cast(convert(value));
         }
 
         @Override
@@ -121,7 +121,7 @@ public abstract class AbstractHorizontalBlockImpl extends HorizontalDirectionalB
         public <T> T getOptionalParameter(ILootContextParam<T> param) {
             Object value = builder.getOptionalParameter(KEYS.get(param));
             if (value != null) {
-                return param.getValueClass().cast(convert(value));
+                return param.valueType().cast(convert(value));
             }
             return null;
         }

@@ -53,12 +53,12 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
     }
 
     @Override
-    public BlockPos getBlockPos() {
+    public BlockPos blockPos() {
         return blockPos;
     }
 
     @Override
-    public BlockState getBlockState() {
+    public BlockState blockState() {
         return blockState;
     }
 
@@ -119,7 +119,7 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
     }
 
     @Override
-    public Level getLevel() {
+    public Level level() {
         return level;
     }
 

@@ -43,21 +43,21 @@ public enum SkinSlotType {
 
     ANY(99, 0, 106, "any", null);
 
-    private final String name;
+    private final String serializedName;
     private final int id;
     private final int index;
     private final int size;
     private final SkinType skinType;
     public static final Codec<SkinSlotType> CODEC = Codec.STRING.xmap(Helper::decode, Helper::encode);
 
-    SkinSlotType(int id, int index, int size, String name, SkinType skinType) {
+    SkinSlotType(int id, int index, int size, String serializedName, SkinType skinType) {
         this.id = id;
-        this.name = name;
+        this.serializedName = serializedName;
         this.index = index;
         this.size = size;
         this.skinType = skinType;
         Helper.TOTAL_SIZE = Math.max(Helper.TOTAL_SIZE, index + size);
-        Helper.NAMED_SLOTS.put(name, this);
+        Helper.NAMED_SLOTS.put(serializedName, this);
         Helper.INDEXED_SLOTS.put(id, this);
     }
 
@@ -90,7 +90,7 @@ public enum SkinSlotType {
         }
         var descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
-            return byType(descriptor.getType());
+            return byType(descriptor.type());
         }
         return null;
     }
@@ -114,11 +114,11 @@ public enum SkinSlotType {
                 break;
             }
         }
-        return DYE.getIndex() + i;
+        return DYE.index() + i;
     }
 
-    public OpenResourceLocation getIconSprite() {
-        return ModConstants.key("item/slot/" + name);
+    public OpenResourceLocation icon() {
+        return ModConstants.key("item/slot/" + serializedName);
     }
 
     public boolean isResizable() {
@@ -129,23 +129,23 @@ public enum SkinSlotType {
         return skinType.isArmour();
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public int getIndex() {
+    public int index() {
         return index;
     }
 
-    public int getMaxSize() {
+    public int maxSize() {
         return size;
     }
 
-    public String getName() {
-        return name;
+    public String serializedName() {
+        return serializedName;
     }
 
-    public SkinType getSkinType() {
+    public SkinType skinType() {
         return skinType;
     }
 
@@ -176,7 +176,7 @@ public enum SkinSlotType {
         }
 
         static String encode(SkinSlotType type) {
-            return type.getName();
+            return type.serializedName();
         }
     }
 }

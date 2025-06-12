@@ -32,7 +32,7 @@ public class AbstractShader extends Shader {
     @Override
     protected void prepare(ShaderVertexGroup group) {
         super.prepare(group);
-        group.getRenderType().get().setupRenderState();
+        group.renderType().get().setupRenderState();
         maxVertexCount = group.maxVertexCount;
     }
 
@@ -40,14 +40,14 @@ public class AbstractShader extends Shader {
     protected void clean(ShaderVertexGroup group) {
         VertexIndexObject.unbind();
         VertexBufferObject.unbind();
-        group.getRenderType().get().clearRenderState();
+        group.renderType().get().clearRenderState();
         super.clean(group);
     }
 
     @Override
     public void render(ShaderVertexObject object) {
-        var count = object.getTotal();
-        var poseStack = object.getPoseStack();
+        var count = object.total();
+        var poseStack = object.poseStack();
 
         RenderSystem.pushMatrix();
         RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(poseStack.last().pose()));
@@ -56,30 +56,30 @@ public class AbstractShader extends Shader {
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
         // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
         // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-        RenderSystem.polygonOffset(0, object.getPolygonOffset() * -1);
+        RenderSystem.polygonOffset(0, object.polygonOffset() * -1);
 
-        object.getBufferObject().bind();
-        object.getFormat().setupBufferState(object.getOffset());
+        object.bufferObject().bind();
+        object.format().setupBufferState(object.offset());
 
         // when the outline color required, we need to modify the color attribute by `glColorPointer`.
         if (object.isOutline()) {
-            var colorBuffer = AbstractColorBufferObject.getColorBuffer(object.getOutlineColor() | 0xff000000);
+            var colorBuffer = AbstractColorBufferObject.getColorBuffer(object.outlineColor() | 0xff000000);
             colorBuffer.ensureCapacity(maxVertexCount);
             colorBuffer.bind();
             colorBuffer.format().setupBufferState(0L);
-            object.getBufferObject().bind();
+            object.bufferObject().bind();
         }
 
         // when the outline color required, we need to modify the lightmap texture attribute by `glVertexAttribPointer`.
         if (!object.isEmissive()) {
-            var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.getLightmap());
+            var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.lightmap());
             lightBuffer.ensureCapacity(maxVertexCount);
             lightBuffer.bind();
             lightBuffer.format().setupBufferState(0L);
-            object.getBufferObject().bind();
+            object.bufferObject().bind();
         }
 
-        var indexObject = object.getIndexObject();
+        var indexObject = object.indexObject();
         if (indexObject != null) {
             indexObject.bind();
             GL15.glDrawElements(GL15.GL_TRIANGLES, indexObject.stride(count), indexObject.type(), 0);
@@ -87,7 +87,7 @@ public class AbstractShader extends Shader {
             GL15.glDrawArrays(GL15.GL_TRIANGLES, 0, count);
         }
 
-        object.getFormat().get().clearBufferState();
+        object.format().get().clearBufferState();
 
         RenderSystem.popMatrix();
     }

@@ -16,18 +16,18 @@ import java.util.Map;
 @Available("[1.16, 1.21)")
 public abstract class AbstractForgeKeyMapping extends KeyMapping {
 
-    private static final Map<IKeyModifier, KeyModifier> MODIFIERS1 = Collections.immutableMap(builder -> {
-        builder.put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL);
-        builder.put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT);
-        builder.put(OpenKeyModifier.ALT, KeyModifier.ALT);
-        builder.put(OpenKeyModifier.NONE, KeyModifier.NONE);
+    private static final Map<IKeyModifier, KeyModifier> MODIFIERS1 = Collections.immutableMap(it -> {
+        it.put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL);
+        it.put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT);
+        it.put(OpenKeyModifier.ALT, KeyModifier.ALT);
+        it.put(OpenKeyModifier.NONE, KeyModifier.NONE);
     });
 
-    private static final Map<KeyModifier, IKeyModifier> MODIFIERS2 = Collections.immutableMap(builder -> {
-        builder.put(KeyModifier.CONTROL, OpenKeyModifier.CONTROL);
-        builder.put(KeyModifier.SHIFT, OpenKeyModifier.SHIFT);
-        builder.put(KeyModifier.ALT, OpenKeyModifier.ALT);
-        builder.put(KeyModifier.NONE, OpenKeyModifier.NONE);
+    private static final Map<KeyModifier, IKeyModifier> MODIFIERS2 = Collections.immutableMap(it -> {
+        it.put(KeyModifier.CONTROL, OpenKeyModifier.CONTROL);
+        it.put(KeyModifier.SHIFT, OpenKeyModifier.SHIFT);
+        it.put(KeyModifier.ALT, OpenKeyModifier.ALT);
+        it.put(KeyModifier.NONE, OpenKeyModifier.NONE);
     });
 
     public AbstractForgeKeyMapping(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {

@@ -153,7 +153,7 @@ public class Compiler {
                 yield new Statement(Statement.Operator.CONTINUE);
             }
             case IDENTIFIER -> {
-                var expr = bindings.getProperty(token.value());
+                var expr = bindings.propertyByName(token.value());
                 if (expr == null) {
                     throw new SyntaxException("Failed to get property: " + token.value(), lexer.cursor());
                 }
@@ -166,7 +166,7 @@ public class Compiler {
                     if (!(expr instanceof ObjectBinding parent)) {
                         throw new SyntaxException("Illegal access to: " + expr + "." + token.value(), lexer.cursor());
                     }
-                    expr = parent.getProperty(token.value());
+                    expr = parent.propertyByName(token.value());
                     if (expr == null) {
                         throw new SyntaxException("Failed to get property: " + parent + "." + token.value(), lexer.cursor());
                     }

@@ -54,7 +54,7 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
         });
         var proxy = new Proxy<>(object);
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return TypedRegistry.Entry.ofValue(object.getRegistryName(), proxy);
+        return TypedRegistry.Entry.ofValue(object.registryName(), proxy);
     }
 
     public static class Proxy<T extends BlockEntity> implements IBlockEntityType<T> {

@@ -67,7 +67,7 @@ public abstract class SkinRenderType implements IRenderType {
     }
 
     public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
-        var key = String.format("%s/%s", name, texture.getPath());
+        var key = String.format("%s/%s", name, texture.path());
         return CUSTOM_FACE_VARIANTS.computeIfAbsent(key, it -> {
             var builder = _customFace(format).texture(texture);
             if (isTranslucent) {

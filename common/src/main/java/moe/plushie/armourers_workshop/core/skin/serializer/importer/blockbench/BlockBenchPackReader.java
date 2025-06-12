@@ -271,7 +271,7 @@ public class BlockBenchPackReader {
         return builder.build();
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 }

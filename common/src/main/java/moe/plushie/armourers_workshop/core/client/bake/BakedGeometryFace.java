@@ -47,13 +47,13 @@ public class BakedGeometryFace {
     private final SkinTexturePos defaultTexturePos;
 
     public BakedGeometryFace(SkinGeometryFace geometryFace) {
-        this.priority = geometryFace.getPriority();
-        this.transform = geometryFace.getTransform();
+        this.priority = geometryFace.priority();
+        this.transform = geometryFace.transform();
         this.renderType = resolveRenderType(geometryFace);
         this.renderTypeVariants = resolveRenderTypeVariants(geometryFace);
-        this.vertices = triangulation(geometryFace.getVertices(), geometryFace.getType());
+        this.vertices = triangulation(geometryFace.vertices(), geometryFace.type());
         this.defaultVertex = resolveDefaultVertex(vertices);
-        this.defaultTexturePos = geometryFace.getTexturePos();
+        this.defaultTexturePos = geometryFace.texturePos();
     }
 
     public void render(BakedSkinPart part, SkinPaintScheme scheme, int lightmap, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
@@ -64,9 +64,9 @@ public class BakedGeometryFace {
 
         // we need to blend the vertex color.
         // NOTE: we assume that all vertices use the same color, but in fact every vertex needs to be blended.
-        var vertexColor = defaultVertex.getColor();
-        var resolvedColor = resolveColor(vertexColor, scheme, part.getColorInfo(), part.getType(), 0);
-        if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
+        var vertexColor = defaultVertex.color();
+        var resolvedColor = resolveColor(vertexColor, scheme, part.colorInfo(), part.type(), 0);
+        if (resolvedColor.paintType() == SkinPaintTypes.NONE) {
             return;
         }
 
@@ -78,21 +78,21 @@ public class BakedGeometryFace {
         var entry = poseStack.last();
 
         // for dye color, we need to relocation to final color by the offset(x, 0).
-        var u = resolveTextureOffset(vertexColor.getPaintType(), resolvedColor.getPaintType());
+        var u = resolveTextureOffset(vertexColor.paintType(), resolvedColor.paintType());
         var v = 0.0f;
 
-        var n = defaultTexturePos.getTotalWidth();
-        var m = defaultTexturePos.getTotalHeight();
+        var n = defaultTexturePos.totalWidth();
+        var m = defaultTexturePos.totalHeight();
 
-        var r = resolvedColor.getRed();
-        var g = resolvedColor.getGreen();
-        var b = resolvedColor.getBlue();
-        var a = vertexColor.getAlpha();
+        var r = resolvedColor.red();
+        var g = resolvedColor.green();
+        var b = resolvedColor.blue();
+        var a = vertexColor.alpha();
 
         for (var vertex : vertices) {
-            var position = vertex.getPosition();
-            var normal = vertex.getNormal();
-            var textureCoords = vertex.getTextureCoords();
+            var position = vertex.position();
+            var normal = vertex.normal();
+            var textureCoords = vertex.textureCoords();
             builder.vertex(entry, position.x(), position.y(), position.z())
                     .color(r, g, b, a)
                     .uv((u + textureCoords.x()) / n, (v + textureCoords.y()) / m)
@@ -108,17 +108,17 @@ public class BakedGeometryFace {
     }
 
     private SkinPaintColor dye(SkinPaintColor source, SkinPaintColor destination, SkinPaintColor average) {
-        if (destination.getPaintType() == SkinPaintTypes.NONE) {
+        if (destination.paintType() == SkinPaintTypes.NONE) {
             return SkinPaintColor.CLEAR;
         }
         if (average == null) {
             return source;
         }
-        int src = (source.getRed() + source.getGreen() + source.getBlue()) / 3;
-        int avg = (average.getRed() + average.getGreen() + average.getBlue()) / 3;
-        int r = OpenMath.clamp(destination.getRed() + src - avg, 0, 255);
-        int g = OpenMath.clamp(destination.getGreen() + src - avg, 0, 255);
-        int b = OpenMath.clamp(destination.getBlue() + src - avg, 0, 255);
+        int src = (source.red() + source.green() + source.blue()) / 3;
+        int avg = (average.red() + average.green() + average.blue()) / 3;
+        int r = OpenMath.clamp(destination.red() + src - avg, 0, 255);
+        int g = OpenMath.clamp(destination.green() + src - avg, 0, 255);
+        int b = OpenMath.clamp(destination.blue() + src - avg, 0, 255);
 
         return destination.withColor(r, g, b);
     }
@@ -127,8 +127,8 @@ public class BakedGeometryFace {
     private SkinPaintColor resolveTextureColor(OpenResourceLocation texture, SkinPartType partType) {
         var bakedTexture = EntityTextureLoader.getInstance().getTextureModel(texture);
         if (bakedTexture != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
-            var shape = cubeVertex.getBoundingBox();
-            var direction = cubeVertex.getDirection();
+            var shape = cubeVertex.boundingBox();
+            var direction = cubeVertex.direction();
             int x = (int) shape.x();
             int y = (int) shape.y();
             int z = (int) shape.z();
@@ -138,16 +138,16 @@ public class BakedGeometryFace {
     }
 
     private float resolveTextureOffset(SkinPaintType from, SkinPaintType to) {
-        var fromTexturePos = from.getTexturePos();
-        var toTexturePos = to.getTexturePos();
+        var fromTexturePos = from.texturePos();
+        var toTexturePos = to.texturePos();
         if (fromTexturePos != toTexturePos) {
-            return toTexturePos.getU() - fromTexturePos.getU();
+            return toTexturePos.u() - fromTexturePos.u();
         }
         return 0;
     }
 
     private SkinPaintColor resolveColor(SkinPaintColor paintColor, SkinPaintScheme scheme, ColorDescriptor descriptor, SkinPartType partType, int deep) {
-        var paintType = paintColor.getPaintType();
+        var paintType = paintColor.paintType();
         if (paintType == SkinPaintTypes.NONE) {
             return SkinPaintColor.CLEAR;
         }
@@ -158,13 +158,13 @@ public class BakedGeometryFace {
             return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
-            var paintColor1 = resolveTextureColor(scheme.getTexture(), partType);
+            var paintColor1 = resolveTextureColor(scheme.texture(), partType);
             if (paintColor1 != null) {
                 return paintColor1;
             }
             return paintColor;
         }
-        if (paintType.getDyeType() != null && deep < 2) {
+        if (paintType.dyeType() != null && deep < 2) {
             var paintColor1 = scheme.getResolvedColor(paintType);
             if (paintColor1 == null) {
                 return paintColor;
@@ -204,53 +204,53 @@ public class BakedGeometryFace {
     }
 
     private IRenderType resolveRenderType(SkinGeometryFace face) {
-        var texturePos = face.getTexturePos();
-        if (texturePos != null && texturePos.getProvider() != null) {
-            return SmartTextureManager.getInstance().register(texturePos.getProvider(), face.getType());
+        var texturePos = face.texturePos();
+        if (texturePos != null && texturePos.provider() != null) {
+            return SmartTextureManager.getInstance().register(texturePos.provider(), face.type());
         }
-        return SkinRenderType.by(face.getType());
+        return SkinRenderType.by(face.type());
     }
 
     private Collection<IRenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
-        var texture = face.getTexturePos();
-        if (texture == null || texture.getProvider() == null) {
+        var texture = face.texturePos();
+        if (texture == null || texture.provider() == null) {
             return null;
         }
-        var parent = texture.getProvider();
+        var parent = texture.provider();
         var renderTypes = new ArrayList<IRenderType>();
-        for (var variant : parent.getVariants()) {
-            var properties = variant.getProperties();
+        for (var variant : parent.variants()) {
+            var properties = variant.properties();
             if (properties.isNormal() || properties.isSpecular()) {
                 continue; // normal/specular map, only use from shader mod.
             }
-            renderTypes.add(SmartTextureManager.getInstance().register(variant, face.getType()));
+            renderTypes.add(SmartTextureManager.getInstance().register(variant, face.type()));
         }
         return renderTypes;
     }
 
-    public float getPriority() {
+    public float priority() {
         return priority;
     }
 
-    public ITransform3f getTransform() {
+    public ITransform3f transform() {
         return transform;
     }
 
-    public List<? extends SkinGeometryVertex> getVertices() {
+    public List<? extends SkinGeometryVertex> vertices() {
         return vertices;
     }
 
-    public IRenderType getRenderType() {
+    public IRenderType renderType() {
         return renderType;
     }
 
-    public Collection<IRenderType> getRenderTypeVariants() {
+    public Collection<IRenderType> renderTypeVariants() {
         return renderTypeVariants;
     }
 
-    public SkinPaintColor getDefaultColor() {
+    public SkinPaintColor defaultColor() {
         if (defaultVertex != null) {
-            return defaultVertex.getColor();
+            return defaultVertex.color();
         }
         return null;
     }

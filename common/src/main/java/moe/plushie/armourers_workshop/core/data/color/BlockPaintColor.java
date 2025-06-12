@@ -171,11 +171,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
 
         public static final IDataSerializerKey<SkinPaintColor> ALL = IDataSerializerKey.create("All", SkinPaintColor.CODEC, null);
 
-        public static final Map<Side, IDataSerializerKey<SkinPaintColor>> SIDES = Collections.immutableMap(builder -> {
+        public static final Map<Side, IDataSerializerKey<SkinPaintColor>> SIDES = Collections.immutableMap(it -> {
             for (var side : Side.values()) {
-                var name = side.name;
+                var name = side.serializedName;
                 var key = IDataSerializerKey.create(name, SkinPaintColor.CODEC, null);
-                builder.put(side, key);
+                it.put(side, key);
             }
         });
     }
@@ -189,11 +189,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
         LEFT("Left", OpenDirection.WEST),
         RIGHT("Right", OpenDirection.EAST);
 
-        final String name;
+        final String serializedName;
         final OpenDirection direction;
 
-        Side(String name, OpenDirection direction) {
-            this.name = name;
+        Side(String serializedName, OpenDirection direction) {
+            this.serializedName = serializedName;
             this.direction = direction;
         }
 
@@ -206,11 +206,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
             return Side.DOWN;
         }
 
-        public String getName() {
-            return name;
+        public String serializedName() {
+            return serializedName;
         }
 
-        public OpenDirection getDirection() {
+        public OpenDirection direction() {
             return direction;
         }
     }

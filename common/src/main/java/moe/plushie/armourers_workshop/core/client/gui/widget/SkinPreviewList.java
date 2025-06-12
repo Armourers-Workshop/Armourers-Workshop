@@ -90,7 +90,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         this.loadTicket.invalidate();
     }
 
-    public ArrayList<T> getEntries() {
+    public ArrayList<T> entries() {
         return entries;
     }
 
@@ -100,8 +100,8 @@ public abstract class SkinPreviewList<T> extends UIView {
     }
 
     public void reloadData() {
-        float boxW = getInnerWidth() + minimumInteritemSpacing;
-        float boxH = getInnerHeight() + minimumLineSpacing;
+        float boxW = innerWidth() + minimumInteritemSpacing;
+        float boxH = innerHeight() + minimumLineSpacing;
         this.colCount = Math.max(1, (int) Math.floor(boxW / (itemSize.width + minimumInteritemSpacing)));
         this.rowCount = Math.max(1, (int) Math.floor(boxH / (itemSize.height + minimumLineSpacing)));
         this.totalCount = rowCount * colCount;
@@ -187,7 +187,7 @@ public abstract class SkinPreviewList<T> extends UIView {
             context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
         }
 
-        var texture = ArmourersWorkshop.getItemIcon(bakedSkin.getType());
+        var texture = ArmourersWorkshop.getItemIcon(bakedSkin.type());
         if (texture != null) {
             context.drawResizableImage(texture, x + 1, y + 1, width / 4, height / 4, 0, 0, 16, 16, 16, 16);
         }
@@ -216,7 +216,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         RenderSystem.enableAlphaTest();
     }
 
-    public CGSize getItemSize() {
+    public CGSize itemSize() {
         return itemSize;
     }
 
@@ -248,7 +248,7 @@ public abstract class SkinPreviewList<T> extends UIView {
         this.itemSelector = itemSelector;
     }
 
-    public int getTotalCount() {
+    public int totalCount() {
         return this.totalCount;
     }
 
@@ -272,11 +272,11 @@ public abstract class SkinPreviewList<T> extends UIView {
     }
 
 
-    private float getInnerWidth() {
+    private float innerWidth() {
         return bounds().width - contentInset.left - contentInset.right;
     }
 
-    private float getInnerHeight() {
+    private float innerHeight() {
         return bounds().height - contentInset.top - contentInset.bottom;
     }
 

@@ -4,11 +4,11 @@ import moe.plushie.armourers_workshop.api.core.IRegistryEntry;
 
 public interface ISkinPaintType extends IRegistryEntry {
 
-    int getId();
+    int id();
 
-    int getIndex();
+    int ordinal();
 
-    ISkinDyeType getDyeType();
+    ISkinDyeType dyeType();
 
-    ISkinTexturePos getTexturePos();
+    ISkinTexturePos texturePos();
 }

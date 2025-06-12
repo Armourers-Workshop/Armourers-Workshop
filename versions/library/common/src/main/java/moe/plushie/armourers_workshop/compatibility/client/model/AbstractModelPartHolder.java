@@ -36,47 +36,47 @@ public class AbstractModelPartHolder implements IModelPart, IModelPartPose {
 
     @Override
     public void transform(IPoseStack poseStack) {
-        float x = getX();
-        float y = getY();
-        float z = getZ();
+        float x = x();
+        float y = y();
+        float z = z();
         if (x != 0 || y != 0 || z != 0) {
             poseStack.translate(x, y, z);
         }
-        float xRot = getXRot();
-        float yRot = getYRot();
-        float zRot = getZRot();
+        float xRot = xRot();
+        float yRot = yRot();
+        float zRot = zRot();
         if (xRot != 0 || yRot != 0 || zRot != 0) {
             poseStack.rotate(OpenQuaternionf.fromEulerAnglesZYX(zRot, yRot, xRot));
         }
     }
 
     @Override
-    public float getX() {
+    public float x() {
         return modelPart.x;
     }
 
     @Override
-    public float getY() {
+    public float y() {
         return modelPart.y;
     }
 
     @Override
-    public float getZ() {
+    public float z() {
         return modelPart.z;
     }
 
     @Override
-    public float getXRot() {
+    public float xRot() {
         return modelPart.xRot;
     }
 
     @Override
-    public float getYRot() {
+    public float yRot() {
         return modelPart.yRot;
     }
 
     @Override
-    public float getZRot() {
+    public float zRot() {
         return modelPart.zRot;
     }
 

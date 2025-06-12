@@ -16,7 +16,7 @@ public abstract class SkinWardrobeBaseSetting extends UIView {
         this.baseKey = baseKey;
     }
 
-    public NSString getTitle() {
+    public NSString title() {
         return NSString.localizedString(baseKey);
     }
 

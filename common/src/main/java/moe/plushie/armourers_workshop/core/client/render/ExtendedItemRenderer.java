@@ -78,13 +78,13 @@ public final class ExtendedItemRenderer {
         tesselator.setLightmap(light);
         tesselator.setPartialTicks(partialTicks);
 
-        tesselator.setRenderData(EntityRenderData.of(tesselator.getMannequin()));
+        tesselator.setRenderData(EntityRenderData.of(tesselator.mannequin()));
         tesselator.setColorScheme(scheme);
         tesselator.setItemSource(itemSource);
         tesselator.setUseItemTransforms(true);
         tesselator.setOutlineColor(outlineColor);
         tesselator.setDisplayBox(targetBox);
-        tesselator.setDisplayContext(itemSource.getDisplayContext());
+        tesselator.setDisplayContext(itemSource.displayContext());
 
         float f = 1 / 16f;
         poseStack.scale(f, f, f);

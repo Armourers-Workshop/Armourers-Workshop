@@ -27,32 +27,32 @@ public class OpenModelPartPose implements IModelPartPose {
     }
 
     @Override
-    public float getX() {
+    public float x() {
         return x;
     }
 
     @Override
-    public float getY() {
+    public float y() {
         return y;
     }
 
     @Override
-    public float getZ() {
+    public float z() {
         return z;
     }
 
     @Override
-    public float getXRot() {
+    public float xRot() {
         return xRot;
     }
 
     @Override
-    public float getYRot() {
+    public float yRot() {
         return yRot;
     }
 
     @Override
-    public float getZRot() {
+    public float zRot() {
         return zRot;
     }
 

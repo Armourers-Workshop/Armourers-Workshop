@@ -11,12 +11,12 @@ import net.fabricmc.api.Environment;
 public class AdvancedMinecartGuideRenderer extends AdvancedEntityGuideRenderer {
 
     @Override
-    public BakedArmature getArmature() {
+    public BakedArmature armature() {
         return BakedArmature.defaultBy(Armatures.MINECART);
     }
 
     @Override
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return new SkinTextureData(ModTextures.MINECART_DEFAULT.toString(), 64, 32);
     }
 }

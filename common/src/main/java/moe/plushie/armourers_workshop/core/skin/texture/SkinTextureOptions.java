@@ -23,7 +23,7 @@ public class SkinTextureOptions implements ISkinTextureOptions {
     }
 
     @Override
-    public int getRotation() {
+    public int rotation() {
         return this.rotation;
     }
 

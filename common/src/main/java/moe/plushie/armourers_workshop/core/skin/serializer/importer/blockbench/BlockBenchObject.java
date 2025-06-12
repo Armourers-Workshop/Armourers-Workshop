@@ -11,11 +11,11 @@ public class BlockBenchObject {
     }
 
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getUUID() {
+    public String uuid() {
         return uuid;
     }
 

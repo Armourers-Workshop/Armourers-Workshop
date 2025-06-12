@@ -18,7 +18,7 @@ public abstract class VariableBinding extends NamedObject implements ObjectBindi
     protected abstract Expression build(Name name);
 
     @Override
-    public Expression getProperty(String name) {
+    public Expression propertyByName(String name) {
         return children.computeIfAbsent(name.toLowerCase(), it -> {
             var holder = build(Name.of(it));
             if (holder instanceof NamedObject namedObject) {

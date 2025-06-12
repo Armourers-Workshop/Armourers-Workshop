@@ -25,17 +25,17 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     public static ItemStack of(Holiday holiday) {
         var stack = new ItemStack(ModItems.GIFT_SACK.get());
         stack.set(ModDataComponents.HOLIDAY.get(), holiday);
-        if (holiday.getHandler() != null) {
-            stack.set(ModDataComponents.GIFT_COLOR_BG.get(), holiday.getHandler().getBackgroundColor());
-            stack.set(ModDataComponents.GIFT_COLOR_FG.get(), holiday.getHandler().getForegroundColor());
+        if (holiday.handler() != null) {
+            stack.set(ModDataComponents.GIFT_COLOR_BG.get(), holiday.handler().backgroundColor());
+            stack.set(ModDataComponents.GIFT_COLOR_FG.get(), holiday.handler().foregroundColor());
         }
         return stack;
     }
 
     public static ItemStack getGift(ItemStack itemStack, Player player) {
         var holiday = itemStack.get(ModDataComponents.HOLIDAY.get());
-        if (holiday != null && holiday.getHandler() != null) {
-            return holiday.getHandler().getGift(player);
+        if (holiday != null && holiday.handler() != null) {
+            return holiday.handler().getGift(player);
         }
         return itemStack.getOrDefault(ModDataComponents.GIFT.get(), ItemStack.EMPTY);
     }
@@ -60,8 +60,8 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     @Override
     public void fillItemGroup(List<ItemStack> results, IItemGroup group) {
         // add all the gifts into creative inventory
-        for (var holiday : ModHolidays.getHolidays()) {
-            if (holiday.getHandler() != null) {
+        for (var holiday : ModHolidays.holidays()) {
+            if (holiday.handler() != null) {
                 results.add(of(holiday));
             }
         }

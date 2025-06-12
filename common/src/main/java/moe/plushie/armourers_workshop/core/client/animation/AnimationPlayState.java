@@ -20,16 +20,16 @@ public abstract class AnimationPlayState {
     public static AnimationPlayState create(double time, int loopCount, double speed, AnimationController controller) {
         // ..
         if (loopCount == 0) {
-            loopCount = switch (controller.getLoop()) {
+            loopCount = switch (controller.loop()) {
                 case NONE -> 1;
                 case LAST_FRAME -> 0;
                 case LOOP -> -1;
             };
         }
         // ..
-        var playState = createVariant(speed, controller.getDuration());
+        var playState = createVariant(speed, controller.duration());
         playState.setTime(time);
-        playState.setDuration(controller.getDuration());
+        playState.setDuration(controller.duration());
         playState.setLoopCount(loopCount);
         return playState;
     }
@@ -72,7 +72,7 @@ public abstract class AnimationPlayState {
         reset();
     }
 
-    public double getAdjustedTime(double animationTime) {
+    public double adjustedTime(double animationTime) {
         // this is a future animation?
         if (animationTime < time) {
             return 0;
@@ -86,11 +86,11 @@ public abstract class AnimationPlayState {
         this.time = time;
     }
 
-    public double getTime() {
+    public double time() {
         return time;
     }
 
-    public double getAdjustedTime() {
+    public double adjustedTime() {
         return adjustedTime;
     }
 
@@ -98,7 +98,7 @@ public abstract class AnimationPlayState {
         this.duration = duration;
     }
 
-    public double getDuration() {
+    public double duration() {
         return duration;
     }
 
@@ -106,8 +106,7 @@ public abstract class AnimationPlayState {
         this.loopCount = playCount;
     }
 
-
-    public int getLoopCount() {
+    public int loopCount() {
         return loopCount;
     }
 
@@ -115,7 +114,7 @@ public abstract class AnimationPlayState {
         return isCompleted;
     }
 
-    public AnimationEffectState getEffect(String name) {
+    public AnimationEffectState effectByName(String name) {
         return effects.computeIfAbsent(name, AnimationEffectState::new);
     }
 

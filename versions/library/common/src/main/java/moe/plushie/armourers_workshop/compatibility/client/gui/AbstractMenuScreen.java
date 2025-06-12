@@ -19,7 +19,7 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         super.onClose();
     }
 
-    public CGPoint getContentOffset() {
+    public CGPoint contentOffset() {
         return new CGPoint(leftPos, topPos);
     }
 
@@ -28,7 +28,7 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         topPos = (int) offset.y;
     }
 
-    public CGSize getContentSize() {
+    public CGSize contentSize() {
         return new CGSize(imageWidth, imageHeight);
     }
 
@@ -37,7 +37,7 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         imageHeight = (int) size.height;
     }
 
-    public CGSize getScreenSize() {
+    public CGSize screenSize() {
         return new CGSize(width, height);
     }
 

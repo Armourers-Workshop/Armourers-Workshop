@@ -26,7 +26,7 @@ public class BakedSkinPartCombiner {
 
     private static BakedSkinPart clip(BakedSkinPart rootPart) {
         // single node, no needs any clip.
-        if (rootPart.getChildren().isEmpty()) {
+        if (rootPart.children().isEmpty()) {
             return rootPart;
         }
         var restNodes = new ArrayList<Node>();
@@ -38,7 +38,7 @@ public class BakedSkinPartCombiner {
         var pendingQuads = new ArrayList<Pair<ITransform, BakedGeometryQuads>>();
         for (var childNode : restNodes) {
             var resolvedTransform = childNode.resolveTransform();
-            var resolvedQuads = childNode.part.getQuads();
+            var resolvedQuads = childNode.part.quads();
             pendingQuads.add(Pair.of(resolvedTransform, resolvedQuads));
         }
         var childrenParts = new ArrayList<Pair<SkinPartTransform, BakedSkinPart>>();
@@ -47,16 +47,16 @@ public class BakedSkinPartCombiner {
             var part = clip(childNode.part);
             childrenParts.add(Pair.of(transform, part));
         }
-        var mergedQuads = BakedGeometryQuads.merge(rootPart.getQuads(), pendingQuads);
-        var resolvedPart = new BakedSkinPart(rootPart.getPart(), rootPart.getTransform(), mergedQuads);
+        var mergedQuads = BakedGeometryQuads.merge(rootPart.quads(), pendingQuads);
+        var resolvedPart = new BakedSkinPart(rootPart.part(), rootPart.transform(), mergedQuads);
         for (var pair : childrenParts) {
             var transform = pair.getKey();
             var childPart = pair.getValue();
-            if (childPart.getTransform() == transform) {
+            if (childPart.transform() == transform) {
                 resolvedPart.addPart(childPart);
             } else {
-                var childPart1 = new BakedSkinPart(childPart.getPart(), transform, childPart.getQuads());
-                childPart.getChildren().forEach(childPart1::addPart);
+                var childPart1 = new BakedSkinPart(childPart.part(), transform, childPart.quads());
+                childPart.children().forEach(childPart1::addPart);
                 resolvedPart.addPart(childPart1);
             }
         }
@@ -74,7 +74,7 @@ public class BakedSkinPartCombiner {
         private Node(Node parent, BakedSkinPart part) {
             this.parent = parent;
             this.part = part;
-            for (var childPart : part.getChildren()) {
+            for (var childPart : part.children()) {
                 this.children.add(new Node(this, childPart));
             }
         }
@@ -83,7 +83,7 @@ public class BakedSkinPartCombiner {
             if (parent == null) {
                 return SkinPartTransform.IDENTITY;
             }
-            var childTransform = part.getTransform();
+            var childTransform = part.transform();
             var parentTransform = parent.resolveTransform();
             if (parentTransform.isIdentity()) {
                 return childTransform;
@@ -92,10 +92,10 @@ public class BakedSkinPartCombiner {
                 return parentTransform;
             }
             var mergedTransform = new SkinPartTransform();
-            for (var transform : parentTransform.getChildren()) {
+            for (var transform : parentTransform.children()) {
                 mergedTransform.addChild(transform);
             }
-            for (var transform : childTransform.getChildren()) {
+            for (var transform : childTransform.children()) {
                 mergedTransform.addChild(transform);
             }
             return mergedTransform;
@@ -114,11 +114,11 @@ public class BakedSkinPartCombiner {
 
         private boolean freeze() {
             // we can't freeze the non-part type, because the part will be read/write transform for real time.
-            if (part.getType() != SkinPartTypes.ADVANCED) {
+            if (part.type() != SkinPartTypes.ADVANCED) {
                 return false;
             }
             // determine node freeze by transform.
-            for (var transform : part.getTransform().getChildren()) {
+            for (var transform : part.transform().children()) {
                 if (transform instanceof WingPartTransform) {
                     return false;
                 }

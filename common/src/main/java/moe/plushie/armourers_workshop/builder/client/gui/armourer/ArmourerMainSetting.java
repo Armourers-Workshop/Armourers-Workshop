@@ -71,7 +71,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         this.container = container;
         this.blockEntity = container.getBlockEntity();
         if (this.blockEntity != null) {
-            this.skinType = blockEntity.getSkinType();
+            this.skinType = blockEntity.skinType();
         }
     }
 
@@ -146,10 +146,10 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
 
     @Override
     public void reloadData() {
-        var skinProperties = blockEntity.getSkinProperties();
+        var skinProperties = blockEntity.skinProperties();
         nameTextField.setText(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
         flavorTextField.setText(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
-        skinTypeBox.setSelectedSkin(blockEntity.getSkinType());
+        skinTypeBox.setSelectedSkin(blockEntity.skinType());
     }
 
     private void setupLabel(int x, int y, NSString text) {
@@ -180,10 +180,10 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void updateSkinProperties() {
-        var newValue = blockEntity.getSkinProperties().copy();
+        var newValue = blockEntity.skinProperties().copy();
         newValue.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.text());
         newValue.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.text());
-        if (newValue.equals(blockEntity.getSkinProperties())) {
+        if (newValue.equals(blockEntity.skinProperties())) {
             return; // not any changes.
         }
         blockEntity.setSkinProperties(newValue);

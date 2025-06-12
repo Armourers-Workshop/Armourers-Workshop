@@ -22,7 +22,7 @@ public class CubeChangesCollector {
 
     public void submit(Component name, Player player) {
         // we need to ensure that all changes are commit to the changes queue.
-        wrapper.setPos(null);
+        wrapper.setBlockPos(null);
         if (allChanges.isEmpty()) {
             return;
         }
@@ -32,16 +32,16 @@ public class CubeChangesCollector {
         UndoManager.of(player.getUUID()).push(group.apply());
     }
 
-    public CubeWrapper getCube(BlockPos pos) {
-        wrapper.setPos(pos);
+    public CubeWrapper cubeAtPos(BlockPos pos) {
+        wrapper.setBlockPos(pos);
         return wrapper;
     }
 
-    public Level getLevel() {
+    public Level level() {
         return level;
     }
 
-    public int getTotal() {
+    public int total() {
         return allChanges.size();
     }
 }

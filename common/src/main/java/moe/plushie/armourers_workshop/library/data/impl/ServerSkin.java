@@ -57,7 +57,7 @@ public class ServerSkin {
         parameters.put("description", desc);
         parameters.put("skinId", id);
         parameters.put("skinOwner", userId);
-        getLibrary().request("/skin/edit", parameters, null, (response, exception) -> {
+        library().request("/skin/edit", parameters, null, (response, exception) -> {
             if (exception == null) {
                 this.name = name;
                 this.description = desc;
@@ -71,7 +71,7 @@ public class ServerSkin {
     public void getRate(IResultHandler<Integer> handler) {
         var parameters = new HashMap<String, Object>();
         parameters.put("skinId", id);
-        getLibrary().request("/skin/rating", parameters, o -> o.get("rating").intValue(), handler);
+        library().request("/skin/rating", parameters, o -> o.get("rating").intValue(), handler);
     }
 
 
@@ -79,7 +79,7 @@ public class ServerSkin {
         var parameters = new HashMap<String, Object>();
         parameters.put("skinId", id);
         parameters.put("rating", rate);
-        getLibrary().request("/skin/rate", parameters, o -> o.get("rating").intValue(), (rating, exception) -> {
+        library().request("/skin/rate", parameters, o -> o.get("rating").intValue(), (rating, exception) -> {
             if (exception == null) {
                 this.rating = rating;
             }
@@ -92,7 +92,7 @@ public class ServerSkin {
         var parameters = new HashMap<String, Object>();
         parameters.put("skinId", id);
         parameters.put("skinOwner", userId);
-        getLibrary().request("/skin/delete", parameters, null, handler);
+        library().request("/skin/delete", parameters, null, handler);
     }
 
     public void report(String message, ReportType reportType, IResultHandler<Void> handler) {
@@ -100,47 +100,47 @@ public class ServerSkin {
         parameters.put("reportSkinId", id);
         parameters.put("reportType", reportType.toString());
         parameters.put("reportMessage", message);
-        getLibrary().request("/skin/report", parameters, null, handler);
+        library().request("/skin/report", parameters, null, handler);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getDescription() {
+    public String description() {
         return description;
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    public ServerUser getUser() {
-        return getLibrary().getUserById(userId);
+    public ServerUser user() {
+        return library().userById(userId);
     }
 
-    public SkinDescriptor getDescriptor() {
+    public SkinDescriptor descriptor() {
         return descriptor;
     }
 
 
-    public void setRatingCount(int ratingCount) {
+    public void ratingCount(int ratingCount) {
         this.ratingCount = ratingCount;
     }
 
-    public int getRatingCount() {
+    public int ratingCount() {
         return ratingCount;
     }
 
-    public int getDownloads() {
+    public int downloads() {
         return downloads;
     }
 
-    public float getRating() {
+    public float rating() {
         return rating;
     }
 
-    private GlobalSkinLibrary getLibrary() {
+    private GlobalSkinLibrary library() {
         return GlobalSkinLibrary.getInstance();
     }
 }

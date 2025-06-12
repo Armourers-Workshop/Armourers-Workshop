@@ -44,18 +44,18 @@ public final class ModHolidays {
     public static void init() {
     }
 
-    public static Collection<Holiday> getHolidays() {
+    public static Collection<Holiday> holidays() {
         return HOLIDAY_LIST;
     }
 
-    public static Collection<Holiday> getActiveHolidays() {
+    public static Collection<Holiday> activatedHolidays() {
         return Collections.filter(HOLIDAY_LIST, Holiday::isHolidayActive);
     }
 
     @Nullable
     public static Holiday byName(String name) {
         for (var holiday : HOLIDAY_LIST) {
-            if (holiday.getName().equals(name)) {
+            if (holiday.name().equals(name)) {
                 return holiday;
             }
         }
@@ -67,8 +67,8 @@ public final class ModHolidays {
         if (server == null || ModConfig.Common.disableAllHolidayEvents) {
             return;
         }
-        for (var holiday1 : getActiveHolidays()) {
-            if (holiday1.getHandler() == null) {
+        for (var holiday1 : activatedHolidays()) {
+            if (holiday1.handler() == null) {
                 continue;
             }
             var storage = HolidayTracker.of(server);

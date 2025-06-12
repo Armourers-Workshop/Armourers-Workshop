@@ -64,7 +64,7 @@ public class InventoryBox extends UIControl {
         }
     }
 
-    public CGPoint getOffset() {
+    public CGPoint offset() {
         return offset;
     }
 
@@ -80,7 +80,7 @@ public class InventoryBox extends UIControl {
         this.message = message;
     }
 
-    public CGSize getItemSize() {
+    public CGSize itemSize() {
         return itemSize;
     }
 

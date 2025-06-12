@@ -16,7 +16,7 @@ public class DefaultJointBinder extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        var modelPart = model.getPart(name);
+        var modelPart = model.partByName(name);
         if (modelPart == null) {
             return transform;
         }

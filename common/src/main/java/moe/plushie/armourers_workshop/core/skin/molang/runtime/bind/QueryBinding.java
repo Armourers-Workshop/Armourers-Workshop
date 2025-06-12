@@ -21,26 +21,26 @@ import moe.plushie.armourers_workshop.core.skin.molang.runtime.function.query.Re
 public class QueryBinding extends ContextBinding {
 
     public QueryBinding() {
-        variable("anim_time", ContextSelector::getAnimTime);
-        variable("life_time", ContextSelector::getLifeTime);
+        variable("anim_time", ContextSelector::animTime);
+        variable("life_time", ContextSelector::lifeTime);
 
-        variable("actor_count", ContextSelector::getEntityCount);
+        variable("actor_count", ContextSelector::entityCount);
         variable("is_first_person", ContextSelector::isFirstPerson);
 
-        variable("time_of_day", LevelSelector::getDays);
-        variable("time_stamp", LevelSelector::getTimestamp);
-        variable("moon_phase", LevelSelector::getMoonPhase);
+        variable("time_of_day", LevelSelector::days);
+        variable("time_stamp", LevelSelector::timestamp);
+        variable("moon_phase", LevelSelector::moonPhase);
 
-        variable("eye_target_x_rotation", EntitySelector::getEyeYaw);
-        variable("eye_target_y_rotation", EntitySelector::getEyePitch);
-        variable("head_x_rotation", EntitySelector::getHeadYaw);
-        variable("head_y_rotation", EntitySelector::getHeadPitch);
+        variable("eye_target_x_rotation", EntitySelector::eyeYaw);
+        variable("eye_target_y_rotation", EntitySelector::eyePitch);
+        variable("head_x_rotation", EntitySelector::headYaw);
+        variable("head_y_rotation", EntitySelector::headPitch);
 
-        variable("yaw_speed", EntitySelector::getYawSpeed);
-        variable("ground_speed", EntitySelector::getGroundSpeed);
-        variable("vertical_speed", EntitySelector::getVerticalSpeed);
+        variable("yaw_speed", EntitySelector::yawSpeed);
+        variable("ground_speed", EntitySelector::groundSpeed);
+        variable("vertical_speed", EntitySelector::verticalSpeed);
 
-        variable("cardinal_facing_2d", EntitySelector::getCardinalFacing);
+        variable("cardinal_facing_2d", EntitySelector::cardinalFacing);
         variable("distance_from_camera", EntitySelector::distanceFromCamera);
         variable("modified_distance_moved", EntitySelector::distanceFromMove);
         variable("walk_distance", EntitySelector::distanceFromWalk);
@@ -58,23 +58,23 @@ public class QueryBinding extends ContextBinding {
         variable("is_sprinting", EntitySelector::isSprinting);
         variable("is_swimming", EntitySelector::isSwimming);
 
-        variable("body_x_rotation", LivingEntitySelector::getBodyYaw);
-        variable("body_y_rotation", LivingEntitySelector::getBodyPitch);
-        variable("health", LivingEntitySelector::getHealth);
-        variable("max_health", LivingEntitySelector::getMaxHealth);
-        variable("hurt_time", LivingEntitySelector::getHurtTime);
+        variable("body_x_rotation", LivingEntitySelector::bodyYaw);
+        variable("body_y_rotation", LivingEntitySelector::bodyPitch);
+        variable("health", LivingEntitySelector::health);
+        variable("max_health", LivingEntitySelector::maxHealth);
+        variable("hurt_time", LivingEntitySelector::hurtTime);
         variable("is_playing_dead", LivingEntitySelector::isDeadOrDying);
         variable("is_eating", LivingEntitySelector::isEating);
         variable("is_sleeping", LivingEntitySelector::isSleeping);
         variable("is_using_item", LivingEntitySelector::isUsingItem);
-        variable("item_in_use_duration", LivingEntitySelector::getUsingItemDuration);
-        variable("item_max_use_duration", LivingEntitySelector::getUsingItemMaxDuration);
-        variable("item_remaining_use_duration", LivingEntitySelector::getUsingItemRemainingDuration);
-        variable("equipment_count", LivingEntitySelector::getEquipmentCount);
+        variable("item_in_use_duration", LivingEntitySelector::usingItemDuration);
+        variable("item_max_use_duration", LivingEntitySelector::usingItemMaxDuration);
+        variable("item_remaining_use_duration", LivingEntitySelector::usingItemRemainingDuration);
+        variable("equipment_count", LivingEntitySelector::equipmentCount);
 
         variable("has_cape", PlayerSelector::hasCape);
-        variable("cape_flap_amount", PlayerSelector::getCapeFlapAmount);
-        variable("player_level", PlayerSelector::getExperience);
+        variable("cape_flap_amount", PlayerSelector::capeFlapAmount);
+        variable("player_level", PlayerSelector::experience);
 
         function("biome_has_all_tags", BiomeHasAllTags::new);
         function("biome_has_any_tag", BiomeHasAnyTag::new);

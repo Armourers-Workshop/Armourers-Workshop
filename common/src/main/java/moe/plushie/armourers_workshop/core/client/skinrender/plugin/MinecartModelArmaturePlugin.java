@@ -23,10 +23,10 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
     @Override
     public void activate(Entity entity, Context context) {
         var minecart = (AbstractMinecart) entity;
-        var poseStack = context.getPoseStack();
+        var poseStack = context.poseStack();
 
         // fix minecart render direction issue.
-        if (isFlapped(minecart, context.getPartialTicks(), context.getRenderData())) {
+        if (isFlapped(minecart, context.partialTicks(), context.renderData())) {
             // the vanilla design doesn't care the minecart orientation,
             // but we need a precise orientation.
             poseStack.rotate(OpenVector3f.YP.rotationDegrees(180));

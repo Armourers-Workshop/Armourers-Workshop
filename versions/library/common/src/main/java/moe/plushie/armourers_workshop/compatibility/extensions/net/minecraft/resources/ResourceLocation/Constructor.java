@@ -18,8 +18,8 @@ public class Constructor {
     }
 
     public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceLocation location, String variant) {
-        var namespace = location.getNamespace();
-        var path = location.getPath();
+        var namespace = location.namespace();
+        var path = location.path();
         switch (EnvironmentManager.getPlatformType()) {
             case FABRIC -> {
                 // in 1.21 fabric only allows adding fabric_resources models.

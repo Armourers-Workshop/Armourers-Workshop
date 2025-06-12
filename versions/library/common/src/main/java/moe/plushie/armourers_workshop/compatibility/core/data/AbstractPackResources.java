@@ -26,7 +26,7 @@ public class AbstractPackResources implements PackResources {
     private final PackType packType;
 
     public AbstractPackResources(SmartResourceManager resourceManager, PackType packType) {
-        this.location = new PackLocationInfo(resourceManager.getId(), Component.empty(), PackSource.DEFAULT, Optional.empty());
+        this.location = new PackLocationInfo(resourceManager.id(), Component.empty(), PackSource.DEFAULT, Optional.empty());
         this.resourceManager = resourceManager;
         this.packType = packType;
     }

@@ -50,7 +50,7 @@ public class SkinningTableMenu extends AbstractBlockEntityMenu<SkinningTableBloc
             @Override
             public void set(ItemStack itemStack) {
                 if (itemStack.isEmpty()) {
-                    SkinningRecipes.onCraft(inventory, blockEntity.getOptions());
+                    SkinningRecipes.onCraft(inventory, blockEntity.options());
                     super.set(itemStack);
                     onCraftSlotChanges();
                 }
@@ -59,6 +59,6 @@ public class SkinningTableMenu extends AbstractBlockEntityMenu<SkinningTableBloc
     }
 
     public void onCraftSlotChanges() {
-        inventory.setItem(0, SkinningRecipes.getRecipeOutput(inventory, blockEntity.getOptions()));
+        inventory.setItem(0, SkinningRecipes.getRecipeOutput(inventory, blockEntity.options()));
     }
 }

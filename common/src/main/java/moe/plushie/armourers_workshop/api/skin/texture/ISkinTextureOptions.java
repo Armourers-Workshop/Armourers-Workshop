@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.api.skin.texture;
 
 public interface ISkinTextureOptions {
 
-    int getRotation();
+    int rotation();
 
     boolean isEmpty();
 

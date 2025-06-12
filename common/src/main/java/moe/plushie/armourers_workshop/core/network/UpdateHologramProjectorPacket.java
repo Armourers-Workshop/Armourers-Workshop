@@ -51,7 +51,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
 
         private static final auto TYPE = GenericProperties.of(HologramProjectorBlockEntity.class, UpdateHologramProjectorPacket::new);
 
-        public static final auto POWER_MODE = create(HologramProjectorBlockEntity::getPowerMode, HologramProjectorBlockEntity::setPowerMode, DataSerializers.INT);
+        public static final auto POWER_MODE = create(HologramProjectorBlockEntity::powerMode, HologramProjectorBlockEntity::setPowerMode, DataSerializers.INT);
         public static final auto IS_GLOWING = create(HologramProjectorBlockEntity::isGlowing, HologramProjectorBlockEntity::setGlowing, DataSerializers.BOOLEAN);
 
         public static final auto SHOWS_ROTATION_POINT = create(HologramProjectorBlockEntity::shouldShowRotationPoint, HologramProjectorBlockEntity::setShowRotationPoint, DataSerializers.BOOLEAN);

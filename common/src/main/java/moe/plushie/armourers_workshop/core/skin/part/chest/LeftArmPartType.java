@@ -22,7 +22,7 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
     }
 
     @Override
-    public OpenRectangle3i getGuideSpace(EntityTextureDescriptor.Model model) {
+    public OpenRectangle3i guideSpace(EntityTextureDescriptor.Model model) {
         if (model == EntityTextureDescriptor.Model.ALEX) {
             return guideSpaceSlim;
         }
@@ -30,12 +30,12 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
     }
 
     @Override
-    public OpenVector2i getTextureSkinPos() {
+    public OpenVector2i textureSkinPos() {
         return new OpenVector2i(40, 16);
     }
 
     @Override
-    public OpenVector3i getTextureModelSize() {
+    public OpenVector3i textureModelSize() {
         return new OpenVector3i(4, 12, 4);
     }
 }

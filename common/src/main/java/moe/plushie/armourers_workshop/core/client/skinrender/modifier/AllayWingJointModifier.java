@@ -11,8 +11,8 @@ public class AllayWingJointModifier extends JointModifier {
 
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        var rootModelPart = model.getPart("root");
-        var bodyModelPart = model.getPart("body");
+        var rootModelPart = model.partByName("root");
+        var bodyModelPart = model.partByName("body");
         var wingModelPart = getWingPart(joint, model);
         if (rootModelPart == null || bodyModelPart == null || wingModelPart == null) {
             return transform;
@@ -24,7 +24,7 @@ public class AllayWingJointModifier extends JointModifier {
             rootPose.transform(poseStack);
             bodyPose.transform(poseStack);
             transform.apply(poseStack);
-            var yRot = wingPose.getYRot();
+            var yRot = wingPose.yRot();
             if (yRot != 0) {
                 poseStack.rotate(OpenVector3f.YP.rotation(yRot));
             }
@@ -33,9 +33,9 @@ public class AllayWingJointModifier extends JointModifier {
     }
 
     private IModelPart getWingPart(IJoint joint, IModel model) {
-        if (joint.getName().equals("Phalanx_R")) {
-            return model.getPart("right_wing");
+        if (joint.name().equals("Phalanx_R")) {
+            return model.partByName("right_wing");
         }
-        return model.getPart("left_wing");
+        return model.partByName("left_wing");
     }
 }

@@ -14,7 +14,7 @@ public class BlockSelectorImpl implements BlockSelector {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return AbstractRegistryManager.getBlockKey(blockState.getBlock());
     }
 

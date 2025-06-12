@@ -55,8 +55,8 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     protected abstract void submitColorChange(UIControl control);
 
     protected void applyPaletteChange(UIControl button) {
-        int index = paletteBox.getSelectedIndex();
-        Palette palette = getSelectedPalette();
+        int index = paletteBox.selectedIndex();
+        Palette palette = selectedPalette();
         if (palette != null) {
             if (!palette.isLocked() && InputManagerImpl.hasShiftDown()) {
                 palette.setColor(index, paintColorView.color().getRGB());
@@ -73,7 +73,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void applyColorChange(UIControl button) {
-        setColorComponents(new float[]{sliders[0].getValue(), sliders[1].getValue(), sliders[2].getValue()});
+        setColorComponents(new float[]{sliders[0].value(), sliders[1].value(), sliders[2].value()});
     }
 
     protected void showNewPaletteDialog(UIControl button) {
@@ -89,17 +89,17 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void showRenamePaletteDialog(UIControl button) {
-        var palette = getSelectedPalette();
+        var palette = selectedPalette();
         if (palette == null || palette.isLocked()) {
             return;
         }
         var alert = new InputDialog();
         alert.setTitle(NSString.localizedString("colour-mixer.rename_palette.title"));
         alert.setPlaceholder(NSString.localizedString("colour-mixer.rename_palette.enter_name"));
-        alert.setValue(palette.getName());
+        alert.setValue(palette.name());
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                String name = palette.getName();
+                String name = palette.name();
                 PaletteManager.getInstance().renamePalette(name, alert.value());
                 this.reloadPalettes();
             }
@@ -107,18 +107,18 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void showRemovePaletteDialog(UIControl button) {
-        var palette = getSelectedPalette();
+        var palette = selectedPalette();
         if (palette == null || palette.isLocked()) {
             return;
         }
         var alert = new ConfirmDialog();
         alert.setTitle(NSString.localizedString("colour-mixer.remove_palette.title"));
-        alert.setMessage(NSString.localizedString("colour-mixer.remove_palette.message", palette.getName()));
+        alert.setMessage(NSString.localizedString("colour-mixer.remove_palette.message", palette.name()));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                String name = palette.getName();
+                String name = palette.name();
                 paletteManager.deletePalette(name);
-                setSelectedPalette(paletteManager.getPalettes().iterator().next());
+                setSelectedPalette(paletteManager.palettes().iterator().next());
                 this.reloadPalettes();
             }
         });
@@ -128,9 +128,9 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         var selectedIndex = 0;
         palettes = new ArrayList<>();
         var items = new ArrayList<UIComboItem>();
-        for (var palette : PaletteManager.getInstance().getPalettes()) {
-            var item = new UIComboItem(new NSString(palette.getName()));
-            if (palette == getSelectedPalette()) {
+        for (var palette : PaletteManager.getInstance().palettes()) {
+            var item = new UIComboItem(new NSString(palette.name()));
+            if (palette == selectedPalette()) {
                 selectedIndex = items.size();
             }
             items.add(item);
@@ -162,18 +162,18 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         for (var slider : sliders) {
             slider.setValueWithComponents(values);
         }
-        hexInputView.setText(String.format("#%02x%02x%02x", newValue.getRed(), newValue.getGreen(), newValue.getBlue()));
+        hexInputView.setText(String.format("#%02x%02x%02x", newValue.red(), newValue.green(), newValue.blue()));
         if (hexInputView.isEditing()) {
             hexInputView.resignFirstResponder();
         }
     }
 
     public void setSelectedColor(UIColor selectedColor) {
-        var values = ColorUtils.RGBtoHSB(selectedColor.getRed(), selectedColor.getGreen(), selectedColor.getBlue(), null);
+        var values = ColorUtils.RGBtoHSB(selectedColor.red(), selectedColor.green(), selectedColor.blue(), null);
         setColorComponents(values);
     }
 
-    public UIColor getSelectedColor() {
+    public UIColor selectedColor() {
         return paintColorView.color();
     }
 
@@ -184,7 +184,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
         }
     }
 
-    public Palette getSelectedPalette() {
-        return paletteManager.getCurrentPalette();
+    public Palette selectedPalette() {
+        return paletteManager.currentPalette();
     }
 }

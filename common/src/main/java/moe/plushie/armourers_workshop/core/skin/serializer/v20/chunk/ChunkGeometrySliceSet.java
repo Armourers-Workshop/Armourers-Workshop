@@ -37,26 +37,26 @@ public class ChunkGeometrySliceSet extends SkinGeometrySet<SkinGeometry> {
     }
 
     @Override
-    public Collection<SkinGeometryType> getSupportedTypes() {
+    public Collection<SkinGeometryType> supportedTypes() {
         var supportedTypes = new HashSet<SkinGeometryType>();
         for (var selector : selectors) {
-            supportedTypes.add(selector.getSection().getGeometryType());
+            supportedTypes.add(selector.section().geometryType());
         }
         return supportedTypes;
     }
 
-    public ChunkPaletteData getPalette() {
+    public ChunkPaletteData palette() {
         return palette;
     }
 
-    public Collection<ChunkGeometrySelector> getSelectors() {
+    public Collection<ChunkGeometrySelector> selectors() {
         return selectors;
     }
 
     private static int sum(Collection<ChunkGeometrySelector> elements) {
         int sum = 0;
         for (var element : elements) {
-            sum += element.getCount();
+            sum += element.count();
         }
         return sum;
     }
@@ -66,8 +66,8 @@ public class ChunkGeometrySliceSet extends SkinGeometrySet<SkinGeometry> {
         int startIndex = 0;
         int endIndex = 0;
         for (var selector : selectors) {
-            endIndex += selector.getCount();
-            providers.add(new ChunkGeometrySlice(startIndex, endIndex, selector, (ChunkGeometrySection.Immutable) selector.getSection()));
+            endIndex += selector.count();
+            providers.add(new ChunkGeometrySlice(startIndex, endIndex, selector, (ChunkGeometrySection.Immutable) selector.section()));
             startIndex = endIndex;
         }
         return new OpenSliceAccessor<>(providers);

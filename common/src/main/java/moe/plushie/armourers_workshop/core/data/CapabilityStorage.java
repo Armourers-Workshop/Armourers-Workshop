@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -62,7 +63,7 @@ public class CapabilityStorage {
             return;
         }
         var capsKey = AbstractCapabilityStorage.KEY;
-        var caps = tag.getCompound(capsKey);
+        var caps = tag.getOptionalCompound(capsKey).orElseGet(CompoundTag::new);
         capabilities.values().forEach(pair -> {
             if (pair.getValue().orElse(null) instanceof IDataSerializable.Mutable provider) {
                 var tag1 = new CompoundTag();
@@ -82,7 +83,7 @@ public class CapabilityStorage {
             return;
         }
         var caps = getCapTag(tag);
-        if (caps.isEmpty()) {
+        if (caps == null || caps.isEmpty()) {
             return;
         }
         capabilities.values().forEach(pair -> {
@@ -95,16 +96,14 @@ public class CapabilityStorage {
         });
     }
 
+    @Nullable
     private CompoundTag getCapTag(CompoundTag tag) {
-        if (tag.contains(Constants.Key.OLD_CAPABILITY, Constants.TagFlags.COMPOUND)) {
-            var caps = tag.getCompound(Constants.Key.OLD_CAPABILITY);
-            if (tag.contains(Constants.Key.NEW_CAPABILITY, Constants.TagFlags.COMPOUND)) {
-                caps = caps.copy();
-                caps.merge(tag.getCompound(Constants.Key.NEW_CAPABILITY));
-            }
-            return caps;
+        var newValue = tag.getOptionalCompound(Constants.Key.NEW_CAPABILITY);
+        var oldValue = tag.getOptionalCompound(Constants.Key.OLD_CAPABILITY).orElse(null);
+        if (oldValue != null) {
+            return newValue.map(newCaps -> oldValue.copy().merge(newCaps)).orElse(oldValue);
         }
-        return tag.getCompound(Constants.Key.NEW_CAPABILITY);
+        return newValue.orElse(null);
     }
 
     public interface Provider {

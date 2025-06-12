@@ -28,7 +28,7 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
     public SkinWardrobeLayer(BakedArmatureTransformer armatureTransformer, RenderLayerParent<T, V> renderer) {
         super(renderer);
-        this.armature = new BakedArmature(armatureTransformer.getArmature());
+        this.armature = new BakedArmature(armatureTransformer.armature());
         this.entityRenderer = renderer;
     }
 
@@ -42,22 +42,22 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
         if (renderData == null) {
             return;
         }
-        var renderingTasks = renderData.getArmorSkins();
+        var renderingTasks = renderData.armorSkins();
         if (renderingTasks.isEmpty()) {
             return;
         }
-        var renderPatch = renderData.getRenderPatch();
+        var renderPatch = renderData.renderPatch();
         if (renderPatch == null) {
             return;
         }
-        var transformer = renderPatch.getTransformer();
+        var transformer = renderPatch.transformer();
         if (transformer == null) {
             return;
         }
         var poseStack1 = poseStack;
         var epicFlightContext = Objects.safeCast(renderPatch, EpicFightEntityRendererPatch.class);
         if (epicFlightContext != null) {
-            poseStack = epicFlightContext.getOverridePose();
+            poseStack = epicFlightContext.overridePose();
         }
 
         poseStack.pushPose();
@@ -72,13 +72,13 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
         transformer.applyTo(armature);
 
-        var pluginContext = renderPatch.getPluginContext();
-        var renderingContext = renderPatch.getRenderingContext();
+        var pluginContext = renderPatch.pluginContext();
+        var renderingContext = renderPatch.renderingContext();
 
-        renderingContext.setOverlay(pluginContext.getOverlay());
-        renderingContext.setLightmap(pluginContext.getLightmap());
-        renderingContext.setPartialTicks(pluginContext.getPartialTicks());
-        renderingContext.setAnimationTicks(pluginContext.getAnimationTicks());
+        renderingContext.setOverlay(pluginContext.overlay());
+        renderingContext.setLightmap(pluginContext.lightmap());
+        renderingContext.setPartialTicks(pluginContext.partialTicks());
+        renderingContext.setAnimationTicks(pluginContext.animationTicks());
 
         renderingContext.setPoseStack(poseStack);
         renderingContext.setBufferSource(bufferSource);
@@ -88,10 +88,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
 
         for (var entry : renderingTasks) {
             renderingContext.setOverlay(entry.getOverrideOverlay(entity));
-            renderingContext.setItemSource(SkinItemSource.create(entry.getRenderPriority(), entry.getItemStack()));
-            var bakedSkin = entry.getSkin();
+            renderingContext.setItemSource(SkinItemSource.create(entry.renderPriority(), entry.itemStack()));
+            var bakedSkin = entry.skin();
             bakedSkin.setupAnim(entity, armature, renderingContext);
-            var paintScheme = bakedSkin.resolve(entity, entry.getPaintScheme());
+            var paintScheme = bakedSkin.resolve(entity, entry.paintScheme());
             SkinRenderer.render(entity, armature, bakedSkin, paintScheme, renderingContext);
         }
 
@@ -99,10 +99,10 @@ public class SkinWardrobeLayer<T extends Entity, V extends EntityModel<T>, M ext
     }
 
     protected void applyModelScale(IPoseStack poseStack, M model) {
-        var babyPose = model.getBabyPose();
+        var babyPose = model.babyPose();
         if (babyPose != null) {
-            var scale = 1 / babyPose.getHeadScale();
-            var offset = babyPose.getHeadOffset();
+            var scale = 1 / babyPose.headScale();
+            var offset = babyPose.headOffset();
             poseStack.scale(scale, scale, scale);
             poseStack.translate(offset.x() / 16f, offset.y() / 16f, offset.z() / 16f);
         }

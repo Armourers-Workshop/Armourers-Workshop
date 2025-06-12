@@ -102,7 +102,7 @@ public class OpenVector3i implements Comparable<OpenVector3i>, IVector3i {
         if (i == 0) {
             return this;
         }
-        return new OpenVector3i(x() + dir.getStepX() * i, y() + dir.getStepY() * i, z() + dir.getStepZ() * i);
+        return new OpenVector3i(x() + dir.stepX() * i, y() + dir.stepY() * i, z() + dir.stepZ() * i);
     }
 
     public OpenVector3i cross(OpenVector3i pos) {

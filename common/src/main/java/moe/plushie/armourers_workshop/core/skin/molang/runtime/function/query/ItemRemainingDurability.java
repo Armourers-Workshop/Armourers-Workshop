@@ -18,9 +18,9 @@ public class ItemRemainingDurability extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var item = entity.getEquippedItem(this.slot.evaluate(context).getAsString());
+        var item = entity.equippedItemBySlot(this.slot.evaluate(context).getAsString());
         if (item != null) {
-            return item.getMaxDamage() - item.getDamage();
+            return item.maxDamage() - item.damage();
         }
         return 0;
     }

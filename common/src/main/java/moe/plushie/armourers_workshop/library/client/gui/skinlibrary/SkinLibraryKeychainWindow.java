@@ -45,8 +45,8 @@ public class SkinLibraryKeychainWindow {
         }
         // auth algorithm
         if (securityData.startsWith(DataEncryptMethod.AUTH.method() + ";")) {
-            var setting = SkinLibraryManager.getClient().getSetting();
-            if (!securityData.equals(setting.getPublicKey())) {
+            var setting = SkinLibraryManager.getClient().setting();
+            if (!securityData.equals(setting.publicKey())) {
                 consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalServer"));
                 return;
             }

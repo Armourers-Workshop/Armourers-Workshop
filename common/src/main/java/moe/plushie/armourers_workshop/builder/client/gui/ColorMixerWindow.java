@@ -55,9 +55,9 @@ public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> imple
 
     protected void reloadStatus() {
         var blockEntity = menu.getBlockEntity();
-        var paintColor = blockEntity.getColor();
+        var paintColor = blockEntity.color();
         var selectedColor = new UIColor(paintColor.getRGB());
-        var selectedPaintType = paintColor.getPaintType();
+        var selectedPaintType = paintColor.paintType();
         paintColorView.setColor(selectedColor);
         paintColorView.setPaintType(selectedPaintType);
         if (paintComboBox == null || paintTypes == null) {

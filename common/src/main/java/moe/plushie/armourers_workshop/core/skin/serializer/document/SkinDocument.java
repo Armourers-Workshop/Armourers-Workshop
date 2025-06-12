@@ -105,7 +105,7 @@ public class SkinDocument {
         this.animations = animations;
     }
 
-    public List<SkinDocumentAnimation> getAnimations() {
+    public List<SkinDocumentAnimation> animations() {
         return animations;
     }
 
@@ -113,11 +113,11 @@ public class SkinDocument {
         settings.setItemTransforms(itemTransforms);
     }
 
-    public OpenItemTransforms getItemTransforms() {
-        return settings.getItemTransforms();
+    public OpenItemTransforms itemTransforms() {
+        return settings.itemTransforms();
     }
 
-    public SkinDocumentListener getHandler() {
+    public SkinDocumentListener handler() {
         return listener;
     }
 
@@ -125,19 +125,19 @@ public class SkinDocument {
         return _findNodeById(nodes, id);
     }
 
-    public SkinDocumentNode getRoot() {
+    public SkinDocumentNode root() {
         return nodes;
     }
 
-    public SkinDocumentSettings getSettings() {
+    public SkinDocumentSettings settings() {
         return settings;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
-    public SkinDocumentType getType() {
+    public SkinDocumentType type() {
         return this.type;
     }
 
@@ -147,7 +147,7 @@ public class SkinDocument {
     }
 
     private SkinDocumentNode _findNodeById(SkinDocumentNode parent, String id) {
-        if (id.equals(parent.getId())) {
+        if (id.equals(parent.id())) {
             return parent;
         }
         for (var node : parent.children()) {
@@ -177,8 +177,8 @@ public class SkinDocument {
 
     private SkinDocumentNode _generateDefaultNode(SkinDocumentType category) {
         var root = new SkinDocumentNode("root", null);
-        for (var partType : category.getSkinPartTypes()) {
-            var node = new SkinDocumentNode(partType.getRegistryName().getPath(), null);
+        for (var partType : category.skinPartTypes()) {
+            var node = new SkinDocumentNode(partType.registryName().path(), null);
             node.setType(partType);
             root.add(node);
         }

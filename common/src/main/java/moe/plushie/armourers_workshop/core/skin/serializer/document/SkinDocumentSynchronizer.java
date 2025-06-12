@@ -64,26 +64,26 @@ public class SkinDocumentSynchronizer implements SkinDocumentListener {
     public void documentDidInsertNode(SkinDocumentNode node, SkinDocumentNode target, int index) {
         var builder = new TagSerializer();
         target.serialize(builder);
-        post(new UpdateSkinDocumentPacket.InsertNodeAction(node.getId(), index, builder.getTag()));
+        post(new UpdateSkinDocumentPacket.InsertNodeAction(node.id(), index, builder.tag()));
     }
 
     @Override
     public void documentDidUpdateNode(SkinDocumentNode node, CompoundTag tag) {
         if (isCapturing) {
-            capturedNodeValues.computeIfAbsent(node.getId(), it -> tag).merge(tag);
+            capturedNodeValues.computeIfAbsent(node.id(), it -> tag).merge(tag);
             return;
         }
-        post(new UpdateSkinDocumentPacket.UpdateNodeAction(node.getId(), tag));
+        post(new UpdateSkinDocumentPacket.UpdateNodeAction(node.id(), tag));
     }
 
     @Override
     public void documentDidRemoveNode(SkinDocumentNode node) {
-        post(new UpdateSkinDocumentPacket.RemoveNodeAction(node.getId()));
+        post(new UpdateSkinDocumentPacket.RemoveNodeAction(node.id()));
     }
 
     @Override
     public void documentDidMoveNode(SkinDocumentNode node, SkinDocumentNode target, int index) {
-        post(new UpdateSkinDocumentPacket.MoveNodeAction(node.getId(), target.getId(), index));
+        post(new UpdateSkinDocumentPacket.MoveNodeAction(node.id(), target.id(), index));
     }
 
     @Override

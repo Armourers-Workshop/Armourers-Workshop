@@ -9,13 +9,13 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface IRegistry<T> {
 
-    Collection<IRegistryHolder<? extends T>> getEntries();
+    Collection<IRegistryHolder<? extends T>> entries();
 
     IResourceLocation getKey(T object);
 
     T getValue(IResourceLocation registryName);
 
-    Class<?> getType();
+    Class<?> type();
 
 
     /**

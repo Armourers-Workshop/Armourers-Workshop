@@ -77,7 +77,7 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
     }
 
     public void mul(IMatrix4f matrix) {
-        for (var vector : getVertexes()) {
+        for (var vector : vertexes()) {
             vector.transform(matrix);
         }
         box = null;
@@ -85,7 +85,7 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
     }
 
     public void add(float x, float y, float z, float width, float height, float depth) {
-        var list = getVertexes();
+        var list = vertexes();
         list.add(new OpenVector4f(x, y, z, 1.0f));
         list.add(new OpenVector4f(x + width, y, z, 1.0f));
         list.add(new OpenVector4f(x + width, y + height, z, 1.0f));
@@ -99,8 +99,8 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
     }
 
     public void add(OpenVoxelShape shape1) {
-        var list = getVertexes();
-        list.addAll(shape1.getVertexes());
+        var list = vertexes();
+        list.addAll(shape1.vertexes());
         box = null;
     }
 
@@ -113,7 +113,7 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
     }
 
     public void add(OpenVector4f vertex) {
-        var list = getVertexes();
+        var list = vertexes();
         list.add(vertex);
         box = null;
     }
@@ -126,7 +126,7 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
         if (vertexes == null || vertexes.size() <= 8) {
             return;
         }
-        var list = getVertexes();
+        var list = vertexes();
         var uniquesVertexes = new LinkedHashSet<OpenVector4f>(list.size());
         uniquesVertexes.addAll(list);
         vertexes = Collections.newList(uniquesVertexes);
@@ -152,17 +152,17 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
         if (vertexes != null) {
             return vertexes.iterator();
         }
-        return getVertexes(box).iterator();
+        return vertexesFromBox(box).iterator();
     }
 
-    private List<OpenVector4f> getVertexes() {
+    private List<OpenVector4f> vertexes() {
         if (vertexes == null) {
-            vertexes = getVertexes(box);
+            vertexes = vertexesFromBox(box);
         }
         return vertexes;
     }
 
-    private List<OpenVector4f> getVertexes(IRectangle3f box) {
+    private List<OpenVector4f> vertexesFromBox(IRectangle3f box) {
         if (box == null) {
             return Collections.newList();
         }

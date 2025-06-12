@@ -16,7 +16,7 @@ public class ServerResponse {
         return valid;
     }
 
-    public String getMessage() {
+    public String message() {
         return message;
     }
 

@@ -6,9 +6,9 @@ public interface Chunk {
 
     void writeToStream(ChunkOutputStream stream) throws IOException;
 
-    int getLength();
+    int length();
 
-    String getName();
+    String name();
 
-    ChunkFlags getFlags();
+    ChunkFlags flags();
 }

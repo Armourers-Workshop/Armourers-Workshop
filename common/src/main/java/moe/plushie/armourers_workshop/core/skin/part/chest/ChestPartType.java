@@ -18,12 +18,12 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
     }
 
     @Override
-    public OpenVector2i getTextureSkinPos() {
+    public OpenVector2i textureSkinPos() {
         return new OpenVector2i(16, 16);
     }
 
     @Override
-    public OpenVector3i getTextureModelSize() {
+    public OpenVector3i textureModelSize() {
         return new OpenVector3i(8, 12, 4);
     }
 }

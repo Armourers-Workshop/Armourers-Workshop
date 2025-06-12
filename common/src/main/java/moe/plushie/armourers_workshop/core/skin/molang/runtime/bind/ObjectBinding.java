@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
 
 public interface ObjectBinding extends Expression {
 
-    Expression getProperty(String name);
+    Expression propertyByName(String name);
 
     @Override
     default Result evaluate(final ExecutionContext context) {

@@ -58,7 +58,7 @@ public interface IDataCodec<A> {
             var serializer = new TagSerializer();
             it.serialize(serializer);
             // noinspection unchecked
-            return (A) serializer.getTag();
+            return (A) serializer.tag();
         });
     }
 

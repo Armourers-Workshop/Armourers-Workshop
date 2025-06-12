@@ -33,7 +33,7 @@ public class SkinLibrarySetting implements IDataSerializable.Immutable {
             flags |= 0x04;
         }
         this.flags = flags;
-        this.publicKey = manager.getPublicKey();
+        this.publicKey = manager.publicKey();
     }
 
     public SkinLibrarySetting(IDataSerializer serializer) {
@@ -59,7 +59,7 @@ public class SkinLibrarySetting implements IDataSerializable.Immutable {
         return (flags & 0x04) != 0;
     }
 
-    public String getPublicKey() {
+    public String publicKey() {
         return publicKey;
     }
 

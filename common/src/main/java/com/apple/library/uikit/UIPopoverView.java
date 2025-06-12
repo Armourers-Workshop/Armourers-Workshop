@@ -87,11 +87,11 @@ public class UIPopoverView extends UIWindow {
 
     private UIWindowManager getWindowManagerFromView(UIView view) {
         if (view instanceof UIWindow window) {
-            return window.getWindowManager();
+            return window.windowManager();
         }
         var window = view.window();
         if (window != null) {
-            return window.getWindowManager();
+            return window.windowManager();
         }
         return null;
     }

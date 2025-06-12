@@ -45,14 +45,14 @@ public class AnimatedTransform implements ITransform {
     @Nullable
     public static AnimatedTransform of(SkinPartTransform partTransform) {
         // when animation transform already been created, we just use it directly.
-        for (var childTransform : partTransform.getChildren()) {
+        for (var childTransform : partTransform.children()) {
             if (childTransform instanceof AnimatedTransform animatedTransform) {
                 return animatedTransform;
             }
         }
         // if part have a non-standard transform (preview mode),
         // we wil think this part can't be support animation.
-        if (!(partTransform.getParent() instanceof OpenTransform3f parent)) {
+        if (!(partTransform.parent() instanceof OpenTransform3f parent)) {
             return null;
         }
         // we will replace the standard transform to animated transform.
@@ -64,26 +64,26 @@ public class AnimatedTransform implements ITransform {
     public void link(AnimatedOutputPoint point) {
         // add point and sort it.
         this.pendingPoints.add(point);
-        this.pendingPoints.sort(Comparator.comparingInt(it -> it.getMode().getPriority()));
+        this.pendingPoints.sort(Comparator.comparingInt(it -> it.mode().priority()));
         // rebuild linked values.
         this.points.clear();
         this.defaultPoints.clear();
         this.mixedPoints.clear();
         this.points.addAll(pendingPoints);
-        this.defaultPoints.addAll(Collections.filter(pendingPoints, it -> !it.getMode().isMixMode()));
-        this.mixedPoints.addAll(Collections.filter(pendingPoints, it -> it.getMode().isMixMode()));
+        this.defaultPoints.addAll(Collections.filter(pendingPoints, it -> !it.mode().isMixMode()));
+        this.mixedPoints.addAll(Collections.filter(pendingPoints, it -> it.mode().isMixMode()));
     }
 
     @Override
     public void apply(IPoseStack poseStack) {
         // the translation have changes?
-        var translate = getTranslate();
+        var translate = translation();
         if (translate != OpenVector3f.ZERO) {
             poseStack.translate(translate.x(), translate.y(), translate.z());
         }
         // the rotation have changes?
-        var pivot = getPivot();
-        var rotation = getRotation();
+        var pivot = pivot();
+        var rotation = rotation();
         if (rotation != OpenVector3f.ZERO) {
             if (pivot != OpenVector3f.ZERO) {
                 poseStack.translate(pivot.x(), pivot.y(), pivot.z());
@@ -94,7 +94,7 @@ public class AnimatedTransform implements ITransform {
             }
         }
         // the scale have changes?
-        var scale = getScale();
+        var scale = scale();
         if (scale != OpenVector3f.ONE) {
             if (pivot != OpenVector3f.ZERO) {
                 poseStack.translate(pivot.x(), pivot.y(), pivot.z());
@@ -121,26 +121,26 @@ public class AnimatedTransform implements ITransform {
         var base = parent.translate();
         var delta = OpenVector3f.ZERO;
         for (var point : points) {
-            var value = point.getTranslate();
+            var value = point.translation();
             if (value != OpenVector3f.ZERO) { // has any animation change this point?
                 delta = value;
             }
         }
-        result.setTranslate(base.x() + delta.x(), base.y() + delta.y(), base.z() + delta.z());
+        result.setTranslation(base.x() + delta.x(), base.y() + delta.y(), base.z() + delta.z());
     }
 
     private void exportRotation(AnimatedPoint result) {
         var base = parent.rotation();
         var delta = OpenVector3f.ZERO;
         for (var point : defaultPoints) {
-            var value = point.getRotation();
+            var value = point.rotation();
             if (value != OpenVector3f.ZERO) { // has any animation change this point?
                 delta = value;
             }
         }
         // if the wants the bone to be controlled, we always use the rotation by controller.
         if (controller != null) {
-            delta = controller.getRotation();
+            delta = controller.rotation();
             base = OpenVector3f.ZERO; // the parent rotation will overwrite when a bone controlled.
         }
         // in mixed mode we need to merge all rotation.
@@ -148,7 +148,7 @@ public class AnimatedTransform implements ITransform {
         var y = base.y() + delta.y();
         var z = base.z() + delta.z();
         for (var point : mixedPoints) {
-            var value = point.getRotation();
+            var value = point.rotation();
             if (value != OpenVector3f.ZERO) { // has any animation change this point?
                 x += value.x();
                 y += value.y();
@@ -162,7 +162,7 @@ public class AnimatedTransform implements ITransform {
         var base = parent.scale();
         var delta = OpenVector3f.ONE;
         for (var point : points) {
-            var value = point.getScale();
+            var value = point.scale();
             if (value != OpenVector3f.ONE) { // has any animation change this point?
                 delta = value;
             }
@@ -187,39 +187,39 @@ public class AnimatedTransform implements ITransform {
         this.controller = controller;
     }
 
-    public AnimatedOutputPoint getController() {
+    public AnimatedOutputPoint controller() {
         return controller;
     }
 
-    public OpenTransform3f getParent() {
+    public OpenTransform3f parent() {
         return parent;
     }
 
-    public OpenVector3f getTranslate() {
+    public OpenVector3f translation() {
         if (snapshot != null) {
-            return snapshot.getTranslate();
+            return snapshot.translation();
         }
         return parent.translate();
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         if (snapshot != null) {
-            return snapshot.getRotation();
+            return snapshot.rotation();
         }
         if (controller != null) {
-            return controller.getRotation();
+            return controller.rotation();
         }
         return parent.rotation();
     }
 
-    public OpenVector3f getScale() {
+    public OpenVector3f scale() {
         if (snapshot != null) {
-            return snapshot.getScale();
+            return snapshot.scale();
         }
         return parent.scale();
     }
 
-    public OpenVector3f getPivot() {
+    public OpenVector3f pivot() {
         return pivot;
     }
 }

@@ -22,13 +22,13 @@ public class GlobalSkinLibrarySettingWindow extends ConfirmDialog {
 
     public GlobalSkinLibrarySettingWindow() {
         super();
-        this.properties = getChanges().copy();
+        this.properties = changes().copy();
         this.setup();
         this.contentHeight += 6;
     }
 
     public static boolean hasChanges() {
-        return !getChanges().isEmpty();
+        return !changes().isEmpty();
     }
 
     public static void setChanges(SkinProperties properties) {
@@ -37,7 +37,7 @@ public class GlobalSkinLibrarySettingWindow extends ConfirmDialog {
         OPTIONS = newProperties;
     }
 
-    public static SkinProperties getChanges() {
+    public static SkinProperties changes() {
         if (OPTIONS == null) {
             var tag = ModMenuOptions.getInstance().getTag("library.uploadFileOptions");
             if (tag != null) {
@@ -49,8 +49,8 @@ public class GlobalSkinLibrarySettingWindow extends ConfirmDialog {
         return OPTIONS;
     }
 
-    public static SkinFileOptions getFileOptions() {
-        var values = getChanges().copy();
+    public static SkinFileOptions fileOptions() {
+        var values = changes().copy();
         var options = new SkinFileOptions();
         options.setEditable(values.get(Option.IS_EDITABLE));
         options.setSavable(values.get(Option.IS_SAVABLE));
@@ -77,7 +77,7 @@ public class GlobalSkinLibrarySettingWindow extends ConfirmDialog {
 
     private UICheckBox addOptionView(Option<Boolean> property) {
         var checkBox = new UICheckBox(new CGRect(8, contentHeight, bounds().width() - 16, 9));
-        checkBox.setTitle(NSString.localizedString("skin-library.setting." + property.getKey()));
+        checkBox.setTitle(NSString.localizedString("skin-library.setting." + property.key()));
         checkBox.setSelected(properties.get(property));
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, sender) -> {
             properties.put(property, sender.isSelected());
@@ -93,7 +93,7 @@ public class GlobalSkinLibrarySettingWindow extends ConfirmDialog {
         setBounds(new CGRect(0, 0, bounds().width(), contentHeight + 30));
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 

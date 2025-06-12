@@ -17,12 +17,12 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
     }
 
     @Override
-    public int getMaximumMarkersNeeded() {
+    public int maximumMarkersNeeded() {
         return 1;
     }
 
     @Override
-    public int getMinimumMarkersNeeded() {
+    public int minimumMarkersNeeded() {
         return 1;
     }
 }

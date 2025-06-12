@@ -37,13 +37,13 @@ public enum OpenRotation {
     }
 
     public OpenDirection rotate(OpenDirection direction) {
-        if (direction.getAxis() == OpenDirection.Axis.Y) {
+        if (direction.axis() == OpenDirection.Axis.Y) {
             return direction;
         }
         return switch (this) {
-            case CLOCKWISE_90 -> direction.getClockWise();
-            case CLOCKWISE_180 -> direction.getOpposite();
-            case COUNTERCLOCKWISE_90 -> direction.getCounterClockWise();
+            case CLOCKWISE_90 -> direction.clockWise();
+            case CLOCKWISE_180 -> direction.opposite();
+            case COUNTERCLOCKWISE_90 -> direction.counterClockWise();
             default -> direction;
         };
     }

@@ -23,12 +23,12 @@ public class ShaderVertexGroup {
         this.animationController = TextureAnimationController.of(renderType);
     }
 
-    public IRenderType getRenderType() {
+    public IRenderType renderType() {
         return renderType;
     }
 
-    public OpenMatrix4f getTextureMatrix(double animationTime) {
-        return animationController.getTextureMatrix(animationTime);
+    public OpenMatrix4f textureMatrix(double animationTime) {
+        return animationController.textureMatrix(animationTime);
     }
 
     public int size() {

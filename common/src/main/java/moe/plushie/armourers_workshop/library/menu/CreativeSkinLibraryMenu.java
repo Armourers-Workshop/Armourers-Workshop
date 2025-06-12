@@ -13,6 +13,6 @@ public class CreativeSkinLibraryMenu extends SkinLibraryMenu {
 
     @Override
     public boolean shouldLoadStack() {
-        return getOutputStack().isEmpty();
+        return outputStack().isEmpty();
     }
 }

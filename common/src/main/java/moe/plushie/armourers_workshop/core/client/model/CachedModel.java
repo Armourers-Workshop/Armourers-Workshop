@@ -23,17 +23,17 @@ public class CachedModel<P> implements IModel {
     }
 
     @Override
-    public IModelBabyPose getBabyPose() {
-        return container.getBabyPose();
+    public IModelBabyPose babyPose() {
+        return container.babyPose();
     }
 
     @Override
-    public IModelPart getPart(String name) {
+    public IModelPart partByName(String name) {
         return container.parts.get(name);
     }
 
     @Override
-    public Collection<? extends IModelPart> getAllParts() {
+    public Collection<? extends IModelPart> allParts() {
         return container.values;
     }
 
@@ -48,7 +48,7 @@ public class CachedModel<P> implements IModel {
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<?> type() {
         return container.type;
     }
 
@@ -81,7 +81,7 @@ public class CachedModel<P> implements IModel {
             }
         }
 
-        public IModelBabyPose getBabyPose() {
+        public IModelBabyPose babyPose() {
             return babyPose;
         }
     }

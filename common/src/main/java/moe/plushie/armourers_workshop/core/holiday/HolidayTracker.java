@@ -28,13 +28,13 @@ public class HolidayTracker extends AbstractSavedData {
     }
 
     public void add(Player player, Holiday holiday) {
-        ModLog.info("give a {} gift sack for the {}", holiday.getName(), player.getScoreboardName());
+        ModLog.info("give a {} gift sack for the {}", holiday.name(), player.getScoreboardName());
         logs.add(getKey(player, holiday));
         setDirty();
     }
 
     public void remove(Player player, Holiday holiday) {
-        ModLog.info("take a {} gift sack for the {}", holiday.getName(), player.getScoreboardName());
+        ModLog.info("take a {} gift sack for the {}", holiday.name(), player.getScoreboardName());
         logs.remove(getKey(player, holiday));
         setDirty();
     }
@@ -70,7 +70,7 @@ public class HolidayTracker extends AbstractSavedData {
 
     private String getKey(Player player, Holiday holiday) {
         // 2020:new-years:889bebd9-9ebc-4dec-97ee-de9907cbbc85
-        return calendar.get(Calendar.YEAR) + ":" + holiday.getName() + ":" + player.getStringUUID();
+        return calendar.get(Calendar.YEAR) + ":" + holiday.name() + ":" + player.getStringUUID();
     }
 
     private static class CodingKeys {

@@ -28,14 +28,14 @@ public class SkinExporterPolygon implements SkinExporter {
     private static final String CRLF = "\n";
 
     @Override
-    public Collection<String> getExtensions() {
+    public Collection<String> extensions() {
         return Collections.singleton("ply");
     }
 
     @Override
     public void exportSkin(Skin skin, File filePath, String filename, float scale) throws Exception {
         var partIndex = 0;
-        for (var skinPart : skin.getParts()) {
+        for (var skinPart : skin.parts()) {
             exportPart(skinPart, skin, filePath, filename, scale, partIndex++);
         }
     }
@@ -47,7 +47,7 @@ public class SkinExporterPolygon implements SkinExporter {
         var faces = new HashMap<SkinGeometryType, ArrayList<SkinCubeFace>>();
         for (var face : task.cubeFaces) {
             if (face.isVisible()) {
-                faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);
+                faces.computeIfAbsent(face.type(), k -> new ArrayList<>()).add(face);
             }
         }
         String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
@@ -60,11 +60,11 @@ public class SkinExporterPolygon implements SkinExporter {
     }
 
     private void exportLayer(ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, File filePath, String filename, float scale, String layer, int partIndex) throws IOException {
-        ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.getType(), faces.size());
+        ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.type(), faces.size());
 
         var finalName = filename;
         finalName += "-" + partIndex;
-        finalName += "-" + skinPart.getType().getRegistryName().getPath();
+        finalName += "-" + skinPart.type().registryName().path();
         finalName += "-" + layer;
         finalName += ".ply";
 
@@ -95,16 +95,16 @@ public class SkinExporterPolygon implements SkinExporter {
         poseStack.rotate(OpenVector3f.YP.rotationDegrees(90));
 
         for (var face : faces) {
-            var shape = face.getBoundingBox();
+            var shape = face.boundingBox();
             var x = shape.x();
             var y = shape.y();
             var z = shape.z();
             var w = shape.width();
             var h = shape.height();
             var d = shape.depth();
-            var vertexes = SkinCubeFace.getBaseVertices(face.getDirection());
+            var vertexes = SkinCubeFace.getBaseVertices(face.direction());
             for (var i = 0; i < 4; ++i) {
-                writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d, face.getColor());
+                writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d, face.color());
             }
         }
 
@@ -120,7 +120,7 @@ public class SkinExporterPolygon implements SkinExporter {
     private void writeVert(OpenPoseStack poseStack, OutputStreamWriter os, float x, float y, float z, SkinPaintColor color) throws IOException {
         var q = new OpenVector4f(x, y, z, 1);
         q.transform(poseStack.last().pose());
-        os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);
+        os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.red(), color.green(), color.blue()) + CRLF);
     }
 
     private String f2s(float value) {
@@ -133,8 +133,8 @@ public class SkinExporterPolygon implements SkinExporter {
         final ArrayList<SkinCubeFace> cubeFaces;
 
         Task(Skin skin, SkinPart skinPart) {
-            var geometries = skinPart.getGeometries();
-            var bounds = new OpenRectangle3i(geometries.getShape().bounds());
+            var geometries = skinPart.geometries();
+            var bounds = new OpenRectangle3i(geometries.shape().bounds());
             this.skin = skin;
             this.skinPart = skinPart;
             this.cubeFaces = Collections.collect(SkinCubeFaceCuller.cullFaces(geometries, bounds), SkinCubeFace.class);

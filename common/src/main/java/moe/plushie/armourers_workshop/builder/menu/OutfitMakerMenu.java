@@ -49,11 +49,11 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
 
     public boolean shouldCrafting() {
         // required empty of the output slot.
-        if (!getOutputStack().isEmpty()) {
+        if (!outputStack().isEmpty()) {
             return false;
         }
         // required has item on the input slot.
-        for (var itemStack : getInputStacks()) {
+        for (var itemStack : inputStacks()) {
             if (!itemStack.isEmpty()) {
                 return true;
             }
@@ -84,29 +84,29 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         SkinPaintData paintData = null;
         int paintDataVersion = 0;
         int skinIndex = 0;
-        for (var itemStack : getInputStacks()) {
+        for (var itemStack : inputStacks()) {
             var descriptor = SkinDescriptor.of(itemStack);
-            var skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
+            var skin = SkinLoader.getInstance().loadSkin(descriptor.identifier());
             if (skin == null) {
                 continue;
             }
             // TODO: no support!!
-            if (skin.getVersion() >= 20) {
+            if (skin.fileVersion() >= 20) {
                 throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
             }
-            if (!skin.getSettings().isEditable()) {
+            if (!skin.settings().isEditable()) {
                 throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
             }
-            for (int partIndex = 0; partIndex < skin.getPartCount(); partIndex++) {
-                var part = skin.getParts().get(partIndex);
+            for (int partIndex = 0; partIndex < skin.partCount(); partIndex++) {
+                var part = skin.parts().get(partIndex);
                 skinParts.add(part);
             }
-            if (skin.getPaintData() != null) {
-                var oldPaintData = skin.getPaintData();
+            if (skin.paintData() != null) {
+                var oldPaintData = skin.paintData();
                 if (paintData == null) {
                     paintData = SkinPaintData.v2(oldPaintData.slim());
                 }
-                for (var partType : skin.getType().getParts()) {
+                for (var partType : skin.type().parts()) {
                     if (partType instanceof ISkinPartTypeTextured texType) {
                         mergePaintPart(oldPaintData, paintData, texType);
                     }
@@ -118,7 +118,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 partIndexs += ":" + skinParts.size();
             }
             // TODO: refactor
-            for (var entry : skin.getProperties().entrySet()) {
+            for (var entry : skin.properties().entrySet()) {
                 if (entry.getKey().startsWith("wings")) {
                     properties.put(entry.getKey() + skinIndex, entry.getValue());
                 } else {
@@ -142,8 +142,8 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             if (profile.getId() != null) {
                 properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
             }
-            properties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.getItemName());
-            properties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.getItemFlavour());
+            properties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.itemName());
+            properties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.itemFlavour());
             // build
             var builder = new Skin.Builder(SkinTypes.OUTFIT);
             builder.properties(properties);
@@ -151,7 +151,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             builder.parts(skinParts);
             var skin = builder.build();
             var identifier = SkinLoader.getInstance().saveSkin("", skin);
-            var descriptor = new SkinDescriptor(identifier, skin.getType());
+            var descriptor = new SkinDescriptor(identifier, skin.type());
             setOutputStack(descriptor.asItemStack());
         }
     }
@@ -177,7 +177,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
     }
 
 
-    protected ItemStack getOutputStack() {
+    protected ItemStack outputStack() {
         var outputSlot = slots.get(slots.size() - 1);
         return outputSlot.getItem();
     }
@@ -187,15 +187,15 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         outputSlot.set(itemStack);
     }
 
-    protected Iterable<ItemStack> getInputStacks() {
+    protected Iterable<ItemStack> inputStacks() {
         return Iterables.transform(Iterables.skip(Iterables.limit(slots, slots.size() - 1), 36), Slot::getItem);
     }
 
     private void mergePaintPart(SkinPaintData srcData, SkinPaintData destData, ISkinPartTypeTextured texType) {
-        var pos = texType.getTextureSkinPos();
+        var pos = texType.textureSkinPos();
 
-        var width = (texType.getTextureModelSize().x() * 2) + (texType.getTextureModelSize().z() * 2);
-        var height = texType.getTextureModelSize().y() + texType.getTextureModelSize().z();
+        var width = (texType.textureModelSize().x() * 2) + (texType.textureModelSize().z() * 2);
+        var height = texType.textureModelSize().y() + texType.textureModelSize().z();
 
         for (var ix = 0; ix < width; ix++) {
             for (var iy = 0; iy < height; iy++) {

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -24,7 +25,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -57,21 +57,21 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     public UpdateWardrobePacket(SkinWardrobe wardrobe, Type mode, CompoundTag compoundTag, GenericValue<SkinWardrobe, ?> fieldValue) {
         this.type = mode;
-        this.entityId = wardrobe.getId();
+        this.entityId = wardrobe.id();
         this.fieldValue = fieldValue;
         this.compoundTag = compoundTag;
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        var serializer = new TagSerializer(new CompoundTag(), wardrobe.getEntity());
+        var serializer = new TagSerializer(new CompoundTag(), wardrobe.entity());
         wardrobe.serialize(serializer);
-        return new UpdateWardrobePacket(wardrobe, Type.SYNC, serializer.getTag(), null);
+        return new UpdateWardrobePacket(wardrobe, Type.SYNC, serializer.tag(), null);
     }
 
     public static UpdateWardrobePacket dying(SkinWardrobe wardrobe, int slot, SkinPaintColor color) {
         var compoundNBT = new CompoundTag();
         compoundNBT.putInt("Slot", slot);
-        compoundNBT.putInt("Color", color.getRawValue());
+        compoundNBT.putInt("Color", color.rawValue());
         return new UpdateWardrobePacket(wardrobe, Type.SYNC_ITEM, compoundNBT, null);
     }
 
@@ -95,14 +95,14 @@ public class UpdateWardrobePacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // We can't allow wardrobe updates without container.
         if (!(player.containerMenu instanceof SkinWardrobeMenu)) {
-            ModLog.info("reject {} operation for '{}'", getOperator(), player.getScoreboardName());
+            ModLog.info("reject {} operation for '{}'", operator(), player.getScoreboardName());
             return;
         }
         if (!checkSecurityByServer()) {
-            ModLog.info("reject {} operation for '{}', for security reasons.", getOperator(), player.getScoreboardName());
+            ModLog.info("reject {} operation for '{}', for security reasons.", operator(), player.getScoreboardName());
             return;
         }
-        ModLog.debug("accept {} operation for '{}'", getOperator(), player.getScoreboardName());
+        ModLog.debug("accept {} operation for '{}'", operator(), player.getScoreboardName());
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkManager.sendToTracking(this, player);
@@ -134,11 +134,11 @@ public class UpdateWardrobePacket extends CustomPacket {
                 yield null;
             }
             case SYNC_ITEM -> {
-                var inventory = wardrobe.getInventory();
-                int slot = compoundTag.getInt("Slot");
+                var inventory = wardrobe.inventory();
+                int slot = compoundTag.getOptionalInt("Slot").orElse(0);
                 if (slot < inventory.getContainerSize()) {
                     var itemStack = ItemStack.EMPTY;
-                    var color = SkinPaintColor.of(compoundTag.getInt("Color"));
+                    var color = SkinPaintColor.of(compoundTag.getOptionalInt("Color").orElse(0));
                     if (!color.isEmpty()) {
                         var newItemStack = new ItemStack(ModItems.BOTTLE.get());
                         newItemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
@@ -157,10 +157,10 @@ public class UpdateWardrobePacket extends CustomPacket {
             case SYNC -> false; // the server side never accept sync request.
             case SYNC_OPTION -> true;
             case SYNC_ITEM -> {
-                int slot = compoundTag.getInt("Slot");
+                int slot = compoundTag.getOptionalInt("Slot").orElse(0);
                 // for security reasons we need to check the position of the slot.
-                int index = slot - SkinSlotType.DYE.getIndex();
-                if (index < 8 || index >= SkinSlotType.DYE.getMaxSize()) {
+                int index = slot - SkinSlotType.DYE.index();
+                if (index < 8 || index >= SkinSlotType.DYE.maxSize()) {
                     yield false;
                 }
                 yield true;
@@ -168,9 +168,9 @@ public class UpdateWardrobePacket extends CustomPacket {
         };
     }
 
-    private Object getOperator() {
+    private Object operator() {
         if (fieldValue != null) {
-            return fieldValue.getProperty();
+            return fieldValue.property();
         }
         return type;
     }
@@ -184,14 +184,14 @@ public class UpdateWardrobePacket extends CustomPacket {
 
         private static final auto TYPE = GenericProperties.of(SkinWardrobe.class, UpdateWardrobePacket::field);
 
-        public static final auto WARDROBE_ARMOUR_HEAD = wardrobe(EquipmentSlot.HEAD);
-        public static final auto WARDROBE_ARMOUR_CHEST = wardrobe(EquipmentSlot.CHEST);
-        public static final auto WARDROBE_ARMOUR_LEGS = wardrobe(EquipmentSlot.LEGS);
-        public static final auto WARDROBE_ARMOUR_FEET = wardrobe(EquipmentSlot.FEET);
+        public static final auto WARDROBE_ARMOUR_HEAD = wardrobe(OpenEquipmentSlot.HEAD);
+        public static final auto WARDROBE_ARMOUR_CHEST = wardrobe(OpenEquipmentSlot.CHEST);
+        public static final auto WARDROBE_ARMOUR_LEGS = wardrobe(OpenEquipmentSlot.LEGS);
+        public static final auto WARDROBE_ARMOUR_FEET = wardrobe(OpenEquipmentSlot.FEET);
 
         public static final auto WARDROBE_EXTRA_RENDER = wardrobe(SkinWardrobe::shouldRenderExtra, SkinWardrobe::setRenderExtra);
 
-        public static final auto WARDROBE_COLLISION_SHAPE = wardrobe(SkinWardrobe::getCollisionShape, SkinWardrobe::setCollisionShape, DataSerializers.COLLISION_SHAPE_OPT);
+        public static final auto WARDROBE_COLLISION_SHAPE = wardrobe(SkinWardrobe::collisionShape, SkinWardrobe::setCollisionShape, DataSerializers.COLLISION_SHAPE_OPT);
 
         public static final auto MANNEQUIN_IS_CHILD = entity(MannequinEntity.DATA_IS_CHILD);
         public static final auto MANNEQUIN_IS_FLYING = entity(MannequinEntity.DATA_IS_FLYING);
@@ -207,7 +207,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         public static final auto MANNEQUIN_TEXTURE_MODEL = entity(MannequinEntity.DATA_TEXTURE_MODEL);
 
 
-        private static Field<Boolean> wardrobe(EquipmentSlot slotType) {
+        private static Field<Boolean> wardrobe(OpenEquipmentSlot slotType) {
             return wardrobe((source) -> source.shouldRenderEquipment(slotType), (source, value) -> source.setRenderEquipment(slotType, value), DataSerializers.BOOLEAN);
         }
 
@@ -226,13 +226,13 @@ public class UpdateWardrobePacket extends CustomPacket {
 
         private static <S extends Entity, T> Field<T> entity(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter((source) -> {
-                var entity = source.getEntity();
+                var entity = source.entity();
                 if (entity != null) {
                     return supplier.apply(Objects.unsafeCast(entity));
                 }
                 return null;
             }).setter((source, value) -> {
-                var entity = source.getEntity();
+                var entity = source.entity();
                 if (entity != null) {
                     applier.accept(Objects.unsafeCast(entity), value);
                 }

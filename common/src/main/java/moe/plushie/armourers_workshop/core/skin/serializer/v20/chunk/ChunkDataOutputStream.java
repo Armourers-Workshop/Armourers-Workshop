@@ -78,7 +78,7 @@ public class ChunkDataOutputStream implements ChunkOutputStream {
     }
 
     protected void ifTask(ChunkCondition condition, IOExecutor executor) throws IOException {
-        switch (condition.getResult()) {
+        switch (condition.result()) {
             case PASS -> executor.run();
             case PENDING -> {
                 var start = appendVariable(null);
@@ -105,16 +105,16 @@ public class ChunkDataOutputStream implements ChunkOutputStream {
     }
 
     @Override
-    public DataOutputStream getOutputStream() {
+    public DataOutputStream outputStream() {
         return outputStream;
     }
 
     @Override
-    public ChunkContext getContext() {
+    public ChunkContext context() {
         return context;
     }
 
-    protected ByteBuf getBuffer() {
+    protected ByteBuf buffer() {
         return buffer;
     }
 

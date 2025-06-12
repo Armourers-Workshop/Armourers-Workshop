@@ -44,8 +44,8 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return storage.get(property);
     }
 
-    public void setEmissive(boolean isEmissive) {
-        setFlag(0, isEmissive);
+    public void setEmissive(boolean newValue) {
+        setFlag(0, newValue);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return getFlag(1);
     }
 
-    public void setSpecular(boolean isSpecular) {
-        setFlag(2, isSpecular);
+    public void setSpecular(boolean newValue) {
+        setFlag(2, newValue);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return getFlag(2);
     }
 
-    public void setNormal(boolean isNormal) {
-        setFlag(3, isNormal);
+    public void setNormal(boolean newValue) {
+        setFlag(3, newValue);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return getFlag(3);
     }
 
-    public void setBlurFilter(boolean isBlurFilter) {
-        setFlag(4, isBlurFilter);
+    public void setBlurFilter(boolean newValue) {
+        setFlag(4, newValue);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return getFlag(4);
     }
 
-    public void setClampToEdge(boolean isClampToEdge) {
-        setFlag(5, isClampToEdge);
+    public void setClampToEdge(boolean newValue) {
+        setFlag(5, newValue);
     }
 
     @Override

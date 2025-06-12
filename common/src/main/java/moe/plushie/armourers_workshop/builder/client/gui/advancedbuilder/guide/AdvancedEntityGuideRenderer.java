@@ -27,17 +27,17 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
     protected final IRenderType renderType;
 
     public AdvancedEntityGuideRenderer() {
-        this.armature = getArmature();
-        this.texture = getTexture();
+        this.armature = armature();
+        this.texture = texture();
         this.renderType = getRenderType(texture);
     }
 
-    public abstract SkinTextureData getTexture();
+    public abstract SkinTextureData texture();
 
-    public abstract BakedArmature getArmature();
+    public abstract BakedArmature armature();
 
     public IRenderType getRenderType(SkinTextureData texture) {
-        return SkinRenderType.entityCutoutNoCull(OpenResourceLocation.parse(texture.getName()));
+        return SkinRenderType.entityCutoutNoCull(OpenResourceLocation.parse(texture.name()));
     }
 
     public void applyOffset(SkinDocument document, IPoseStack poseStack) {
@@ -48,15 +48,15 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
     public void render(SkinDocument document, IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
         poseStack.pushPose();
         applyOffset(document, poseStack);
-        var transforms = armature.getTransforms();
-        var armature1 = armature.getArmature();
+        var transforms = armature.transforms();
+        var armature1 = armature.armature();
         for (var joint : armature1.allJoints()) {
-            var shape = armature1.getShape(joint.getId());
-            var transform = transforms[joint.getId()];
+            var shape = armature1.shapeById(joint.id());
+            var transform = transforms[joint.id()];
             if (shape != null && transform != null) {
                 poseStack.pushPose();
                 transform.apply(poseStack);
-                renderShape(shape, ColorUtils.getPaletteColor(joint.getId()), poseStack, bufferSource);
+                renderShape(shape, ColorUtils.getPaletteColor(joint.id()), poseStack, bufferSource);
                 poseStack.popPose();
             }
         }
@@ -107,8 +107,8 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
         float v = uv.y();
         float s = uv.width();
         float t = uv.height();
-        float n = texture.getWidth();
-        float m = texture.getHeight();
+        float n = texture.width();
+        float m = texture.height();
 
         var uvs = SkinCubeFace.getBaseUVs(dir, 0);
         var vertexes = SkinCubeFace.getBaseVertices(dir);

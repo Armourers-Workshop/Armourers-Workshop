@@ -64,11 +64,11 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
     public static void setShaderColor(UIColor color) {
-        setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f);
+        setShaderColor(color.red() / 255f, color.green() / 255f, color.blue() / 255f, color.alpha() / 255f);
     }
 
     public static void setShaderColor(SkinPaintColor color) {
-        setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1.0f);
+        setShaderColor(color.red() / 255f, color.green() / 255f, color.blue() / 255f, 1.0f);
     }
 
     public static void setShaderColor(float f, float g, float h) {

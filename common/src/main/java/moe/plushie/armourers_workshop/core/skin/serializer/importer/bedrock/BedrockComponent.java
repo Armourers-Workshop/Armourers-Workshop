@@ -21,11 +21,11 @@ public class BedrockComponent {
             this.update = update;
         }
 
-        public OpenExpression getCreation() {
+        public OpenExpression creation() {
             return creation;
         }
 
-        public OpenExpression getUpdate() {
+        public OpenExpression update() {
             return update;
         }
 
@@ -108,11 +108,11 @@ public class BedrockComponent {
             this.maxParticles = maxParticles;
         }
 
-        public OpenExpression getSpawnRate() {
+        public OpenExpression spawnRate() {
             return spawnRate;
         }
 
-        public OpenExpression getMaxParticles() {
+        public OpenExpression maxParticles() {
             return maxParticles;
         }
 
@@ -144,7 +144,7 @@ public class BedrockComponent {
             this.particles = particles;
         }
 
-        public OpenExpression getParticles() {
+        public OpenExpression particles() {
             return particles;
         }
 
@@ -171,7 +171,7 @@ public class BedrockComponent {
             this.maxParticles = maxParticles;
         }
 
-        public OpenExpression getMaxParticles() {
+        public OpenExpression maxParticles() {
             return maxParticles;
         }
 
@@ -199,23 +199,23 @@ public class BedrockComponent {
         private final Map<String, List<String>> travelDistanceEvents;
         private final Map<Float, List<String>> travelDistanceLoopEvents;
 
-        public List<String> getCreation() {
+        public List<String> creation() {
             return creation;
         }
 
-        public List<String> getExpiration() {
+        public List<String> expiration() {
             return expiration;
         }
 
-        public Map<String, List<String>> getTimelineEvents() {
+        public Map<String, List<String>> timelineEvents() {
             return timelineEvents;
         }
 
-        public Map<String, List<String>> getTravelDistanceEvents() {
+        public Map<String, List<String>> travelDistanceEvents() {
             return travelDistanceEvents;
         }
 
-        public Map<Float, List<String>> getTravelDistanceLoopEvents() {
+        public Map<Float, List<String>> travelDistanceLoopEvents() {
             return travelDistanceLoopEvents;
         }
 
@@ -274,11 +274,11 @@ public class BedrockComponent {
             this.sleepTime = sleepTime;
         }
 
-        public OpenExpression getActiveTime() {
+        public OpenExpression activeTime() {
             return activeTime;
         }
 
-        public OpenExpression getSleepTime() {
+        public OpenExpression sleepTime() {
             return sleepTime;
         }
 
@@ -311,7 +311,7 @@ public class BedrockComponent {
             this.activeTime = activeTime;
         }
 
-        public OpenExpression getActiveTime() {
+        public OpenExpression activeTime() {
             return activeTime;
         }
 
@@ -340,11 +340,11 @@ public class BedrockComponent {
             this.expiration = expiration;
         }
 
-        public OpenExpression getActivation() {
+        public OpenExpression activation() {
             return activation;
         }
 
-        public OpenExpression getExpiration() {
+        public OpenExpression expiration() {
             return expiration;
         }
 
@@ -382,19 +382,19 @@ public class BedrockComponent {
             this.direction = direction;
         }
 
-        public OpenExpression getOffsetX() {
+        public OpenExpression offsetX() {
             return offsetX;
         }
 
-        public OpenExpression getOffsetY() {
+        public OpenExpression offsetY() {
             return offsetY;
         }
 
-        public OpenExpression getOffsetZ() {
+        public OpenExpression offsetZ() {
             return offsetZ;
         }
 
-        public Object getDirection() {
+        public Object direction() {
             return direction;
         }
 
@@ -426,19 +426,19 @@ public class BedrockComponent {
             this.direction = direction;
         }
 
-        public OpenExpression getOffsetX() {
+        public OpenExpression offsetX() {
             return offsetX;
         }
 
-        public OpenExpression getOffsetY() {
+        public OpenExpression offsetY() {
             return offsetY;
         }
 
-        public OpenExpression getOffsetZ() {
+        public OpenExpression offsetZ() {
             return offsetZ;
         }
 
-        public OpenExpression getRadius() {
+        public OpenExpression radius() {
             return radius;
         }
 
@@ -446,7 +446,7 @@ public class BedrockComponent {
             return surfaceOnly;
         }
 
-        public Object getDirection() {
+        public Object direction() {
             return direction;
         }
 
@@ -483,27 +483,27 @@ public class BedrockComponent {
             this.direction = direction;
         }
 
-        public OpenExpression getOffsetX() {
+        public OpenExpression offsetX() {
             return offsetX;
         }
 
-        public OpenExpression getOffsetY() {
+        public OpenExpression offsetY() {
             return offsetY;
         }
 
-        public OpenExpression getOffsetZ() {
+        public OpenExpression offsetZ() {
             return offsetZ;
         }
 
-        public OpenExpression getSizeWidth() {
+        public OpenExpression sizeWidth() {
             return sizeWidth;
         }
 
-        public OpenExpression getSizeHeight() {
+        public OpenExpression sizeHeight() {
             return sizeHeight;
         }
 
-        public OpenExpression getSizeDepth() {
+        public OpenExpression sizeDepth() {
             return sizeDepth;
         }
 
@@ -511,7 +511,7 @@ public class BedrockComponent {
             return surfaceOnly;
         }
 
-        public Object getDirection() {
+        public Object direction() {
             return direction;
         }
 
@@ -567,31 +567,31 @@ public class BedrockComponent {
             this.direction = direction;
         }
 
-        public OpenExpression getOffsetX() {
+        public OpenExpression offsetX() {
             return offsetX;
         }
 
-        public OpenExpression getOffsetY() {
+        public OpenExpression offsetY() {
             return offsetY;
         }
 
-        public OpenExpression getOffsetZ() {
+        public OpenExpression offsetZ() {
             return offsetZ;
         }
 
-        public OpenExpression getRadius() {
+        public OpenExpression radius() {
             return radius;
         }
 
-        public OpenExpression getPlaneNormalX() {
+        public OpenExpression planeNormalX() {
             return planeNormalX;
         }
 
-        public OpenExpression getPlaneNormalY() {
+        public OpenExpression planeNormalY() {
             return planeNormalY;
         }
 
-        public OpenExpression getPlaneNormalZ() {
+        public OpenExpression planeNormalZ() {
             return planeNormalZ;
         }
 
@@ -599,7 +599,7 @@ public class BedrockComponent {
             return surfaceOnly;
         }
 
-        public Object getDirection() {
+        public Object direction() {
             return direction;
         }
 
@@ -645,15 +645,15 @@ public class BedrockComponent {
             this.direction = direction;
         }
 
-        public OpenExpression getOffsetX() {
+        public OpenExpression offsetX() {
             return offsetX;
         }
 
-        public OpenExpression getOffsetY() {
+        public OpenExpression offsetY() {
             return offsetY;
         }
 
-        public OpenExpression getOffsetZ() {
+        public OpenExpression offsetZ() {
             return offsetZ;
         }
 
@@ -661,7 +661,7 @@ public class BedrockComponent {
             return surfaceOnly;
         }
 
-        public Object getDirection() {
+        public Object direction() {
             return direction;
         }
 
@@ -684,11 +684,11 @@ public class BedrockComponent {
             this.render = render;
         }
 
-        public OpenExpression getUpdate() {
+        public OpenExpression update() {
             return update;
         }
 
-        public OpenExpression getRender() {
+        public OpenExpression render() {
             return render;
         }
 
@@ -720,7 +720,7 @@ public class BedrockComponent {
             this.speed = speed;
         }
 
-        public OpenExpression getSpeed() {
+        public OpenExpression speed() {
             return speed;
         }
 
@@ -751,11 +751,11 @@ public class BedrockComponent {
             this.rotationRate = rotationRate;
         }
 
-        public OpenExpression getRotation() {
+        public OpenExpression rotation() {
             return rotation;
         }
 
-        public OpenExpression getRotationRate() {
+        public OpenExpression rotationRate() {
             return rotationRate;
         }
 
@@ -791,15 +791,15 @@ public class BedrockComponent {
             this.timelineEvents = timelineEvents;
         }
 
-        public List<String> getCreation() {
+        public List<String> creation() {
             return creation;
         }
 
-        public List<String> getExpiration() {
+        public List<String> expiration() {
             return expiration;
         }
 
-        public Map<String, List<String>> getTimelineEvents() {
+        public Map<String, List<String>> timelineEvents() {
             return timelineEvents;
         }
 
@@ -838,11 +838,11 @@ public class BedrockComponent {
             this.expiration = expiration;
         }
 
-        public OpenExpression getMaxAge() {
+        public OpenExpression maxAge() {
             return maxAge;
         }
 
-        public OpenExpression getExpiration() {
+        public OpenExpression expiration() {
             return expiration;
         }
 
@@ -874,7 +874,7 @@ public class BedrockComponent {
             this.parameters = parameters;
         }
 
-        public List<Float> getParameters() {
+        public List<Float> parameters() {
             return parameters;
         }
 
@@ -901,7 +901,7 @@ public class BedrockComponent {
             this.blocks = blocks;
         }
 
-        public List<String> getBlocks() {
+        public List<String> blocks() {
             return blocks;
         }
 
@@ -928,7 +928,7 @@ public class BedrockComponent {
             this.blocks = blocks;
         }
 
-        public List<String> getBlocks() {
+        public List<String> blocks() {
             return blocks;
         }
 
@@ -968,19 +968,19 @@ public class BedrockComponent {
             this.events = events;
         }
 
-        public OpenExpression getEnabled() {
+        public OpenExpression enabled() {
             return enabled;
         }
 
-        public float getCollisionDrag() {
+        public float collisionDrag() {
             return collisionDrag;
         }
 
-        public float getCollisionRadius() {
+        public float collisionRadius() {
             return collisionRadius;
         }
 
-        public float getCoefficientOfRestitution() {
+        public float coefficientOfRestitution() {
             return coefficientOfRestitution;
         }
 
@@ -988,7 +988,7 @@ public class BedrockComponent {
             return expireOnContact;
         }
 
-        public Map<Float, String> getEvents() {
+        public Map<Float, String> events() {
             return events;
         }
 
@@ -1055,27 +1055,27 @@ public class BedrockComponent {
             this.rotationDragCoefficient = rotationDragCoefficient;
         }
 
-        public OpenExpression getLinearAccelerationX() {
+        public OpenExpression linearAccelerationX() {
             return linearAccelerationX;
         }
 
-        public OpenExpression getLinearAccelerationY() {
+        public OpenExpression linearAccelerationY() {
             return linearAccelerationY;
         }
 
-        public OpenExpression getLinearAccelerationZ() {
+        public OpenExpression linearAccelerationZ() {
             return linearAccelerationZ;
         }
 
-        public OpenExpression getLinearDragCoefficient() {
+        public OpenExpression linearDragCoefficient() {
             return linearDragCoefficient;
         }
 
-        public OpenExpression getRotationAcceleration() {
+        public OpenExpression rotationAcceleration() {
             return rotationAcceleration;
         }
 
-        public OpenExpression getRotationDragCoefficient() {
+        public OpenExpression rotationDragCoefficient() {
             return rotationDragCoefficient;
         }
 
@@ -1142,31 +1142,31 @@ public class BedrockComponent {
             this.rotation = rotation;
         }
 
-        public OpenExpression getRelativePositionX() {
+        public OpenExpression relativePositionX() {
             return relativePositionX;
         }
 
-        public OpenExpression getRelativePositionY() {
+        public OpenExpression relativePositionY() {
             return relativePositionY;
         }
 
-        public OpenExpression getRelativePositionZ() {
+        public OpenExpression relativePositionZ() {
             return relativePositionZ;
         }
 
-        public OpenExpression getDirectionX() {
+        public OpenExpression directionX() {
             return directionX;
         }
 
-        public OpenExpression getDirectionY() {
+        public OpenExpression directionY() {
             return directionY;
         }
 
-        public OpenExpression getDirectionZ() {
+        public OpenExpression directionZ() {
             return directionZ;
         }
 
-        public OpenExpression getRotation() {
+        public OpenExpression rotation() {
             return rotation;
         }
 
@@ -1270,43 +1270,43 @@ public class BedrockComponent {
             this.loop = loop;
         }
 
-        public OpenExpression getWidth() {
+        public OpenExpression width() {
             return width;
         }
 
-        public OpenExpression getHeight() {
+        public OpenExpression height() {
             return height;
         }
 
-        public String getFacingCameraMode() {
+        public String facingCameraMode() {
             return facingCameraMode;
         }
 
-        public OpenSize2i getTextureSize() {
+        public OpenSize2i textureSize() {
             return textureSize;
         }
 
-        public OpenExpression getTextureCoordsX() {
+        public OpenExpression textureCoordsX() {
             return textureCoordsX;
         }
 
-        public OpenExpression getTextureCoordsY() {
+        public OpenExpression textureCoordsY() {
             return textureCoordsY;
         }
 
-        public OpenExpression getTextureCoordsWidth() {
+        public OpenExpression textureCoordsWidth() {
             return textureCoordsWidth;
         }
 
-        public OpenExpression getTextureCoordsHeight() {
+        public OpenExpression textureCoordsHeight() {
             return textureCoordsHeight;
         }
 
-        public OpenExpression getStepX() {
+        public OpenExpression stepX() {
             return stepX;
         }
 
-        public OpenExpression getStepY() {
+        public OpenExpression stepY() {
             return stepY;
         }
 
@@ -1314,11 +1314,11 @@ public class BedrockComponent {
             return useAnimation;
         }
 
-        public int getFps() {
+        public int fps() {
             return fps;
         }
 
-        public OpenExpression getMaxFrame() {
+        public OpenExpression maxFrame() {
             return maxFrame;
         }
 
@@ -1438,15 +1438,15 @@ public class BedrockComponent {
             this.gradientValues = gradientValues;
         }
 
-        public List<OpenExpression> getValues() {
+        public List<OpenExpression> values() {
             return values;
         }
 
-        public OpenExpression getInterpolation() {
+        public OpenExpression interpolation() {
             return interpolation;
         }
 
-        public Map<String, String> getGradientValues() {
+        public Map<String, String> gradientValues() {
             return gradientValues;
         }
 

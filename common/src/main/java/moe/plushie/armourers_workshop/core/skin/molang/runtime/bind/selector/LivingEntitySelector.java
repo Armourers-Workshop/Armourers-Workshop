@@ -4,20 +4,20 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LivingEntitySelector {
 
-    double getBodyYaw();
+    double bodyYaw();
 
-    double getBodyPitch();
-
-
-    double getHealth();
-
-    double getMaxHealth();
+    double bodyPitch();
 
 
-    double getArmorValue();
+    double health();
+
+    double maxHealth();
 
 
-    double getHurtTime();
+    double armorValue();
+
+
+    double hurtTime();
 
 
     boolean isDeadOrDying();
@@ -34,25 +34,25 @@ public interface LivingEntitySelector {
     boolean isOnClimbable();
 
 
-    double getUsingItemDuration();
+    double usingItemDuration();
 
-    double getUsingItemMaxDuration();
+    double usingItemMaxDuration();
 
-    double getUsingItemRemainingDuration();
+    double usingItemRemainingDuration();
 
-    int getArrowCount();
+    int arrowCount();
 
-    int getStingerCount();
+    int stingerCount();
 
-    double getAttributeValue(String name);
-
-    @Nullable
-    EffectSelector getEffect(String name);
+    double attributeValueByName(String name);
 
     @Nullable
-    ItemSelector getEquippedItem(String slot);
+    EffectSelector effectByName(String name);
 
-    int getEquipmentCount();
+    @Nullable
+    ItemSelector equippedItemBySlot(String slot);
 
-    int getLastClimbableFacing();
+    int equipmentCount();
+
+    int lastClimbableFacing();
 }

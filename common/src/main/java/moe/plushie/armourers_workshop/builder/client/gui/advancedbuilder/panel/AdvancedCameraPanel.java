@@ -44,7 +44,7 @@ public class AdvancedCameraPanel extends UIView {
     public AdvancedCameraPanel(DocumentEditor editor) {
         super(CGRect.ZERO);
         this.options = Minecraft.getInstance().options;
-        this.blockEntity = editor.getBlockEntity();
+        this.blockEntity = editor.blockEntity();
     }
 
     public void connect() {
@@ -262,7 +262,7 @@ public class AdvancedCameraPanel extends UIView {
         Node(BakedSkinPart part, OpenMatrix4f invMat) {
             this.part = part;
             this.invMat = invMat;
-            this.box = part.getRenderShape().aabb();
+            this.box = part.renderShape().aabb();
         }
 
 //        public void raycast(OpenRay ray, Consumer<Result> recorder) {

@@ -64,7 +64,7 @@ public class EntityCollisionContainer {
         }
     }
 
-    public EntityCollisionShape getResult() {
+    public EntityCollisionShape result() {
         return this.result;
     }
 
@@ -82,10 +82,10 @@ public class EntityCollisionContainer {
     @Nullable
     private EntityCollisionShape resolve(List<Skin> skins) {
         for (var skin : skins) {
-            if (skin.getType() == SkinTypes.BLOCK) {
+            if (skin.type() == SkinTypes.BLOCK) {
                 continue; // can't compute entity bounding box of the block skin.
             }
-            var boundingBox = skin.getSettings().getCollisionBox();
+            var boundingBox = skin.settings().collisionBox();
             if (boundingBox == null || boundingBox.isEmpty()) {
                 continue; // can't found collision box.
             }
@@ -103,7 +103,7 @@ public class EntityCollisionContainer {
         if (wardrobe == null) {
             return; // can't found wardrobe.
         }
-        var result = getResult();
+        var result = result();
         NetworkManager.sendToTracking(UpdateWardrobePacket.Field.WARDROBE_COLLISION_SHAPE.buildPacket(wardrobe, result), entity1);
     }
 

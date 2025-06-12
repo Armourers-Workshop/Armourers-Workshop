@@ -19,15 +19,15 @@ import java.util.Map;
 
 public class ChunkGeometrySerializers {
 
-    private static final Map<SkinGeometryType, ChunkGeometrySerializer> SERIALIZERS = Collections.immutableMap(builder -> {
-        builder.put(SkinGeometryTypes.BLOCK_SOLID, new ChunkGeometrySerializerV1());
-        builder.put(SkinGeometryTypes.BLOCK_GLOWING, new ChunkGeometrySerializerV1());
-        builder.put(SkinGeometryTypes.BLOCK_GLASS, new ChunkGeometrySerializerV1());
-        builder.put(SkinGeometryTypes.BLOCK_GLASS_GLOWING, new ChunkGeometrySerializerV1());
-        builder.put(SkinGeometryTypes.CUBE, new ChunkGeometrySerializerV2());
-        builder.put(SkinGeometryTypes.CUBE_CULL, new ChunkGeometrySerializerV2());
-        builder.put(SkinGeometryTypes.MESH, new ChunkGeometrySerializerV3());
-        builder.put(SkinGeometryTypes.MESH_CULL, new ChunkGeometrySerializerV3());
+    private static final Map<SkinGeometryType, ChunkGeometrySerializer> SERIALIZERS = Collections.immutableMap(it -> {
+        it.put(SkinGeometryTypes.BLOCK_SOLID, new ChunkGeometrySerializerV1());
+        it.put(SkinGeometryTypes.BLOCK_GLOWING, new ChunkGeometrySerializerV1());
+        it.put(SkinGeometryTypes.BLOCK_GLASS, new ChunkGeometrySerializerV1());
+        it.put(SkinGeometryTypes.BLOCK_GLASS_GLOWING, new ChunkGeometrySerializerV1());
+        it.put(SkinGeometryTypes.CUBE, new ChunkGeometrySerializerV2());
+        it.put(SkinGeometryTypes.CUBE_CULL, new ChunkGeometrySerializerV2());
+        it.put(SkinGeometryTypes.MESH, new ChunkGeometrySerializerV3());
+        it.put(SkinGeometryTypes.MESH_CULL, new ChunkGeometrySerializerV3());
     });
 
     public static ChunkGeometrySerializer getSerializer(SkinGeometryType geometryType) {
@@ -48,7 +48,7 @@ public class ChunkGeometrySerializers {
 
     public static ChunkContext createEncodeContext(Skin skin, SkinFileOptions options) {
         var context = new ChunkContext(options);
-        context.setFastEncoder(canFastEncoding(skin.getId(), skin.getParts()));
+        context.setFastEncoder(canFastEncoding(skin.id(), skin.parts()));
         return context;
     }
 
@@ -61,10 +61,10 @@ public class ChunkGeometrySerializers {
         // because it must to recompile and resort it.
         var owners = new HashSet<>();
         owners.add(skinOwner);
-        Collections.eachTree(parts, SkinPart::getChildren, part -> {
-            var geometries = part.getGeometries();
+        Collections.eachTree(parts, SkinPart::children, part -> {
+            var geometries = part.geometries();
             if (!geometries.isEmpty()) {
-                owners.add(geometries.getId());
+                owners.add(geometries.id());
             }
         });
         return owners.size() <= 1;

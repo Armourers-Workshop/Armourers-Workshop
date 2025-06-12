@@ -37,12 +37,12 @@ public class SkinAttachmentTypes {
     private static SkinAttachmentType register(String name) {
         var attachmentType = new SkinAttachmentType();
         attachmentType.setRegistryName(OpenResourceLocation.create("armourers", name));
-        if (ALL_ATTACHMENT_TYPES.containsKey(attachmentType.getRegistryName().toString())) {
+        if (ALL_ATTACHMENT_TYPES.containsKey(attachmentType.registryName().toString())) {
             ModLog.warn("A mod tried to register a attachment type with an id that is in use.");
             return attachmentType;
         }
-        ALL_ATTACHMENT_TYPES.put(attachmentType.getRegistryName().toString(), attachmentType);
-        ModLog.debug("Registering Skin Attachment '{}'", attachmentType.getRegistryName());
+        ALL_ATTACHMENT_TYPES.put(attachmentType.registryName().toString(), attachmentType);
+        ModLog.debug("Registering Skin Attachment '{}'", attachmentType.registryName());
         return attachmentType;
     }
 

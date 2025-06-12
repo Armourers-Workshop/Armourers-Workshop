@@ -34,7 +34,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
     private HashMap<Integer, Integer> colors;
 
     @Override
-    public Collection<String> getExtensions() {
+    public Collection<String> extensions() {
         return Collections.singleton("obj");
     }
 
@@ -51,13 +51,13 @@ public class SkinExporterWavefrontObj implements SkinExporter {
 
         int colorIndex = 0;
         int totalFaces = 0;
-        for (var skinPart : skin.getParts()) {
+        for (var skinPart : skin.parts()) {
             var task = new Task(skin, skinPart);
             for (var face : task.cubeFaces) {
                 if (!face.isVisible()) {
                     continue;
                 }
-                int color = face.getColor().getRGB() | 0xff000000;
+                int color = face.color().getRGB() | 0xff000000;
                 if (!colors.containsKey(color)) {
                     colors.put(color, colorIndex++);
                 }
@@ -91,7 +91,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
             poseStack.scale(-1, -1, 1);
             poseStack.rotate(OpenVector3f.YP.rotationDegrees(90));
             // apply the origin offset.
-            var pos = part.getType().getRenderOffset();
+            var pos = part.type().renderOffset();
             poseStack.translate(pos.x(), pos.y(), pos.z());
             // apply the marker rotation and offset.
             transform.apply(poseStack);
@@ -112,7 +112,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         var faces = new HashMap<SkinGeometryType, ArrayList<SkinCubeFace>>();
         for (var face : allFaces) {
             if (face.isVisible()) {
-                faces.computeIfAbsent(face.getType(), k -> new ArrayList<>()).add(face);
+                faces.computeIfAbsent(face.type(), k -> new ArrayList<>()).add(face);
             }
         }
         String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
@@ -125,23 +125,23 @@ public class SkinExporterWavefrontObj implements SkinExporter {
     }
 
     private void exportLayer(OpenPoseStack poseStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
-        ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.getType(), faces.size());
+        ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.type(), faces.size());
 
-        os.write("o " + partIndex + "-" + skinPart.getType().getRegistryName().getPath() + "-" + layer + CRLF);
+        os.write("o " + partIndex + "-" + skinPart.type().registryName().path() + "-" + layer + CRLF);
         os.write("usemtl basetexture" + CRLF);
         os.write("s 1" + CRLF);
         os.flush();
 
         // Export vertex list.
         for (var face : faces) {
-            var shape = face.getBoundingBox();
+            var shape = face.boundingBox();
             var x = shape.x();
             var y = shape.y();
             var z = shape.z();
             var w = shape.width();
             var h = shape.height();
             var d = shape.depth();
-            var vertexes = SkinCubeFace.getBaseVertices(face.getDirection());
+            var vertexes = SkinCubeFace.getBaseVertices(face.direction());
             for (var i = 0; i < 4; ++i) {
                 writeVert(poseStack, os, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d);
             }
@@ -150,10 +150,10 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         // TODO: add adv skin support.
         var scale = 1.0 / texture.width;
         for (var face : faces) {
-            int index = colors.getOrDefault(face.getColor().getRGB() | 0xff000000, 0);
+            int index = colors.getOrDefault(face.color().getRGB() | 0xff000000, 0);
 
-            var ix = texture.getX(index) + 0.5;
-            var iy = texture.getY(index) + 0.5;
+            var ix = texture.x(index) + 0.5;
+            var iy = texture.y(index) + 0.5;
 
             writeTexture(os, (ix + 1) * scale, iy * scale);
             writeTexture(os, (ix + 1) * scale, (iy + 1) * scale);
@@ -162,7 +162,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         }
 
         for (var face : faces) {
-            var vertexes = SkinCubeFace.getBaseVertices(face.getDirection());
+            var vertexes = SkinCubeFace.getBaseVertices(face.direction());
             writeNormal(poseStack, os, vertexes[4][0], vertexes[4][1], vertexes[4][2]);
         }
 
@@ -224,13 +224,13 @@ public class SkinExporterWavefrontObj implements SkinExporter {
     }
 
     private static class Task {
-        final Skin skin;
-        final SkinPart skinPart;
-        final ArrayList<SkinCubeFace> cubeFaces;
+        private final Skin skin;
+        private final SkinPart skinPart;
+        private final ArrayList<SkinCubeFace> cubeFaces;
 
-        Task(Skin skin, SkinPart skinPart) {
-            var geometries = skinPart.getGeometries();
-            var bounds = new OpenRectangle3i(geometries.getShape().bounds());
+        public Task(Skin skin, SkinPart skinPart) {
+            var geometries = skinPart.geometries();
+            var bounds = new OpenRectangle3i(geometries.shape().bounds());
             this.skin = skin;
             this.skinPart = skinPart;
             this.cubeFaces = Collections.collect(SkinCubeFaceCuller.cullFaces(geometries, bounds), SkinCubeFace.class);
@@ -239,34 +239,34 @@ public class SkinExporterWavefrontObj implements SkinExporter {
 
     private static class TextureBuilder {
 
-        final int width;
-        final int height;
-        final BufferedImage image;
+        private final int width;
+        private final int height;
+        private final BufferedImage image;
 
-        TextureBuilder(int width, int height) {
+        public TextureBuilder(int width, int height) {
             this.width = width;
             this.height = height;
             this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         }
 
-        void setColor(int index, int color) {
-            var ix = getX(index);
-            var iy = height - 1 - getY(index);
+        public void setColor(int index, int color) {
+            var ix = x(index);
+            var iy = height - 1 - y(index);
             image.setRGB(ix, iy, color);
             image.setRGB(ix + 1, iy, color);
             image.setRGB(ix, iy - 1, color);
             image.setRGB(ix + 1, iy - 1, color);
         }
 
-        int getX(int index) {
+        public int x(int index) {
             return (index % (width / 2)) * 2;
         }
 
-        int getY(int index) {
+        public int y(int index) {
             return (index / (width / 2)) * 2;
         }
 
-        BufferedImage build() {
+        public BufferedImage build() {
             return image;
         }
     }

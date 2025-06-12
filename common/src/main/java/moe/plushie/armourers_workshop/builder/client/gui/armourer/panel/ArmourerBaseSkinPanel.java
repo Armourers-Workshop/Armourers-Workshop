@@ -72,7 +72,7 @@ public class ArmourerBaseSkinPanel extends UIView {
     protected UICheckBox addCheckBox(int x, int y, SkinProperty<Boolean> property) {
         boolean oldValue = skinProperties.get(property);
         var checkBox = new UICheckBox(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
-        checkBox.setTitle(getDisplayText(property.getKey()));
+        checkBox.setTitle(getDisplayText(property.key()));
         checkBox.setSelected(oldValue);
         checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, box) -> {
             boolean value = box.isSelected();

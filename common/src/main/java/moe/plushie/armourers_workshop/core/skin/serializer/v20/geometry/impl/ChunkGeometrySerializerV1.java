@@ -23,7 +23,7 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
     @Override
     public int stride(SkinGeometryType geometryType, int options, ChunkPaletteData palette) {
         int faceCount = options & 0x0F;
-        return Decoder.calcStride(palette.getColorIndexBytes(), faceCount);
+        return Decoder.calcStride(palette.colorIndexBytes(), faceCount);
     }
 
     @Override
@@ -46,9 +46,9 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
 
         public Decoder(SkinGeometryType type, ChunkGeometrySlice slice) {
             this.type = type;
-            this.palette = slice.getPalette();
+            this.palette = slice.palette();
             this.slice = slice;
-            this.faceCount = slice.getGeometryOptions() & 0x0F;
+            this.faceCount = slice.geometryOptions() & 0x0F;
         }
 
         public static int calcStride(int usedBytes, int size) {
@@ -62,12 +62,12 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
         }
 
         @Override
-        public SkinGeometryType getType() {
+        public SkinGeometryType type() {
             return type;
         }
 
         @Override
-        public OpenRectangle3f getBoundingBox() {
+        public OpenRectangle3f boundingBox() {
             if (slice.once(0)) {
                 float x = slice.getByte(0);
                 float y = slice.getByte(1);
@@ -91,7 +91,7 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
         }
 
         protected void parseColors() {
-            int usedBytes = palette.getColorIndexBytes();
+            int usedBytes = palette.colorIndexBytes();
             for (int i = 0; i < faceCount; ++i) {
                 int face = slice.getByte(calcStride(usedBytes, i));
                 var color = slice.getColor(calcStride(usedBytes, i) + 1);
@@ -110,7 +110,7 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
         @Override
         public int begin(SkinCube cube) {
             // merge all values
-            pos = cube.getBlockPos();
+            pos = cube.blockPos();
             for (var dir : OpenDirection.values()) {
                 var value = cube.getPaintColor(dir);
                 int face = values.getOrDefault(value, 0);

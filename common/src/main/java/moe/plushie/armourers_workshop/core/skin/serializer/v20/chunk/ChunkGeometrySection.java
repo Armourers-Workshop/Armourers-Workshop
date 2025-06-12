@@ -36,19 +36,19 @@ public abstract class ChunkGeometrySection {
         return geometryTotal == 0;
     }
 
-    public int getIndex() {
+    public int index() {
         return index;
     }
 
-    public int getGeometryTotal() {
+    public int geometryTotal() {
         return geometryTotal;
     }
 
-    public int getGeometryOptions() {
+    public int geometryOptions() {
         return geometryOptions;
     }
 
-    public SkinGeometryType getGeometryType() {
+    public SkinGeometryType geometryType() {
         return geometryType;
     }
 
@@ -75,11 +75,11 @@ public abstract class ChunkGeometrySection {
             stream.write(bytes);
         }
 
-        public byte[] getBytes() {
+        public byte[] bytes() {
             return bytes;
         }
 
-        public ChunkPaletteData getPalette() {
+        public ChunkPaletteData palette() {
             return palette;
         }
     }
@@ -100,7 +100,7 @@ public abstract class ChunkGeometrySection {
 
         @Override
         public void writeToStream(ChunkOutputStream stream) throws IOException {
-            outputStream.transferTo(stream.getOutputStream());
+            outputStream.transferTo(stream.outputStream());
         }
     }
 }

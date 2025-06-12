@@ -49,46 +49,46 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
     public static final float SCALE = 0.0625f; // 1 / 16f;
 
-    private static final Map<SkinDocumentType, AdvancedAbstractGuideRenderer> GUIDES = Collections.immutableMap(builder -> {
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_HEAD, new AdvancedHumanGuideRenderer());
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_CHEST, new AdvancedHumanGuideRenderer());
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_FEET, new AdvancedHumanGuideRenderer());
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_LEGS, new AdvancedHumanGuideRenderer());
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_WINGS, new AdvancedHumanGuideRenderer());
-        builder.put(SkinDocumentTypes.GENERAL_ARMOR_OUTFIT, new AdvancedHumanGuideRenderer());
+    private static final Map<SkinDocumentType, AdvancedAbstractGuideRenderer> GUIDES = Collections.immutableMap(it -> {
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_HEAD, new AdvancedHumanGuideRenderer());
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_CHEST, new AdvancedHumanGuideRenderer());
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_FEET, new AdvancedHumanGuideRenderer());
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_LEGS, new AdvancedHumanGuideRenderer());
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_WINGS, new AdvancedHumanGuideRenderer());
+        it.put(SkinDocumentTypes.GENERAL_ARMOR_OUTFIT, new AdvancedHumanGuideRenderer());
 
-        builder.put(SkinDocumentTypes.ITEM, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_AXE, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_HOE, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_SHOVEL, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_PICKAXE, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_AXE, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_HOE, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_SHOVEL, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_PICKAXE, new AdvancedItemGuideRenderer());
 
-        builder.put(SkinDocumentTypes.ITEM_SWORD, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_SHIELD, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_BOW, new AdvancedItemGuideRenderer());
-        builder.put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_SWORD, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_SHIELD, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_BOW, new AdvancedItemGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_TRIDENT, new AdvancedItemGuideRenderer());
 
-        builder.put(SkinDocumentTypes.ITEM_BACKPACK, new AdvancedBackpackGuideRenderer());
+        it.put(SkinDocumentTypes.ITEM_BACKPACK, new AdvancedBackpackGuideRenderer());
 
-        builder.put(SkinDocumentTypes.ENTITY_BOAT, new AdvancedBoatGuideRenderer());
-        builder.put(SkinDocumentTypes.ENTITY_MINECART, new AdvancedMinecartGuideRenderer());
+        it.put(SkinDocumentTypes.ENTITY_BOAT, new AdvancedBoatGuideRenderer());
+        it.put(SkinDocumentTypes.ENTITY_MINECART, new AdvancedMinecartGuideRenderer());
 
-        builder.put(SkinDocumentTypes.ENTITY_HORSE, new AdvancedHorseGuideRenderer());
+        it.put(SkinDocumentTypes.ENTITY_HORSE, new AdvancedHorseGuideRenderer());
 
-        builder.put(SkinDocumentTypes.BLOCK, new AdvancedBlockGuideRenderer());
+        it.put(SkinDocumentTypes.BLOCK, new AdvancedBlockGuideRenderer());
     });
 
 
-    private static final Set<SkinType> USE_ITEM_TRANSFORMERS = Collections.immutableSet(builder -> {
-        builder.add(SkinTypes.ITEM);
-        builder.add(SkinTypes.ITEM_AXE);
-        builder.add(SkinTypes.ITEM_HOE);
-        builder.add(SkinTypes.ITEM_SHOVEL);
-        builder.add(SkinTypes.ITEM_PICKAXE);
-        builder.add(SkinTypes.ITEM_SWORD);
-        builder.add(SkinTypes.ITEM_SHIELD);
-        builder.add(SkinTypes.ITEM_BOW);
-        builder.add(SkinTypes.ITEM_TRIDENT);
+    private static final Set<SkinType> USE_ITEM_TRANSFORMERS = Collections.immutableSet(it -> {
+        it.add(SkinTypes.ITEM);
+        it.add(SkinTypes.ITEM_AXE);
+        it.add(SkinTypes.ITEM_HOE);
+        it.add(SkinTypes.ITEM_SHOVEL);
+        it.add(SkinTypes.ITEM_PICKAXE);
+        it.add(SkinTypes.ITEM_SWORD);
+        it.add(SkinTypes.ITEM_SHIELD);
+        it.add(SkinTypes.ITEM_BOW);
+        it.add(SkinTypes.ITEM_TRIDENT);
     });
 
     public static ArrayList<OpenVector3f> OUTPUTS = new ArrayList<>();
@@ -119,8 +119,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
         poseStack.scale(-SCALE, -SCALE, SCALE);
 
-        var document = entity.getDocument();
-        var settings = document.getSettings();
+        var document = entity.document();
+        var settings = document.settings();
 
 //        IGuideRenderer guideRenderer = rendererManager.getRenderer(SkinPartTypes.BIPPED_HEAD);
 //        if (guideRenderer != null) {
@@ -138,7 +138,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         }
 
         if (settings.showsHelperModel()) {
-            var guideRenderer = GUIDES.get(document.getType());
+            var guideRenderer = GUIDES.get(document.type());
             if (guideRenderer != null) {
                 guideRenderer.render(document, poseStack, light, overlay, bufferSource);
             }
@@ -154,13 +154,13 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         }
 
         // only item
-        if (USE_ITEM_TRANSFORMERS.contains(document.getType().getSkinType())) {
-            applyTransform(poseStack, document.getType().getSkinType(), document.getItemTransforms());
+        if (USE_ITEM_TRANSFORMERS.contains(document.type().skinType())) {
+            applyTransform(poseStack, document.type().skinType(), document.itemTransforms());
         }
 
 
-        var armature = BakedArmature.defaultBy(document.getType().getSkinType());
-        renderNode(document, document.getRoot(), armature, 0, poseStack, bufferSource, light, overlay);
+        var armature = BakedArmature.defaultBy(document.type().skinType());
+        renderNode(document, document.root(), armature, 0, poseStack, bufferSource, light, overlay);
 
         poseStack.popPose();
 
@@ -193,14 +193,14 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
 
         // apply joint transform.
         if (armature != null && node.isLocked()) {
-            var transform = armature.getTransform(node.getType());
+            var transform = armature.transformByType(node.type());
             if (transform != null) {
                 transform.apply(poseStack);
             }
         }
 
         // apply node transform.
-        node.getTransform().apply(poseStack);
+        node.transform().apply(poseStack);
 
         if (node.isLocator()) {
             poseStack.scale(-1, -1, 1);
@@ -208,7 +208,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
             poseStack.scale(-1, -1, 1);
         }
 
-        var descriptor = node.getSkin();
+        var descriptor = node.skin();
         var tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
         if (tesselator != null) {
             tesselator.setLightmap(0xf000f0);

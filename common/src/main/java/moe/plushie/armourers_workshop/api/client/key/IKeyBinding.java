@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component;
 
 public interface IKeyBinding {
 
-    Component getKeyName();
+    Component keyName();
 
-    IKeyModifier getKeyModifier();
+    IKeyModifier keyModifier();
 }

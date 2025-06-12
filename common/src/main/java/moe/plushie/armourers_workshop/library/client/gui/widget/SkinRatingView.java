@@ -47,7 +47,7 @@ public class SkinRatingView extends UIControl {
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
         int value = getRatingAtPos(event.locationInView(this));
-        if (value >= 0 && value <= getMaxValue()) {
+        if (value >= 0 && value <= maxValue()) {
             setValue(value);
             sendEvent(Event.VALUE_CHANGED);
         }
@@ -57,11 +57,11 @@ public class SkinRatingView extends UIControl {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
 
-        for (int i = 0; i < (getMaxValue() / 2); i++) {
+        for (int i = 0; i < (maxValue() / 2); i++) {
             context.drawImage(ModTextures.RATING, i * 16, 0, 16, 16, 32, 0, 256, 256);
         }
 
-        int rating = getValue();
+        int rating = value();
         if (isHighlighted()) {
             rating = hoveredValue;
         }
@@ -76,15 +76,15 @@ public class SkinRatingView extends UIControl {
         }
     }
 
-    public int getValue() {
+    public int value() {
         return value;
     }
 
     public void setValue(int value) {
-        this.value = OpenMath.clamp(value, 0, getMaxValue());
+        this.value = OpenMath.clamp(value, 0, maxValue());
     }
 
-    public int getMaxValue() {
+    public int maxValue() {
         return maxValue;
     }
 

@@ -95,7 +95,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
         var object = AbstractFabricRegistries.ENTITY_TYPES.register(name, () -> builder.build());
         var proxy = new Proxy<>(object);
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return TypedRegistry.Entry.of(object.getRegistryName(), () -> proxy);
+        return TypedRegistry.Entry.of(object.registryName(), () -> proxy);
     }
 
     public static class Proxy<T extends Entity> implements IEntityType<T> {

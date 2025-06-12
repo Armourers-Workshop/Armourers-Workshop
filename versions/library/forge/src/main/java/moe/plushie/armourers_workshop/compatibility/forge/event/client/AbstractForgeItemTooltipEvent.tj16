@@ -22,17 +22,17 @@ public class AbstractForgeItemTooltipEvent {
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
         return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_GATHER.map(event -> new ItemTooltipEvent.Gather() {
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return event.getItemStack();
             }
 
             @Override
-            public List<Component> getTooltips() {
+            public List<Component> tooltips() {
                 return event.getToolTip();
             }
 
             @Override
-            public ITooltipContext getContext() {
+            public ITooltipContext context() {
                 return new AbstractTooltipContext<>(null, event.getFlags());
             }
         });
@@ -47,27 +47,27 @@ public class AbstractForgeItemTooltipEvent {
         return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER_POST.map(event -> new ItemTooltipEvent.Render() {
 
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return event.getStack();
             }
 
             @Override
-            public CGRect getFrame() {
+            public CGRect frame() {
                 return new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
             }
 
             @Override
-            public float getScreenWidth() {
+            public float screenWidth() {
                 return screenLayout.width();
             }
 
             @Override
-            public float getScreenHeight() {
+            public float screenHeight() {
                 return screenLayout.height;
             }
 
             @Override
-            public CGGraphicsContext getContext() {
+            public CGGraphicsContext context() {
                 float mouseX = screenLayout.x;
                 float mouseY = screenLayout.y;
                 return AbstractGraphicsRenderer.of(null, event.getMatrixStack(), mouseX, mouseY, 0);

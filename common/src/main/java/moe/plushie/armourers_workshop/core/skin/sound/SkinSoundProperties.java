@@ -54,7 +54,7 @@ public class SkinSoundProperties implements ISkinSoundProperties {
     }
 
     @Override
-    public float getVolume() {
+    public float volume() {
         return storage.get(VOLUME);
     }
 
@@ -63,7 +63,7 @@ public class SkinSoundProperties implements ISkinSoundProperties {
     }
 
     @Override
-    public float getPitch() {
+    public float pitch() {
         return storage.get(PITCH);
     }
 

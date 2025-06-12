@@ -45,7 +45,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         var blockEntity = player.getLevel().getBlockEntity(pos);
-        if (!(blockEntity instanceof OutfitMakerBlockEntity blockEntity1) || !(fieldValue.getProperty() instanceof Field<?> field)) {
+        if (!(blockEntity instanceof OutfitMakerBlockEntity blockEntity1) || !(fieldValue.property() instanceof Field<?> field)) {
             return;
         }
         // TODO: check player
@@ -63,7 +63,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
             return;
         }
         if (player.containerMenu instanceof OutfitMakerMenu menu) {
-            var nbt = (CompoundTag) fieldValue.getValue();
+            var nbt = (CompoundTag) fieldValue.value();
             var profile = DataSerializers.readGameProfile(nbt);
             menu.saveArmourItem(player, profile);
         }
@@ -73,8 +73,8 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
 
         private static final auto TYPE = GenericProperties.of(OutfitMakerBlockEntity.class, UpdateOutfitMakerPacket::new);
 
-        public static final auto ITEM_NAME = create(OutfitMakerBlockEntity::getItemName, OutfitMakerBlockEntity::setItemName, DataSerializers.STRING);
-        public static final auto ITEM_FLAVOUR = create(OutfitMakerBlockEntity::getItemFlavour, OutfitMakerBlockEntity::setItemFlavour, DataSerializers.STRING);
+        public static final auto ITEM_NAME = create(OutfitMakerBlockEntity::itemName, OutfitMakerBlockEntity::setItemName, DataSerializers.STRING);
+        public static final auto ITEM_FLAVOUR = create(OutfitMakerBlockEntity::itemFlavour, OutfitMakerBlockEntity::setItemFlavour, DataSerializers.STRING);
         public static final auto ITEM_CRAFTING = create(UpdateOutfitMakerPacket::craftItem, DataSerializers.COMPOUND_TAG);
 
         private FieldAction<T> action;

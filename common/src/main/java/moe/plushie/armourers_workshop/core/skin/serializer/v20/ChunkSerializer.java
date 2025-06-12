@@ -20,7 +20,7 @@ public abstract class ChunkSerializer<V, C> {
     public ChunkSerializer(ChunkType chunkType, V defaultValue) {
         this.chunkType = chunkType;
         this.defaultValue = defaultValue;
-        this.decoders.put(chunkType.getName(), this::read);
+        this.decoders.put(chunkType.serializedName(), this::read);
         this.config();
     }
 
@@ -35,11 +35,11 @@ public abstract class ChunkSerializer<V, C> {
         return context.createSerializerFlags(this, value);
     }
 
-    public ChunkType getChunkType() {
+    public ChunkType chunkType() {
         return chunkType;
     }
 
-    public V getDefaultValue() {
+    public V defaultValue() {
         return defaultValue;
     }
 

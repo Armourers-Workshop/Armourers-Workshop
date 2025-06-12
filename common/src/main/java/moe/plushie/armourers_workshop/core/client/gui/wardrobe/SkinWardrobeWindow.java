@@ -39,8 +39,8 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
         this.operator = inventory.player;
         this.operator.containerMenu = menu;
 
-        this.entity = menu.getEntity();
-        this.wardrobe = menu.getWardrobe();
+        this.entity = menu.entity();
+        this.wardrobe = menu.wardrobe();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M
     }
 
     private TabView.EntryBuilder addTab(SkinWardrobeBaseSetting contentView) {
-        return tabView.addContentView(contentView).setTooltip(contentView.getTitle());
+        return tabView.addContentView(contentView).setTooltip(contentView.title());
     }
 
     private boolean haveSlots(SkinSlotType slotType) {

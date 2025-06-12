@@ -14,8 +14,8 @@ public class FishingModelArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, Context context) {
-        var poseStack = context.getPoseStack();
-        var rotation = Minecraft.getInstance().getCameraOrientation().getEulerAnglesYXZ();
+        var poseStack = context.poseStack();
+        var rotation = Minecraft.getInstance().getCameraOrientation().eulerAnglesYXZ();
         poseStack.rotate(OpenQuaternionf.fromEulerAnglesYXZ(rotation.y(), 0, 0));
         poseStack.rotate(OpenVector3f.YP.rotationDegrees(180.0f));
         poseStack.translate(0.03125f, 0.1875f, 0); // 0.5, 3, 0

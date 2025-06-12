@@ -70,18 +70,18 @@ public class SkinnableMenu extends AbstractBlockEntityMenu<SkinnableBlockEntity>
         }
     }
 
-    public Component getInventoryName() {
+    public Component name() {
         if (Strings.isNotBlank(title)) {
             return TranslateUtils.formatted(title);
         }
         return Component.translatable("inventory.armourers_workshop.skinnable");
     }
 
-    public int getRow() {
+    public int row() {
         return row;
     }
 
-    public int getColumn() {
+    public int column() {
         return column;
     }
 }

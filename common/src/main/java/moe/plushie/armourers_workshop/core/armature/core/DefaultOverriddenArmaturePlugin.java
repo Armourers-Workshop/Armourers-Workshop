@@ -33,7 +33,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void prepare(Entity entity, Context context) {
-        var renderData = context.getRenderData();
+        var renderData = context.renderData();
 
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
@@ -44,8 +44,8 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void activate(Entity entity, Context context) {
-        var renderData = context.getRenderData();
-        var overriddenManager = renderData.getOverriddenManager();
+        var renderData = context.renderData();
+        var overriddenManager = renderData.overriddenManager();
 
         // apply all other part by the entity.
         overriddenManager.willRender(entity);
@@ -59,13 +59,13 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
         // apply all visible part to hidden if the specified skin type exists.
         for (var entry : skinTypeToOverrides.entrySet()) {
-            if (has(entry.getKey(), SkinTypes.UNKNOWN, renderData.getUsingTypes())) {
+            if (has(entry.getKey(), SkinTypes.UNKNOWN, renderData.usingTypes())) {
                 hidden(entry.getValue());
             }
         }
         // apply all visible part to hidden if the specified skin part type exists.
         for (var entry : skinPartTypeToOverrides.entrySet()) {
-            if (has(entry.getKey(), SkinPartTypes.UNKNOWN, renderData.getUsingPartTypes())) {
+            if (has(entry.getKey(), SkinPartTypes.UNKNOWN, renderData.usingPartTypes())) {
                 hidden(entry.getValue());
             }
         }
@@ -73,8 +73,8 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
 
     @Override
     public void deactivate(Entity entity, Context context) {
-        var renderData = context.getRenderData();
-        var overriddenManager = renderData.getOverriddenManager();
+        var renderData = context.renderData();
+        var overriddenManager = renderData.overriddenManager();
 
         overriddenManager.didRender(entity);
 
@@ -136,12 +136,12 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     private Collection<? extends IModelPart> buildParts(Collection<String> names, IModel model) {
         // '*' will wildcard all parts.
         if (names.contains("*")) {
-            return model.getAllParts();
+            return model.allParts();
         }
         // find all parts and remove duplicates.
         var parts = new LinkedHashMap<String, IModelPart>();
         for (var name : names) {
-            var part = model.getPart(name);
+            var part = model.partByName(name);
             if (part != null) {
                 parts.put(name, part);
             }

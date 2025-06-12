@@ -34,15 +34,15 @@ public class SkinUsedCounter {
             return;
         }
         for (var paintType : paintTypes) {
-            if (paintType.getDyeType() != null) {
-                dyeTypes.add(paintType.getDyeType());
+            if (paintType.dyeType() != null) {
+                dyeTypes.add(paintType.dyeType());
             }
         }
     }
 
     public void addGeometryType(SkinGeometryType geometryType) {
         geometryTotal += 1;
-        geometryTotals[geometryType.getId()] += 1;
+        geometryTotals[geometryType.id()] += 1;
     }
 
     public void addFaceTotal(int total) {
@@ -66,23 +66,23 @@ public class SkinUsedCounter {
         return result;
     }
 
-    public int getDyeTotal() {
+    public int dyeTotal() {
         return dyeTypes.size();
     }
 
-    public Set<SkinDyeType> getDyeTypes() {
+    public Set<SkinDyeType> dyeTypes() {
         return dyeTypes;
     }
 
-    public int getMarkerTotal() {
+    public int markerTotal() {
         return markerTotal;
     }
 
     public int getGeometryTotal(SkinGeometryType geometryType) {
-        return geometryTotals[geometryType.getId()];
+        return geometryTotals[geometryType.id()];
     }
 
-    public int getGeometryTotal() {
+    public int geometryTotal() {
         return geometryTotal;
     }
 }

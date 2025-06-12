@@ -26,10 +26,10 @@ public class ColorParser {
 
     private static final List<String> DEFAULT_COLORS = Collections.newList("#ffffff", "0xffffff", "255,255,255");
 
-    private static final Map<String, SkinPaintType> PAINT_TYPES = Collections.immutableMap(builder -> {
+    private static final Map<String, SkinPaintType> PAINT_TYPES = Collections.immutableMap(it -> {
         for (var paintType : SkinPaintTypes.values()) {
-            var name = paintType.getRegistryName().getPath();
-            builder.put(name.replaceAll("_", ""), paintType);
+            var name = paintType.registryName().path();
+            it.put(name.replaceAll("_", ""), paintType);
         }
     });
     private static final Function<SuggestionsBuilder, CompletableFuture<Suggestions>> SUGGEST_NOTHING = SuggestionsBuilder::buildFuture;
@@ -58,7 +58,7 @@ public class ColorParser {
         return this;
     }
 
-    public SkinPaintColor getPaintColor() {
+    public SkinPaintColor paintColor() {
         return paintColor;
     }
 
@@ -80,7 +80,7 @@ public class ColorParser {
     }
 
     private int readPaintColor() throws CommandSyntaxException {
-        var colorString = getColorString();
+        var colorString = colorString();
         // #RRGGBB 0xRRGGBB R,G,B
         if (colorString.startsWith("#")) {
             // suggestions #000000
@@ -146,7 +146,7 @@ public class ColorParser {
         }
     }
 
-    private String getColorString() {
+    private String colorString() {
         final int start = reader.getCursor();
         while (reader.canRead() && isAllowedColorString(reader.peek())) {
             reader.skip();

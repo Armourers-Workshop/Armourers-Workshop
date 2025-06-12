@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 
 public interface ISkinSoundProvider {
 
-    String getName();
+    String name();
 
-    ByteBuf getBuffer();
+    ByteBuf buffer();
 
-    ISkinSoundProperties getProperties();
+    ISkinSoundProperties properties();
 }

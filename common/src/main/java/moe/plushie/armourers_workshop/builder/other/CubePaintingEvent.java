@@ -75,7 +75,7 @@ public class CubePaintingEvent {
         var level = context.getLevel();
         var player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            var cube = collector.getCube(target);
+            var cube = collector.cubeAtPos(target);
             if (cube.is(IBlockPaintable.class)) {
                 targetCount += 1;
             }
@@ -92,7 +92,7 @@ public class CubePaintingEvent {
         var player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
             var action1 = overrides.getOrDefault(Pair.of(target, dir), action);
-            action1.apply(level, target, dir, collector.getCube(target), player);
+            action1.apply(level, target, dir, collector.cubeAtPos(target), player);
         });
     }
 
@@ -171,7 +171,7 @@ public class CubePaintingEvent {
 
         @Override
         public void encode(IFriendlyByteBuf buffer) {
-            buffer.writeInt(destinationColor.getRawValue());
+            buffer.writeInt(destinationColor.rawValue());
             buffer.writeBoolean(usePaintColor);
             buffer.writeBoolean(usePaintType);
         }
@@ -190,10 +190,10 @@ public class CubePaintingEvent {
             }
             var oldValue = provider.getColor(dir);
             if (usePaintColor) {
-                return destinationColor.withPaintType(oldValue.getPaintType());
+                return destinationColor.withPaintType(oldValue.paintType());
             }
             if (usePaintType) {
-                return destinationColor.withColor(oldValue.getRed());
+                return destinationColor.withColor(oldValue.red());
             }
             return oldValue;
         }
@@ -320,7 +320,7 @@ public class CubePaintingEvent {
 
         @Override
         public void encode(IFriendlyByteBuf buffer) {
-            buffer.writeInt(destinationColor.getRawValue());
+            buffer.writeInt(destinationColor.rawValue());
             buffer.writeBoolean(changeHue);
             buffer.writeBoolean(changeSaturation);
             buffer.writeBoolean(changeBrightness);
@@ -365,7 +365,7 @@ public class CubePaintingEvent {
 
         @Override
         public void encode(IFriendlyByteBuf buffer) {
-            buffer.writeInt(destinationColor.getRawValue());
+            buffer.writeInt(destinationColor.rawValue());
             buffer.writeInt(intensity);
         }
 

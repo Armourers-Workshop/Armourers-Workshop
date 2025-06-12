@@ -32,12 +32,12 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
     public DrawerToolbar(CGRect frame) {
         super(frame);
         this.badgeBackgroundImage = ModTextures.buttonImage(ModTextures.ADVANCED_SKIN_BUILDER, 0, 48, 24, 24);
-        this.sidebarView.setFrame(new CGRect(0, 0, getBarSize(), frame.height));
+        this.sidebarView.setFrame(new CGRect(0, 0, barSize(), frame.height));
         this.sidebarView.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleHeight);
         this.sidebarView.setShowsVerticalScrollIndicator(false);
         this.sidebarView.setDelegate(this);
         this.addSubview(sidebarView);
-        this.containerView.setFrame(new CGRect(getBarSize(), 0, frame.width - getBarSize(), frame.height));
+        this.containerView.setFrame(new CGRect(barSize(), 0, frame.width - barSize(), frame.height));
         this.containerView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         this.containerView.setContents(UIImage.of(ModTextures.ADVANCED_SKIN_BUILDER).uv(52, 24).fixed(20, 24).clip(4, 0, 4, 4).build());
         this.containerView.setShowsVerticalScrollIndicator(false);
@@ -47,7 +47,7 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
 
     public void addPage(UIView contentView, UIBarItem barItem) {
         var edg = barItem.imageInsets();
-        var badgeView = new UIButton(new CGRect(0, 0, getBarSize(), getBarSize()));
+        var badgeView = new UIButton(new CGRect(0, 0, barSize(), barSize()));
         badgeView.setImage(barItem.getImage(), UIControl.State.NORMAL);
         badgeView.setImageEdgeInsets(new UIEdgeInsets(edg.top + 2, edg.left + 2, edg.bottom + 2, edg.right + 0));
         badgeView.setBackgroundImage(badgeBackgroundImage, UIControl.State.ALL);
@@ -77,7 +77,7 @@ public class DrawerToolbar extends UIView implements UIScrollViewDelegate {
         layoutContainerView();
     }
 
-    protected float getBarSize() {
+    protected float barSize() {
         return 24;
     }
 

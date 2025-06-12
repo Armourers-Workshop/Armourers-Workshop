@@ -11,29 +11,29 @@ public interface ConcurrentRenderingContext {
 
     boolean shouldRenderOutline();
 
-    int getOverlay();
+    int overlay();
 
-    int getLightmap();
+    int lightmap();
 
-    int getOutlineColor();
+    int outlineColor();
 
-    float getPartialTicks();
+    float partialTicks();
 
-    double getAnimationTicks();
+    double animationTicks();
 
-    float getRenderPriority();
+    float renderPriority();
 
-    SkinItemSource getItemSource();
+    SkinItemSource itemSource();
 
-    IPoseStack getPoseStack();
+    IPoseStack poseStack();
 
-    IBufferSource getBufferSource();
+    IBufferSource bufferSource();
 
     default IVertexConsumer getBuffer(IRenderType renderType) {
-        return getBufferSource().getBuffer(renderType);
+        return bufferSource().getBuffer(renderType);
     }
 
     ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin);
 
-    IPoseStack getModelViewStack();
+    IPoseStack modelViewStack();
 }

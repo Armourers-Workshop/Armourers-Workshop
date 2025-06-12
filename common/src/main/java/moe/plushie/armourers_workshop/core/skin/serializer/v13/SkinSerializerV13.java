@@ -52,17 +52,17 @@ public final class SkinSerializerV13 implements IOSerializer {
         stream.writeString(TAG_SKIN_HEADER);
         // Write skin props.
         stream.writeString(TAG_SKIN_PROPS_HEADER);
-        stream.writeSkinProperties(skin.getProperties());
+        stream.writeSkinProperties(skin.properties());
         stream.writeString(TAG_SKIN_PROPS_FOOTER);
         // Write the skin type.
         stream.writeString(TAG_SKIN_TYPE_HEADER);
-        stream.writeType(skin.getType());
+        stream.writeType(skin.type());
         stream.writeString(TAG_SKIN_TYPE_FOOTER);
         // Write paint data.
         stream.writeString(TAG_SKIN_PAINT_HEADER);
-        if (skin.getPaintData() != null) {
+        if (skin.paintData() != null) {
             stream.writeBoolean(true);
-            int[] colors = skin.getPaintData().bytes();
+            int[] colors = skin.paintData().bytes();
             for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(colors[i]);
             }
@@ -71,8 +71,8 @@ public final class SkinSerializerV13 implements IOSerializer {
         }
         stream.writeString(TAG_SKIN_PAINT_FOOTER);
         // Write parts
-        stream.writeByte(skin.getParts().size());
-        for (var skinPart : skin.getParts()) {
+        stream.writeByte(skin.parts().size());
+        for (var skinPart : skin.parts()) {
             stream.writeString(TAG_SKIN_PART_HEADER);
             partSerializer.saveSkinPart(skinPart, stream);
             stream.writeString(TAG_SKIN_PART_FOOTER);
@@ -165,7 +165,7 @@ public final class SkinSerializerV13 implements IOSerializer {
             if (!stream.readString().equals(TAG_SKIN_PART_HEADER)) {
                 ModLog.error("Error loading skin part header.");
             }
-            var part = partSerializer.loadSkinPart(stream, options.getFileVersion());
+            var part = partSerializer.loadSkinPart(stream, options.fileVersion());
             parts.add(part);
             if (!stream.readString().equals(TAG_SKIN_PART_FOOTER)) {
                 ModLog.error("Error loading skin part footer.");
@@ -233,16 +233,16 @@ public final class SkinSerializerV13 implements IOSerializer {
             skinType = SkinTypes.byName(sb.toString());
             ModLog.info("got failed type " + skinType);
         }
-        return SkinFileHeader.optimized(options.getFileVersion(), skinType, properties);
+        return SkinFileHeader.optimized(options.fileVersion(), skinType, properties);
     }
 
     @Override
     public boolean isSupportedVersion(SkinFileOptions options) {
-        return options.getFileVersion() == FILE_VERSION;
+        return options.fileVersion() == FILE_VERSION;
     }
 
     @Override
-    public int getVersion() {
+    public int fileVersion() {
         return FILE_VERSION;
     }
 }

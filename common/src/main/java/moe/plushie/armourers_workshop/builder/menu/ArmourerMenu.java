@@ -80,7 +80,7 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         }
         try {
             var stackInput = inventory.getItem(0);
-            var skinProps = blockEntity.getSkinProperties().copy();
+            var skinProps = blockEntity.skinProperties().copy();
 
             skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
 
@@ -94,11 +94,11 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             }
 
             var level = blockEntity.getLevel();
-            var transform = blockEntity.getTransform();
-            var skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.getSkinType(), blockEntity.getPaintData());
+            var transform = blockEntity.transform();
+            var skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, blockEntity.skinType(), blockEntity.paintData());
 
             var identifier = SkinLoader.getInstance().saveSkin("", skin);
-            var descriptor = new SkinDescriptor(identifier, skin.getType());
+            var descriptor = new SkinDescriptor(identifier, skin.type());
             if (!player.isCreative()) {
                 stackInput.shrink(1);
             }
@@ -128,22 +128,22 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             return;
         }
         try {
-            var skin = SkinLoader.getInstance().loadSkin(descriptor.getIdentifier());
+            var skin = SkinLoader.getInstance().loadSkin(descriptor.identifier());
             if (skin == null) {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
             // because descriptor maybe is a wrong skin type.
-            if (skin.getType() != blockEntity.getSkinType() || skin.getVersion() >= 20) {
+            if (skin.type() != blockEntity.skinType() || skin.fileVersion() >= 20) {
                 throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
             }
-            if (!skin.getSettings().isEditable()) {
+            if (!skin.settings().isEditable()) {
                 throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
             }
-            blockEntity.setSkinProperties(skin.getProperties());
-            blockEntity.setPaintData(skin.getPaintData());
+            blockEntity.setSkinProperties(skin.properties());
+            blockEntity.setPaintData(skin.paintData());
 
             var collector = new CubeChangesCollector(blockEntity.getLevel());
-            var transform = blockEntity.getTransform();
+            var transform = blockEntity.transform();
             WorldUtils.loadSkinIntoWorld(collector, transform, skin);
             collector.submit(Component.translatable("action.armourers_workshop.block.load"), player);
 
@@ -181,7 +181,7 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         });
     }
 
-    public Group getGroup() {
+    public Group group() {
         return this.group;
     }
 

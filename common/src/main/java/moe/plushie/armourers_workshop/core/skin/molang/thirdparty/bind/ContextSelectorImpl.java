@@ -22,38 +22,38 @@ public class ContextSelectorImpl implements ContextSelector {
         this.partialTicks = partialTicks;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public float getPartialTick() {
+    public float partialTick() {
         return partialTicks;
     }
 
     @Override
-    public double getAnimationTicks() {
+    public double animationTicks() {
         return animationTicks;
     }
 
     @Override
-    public double getAnimTime() {
+    public double animTime() {
         return animTime;
     }
 
     @Override
-    public double getLifeTime() {
+    public double lifeTime() {
         return animationTicks - beginTime;
     }
 
     @Override
-    public double getFPS() {
+    public double fps() {
         return -1;
     }
 
 
     @Override
-    public LevelSelector getLevel() {
+    public LevelSelector level() {
         return null;
     }
 
@@ -62,7 +62,7 @@ public class ContextSelectorImpl implements ContextSelector {
     }
 
     @Override
-    public int getEntityCount() {
+    public int entityCount() {
         return 0;
     }
 

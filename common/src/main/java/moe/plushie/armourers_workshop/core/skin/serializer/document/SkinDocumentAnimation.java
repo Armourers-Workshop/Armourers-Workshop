@@ -29,11 +29,11 @@ public class SkinDocumentAnimation implements IDataSerializable.Immutable {
         serializer.write(CodingKeys.SKIN, descriptor); // extra link
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public SkinDescriptor getDescriptor() {
+    public SkinDescriptor descriptor() {
         return descriptor;
     }
 

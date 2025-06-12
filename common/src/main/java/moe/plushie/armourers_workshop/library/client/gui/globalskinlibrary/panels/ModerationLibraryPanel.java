@@ -47,7 +47,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
             return;
         }
         Report report = skinReports.get(index);
-        GlobalSkinLibrary.getInstance().getSkin(report.getSkinId(), (result, exception) -> {
+        GlobalSkinLibrary.getInstance().getSkin(report.skinId(), (result, exception) -> {
             if (exception != null) {
                 UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
                 return;
@@ -63,8 +63,8 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         if (isRequesting) {
             return;
         }
-        if (contentOffset.y() + reportList.frame().height() * 1.5f >= reportList.getContentHeight()) {
-            pageIndex += getMaxPerPage();
+        if (contentOffset.y() + reportList.frame().height() * 1.5f >= reportList.contentHeight()) {
+            pageIndex += maxPerPage();
             loadReportList();
         }
     }
@@ -72,9 +72,9 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     private void loadReportList() {
         int pageIndex = this.pageIndex;
         isRequesting = true;
-        GlobalSkinLibrary.getInstance().getReportList(pageIndex, getMaxPerPage(), filter, (result, exception) -> {
+        GlobalSkinLibrary.getInstance().getReportList(pageIndex, maxPerPage(), filter, (result, exception) -> {
             if (result != null) {
-                onPageLoad(pageIndex, result.getReports());
+                onPageLoad(pageIndex, result.reports());
             }
         });
     }
@@ -86,16 +86,16 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         var names = new ArrayList<String>();
         var sdf = new SimpleDateFormat("yyyy-MM-dd MM:dd:HH");
         for (var skinReport : reports) {
-            names.add(sdf.format(skinReport.getDate()));
-            names.add(String.valueOf(skinReport.getUserId()));
-            names.add(String.valueOf(skinReport.getSkinId()));
-            names.add(I18n.get(skinReport.getReportType().getLangKey()));
-            names.add(skinReport.getMessage());
+            names.add(sdf.format(skinReport.date()));
+            names.add(String.valueOf(skinReport.userId()));
+            names.add(String.valueOf(skinReport.skinId()));
+            names.add(I18n.get(skinReport.reportType().toLangKey()));
+            names.add(skinReport.message());
             listReports.addItem(names.toArray(new String[5]));
             names.clear();
         }
         skinReports.addAll(reports);
-        if (reports.size() >= getMaxPerPage()) {
+        if (reports.size() >= maxPerPage()) {
             isRequesting = false;
         }
     }
@@ -111,7 +111,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         return reportList;
     }
 
-    private int getMaxPerPage() {
+    private int maxPerPage() {
         return 50;
     }
 }

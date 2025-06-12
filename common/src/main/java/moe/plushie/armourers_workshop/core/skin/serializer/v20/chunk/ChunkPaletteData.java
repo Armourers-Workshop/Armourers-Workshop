@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureOptions;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenSliceAccessor;
 
@@ -52,8 +51,8 @@ public class ChunkPaletteData implements ChunkVariable {
     }
 
     public ChunkColorSection.ColorRef writeColor(SkinPaintColor color) {
-        int rawValue = color.getRawValue();
-        return _mutableSectionAt(color.getPaintType(), 3).putColor(rawValue);
+        int rawValue = color.rawValue();
+        return _mutableSectionAt(color.paintType(), 3).putColor(rawValue);
     }
 
     public SkinPaintColor readColor(int index) {
@@ -81,7 +80,7 @@ public class ChunkPaletteData implements ChunkVariable {
 
     public ChunkTextureData.TextureRef readTexture(OpenVector2f uv) {
         // texture + black(0x000000) + 0(used bytes)
-        return _sectionAt(SkinPaintTypes.TEXTURE, 0).getTexture(uv);
+        return _sectionAt(SkinPaintTypes.TEXTURE, 0).textureRefAt(uv);
     }
 
     public ChunkTextureData.OptionsRef writeTextureOptions(long options) {
@@ -110,7 +109,7 @@ public class ChunkPaletteData implements ChunkVariable {
             if (!section.isResolved()) {
                 section.freeze(offset);
             }
-            offset += section.getSize();
+            offset += section.size();
         }
         colorUsedIndex = _used(offset);
         textureUsedIndex = 4;
@@ -134,9 +133,9 @@ public class ChunkPaletteData implements ChunkVariable {
             }
             sections.put(_key(section), section);
             section.freeze(offset);
-            offset += section.getSize();
+            offset += section.size();
             if (!section.isTexture()) {
-                colorOffset += section.getSize();
+                colorOffset += section.size();
             }
         }
         // yep, we have a fixed color table.
@@ -151,7 +150,7 @@ public class ChunkPaletteData implements ChunkVariable {
     public void writeToStream(ChunkOutputStream stream) throws IOException {
         // we need to make sure section in offset order.
         var sortedSections = new ArrayList<>(sections.values());
-        sortedSections.sort(Comparator.comparing(ChunkColorSection::getStartIndex));
+        sortedSections.sort(Comparator.comparing(ChunkColorSection::startIndex));
         stream.writeVarInt(flags);
         stream.writeVarInt(reserved);
         for (var section : sortedSections) {
@@ -177,17 +176,17 @@ public class ChunkPaletteData implements ChunkVariable {
             stream.writeVarInt(0);
             return;
         }
-        stream.writeVarInt(section.getSize());
-        stream.writeByte(section.getPaintType().getId());
-        stream.writeByte(section.getUsedBytes());
+        stream.writeVarInt(section.size());
+        stream.writeByte(section.paintType().id());
+        stream.writeByte(section.usedBytes());
         section.writeToStream(stream);
     }
 
-    public int getColorIndexBytes() {
+    public int colorIndexBytes() {
         return colorUsedIndex;
     }
 
-    public int getTextureIndexBytes() {
+    public int textureIndexBytes() {
         return textureUsedIndex;
     }
 
@@ -196,15 +195,15 @@ public class ChunkPaletteData implements ChunkVariable {
     }
 
     private Integer _key(ChunkColorSection section) {
-        return section.getPaintType().getId() << 24 | section.getUsedBytes();
+        return section.paintType().id() << 24 | section.usedBytes();
     }
 
     private ChunkColorSection _sectionAt(SkinPaintType paintType, int usedBytes) {
-        return sections.get(paintType.getId() << 24 | usedBytes);
+        return sections.get(paintType.id() << 24 | usedBytes);
     }
 
     private ChunkColorSection.Mutable _mutableSectionAt(SkinPaintType paintType, int usedBytes) {
-        return (ChunkColorSection.Mutable) sections.computeIfAbsent(paintType.getId() << 24 | usedBytes, k -> new ChunkColorSection.Mutable(usedBytes, paintType));
+        return (ChunkColorSection.Mutable) sections.computeIfAbsent(paintType.id() << 24 | usedBytes, k -> new ChunkColorSection.Mutable(usedBytes, paintType));
     }
 
     private int _used(int size) {
@@ -226,17 +225,17 @@ public class ChunkPaletteData implements ChunkVariable {
 
         @Override
         public SkinPaintColor get(int index) {
-            return section.getColor(index);
+            return section.colorAt(index);
         }
 
         @Override
-        public int getStartIndex() {
-            return section.getStartIndex();
+        public int startIndex() {
+            return section.startIndex();
         }
 
         @Override
-        public int getEndIndex() {
-            return section.getEndIndex();
+        public int endIndex() {
+            return section.endIndex();
         }
     }
 }

@@ -25,7 +25,7 @@ public class BakedRenderInfo {
         this.luminance = luminance;
     }
 
-    public int getLuminance() {
+    public int luminance() {
         return luminance;
     }
 

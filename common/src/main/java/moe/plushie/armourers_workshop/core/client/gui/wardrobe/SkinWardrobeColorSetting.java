@@ -88,7 +88,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void setup(SkinPaintType paintType, boolean enableAutoPick) {
-            var name = paintType.getRegistryName().getPath();
+            var name = paintType.registryName().path();
             // title
             this.titleView.setText(getDisplayText("label." + name));
             this.titleView.setFrame(new CGRect(0, 0, bounds().width, 9));
@@ -153,7 +153,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void autoPick(UIControl control) {
-            var location = TextureUtils.getTexture(wardrobe.getEntity());
+            var location = TextureUtils.getTexture(wardrobe.entity());
             if (location == null) {
                 return;
             }
@@ -185,9 +185,9 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             int r = 0, g = 0, b = 0, c = 0;
             for (var paintColor : colors) {
                 if (paintColor != null) {
-                    r += paintColor.getRed();
-                    g += paintColor.getGreen();
-                    b += paintColor.getBlue();
+                    r += paintColor.red();
+                    g += paintColor.green();
+                    b += paintColor.blue();
                     c += 1;
                 }
             }
@@ -198,7 +198,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private SkinPaintColor getColor() {
-            var itemStack = wardrobe.getInventory().getItem(slot);
+            var itemStack = wardrobe.inventory().getItem(slot);
             return itemStack.getOrDefault(ModDataComponents.TOOL_COLOR.get(), SkinPaintColor.CLEAR);
         }
 

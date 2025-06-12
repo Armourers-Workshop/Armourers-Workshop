@@ -14,12 +14,12 @@ public class AdvancedPartType extends SkinPartType {
     }
 
     @Override
-    public int getMinimumMarkersNeeded() {
+    public int minimumMarkersNeeded() {
         return 0;
     }
 
     @Override
-    public int getMaximumMarkersNeeded() {
+    public int maximumMarkersNeeded() {
         return 0;
     }
 }

@@ -16,11 +16,11 @@ public class ServerItemList extends SkinPreviewList<ServerSkin> {
 
     @Override
     protected String getItemName(ServerSkin value) {
-        return value.getName();
+        return value.name();
     }
 
     @Override
     protected SkinDescriptor getItemDescriptor(ServerSkin value) {
-        return value.getDescriptor();
+        return value.descriptor();
     }
 }

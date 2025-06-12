@@ -12,29 +12,29 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public interface ShaderVertexObject {
 
-    int getOffset();
+    int offset();
 
-    int getTotal();
+    int total();
 
-    VertexArrayObject getArrayObject();
+    VertexArrayObject arrayObject();
 
-    VertexBufferObject getBufferObject();
+    VertexBufferObject bufferObject();
 
-    VertexIndexObject getIndexObject();
+    VertexIndexObject indexObject();
 
-    int getOverlay();
+    int overlay();
 
-    int getLightmap();
+    int lightmap();
 
-    int getOutlineColor();
+    int outlineColor();
 
-    float getPolygonOffset();
+    float polygonOffset();
 
-    OpenPoseStack getPoseStack();
+    OpenPoseStack poseStack();
 
-    IVertexFormat getFormat();
+    IVertexFormat format();
 
-    IRenderType getType();
+    IRenderType type();
 
     boolean isEmissive();
 

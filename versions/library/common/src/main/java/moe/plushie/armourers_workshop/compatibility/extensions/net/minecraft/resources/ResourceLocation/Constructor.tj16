@@ -21,6 +21,6 @@ public class Constructor {
     }
 
     public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceLocation location, String variant) {
-        return new ModelResourceLocation(new ResourceLocation(location.getNamespace(), location.getPath()), variant);
+        return new ModelResourceLocation(new ResourceLocation(location.namespace(), location.path()), variant);
     }
 }

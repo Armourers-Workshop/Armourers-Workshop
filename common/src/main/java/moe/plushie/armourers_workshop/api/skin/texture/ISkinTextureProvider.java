@@ -7,19 +7,19 @@ import java.util.Collections;
 
 public interface ISkinTextureProvider {
 
-    String getName();
+    String name();
 
-    float getWidth();
+    float width();
 
-    float getHeight();
+    float height();
 
-    ByteBuf getBuffer();
+    ByteBuf buffer();
 
-    ISkinTextureAnimation getAnimation();
+    ISkinTextureAnimation animation();
 
-    ISkinTextureProperties getProperties();
+    ISkinTextureProperties properties();
 
-    default Collection<? extends ISkinTextureProvider> getVariants() {
+    default Collection<? extends ISkinTextureProvider> variants() {
         return Collections.emptyList();
     }
 }

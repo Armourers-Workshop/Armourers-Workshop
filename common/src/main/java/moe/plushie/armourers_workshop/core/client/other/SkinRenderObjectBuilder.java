@@ -41,32 +41,32 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
 
     @Override
     public void addShape(OpenVector3f origin, ConcurrentRenderingContext context) {
-        ShapeTesselator.vector(origin, 16, context.getPoseStack(), context.getBufferSource());
+        ShapeTesselator.vector(origin, 16, context.poseStack(), context.bufferSource());
     }
 
     @Override
     public void addShape(OpenVoxelShape shape, int color, ConcurrentRenderingContext context) {
-        ShapeTesselator.stroke(shape.bounds(), color, context.getPoseStack(), context.getBufferSource());
+        ShapeTesselator.stroke(shape.bounds(), color, context.poseStack(), context.bufferSource());
     }
 
     @Override
     public void addShape(BakedArmature armature, ConcurrentRenderingContext context) {
-        var bufferSource = context.getBufferSource();
-        var poseStack = context.getPoseStack();
-        var transforms = armature.getTransforms();
-        var armature1 = armature.getArmature();
+        var bufferSource = context.bufferSource();
+        var poseStack = context.poseStack();
+        var transforms = armature.transforms();
+        var armature1 = armature.armature();
         for (var joint : armature1.allJoints()) {
-            var shape = armature1.getShape(joint.getId());
-            var transform = transforms[joint.getId()];
+            var shape = armature1.shapeById(joint.id());
+            var transform = transforms[joint.id()];
             if (ModDebugger.defaultArmature) {
-                transform = armature1.getGlobalTransform(joint.getId());
+                transform = armature1.globalTransformById(joint.id());
             }
             if (shape != null && transform != null) {
                 poseStack.pushPose();
                 transform.apply(poseStack);
 //                ModDebugger.translate(context.pose().pose());
 //			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
-                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.getId()), poseStack, bufferSource);
+                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.id()), poseStack, bufferSource);
                 ShapeTesselator.vector(0, 0, 0, 4, 4, 4, poseStack, bufferSource);
                 poseStack.popPose();
             }
@@ -86,14 +86,14 @@ public class SkinRenderObjectBuilder implements ConcurrentBufferBuilder {
     }
 
     private void drawWithoutVBO(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, ConcurrentRenderingContext context) {
-        var poseStack = context.getPoseStack();
-        var bufferSource = context.getBufferSource();
-        part.getQuads().forEach((renderType, quads) -> {
+        var poseStack = context.poseStack();
+        var bufferSource = context.bufferSource();
+        part.quads().forEach((renderType, quads) -> {
             var builder = bufferSource.getBuffer(renderType);
             quads.forEach((transform, faces) -> {
                 poseStack.pushPose();
                 transform.apply(poseStack);
-                faces.forEach(face -> face.render(part, scheme, context.getLightmap(), context.getOverlay(), poseStack, builder));
+                faces.forEach(face -> face.render(part, scheme, context.lightmap(), context.overlay(), poseStack, builder));
                 poseStack.popPose();
             });
         });

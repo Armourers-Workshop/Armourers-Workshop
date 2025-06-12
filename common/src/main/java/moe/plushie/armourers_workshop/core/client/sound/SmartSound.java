@@ -26,8 +26,8 @@ public class SmartSound extends ReferenceCounted {
     private SoundEvent soundEvent;
 
     public SmartSound(SkinSoundData provider) {
-        this.name = provider.getName();
-        this.properties = provider.getProperties();
+        this.name = provider.name();
+        this.properties = provider.properties();
         this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + ".ogg");
         this.soundBuffers = resolveSoundBuffers(location, provider);
     }
@@ -52,15 +52,15 @@ public class SmartSound extends ReferenceCounted {
         });
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public OpenResourceLocation getLocation() {
+    public OpenResourceLocation location() {
         return location;
     }
 
-    public SoundEvent getSoundEvent() {
+    public SoundEvent soundEvent() {
         if (soundEvent == null) {
             soundEvent = SoundEvent.createVariableRangeEvent(location.toLocation());
             DataContainer.set(soundEvent, this);
@@ -78,7 +78,7 @@ public class SmartSound extends ReferenceCounted {
 
     private Map<OpenResourceLocation, ByteBuf> resolveSoundBuffers(OpenResourceLocation location, ISkinSoundProvider provider) {
         var results = new LinkedHashMap<OpenResourceLocation, ByteBuf>();
-        results.put(location, provider.getBuffer());
+        results.put(location, provider.buffer());
         return results;
     }
 }

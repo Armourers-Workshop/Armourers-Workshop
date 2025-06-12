@@ -58,7 +58,7 @@ public class SkinItemSource {
         this.itemStack = itemStack;
     }
 
-    public ItemStack getItem() {
+    public ItemStack item() {
         return this.itemStack;
     }
 
@@ -66,7 +66,7 @@ public class SkinItemSource {
         this.renderPriority = renderPriority;
     }
 
-    public float getRenderPriority() {
+    public float renderPriority() {
         return renderPriority;
     }
 
@@ -74,7 +74,7 @@ public class SkinItemSource {
         this.itemRotation = rotation;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return itemRotation;
     }
 
@@ -82,7 +82,7 @@ public class SkinItemSource {
         this.itemScale = scale;
     }
 
-    public OpenVector3f getScale() {
+    public OpenVector3f scale() {
         return itemScale;
     }
 
@@ -90,7 +90,7 @@ public class SkinItemSource {
         this.itemDisplayContext = itemDisplayContext;
     }
 
-    public OpenItemDisplayContext getDisplayContext() {
+    public OpenItemDisplayContext displayContext() {
         return itemDisplayContext;
     }
 
@@ -98,7 +98,7 @@ public class SkinItemSource {
         this.itemProperties = itemProperties;
     }
 
-    public SkinItemProperties getProperties() {
+    public SkinItemProperties properties() {
         return itemProperties;
     }
 }

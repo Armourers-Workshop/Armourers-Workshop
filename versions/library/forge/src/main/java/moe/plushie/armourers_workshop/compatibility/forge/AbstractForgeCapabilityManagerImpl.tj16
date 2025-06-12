@@ -77,7 +77,7 @@ public class AbstractForgeCapabilityManagerImpl {
         }
 
         @Override
-        public IResourceLocation getRegistryName() {
+        public IResourceLocation registryName() {
             return registryName;
         }
     }

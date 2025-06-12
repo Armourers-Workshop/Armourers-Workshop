@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 
 public interface ISkinPartType extends IRegistryEntry {
 
-    String getName();
+    String name();
 
     /**
      * The last 3 values are used to define the size of this part, the first 3
@@ -15,7 +15,7 @@ public interface ISkinPartType extends IRegistryEntry {
      *
      * @return
      */
-    IRectangle3i getBuildingSpace();
+    IRectangle3i buildingSpace();
 
     /**
      * The last 3 values set the size of the invisible blocks that cubes can be
@@ -25,18 +25,18 @@ public interface ISkinPartType extends IRegistryEntry {
      *
      * @return
      */
-    IRectangle3i getGuideSpace();
+    IRectangle3i guideSpace();
 
     /**
      * This is used by the armourer to position this part
      */
-    IVector3i getOffset();
+    IVector3i offset();
 
-    IVector3i getRenderOffset();
+    IRectangle3i bounds();
 
-    IRectangle3i getBounds();
+    IVector3i renderOffset();
 
-    default float getRenderPolygonOffset() {
+    default float renderPolygonOffset() {
         return 0;
     }
 
@@ -45,14 +45,14 @@ public interface ISkinPartType extends IRegistryEntry {
      *
      * @return
      */
-    int getMinimumMarkersNeeded();
+    int minimumMarkersNeeded();
 
     /**
      * Gets the maximum number of markers allowed for this skin part.
      *
      * @return
      */
-    int getMaximumMarkersNeeded();
+    int maximumMarkersNeeded();
 
     /**
      * If true this part must be present for the skin to be saved.

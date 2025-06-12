@@ -74,7 +74,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         bringSubviewToFront(cancelButton);
 
         listView.setFrame(new CGRect(0, 0, bounds().width(), height));
-        listView.getMenu().reloadSlots(inventoryView.frame(), new CGRect(left + 32, 44, 0, 0));
+        listView.menu().reloadSlots(inventoryView.frame(), new CGRect(left + 32, 44, 0, 0));
         addSubview(listView);
     }
 
@@ -123,11 +123,11 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         return keepPaintBox.isSelected();
     }
 
-    public ItemStack getSelector() {
+    public ItemStack selector() {
         return inventory.getItem(inventory.getContainerSize() - 2);
     }
 
-    public ItemStack getApplier() {
+    public ItemStack applier() {
         return inventory.getItem(inventory.getContainerSize() - 1);
     }
 

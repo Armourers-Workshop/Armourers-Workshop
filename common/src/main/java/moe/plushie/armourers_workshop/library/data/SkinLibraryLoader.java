@@ -78,7 +78,7 @@ public class SkinLibraryLoader implements Runnable {
         var cache = CACHED_FILE_HEADERS.get(key);
         var modifiedTime = FileUtils.getLastModifiedTime(file);
         if (cache != null && cache.isValid(modifiedTime)) {
-            return cache.getHeader();
+            return cache.header();
         }
         try (var inputStream = new FileInputStream(file)) {
             var header = SkinSerializer.readHeaderFromStream(inputStream);
@@ -119,7 +119,7 @@ public class SkinLibraryLoader implements Runnable {
             return this.modifiedTime == modifiedTime;
         }
 
-        public SkinFileHeader getHeader() {
+        public SkinFileHeader header() {
             return header;
         }
     }

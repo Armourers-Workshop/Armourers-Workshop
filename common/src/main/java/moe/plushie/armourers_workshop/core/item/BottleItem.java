@@ -43,7 +43,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         var itemStack = context.getItemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
-            setItemColor(itemStack, provider.getColor());
+            setItemColor(itemStack, provider.color());
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
@@ -53,7 +53,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     public boolean isFoil(ItemStack itemStack) {
         var paintColor = getItemColor(itemStack);
         if (paintColor != null) {
-            return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
+            return paintColor.paintType() != SkinPaintTypes.NORMAL;
         }
         return false;
     }

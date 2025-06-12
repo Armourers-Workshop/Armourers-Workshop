@@ -29,7 +29,7 @@ public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPain
     }
 
     @Override
-    public SkinPaintColor getColor() {
+    public SkinPaintColor color() {
         return color;
     }
 

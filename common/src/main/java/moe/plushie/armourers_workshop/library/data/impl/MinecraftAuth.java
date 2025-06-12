@@ -41,7 +41,7 @@ public class MinecraftAuth {
                 return false;
             }
             ModLog.info("MC Auth Start");
-            var data = "{\"accessToken\":\"" + USER_PROVIDER.getAccessToken() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + USER_PROVIDER.getId() + "\"}";
+            var data = "{\"accessToken\":\"" + USER_PROVIDER.accessToken() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + USER_PROVIDER.id() + "\"}";
 
             try {
                 // returns non 204 if error occurred
@@ -100,10 +100,10 @@ public class MinecraftAuth {
 
     public interface UserProvider {
 
-        String getId();
+        String id();
 
-        String getName();
+        String name();
 
-        String getAccessToken();
+        String accessToken();
     }
 }

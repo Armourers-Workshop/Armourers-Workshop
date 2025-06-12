@@ -14,11 +14,11 @@ public class BlockBenchAnimator extends BlockBenchObject {
         this.keyframes = keyframes;
     }
 
-    public String getType() {
+    public String type() {
         return type;
     }
 
-    public List<BlockBenchKeyframe> getKeyframes() {
+    public List<BlockBenchKeyframe> keyframes() {
         return keyframes;
     }
 

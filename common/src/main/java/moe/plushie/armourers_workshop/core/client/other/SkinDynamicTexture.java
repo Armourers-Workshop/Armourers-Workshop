@@ -32,7 +32,7 @@ public class SkinDynamicTexture extends DynamicTexture {
         this.textureManager = Minecraft.getInstance().getTextureManager();
     }
 
-    public OpenResourceLocation getRefer() {
+    public OpenResourceLocation refer() {
         return refer;
     }
 
@@ -45,7 +45,7 @@ public class SkinDynamicTexture extends DynamicTexture {
         }
     }
 
-    public SkinPaintData getPaintData() {
+    public SkinPaintData paintData() {
         return paintData;
     }
 
@@ -58,7 +58,7 @@ public class SkinDynamicTexture extends DynamicTexture {
 
     @Override
     public void upload() {
-        var downloadedImage = getDownloadedImage();
+        var downloadedImage = downloadedImage();
         var mergedImage = OpenNativeImage.of(getPixels());
         if (mergedImage == null || downloadedImage == null) {
             return;
@@ -91,7 +91,7 @@ public class SkinDynamicTexture extends DynamicTexture {
         }
     }
 
-    private OpenNativeImage getDownloadedImage() {
+    private OpenNativeImage downloadedImage() {
         if (downloadedImage != null) {
             return downloadedImage;
         }

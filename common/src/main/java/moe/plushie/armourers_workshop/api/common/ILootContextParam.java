@@ -22,5 +22,5 @@ public interface ILootContextParam<T> {
     ILootContextParam<ItemStack> TOOL = () -> ItemStack.class;
     ILootContextParam<Float> EXPLOSION_RADIUS = () -> Float.class;
 
-    Class<T> getValueClass();
+    Class<T> valueType();
 }

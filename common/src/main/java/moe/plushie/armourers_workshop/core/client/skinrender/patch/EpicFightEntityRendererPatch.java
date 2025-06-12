@@ -70,7 +70,7 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
             return;
         }
         if (isFirstPerson) {
-            transformer.setFilter(joint -> !joint.getName().equals("Head") && !joint.getName().equals("Chest") && !joint.getName().equals("Torso"));
+            transformer.setFilter(joint -> !joint.name().equals("Head") && !joint.name().equals("Chest") && !joint.name().equals("Torso"));
         } else {
             transformer.setFilter(null);
         }
@@ -97,18 +97,18 @@ public class EpicFightEntityRendererPatch<T extends LivingEntity> extends Entity
         overridePoseStack = pose;
     }
 
-    public IPoseStack getOverridePose() {
+    public IPoseStack overridePose() {
         if (overridePoseStack != null) {
             return overridePoseStack;
         }
-        return pluginContext.getPoseStack();
+        return pluginContext.poseStack();
     }
 
     @Override
-    public BakedArmatureTransformer getTransformer() {
+    public BakedArmatureTransformer transformer() {
         // the transformer status is abnormal when transform provider is null.
         if (transformProvider != null) {
-            return super.getTransformer();
+            return super.transformer();
         }
         return null;
     }

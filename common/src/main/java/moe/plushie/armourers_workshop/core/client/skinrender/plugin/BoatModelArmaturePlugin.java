@@ -28,7 +28,7 @@ public class BoatModelArmaturePlugin extends ArmaturePlugin {
         placeholderModel.linkTo(modelProvider.getModel(entity));
 
         // fix the direction.
-        context.getPoseStack().scale(-1, -1, 1);
+        context.poseStack().scale(-1, -1, 1);
     }
 
     @Override

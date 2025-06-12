@@ -127,24 +127,24 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private void prepareDefaultValue() {
         defaultValues.clear();
         if (blockEntity != null) {
-            lastDescriptor = blockEntity.getTextureDescriptor();
-            lastTextureModel = blockEntity.getTextureModel();
+            lastDescriptor = blockEntity.textureDescriptor();
+            lastTextureModel = blockEntity.textureModel();
         }
-        lastTextureSource = lastDescriptor.getSource();
-        defaultValues.put(lastTextureSource, lastDescriptor.getValue());
+        lastTextureSource = lastDescriptor.source();
+        defaultValues.put(lastTextureSource, lastDescriptor.value());
     }
 
     private void submit(Object button) {
         textField.resignFirstResponder();
         confirmView.setEnabled(false);
         // load texture info and then update to entity.
-        EntityTextureLoader.getInstance().loadTexture(getTextureDescriptor(), (texture, exception) -> {
+        EntityTextureLoader.getInstance().loadTexture(textureDescriptor(), (texture, exception) -> {
             confirmView.setEnabled(true);
             if (texture == null) {
                 UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
                 return;
             }
-            var newValue = texture.getDescriptor();
+            var newValue = texture.descriptor();
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
@@ -153,8 +153,8 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             blockEntity.setTextureDescriptor(newValue);
             NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR.buildPacket(blockEntity, newValue));
             // update to use
-            var newTexutreSource = newValue.getSource();
-            var newTextureValue = Objects.flatMap(newValue, EntityTextureDescriptor::getValue, "");
+            var newTexutreSource = newValue.source();
+            var newTextureValue = Objects.flatMap(newValue, EntityTextureDescriptor::value, "");
             defaultValues.put(newTexutreSource, newTextureValue);
             applyTextureSource(newTexutreSource);
         });
@@ -221,7 +221,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         return button;
     }
 
-    private EntityTextureDescriptor getTextureDescriptor() {
+    private EntityTextureDescriptor textureDescriptor() {
         var value = textField.text();
         if (Strings.isNotEmpty(value)) {
             var userType = EntityTextureDescriptor.Source.values()[sourceComboView.selectedIndex()];

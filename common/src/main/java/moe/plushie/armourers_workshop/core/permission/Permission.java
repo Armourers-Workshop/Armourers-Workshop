@@ -21,8 +21,8 @@ public abstract class Permission {
     }
 
     protected void add(IRegistryHolder<?> object) {
-        var registryName = object.getRegistryName();
-        var node = makeNode(registryName.getPath() + "." + name);
+        var registryName = object.registryName();
+        var node = makeNode(registryName.path() + "." + name);
         nodes.put(registryName, node);
     }
 
@@ -42,11 +42,11 @@ public abstract class Permission {
         return BuilderManager.getInstance().createPermissionBuilder().level(0).build(path);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Collection<IPermissionNode> getNodes() {
+    public Collection<IPermissionNode> nodes() {
         return nodes.values();
     }
 }

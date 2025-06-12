@@ -8,10 +8,10 @@ public interface ISkinGeometryType extends IRegistryEntry {
     /**
      * Get the geometry ID
      */
-    int getId();
+    int id();
 
     /**
      * Get the geometry binding minecraft block.
      */
-    Block getBlock();
+    Block block();
 }

@@ -40,10 +40,10 @@ public abstract class ArmatureTransformerManager {
         pendingBuilders.forEach((name, builder) -> {
             var chain = new ArrayList<ArmatureTransformerBuilder>();
             var nextBuilder = builder;
-            while (nextBuilder.getParent() != null) {
-                var parent = pendingBuilders.get(nextBuilder.getParent());
+            while (nextBuilder.parent() != null) {
+                var parent = pendingBuilders.get(nextBuilder.parent());
                 if (parent == null) {
-                    ModLog.warn("Can't found parent '{}'", nextBuilder.getParent());
+                    ModLog.warn("Can't found parent '{}'", nextBuilder.parent());
                     break;
                 }
                 chain.add(parent);
@@ -57,12 +57,12 @@ public abstract class ArmatureTransformerManager {
         pendingBuilders.clear();
         builders1.forEach((name, builder) -> {
             // ...
-            builder.getEntities().forEach(entityType -> {
+            builder.entities().forEach(entityType -> {
                 // ...
                 entityBuilders.computeIfAbsent(entityType, it -> new ArrayList<>()).add(builder);
             });
             // ...
-            builder.getModels().forEach(model -> {
+            builder.models().forEach(model -> {
                 var modelClazz = ArmatureSerializers.getClass(model);
                 if (modelClazz == null) {
                     ModLog.warn("Can't found model class '{}'", model);
@@ -83,7 +83,7 @@ public abstract class ArmatureTransformerManager {
         var finalBuilders = new ArrayList<ArmatureTransformerBuilder>();
         if (entityModel != null) {
             modelBuilders.forEach((clazz, builders) -> {
-                if (clazz.isAssignableFrom(entityModel.getType())) {
+                if (clazz.isAssignableFrom(entityModel.type())) {
                     for (var parent : classes) {
                         if (clazz.isAssignableFrom(parent)) {
                             return;
@@ -101,7 +101,7 @@ public abstract class ArmatureTransformerManager {
             }
         }
         if (entityProfile != null) {
-            for (var registryName : entityProfile.getTransformers()) {
+            for (var registryName : entityProfile.transformers()) {
                 var builder = namedBuilders.get(registryName);
                 if (builder != null) {
                     finalBuilders.add(builder);
@@ -115,7 +115,7 @@ public abstract class ArmatureTransformerManager {
         return null;
     }
 
-    public int getVersion() {
+    public int version() {
         return version;
     }
 

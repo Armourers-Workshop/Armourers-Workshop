@@ -18,17 +18,17 @@ public class OpenItemTransforms extends LinkedHashMap<String, OpenTransform3f> {
     }
 
     public OpenItemTransforms(CompoundTag nbt) {
-        for (var key : nbt.getAllKeys()) {
-            put(key, deserializeTransform(nbt.getList(key, Constants.TagFlags.FLOAT)));
+        for (var key : nbt.keySet()) {
+            nbt.getOptionalList(key, Constants.TagFlags.FLOAT).ifPresent(values -> put(key, deserializeTransform(values)));
         }
     }
 
     public void put(OpenItemDisplayContext key, OpenTransform3f value) {
-        put(key.getName(), value);
+        put(key.serializedName(), value);
     }
 
     public OpenTransform3f get(OpenItemDisplayContext key) {
-        return get(key.getName());
+        return get(key.serializedName());
     }
 
 
@@ -37,7 +37,7 @@ public class OpenItemTransforms extends LinkedHashMap<String, OpenTransform3f> {
     }
 
     @Nullable
-    public OpenTransform3f getOffset() {
+    public OpenTransform3f offset() {
         return get("offset");
     }
 
@@ -75,19 +75,19 @@ public class OpenItemTransforms extends LinkedHashMap<String, OpenTransform3f> {
         if (tag.isEmpty() || tag.size() < 9) {
             return OpenTransform3f.IDENTITY;
         }
-        var tx = tag.getFloat(0);
-        var ty = tag.getFloat(1);
-        var tz = tag.getFloat(2);
+        var tx = tag.getOptionalFloat(0).orElse(0f);
+        var ty = tag.getOptionalFloat(1).orElse(0f);
+        var tz = tag.getOptionalFloat(2).orElse(0f);
         var translate = new OpenVector3f(tx, ty, tz);
 
-        var rx = tag.getFloat(3);
-        var ry = tag.getFloat(4);
-        var rz = tag.getFloat(5);
+        var rx = tag.getOptionalFloat(3).orElse(0f);
+        var ry = tag.getOptionalFloat(4).orElse(0f);
+        var rz = tag.getOptionalFloat(5).orElse(0f);
         var rotation = new OpenVector3f(rx, ry, rz);
 
-        var sx = tag.getFloat(6);
-        var sy = tag.getFloat(7);
-        var sz = tag.getFloat(8);
+        var sx = tag.getOptionalFloat(6).orElse(0f);
+        var sy = tag.getOptionalFloat(7).orElse(0f);
+        var sz = tag.getOptionalFloat(8).orElse(0f);
         var scale = new OpenVector3f(sx, sy, sz);
 
         return OpenTransform3f.create(translate, rotation, scale);

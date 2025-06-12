@@ -6,13 +6,13 @@ import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintColor;
 
 public interface ISkinGeometryVertex {
 
-    int getId();
+    int id();
 
-    IVector3f getPosition();
+    IVector3f position();
 
-    IVector3f getNormal();
+    IVector3f normal();
 
-    IVector2f getTextureCoords();
+    IVector2f textureCoords();
 
-    ISkinPaintColor getColor();
+    ISkinPaintColor color();
 }

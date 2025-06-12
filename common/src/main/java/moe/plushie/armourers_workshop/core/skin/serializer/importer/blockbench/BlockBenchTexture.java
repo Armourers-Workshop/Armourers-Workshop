@@ -37,27 +37,27 @@ public class BlockBenchTexture extends BlockBenchObject {
         return particle;
     }
 
-    public String getSource() {
+    public String source() {
         return source;
     }
 
-    public OpenSize2f getImageSize() {
+    public OpenSize2f imageSize() {
         return imageSize;
     }
 
-    public OpenSize2f getTextureSize() {
+    public OpenSize2f textureSize() {
         return textureSize;
     }
 
-    public int getFrameTime() {
+    public int frameTime() {
         return frameTime;
     }
 
-    public boolean getFrameInterpolate() {
+    public boolean frameInterpolate() {
         return frameInterpolate;
     }
 
-    public SkinTextureAnimation.Mode getFrameMode() {
+    public SkinTextureAnimation.Mode frameMode() {
         return switch (frameOrderType) {
             case "loop" -> SkinTextureAnimation.Mode.LOOP;
             case "backwards" -> SkinTextureAnimation.Mode.BACKWARDS;
@@ -73,7 +73,7 @@ public class BlockBenchTexture extends BlockBenchObject {
         };
     }
 
-    public SkinTextureProperties getProperties() {
+    public SkinTextureProperties properties() {
         var properties = new SkinTextureProperties();
         properties.setEmissive(renderMode.equals("emissive"));
         //properties.setAdditive(renderMode.equals("additive"));

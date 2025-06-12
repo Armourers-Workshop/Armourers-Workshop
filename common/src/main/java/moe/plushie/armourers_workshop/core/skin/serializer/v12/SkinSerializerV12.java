@@ -65,18 +65,18 @@ public final class SkinSerializerV12 implements IOSerializer {
         stream.writeString(TAG_SKIN_HEADER);
         // Write skin props.
         stream.writeString(TAG_SKIN_PROPS_HEADER);
-        stream.writeSkinProperties(skin.getProperties());
+        stream.writeSkinProperties(skin.properties());
         stream.writeString(TAG_SKIN_PROPS_FOOTER);
         // Write the skin type.
         stream.writeString(TAG_SKIN_TYPE_HEADER);
-        stream.writeType(skin.getType());
+        stream.writeType(skin.type());
         stream.writeString(TAG_SKIN_TYPE_FOOTER);
         // Write paint data.
         stream.writeString(TAG_SKIN_PAINT_HEADER);
-        if (skin.getPaintData() != null) {
+        if (skin.paintData() != null) {
             stream.writeBoolean(true);
             // TODO: Support v2 skin
-            int[] colors = skin.getPaintData().bytes();
+            int[] colors = skin.paintData().bytes();
             for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(colors[i]);
             }
@@ -85,8 +85,8 @@ public final class SkinSerializerV12 implements IOSerializer {
         }
         stream.writeString(TAG_SKIN_PAINT_FOOTER);
         //Write parts
-        stream.writeByte(skin.getParts().size());
-        for (var skinPart : skin.getParts()) {
+        stream.writeByte(skin.parts().size());
+        for (var skinPart : skin.parts()) {
             stream.writeString(TAG_SKIN_PART_HEADER);
             partSerializer.saveSkinPart(skinPart, stream);
             stream.writeString(TAG_SKIN_PART_FOOTER);
@@ -97,7 +97,7 @@ public final class SkinSerializerV12 implements IOSerializer {
 
     @Override
     public Skin readFromStream(IInputStream stream, SkinFileOptions options) throws IOException {
-        var fileVersion = options.getFileVersion();
+        var fileVersion = options.fileVersion();
         if (fileVersion > 12) {
             var header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
@@ -249,7 +249,7 @@ public final class SkinSerializerV12 implements IOSerializer {
 
     @Override
     public SkinFileHeader readInfoFromStream(IInputStream stream, SkinFileOptions options) throws IOException {
-        int fileVersion = options.getFileVersion();
+        int fileVersion = options.fileVersion();
         if (fileVersion > 12) {
             String header = stream.readString();
             if (!header.equals(TAG_SKIN_HEADER)) {
@@ -335,12 +335,12 @@ public final class SkinSerializerV12 implements IOSerializer {
     }
 
     @Override
-    public int getVersion() {
+    public int fileVersion() {
         return FILE_VERSION;
     }
 
     @Override
     public boolean isSupportedVersion(SkinFileOptions options) {
-        return options.getFileVersion() <= FILE_VERSION;
+        return options.fileVersion() <= FILE_VERSION;
     }
 }

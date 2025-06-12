@@ -62,12 +62,12 @@ public abstract class BakedItemTransform {
 
         }
         var itemModel = new SkinItemModel(null, overrides, transforms);
-        return new Custom(itemModel, itemTransforms.getOffset());
+        return new Custom(itemModel, itemTransforms.offset());
     }
 
     public void apply(IPoseStack poseStack, @Nullable Entity entity, BakedSkin skin, SkinRenderContext context) {
-        var itemSource = context.getItemSource();
-        var itemModel = resolve(entity, itemSource.getItem(), itemSource.getProperties(), itemSource.getDisplayContext());
+        var itemSource = context.itemSource();
+        var itemModel = resolve(entity, itemSource.item(), itemSource.properties(), itemSource.displayContext());
         if (itemModel == null) {
             return; // can't found a item model, ignore.
         }
@@ -79,7 +79,7 @@ public abstract class BakedItemTransform {
             tesselator.endBatch();
         }
 
-        var displayContext = itemSource.getDisplayContext();
+        var displayContext = itemSource.displayContext();
         var itemTransform = itemModel.getTransform(displayContext);
         applyItemTransform(itemTransform, displayContext, poseStack);
 
@@ -90,7 +90,7 @@ public abstract class BakedItemTransform {
             tesselator.endBatch();
         }
 
-        var displayBox = context.getDisplayBox();
+        var displayBox = context.displayBox();
         if (displayBox != null) {
             applyScaleInBox(itemTransform, displayContext, skin, displayBox, poseStack);
         }

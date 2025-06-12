@@ -87,7 +87,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
 
     private TabView.EntryBuilder addTab(HologramProjectorBaseSetting contentView) {
         WrappedContainer containerView = new WrappedContainer(contentView);
-        return tabView.addContentView(containerView).setTooltip(contentView.getTitle());
+        return tabView.addContentView(containerView).setTooltip(contentView.title());
     }
 
     private UIImage tabIcon(int u, int v, int frame, int speed) {

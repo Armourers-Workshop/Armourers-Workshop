@@ -37,8 +37,8 @@ public class BakedSkinPart {
         this.part = part;
         this.quads = quads;
         this.transform = transform;
-        this.descriptor = quads.getColorInfo();
-        this.renderPolygonOffset = getType().getRenderPolygonOffset();
+        this.descriptor = quads.colorInfo();
+        this.renderPolygonOffset = type().renderPolygonOffset();
     }
 
     public void addPart(BakedSkinPart part) {
@@ -56,68 +56,68 @@ public class BakedSkinPart {
         }
         var needsEntityTexture = false;
         var requirements = new ArrayList<>();
-        for (var paintType : descriptor.getPaintTypes()) {
-            if (paintType.getDyeType() != null) {
+        for (var paintType : descriptor.paintTypes()) {
+            if (paintType.dyeType() != null) {
                 var resolvedColor = scheme.getResolvedColor(paintType);
-                requirements.add(paintType.getId());
+                requirements.add(paintType.id());
                 requirements.add(resolvedColor);
                 // we must know then texture info for the resolved color.
                 if (resolvedColor != null) {
-                    paintType = resolvedColor.getPaintType();
+                    paintType = resolvedColor.paintType();
                 }
             }
             if (paintType == SkinPaintTypes.TEXTURE) {
                 needsEntityTexture = true;
             }
         }
-        if (needsEntityTexture && EntityTextureLoader.getInstance().getTextureModel(scheme.getTexture()) != null) {
-            requirements.add(SkinPaintTypes.TEXTURE.getId());
-            requirements.add(scheme.getTexture());
+        if (needsEntityTexture && EntityTextureLoader.getInstance().getTextureModel(scheme.texture()) != null) {
+            requirements.add(SkinPaintTypes.TEXTURE.id());
+            requirements.add(scheme.texture());
         }
         return requirements;
     }
 
-    public int getId() {
+    public int id() {
         return this.id;
     }
 
-    public String getName() {
-        var name = part.getName();
+    public String name() {
+        var name = part.name();
         if (name == null) {
-            name = part.getType().getName();
+            name = part.type().name();
         }
         return name;
     }
 
-    public SkinPart getPart() {
+    public SkinPart part() {
         return part;
     }
 
-    public SkinPartType getType() {
-        return part.getType();
+    public SkinPartType type() {
+        return part.type();
     }
 
-    public SkinPartTransform getTransform() {
+    public SkinPartTransform transform() {
         return transform;
     }
 
-    public ColorDescriptor getColorInfo() {
-        return quads.getColorInfo();
+    public ColorDescriptor colorInfo() {
+        return quads.colorInfo();
     }
 
-    public OpenVoxelShape getRenderShape() {
-        return quads.getShape();
+    public OpenVoxelShape renderShape() {
+        return quads.shape();
     }
 
-    public int getMarkerTotal() {
-        return part.getMarkers().size();
+    public int markerTotal() {
+        return part.markers().size();
     }
 
     public void setRenderPolygonOffset(float renderPolygonOffset) {
         this.renderPolygonOffset = renderPolygonOffset;
     }
 
-    public float getRenderPolygonOffset() {
+    public float renderPolygonOffset() {
         return renderPolygonOffset;
     }
 
@@ -129,23 +129,23 @@ public class BakedSkinPart {
         return shouldRender;
     }
 
-    public ArrayList<BakedSkinPart> getChildren() {
+    public ArrayList<BakedSkinPart> children() {
         return children;
     }
 
-    public SkinProperties getProperties() {
-        return part.getProperties();
+    public SkinProperties properties() {
+        return part.properties();
     }
 
     public void setJointTransformModifier(Function<IJointTransform, IJointTransform> jointTransformModifier) {
         this.jointTransformModifier = jointTransformModifier;
     }
 
-    public Function<IJointTransform, IJointTransform> getJointTransformModifier() {
+    public Function<IJointTransform, IJointTransform> jointTransformModifier() {
         return jointTransformModifier;
     }
 
-    public BakedGeometryQuads getQuads() {
+    public BakedGeometryQuads quads() {
         return quads;
     }
 }

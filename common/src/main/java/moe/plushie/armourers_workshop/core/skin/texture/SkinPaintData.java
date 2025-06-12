@@ -90,8 +90,8 @@ public class SkinPaintData {
             if (isMirrorX) {
                 px = 1 - px;
                 // we're just mirroring the x-axis when if it needs.
-                if (dir.getAxis() == OpenDirection.Axis.X) {
-                    dir = dir.getOpposite();
+                if (dir.axis() == OpenDirection.Axis.X) {
+                    dir = dir.opposite();
                 }
             }
             var ix = OpenMath.roundi(px * destWidth);
@@ -127,7 +127,7 @@ public class SkinPaintData {
     }
 
     public void setColor(int x, int y, SkinPaintColor paintColor) {
-        setColor(x, y, paintColor.getRawValue());
+        setColor(x, y, paintColor.rawValue());
     }
 
     public void setColor(int x, int y, int color) {

@@ -25,13 +25,13 @@ public class ExtendedFaceRenderer {
     };
 
     public static void renderMarker(int x, int y, int z, OpenDirection direction, SkinPaintColor paintColor, int alpha, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        if (paintColor.getPaintType() == SkinPaintTypes.NORMAL) {
+        if (paintColor.paintType() == SkinPaintTypes.NORMAL) {
             return;
         }
         var pose = poseStack.last();
-        var paintType = paintColor.getPaintType();
-        var u = paintType.getIndex() % 8;
-        var v = paintType.getIndex() / 8;
+        var paintType = paintColor.paintType();
+        var u = paintType.ordinal() % 8;
+        var v = paintType.ordinal() / 8;
         var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (var i = 0; i < 4; ++i) {
             builder.vertex(pose, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])

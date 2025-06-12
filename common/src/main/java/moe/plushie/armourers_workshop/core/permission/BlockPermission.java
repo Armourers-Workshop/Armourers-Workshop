@@ -20,7 +20,7 @@ public class BlockPermission extends Permission {
         if (player == null) {
             return true;
         }
-        return getNodes().stream().allMatch(node -> eval(node, player, new PlayerPermissionContext(player)));
+        return nodes().stream().allMatch(node -> eval(node, player, new PlayerPermissionContext(player)));
     }
 
     public boolean accept(BlockEntity blockEntity, Player player) {

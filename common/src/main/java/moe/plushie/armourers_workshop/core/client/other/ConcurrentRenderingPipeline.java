@@ -16,8 +16,8 @@ public class ConcurrentRenderingPipeline {
 
     public void add(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
         var pass = Group.POOL.get();
-        var poseStack = context.getPoseStack();
-        var modelViewStack = context.getModelViewStack();
+        var poseStack = context.poseStack();
+        var modelViewStack = context.modelViewStack();
         var last = pass.poseStack.last();
         var lastPose = last.pose();
         var lastNormal = last.normal();
@@ -60,7 +60,7 @@ public class ConcurrentRenderingPipeline {
         public Group fill(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
             usedCount = 0;
             compiledGroup = group;
-            for (var mergedTask : group.getPasses()) {
+            for (var mergedTask : group.passes()) {
                 // skip outline task, when not enable.
                 if (!context.shouldRenderOutline() && mergedTask.isOutline) {
                     continue;
@@ -117,56 +117,56 @@ public class ConcurrentRenderingPipeline {
         public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
-            this.overlay = context.getOverlay();
-            this.lightmap = context.getLightmap();
-            this.outlineColor = context.getOutlineColor();
-            this.polygonOffset = compiledTask.polygonOffset + context.getRenderPriority();
+            this.overlay = context.overlay();
+            this.lightmap = context.lightmap();
+            this.outlineColor = context.outlineColor();
+            this.polygonOffset = compiledTask.polygonOffset + context.renderPriority();
             this.retain();
             return this;
         }
 
         @Override
-        public IRenderType getType() {
+        public IRenderType type() {
             return compiledTask.renderType;
         }
 
         @Override
-        public int getOffset() {
+        public int offset() {
             return compiledTask.vertexOffset;
         }
 
         @Override
-        public int getTotal() {
+        public int total() {
             return compiledTask.vertexCount;
         }
 
         @Override
-        public VertexArrayObject getArrayObject() {
+        public VertexArrayObject arrayObject() {
             return compiledTask.arrayObject;
         }
 
         @Override
-        public VertexIndexObject getIndexObject() {
+        public VertexIndexObject indexObject() {
             return compiledTask.indexObject;
         }
 
         @Override
-        public VertexBufferObject getBufferObject() {
+        public VertexBufferObject bufferObject() {
             return compiledTask.bufferObject;
         }
 
         @Override
-        public float getPolygonOffset() {
+        public float polygonOffset() {
             return polygonOffset;
         }
 
         @Override
-        public OpenPoseStack getPoseStack() {
+        public OpenPoseStack poseStack() {
             return poseStack;
         }
 
         @Override
-        public IVertexFormat getFormat() {
+        public IVertexFormat format() {
             if (compiledTask.format != null) {
                 return compiledTask.format;
             }
@@ -174,17 +174,17 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public int getOverlay() {
+        public int overlay() {
             return overlay;
         }
 
         @Override
-        public int getLightmap() {
+        public int lightmap() {
             return lightmap;
         }
 
         @Override
-        public int getOutlineColor() {
+        public int outlineColor() {
             return outlineColor;
         }
 

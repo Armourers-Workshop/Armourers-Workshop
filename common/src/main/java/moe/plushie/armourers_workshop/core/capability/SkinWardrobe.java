@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
@@ -17,7 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,7 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).getWardrobe().orElse(null);
+            return EntityDataStorage.of(entity).wardrobe().orElse(null);
         }
         return null;
     }
@@ -90,14 +90,14 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
         this.profile = profile;
     }
 
-    public EntityProfile getProfile() {
+    public EntityProfile profile() {
         return profile;
     }
 
     public int getFreeSlot(SkinSlotType slotType) {
         var unlockedSize = getUnlockedSize(slotType);
         for (var i = 0; i < unlockedSize; ++i) {
-            if (inventory.getItem(slotType.getIndex() + i).isEmpty()) {
+            if (inventory.getItem(slotType.index() + i).isEmpty()) {
                 return i;
             }
         }
@@ -108,20 +108,20 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
         if (slot < 0 || slot >= getUnlockedSize(slotType)) {
             return ItemStack.EMPTY;
         }
-        return inventory.getItem(slotType.getIndex() + slot);
+        return inventory.getItem(slotType.index() + slot);
     }
 
     public void setItem(SkinSlotType slotType, int slot, ItemStack itemStack) {
         if (slot < 0 || slot >= getUnlockedSize(slotType)) {
             return;
         }
-        inventory.setItem(slotType.getIndex() + slot, itemStack);
+        inventory.setItem(slotType.index() + slot, itemStack);
     }
 
     public void dropAll(@Nullable Consumer<ItemStack> consumer) {
         var containerSize = inventory.getContainerSize();
-        var ignoredStart = SkinSlotType.DYE.getIndex() + 8;
-        var ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
+        var ignoredStart = SkinSlotType.DYE.index() + 8;
+        var ignoredEnd = SkinSlotType.DYE.index() + SkinSlotType.DYE.maxSize();
         for (int i = 0; i < containerSize; ++i) {
             if (i >= ignoredStart && i < ignoredEnd) {
                 continue;
@@ -146,7 +146,7 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
     }
 
     public void broadcast() {
-        NetworkManager.sendToTracking(UpdateWardrobePacket.sync(this), getEntity());
+        NetworkManager.sendToTracking(UpdateWardrobePacket.sync(this), entity());
     }
 
     public void broadcast(ServerPlayer player) {
@@ -157,19 +157,19 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
         collision.setResult(shape);
     }
 
-    public EntityCollisionShape getCollisionShape() {
-        return collision.getResult();
+    public EntityCollisionShape collisionShape() {
+        return collision.result();
     }
 
-    public boolean shouldRenderEquipment(EquipmentSlot slotType) {
-        return !flags.get(slotType.getFilterFlag());
+    public boolean shouldRenderEquipment(OpenEquipmentSlot slotType) {
+        return !flags.get(slotType.filterFlag());
     }
 
-    public void setRenderEquipment(EquipmentSlot slotType, boolean enable) {
+    public void setRenderEquipment(OpenEquipmentSlot slotType, boolean enable) {
         if (enable) {
-            flags.clear(slotType.getFilterFlag());
+            flags.clear(slotType.filterFlag());
         } else {
-            flags.set(slotType.getFilterFlag());
+            flags.set(slotType.filterFlag());
         }
     }
 
@@ -185,7 +185,7 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
         }
     }
 
-    public BitSet getFlags() {
+    public BitSet flags() {
         return flags;
     }
 
@@ -201,29 +201,29 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
         }
         var modifiedSize = skinSlots.get(slotType);
         if (modifiedSize != null) {
-            return Math.min(slotType.getMaxSize(), modifiedSize);
+            return Math.min(slotType.maxSize(), modifiedSize);
         }
-        return Math.min(slotType.getMaxSize(), profile.getMaxCount(slotType));
+        return Math.min(slotType.maxSize(), profile.getMaxCount(slotType));
     }
 
     public int getMaximumSize(SkinSlotType slotType) {
         if (slotType == SkinSlotType.DYE) {
             return 8;
         }
-        return slotType.getMaxSize();
+        return slotType.maxSize();
     }
 
-    public Container getInventory() {
+    public Container inventory() {
         return inventory;
     }
 
     @Nullable
-    public Entity getEntity() {
+    public Entity entity() {
         return entity.get();
     }
 
-    public int getId() {
-        var entity = getEntity();
+    public int id() {
+        var entity = entity();
         if (entity != null) {
             id = entity.getId();
         }
@@ -231,18 +231,18 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
     }
 
     public boolean isEditable(Player player) {
-        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE.get(), getEntity(), player)) {
+        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE.get(), entity(), player)) {
             return false;
         }
         // can't edit another player's wardrobe
-        var entity = getEntity();
+        var entity = entity();
         if (entity instanceof Player && entity.getId() != player.getId()) {
             return false;
         }
         if (!ModConfig.Common.canOpenWardrobe(entity, player)) {
             return false;
         }
-        return !getProfile().isLocked();
+        return !profile().isLocked();
     }
 
     public boolean isSupported(SkinSlotType slotType) {

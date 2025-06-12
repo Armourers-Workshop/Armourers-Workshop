@@ -24,22 +24,22 @@ public class SkinSoundData implements ISkinSoundProvider {
         this.properties = properties;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
-    public ByteBuf getBuffer() {
+    public ByteBuf buffer() {
         return buffer;
     }
 
     @Override
-    public SkinSoundProperties getProperties() {
+    public SkinSoundProperties properties() {
         return properties;
     }
 

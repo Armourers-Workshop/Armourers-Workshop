@@ -23,30 +23,30 @@ public class AbstractSimpleSound {
         return new AbstractSimpleSound(id, name);
     }
 
-    public ResourceLocation getId() {
+    public ResourceLocation id() {
         return id;
     }
 
-    public String getName() {
+    public String name() {
         if (name != null && !name.isEmpty()) {
             return name;
         }
         return null;
     }
 
-    public float getVolume() {
+    public float volume() {
         return volume;
     }
 
-    public float getPitch() {
+    public float pitch() {
         return pitch;
     }
 
-    public int getWeight() {
+    public int weight() {
         return weight;
     }
 
-    public int getAttenuationDistance() {
+    public int attenuationDistance() {
         return attenuationDistance;
     }
 }

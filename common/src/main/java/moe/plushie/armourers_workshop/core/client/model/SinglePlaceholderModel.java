@@ -5,7 +5,7 @@ public class SinglePlaceholderModel extends PlaceholderModel {
     public final Part root;
 
     public SinglePlaceholderModel() {
-        this.root = getPart("name");
+        this.root = partByName("name");
     }
 
     public boolean isVisible() {

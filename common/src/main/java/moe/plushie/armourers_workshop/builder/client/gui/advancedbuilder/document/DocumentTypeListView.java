@@ -68,7 +68,7 @@ public class DocumentTypeListView extends NewComboBox {
         }
 
         public AdvancedTypeItem add(SkinDocumentType category) {
-            var skinType = category.getSkinType();
+            var skinType = category.skinType();
             var rl = ArmourersWorkshop.getItemIcon(skinType);
             var icon = UIImage.of(rl).resize(12, 12, 16, 16).limit(16, 16).build();
             var item = new AdvancedTypeItem(icon, category);
@@ -87,12 +87,12 @@ public class DocumentTypeListView extends NewComboBox {
         private final SkinDocumentType category;
 
         public AdvancedTypeItem(UIImage icon, SkinDocumentType category) {
-            super(icon, new NSString(TranslateUtils.Name.of(category.getSkinType())));
+            super(icon, new NSString(TranslateUtils.Name.of(category.skinType())));
             this.category = category;
         }
 
         public SkinType getSkinType() {
-            return category.getSkinType();
+            return category.skinType();
         }
     }
 }

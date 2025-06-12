@@ -32,11 +32,11 @@ public enum ItemOverrideType {
     ITEM("item", null, null);
 
     private final IRegistryHolder<IItemTag> tag;
-    private final String name;
+    private final String serializedName;
     private final ItemMatcher matcher;
 
-    ItemOverrideType(String name, IRegistryHolder<IItemTag> tag, ItemMatcher matcher) {
-        this.name = name;
+    ItemOverrideType(String serializedName, IRegistryHolder<IItemTag> tag, ItemMatcher matcher) {
+        this.serializedName = serializedName;
         this.tag = tag;
         this.matcher = matcher;
     }
@@ -44,7 +44,7 @@ public enum ItemOverrideType {
     @Nullable
     public static ItemOverrideType of(String name) {
         for (var overrideType : ItemOverrideType.values()) {
-            if (overrideType.getName().equals(name)) {
+            if (overrideType.serializedName().equals(name)) {
                 return overrideType;
             }
         }
@@ -58,7 +58,7 @@ public enum ItemOverrideType {
         }
         // test by overrides of the config system.
         var registryName = TypedRegistry.findKey(itemStack.getItem());
-        if (ModConfig.Common.overrides.contains(name + ":" + registryName)) {
+        if (ModConfig.Common.overrides.contains(serializedName + ":" + registryName)) {
             return true;
         }
         // test by vanilla's tag system.
@@ -72,7 +72,7 @@ public enum ItemOverrideType {
         return false;
     }
 
-    public String getName() {
-        return name;
+    public String serializedName() {
+        return serializedName;
     }
 }

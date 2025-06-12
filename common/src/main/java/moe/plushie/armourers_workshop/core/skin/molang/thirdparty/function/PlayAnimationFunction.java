@@ -36,7 +36,7 @@ public class PlayAnimationFunction extends Function {
 
     private AnimationManager getTarget(ExecutionContext context) {
         if (context instanceof EntitySelectorImpl<?> entity) {
-            return AnimationManager.of(entity.getEntity());
+            return AnimationManager.of(entity.entity());
         }
         if (context instanceof BlockEntitySelectorImpl<?> entity) {
             return AnimationManager.of(entity.getEntity());

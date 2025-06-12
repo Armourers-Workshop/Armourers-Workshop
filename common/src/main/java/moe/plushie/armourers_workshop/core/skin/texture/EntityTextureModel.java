@@ -28,44 +28,44 @@ public class EntityTextureModel {
     public static final int TEXTURE_OLD_HEIGHT = 32;
     public static final int TEXTURE_OLD_SIZE = TEXTURE_OLD_WIDTH * TEXTURE_OLD_HEIGHT;
 
-    public static final EntityTextureModel STAVE_V1 = new EntityTextureModel(Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
-        builder.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
-        builder.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16, true)); // Mirror Right Leg
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-3, -2, -2, 4, 12, 4, 40, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 4, 12, 4, 40, 16, true)); // Mirror Right Arm
+    public static final EntityTextureModel STAVE_V1 = new EntityTextureModel(Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
+        it.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
+        it.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16, true)); // Mirror Right Leg
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-3, -2, -2, 4, 12, 4, 40, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 4, 12, 4, 40, 16, true)); // Mirror Right Arm
     }));
 
-    public static final EntityTextureModel STAVE_V2 = new EntityTextureModel(Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
-        builder.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
-        builder.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 16, 48));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-3, -2, -2, 4, 12, 4, 40, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 4, 12, 4, 32, 48));
+    public static final EntityTextureModel STAVE_V2 = new EntityTextureModel(Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
+        it.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
+        it.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 16, 48));
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-3, -2, -2, 4, 12, 4, 40, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 4, 12, 4, 32, 48));
     }));
 
-    public static final EntityTextureModel ALEX_V1 = new EntityTextureModel(Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
-        builder.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
-        builder.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16, true)); // Mirror Right Leg
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-2, -2, -2, 3, 12, 4, 40, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 3, 12, 4, 40, 16, true)); // Mirror Right Arm
+    public static final EntityTextureModel ALEX_V1 = new EntityTextureModel(Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
+        it.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
+        it.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16, true)); // Mirror Right Leg
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-2, -2, -2, 3, 12, 4, 40, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 3, 12, 4, 40, 16, true)); // Mirror Right Arm
     }));
 
-    public static final EntityTextureModel ALEX_V2 = new EntityTextureModel(Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
-        builder.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
-        builder.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 16, 48));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-2, -2, -2, 3, 12, 4, 40, 16));
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 3, 12, 4, 32, 48));
+    public static final EntityTextureModel ALEX_V2 = new EntityTextureModel(Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HAT, new Box(-4, -8, -4, 8, 8, 8, 32, 0));
+        it.put(SkinPartTypes.BIPPED_HEAD, new Box(-4, -8, -4, 8, 8, 8, 0, 0));
+        it.put(SkinPartTypes.BIPPED_CHEST, new Box(-4, 0, -2, 8, 12, 4, 16, 16));
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 0, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Box(-2, 0, -2, 4, 12, 4, 16, 48));
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Box(-2, -2, -2, 3, 12, 4, 40, 16));
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, new Box(-1, -2, -2, 3, 12, 4, 32, 48));
     }));
     protected final Map<SkinPartType, Box> skyBoxes;
 
@@ -210,8 +210,8 @@ public class EntityTextureModel {
 
         private OpenDirection getMirroredDirection(OpenDirection direction) {
             // when mirroring occurs, the contents of the WEST and EAST sides will be swapped.
-            if (mirror && direction.getAxis() == OpenDirection.Axis.X) {
-                return direction.getOpposite();
+            if (mirror && direction.axis() == OpenDirection.Axis.X) {
+                return direction.opposite();
             }
             return direction;
         }

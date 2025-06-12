@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class ModItemGroups {
 
-    public static final IRegistryHolder<IItemGroup> MAIN_GROUP = create().icon(() -> SkinItemRenderer.getInstance()::getPlayerMannequinItem).build("main");
+    public static final IRegistryHolder<IItemGroup> MAIN_GROUP = create().icon(() -> SkinItemRenderer.getInstance()::playerMannequinItem).build("main");
     public static final IRegistryHolder<IItemGroup> BUILDING_GROUP = create().icon(() -> () -> new ItemStack(ModItems.ARMOURER.get())).build("painting_tools");
 
     private static IItemGroupBuilder<IItemGroup> create() {

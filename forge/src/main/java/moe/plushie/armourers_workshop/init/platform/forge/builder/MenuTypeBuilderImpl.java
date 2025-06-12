@@ -46,8 +46,8 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     public IRegistryHolder<IMenuType<T>> build(String name) {
         AbstractForgeMenuType<T> menuType = AbstractForgeMenuType.create(factory, serializer);
         IRegistryHolder<MenuType<T>> object = AbstractForgeRegistries.MENU_TYPES.register(name, menuType::getType);
-        menuType.setRegistryName(object.getRegistryName());
+        menuType.setRegistryName(object.registryName());
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return TypedRegistry.Entry.of(object.getRegistryName(), () -> menuType);
+        return TypedRegistry.Entry.of(object.registryName(), () -> menuType);
     }
 }

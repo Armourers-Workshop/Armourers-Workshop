@@ -113,9 +113,9 @@ public class ChunkNode {
 
         private void updateIfNeeded() throws IOException {
             if (stream != null && var != null) {
-                varStart = stream.getBuffer().writerIndex();
+                varStart = stream.buffer().writerIndex();
                 var.writeToStream(stream);
-                varEnd = stream.getBuffer().writerIndex();
+                varEnd = stream.buffer().writerIndex();
                 stream = null;
             }
         }
@@ -144,7 +144,7 @@ public class ChunkNode {
 
         @Override
         public boolean freeze() throws IOException {
-            if (freezeRange(start, this) && condition.getResult() != ChunkConditionResult.PENDING) {
+            if (freezeRange(start, this) && condition.result() != ChunkConditionResult.PENDING) {
                 updateIfNeeded();
                 return true;
             }
@@ -153,7 +153,7 @@ public class ChunkNode {
 
         private void updateIfNeeded() throws IOException {
             // check the condition result, the result failure we need ignore all node.
-            if (condition.getResult() != ChunkConditionResult.FAILURE) {
+            if (condition.result() != ChunkConditionResult.FAILURE) {
                 return;
             }
             // reset the node info.
@@ -184,12 +184,12 @@ public class ChunkNode {
 
         private void updateIfNeeded() throws IOException {
             if (callback != null) {
-                callback.accept(getEstimatedLength());
+                callback.accept(estimatedLength());
                 callback = null;
             }
         }
 
-        private int getEstimatedLength() throws IOException {
+        private int estimatedLength() throws IOException {
             var length = 0;
             var node = start;
             while (node != null) {
@@ -243,8 +243,8 @@ public class ChunkNode {
                 return;
             }
             buf = Unpooled.buffer(1024);
-            var outputStream = stream.getContext().createOutputStream(buf, flags);
-            var bytes = stream.getBuffer().array();
+            var outputStream = stream.context().createOutputStream(buf, flags);
+            var bytes = stream.buffer().array();
             var node = start;
             while (node != null && node != this) {
                 node.write(bytes, outputStream);

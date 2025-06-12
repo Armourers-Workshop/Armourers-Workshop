@@ -44,7 +44,7 @@ public class AbstractForgeRegistry {
         return new TypedRegistry.RegisterProvider<T>() {
             @Override
             public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {
-                return register.register(registryName.getPath(), provider);
+                return register.register(registryName.path(), provider);
             }
         };
     }

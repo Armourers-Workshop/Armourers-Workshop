@@ -16,15 +16,15 @@ public class SkinItemOverride {
         this.model = model;
     }
 
-    public SkinItemModel getModel() {
+    public SkinItemModel model() {
         return model;
     }
 
-    public SkinItemProperty[] getProperties() {
+    public SkinItemProperty[] properties() {
         return properties;
     }
 
-    public float[] getValues() {
+    public float[] values() {
         return values;
     }
 }

@@ -25,10 +25,10 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
 
     public BakedAdapterJointTransform(BakedSkinPart part) {
         this.part = part;
-        this.isPartitionPart = part.getType() instanceof PartitionPartType;
+        this.isPartitionPart = part.type() instanceof PartitionPartType;
         this.output = new AnimatedOutputPoint(null, AnimatedOutputMode.MAIN);
         // the part is controlled by the adapter.
-        var transform = AnimatedTransform.of(part.getTransform());
+        var transform = AnimatedTransform.of(part.transform());
         if (transform != null) {
             transform.setController(output);
         }
@@ -36,13 +36,13 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
 
     public void setup(@Nullable Entity entity, BakedArmature armature, SkinRenderContext context) {
         // find the joint transform without joint modifier.
-        var transform = armature.getTransform(armature.getJoint(part));
+        var transform = armature.transformByJoint(armature.jointByPart(part));
         if (transform == null) {
             output.clear();
             return;
         }
-        var renderData = context.getRenderData();
-        if (renderData != null && renderData.getRenderPatch() instanceof EpicFightEntityRendererPatch) {
+        var renderData = context.renderData();
+        if (renderData != null && renderData.renderPatch() instanceof EpicFightEntityRendererPatch) {
             setupEpicFight(transform, context);
         } else {
             setupVanilla(transform, context);
@@ -58,7 +58,7 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
         transform.apply(tester);
         // get rotation from pose.
         var quaternion = OpenQuaternionf.fromUnnormalizedMatrix(tester.last().pose());
-        var rotation = quaternion.getEulerAnglesZYX();
+        var rotation = quaternion.eulerAnglesZYX();
         var xRot = OpenMath.toDegrees(rotation.x());
         var yRot = OpenMath.toDegrees(rotation.y());
         var zRot = OpenMath.toDegrees(rotation.z());
@@ -72,7 +72,7 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
 
         // get rotation from pose.
         var quaternion = OpenQuaternionf.fromUnnormalizedMatrix(tester.last().pose());
-        var rotation = quaternion.getEulerAnglesZYX();
+        var rotation = quaternion.eulerAnglesZYX();
         var xRot = OpenMath.toDegrees(rotation.x());
         var yRot = OpenMath.toDegrees(rotation.y());
         var zRot = OpenMath.toDegrees(rotation.z());
@@ -85,9 +85,9 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
     }
 
     private boolean inEpicFight(SkinRenderContext context) {
-        var renderData = context.getRenderData();
+        var renderData = context.renderData();
         if (renderData != null) {
-            return renderData.getRenderPatch() instanceof EpicFightEntityRendererPatch;
+            return renderData.renderPatch() instanceof EpicFightEntityRendererPatch;
         }
         return false;
     }

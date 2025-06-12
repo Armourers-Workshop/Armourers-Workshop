@@ -22,6 +22,6 @@ public class EntityJSMixin {
     public Entity minecraftEntity;
 
     public SkinWardrobeJS getWardrobe() {
-        return EntityDataStorage.of(minecraftEntity).getWardrobeJS().orElse(null);
+        return EntityDataStorage.of(minecraftEntity).wardrobeJS().orElse(null);
     }
 }

@@ -35,17 +35,17 @@ public class SkinFileHeader implements ISkinFileHeader {
     }
 
     @Override
-    public int getVersion() {
+    public int version() {
         return version;
     }
 
     @Override
-    public SkinType getType() {
+    public SkinType type() {
         return type;
     }
 
     @Override
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
@@ -54,7 +54,7 @@ public class SkinFileHeader implements ISkinFileHeader {
     }
 
     @Override
-    public int getLastModified() {
+    public int lastModified() {
         return lastModified;
     }
 }

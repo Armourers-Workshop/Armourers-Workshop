@@ -54,13 +54,13 @@ public class SkinMarker implements ISkinMarker {
     }
 
     @Override
-    public OpenVector3i getPosition() {
+    public OpenVector3i position() {
         return new OpenVector3i(x, y, z);
     }
 
     @Nullable
     @Override
-    public OpenDirection getDirection() {
+    public OpenDirection direction() {
         if (meta != 0) {
             return OpenDirection.from3DDataValue(meta - 1);
         }
@@ -69,7 +69,7 @@ public class SkinMarker implements ISkinMarker {
 
     @Override
     public String toString() {
-        return Objects.toString(this, "pos", getPosition(), "direction", getDirection());
+        return Objects.toString(this, "pos", position(), "direction", direction());
     }
 
 }

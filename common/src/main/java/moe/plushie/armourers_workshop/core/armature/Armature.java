@@ -41,39 +41,39 @@ public class Armature {
         }
         for (var entry : linkedJoints.entrySet()) {
             var joint = entry.getValue();
-            partTypes[joint.getId()] = entry.getKey();
+            partTypes[joint.id()] = entry.getKey();
         }
     }
 
     @Nullable
-    public IJoint getJoint(String name) {
+    public IJoint jointByName(String name) {
         return namedJoints.get(name);
     }
 
-    public IJoint getJoint(int id) {
+    public IJoint jointById(int id) {
         return joints[id];
     }
 
     @Nullable
-    public IJoint getJoint(SkinPartType partType) {
+    public IJoint jointByType(SkinPartType partType) {
         // ...
         return linkedJoints.getOrDefault(partType, wildcardJoint);
     }
 
     @Nullable
-    public SkinPartType getPartType(IJoint joint) {
-        return partTypes[joint.getId()];
+    public SkinPartType typeByJoint(IJoint joint) {
+        return partTypes[joint.id()];
     }
 
-    public IJointTransform getLocalTransform(int id) {
+    public IJointTransform localTransformById(int id) {
         return localTransforms[id];
     }
 
-    public IJointTransform getGlobalTransform(int id) {
+    public IJointTransform globalTransformById(int id) {
         return globalTransforms[id];
     }
 
-    public JointShape getShape(int id) {
+    public JointShape shapeById(int id) {
         return shapes[id];
     }
 
@@ -87,10 +87,10 @@ public class Armature {
 
     private IJointTransform calcTransform(Joint joint, Map<Joint, IJointTransform> transforms) {
         var childTransform = transforms.getOrDefault(joint, IJointTransform.NONE);
-        if (joint.getParent() == null) {
+        if (joint.parent() == null) {
             return childTransform;
         }
-        var parentTransform = calcTransform(joint.getParent(), transforms);
+        var parentTransform = calcTransform(joint.parent(), transforms);
         // the parent not need the transform, so we just need to keep the child transform.
         if (parentTransform == IJointTransform.NONE) {
             return childTransform;

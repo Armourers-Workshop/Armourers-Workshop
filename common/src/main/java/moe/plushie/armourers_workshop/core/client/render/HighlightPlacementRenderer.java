@@ -26,7 +26,7 @@ public class HighlightPlacementRenderer {
 
     public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
         var descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.getType() != SkinTypes.BLOCK) {
+        if (descriptor.type() != SkinTypes.BLOCK) {
             return;
         }
 
@@ -41,15 +41,15 @@ public class HighlightPlacementRenderer {
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.scale(f, f, f);
 
-        for (var part : context.getParts()) {
-            var pos = part.getOffset();
+        for (var part : context.parts()) {
+            var pos = part.offset();
             var color = UIColor.RED;
             if (context.canPlace(part)) {
                 color = UIColor.WHITE;
             }
             poseStack.pushPose();
             poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-            ShapeTesselator.stroke(part.getShape(), color, poseStack, bufferSource);
+            ShapeTesselator.stroke(part.shape(), color, poseStack, bufferSource);
             poseStack.popPose();
         }
 
@@ -64,11 +64,11 @@ public class HighlightPlacementRenderer {
         var location = target.getLocation();
 
         poseStack.translate((float) (location.x() - origin.x()), (float) (location.y() - origin.y()), (float) (location.z() - origin.z()));
-        poseStack.rotate(OpenVector3f.YP.rotationDegrees(-target.getRotation()));
+        poseStack.rotate(OpenVector3f.YP.rotationDegrees(-target.rotation()));
 
-        var model = SkinItemRenderer.getInstance().getMannequinModel();
+        var model = SkinItemRenderer.getInstance().mannequinModel();
         if (model != null) {
-            var f = target.getScale() * 0.9375f; // base scale from player model
+            var f = target.scale() * 0.9375f; // base scale from player model
             var buffers1 = AbstractBufferSource.unwrap(bufferSource);
             var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES.get());
             poseStack.pushPose();

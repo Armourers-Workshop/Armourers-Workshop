@@ -207,7 +207,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         // yep, we need copy the fully model info when ctrl down.
         if (EnvironmentExecutorIO.hasControlDown()) {
             var entityTag = new CompoundTag();
-            entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+            entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.registryName().toString());
             addAdditionalSaveData(entityTag);
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
         }
@@ -278,7 +278,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             var entityData = new EntityData();
             entityData.setScale(getScale());
             entityData.setTexture(getTextureDescriptor());
-            Block.popResource(getLevel(), blockPosition(), entityData.getItemStack());
+            Block.popResource(getLevel(), blockPosition(), entityData.itemStack());
         }
         this.brokenByAnything(serverLevel, source);
     }
@@ -355,7 +355,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         serializer.write(CodingKeys.POSE_RIGHT_ARM, entityData.get(DATA_RIGHT_ARM_POSE));
         serializer.write(CodingKeys.POSE_LEFT_LEG, entityData.get(DATA_LEFT_LEG_POSE));
         serializer.write(CodingKeys.POSE_RIGHT_LEG, entityData.get(DATA_RIGHT_LEG_POSE));
-        return serializer.getTag();
+        return serializer.tag();
     }
 
     public void readCustomPose(CompoundTag tag) {
@@ -376,18 +376,18 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         CompoundTag newEntityTag = new CompoundTag();
         if (itemStack.get(MannequinToolOptions.CHANGE_OPTION)) {
             newEntityTag.merge(entityTag);
-            newEntityTag.remove(CodingKeys.SCALE.getName());
-            newEntityTag.remove(CodingKeys.POSE.getName());
-            newEntityTag.remove(CodingKeys.TEXTURE.getName());
+            newEntityTag.remove(CodingKeys.SCALE.name());
+            newEntityTag.remove(CodingKeys.POSE.name());
+            newEntityTag.remove(CodingKeys.TEXTURE.name());
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_SCALE)) {
-            var oldValue = entityTag.get(CodingKeys.SCALE.getName());
+            var oldValue = entityTag.get(CodingKeys.SCALE.name());
             if (oldValue != null) {
-                newEntityTag.put(CodingKeys.SCALE.getName(), oldValue);
+                newEntityTag.put(CodingKeys.SCALE.name(), oldValue);
             }
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_ROTATION)) {
-            var oldValue = entityTag.getCompound(CodingKeys.POSE.getName());
+            var oldValue = entityTag.getOptionalCompound(CodingKeys.POSE.name()).orElseGet(CompoundTag::new);
             if (itemStack.get(MannequinToolOptions.MIRROR_MODE) && !oldValue.isEmpty()) {
                 var poseSerializer = new TagSerializer(oldValue.copy());
                 poseSerializer.write(CodingKeys.POSE_HEAD, EntityData.mirror(poseSerializer.read(CodingKeys.POSE_HEAD)));
@@ -396,14 +396,14 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
                 poseSerializer.write(CodingKeys.POSE_RIGHT_ARM, EntityData.mirror(poseSerializer.read(CodingKeys.POSE_RIGHT_ARM)));
                 poseSerializer.write(CodingKeys.POSE_LEFT_LEG, EntityData.mirror(poseSerializer.read(CodingKeys.POSE_LEFT_LEG)));
                 poseSerializer.write(CodingKeys.POSE_RIGHT_LEG, EntityData.mirror(poseSerializer.read(CodingKeys.POSE_RIGHT_LEG)));
-                oldValue = poseSerializer.getTag();
+                oldValue = poseSerializer.tag();
             }
-            newEntityTag.put(CodingKeys.POSE.getName(), oldValue);
+            newEntityTag.put(CodingKeys.POSE.name(), oldValue);
         }
         if (itemStack.get(MannequinToolOptions.CHANGE_TEXTURE)) {
-            var oldValue = entityTag.get(CodingKeys.TEXTURE.getName());
+            var oldValue = entityTag.get(CodingKeys.TEXTURE.name());
             if (oldValue != null) {
-                newEntityTag.put(CodingKeys.TEXTURE.getName(), oldValue);
+                newEntityTag.put(CodingKeys.TEXTURE.name(), oldValue);
             }
         }
         // load into entity
@@ -453,7 +453,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             serializer.write(CodingKeys.SCALE, scale);
         }
 
-        public float getScale() {
+        public float scale() {
             return serializer.read(CodingKeys.SCALE);
         }
 
@@ -461,7 +461,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             serializer.write(CodingKeys.TEXTURE, texture);
         }
 
-        public EntityTextureDescriptor getTexture() {
+        public EntityTextureDescriptor texture() {
             return serializer.read(CodingKeys.TEXTURE);
         }
 
@@ -469,18 +469,18 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             return serializer.read(CodingKeys.IS_SMALL);
         }
 
-        public CompoundTag getEntityTag() {
-            var entityTag = serializer.getTag().copy();
+        public CompoundTag entityTag() {
+            var entityTag = serializer.tag().copy();
             if (!entityTag.isEmpty()) {
-                entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.getRegistryName().toString());
+                entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.registryName().toString());
                 //itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
             }
             return entityTag;
         }
 
-        public ItemStack getItemStack() {
+        public ItemStack itemStack() {
             var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-            var entityTag = getEntityTag();
+            var entityTag = entityTag();
             if (!entityTag.isEmpty()) {
                 itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
             }

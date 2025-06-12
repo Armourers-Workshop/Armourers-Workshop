@@ -30,11 +30,11 @@ public class ChunkReader {
             var builder = new EntryBuilder(length);
             readHeader(builder);
             if (chunkFilter != null && !chunkFilter.test(builder.name)) {
-                stream.skipBytes(builder.getBodySize());
+                stream.skipBytes(builder.bodySize());
                 readFooter(builder);
                 continue;
             }
-            builder.buffer = stream.readBytes(builder.getBodySize());
+            builder.buffer = stream.readBytes(builder.bodySize());
             readFooter(builder);
             entries.add(builder.build(stream.context()));
         }
@@ -48,13 +48,13 @@ public class ChunkReader {
         var iterator = entries.iterator();
         while (iterator.hasNext()) {
             var entry = iterator.next();
-            var decoder = serializer.createDecoder(entry.getName());
+            var decoder = serializer.createDecoder(entry.name());
             if (decoder != null) {
                 iterator.remove();
-                return decoder.decode(entry.getInputStream(), context);
+                return decoder.decode(entry.inputStream(), context);
             }
         }
-        return serializer.getDefaultValue();
+        return serializer.defaultValue();
     }
 
     public <T> Collection<T> readAll(ChunkSerializer<T, Void> serializer) throws IOException {
@@ -66,10 +66,10 @@ public class ChunkReader {
         var iterator = entries.iterator();
         while (iterator.hasNext()) {
             var entry = iterator.next();
-            var decoder = serializer.createDecoder(entry.getName());
+            var decoder = serializer.createDecoder(entry.name());
             if (decoder != null) {
                 iterator.remove();
-                results.add(decoder.decode(entry.getInputStream(), context));
+                results.add(decoder.decode(entry.inputStream(), context));
             }
         }
         return results;
@@ -119,21 +119,21 @@ public class ChunkReader {
         }
 
         @Override
-        public int getLength() {
+        public int length() {
             return length;
         }
 
         @Override
-        public String getName() {
+        public String name() {
             return name;
         }
 
         @Override
-        public ChunkFlags getFlags() {
+        public ChunkFlags flags() {
             return flags;
         }
 
-        public ChunkDataInputStream getInputStream() throws IOException {
+        public ChunkDataInputStream inputStream() throws IOException {
             if (inputStream == null) {
                 inputStream = new ChunkDataInputStream(new DataInputStream(context.createInputStream(buffer, flags)), context, null);
             }
@@ -159,7 +159,7 @@ public class ChunkReader {
             return new Entry(name, flags, length, buffer, extra, context);
         }
 
-        public int getBodySize() {
+        public int bodySize() {
             return length - header;
         }
     }

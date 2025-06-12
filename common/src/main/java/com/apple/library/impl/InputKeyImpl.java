@@ -161,7 +161,7 @@ public class InputKeyImpl {
         return key.getType() == InputConstants.Type.KEYSYM && key.getValue() == i;
     }
 
-    public Component getName() {
+    public Component name() {
         return key.getDisplayName();
     }
 }

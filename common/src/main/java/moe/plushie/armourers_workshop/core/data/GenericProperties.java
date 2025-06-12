@@ -101,12 +101,12 @@ public class GenericProperties<S> {
         }
 
         @Override
-        public GenericProperty<S, T> getProperty() {
+        public GenericProperty<S, T> property() {
             return property;
         }
 
         @Override
-        public T getValue() {
+        public T value() {
             return value;
         }
     }

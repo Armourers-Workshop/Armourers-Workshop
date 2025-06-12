@@ -7,11 +7,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface IWorldUpdateTask {
 
-    Level getLevel();
+    Level level();
 
-    BlockPos getBlockPos();
+    BlockPos blockPos();
 
-    BlockState getBlockState();
+    BlockState blockState();
 
     InteractionResult run(Level level);
 }

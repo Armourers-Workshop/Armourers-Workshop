@@ -21,7 +21,7 @@ public class FabricMrcrayfishBackpackRendererMixin {
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFFF)V", at = @At("HEAD"), cancellable = true)
     private void aw2$render(PoseStack pose, MultiBufferSource source, int light, Player player, float p_225628_5_, float p_225628_6_, float partialTick, float p_225628_8_, float p_225628_9_, float p_225628_10_, CallbackInfo ci) {
         var renderData = EntityRenderData.of(player);
-        if (renderData != null && renderData.getOverriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
+        if (renderData != null && renderData.overriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
             ci.cancel();
         }
     }

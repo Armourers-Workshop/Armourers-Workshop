@@ -4,15 +4,14 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ItemSelector {
 
-    String getId();
+    String id();
 
-    int getDamage();
+    int damage();
 
-    int getMaxDamage();
+    int maxDamage();
 
     @Nullable
-    EnchantmentSelector getEnchantment(String name);
-
+    EnchantmentSelector enchantmentByName(String name);
 
     boolean hasTag(String tag);
 }

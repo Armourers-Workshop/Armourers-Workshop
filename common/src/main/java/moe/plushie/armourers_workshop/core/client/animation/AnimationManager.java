@@ -63,7 +63,7 @@ public class AnimationManager {
     public static AnimationManager of(Entity entity) {
         var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
-            return renderData.getAnimationManager();
+            return renderData.animationManager();
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class AnimationManager {
     public static AnimationManager of(BlockEntity blockEntity) {
         var renderData = BlockEntityRenderData.of(blockEntity);
         if (renderData != null) {
-            return renderData.getAnimationManager();
+            return renderData.animationManager();
         }
         return null;
     }
@@ -105,7 +105,7 @@ public class AnimationManager {
             resumeState(entry);
         });
         expiredEntries.forEach((key, entry) -> {
-            entry.getAnimationControllers().forEach(it -> lastActions.remove(it.getName()));
+            entry.animationControllers().forEach(it -> lastActions.remove(it.name()));
             activeEntries.remove(key);
             entry.stop();
         });
@@ -142,8 +142,8 @@ public class AnimationManager {
     public void play(String name, double atTime, CompoundTag tag) {
         lastActions.put(name, new PlayAction(name, atTime, tag));
         for (var entry : activeEntries.values()) {
-            for (var animationController : entry.getAnimationControllers()) {
-                if (name.equals(animationController.getName())) {
+            for (var animationController : entry.animationControllers()) {
+                if (name.equals(animationController.name())) {
                     entry.play(animationController, atTime, tag);
                 }
             }
@@ -157,8 +157,8 @@ public class AnimationManager {
             lastActions.remove(name);
         }
         for (var entry : activeEntries.values()) {
-            for (var animationController : entry.getAnimationControllers()) {
-                if (name.isEmpty() || name.equals(animationController.getName())) {
+            for (var animationController : entry.animationControllers()) {
+                if (name.isEmpty() || name.equals(animationController.name())) {
                     entry.stop(animationController);
                 }
             }
@@ -202,8 +202,8 @@ public class AnimationManager {
     private void resumeState(Entry entry) {
         entry.autoplay();
         lastActions.forEach((name, action) -> {
-            for (var animationController : entry.getAnimationControllers()) {
-                if (name.equals(animationController.getName())) {
+            for (var animationController : entry.animationControllers()) {
+                if (name.equals(animationController.name())) {
                     action.resume(entry, animationController);
                 }
             }
@@ -226,7 +226,7 @@ public class AnimationManager {
         protected boolean isFirstTransitionAnimation = true;
 
         public Entry(BakedSkin skin) {
-            super(AnimationManager.this.executionContext, skin.getAnimationControllers());
+            super(AnimationManager.this.executionContext, skin.animationControllers());
             this.rebuildTriggerableControllers();
         }
 
@@ -253,7 +253,7 @@ public class AnimationManager {
             }
             var newValue = findTriggerableController(actionSet);
             if (newValue != null && newValue != playing) {
-                play(newValue, playing, time, 1, newValue.getPlayCount(), false);
+                play(newValue, playing, time, 1, newValue.playCount(), false);
             }
         }
 
@@ -317,7 +317,7 @@ public class AnimationManager {
             playing = newValue;
 
             // TODO: @SAGESSE Add transition duration support.
-            var duration = newValue.getTransitionDuration();
+            var duration = newValue.transitionDuration();
             applyTransiting(fromAnimationController, toAnimationController, time, speed, duration);
         }
 
@@ -328,7 +328,7 @@ public class AnimationManager {
             if (ModConfig.Client.enableAnimationDebug) {
                 ModLog.debug("start play {}", animationController);
             }
-            if (newPlayState.getLoopCount() > 0) {
+            if (newPlayState.loopCount() > 0) {
                 removeOnCompletion.add(Pair.of(newPlayState, () -> stop(animationController)));
             }
         }
@@ -353,7 +353,7 @@ public class AnimationManager {
             // delay the animation start time.
             var playState = getPlayState(toAnimationController);
             if (playState != null) {
-                playState.setTime(playState.getTime() + duration);
+                playState.setTime(playState.time() + duration);
             }
             addAnimation(fromAnimationController, toAnimationController, time, speed, duration);
         }
@@ -393,12 +393,12 @@ public class AnimationManager {
             var newValues = new ArrayList<TriggerableController>();
             for (var animationController : animationControllers) {
                 if (!animationController.isParallel()) {
-                    var name = resolveMappingName(animationController.getName());
+                    var name = resolveMappingName(animationController.name());
                     var controller = new TriggerableController(name, animationController);
                     newValues.add(controller);
                 }
             }
-            newValues.sort(Comparator.comparingDouble(TriggerableController::getPriority).reversed());
+            newValues.sort(Comparator.comparingDouble(TriggerableController::priority).reversed());
             triggerableControllers.clear();
             triggerableControllers.addAll(newValues);
             if (playing == null) {
@@ -445,12 +445,12 @@ public class AnimationManager {
             this.name = name;
             this.target = EntityActions.by(name);
             this.animationController = animationController;
-            this.isIdle = target.getActions().contains(EntityAction.IDLE);
+            this.isIdle = target.actions().contains(EntityAction.IDLE);
         }
 
         public boolean test(EntityActionSet actionSet) {
             int hit = 0;
-            for (var action : target.getActions()) {
+            for (var action : target.actions()) {
                 if (!actionSet.contains(action)) {
                     return false;
                 }
@@ -459,20 +459,20 @@ public class AnimationManager {
             return hit != 0;
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
 
-        public double getPriority() {
-            return target.getPriority();
+        public double priority() {
+            return target.priority();
         }
 
-        public double getTransitionDuration() {
-            return target.getTransitionDuration();
+        public double transitionDuration() {
+            return target.transitionDuration();
         }
 
-        public int getPlayCount() {
-            return target.getPlayCount();
+        public int playCount() {
+            return target.playCount();
         }
 
         @Override
@@ -495,8 +495,8 @@ public class AnimationManager {
 
         public void resume(Entry entry, AnimationController animationController) {
             // check it still playing.
-            if (animationController.getLoop() == SkinAnimationLoop.NONE) {
-                var endTime = time + animationController.getDuration();
+            if (animationController.loop() == SkinAnimationLoop.NONE) {
+                var endTime = time + animationController.duration();
                 if (endTime < lastAnimationTicks) {
                     return; // can't play
                 }

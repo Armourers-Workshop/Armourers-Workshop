@@ -19,11 +19,11 @@ public class SkinTexturePos implements ISkinTexturePos {
     protected final SkinTextureData provider;
 
     public SkinTexturePos(float u, float v, float width, float height, SkinTextureData provider) {
-        this(u, v, width, height, provider.getWidth(), provider.getHeight(), null, provider);
+        this(u, v, width, height, provider.width(), provider.height(), null, provider);
     }
 
     public SkinTexturePos(float u, float v, float width, float height, SkinTextureOptions options, SkinTextureData provider) {
-        this(u, v, width, height, provider.getWidth(), provider.getHeight(), options, provider);
+        this(u, v, width, height, provider.width(), provider.height(), options, provider);
     }
 
     public SkinTexturePos(float u, float v, float width, float height, float totalWidth, float totalHeight) {
@@ -42,43 +42,43 @@ public class SkinTexturePos implements ISkinTexturePos {
     }
 
     @Override
-    public float getU() {
+    public float u() {
         return u;
     }
 
     @Override
-    public float getV() {
+    public float v() {
         return v;
     }
 
     @Override
-    public float getWidth() {
+    public float width() {
         return width;
     }
 
     @Override
-    public float getHeight() {
+    public float height() {
         return height;
     }
 
     @Override
-    public float getTotalWidth() {
+    public float totalWidth() {
         return totalWidth;
     }
 
     @Override
-    public float getTotalHeight() {
+    public float totalHeight() {
         return totalHeight;
     }
 
     @Override
-    public SkinTextureOptions getOptions() {
+    public SkinTextureOptions options() {
         return options;
     }
 
     @Nullable
     @Override
-    public SkinTextureData getProvider() {
+    public SkinTextureData provider() {
         return provider;
     }
 

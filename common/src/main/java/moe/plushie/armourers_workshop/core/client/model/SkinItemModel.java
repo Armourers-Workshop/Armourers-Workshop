@@ -27,8 +27,8 @@ public class SkinItemModel {
         var indexedProperties = new ArrayList<SkinItemProperty>();
         for (var override : overrides) {
             var childTester = new ArrayList<Predicate<float[]>>();
-            var childProperties = override.getProperties();
-            var childValues = override.getValues();
+            var childProperties = override.properties();
+            var childValues = override.values();
             for (int i = 0; i < childProperties.length; ++i) {
                 var childProperty = childProperties[i];
                 var childValue = childValues[i];
@@ -58,7 +58,7 @@ public class SkinItemModel {
         // test all properties
         for (var matcher : matchers) {
             if (matcher.test(results)) {
-                var model = matcher.override.getModel();
+                var model = matcher.override.model();
                 if (model != null) {
                     return model;
                 }
@@ -72,7 +72,7 @@ public class SkinItemModel {
         return transforms.getOrDefault(transformType, SkinItemTransform.NO_TRANSFORM);
     }
 
-    public IResourceLocation getName() {
+    public IResourceLocation name() {
         return name;
     }
 

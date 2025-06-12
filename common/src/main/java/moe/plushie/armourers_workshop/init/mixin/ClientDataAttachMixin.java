@@ -19,7 +19,7 @@ public abstract class ClientDataAttachMixin implements IAssociatedContainerProvi
         if (aw2$associatedContainer != null) {
             return aw2$associatedContainer.getAssociatedObject(key);
         }
-        return key.getDefaultValue();
+        return key.defaultValue();
     }
 
     public <T> void setAssociatedObject(IAssociatedContainerKey<T> key, T value) {

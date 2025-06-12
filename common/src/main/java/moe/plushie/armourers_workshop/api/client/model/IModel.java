@@ -8,11 +8,11 @@ import java.util.Collection;
 public interface IModel extends IAssociatedContainerProvider {
 
     @Nullable
-    IModelBabyPose getBabyPose();
+    IModelBabyPose babyPose();
 
-    IModelPart getPart(String name);
+    IModelPart partByName(String name);
 
-    Collection<? extends IModelPart> getAllParts();
+    Collection<? extends IModelPart> allParts();
 
-    Class<?> getType();
+    Class<?> type();
 }

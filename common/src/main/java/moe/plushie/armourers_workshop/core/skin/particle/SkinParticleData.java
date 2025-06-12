@@ -21,19 +21,19 @@ public class SkinParticleData implements ISkinParticleProvider {
         this.components = components;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public SkinParticleMaterial getMaterial() {
+    public SkinParticleMaterial material() {
         return material;
     }
 
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return texture;
     }
 
-    public List<? extends SkinParticleComponent> getComponents() {
+    public List<? extends SkinParticleComponent> components() {
         return components;
     }
 }

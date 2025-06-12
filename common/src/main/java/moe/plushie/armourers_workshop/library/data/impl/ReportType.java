@@ -11,7 +11,7 @@ public enum ReportType {
         }
     }
 
-    public String getLangKey() {
+    public String toLangKey() {
         return "skin_report_type.armourers_workshop." + toString().toLowerCase();
     }
 }

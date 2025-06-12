@@ -14,7 +14,7 @@ public class BooleanToolProperty extends ToolProperty<Boolean> {
     @Override
     public Boolean get(CompoundTag nbt) {
         if (nbt.contains(name, Constants.TagFlags.BYTE)) {
-            return nbt.getBoolean(name);
+            return nbt.getOptionalBoolean(name).orElse(false);
         }
         return empty();
     }

@@ -82,7 +82,7 @@ public class SkinContainerEvaluator {
         }
         newValue.forEach(it -> {
             // the skin request exists?
-            var identifier = it.getIdentifier();
+            var identifier = it.identifier();
             if (oldValue.remove(identifier)) {
                 return;
             }

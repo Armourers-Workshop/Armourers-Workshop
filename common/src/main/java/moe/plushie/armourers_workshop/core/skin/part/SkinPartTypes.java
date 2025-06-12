@@ -35,7 +35,7 @@ public final class SkinPartTypes {
 
     private static final LinkedHashMap<String, SkinPartType> ALL_PART_TYPES = new LinkedHashMap<>();
 
-    public static final IDataCodec<SkinPartType> CODEC = IDataCodec.STRING.xmap(SkinPartTypes::byName, SkinPartType::getName);
+    public static final IDataCodec<SkinPartType> CODEC = IDataCodec.STRING.xmap(SkinPartTypes::byName, SkinPartType::name);
 
     public static final SkinPartType UNKNOWN = register("unknown", new UnknownPartType());
 
@@ -148,12 +148,12 @@ public final class SkinPartTypes {
 
     private static SkinPartType register(String name, SkinPartType partType) {
         partType.setRegistryName(OpenResourceLocation.create("armourers", name));
-        if (ALL_PART_TYPES.containsKey(partType.getRegistryName().toString())) {
+        if (ALL_PART_TYPES.containsKey(partType.registryName().toString())) {
             ModLog.warn("A mod tried to register a skin type with a registry name that is in use.");
             return partType;
         }
-        ALL_PART_TYPES.put(partType.getRegistryName().toString(), partType);
-        ModLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
+        ALL_PART_TYPES.put(partType.registryName().toString(), partType);
+        ModLog.debug("Registering Skin Part '{}'", partType.registryName());
         return partType;
     }
 }

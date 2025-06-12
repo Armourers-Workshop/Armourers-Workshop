@@ -48,7 +48,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
         int mouseX = (int) context.state().mousePos().x();
         int mouseY = (int) context.state().mousePos().y();
-        var offset = screen.getContentOffset();
+        var offset = screen.contentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.x, -offset.y, 0);
         screen.renderInView(this, 400, mouseX, mouseY, context.state().partialTicks(), context);
@@ -73,7 +73,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         screen.removed();
     }
 
-    public M getMenu() {
+    public M menu() {
         return menu;
     }
 

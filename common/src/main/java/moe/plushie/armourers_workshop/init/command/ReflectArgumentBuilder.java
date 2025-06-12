@@ -27,12 +27,12 @@ import java.util.function.Function;
 
 public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
 
-    private static final Map<Class<?>, Function<Pair<Object, Field>, ArgumentBuilder<CommandSourceStack, ?>>> FIELD_BUILDERS = Collections.immutableMap(builder -> {
-        builder.put(boolean.class, pair -> field(pair, BoolArgumentType.bool(), BoolArgumentType::getBool));
-        builder.put(int.class, pair -> field(pair, IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
-        builder.put(double.class, pair -> field(pair, DoubleArgumentType.doubleArg(), DoubleArgumentType::getDouble));
-        builder.put(float.class, pair -> field(pair, FloatArgumentType.floatArg(), FloatArgumentType::getFloat));
-        builder.put(String.class, pair -> field(pair, StringArgumentType.string(), StringArgumentType::getString));
+    private static final Map<Class<?>, Function<Pair<Object, Field>, ArgumentBuilder<CommandSourceStack, ?>>> FIELD_BUILDERS = Collections.immutableMap(it -> {
+        it.put(boolean.class, pair -> field(pair, BoolArgumentType.bool(), BoolArgumentType::getBool));
+        it.put(int.class, pair -> field(pair, IntegerArgumentType.integer(), IntegerArgumentType::getInteger));
+        it.put(double.class, pair -> field(pair, DoubleArgumentType.doubleArg(), DoubleArgumentType::getDouble));
+        it.put(float.class, pair -> field(pair, FloatArgumentType.floatArg(), FloatArgumentType::getFloat));
+        it.put(String.class, pair -> field(pair, StringArgumentType.string(), StringArgumentType::getString));
     });
 
     private final Class<?> object;

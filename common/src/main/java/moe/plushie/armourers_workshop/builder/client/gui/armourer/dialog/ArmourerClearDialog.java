@@ -69,7 +69,7 @@ public class ArmourerClearDialog extends ConfirmDialog {
         return markersCheckBox == null || markersCheckBox.isSelected();
     }
 
-    public SkinPartType getSelectedPartType() {
+    public SkinPartType selectedPartType() {
         if (partTypes != null && partComboBox != null && partComboBox.selectedIndex() < partTypes.size()) {
             return partTypes.get(partComboBox.selectedIndex());
         }

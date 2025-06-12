@@ -92,7 +92,7 @@ public class PacketSplitter {
     }
 
     private void writePacket(CustomPacket message, ByteBuf buffer) {
-        buffer.writeInt(message.getPacketID());
+        buffer.writeInt(message.packetId());
         message.encode(IFriendlyByteBuf.wrap(buffer));
     }
 

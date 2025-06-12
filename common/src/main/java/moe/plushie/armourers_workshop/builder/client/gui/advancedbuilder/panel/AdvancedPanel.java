@@ -37,7 +37,7 @@ public abstract class AdvancedPanel extends UIView {
 
     public AdvancedPanel(DocumentEditor editor) {
         super(CGRect.ZERO);
-        this.document = editor.getDocument();
+        this.document = editor.document();
         this.editor = editor;
     }
 

@@ -12,7 +12,7 @@ public class SkinningArmourRecipe extends SkinningRecipe {
     public SkinningArmourRecipe(SkinType skinType) {
         super(skinType);
         if (skinType instanceof SkinType.Armor armorType) {
-            slotType = armorType.getSlotType();
+            slotType = armorType.slotType();
         }
     }
 

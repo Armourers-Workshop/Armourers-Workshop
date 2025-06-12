@@ -74,7 +74,7 @@ public class UpdateContextPacket extends CustomPacket {
             buffer.writeNbt(getConfig());
         }
         if ((flags & 0x04) != 0) {
-            buffer.writeNbt(getDataPack());
+            buffer.writeNbt(dataPack());
         }
     }
 
@@ -125,11 +125,11 @@ public class UpdateContextPacket extends CustomPacket {
         var pack = new DataPack(new TagSerializer(tag));
     }
 
-    private CompoundTag getDataPack() {
+    private CompoundTag dataPack() {
         var dataPack = new DataPack();
         var serializer = new TagSerializer();
         dataPack.serialize(serializer);
-        return serializer.getTag();
+        return serializer.tag();
     }
 
     private void checkNetworkVersion(String version) {
@@ -169,13 +169,13 @@ public class UpdateContextPacket extends CustomPacket {
             var profileTags = new ArrayList<CompoundTag>();
             var profiles = new LinkedHashMap<EntityProfile, ArrayList<String>>();
             ModEntityProfiles.getCustomProfiles().forEach((entityType, profile) -> {
-                profiles.computeIfAbsent(profile, e -> new ArrayList<>()).add(entityType.getRegistryName());
+                profiles.computeIfAbsent(profile, e -> new ArrayList<>()).add(entityType.registryName());
             });
             profiles.forEach((profile, entities) -> {
                 var serializer1 = new TagSerializer();
                 profile.serialize(serializer1);
                 serializer1.write(CodingKeys.ENTITIES, entities);
-                profileTags.add(serializer1.getTag());
+                profileTags.add(serializer1.tag());
             });
             serializer.write(CodingKeys.PROFILES, profileTags);
             // ...

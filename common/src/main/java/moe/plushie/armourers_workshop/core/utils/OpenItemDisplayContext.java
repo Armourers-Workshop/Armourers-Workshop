@@ -13,11 +13,11 @@ public enum OpenItemDisplayContext {
     FIXED(8, "fixed");
 
     private final int id;
-    private final String name;
+    private final String serializedName;
 
-    OpenItemDisplayContext(int id, String name) {
+    OpenItemDisplayContext(int id, String serializedName) {
         this.id = id;
-        this.name = name;
+        this.serializedName = serializedName;
     }
 
     public static OpenItemDisplayContext byId(int id) {
@@ -31,19 +31,19 @@ public enum OpenItemDisplayContext {
 
     public static OpenItemDisplayContext byName(String name) {
         for (var value : values()) {
-            if (value.name.equals(name)) {
+            if (value.serializedName.equals(name)) {
                 return value;
             }
         }
         return OpenItemDisplayContext.NONE;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String serializedName() {
+        return serializedName;
     }
 
 

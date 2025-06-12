@@ -38,7 +38,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var itemStack = player.getItemInHand(hand);
         var descriptor = SkinDescriptor.of(itemStack);
-        var slotType = SkinSlotType.byType(descriptor.getType());
+        var slotType = SkinSlotType.byType(descriptor.type());
         if (descriptor.isEmpty() || slotType == null) {
             return InteractionResultHolder.pass(itemStack);
         }
@@ -66,7 +66,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     public InteractionResult place(BlockPlaceContext context) {
         var itemStack = context.getItemInHand();
         var descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.getType() != SkinTypes.BLOCK) {
+        if (descriptor.type() != SkinTypes.BLOCK) {
             return InteractionResult.PASS;
         }
         // we need expand the context info.
@@ -76,11 +76,11 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     @Override
     public Component getName(ItemStack itemStack) {
         var skin = SkinLoader.getInstance().getSkin(itemStack);
-        if (skin != null && !skin.getCustomName().trim().isEmpty()) {
-            return TranslateUtils.formatted(skin.getCustomName());
+        if (skin != null && !skin.customName().trim().isEmpty()) {
+            return TranslateUtils.formatted(skin.customName());
         }
         if (skin != null) {
-            return TranslateUtils.Name.of(skin.getType());
+            return TranslateUtils.Name.of(skin.type());
         }
         return super.getName(itemStack);
     }
@@ -98,7 +98,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
             if (bakedSkin != null) {
                 return 0;
             }
-            return descriptor.getType().getId() / 1000f;
+            return descriptor.type().id() / 1000f;
         });
     }
 }

@@ -12,28 +12,28 @@ public abstract class SkinGeometry implements ISkinGeometry {
     protected OpenTransform3f transform = OpenTransform3f.IDENTITY;
 
     @Override
-    public OpenTransform3f getTransform() {
+    public OpenTransform3f transform() {
         return transform;
     }
 
     @Override
-    public abstract OpenVoxelShape getShape();
+    public abstract OpenVoxelShape shape();
 
     @Override
-    public abstract SkinGeometryType getType();
+    public abstract SkinGeometryType type();
 
     @Override
-    public SkinGeometryOptions getOptions() {
+    public SkinGeometryOptions options() {
         return options;
     }
 
     @Override
-    public Iterable<? extends SkinGeometryFace> getFaces() {
+    public Iterable<? extends SkinGeometryFace> faces() {
         return Collections.emptyList();
     }
 
     @Override
     public String toString() {
-        return Objects.toString(this, "type", getType(), "shape", getShape().bounds());
+        return Objects.toString(this, "type", type(), "shape", shape().bounds());
     }
 }

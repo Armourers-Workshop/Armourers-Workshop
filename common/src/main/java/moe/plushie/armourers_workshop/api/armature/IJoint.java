@@ -4,10 +4,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IJoint {
 
-    int getId();
+    int id();
 
-    String getName();
+    String name();
 
     @Nullable
-    IJoint getParent();
+    IJoint parent();
 }

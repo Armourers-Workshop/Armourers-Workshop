@@ -20,19 +20,19 @@ public class SkinAnimationKeyframe {
         this.points = points;
     }
 
-    public float getTime() {
+    public float time() {
         return time;
     }
 
-    public String getKey() {
+    public String key() {
         return key;
     }
 
-    public SkinAnimationFunction getFunction() {
+    public SkinAnimationFunction function() {
         return function;
     }
 
-    public List<SkinAnimationPoint> getPoints() {
+    public List<SkinAnimationPoint> points() {
         return points;
     }
 

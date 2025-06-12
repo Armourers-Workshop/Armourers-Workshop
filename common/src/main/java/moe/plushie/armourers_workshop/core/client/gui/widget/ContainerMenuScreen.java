@@ -37,7 +37,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
 
     @Override
     public void init() {
-        var screenSize = getScreenSize();
+        var screenSize = screenSize();
         manager.layout(screenSize.width, screenSize.height);
         var rect = window.bounds();
         setContentSize(new CGSize(rect.width, rect.height));

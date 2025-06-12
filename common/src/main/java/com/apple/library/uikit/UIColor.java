@@ -56,19 +56,19 @@ public class UIColor {
         return new UIColor((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
 
-    public int getRed() {
+    public int red() {
         return (getRGB() >> 16) & 0xFF;
     }
 
-    public int getGreen() {
+    public int green() {
         return (getRGB() >> 8) & 0xFF;
     }
 
-    public int getBlue() {
+    public int blue() {
         return (getRGB()) & 0xFF;
     }
 
-    public int getAlpha() {
+    public int alpha() {
         return (getRGB() >> 24) & 0xff;
     }
 

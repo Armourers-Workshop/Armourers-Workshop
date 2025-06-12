@@ -32,7 +32,7 @@ public abstract class AbstractMenuType<C extends AbstractContainerMenu> implemen
         if (globalPos != null) {
             return openMenu(serverPlayer, globalPos, null).orElse(InteractionResult.FAIL);
         }
-        return openMenu(serverPlayer, getTitle(), value);
+        return openMenu(serverPlayer, title(), value);
     }
 
     protected Optional<InteractionResult> openMenu(ServerPlayer player, IGlobalPos globalPos, Object extraData) {
@@ -42,7 +42,7 @@ public abstract class AbstractMenuType<C extends AbstractContainerMenu> implemen
             if (!ModPermissions.OPEN.accept(this, level, blockPos, player)) {
                 return InteractionResult.FAIL;
             }
-            return openMenu(player, getTitle(), globalPos);
+            return openMenu(player, title(), globalPos);
         });
     }
 
@@ -59,12 +59,12 @@ public abstract class AbstractMenuType<C extends AbstractContainerMenu> implemen
     }
 
     @Override
-    public Component getTitle() {
-        return TranslateUtils.title("inventory.armourers_workshop." + getRegistryName().getPath());
+    public Component title() {
+        return TranslateUtils.title("inventory.armourers_workshop." + registryName().path());
     }
 
     @Override
-    public IResourceLocation getRegistryName() {
+    public IResourceLocation registryName() {
         return registryName;
     }
 

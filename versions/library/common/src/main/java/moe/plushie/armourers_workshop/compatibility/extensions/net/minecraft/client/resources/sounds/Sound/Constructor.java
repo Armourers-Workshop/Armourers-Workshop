@@ -14,11 +14,11 @@ import manifold.ext.rt.api.ThisClass;
 public class Constructor {
 
     public static @Self Sound create(@ThisClass Class<?> clazz, AbstractSimpleSound sound) {
-        var location = sound.getId();
-        var volume = ConstantFloat.of(sound.getVolume());
-        var pitch = ConstantFloat.of(sound.getPitch());
-        var weight = sound.getWeight();
-        var attenuationDistance = sound.getAttenuationDistance();
+        var location = sound.id();
+        var volume = ConstantFloat.of(sound.volume());
+        var pitch = ConstantFloat.of(sound.pitch());
+        var weight = sound.weight();
+        var attenuationDistance = sound.attenuationDistance();
         return new Sound(location, volume, pitch, weight, Sound.Type.FILE, false, false, attenuationDistance);
     }
 }

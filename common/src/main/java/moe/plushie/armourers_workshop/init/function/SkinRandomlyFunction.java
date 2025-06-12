@@ -60,7 +60,7 @@ import java.util.function.Function;
 public class SkinRandomlyFunction implements ILootFunction {
 
     public static final MapCodec<SkinRandomlyFunction> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SkinSource.MAP_CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::getSources)
+            SkinSource.MAP_CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::sources)
     ).apply(instance, SkinRandomlyFunction::new));
 
     public final List<SkinSource> sources;
@@ -90,13 +90,13 @@ public class SkinRandomlyFunction implements ILootFunction {
         return itemStack;
     }
 
-    public List<SkinSource> getSources() {
+    public List<SkinSource> sources() {
         return sources;
     }
 
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
-        return new HashSet<>(Collections.compactMap(sources, SkinSource::getParam));
+        return new HashSet<>(Collections.compactMap(sources, SkinSource::param));
     }
 
     public static class SkinSource implements IResultHandler<SkinDescriptor> {
@@ -182,7 +182,7 @@ public class SkinRandomlyFunction implements ILootFunction {
             ArrayList<ItemStack> results = new ArrayList<>();
             if (slotType == null) {
                 for (SkinSlotType slotType1 : SkinSlotType.values()) {
-                    if (slotType1.getSkinType() != null) {
+                    if (slotType1.skinType() != null) {
                         results.addAll(collect(wardrobe, slotType1, index));
                     }
                 }
@@ -201,7 +201,7 @@ public class SkinRandomlyFunction implements ILootFunction {
             return results;
         }
 
-        public LootContextParam<?> getParam() {
+        public LootContextParam<?> param() {
             return param;
         }
     }

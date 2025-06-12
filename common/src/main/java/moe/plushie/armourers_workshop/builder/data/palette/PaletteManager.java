@@ -53,14 +53,14 @@ public class PaletteManager {
     }
 
     private void putPaletteInMap(Palette palette) {
-        paletteMap.put(palette.getName(), palette);
+        paletteMap.put(palette.name(), palette);
     }
 
-    public Palette getPalette(String name) {
+    public Palette paletteByName(String name) {
         return paletteMap.get(name);
     }
 
-    public Collection<Palette> getPalettes() {
+    public Collection<Palette> palettes() {
         return paletteMap.values();
     }
 
@@ -69,7 +69,7 @@ public class PaletteManager {
     }
 
     @Nullable
-    public Palette getCurrentPalette() {
+    public Palette currentPalette() {
         return currentPalette;
     }
 
@@ -89,7 +89,7 @@ public class PaletteManager {
         if (oldName.equals(newName)) {
             return;
         }
-        var palette = getPalette(oldName);
+        var palette = paletteByName(oldName);
         palette.setName(newName);
         paletteMap.put(newName, palette);
         paletteMap.remove(oldName);
@@ -112,9 +112,9 @@ public class PaletteManager {
         var json = new JsonArray();
         for (var palette : paletteMap.values()) {
             JsonObject jsonPalette = new JsonObject();
-            jsonPalette.addProperty("name", palette.getName());
+            jsonPalette.addProperty("name", palette.name());
             jsonPalette.addProperty("locked", palette.isLocked());
-            jsonPalette.add("colours", intToJsonArray(palette.getColors()));
+            jsonPalette.add("colours", intToJsonArray(palette.colors()));
             json.add(jsonPalette);
         }
         try {
@@ -142,7 +142,7 @@ public class PaletteManager {
                     var locked = jsonPalette.get("locked").getAsBoolean();
                     var colors = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
                     var palette = new Palette(name, locked, colors);
-                    paletteMap.put(palette.getName(), palette);
+                    paletteMap.put(palette.name(), palette);
                 }
             }
         } catch (Exception e) {

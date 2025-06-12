@@ -40,10 +40,10 @@ public class Wrapper {
 
             @Override
             public void readResources(IResourceLocation target, Predicate<String> validator, BiConsumer<IResourceLocation, IResource> consumer) {
-                resourceManager.listResources(target.getPath(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
+                resourceManager.listResources(target.path(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
                     try {
                         try {
-                            if (!key.getNamespace().equals(target.getNamespace())) {
+                            if (!key.getNamespace().equals(target.namespace())) {
                                 return;
                             }
                             IResourceLocation key1 = OpenResourceLocation.create(key);
@@ -60,17 +60,17 @@ public class Wrapper {
             private IResource wrap(IResourceLocation name, Resource resource) {
                 return new IResource() {
                     @Override
-                    public String getName() {
+                    public String name() {
                         return name.toString();
                     }
 
                     @Override
-                    public String getSource() {
+                    public String source() {
                         return resource.sourcePackId();
                     }
 
                     @Override
-                    public InputStream getInputStream() throws IOException {
+                    public InputStream inputStream() throws IOException {
                         return resource.open();
                     }
                 };

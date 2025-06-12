@@ -169,7 +169,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         dialog.sizeToFit();
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
-                GlobalSkinLibrarySettingWindow.setChanges(dialog.getProperties());
+                GlobalSkinLibrarySettingWindow.setChanges(dialog.properties());
                 fileOptionsBox.setSelected(GlobalSkinLibrarySettingWindow.hasChanges());
             }
         });
@@ -188,8 +188,8 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         // we can't upload a readonly skin.
-        var uploadOptions = getUploadOptions(bakedSkin.getSkin());
-        if (bakedSkin.getSkin().getSettings().isEncrypted()) {
+        var uploadOptions = getUploadOptions(bakedSkin.skin());
+        if (bakedSkin.skin().settings().isEncrypted()) {
             onUploadFailed(getDisplayText("error.notSupported"));
             return;
         }
@@ -204,7 +204,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
                 return;
             }
             // upload now
-            library.uploadSkin(textName.text().trim(), textDescription.text().trim(), bakedSkin.getSkin(), uploadOptions, (result1, exception1) -> {
+            library.uploadSkin(textName.text().trim(), textDescription.text().trim(), bakedSkin.skin(), uploadOptions, (result1, exception1) -> {
                 if (exception1 != null) {
                     onUploadFailed(new NSString(exception1.toString()));
                 } else {
@@ -216,8 +216,8 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private SkinFileOptions getUploadOptions(Skin skin) {
         // only upgrade the version if necessary.
-        var options = GlobalSkinLibrarySettingWindow.getFileOptions();
-        if (skin.getVersion() < SkinSerializer.Versions.V20 && options.getFileVersion() < SkinSerializer.Versions.V20) {
+        var options = GlobalSkinLibrarySettingWindow.fileOptions();
+        if (skin.fileVersion() < SkinSerializer.Versions.V20 && options.fileVersion() < SkinSerializer.Versions.V20) {
             return null;
         }
         options.setCompressed(true); // the global skin library always compress.
@@ -254,7 +254,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     }
 
     private ItemStack getInputStack() {
-        return getMenu().map(GlobalSkinLibraryMenu::getInputStack).orElse(ItemStack.EMPTY);
+        return getMenu().map(GlobalSkinLibraryMenu::inputStack).orElse(ItemStack.EMPTY);
     }
 
     private Optional<GlobalSkinLibraryMenu> getMenu() {

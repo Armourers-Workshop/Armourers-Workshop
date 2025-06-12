@@ -8,5 +8,5 @@ public interface EpicFlightTransformProvider {
 
     DataContainerKey<EpicFlightTransformProvider> KEY = DataContainerKey.of("transforms", EpicFlightTransformProvider.class);
 
-    OpenPoseStack.Pose getJointPose(String name);
+    OpenPoseStack.Pose poseByName(String name);
 }

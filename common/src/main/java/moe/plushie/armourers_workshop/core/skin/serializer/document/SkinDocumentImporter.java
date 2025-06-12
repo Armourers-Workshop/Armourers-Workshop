@@ -21,14 +21,14 @@ public class SkinDocumentImporter {
     }
 
     public void execute(String identifier, Skin skin) {
-        var parts = skin.getParts();
-        var root = document.getRoot();
+        var parts = skin.parts();
+        var root = document.root();
         for (var i = 0; i < parts.size(); ++i) {
             var part = parts.get(i);
             if (isEmpty(part)) {
                 continue; // ignore empty part
             }
-            var node = findNodeByType(root, part.getType());
+            var node = findNodeByType(root, part.type());
             if (node != null) {
                 copyTo(part, node, identifier, String.valueOf(i));
             }
@@ -44,13 +44,13 @@ public class SkinDocumentImporter {
             return;
         }
 
-        var name = part.getName();
+        var name = part.name();
         if (name == null || name.isEmpty()) {
             name = "untitled node";
         }
 
         if (name.equals("Float")) {
-            var floatNode = findNodeByType(document.getRoot(), SkinPartTypes.ADVANCED_FLOAT);
+            var floatNode = findNodeByType(document.root(), SkinPartTypes.ADVANCED_FLOAT);
             if (floatNode != null) {
                 node = floatNode;
                 name = "untitled float node";
@@ -66,17 +66,17 @@ public class SkinDocumentImporter {
     private void copyAnimations(String identifier, Skin skin) {
         var animations = new ArrayList<SkinDocumentAnimation>();
         var descriptor = new SkinDescriptor(identifier, SkinTypes.ADVANCED);
-        for (var animation : skin.getAnimations()) {
-            animations.add(new SkinDocumentAnimation(animation.getName(), descriptor));
+        for (var animation : skin.animations()) {
+            animations.add(new SkinDocumentAnimation(animation.name(), descriptor));
         }
         document.setAnimations(animations);
     }
 
     private boolean isEmpty(SkinPart part) {
-        if (!part.getGeometries().isEmpty()) {
+        if (!part.geometries().isEmpty()) {
             return false;
         }
-        for (var child : part.getChildren()) {
+        for (var child : part.children()) {
             if (!isEmpty(child)) {
                 return false;
             }
@@ -89,7 +89,7 @@ public class SkinDocumentImporter {
         // we shouldn't match advanced parts
         if (partType != SkinPartTypes.ADVANCED) {
             for (var node : root.children()) {
-                if (partType.equals(node.getType())) {
+                if (partType.equals(node.type())) {
                     return node;
                 }
             }

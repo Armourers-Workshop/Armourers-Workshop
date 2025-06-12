@@ -84,7 +84,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void auth() throws Exception {
-        var user = getUser();
+        var user = user();
         if (user.isAuthenticated()) {
             return;
         }
@@ -94,16 +94,16 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     public void auth2() {
-        var accessToken = getUser().getAccessToken();
-        if (accessToken == null || accessToken.getRemainingTime() < 0 || accessToken.getRemainingTime() > TOKEN_UPDATE_TIME || state.updatingToken) {
+        var accessToken = user().accessToken();
+        if (accessToken == null || accessToken.remainingTime() < 0 || accessToken.remainingTime() > TOKEN_UPDATE_TIME || state.updatingToken) {
             return;
         }
-        ModLog.debug("Getting new token. Time left: {}", accessToken.getRemainingTime() / 1000);
+        ModLog.debug("Getting new token. Time left: {}", accessToken.remainingTime() / 1000);
         state.updatingToken = true;
         request("/user/auth2", null, ServerToken::new, (result, exception) -> {
             state.updatingToken = false;
             if (result != null) {
-                getUser().setAccessToken(result);
+                user().setAccessToken(result);
             }
         });
     }
@@ -151,8 +151,8 @@ public class GlobalSkinLibrary extends ServerSession {
         parameters.put("searchTypes", buildSearchTypes(SkinTypes.UNKNOWN));
         request("/skin/info", parameters, SearchResult::fromJSON, (result, exception) -> {
             if (result != null) {
-                if (!result.getSkins().isEmpty()) {
-                    handler.accept(result.getSkins().get(0));
+                if (!result.skins().isEmpty()) {
+                    handler.accept(result.skins().get(0));
                 } else {
                     handler.abort(new RuntimeException("can't found the skin " + skinId));
                 }
@@ -203,7 +203,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
 
-    public void getUser(String userId, IResultHandler<ServerUser> handler) {
+    public void user(String userId, IResultHandler<ServerUser> handler) {
         request("/user/info", a2m("userId", userId), ServerUser::fromJSON, handler);
     }
 
@@ -221,7 +221,7 @@ public class GlobalSkinLibrary extends ServerSession {
 
     @Override
     protected void checkRequest(ServerRequest request, @Nullable Map<String, ?> parameters) throws Exception {
-        var user = getUser();
+        var user = user();
         // when request permission is specified, we need to check it.
         var permission = resolvePermission(request, parameters);
         if (permission != null && !user.hasPermission(permission)) {
@@ -237,32 +237,32 @@ public class GlobalSkinLibrary extends ServerSession {
     protected HashMap<String, Object> defaultParameters() {
         var parameters = super.defaultParameters();
         parameters.put("maxFileVersion", SkinSerializer.Versions.LATEST);
-        var user = getUser();
-        if (user.getId() != null) {
-            parameters.put("userId", user.getId());
+        var user = user();
+        if (user.id() != null) {
+            parameters.put("userId", user.id());
         }
-        var accessToken = user.getAccessToken();
-        if (accessToken != null && accessToken.getValue() != null) {
-            parameters.put("accessToken", accessToken.getValue());
+        var accessToken = user.accessToken();
+        if (accessToken != null && accessToken.value() != null) {
+            parameters.put("accessToken", accessToken.value());
         }
         return parameters;
     }
 
     @Override
-    protected ArrayList<String> getBaseURLs() {
+    protected ArrayList<String> baseURLs() {
         var customURLs = ModConfig.Common.customSkinServerURLs;
         if (!customURLs.isEmpty()) {
             return customURLs;
         }
-        return super.getBaseURLs();
+        return super.baseURLs();
     }
 
-    public ServerUser getUser() {
+    public ServerUser user() {
         return state.currentUser;
     }
 
     @Nullable
-    public ServerUser getUserById(String userId) {
+    public ServerUser userById(String userId) {
         synchronized (state.users) {
             var user = state.users.get(userId);
             if (user != null) {
@@ -273,7 +273,7 @@ public class GlobalSkinLibrary extends ServerSession {
         state.users.put(userId, user);
         if (!state.downloaded.contains(userId)) {
             state.downloaded.add(userId);
-            getUser(userId, (realUser, exception) -> {
+            user(userId, (realUser, exception) -> {
                 synchronized (state.users) {
                     state.users.put(userId, realUser);
                 }
@@ -326,11 +326,11 @@ public class GlobalSkinLibrary extends ServerSession {
 
     private String buildSearchTypes(SkinType skinType) {
         if (skinType != null && skinType != SkinTypes.UNKNOWN) {
-            return skinType.getRegistryName().toString();
+            return skinType.registryName().toString();
         }
         var searchTypesBuilder = new StringBuilder();
         for (var skinType1 : SkinTypes.values()) {
-            var registryName = skinType1.getRegistryName();
+            var registryName = skinType1.registryName();
             if (skinType1 != SkinTypes.UNKNOWN && registryName != null) {
                 if (searchTypesBuilder.length() != 0) {
                     searchTypesBuilder.append(";");
@@ -342,7 +342,7 @@ public class GlobalSkinLibrary extends ServerSession {
     }
 
     private Map<String, Object> authenticationFromMinecraft() {
-        var user = getUser();
+        var user = user();
         var serverId = String.valueOf(defaultBaseURL().hashCode());
         if (!MinecraftAuth.checkAndRefeshAuth(serverId)) {
             var error = MinecraftAuth.getLastError();
@@ -352,8 +352,8 @@ public class GlobalSkinLibrary extends ServerSession {
         }
         ModLog.info("MC Auth Done");
         var parameters = new HashMap<String, Object>();
-        parameters.put("username", user.getName());
-        parameters.put("uuid", user.getUUID());
+        parameters.put("username", user.name());
+        parameters.put("uuid", user.uuid());
         parameters.put("serverId", serverId);
         return parameters;
     }
@@ -367,15 +367,15 @@ public class GlobalSkinLibrary extends ServerSession {
     private void updateUser(ServerUser user) {
         if (user != null) {
             state.currentUser = user;
-            state.users.put(user.getId(), user);
+            state.users.put(user.id(), user);
         }
     }
 
     private ServerPermission resolvePermission(ServerRequest request, @Nullable Map<String, ?> parameters) {
-        var user = getUser();
-        var permission = request.getPermission();
+        var user = user();
+        var permission = request.permission();
         var value = Objects.flatMap(parameters, it -> it.get("skinOwner"));
-        if (value == null || user.getId().equals(value)) {
+        if (value == null || user.id().equals(value)) {
             return permission;
         }
         // the user is not the owner, we need required the mod permission.

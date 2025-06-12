@@ -32,7 +32,7 @@ public class EmbeddedItemModel {
 
 
     public static EmbeddedItemModel fromWardrobe(@Nullable LivingEntity entity, @Nullable Level level, EntitySlot slot) {
-        return new EmbeddedItemModel(entity, level, 0, slot, slot.getDescriptor(), slot.getItemStack());
+        return new EmbeddedItemModel(entity, level, 0, slot, slot.descriptor(), slot.itemStack());
     }
 
     public static EmbeddedItemModel fromComponent(@Nullable LivingEntity entity, @Nullable Level level, SkinDescriptor descriptor, ItemStack itemStack) {
@@ -45,12 +45,12 @@ public class EmbeddedItemModel {
     }
 
 
-    public LivingEntity getEntity() {
+    public LivingEntity entity() {
         return entity;
     }
 
 
-    public Level getLevel() {
+    public Level level() {
         return level;
     }
 
@@ -58,19 +58,19 @@ public class EmbeddedItemModel {
         this.properties = properties;
     }
 
-    public SkinItemProperties getProperties() {
+    public SkinItemProperties properties() {
         return properties;
     }
 
-    public SkinDescriptor getSourceSkin() {
+    public SkinDescriptor sourceSkin() {
         return sourceSkin;
     }
 
-    public ItemStack getSourceStack() {
+    public ItemStack sourceStack() {
         return sourceStack;
     }
 
-    public EntitySlot getSourceSlot() {
+    public EntitySlot sourceSlot() {
         return sourceSlot;
     }
 
@@ -79,7 +79,7 @@ public class EmbeddedItemModel {
         if (sourceMode == 2) {
             return true;
         }
-        var skinType = sourceSkin.getType();
+        var skinType = sourceSkin.type();
         if (skinType == SkinTypes.BOAT || skinType == SkinTypes.ITEM_FISHING || skinType == SkinTypes.HORSE) {
             return true;
         }

@@ -95,7 +95,7 @@ public class DocumentImporter {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFile");
                 }
                 var skin = readSkinFromFile(inputFile);
-                if (skin == null || skin.getParts().isEmpty()) {
+                if (skin == null || skin.parts().isEmpty()) {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFormat");
                 }
                 Minecraft.getInstance().execute(() -> resultHandler.accept(apply(skin)));
@@ -113,20 +113,20 @@ public class DocumentImporter {
         var pack = reader.readPack();
         var exporter = new BlockBenchExporter(pack);
 
-        var settings = exporter.getSettings();
-        var properties = exporter.getProperties();
+        var settings = exporter.settings();
+        var properties = exporter.properties();
 
-        var name = pack.getName();
+        var name = pack.name();
         if (name != null && !name.isEmpty()) {
             properties.put(SkinProperty.ALL_CUSTOM_NAME, name);
         }
 
-        var description = pack.getDescription();
+        var description = pack.description();
         if (description != null && !description.isEmpty()) {
             properties.put(SkinProperty.ALL_FLAVOUR_TEXT, description);
         }
 
-        var authors = pack.getAuthors();
+        var authors = pack.authors();
         if (authors != null && !authors.isEmpty()) {
             var joiner = new StringJoiner(",");
             authors.forEach(joiner::add);
@@ -147,21 +147,21 @@ public class DocumentImporter {
     }
 
     private Skin apply(Skin skin) {
-        var settings = skin.getSettings().copy();
-        var properties = skin.getProperties().copy();
+        var settings = skin.settings().copy();
+        var properties = skin.properties().copy();
 
         if (!isKeepItemTransforms()) {
             settings.setItemTransforms(null);
         }
 
-        var resolvedParts = resolveMappedParts(skin.getParts());
-        var resolvedAnimations = resolveMappedAnimations(skin.getAnimations());
+        var resolvedParts = resolveMappedParts(skin.parts());
+        var resolvedAnimations = resolveMappedAnimations(skin.animations());
 
         var rootParts = new ArrayList<>(resolvedParts);
-        if (partMapper.getRoot() != null) {
+        if (partMapper.root() != null) {
             // merge into one part
-            var rootEntry = partMapper.getRoot();
-            var builder = new SkinPart.Builder(rootEntry.getType());
+            var rootEntry = partMapper.root();
+            var builder = new SkinPart.Builder(rootEntry.type());
             builder.children(resolvedParts);
             rootParts.clear();
             rootParts.add(builder.build());
@@ -187,17 +187,17 @@ public class DocumentImporter {
     public List<SkinPart> resolveMappedParts(List<SkinPart> parts) {
         var results = new ArrayList<SkinPart>();
         for (var part : parts) {
-            var node = partMapper.resolve(part.getName(), part.getType());
-            var builder = new SkinPart.Builder(node.getType());
+            var node = partMapper.resolve(part.name(), part.type());
+            var builder = new SkinPart.Builder(node.type());
             builder.copyFrom(part);
             // change part properties?
-            if (isAdaptMode && USE_ADAPT_MODE.contains(node.getType())) {
-                var newProperties = part.getProperties().copy();
+            if (isAdaptMode && USE_ADAPT_MODE.contains(node.type())) {
+                var newProperties = part.properties().copy();
                 newProperties.put(SkinProperty.USE_ADAPT_MODE, true);
                 builder.properties(newProperties);
             }
-            builder.name(node.getName());
-            builder.children(resolveMappedParts(part.getChildren()));
+            builder.name(node.name());
+            builder.children(resolveMappedParts(part.children()));
             results.add(builder.build());
         }
         return results;
@@ -207,13 +207,13 @@ public class DocumentImporter {
         var results = new ArrayList<SkinAnimation>();
         for (var animation : animations) {
             var keyframes = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
-            animation.getKeyframes().forEach((key, value) -> {
+            animation.keyframes().forEach((key, value) -> {
                 var node = partMapper.resolve(key, SkinPartTypes.ADVANCED);
-                keyframes.put(node.getName(), value);
+                keyframes.put(node.name(), value);
             });
-            var name = animation.getName();
-            var duration = animation.getDuration();
-            var loop = animation.getLoop();
+            var name = animation.name();
+            var duration = animation.duration();
+            var loop = animation.loop();
             results.add(new SkinAnimation(name, duration, loop, keyframes));
         }
         return results;
@@ -221,14 +221,14 @@ public class DocumentImporter {
 
     private void extractToRootPart(SkinPart part, Stack<SkinPart> parent, List<SkinPart> rootParts) {
         // search all child part.
-        var children = new ArrayList<>(part.getChildren());
+        var children = new ArrayList<>(part.children());
         for (var child : children) {
             parent.push(part);
             extractToRootPart(child, parent, rootParts);
             parent.pop();
         }
         // the part is rewrite?
-        var entry = partMapper.get(part.getName());
+        var entry = partMapper.get(part.name());
         if (entry != null && entry.isRootPart()) {
             // remove from the part tree.
             if (parent.isEmpty()) {
@@ -237,7 +237,7 @@ public class DocumentImporter {
                 var parentPart = parent.peek();
                 parentPart.removePart(part);
             }
-            var builder = new SkinPart.Builder(entry.getType());
+            var builder = new SkinPart.Builder(entry.type());
             builder.copyFrom(part);
             builder.transform(convertToLocal(part, entry, parent));
             rootParts.add(builder.build());
@@ -250,13 +250,13 @@ public class DocumentImporter {
         //translate = origin;
         //rotation = transform.getRotation();
         //pivot = transform.getPivot();
-        var translate = entry.getOffset(); // 0 + offset
+        var translate = entry.offset(); // 0 + offset
         var rotation = OpenVector3f.ZERO; // never use rotation on the built-in part type.
         return OpenTransform3f.create(translate, rotation, OpenVector3f.ONE);
     }
 
     private boolean isCulling(BlockBenchPack pack) {
-        if (pack.getFormat().equals("java_block")) {
+        if (pack.format().equals("java_block")) {
             return true;
         }
         return false;
@@ -266,7 +266,7 @@ public class DocumentImporter {
         // relocation the block model origin to the center(8, 8, 8).
         if (ITEM_TYPES.contains(targetType)) {
             // work in java_block.
-            if (pack.getFormat().equals("java_block")) {
+            if (pack.format().equals("java_block")) {
                 return new OpenVector3f(8, 8, 8);
             }
             // work in bedrock_block/bedrock_entity/bedrock_entity_old/geckolib_block/generic_block/modded_entity/optifine_entity.
@@ -284,7 +284,7 @@ public class DocumentImporter {
 
     private OpenVector3f getDisplayOffset(BlockBenchPack pack) {
         // the java_block display center is same the wen model center.
-        if (pack.getFormat().equals("java_block")) {
+        if (pack.format().equals("java_block")) {
             return OpenVector3f.ZERO;
         }
         // work in bedrock_block/bedrock_entity/bedrock_entity_old/geckolib_block/generic_block/modded_entity/optifine_entity.
@@ -295,7 +295,7 @@ public class DocumentImporter {
     private OpenVector3f getParentOrigin(Stack<SkinPart> parent) {
         var origin = OpenVector3f.ZERO;
         for (var part : parent) {
-            if (part.getTransform() instanceof OpenTransform3f transform) {
+            if (part.transform() instanceof OpenTransform3f transform) {
                 origin = origin.adding(transform.translate());
             }
         }

@@ -33,7 +33,7 @@ public enum OpenDirection implements IDirection {
             .sorted(Comparator.comparingInt(direction -> direction.data3d))
             .toArray(OpenDirection[]::new);
     private static final OpenDirection[] BY_2D_DATA = Arrays.stream(VALUES)
-            .filter(direction -> direction.getAxis().isHorizontal())
+            .filter(direction -> direction.axis().isHorizontal())
             .sorted(Comparator.comparingInt(direction -> direction.data2d))
             .toArray(OpenDirection[]::new);
 
@@ -69,6 +69,7 @@ public enum OpenDirection implements IDirection {
         return Stream.of(VALUES);
     }
 
+    @Override
     public int get3DDataValue() {
         return this.data3d;
     }
@@ -77,16 +78,16 @@ public enum OpenDirection implements IDirection {
         return this.data2d;
     }
 
-    public AxisDirection getAxisDirection() {
+    public AxisDirection axisDirection() {
         return this.axisDirection;
     }
 
 
-    public OpenDirection getOpposite() {
+    public OpenDirection opposite() {
         return from3DDataValue(this.oppositeIndex);
     }
 
-    public OpenDirection getClockWise() {
+    public OpenDirection clockWise() {
         return switch (this) {
             case NORTH -> EAST;
             case SOUTH -> WEST;
@@ -96,7 +97,7 @@ public enum OpenDirection implements IDirection {
         };
     }
 
-    public OpenDirection getCounterClockWise() {
+    public OpenDirection counterClockWise() {
         return switch (this) {
             case NORTH -> WEST;
             case SOUTH -> EAST;
@@ -106,23 +107,23 @@ public enum OpenDirection implements IDirection {
         };
     }
 
-    public int getStepX() {
+    public int stepX() {
         return this.normal.x();
     }
 
-    public int getStepY() {
+    public int stepY() {
         return this.normal.y();
     }
 
-    public int getStepZ() {
+    public int stepZ() {
         return this.normal.z();
     }
 
-    public String getName() {
+    public String serializedName() {
         return this.name;
     }
 
-    public Axis getAxis() {
+    public Axis axis() {
         return this.axis;
     }
 
@@ -141,7 +142,7 @@ public enum OpenDirection implements IDirection {
 
     public static OpenDirection get(AxisDirection axisDirection, Axis axis) {
         for (OpenDirection direction : VALUES) {
-            if (direction.getAxisDirection() == axisDirection && direction.getAxis() == axis) {
+            if (direction.axisDirection() == axisDirection && direction.axis() == axis) {
                 return direction;
             }
         }
@@ -195,10 +196,6 @@ public enum OpenDirection implements IDirection {
             this.name = string2;
         }
 
-        public String getName() {
-            return this.name;
-        }
-
         public boolean isVertical() {
             return this == Y;
         }
@@ -213,7 +210,7 @@ public enum OpenDirection implements IDirection {
 
 
         public boolean test(@Nullable OpenDirection direction) {
-            return direction != null && direction.getAxis() == this;
+            return direction != null && direction.axis() == this;
         }
 
         public Plane getPlane() {
@@ -240,12 +237,8 @@ public enum OpenDirection implements IDirection {
             this.name = string2;
         }
 
-        public int getStep() {
+        public int step() {
             return this.step;
-        }
-
-        public String getName() {
-            return this.name;
         }
 
         @Override
@@ -271,7 +264,7 @@ public enum OpenDirection implements IDirection {
         }
 
         public boolean test(@Nullable OpenDirection direction) {
-            return direction != null && direction.getAxis().getPlane() == this;
+            return direction != null && direction.axis().getPlane() == this;
         }
 
         public int length() {

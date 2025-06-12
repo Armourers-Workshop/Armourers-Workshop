@@ -13,23 +13,23 @@ public class LevelSelectorImpl<T extends Level> implements LevelSelector {
     }
 
     @Override
-    public int getMoonPhase() {
+    public int moonPhase() {
         return level.getMoonPhase();
     }
 
     @Override
-    public double getDays() {
+    public double days() {
         // ((float) (level.getDayTime() + 6000L) / 24000) % 1;
         return (level.getDayTime() + 6000L) / 24000d;
     }
 
     @Override
-    public double getTimestamp() {
+    public double timestamp() {
         return level.getDayTime();
     }
 
     @Override
-    public int getWeather() {
+    public int weather() {
         if (level.isThundering()) {
             return 2;
         }
@@ -40,7 +40,7 @@ public class LevelSelectorImpl<T extends Level> implements LevelSelector {
     }
 
     @Override
-    public String getDimensionId() {
+    public String dimensionId() {
         return level.dimension().location().toString();
     }
 }

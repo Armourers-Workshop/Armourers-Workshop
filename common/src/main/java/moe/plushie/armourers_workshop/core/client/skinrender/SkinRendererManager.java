@@ -114,13 +114,13 @@ public class SkinRendererManager {
         public static void profileDidChange(IEntityTypeProvider<?> entityType, EntityProfile entityProfile) {
             if (entityProfile != null) {
                 if (ENTITIES.containsKey(entityType)) {
-                    ModLog.debug("Update Entity Renderer '{}'", entityType.getRegistryName());
+                    ModLog.debug("Update Entity Renderer '{}'", entityType.registryName());
                 } else {
-                    ModLog.debug("Attach Entity Renderer '{}'", entityType.getRegistryName());
+                    ModLog.debug("Attach Entity Renderer '{}'", entityType.registryName());
                 }
                 ENTITIES.put(entityType, entityProfile);
             } else {
-                ModLog.debug("Detach Entity Renderer '{}'", entityType.getRegistryName());
+                ModLog.debug("Detach Entity Renderer '{}'", entityType.registryName());
                 ENTITIES.remove(entityType);
             }
             if (IS_READY) {
@@ -304,15 +304,15 @@ public class SkinRendererManager {
 
     private static class TransformerLoaderImpl implements DataPackBuilder {
 
-        private static final Map<String, ArmatureTransformerManager> MANAGERS = Collections.immutableMap(builder -> {
-            builder.put("armourers_workshop:armature", DEFAULT);
-            builder.put("epicfight:armature", EPIC_FIGHT);
+        private static final Map<String, ArmatureTransformerManager> MANAGERS = Collections.immutableMap(it -> {
+            it.put("armourers_workshop:armature", DEFAULT);
+            it.put("epicfight:armature", EPIC_FIGHT);
         });
 
         private final IResourceLocation registryName;
 
         public TransformerLoaderImpl(IResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.getPath(), "skin/transformers/");
+            var path = FileUtils.getRegistryName(location.path(), "skin/transformers/");
             this.registryName = location.withPath(path);
         }
 

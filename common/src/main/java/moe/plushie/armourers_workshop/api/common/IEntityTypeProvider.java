@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public interface IEntityTypeProvider<T extends Entity> extends Supplier<EntityType<T>> {
 
-    String getRegistryName();
+    String registryName();
 
     static <T extends Entity> IEntityTypeProvider<T> of(String registryName) {
         return new IEntityTypeProvider<T>() {
@@ -16,7 +16,7 @@ public interface IEntityTypeProvider<T extends Entity> extends Supplier<EntityTy
             EntityType<T> entityType;
 
             @Override
-            public String getRegistryName() {
+            public String registryName() {
                 return registryName;
             }
 
@@ -37,7 +37,7 @@ public interface IEntityTypeProvider<T extends Entity> extends Supplier<EntityTy
             public boolean equals(Object o) {
                 if (this == o) return true;
                 if (!(o instanceof IEntityTypeProvider<?> that)) return false;
-                return registryName.equals(that.getRegistryName());
+                return registryName.equals(that.registryName());
             }
 
             @Override

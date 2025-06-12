@@ -20,15 +20,15 @@ public abstract class SkinAnimationPoint {
             this.z = z;
         }
 
-        public OpenPrimitive getX() {
+        public OpenPrimitive x() {
             return x;
         }
 
-        public OpenPrimitive getY() {
+        public OpenPrimitive y() {
             return y;
         }
 
-        public OpenPrimitive getZ() {
+        public OpenPrimitive z() {
             return z;
         }
 
@@ -46,7 +46,7 @@ public abstract class SkinAnimationPoint {
             this.script = script;
         }
 
-        public String getScript() {
+        public String script() {
             return script;
         }
 
@@ -66,11 +66,11 @@ public abstract class SkinAnimationPoint {
             this.provider = provider;
         }
 
-        public String getEffect() {
+        public String effect() {
             return effect;
         }
 
-        public SkinSoundData getProvider() {
+        public SkinSoundData provider() {
             return provider;
         }
 
@@ -94,21 +94,21 @@ public abstract class SkinAnimationPoint {
             this.script = script;
         }
 
-        public String getEffect() {
+        public String effect() {
             return effect;
         }
 
         @Nullable
-        public String getLocator() {
+        public String locator() {
             return locator;
         }
 
         @Nullable
-        public String getScript() {
+        public String script() {
             return script;
         }
 
-        public SkinParticleData getProvider() {
+        public SkinParticleData provider() {
             return provider;
         }
 

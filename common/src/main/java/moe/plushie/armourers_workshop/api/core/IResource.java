@@ -5,9 +5,9 @@ import java.io.InputStream;
 
 public interface IResource {
 
-    String getName();
+    String name();
 
-    String getSource();
+    String source();
 
-    InputStream getInputStream() throws IOException;
+    InputStream inputStream() throws IOException;
 }

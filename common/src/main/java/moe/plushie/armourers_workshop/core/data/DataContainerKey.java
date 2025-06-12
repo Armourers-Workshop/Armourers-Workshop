@@ -51,12 +51,12 @@ public class DataContainerKey<T> implements IAssociatedContainerKey<T> {
     }
 
     @Override
-    public Class<T> getType() {
+    public Class<T> type() {
         return type;
     }
 
     @Override
-    public T getDefaultValue() {
+    public T defaultValue() {
         if (defaultValue != null) {
             return defaultValue.get();
         }

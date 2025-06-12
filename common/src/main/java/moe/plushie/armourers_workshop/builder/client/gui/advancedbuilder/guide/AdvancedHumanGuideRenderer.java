@@ -11,12 +11,12 @@ import net.fabricmc.api.Environment;
 public class AdvancedHumanGuideRenderer extends AdvancedEntityGuideRenderer {
 
     @Override
-    public BakedArmature getArmature() {
+    public BakedArmature armature() {
         return BakedArmature.defaultBy(Armatures.HUMANOID);
     }
 
     @Override
-    public SkinTextureData getTexture() {
+    public SkinTextureData texture() {
         return new SkinTextureData(ModTextures.MANNEQUIN_DEFAULT.toString(), 64, 64);
     }
 }

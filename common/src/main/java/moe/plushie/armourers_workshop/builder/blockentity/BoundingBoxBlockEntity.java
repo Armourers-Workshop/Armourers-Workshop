@@ -54,7 +54,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         serializer.write(CodingKeys.PART_TYPE, partType);
     }
 
-    public SkinPartType getPartType() {
+    public SkinPartType partType() {
         return partType;
     }
 
@@ -62,7 +62,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         this.partType = partType;
     }
 
-    public BlockPos getParent() {
+    public BlockPos parent() {
         return parent;
     }
 
@@ -71,7 +71,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         this.parent = parent;
     }
 
-    public OpenVector3i getGuide() {
+    public OpenVector3i guide() {
         return guide;
     }
 
@@ -80,15 +80,15 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     }
 
     public boolean isValid() {
-        var blockEntity = getParentBlockEntity();
-        if (blockEntity != null && blockEntity.getSkinType() != null) {
-            return blockEntity.getSkinType().getParts().contains(partType);
+        var blockEntity = parentBlockEntity();
+        if (blockEntity != null && blockEntity.skinType() != null) {
+            return blockEntity.skinType().parts().contains(partType);
         }
         return false;
     }
 
     public boolean hasColors() {
-        var blockEntity = getParentBlockEntity();
+        var blockEntity = parentBlockEntity();
         if (blockEntity == null) {
             return false;
         }
@@ -104,15 +104,15 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     @Override
     public boolean shouldChangeColor(OpenDirection direction) {
         // we can't change the side color of the face without finding the texture.
-        return getTexturePos(getParentBlockEntity(), direction) != null;
+        return getTexturePos(parentBlockEntity(), direction) != null;
     }
 
     @Override
     public SkinPaintColor getColor(OpenDirection direction) {
-        var blockEntity = getParentBlockEntity();
+        var blockEntity = parentBlockEntity();
         var texturePos = getTexturePos(blockEntity, direction);
         var color = getArmourerTextureColor(blockEntity, texturePos);
-        if (color != null && color.getPaintType() != SkinPaintTypes.NONE) {
+        if (color != null && color.paintType() != SkinPaintTypes.NONE) {
             return color;
         }
         // when work in the client side, we try to get the texture color from the loaded texture.
@@ -130,7 +130,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
 
     @Override
     public void setColors(Map<OpenDirection, SkinPaintColor> colors) {
-        var blockEntity = getParentBlockEntity();
+        var blockEntity = parentBlockEntity();
         colors.forEach((dir, color) -> setArmourerTextureColor(blockEntity, getTexturePos(blockEntity, dir), color));
     }
 
@@ -141,7 +141,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     }
 
     public void clearArmourerTextureColors() {
-        var blockEntity = getParentBlockEntity();
+        var blockEntity = parentBlockEntity();
         if (blockEntity == null || getLevel() == null) {
             return;
         }
@@ -170,7 +170,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     @Environment(EnvType.CLIENT)
     private SkinPaintColor getTextureColor(ArmourerBlockEntity blockEntity, OpenVector2i texturePos) {
         if (texturePos != null && blockEntity != null) {
-            var color = TextureUtils.getPlayerTextureModelColor(blockEntity.getTextureDescriptor(), texturePos);
+            var color = TextureUtils.getPlayerTextureModelColor(blockEntity.textureDescriptor(), texturePos);
             if (color != null) {
                 return color;
             }
@@ -189,7 +189,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         if (blockEntity == null) {
             return dir;
         }
-        return switch (blockEntity.getFacing()) {
+        return switch (blockEntity.facing()) {
             case SOUTH -> OpenRotation.CLOCKWISE_180.rotate(dir); // rotate 180° get facing north direction.
             case WEST -> OpenRotation.CLOCKWISE_90.rotate(dir); // rotate 90° get facing north direction.
             case EAST -> OpenRotation.COUNTERCLOCKWISE_90.rotate(dir); // rotate -90° get facing north direction.
@@ -197,7 +197,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         };
     }
 
-    private ArmourerBlockEntity getParentBlockEntity() {
+    private ArmourerBlockEntity parentBlockEntity() {
         // quickly query the parent block.
         if (cachedParentBlockEntity != null) {
             if (cachedParentBlockEntity.isRemoved()) {

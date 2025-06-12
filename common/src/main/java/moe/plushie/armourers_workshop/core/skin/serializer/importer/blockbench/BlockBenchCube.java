@@ -41,23 +41,23 @@ public class BlockBenchCube extends BlockBenchElement {
         this.faces = faces;
     }
 
-    public OpenVector3f getFrom() {
+    public OpenVector3f from() {
         return from;
     }
 
-    public OpenVector3f getTo() {
+    public OpenVector3f to() {
         return to;
     }
 
-    public OpenVector3f getOrigin() {
+    public OpenVector3f origin() {
         return origin;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
-    public float getInflate() {
+    public float inflate() {
         return inflate;
     }
 
@@ -69,15 +69,15 @@ public class BlockBenchCube extends BlockBenchElement {
         return mirrorUV;
     }
 
-    public String getRenderOrder() {
+    public String renderOrder() {
         return renderOrder;
     }
 
-    public OpenVector2f getUVOffset() {
+    public OpenVector2f uvOffset() {
         return uvOffset;
     }
 
-    public Map<OpenDirection, BlockBenchCubeFace> getFaces() {
+    public Map<OpenDirection, BlockBenchCubeFace> faces() {
         return faces;
     }
 

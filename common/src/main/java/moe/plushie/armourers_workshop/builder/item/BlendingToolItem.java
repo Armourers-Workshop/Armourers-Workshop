@@ -74,7 +74,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
         var colors = new ArrayList<Integer>();
         var collector = new CubeChangesCollector(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            var cube = collector.getCube(targetPos);
+            var cube = collector.cubeAtPos(targetPos);
             if (cube.shouldChangeColor(dir)) {
                 var paintColor = cube.getColor(dir);
                 if (paintColor != null) {

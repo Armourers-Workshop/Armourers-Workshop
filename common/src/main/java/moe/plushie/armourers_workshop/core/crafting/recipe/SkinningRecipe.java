@@ -85,7 +85,7 @@ public abstract class SkinningRecipe {
     }
 
     protected boolean isValidSkin(ItemStack itemStack) {
-        return ModItems.SKIN.get() == itemStack.getItem() && SkinDescriptor.of(itemStack).getType() == skinType;
+        return ModItems.SKIN.get() == itemStack.getItem() && SkinDescriptor.of(itemStack).type() == skinType;
     }
 
     protected boolean isValidTarget(ItemStack itemStack) {

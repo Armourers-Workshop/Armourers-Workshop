@@ -28,7 +28,7 @@ public class BakedEntityTexture {
     private final HashMap<SkinPartType, HashMap<Integer, SkinPaintColor>> allParts = new HashMap<>();
     private final HashMap<SkinPartType, OpenRectangle3i> allBounds = new HashMap<>();
 
-    private String model;
+    private String modelType;
     private OpenResourceLocation resourceLocation;
 
     private boolean isSlimModel = false;
@@ -43,7 +43,7 @@ public class BakedEntityTexture {
         BufferedImage bufferedImage;
         try {
             var resourceManager = EnvironmentManager.getResourceManager();
-            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).getInputStream());
+            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).inputStream());
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
                 this.loadColors(bufferedImage.getWidth(), bufferedImage.getHeight(), slim, bufferedImage::getRGB);
@@ -101,7 +101,7 @@ public class BakedEntityTexture {
         return (v & 0xffff) << 16 | (u & 0xffff);
     }
 
-    public OpenResourceLocation getResourceLocation() {
+    public OpenResourceLocation location() {
         return resourceLocation;
     }
 
@@ -109,13 +109,13 @@ public class BakedEntityTexture {
         this.resourceLocation = location;
     }
 
-    public String getModel() {
-        return model;
+    public String modelType() {
+        return modelType;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-        this.isSlimModel = Objects.equals(model, "slim");
+    public void setModelType(String modelType) {
+        this.modelType = modelType;
+        this.isSlimModel = Objects.equals(modelType, "slim");
     }
 
     public boolean isSlimModel() {

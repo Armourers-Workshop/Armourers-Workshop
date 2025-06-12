@@ -8,7 +8,7 @@ public class OpenExpression {
         this.expression = expression;
     }
 
-    public String getExpression() {
+    public String expression() {
         return this.expression;
     }
 

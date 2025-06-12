@@ -52,15 +52,15 @@ import java.util.Objects;
 
 public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintToolSelector.Provider {
 
-    private static final Map<SkinPartType, SkinProperty<Boolean>> PART_TO_MODEL = Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HEAD, SkinProperty.OVERRIDE_MODEL_HEAD);
-        builder.put(SkinPartTypes.BIPPED_CHEST, SkinProperty.OVERRIDE_MODEL_CHEST);
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, SkinProperty.OVERRIDE_MODEL_RIGHT_ARM);
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, SkinProperty.OVERRIDE_MODEL_LEFT_LEG);
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG);
-        builder.put(SkinPartTypes.BIPPED_LEFT_FOOT, SkinProperty.OVERRIDE_MODEL_LEFT_LEG);
-        builder.put(SkinPartTypes.BIPPED_RIGHT_FOOT, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG);
+    private static final Map<SkinPartType, SkinProperty<Boolean>> PART_TO_MODEL = Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HEAD, SkinProperty.OVERRIDE_MODEL_HEAD);
+        it.put(SkinPartTypes.BIPPED_CHEST, SkinProperty.OVERRIDE_MODEL_CHEST);
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, SkinProperty.OVERRIDE_MODEL_RIGHT_ARM);
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, SkinProperty.OVERRIDE_MODEL_LEFT_LEG);
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG);
+        it.put(SkinPartTypes.BIPPED_LEFT_FOOT, SkinProperty.OVERRIDE_MODEL_LEFT_LEG);
+        it.put(SkinPartTypes.BIPPED_RIGHT_FOOT, SkinProperty.OVERRIDE_MODEL_RIGHT_LEG);
     });
 
     protected int flags = 0;
@@ -106,7 +106,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
-        remakeBoundingBoxes(null, getBoundingBoxes(), true);
+        remakeBoundingBoxes(null, boundingBoxes(), true);
         if (entity instanceof Player player) {
             setTextureDescriptor(EntityTextureDescriptor.fromProfile(player.getGameProfile()));
         }
@@ -117,10 +117,10 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (!getBlockState().is(ModBlocks.ARMOURER.get())) {
             return;
         }
-        remakeBoundingBoxes(getBoundingBoxes(), null, true);
+        remakeBoundingBoxes(boundingBoxes(), null, true);
     }
 
-    public SkinType getSkinType() {
+    public SkinType skinType() {
         return skinType;
     }
 
@@ -128,22 +128,22 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (this.skinType == newValue) {
             return;
         }
-        var boxes = getBoundingBoxes();
+        var boxes = boundingBoxes();
         this.skinType = newValue;
         this.setPaintData(null);
         this.remakeSkinProperties();
-        this.remakeBoundingBoxes(boxes, getBoundingBoxes(), true);
+        this.remakeBoundingBoxes(boxes, boundingBoxes(), true);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public SkinProperties getSkinProperties() {
+    public SkinProperties skinProperties() {
         return skinProperties;
     }
 
     public void setSkinProperties(SkinProperties newValue) {
-        var boxes = getBoundingBoxes();
+        var boxes = boundingBoxes();
         this.skinProperties = newValue;
-        this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
+        this.remakeBoundingBoxes(boxes, boundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
@@ -152,13 +152,13 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     public void setFlags(int flags) {
-        var boxes = getBoundingBoxes();
+        var boxes = boundingBoxes();
         this.flags = flags;
-        this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
+        this.remakeBoundingBoxes(boxes, boundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public EntityTextureDescriptor getTextureDescriptor() {
+    public EntityTextureDescriptor textureDescriptor() {
         return textureDescriptor;
     }
 
@@ -167,19 +167,19 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public EntityTextureDescriptor.Model getTextureModel() {
+    public EntityTextureDescriptor.Model textureModel() {
         return textureModel;
     }
 
     public void setTextureModel(EntityTextureDescriptor.Model newValue) {
-        var boxes = getBoundingBoxes();
+        var boxes = boundingBoxes();
         this.textureModel = newValue;
         this.remakePaintData(newValue);
-        this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
+        this.remakeBoundingBoxes(boxes, boundingBoxes(), false);
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public SkinPaintData getPaintData() {
+    public SkinPaintData paintData() {
         return paintData;
     }
 
@@ -207,7 +207,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (this.paintData == null) {
             this.paintData = createPaintData(textureModel);
         }
-        this.paintData.setColor(pos, paintColor.getRawValue());
+        this.paintData.setColor(pos, paintColor.rawValue());
         this.setChanged();
     }
 
@@ -270,8 +270,8 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
             return null;
         }
         var rects = new ArrayList<OpenRectangle3i>();
-        var transform = getTransform();
-        for (var partType : getSkinType().getParts()) {
+        var transform = transform();
+        for (var partType : skinType().parts()) {
             var box = WorldUtils.getResolvedBuildingSpace(partType);
             var p1 = transform.mul(box.minX(), box.minY(), box.minZ());
             var p2 = transform.mul(box.maxX(), box.maxY(), box.maxZ());
@@ -290,7 +290,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (paintData == null) {
             return;
         }
-        var boundingModel = getBoundingModel();
+        var boundingModel = boundingModel();
         var srcBox = boundingModel.get(srcPart);
         var destBox = boundingModel.get(destPart);
         if (srcBox != null && destBox != null) {
@@ -309,7 +309,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
             return;
         }
         // we just need to clear the paint data for the current part type.
-        var boundingModel = getBoundingModel();
+        var boundingModel = boundingModel();
         var srcBox = boundingModel.get(partType);
         if (srcBox != null) {
             WorldUtils.clearPaintData(paintData, srcBox);
@@ -319,7 +319,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
 
     public void clearCubes(CubeChangesCollector collector, SkinPartType partType) {
         // remove all part
-        WorldUtils.clearCubes(collector, getTransform(), getSkinType(), getSkinProperties(), partType);
+        WorldUtils.clearCubes(collector, transform(), skinType(), skinProperties(), partType);
         // when just clear a part, we don't reset skin properties.
         if (partType != SkinPartTypes.UNKNOWN) {
             return;
@@ -332,15 +332,15 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     public void replaceCubes(CubeChangesCollector collector, SkinPartType partType, CubeReplacingEvent event) throws Exception {
-        WorldUtils.replaceCubes(collector, getTransform(), getSkinType(), getSkinProperties(), event);
+        WorldUtils.replaceCubes(collector, transform(), skinType(), skinProperties(), event);
     }
 
     public void copyCubes(CubeChangesCollector collector, SkinPartType srcPart, SkinPartType destPart, boolean mirror) throws Exception {
-        WorldUtils.copyCubes(collector, getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
+        WorldUtils.copyCubes(collector, transform(), skinType(), skinProperties(), srcPart, destPart, mirror);
     }
 
     public void clearMarkers(CubeChangesCollector collector, SkinPartType partType) {
-        WorldUtils.clearMarkers(collector, getTransform(), getSkinType(), getSkinProperties(), partType);
+        WorldUtils.clearMarkers(collector, transform(), skinType(), skinProperties(), partType);
         setChanged();
     }
 
@@ -348,12 +348,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     public boolean isModelOverridden(SkinPartType partType) {
         var property = PART_TO_MODEL.get(partType);
         if (property != null) {
-            return getSkinProperties().get(property);
+            return skinProperties().get(property);
         }
         return false;
     }
 
-    public int getVersion() {
+    public int version() {
         return version;
     }
 
@@ -427,12 +427,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         if (boxes == null || boxes.isEmpty()) {
             return;
         }
-        var transform = getTransform();
+        var transform = transform();
         boxes.forEach(box -> box.forEach((ix, iy, iz) -> {
             var target = transform.mul(ix + box.x(), iy + box.y(), iz + box.z());
             ix = box.width() - ix - 1;
             iy = box.height() - iy - 1;
-            var partType = box.getPartType();
+            var partType = box.partType();
             var task = builder.build(partType, target, new OpenVector3i(ix, iy, iz));
             if (task != null) {
                 WorldUpdater.getInstance().submit(task);
@@ -441,7 +441,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     public OpenVector2i getTexturePos(SkinPartType partType, OpenVector3i offset, OpenDirection dir) {
-        var boundingModel = getBoundingModel();
+        var boundingModel = boundingModel();
         var box = boundingModel.get(partType);
         if (box == null) {
             return null;
@@ -451,13 +451,13 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
 
-    private Collection<BoundingBox> getBoundingBoxes() {
+    private Collection<BoundingBox> boundingBoxes() {
         var boxes = new ArrayList<BoundingBox>();
-        for (var partType : skinType.getParts()) {
+        for (var partType : skinType.parts()) {
             if (shouldAddBoundingBoxes(partType)) {
-                var offset = partType.getOffset();
-                var bounds = partType.getBuildingSpace();
-                var rect = partType.getGuideSpace(textureModel);
+                var offset = partType.offset();
+                var bounds = partType.buildingSpace();
+                var rect = partType.guideSpace(textureModel);
                 rect = rect.offset(-offset.x(), -offset.y() - bounds.minY(), offset.z());
                 boxes.add(new BoundingBox(partType, rect));
             }
@@ -465,12 +465,12 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return boxes;
     }
 
-    private Collection<BoundingBox> getFullBoundingBoxes() {
+    private Collection<BoundingBox> fullBoundingBoxes() {
         var boxes = new ArrayList<BoundingBox>();
-        for (var partType : skinType.getParts()) {
+        for (var partType : skinType.parts()) {
             if (shouldAddBoundingBoxes(partType)) {
-                var origin = partType.getOffset();
-                var buildSpace = partType.getBuildingSpace();
+                var origin = partType.offset();
+                var buildSpace = partType.buildingSpace();
                 var dx = -origin.x() + buildSpace.x();
                 var dy = -origin.y();
                 var dz = origin.z() + buildSpace.z();
@@ -481,7 +481,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return boxes;
     }
 
-    private EntityTextureModel getBoundingModel() {
+    private EntityTextureModel boundingModel() {
         if (textureModel == EntityTextureDescriptor.Model.ALEX) {
             return BoundingBox.SLIM_MODEL;
         }
@@ -493,13 +493,13 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         return SkinPaintData.v2(slim);
     }
 
-    public OpenDirection getFacing() {
+    public OpenDirection facing() {
         return getBlockState().getOptionalValue(ArmourerBlock.FACING).map(AbstractDirection::wrap).orElse(OpenDirection.NORTH);
     }
 
-    public CubeTransform getTransform() {
+    public CubeTransform transform() {
         var pos = getBlockPos().offset(0, 1, 0);
-        return new CubeTransform(getLevel(), pos, getFacing());
+        return new CubeTransform(getLevel(), pos, facing());
     }
 
     private static class CodingKeys {

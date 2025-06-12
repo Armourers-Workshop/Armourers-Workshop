@@ -45,10 +45,10 @@ public class ChunkFileData implements ChunkVariable, ChunkCondition {
     public void writeToStream(ChunkOutputStream stream) throws IOException {
         stream.writeVarInt(contents.size());
         for (var content : contents) {
-            stream.writeVarInt(content.getType());
-            stream.writeOptionalString(content.getName());
-            stream.writeSkinProperties(content.getProperties());
-            var buf = content.getBytes().slice();
+            stream.writeVarInt(content.type());
+            stream.writeOptionalString(content.name());
+            stream.writeSkinProperties(content.properties());
+            var buf = content.bytes().slice();
             stream.writeVarInt(buf.readableBytes());
             stream.writeBytes(buf);
         }
@@ -76,7 +76,7 @@ public class ChunkFileData implements ChunkVariable, ChunkCondition {
     }
 
     @Override
-    public ChunkConditionResult getResult() {
+    public ChunkConditionResult result() {
         if (!freeze()) {
             return ChunkConditionResult.PENDING;
         }

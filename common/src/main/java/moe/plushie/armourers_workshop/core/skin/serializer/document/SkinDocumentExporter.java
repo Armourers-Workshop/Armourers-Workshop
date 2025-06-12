@@ -38,11 +38,11 @@ public class SkinDocumentExporter {
     }
 
     public Skin execute(Player player, GameProfile profile) throws TranslatableException {
-        var skinType = document.getType().getSkinType();
+        var skinType = document.type().skinType();
         var settings = new SkinSettings();
-        var properties = document.getProperties().copy();
-        var parts = convertToParts(document.getRoot());
-        var animations = convertToAnimations(document.getAnimations());
+        var properties = document.properties().copy();
+        var parts = convertToParts(document.root());
+        var animations = convertToAnimations(document.animations());
 
         if (parts.isEmpty()) {
             throw SkinSaveException.Type.NO_DATA.build("noting");
@@ -60,7 +60,7 @@ public class SkinDocumentExporter {
 //        }
 
         if (skinType == SkinTypes.BLOCK) {
-            var boxes = SkinDocumentCollider.generateCollisionBox(document.getRoot());
+            var boxes = SkinDocumentCollider.generateCollisionBox(document.root());
             settings.setCollisionBox(Collections.compactMap(boxes.values(), OpenRectangle3f::new));
 
             // check if the skin is not a seat and a bed.
@@ -113,7 +113,7 @@ public class SkinDocumentExporter {
         this.itemTransforms = itemTransforms;
     }
 
-    public OpenItemTransforms getItemTransforms() {
+    public OpenItemTransforms itemTransforms() {
         return itemTransforms;
     }
 
@@ -126,32 +126,32 @@ public class SkinDocumentExporter {
             }
             var skin = loadSkin(node);
             var using = loadSkinParts(skin, node);
-            var transform = node.getTransform();
+            var transform = node.transform();
             var parts = convertToParts(node);
             if (using == null && parts.isEmpty()) {
                 // ignore empty node.
                 continue;
             }
-            if (using != null && node.getType() == using.get(0).getType() && parts.isEmpty() && transform.isIdentity()) {
+            if (using != null && node.type() == using.get(0).type() && parts.isEmpty() && transform.isIdentity()) {
                 // using original skin data directly.
                 var part = using.get(0);
-                var builder = new SkinPart.Builder(node.getType());
+                var builder = new SkinPart.Builder(node.type());
                 if (!node.isLocked()) {
-                    builder.name(node.getName());
+                    builder.name(node.name());
                 }
-                builder.transform(part.getTransform());
-                builder.geometries(part.getGeometries());
+                builder.transform(part.transform());
+                builder.geometries(part.geometries());
                 builder.markers(loadSkinMarkers(node));
-                builder.properties(part.getProperties());
+                builder.properties(part.properties());
                 var newPart = builder.build();
-                part.getChildren().forEach(newPart::addPart);
+                part.children().forEach(newPart::addPart);
                 allParts.add(newPart);
                 continue;
             }
             // create a new part.
-            var builder = new SkinPart.Builder(node.getType());
+            var builder = new SkinPart.Builder(node.type());
             if (!node.isLocked()) {
-                builder.name(node.getName());
+                builder.name(node.name());
             }
             builder.transform(transform);
 
@@ -186,7 +186,7 @@ public class SkinDocumentExporter {
     @Nullable
     private List<SkinPart> loadSkinParts(Skin skin, SkinDocumentNode node) throws TranslatableException {
         if (skin != null) {
-            var parts = skin.getParts();
+            var parts = skin.parts();
             if (!parts.isEmpty()) {
                 return parts;
             }
@@ -196,14 +196,14 @@ public class SkinDocumentExporter {
 
     @Nullable
     private SkinAnimation loadSkinAnimation(SkinDocumentAnimation ref) throws TranslatableException {
-        var name = ref.getName();
-        var descriptor = ref.getDescriptor();
+        var name = ref.name();
+        var descriptor = ref.descriptor();
         if (name.isEmpty() || descriptor.isEmpty()) {
             return null;
         }
         var skin = loadSkin(name, descriptor);
-        for (var animation : skin.getAnimations()) {
-            if (animation.getName().equals(ref.getName())) {
+        for (var animation : skin.animations()) {
+            if (animation.name().equals(ref.name())) {
                 return animation;
             }
         }
@@ -212,15 +212,15 @@ public class SkinDocumentExporter {
 
     @Nullable
     private Skin loadSkin(SkinDocumentNode node) throws TranslatableException {
-        var descriptor = node.getSkin();
+        var descriptor = node.skin();
         if (!descriptor.isEmpty()) {
-            return loadSkin(node.getName(), descriptor);
+            return loadSkin(node.name(), descriptor);
         }
         return null;
     }
 
     private Skin loadSkin(String source, SkinDescriptor descriptor) throws TranslatableException {
-        var identifier = descriptor.getIdentifier();
+        var identifier = descriptor.identifier();
         var skin = skins.get(identifier);
         if (skin != null) {
             return skin;
@@ -237,9 +237,9 @@ public class SkinDocumentExporter {
         var markers = new ArrayList<SkinMarker>();
         for (var child : node.children()) {
             if (child.isLocator()) {
-                int x = -OpenMath.floori(child.getLocation().x());
-                int y = -OpenMath.floori(child.getLocation().y());
-                int z = OpenMath.floori(child.getLocation().z());
+                int x = -OpenMath.floori(child.location().x());
+                int y = -OpenMath.floori(child.location().y());
+                int z = OpenMath.floori(child.location().z());
                 var marker = new SkinMarker((byte) x, (byte) y, (byte) z, (byte) 0);
                 markers.add(marker);
             }

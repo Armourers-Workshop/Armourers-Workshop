@@ -40,8 +40,8 @@ public class ItemMatcher {
             return false;
         }
         // we only check the path part, to avoid keywords exists in the mod id.
-        if (matchPattern != null && matchPattern.matcher(registryName.getPath()).find()) {
-            if (nonMatchPattern != null && nonMatchPattern.matcher(registryName.getPath()).find()) {
+        if (matchPattern != null && matchPattern.matcher(registryName.path()).find()) {
+            if (nonMatchPattern != null && nonMatchPattern.matcher(registryName.path()).find()) {
                 return false;
             }
             // check the item the requirements.

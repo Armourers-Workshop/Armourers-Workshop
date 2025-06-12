@@ -20,7 +20,7 @@ public class EntityAnimationState extends EntityActionSet {
     @Nullable
     public static EntityAnimationState of(@Nullable Entity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).getAnimationState().orElse(null);
+            return EntityDataStorage.of(entity).animationState().orElse(null);
         }
         return null;
     }

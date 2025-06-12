@@ -7,11 +7,11 @@ import net.minecraft.world.entity.player.Player;
 
 public interface IPermissionNode {
 
-    Component getName();
+    Component name();
 
-    Component getDescription();
+    Component description();
 
-    IResourceLocation getRegistryName();
+    IResourceLocation registryName();
 
     boolean resolve(GameProfile profile, IPermissionContext context);
 

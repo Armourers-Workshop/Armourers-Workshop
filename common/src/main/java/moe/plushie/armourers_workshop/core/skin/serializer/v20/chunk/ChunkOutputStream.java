@@ -7,20 +7,20 @@ import java.io.IOException;
 public interface ChunkOutputStream extends IOutputStream {
 
     default void writeFile(ChunkFile file) throws IOException {
-        getFileProvider().writeItem(file, this);
+        fileProvider().writeItem(file, this);
     }
 
-    ChunkContext getContext();
+    ChunkContext context();
 
-    default int getFileVersion() {
-        return getContext().fileVersion();
+    default int fileVersion() {
+        return context().fileVersion();
     }
 
-    default ChunkFileData getFileProvider() {
-        return getContext().fileProvider();
+    default ChunkFileData fileProvider() {
+        return context().fileProvider();
     }
 
-    default ChunkPaletteData getPaletteProvider() {
-        return getContext().paletteProvider();
+    default ChunkPaletteData paletteProvider() {
+        return context().paletteProvider();
     }
 }

@@ -57,7 +57,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         if (!mode.permission.accept(player)) {
             return;
         }
-        var library = SkinLibraryManager.getServer().getLibrary();
+        var library = SkinLibraryManager.getServer().library();
         if (mode == Mode.RELOAD) {
             library.reload();
             return;
@@ -83,7 +83,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     }
 
     private Optional<SkinLibraryFile> getFile(String path) {
-        return Optional.of(SkinLibraryManager.getServer().getLibrary().get(path));
+        return Optional.of(SkinLibraryManager.getServer().library().get(path));
     }
 
     private boolean isAuthorized(Player player) {

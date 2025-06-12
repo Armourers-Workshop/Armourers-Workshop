@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class CompilerTest {
 
     private ClientExecutionContextImpl context;
-    private MolangVirtualMachine virtualMachine = new MolangVirtualMachine(Collections.immutableMap(builder -> {
-        builder.put("test", new TestBinding());
+    private MolangVirtualMachine virtualMachine = new MolangVirtualMachine(Collections.immutableMap(it -> {
+        it.put("test", new TestBinding());
     }));
 
     public static void main() {

@@ -6,8 +6,8 @@ import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.Eff
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.ItemSelector;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.LivingEntitySelector;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -20,15 +20,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySelectorImpl<T> implements LivingEntitySelector {
 
-    private static final Map<String, Optional<EquipmentSlot>> NAMED_SLOTS = new ConcurrentHashMap<>();
+    private static final Map<String, Optional<OpenEquipmentSlot>> NAMED_SLOTS = new ConcurrentHashMap<>();
 
-    private static final Map<String, EquipmentSlot> FIXED_SLOTS = Collections.immutableMap(builder -> {
-        builder.put("chest", EquipmentSlot.CHEST);
-        builder.put("feet", EquipmentSlot.FEET);
-        builder.put("head", EquipmentSlot.HEAD);
-        builder.put("legs", EquipmentSlot.LEGS);
-        builder.put("mainhand", EquipmentSlot.MAINHAND);
-        builder.put("offhand", EquipmentSlot.OFFHAND);
+    private static final Map<String, OpenEquipmentSlot> FIXED_SLOTS = Collections.immutableMap(it -> {
+        it.put("chest", OpenEquipmentSlot.CHEST);
+        it.put("feet", OpenEquipmentSlot.FEET);
+        it.put("head", OpenEquipmentSlot.HEAD);
+        it.put("legs", OpenEquipmentSlot.LEGS);
+        it.put("mainhand", OpenEquipmentSlot.MAINHAND);
+        it.put("offhand", OpenEquipmentSlot.OFFHAND);
+        it.put("body", OpenEquipmentSlot.BODY);
     });
 
     private final ItemSelectorImpl itemSelector = new ItemSelectorImpl();
@@ -41,32 +42,32 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
     }
 
     @Override
-    public double getBodyYaw() {
-        return MathHelper.lerp(getPartialTick(), entity.xRotO, entity.getXRot());
+    public double bodyYaw() {
+        return MathHelper.lerp(partialTick(), entity.xRotO, entity.getXRot());
     }
 
     @Override
-    public double getBodyPitch() {
-        return MathHelper.wrapDegrees(MathHelper.lerp(getPartialTick(), entity.yRotO, entity.getYRot()));
+    public double bodyPitch() {
+        return MathHelper.wrapDegrees(MathHelper.lerp(partialTick(), entity.yRotO, entity.getYRot()));
     }
 
     @Override
-    public double getHealth() {
+    public double health() {
         return entity.getHealth();
     }
 
     @Override
-    public double getMaxHealth() {
+    public double maxHealth() {
         return entity.getMaxHealth();
     }
 
     @Override
-    public double getArmorValue() {
+    public double armorValue() {
         return entity.getArmorValue();
     }
 
     @Override
-    public double getHurtTime() {
+    public double hurtTime() {
         return entity.hurtTime;
     }
 
@@ -101,12 +102,12 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
     }
 
     @Override
-    public double getUsingItemDuration() {
+    public double usingItemDuration() {
         return entity.getTicksUsingItem() / 20.0;
     }
 
     @Override
-    public double getUsingItemMaxDuration() {
+    public double usingItemMaxDuration() {
         var item = entity.getUseItem();
         if (!item.isEmpty()) {
             return item.getUseDuration(entity) / 20.0;
@@ -115,28 +116,28 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
     }
 
     @Override
-    public double getUsingItemRemainingDuration() {
+    public double usingItemRemainingDuration() {
         return entity.getUseItemRemainingTicks() / 20.0;
     }
 
     @Override
-    public int getArrowCount() {
+    public int arrowCount() {
         return entity.getArrowCount();
     }
 
     @Override
-    public int getStingerCount() {
+    public int stingerCount() {
         return entity.getStingerCount();
     }
 
     @Override
-    public double getAttributeValue(String name) {
+    public double attributeValueByName(String name) {
         return AbstractRegistryManager.getAttribute(entity, name);
     }
 
     @Nullable
     @Override
-    public EffectSelector getEffect(String name) {
+    public EffectSelector effectByName(String name) {
         var effect = AbstractRegistryManager.getEffect(entity, name);
         if (effect != null) {
             return effectSelector.apply(effect);
@@ -146,7 +147,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
     @Nullable
     @Override
-    public ItemSelector getEquippedItem(String name) {
+    public ItemSelector equippedItemBySlot(String name) {
         var slot = NAMED_SLOTS.computeIfAbsent(name, LivingEntitySelectorImpl::findSlot);
         var itemStack = slot.map(it -> entity.getItemBySlot(it)).orElse(ItemStack.EMPTY);
         if (!itemStack.isEmpty()) {
@@ -157,10 +158,10 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
 
     @Override
-    public int getEquipmentCount() {
+    public int equipmentCount() {
         int count = 0;
-        for (var slot : EquipmentSlot.values()) {
-            if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) {
+        for (var slot : OpenEquipmentSlot.values()) {
+            if (slot == OpenEquipmentSlot.MAINHAND || slot == OpenEquipmentSlot.OFFHAND) {
                 continue;
             }
             var stack = entity.getItemBySlot(slot);
@@ -172,7 +173,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
     }
 
     @Override
-    public int getLastClimbableFacing() {
+    public int lastClimbableFacing() {
         var level = entity.getLevel();
         if (level == null) {
             return 0;
@@ -189,7 +190,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
 
     // https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/equipmentslot?view=minecraft-bedrock-stable
-    private static Optional<EquipmentSlot> findSlot(String name) {
+    private static Optional<OpenEquipmentSlot> findSlot(String name) {
         // [slot.]Head -> head
         return Optional.ofNullable(FIXED_SLOTS.get(name.toLowerCase()));
     }

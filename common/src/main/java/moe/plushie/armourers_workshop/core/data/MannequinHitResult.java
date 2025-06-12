@@ -56,11 +56,11 @@ public class MannequinHitResult extends BlockHitResult {
         return new MannequinHitResult(pos, target, scale, rotation);
     }
 
-    public float getScale() {
+    public float scale() {
         return scale;
     }
 
-    public float getRotation() {
+    public float rotation() {
         return rotation;
     }
 }

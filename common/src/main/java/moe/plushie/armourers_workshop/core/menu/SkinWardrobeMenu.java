@@ -72,7 +72,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     protected void addMannequinSlots(Group group, int column, int row) {
-        if (wardrobe.getEntity() instanceof MannequinEntity entity) {
+        if (wardrobe.entity() instanceof MannequinEntity entity) {
             var inventory = entity.getInventory();
             var size = inventory.getContainerSize();
             for (var i = 0; i < inventory.getContainerSize(); ++i) {
@@ -85,9 +85,9 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     protected void addSkinSlots(SkinSlotType slotType, Group group, int column, int row) {
-        var index = slotType.getIndex();
+        var index = slotType.index();
         var size = wardrobe.getUnlockedSize(slotType);
-        var inventory = wardrobe.getInventory();
+        var inventory = wardrobe.inventory();
         for (var i = 0; i < size; ++i) {
             var x = slotsX + (column + i) * 19;
             var y = slotsY + row * 19;
@@ -101,7 +101,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
             @Override
             public boolean isActive() {
-                return getGroup() == group;
+                return group() == group;
             }
 
             @Override
@@ -117,7 +117,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         return slot;
     }
 
-    public List<Slot> getCustomSlots() {
+    public List<Slot> customSlots() {
         return customSlots;
     }
 
@@ -131,7 +131,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        var entity = getEntity();
+        var entity = entity();
         if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
             return false;
         }
@@ -161,7 +161,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
-        if (wardrobe.getEntity() instanceof MannequinEntity) {
+        if (wardrobe.entity() instanceof MannequinEntity) {
             var startIndex = getFreeSlot(SkinSlotType.ANY);
             if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
                 return ItemStack.EMPTY;
@@ -211,7 +211,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     private int getFreeSlot(SkinSlotType slotType) {
         for (var slot : slots) {
             if (slot instanceof SkinSlot slot1 && !slot.hasItem()) {
-                if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
+                if (slot1.slotTypes().contains(slotType) || slot1.slotTypes().isEmpty()) {
                     return slot1.index;
                 }
             }
@@ -219,7 +219,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         return 0;
     }
 
-    public Group getGroup() {
+    public Group group() {
         return this.group;
     }
 
@@ -227,13 +227,13 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         this.group = group;
     }
 
-    public SkinWardrobe getWardrobe() {
+    public SkinWardrobe wardrobe() {
         return wardrobe;
     }
 
     @Nullable
-    public Entity getEntity() {
-        return wardrobe.getEntity();
+    public Entity entity() {
+        return wardrobe.entity();
     }
 
     public enum Group {
@@ -251,7 +251,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
             return exchanges;
         }
 
-        public int getExtendedHeight() {
+        public int extendedHeight() {
             return extendedHeight;
         }
     }

@@ -24,10 +24,10 @@ public class HasSkinArgumentType implements ArgumentType<EntitySelectorPredicate
 
     private static final DynamicCommandExceptionType ERROR_MISSING_KEY = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.unknownHasSkinKey", ob));
 
-    private static final Map<String, LazyValue<ArgumentType<?>>> PROPERTIES = Collections.immutableMap(builder -> {
-        builder.put("id", LazyValue.of(() -> StringArgumentType.string()));
-        builder.put("slot", LazyValue.of(() -> IntegerArgumentType.integer(1)));
-        builder.put("type", LazyValue.of(() -> new ListArgumentType(Collections.compactMap(SkinSlotType.values(), SkinSlotType::getName))));
+    private static final Map<String, LazyValue<ArgumentType<?>>> PROPERTIES = Collections.immutableMap(it -> {
+        it.put("id", LazyValue.of(() -> StringArgumentType.string()));
+        it.put("slot", LazyValue.of(() -> IntegerArgumentType.integer(1)));
+        it.put("type", LazyValue.of(() -> new ListArgumentType(Collections.compactMap(SkinSlotType.values(), SkinSlotType::serializedName))));
     });
 
     @Override
@@ -95,7 +95,7 @@ public class HasSkinArgumentType implements ArgumentType<EntitySelectorPredicate
                 }
                 var descriptor = SkinDescriptor.of(wardrobe.getItem(slotType, i));
                 if (skinId != null) {
-                    return skinId.equals(descriptor.getIdentifier()); // has specified skin?
+                    return skinId.equals(descriptor.identifier()); // has specified skin?
                 }
                 return !descriptor.isEmpty(); // has any skin?
             }

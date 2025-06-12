@@ -8,12 +8,12 @@ public interface ISkinPartTypeTextured extends ISkinPartType {
     /**
      * Location of the texture in skin storage.
      */
-    IVector2i getTextureSkinPos();
+    IVector2i textureSkinPos();
 
     /**
      * Size of the model the texture is used on.
      *
      * @return
      */
-    IVector3i getTextureModelSize();
+    IVector3i textureModelSize();
 }

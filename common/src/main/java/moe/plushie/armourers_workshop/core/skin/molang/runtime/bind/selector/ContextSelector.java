@@ -2,19 +2,19 @@ package moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector;
 
 public interface ContextSelector {
 
-    float getPartialTick();
+    float partialTick();
 
-    double getAnimationTicks();
+    double animationTicks();
 
-    double getAnimTime();
+    double animTime();
 
-    double getLifeTime();
+    double lifeTime();
 
-    double getFPS();
+    double fps();
 
-    int getEntityCount();
+    int entityCount();
 
-    LevelSelector getLevel();
+    LevelSelector level();
 
     boolean isFirstPerson();
 

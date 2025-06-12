@@ -47,12 +47,12 @@ public final class TranslateUtils {
     public static class Name {
 
         public static MutableComponent of(ItemOverrideType overrideType) {
-            return title("itemOverrideType.armourers_workshop." + overrideType.getName());
+            return title("itemOverrideType.armourers_workshop." + overrideType.serializedName());
         }
 
         public static MutableComponent of(SkinDocumentType documentType) {
-            var lhs = title("documentType.armourers_workshop.category." + documentType.getCategory());
-            var rhs = of(documentType.getSkinType());
+            var lhs = title("documentType.armourers_workshop.category." + documentType.category());
+            var rhs = of(documentType.skinType());
             return title("documentType.armourers_workshop.category", lhs, rhs);
         }
 
@@ -60,7 +60,7 @@ public final class TranslateUtils {
             if (skinType == SkinTypes.UNKNOWN) {
                 return title("skinType.armourers_workshop.all");
             }
-            var path = skinType.getRegistryName().getPath();
+            var path = skinType.registryName().path();
             return title("skinType.armourers_workshop." + path);
         }
 
@@ -69,7 +69,7 @@ public final class TranslateUtils {
         }
 
         public static MutableComponent of(String prefix, SkinPartType skinPartType) {
-            var path = skinPartType.getRegistryName().getPath();
+            var path = skinPartType.registryName().path();
             var key = prefix + "." + path;
             var text = title(key);
             if (!text.getString().equals(key)) {
@@ -81,7 +81,7 @@ public final class TranslateUtils {
 
 
         public static MutableComponent of(SkinPaintType paintType) {
-            var path = paintType.getRegistryName().getPath();
+            var path = paintType.registryName().path();
             return title("paintType.armourers_workshop." + path);
         }
     }

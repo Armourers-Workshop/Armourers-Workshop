@@ -9,16 +9,16 @@ import org.jetbrains.annotations.Nullable;
 
 public interface BlockEvent {
 
-    Entity getEntity();
+    Entity entity();
 
-    LevelAccessor getLevel();
+    LevelAccessor level();
 
-    BlockPos getPos();
+    BlockPos blockPos();
 
     @Nullable
-    BlockState getState();
+    BlockState blockState();
 
-    IBlockSnapshot getSnapshot();
+    IBlockSnapshot snapshot();
 
     interface Break extends BlockEvent {
     }

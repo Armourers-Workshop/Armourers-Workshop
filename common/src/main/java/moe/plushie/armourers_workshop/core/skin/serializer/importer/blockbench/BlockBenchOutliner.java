@@ -26,15 +26,15 @@ public class BlockBenchOutliner extends BlockBenchObject {
         return allowExport;
     }
 
-    public OpenVector3f getOrigin() {
+    public OpenVector3f origin() {
         return origin;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
-    public List<Object> getChildren() {
+    public List<Object> children() {
         return children;
     }
 

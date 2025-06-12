@@ -47,8 +47,8 @@ public abstract class AbstractForgePermissionManager {
                 if (!hasPermissionAPI()) {
                     return true;
                 }
-                if (player instanceof ServerPlayer) {
-                    return PermissionAPI.getPermission((ServerPlayer) player, node, makeContexts(context));
+                if (player instanceof ServerPlayer serverPlayer) {
+                    return PermissionAPI.getPermission(serverPlayer, node, makeContexts(context));
                 }
                 return super.resolve(player, context);
             }
@@ -61,7 +61,7 @@ public abstract class AbstractForgePermissionManager {
                 return PermissionAPI.getOfflinePermission(profile.getId(), node, makeContexts(context));
             }
         };
-        node.setInformation(nodeImpl.getName(), nodeImpl.getDescription());
+        node.setInformation(nodeImpl.name(), nodeImpl.description());
         PENDING.add(node);
         return nodeImpl;
     }

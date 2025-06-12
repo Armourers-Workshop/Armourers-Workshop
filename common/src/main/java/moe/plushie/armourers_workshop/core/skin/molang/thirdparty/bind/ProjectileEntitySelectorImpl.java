@@ -13,7 +13,7 @@ public class ProjectileEntitySelectorImpl<T extends Projectile> extends EntitySe
     }
 
     @Override
-    public double getOnGroundTime() {
+    public double onGroundTime() {
         return 0; // NO IMPL.
     }
 
@@ -23,7 +23,7 @@ public class ProjectileEntitySelectorImpl<T extends Projectile> extends EntitySe
     }
 
     @Override
-    public Object getOwner() {
+    public Object owner() {
         return entity.getOwner();
     }
 }

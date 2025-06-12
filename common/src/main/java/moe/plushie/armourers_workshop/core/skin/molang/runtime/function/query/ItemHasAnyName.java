@@ -21,11 +21,11 @@ public class ItemHasAnyName extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var item = entity.getEquippedItem(this.slot.evaluate(context).getAsString());
+        var item = entity.equippedItemBySlot(this.slot.evaluate(context).getAsString());
         if (item == null) {
             return 0; // can't found item.
         }
-        var actualId = item.getId();
+        var actualId = item.id();
         for (var name : this.names) {
             var id = name.evaluate(context).getAsString();
             if (!id.isEmpty() && !id.contains(":")) {

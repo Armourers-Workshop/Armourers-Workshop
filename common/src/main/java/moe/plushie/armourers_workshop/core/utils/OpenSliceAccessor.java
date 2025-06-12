@@ -24,10 +24,10 @@ public class OpenSliceAccessor<T> {
     }
 
     public T get(int index) {
-        return getSlice(index).get(index - startIndex);
+        return sliceAt(index).get(index - startIndex);
     }
 
-    private Provider<? extends T> getSlice(int index) {
+    private Provider<? extends T> sliceAt(int index) {
         int cursor = selectedIndex;
         while (true) {
             if (index < startIndex) {
@@ -52,13 +52,13 @@ public class OpenSliceAccessor<T> {
     private void switchSlice(int selectedIndex) {
         this.selected = slices.get(selectedIndex);
         this.selectedIndex = selectedIndex;
-        this.startIndex = selected.getStartIndex();
-        this.endIndex = selected.getEndIndex();
+        this.startIndex = selected.startIndex();
+        this.endIndex = selected.endIndex();
     }
 
     private List<Provider<? extends T>> checkOrder(List<Provider<? extends T>> slices) {
         var sortedSlices = new ArrayList<>(slices);
-        sortedSlices.sort(Comparator.comparingInt(Provider::getStartIndex));
+        sortedSlices.sort(Comparator.comparingInt(Provider::startIndex));
         return sortedSlices;
     }
 
@@ -66,8 +66,8 @@ public class OpenSliceAccessor<T> {
 
         T get(int index);
 
-        int getStartIndex();
+        int startIndex();
 
-        int getEndIndex();
+        int endIndex();
     }
 }

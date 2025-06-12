@@ -63,13 +63,13 @@ public class AdvancedImportPacket extends CustomPacket {
             abort(player, "import", "prohibited by the config file");
             return;
         }
-        if (!skin.getSettings().isEditable()) {
+        if (!skin.settings().isEditable()) {
             abort(player, "import", "prohibited by the skin can't editing.");
             return;
         }
         SkinDocumentNode node = null;
         if (!target.isEmpty()) {
-            node = blockEntity1.getDocument().nodeById(target);
+            node = blockEntity1.document().nodeById(target);
             if (node == null) {
                 abort(player, "import", "can't found node.");
                 return;

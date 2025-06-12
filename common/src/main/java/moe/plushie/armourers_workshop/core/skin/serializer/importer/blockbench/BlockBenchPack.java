@@ -45,60 +45,60 @@ public class BlockBenchPack {
         this.animations = animations;
         this.transforms = transforms;
         // rebuild object map.
-        elements.forEach(it -> objects.put(it.getUUID(), it));
-        rootOutliner.getChildren().forEach(it -> {
+        elements.forEach(it -> objects.put(it.uuid(), it));
+        rootOutliner.children().forEach(it -> {
             if (it instanceof BlockBenchObject object) {
-                objects.put(object.getUUID(), object);
+                objects.put(object.uuid(), object);
             }
         });
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getDescription() {
+    public String description() {
         return description;
     }
 
-    public String getVersion() {
+    public String version() {
         return version;
     }
 
-    public String getFormat() {
+    public String format() {
         return format;
     }
 
-    public List<String> getAuthors() {
+    public List<String> authors() {
         return authors;
     }
 
-    public OpenSize2f getResolution() {
+    public OpenSize2f resolution() {
         return resolution;
     }
 
-    public OpenSize3f getVisibleBox() {
+    public OpenSize3f visibleBox() {
         return visibleBox;
     }
 
-    public BlockBenchOutliner getRootOutliner() {
+    public BlockBenchOutliner rootOutliner() {
         return rootOutliner;
     }
 
-    public List<BlockBenchElement> getElements() {
+    public List<BlockBenchElement> elements() {
         return elements;
     }
 
-    public List<BlockBenchTexture> getTextures() {
+    public List<BlockBenchTexture> textures() {
         return textures;
     }
 
-    public List<BlockBenchAnimation> getAnimations() {
+    public List<BlockBenchAnimation> animations() {
         return animations;
     }
 
     @Nullable
-    public Map<String, BlockBenchDisplay> getItemTransforms() {
+    public Map<String, BlockBenchDisplay> itemTransforms() {
         return transforms;
     }
 

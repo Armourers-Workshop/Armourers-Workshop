@@ -56,7 +56,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
         var blockEntity = player.getLevel().getBlockEntity(pos);
-        if (!(blockEntity instanceof ArmourerBlockEntity blockEntity1) || !(player.containerMenu instanceof ArmourerMenu menu1) || !(fieldValue.getProperty() instanceof Field<?> field)) {
+        if (!(blockEntity instanceof ArmourerBlockEntity blockEntity1) || !(player.containerMenu instanceof ArmourerMenu menu1) || !(fieldValue.property() instanceof Field<?> field)) {
             return;
         }
         BlockUtils.performBatch(() -> {
@@ -80,10 +80,10 @@ public class UpdateArmourerPacket extends CustomPacket {
 
     private void copyItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
         ModLog.info("accept copy action of the {}, nbt: {}", player.getScoreboardName(), nbt);
-        boolean isMirror = nbt.getBoolean(Constants.Key.MIRROR);
-        boolean isCopyPaintData = nbt.getBoolean(Constants.Key.SKIN_PAINTS);
-        var sourcePartType = SkinPartTypes.byName(nbt.getString(Constants.Key.SOURCE));
-        var destinationPartType = SkinPartTypes.byName(nbt.getString(Constants.Key.DESTINATION));
+        var isMirror = nbt.getOptionalBoolean(Constants.Key.MIRROR).orElse(false);
+        var isCopyPaintData = nbt.getOptionalBoolean(Constants.Key.SKIN_PAINTS).orElse(false);
+        var sourcePartType = SkinPartTypes.byName(nbt.getOptionalString(Constants.Key.SOURCE).orElse(""));
+        var destinationPartType = SkinPartTypes.byName(nbt.getOptionalString(Constants.Key.DESTINATION).orElse(""));
         var collector = new CubeChangesCollector(blockEntity.getLevel());
         blockEntity.copyCubes(collector, sourcePartType, destinationPartType, isMirror);
         if (isCopyPaintData) {
@@ -95,31 +95,31 @@ public class UpdateArmourerPacket extends CustomPacket {
     private void replaceItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
         ModLog.info("accept replace action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         var level = player.getLevel();
-        var source = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.SOURCE));
-        var destination = ItemStack.parseOptional(level.registryAccess(), nbt.getCompound(Constants.Key.DESTINATION));
+        var source = nbt.getOptionalCompound(Constants.Key.SOURCE).flatMap(tag -> ItemStack.parse(level.registryAccess(), tag)).orElse(ItemStack.EMPTY);
+        var destination = nbt.getOptionalCompound(Constants.Key.DESTINATION).flatMap(tag -> ItemStack.parse(level.registryAccess(), tag)).orElse(ItemStack.EMPTY);
         var event = new CubeReplacingEvent(source, destination);
-        event.keepColor = nbt.getBoolean(Constants.Key.KEEP_COLOR);
-        event.keepPaintType = nbt.getBoolean(Constants.Key.KEEP_PAINT_TYPE);
+        event.keepColor = nbt.getOptionalBoolean(Constants.Key.KEEP_COLOR).orElse(false);
+        event.keepPaintType = nbt.getOptionalBoolean(Constants.Key.KEEP_PAINT_TYPE).orElse(false);
         if (event.isEmptySource && event.isEmptyDestination) {
             return;
         }
         var collector = new CubeChangesCollector(blockEntity.getLevel());
         blockEntity.replaceCubes(collector, SkinPartTypes.UNKNOWN, event);
         collector.submit(Component.translatable("action.armourers_workshop.block.replace"), player);
-        player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", collector.getTotal()));
+        player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", collector.total()));
     }
 
     private void clearItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) {
         ModLog.info("accept clear action of the {}, nbt: {}", player.getScoreboardName(), nbt);
         var collector = new CubeChangesCollector(blockEntity.getLevel());
-        var partType = SkinPartTypes.byName(nbt.getString(Constants.Key.SKIN_PART_TYPE));
-        if (nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
+        var partType = nbt.getOptionalString(Constants.Key.SKIN_PART_TYPE).map(SkinPartTypes::byName).orElse(SkinPartTypes.UNKNOWN);
+        if (nbt.getOptionalBoolean(Constants.Key.SKIN_CUBES).orElse(false)) {
             blockEntity.clearCubes(collector, partType);
         }
-        if (nbt.getBoolean(Constants.Key.SKIN_PAINTS)) {
+        if (nbt.getOptionalBoolean(Constants.Key.SKIN_PAINTS).orElse(false)) {
             blockEntity.clearPaintData(collector, partType);
         }
-        if (nbt.getBoolean(Constants.Key.SKIN_MARKERS) && !nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
+        if (nbt.getOptionalBoolean(Constants.Key.SKIN_MARKERS).orElse(false) && !nbt.getOptionalBoolean(Constants.Key.SKIN_CUBES).orElse(false)) {
             blockEntity.clearMarkers(collector, partType);
         }
         collector.submit(Component.translatable("action.armourers_workshop.block.clear"), player);
@@ -131,11 +131,11 @@ public class UpdateArmourerPacket extends CustomPacket {
 
         public static final auto FLAGS = create(ArmourerBlockEntity::getFlags, ArmourerBlockEntity::setFlags, DataSerializers.INT, ModPermissions.ARMOURER_SETTING);
 
-        public static final auto SKIN_TYPE = create(ArmourerBlockEntity::getSkinType, ArmourerBlockEntity::setSkinType, DataSerializers.SKIN_TYPE, ModPermissions.ARMOURER_SETTING);
-        public static final auto SKIN_PROPERTIES = create(ArmourerBlockEntity::getSkinProperties, ArmourerBlockEntity::setSkinProperties, DataSerializers.SKIN_PROPERTIES, ModPermissions.ARMOURER_SETTING);
+        public static final auto SKIN_TYPE = create(ArmourerBlockEntity::skinType, ArmourerBlockEntity::setSkinType, DataSerializers.SKIN_TYPE, ModPermissions.ARMOURER_SETTING);
+        public static final auto SKIN_PROPERTIES = create(ArmourerBlockEntity::skinProperties, ArmourerBlockEntity::setSkinProperties, DataSerializers.SKIN_PROPERTIES, ModPermissions.ARMOURER_SETTING);
 
-        public static final auto TEXTURE_DESCRIPTOR = create(ArmourerBlockEntity::getTextureDescriptor, ArmourerBlockEntity::setTextureDescriptor, DataSerializers.PLAYER_TEXTURE, ModPermissions.ARMOURER_SETTING);
-        public static final auto TEXTURE_MODEL = create(ArmourerBlockEntity::getTextureModel, ArmourerBlockEntity::setTextureModel, DataSerializers.PLAYER_TEXTURE_MODEL, ModPermissions.ARMOURER_SETTING);
+        public static final auto TEXTURE_DESCRIPTOR = create(ArmourerBlockEntity::textureDescriptor, ArmourerBlockEntity::setTextureDescriptor, DataSerializers.PLAYER_TEXTURE, ModPermissions.ARMOURER_SETTING);
+        public static final auto TEXTURE_MODEL = create(ArmourerBlockEntity::textureModel, ArmourerBlockEntity::setTextureModel, DataSerializers.PLAYER_TEXTURE_MODEL, ModPermissions.ARMOURER_SETTING);
 
         public static final auto ITEM_CLEAR = create(UpdateArmourerPacket::clearItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_CLEAR);
         public static final auto ITEM_COPY = create(UpdateArmourerPacket::copyItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_COPY);
@@ -166,7 +166,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                 return;
             }
             if (action != null) {
-                T value = Objects.unsafeCast(packet.fieldValue.getValue());
+                T value = Objects.unsafeCast(packet.fieldValue.value());
                 action.accept(packet, player, blockEntity, container, value);
             } else {
                 packet.fieldValue.apply(blockEntity);

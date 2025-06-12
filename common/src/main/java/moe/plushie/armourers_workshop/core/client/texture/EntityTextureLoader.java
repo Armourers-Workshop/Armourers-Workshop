@@ -62,13 +62,13 @@ public class EntityTextureLoader {
     }
 
     public GameProfile getGameProfile(EntityTextureDescriptor descriptor) {
-        var profile = descriptor.getProfile();
+        var profile = descriptor.profile();
         if (profile != null) {
             return profile;
         }
-        var name = descriptor.getName();
+        var name = descriptor.name();
         if (name != null) {
-            return namedProfiles.getOrCreate(descriptor.getName()).get();
+            return namedProfiles.getOrCreate(descriptor.name()).get();
         }
         return null;
     }
@@ -85,8 +85,8 @@ public class EntityTextureLoader {
         if (entity instanceof MannequinEntity mannequin) {
             var descriptor = mannequin.getTextureDescriptor();
             var texture = loadTexture(descriptor);
-            if (texture != null && texture.getLocation() != null) {
-                return texture.getLocation();
+            if (texture != null && texture.location() != null) {
+                return texture.location();
             }
         }
         return TextureUtils.getTexture(entity);
@@ -96,7 +96,7 @@ public class EntityTextureLoader {
         if (!descriptor.isEmpty()) {
             var texture1 = loadTexture(descriptor);
             if (texture1 != null) {
-                return texture1.getLocation();
+                return texture1.location();
             }
         }
         return ModTextures.MANNEQUIN_DEFAULT;
@@ -132,7 +132,7 @@ public class EntityTextureLoader {
             return;
         }
         // load from url
-        var url = descriptor.getURL();
+        var url = descriptor.url();
         if (url != null) {
             try {
                 var ignored = new URL(url);
@@ -143,13 +143,13 @@ public class EntityTextureLoader {
             return;
         }
         // load from profile.
-        var profile = descriptor.getProfile();
+        var profile = descriptor.profile();
         if (profile != null) {
             loadTextureWithProfile(profile, task);
             return;
         }
         // load from username.
-        var name = descriptor.getName();
+        var name = descriptor.name();
         if (name != null) {
             loadTextureWithName(name, task);
             return;
@@ -227,14 +227,14 @@ public class EntityTextureLoader {
         var newImage = image.clone();
         workThread.execute(() -> {
             var bakedTexture = getDownloadedTexture(url);
-            if (bakedTexture.getModel() == null) {
-                bakedTexture.setModel("default");
+            if (bakedTexture.modelType() == null) {
+                bakedTexture.setModelType("default");
                 if (slim) {
-                    bakedTexture.setModel("slim");
+                    bakedTexture.setModelType("slim");
                 }
             }
-            bakedTexture.loadImage(newImage, Objects.equals(bakedTexture.getModel(), "slim"));
-            ModLog.debug("baked a player texture => {}, url: {}, slim: {}", bakedTexture.getResourceLocation(), url, slim);
+            bakedTexture.loadImage(newImage, Objects.equals(bakedTexture.modelType(), "slim"));
+            ModLog.debug("baked a player texture => {}, url: {}, slim: {}", bakedTexture.location(), url, slim);
         });
     }
 
@@ -246,7 +246,7 @@ public class EntityTextureLoader {
         var texture = new EntityTexture(descriptor, location, url, modelType);
         var model = getDownloadedTexture(url);
         model.setResourceLocation(location);
-        model.setModel(modelType);
+        model.setModelType(modelType);
         texture.setTexture(model);
         registeredModels.getOrCreate(location).accept(model);
         return texture;

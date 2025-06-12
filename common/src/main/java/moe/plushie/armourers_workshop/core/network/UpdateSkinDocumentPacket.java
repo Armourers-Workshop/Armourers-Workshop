@@ -56,7 +56,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         var blockEntity = player.getLevel().getBlockEntity(pos);
         if (blockEntity instanceof SkinDocumentProvider provider) {
             ModLog.debug("the document {} accepted for '{}'", action, player.getScoreboardName());
-            var document = provider.getDocument();
+            var document = provider.document();
             document.beginEditing();
             action.execute(document, player);
             document.endEditing();
@@ -76,7 +76,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         var blockEntity = player.getLevel().getBlockEntity(pos);
         if (blockEntity instanceof SkinDocumentProvider provider) {
             ModLog.debug("the document {} accepted for server", action);
-            var document = provider.getDocument();
+            var document = provider.document();
             document.beginEditing();
             action.execute(document, player);
             document.endEditing();
@@ -143,7 +143,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public void encode(IFriendlyByteBuf buffer) {
-            buffer.writeUtf(type.getRegistryName().toString());
+            buffer.writeUtf(type.registryName().toString());
         }
 
         @Override
@@ -153,7 +153,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public String toString() {
-            return makeDescription("changeType", "type", type.getRegistryName());
+            return makeDescription("changeType", "type", type.registryName());
         }
     }
 

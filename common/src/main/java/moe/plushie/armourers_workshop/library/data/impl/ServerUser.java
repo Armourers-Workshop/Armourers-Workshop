@@ -58,11 +58,11 @@ public class ServerUser {
         return accessToken != null && accessToken.isValid();
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 
-    public UUID getUUID() {
+    public UUID uuid() {
         return uuid;
     }
 
@@ -70,7 +70,7 @@ public class ServerUser {
         this.name = name;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -78,7 +78,7 @@ public class ServerUser {
         this.accessToken = accessToken;
     }
 
-    public ServerToken getAccessToken() {
+    public ServerToken accessToken() {
         return accessToken;
     }
 }

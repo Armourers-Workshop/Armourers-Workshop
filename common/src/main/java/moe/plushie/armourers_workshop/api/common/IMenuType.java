@@ -10,5 +10,5 @@ public interface IMenuType<C extends AbstractContainerMenu> extends IRegistryEnt
 
     <T> InteractionResult openMenu(Player player, T value);
 
-    Component getTitle();
+    Component title();
 }

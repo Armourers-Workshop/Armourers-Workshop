@@ -53,24 +53,24 @@ public class SmartTextureManager {
             texture = new SmartTexture(provider);
             textures.put(provider, texture);
         }
-        return texture.getRenderType(type);
+        return texture.renderType(type);
     }
 
-    public TextureManager getTextureManager() {
+    public TextureManager textureManager() {
         return Minecraft.getInstance().getTextureManager();
     }
 
     protected void uploadTexture(SmartTexture texture) {
-        var location = texture.getLocation();
-        getTextureManager().register(location.toLocation(), AbstractSimpleTexture.create(location));
+        var location = texture.location();
+        textureManager().register(location.toLocation(), AbstractSimpleTexture.create(location));
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Texture '{}'", location);
         }
     }
 
     protected void releaseTexture(SmartTexture texture) {
-        var location = texture.getLocation();
-        getTextureManager().unregister(location.toLocation());
+        var location = texture.location();
+        textureManager().unregister(location.toLocation());
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Unregistering Texture '{}'", location);
         }

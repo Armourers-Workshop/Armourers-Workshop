@@ -21,7 +21,7 @@ public class AbstractPackResources implements PackResources {
     private final SmartResourceManager resourceManager;
 
     public AbstractPackResources(SmartResourceManager resourceManager, PackType packType) {
-        this.id = resourceManager.getId();
+        this.id = resourceManager.id();
         this.resourceManager = resourceManager;
     }
 

@@ -60,8 +60,8 @@ public class ChunkParticleData {
     public void readFromStream(ChunkInputStream stream) throws IOException {
         var file = stream.readFile();
         var context = stream.context();
-        var inputStream = new DataInputStream(new ByteBufInputStream(file.getBytes()));
-        this.particle = readContentFromStream(file.getName(), new ChunkInputStream() {
+        var inputStream = new DataInputStream(new ByteBufInputStream(file.bytes()));
+        this.particle = readContentFromStream(file.name(), new ChunkInputStream() {
 
             @Override
             public DataInputStream inputStream() {
@@ -77,22 +77,22 @@ public class ChunkParticleData {
 
     public void writeToStream(ChunkOutputStream stream) throws IOException {
         var bytes = Unpooled.buffer(1024);
-        var context = stream.getContext();
+        var context = stream.context();
         var outputStream = new DataOutputStream(new ByteBufOutputStream(bytes));
         writeContentToStream(particle, new ChunkOutputStream() {
 
             @Override
-            public DataOutputStream getOutputStream() {
+            public DataOutputStream outputStream() {
                 return outputStream;
             }
 
             @Override
-            public ChunkContext getContext() {
+            public ChunkContext context() {
                 return context;
             }
         });
         outputStream.close();
-        stream.writeFile(ChunkFile.particle(particle.getName(), bytes));
+        stream.writeFile(ChunkFile.particle(particle.name(), bytes));
     }
 
     private SkinParticleData readContentFromStream(String name, ChunkInputStream stream) throws IOException {
@@ -109,17 +109,17 @@ public class ChunkParticleData {
             }
             components.add(serializer.decoder.apply(stream));
         }
-        return new SkinParticleData(name, material, textureData.getTexture(), components);
+        return new SkinParticleData(name, material, textureData.texture(), components);
     }
 
     private void writeContentToStream(SkinParticleData particle, ChunkOutputStream stream) throws IOException {
-        var textureData = new ChunkTextureData(particle.getTexture());
+        var textureData = new ChunkTextureData(particle.texture());
         textureData.setId(1);
         textureData.freeze(0, 0, p -> null);
-        stream.writeEnum(particle.getMaterial());
+        stream.writeEnum(particle.material());
         textureData.writeToStream(stream);
-        stream.writeVarInt(particle.getComponents().size());
-        for (var component : particle.getComponents()) {
+        stream.writeVarInt(particle.components().size());
+        for (var component : particle.components()) {
             var serializer = Serializer.CLASS_TO_SERIALIZERS.get(component.getClass());
             if (serializer == null) {
                 throw new IOException("can't found serializer of the component: " + component.getClass());
@@ -129,7 +129,7 @@ public class ChunkParticleData {
         }
     }
 
-    public SkinParticleData getParticle() {
+    public SkinParticleData particle() {
         return particle;
     }
 
@@ -140,42 +140,42 @@ public class ChunkParticleData {
         private static final Map<Integer, Serializer<?>> ID_TO_SERIALIZERS = new HashMap<>();
         private static final Map<Class<?>, Serializer<?>> CLASS_TO_SERIALIZERS = new HashMap<>();
 
-        private static final List<Serializer<?>> ALL_SERIALIZERS = Collections.immutableList(builder -> {
-            builder.add(define(0, EmitterInitialization.class, EmitterInitialization::new));
-            builder.add(define(1, EmitterInitialLocalSpace.class, EmitterInitialLocalSpace::new));
+        private static final List<Serializer<?>> ALL_SERIALIZERS = Collections.immutableList(it -> {
+            it.add(define(0, EmitterInitialization.class, EmitterInitialization::new));
+            it.add(define(1, EmitterInitialLocalSpace.class, EmitterInitialLocalSpace::new));
 
-            builder.add(define(2, EmitterEventLifetime.class, EmitterEventLifetime::new));
-            builder.add(define(3, EmitterExpressionLifetime.class, EmitterExpressionLifetime::new));
-            builder.add(define(4, EmitterLoopingLifetime.class, EmitterLoopingLifetime::new));
-            builder.add(define(5, EmitterOnceLifetime.class, EmitterOnceLifetime::new));
+            it.add(define(2, EmitterEventLifetime.class, EmitterEventLifetime::new));
+            it.add(define(3, EmitterExpressionLifetime.class, EmitterExpressionLifetime::new));
+            it.add(define(4, EmitterLoopingLifetime.class, EmitterLoopingLifetime::new));
+            it.add(define(5, EmitterOnceLifetime.class, EmitterOnceLifetime::new));
 
-            builder.add(define(6, EmitterInstantRate.class, EmitterInstantRate::new));
-            builder.add(define(7, EmitterManualRate.class, EmitterManualRate::new));
-            builder.add(define(8, EmitterSteadyRate.class, EmitterSteadyRate::new));
+            it.add(define(6, EmitterInstantRate.class, EmitterInstantRate::new));
+            it.add(define(7, EmitterManualRate.class, EmitterManualRate::new));
+            it.add(define(8, EmitterSteadyRate.class, EmitterSteadyRate::new));
 
-            builder.add(define(9, EmitterBoxShape.class, EmitterBoxShape::new));
-            builder.add(define(10, EmitterDiscShape.class, EmitterDiscShape::new));
-            builder.add(define(11, EmitterEntityShape.class, EmitterEntityShape::new));
-            builder.add(define(12, EmitterPointShape.class, EmitterPointShape::new));
-            builder.add(define(13, EmitterSphereShape.class, EmitterSphereShape::new));
+            it.add(define(9, EmitterBoxShape.class, EmitterBoxShape::new));
+            it.add(define(10, EmitterDiscShape.class, EmitterDiscShape::new));
+            it.add(define(11, EmitterEntityShape.class, EmitterEntityShape::new));
+            it.add(define(12, EmitterPointShape.class, EmitterPointShape::new));
+            it.add(define(13, EmitterSphereShape.class, EmitterSphereShape::new));
 
-            builder.add(define(14, ParticleInitialization.class, ParticleInitialization::new));
-            builder.add(define(15, ParticleInitialSpeed.class, ParticleInitialSpeed::new));
-            builder.add(define(16, ParticleInitialSpin.class, ParticleInitialSpin::new));
+            it.add(define(14, ParticleInitialization.class, ParticleInitialization::new));
+            it.add(define(15, ParticleInitialSpeed.class, ParticleInitialSpeed::new));
+            it.add(define(16, ParticleInitialSpin.class, ParticleInitialSpin::new));
 
-            builder.add(define(17, ParticleEventLifetime.class, ParticleEventLifetime::new));
-            builder.add(define(18, ParticleExpressLifetime.class, ParticleExpressLifetime::new));
-            builder.add(define(19, ParticleKillInBlocksLifetime.class, ParticleKillInBlocksLifetime::new));
-            builder.add(define(20, ParticleKillInPlaneLifetime.class, ParticleKillInPlaneLifetime::new));
-            builder.add(define(21, ParticleOnlyInBlocksLifetime.class, ParticleOnlyInBlocksLifetime::new));
+            it.add(define(17, ParticleEventLifetime.class, ParticleEventLifetime::new));
+            it.add(define(18, ParticleExpressLifetime.class, ParticleExpressLifetime::new));
+            it.add(define(19, ParticleKillInBlocksLifetime.class, ParticleKillInBlocksLifetime::new));
+            it.add(define(20, ParticleKillInPlaneLifetime.class, ParticleKillInPlaneLifetime::new));
+            it.add(define(21, ParticleOnlyInBlocksLifetime.class, ParticleOnlyInBlocksLifetime::new));
 
-            builder.add(define(22, ParticleCollisionMotion.class, ParticleCollisionMotion::new));
-            builder.add(define(23, ParticleDynamicMotion.class, ParticleDynamicMotion::new));
-            builder.add(define(24, ParticleParametricMotion.class, ParticleParametricMotion::new));
+            it.add(define(22, ParticleCollisionMotion.class, ParticleCollisionMotion::new));
+            it.add(define(23, ParticleDynamicMotion.class, ParticleDynamicMotion::new));
+            it.add(define(24, ParticleParametricMotion.class, ParticleParametricMotion::new));
 
-            builder.add(define(25, ParticleBillboardAppearance.class, ParticleBillboardAppearance::new));
-            builder.add(define(26, ParticleLightingAppearance.class, ParticleLightingAppearance::new));
-            builder.add(define(27, ParticleTintingAppearance.class, ParticleTintingAppearance::new));
+            it.add(define(25, ParticleBillboardAppearance.class, ParticleBillboardAppearance::new));
+            it.add(define(26, ParticleLightingAppearance.class, ParticleLightingAppearance::new));
+            it.add(define(27, ParticleTintingAppearance.class, ParticleTintingAppearance::new));
         });
 
         private final int id;

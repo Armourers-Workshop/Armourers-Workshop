@@ -10,11 +10,11 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class UISliderBox extends UIControl {
 
-    private final UIButton leftView = getShareStateButton();
-    private final UIButton rightView = getShareStateButton();
+    private final UIButton leftView = shareStateButton();
+    private final UIButton rightView = shareStateButton();
     private final UIButton middleView = new UIButton(new CGRect(0, 0, 8, 8));
 
-    private final UIButton contentView = getContentButton();
+    private final UIButton contentView = contentButton();
 
     private double value = 0;
     private double maxValue = 1;
@@ -68,7 +68,7 @@ public class UISliderBox extends UIControl {
         } else {
             contentView.setFrame(rect);
         }
-        middleView.setFrame(getCursorRect());
+        middleView.setFrame(cursorRect());
         cachedBounds = rect;
     }
 
@@ -178,7 +178,7 @@ public class UISliderBox extends UIControl {
         if (formatter != null) {
             contentView.setTitle(formatter.apply(value), State.NORMAL);
         }
-        middleView.setFrame(getCursorRect());
+        middleView.setFrame(cursorRect());
     }
 
     private double clampValue(double value) {
@@ -199,7 +199,7 @@ public class UISliderBox extends UIControl {
         return newValue;
     }
 
-    private CGRect getCursorRect() {
+    private CGRect cursorRect() {
         var rect = contentView.bounds();
         var width = rect.width;
         var height = rect.height;
@@ -209,7 +209,7 @@ public class UISliderBox extends UIControl {
         return new CGRect(x, 0, valueWidth, height);
     }
 
-    private UIButton getShareStateButton() {
+    private UIButton shareStateButton() {
         return new UIButton(CGRect.ZERO) {
             @Override
             public void setHighlighted(boolean highlighted) {
@@ -219,7 +219,7 @@ public class UISliderBox extends UIControl {
         };
     }
 
-    private UIButton getContentButton() {
+    private UIButton contentButton() {
         return new UIButton(CGRect.ZERO) {
             @Override
             public void setHighlighted(boolean highlighted) {

@@ -12,7 +12,7 @@ public class DocumentMinimapNode extends TreeNode {
     }
 
     public DocumentMinimapNode(SkinDocumentNode node) {
-        super(node.getName());
+        super(node.name());
         this.setContents(node);
         node.children().forEach(it -> add(new DocumentMinimapNode(it)));
     }
@@ -24,7 +24,7 @@ public class DocumentMinimapNode extends TreeNode {
     }
 
     @Override
-    public SkinDocumentNode getContents() {
+    public SkinDocumentNode contents() {
         return contents;
     }
 }

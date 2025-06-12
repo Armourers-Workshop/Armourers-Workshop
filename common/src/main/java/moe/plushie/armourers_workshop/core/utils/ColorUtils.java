@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -200,7 +199,7 @@ public class ColorUtils {
     }
 
     public static int getDisplayRGB(SkinPaintColor paintColor) {
-        var paintType = paintColor.getPaintType();
+        var paintType = paintColor.paintType();
         if (paintType == SkinPaintTypes.RAINBOW) {
             return getRainbowRGB();
         }
@@ -228,10 +227,10 @@ public class ColorUtils {
             return storage.blockPaintColor.orElse(null);
         }
         BlockPaintColor color = null;
-        CompoundTag tag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
+        var tag = itemStack.get(ModDataComponents.BLOCK_ENTITY_DATA.get());
         if (tag != null) {
-            var colorTag = tag.getCompound(Constants.Key.COLOR);
-            if (!colorTag.isEmpty()) {
+            var colorTag = tag.getOptionalCompound(Constants.Key.COLOR).orElse(null);
+            if (colorTag != null && !colorTag.isEmpty()) {
                 color = new BlockPaintColor(new TagSerializer(colorTag));
             }
         }
@@ -245,9 +244,9 @@ public class ColorUtils {
         if (useDisplayColor) {
             rgb = getDisplayRGB(color);
         }
-        var paintType = color.getPaintType();
+        var paintType = color.paintType();
         var hexColor = String.format("#%06x", rgb & 0xffffff);
-        var paintName = TranslateUtils.Name.of((SkinPaintType) paintType);
+        var paintName = TranslateUtils.Name.of(paintType);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.colour", rgb & 0xffffff));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hex", hexColor));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.paintType", paintName));

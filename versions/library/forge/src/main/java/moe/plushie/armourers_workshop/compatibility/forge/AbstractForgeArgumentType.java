@@ -13,7 +13,7 @@ public class AbstractForgeArgumentType {
     public static <T extends ArgumentType<?>> AbstractArgumentTypeInfo<T> register(IResourceLocation registryName, Class<T> argumentType, IArgumentSerializer<T> argumentSerializer) {
         var info = new AbstractArgumentTypeInfo<T>(argumentSerializer);
         var info1 = ArgumentTypeInfos.registerByClass(argumentType, info);
-        AbstractForgeRegistries.COMMAND_ARGUMENT_TYPES.register(registryName.getPath(), () -> info1);
+        AbstractForgeRegistries.COMMAND_ARGUMENT_TYPES.register(registryName.path(), () -> info1);
         return info;
     }
 }

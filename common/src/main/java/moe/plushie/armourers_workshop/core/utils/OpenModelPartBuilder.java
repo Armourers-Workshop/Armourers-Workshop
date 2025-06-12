@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
-import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -10,7 +9,7 @@ import java.util.Set;
 
 public class OpenModelPartBuilder {
 
-    private static final Set<Direction> ALL_VISIBLE = EnumSet.allOf(Direction.class);
+    private static final Set<OpenDirection> ALL_VISIBLE = EnumSet.allOf(OpenDirection.class);
 
     protected int texU = 0;
     protected int texV = 0;

@@ -25,11 +25,11 @@ public class BlockEntityRenderPatch<T extends BlockEntity> {
     public void deactivate(T entity) {
     }
 
-    public DefaultArmaturePluginContext getPluginContext() {
+    public DefaultArmaturePluginContext pluginContext() {
         return pluginContext;
     }
 
-    public SkinRenderContext getRenderingContext() {
+    public SkinRenderContext renderingContext() {
         return renderContext;
     }
 }

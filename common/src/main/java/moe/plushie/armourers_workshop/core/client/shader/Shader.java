@@ -48,7 +48,7 @@ public abstract class Shader {
     protected void prepare(ShaderVertexGroup group) {
         renderState.save();
         // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
+        RenderSystem.setExtendedTextureMatrix(group.textureMatrix(TickUtils.animationTicks()));
         RenderSystem.enablePolygonOffset();
     }
 
@@ -65,7 +65,7 @@ public abstract class Shader {
     }
 
     public void render(ShaderVertexObject object) {
-        var entry = object.getPoseStack().last();
+        var entry = object.poseStack().last();
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
@@ -80,14 +80,14 @@ public abstract class Shader {
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
         // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
         // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-        RenderSystem.polygonOffset(0.0f, -50.0f + object.getPolygonOffset() * -1f);
+        RenderSystem.polygonOffset(0.0f, -50.0f + object.polygonOffset() * -1f);
 
         // yes, we need update the uniform every render call.
         // maybe need query uniform from current shader.
         ShaderUniforms.getInstance().apply(getLastProgramId());
 
         // ..
-        drawElements(object, object.getArrayObject(), object.getIndexObject(), object.getTotal());
+        drawElements(object, object.arrayObject(), object.indexObject(), object.total());
     }
 
     protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, VertexIndexObject indexObject, int count) {
@@ -106,11 +106,11 @@ public abstract class Shader {
     protected OpenMatrix4f getOverlayTextureMatrix(ShaderVertexObject object) {
         // We specified the no overlay when create the vertex,
         // so we don't need any change when no overlay is required.
-        if (object.getOverlay() == OverlayTexture.NO_OVERLAY) {
+        if (object.overlay() == OverlayTexture.NO_OVERLAY) {
             return OpenMatrix4f.identity();
         }
         // a special matrix, function is reset location of the texture.
-        return overlayMatrices.computeIfAbsent(object.getOverlay(), overlay -> {
+        return overlayMatrices.computeIfAbsent(object.overlay(), overlay -> {
             var u = overlay & 0xffff;
             var v = (overlay >> 16) & 0xffff;
             var newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
@@ -126,7 +126,7 @@ public abstract class Shader {
             return OpenMatrix4f.identity();
         }
         // a special matrix, function is reset location of the texture.
-        return lightmapMatrices.computeIfAbsent(object.getLightmap(), lightmap -> {
+        return lightmapMatrices.computeIfAbsent(object.lightmap(), lightmap -> {
             var u = lightmap & 0xffff;
             var v = (lightmap >> 16) & 0xffff;
             var newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
@@ -143,7 +143,7 @@ public abstract class Shader {
     }
 
     protected OpenVector4f getOutlineColor(ShaderVertexObject object) {
-        return outlineColors.computeIfAbsent(object.getOutlineColor() | 0xff000000, color -> {
+        return outlineColors.computeIfAbsent(object.outlineColor() | 0xff000000, color -> {
             float red = ColorUtils.getRed(color) / 255f;
             float green = ColorUtils.getGreen(color) / 255f;
             float blue = ColorUtils.getBlue(color) / 255f;

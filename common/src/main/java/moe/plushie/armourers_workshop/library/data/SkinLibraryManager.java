@@ -141,15 +141,15 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             return ModConfig.Common.allowLibraryRemoteManage && setting.allowsMaintenance();
         }
 
-        public SkinLibrary getLocalSkinLibrary() {
+        public SkinLibrary localLibrary() {
             return localSkinLibrary;
         }
 
-        public SkinLibrary getPublicSkinLibrary() {
+        public SkinLibrary publicLibrary() {
             return publicSkinLibrary;
         }
 
-        public SkinLibrary getPrivateSkinLibrary() {
+        public SkinLibrary privateLibrary() {
             return privateSkinLibrary;
         }
 
@@ -157,7 +157,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             this.setting = setting;
         }
 
-        public SkinLibrarySetting getSetting() {
+        public SkinLibrarySetting setting() {
             return setting;
         }
     }
@@ -211,8 +211,8 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             // analyze all files
             ArrayList<SkinLibraryFile> publicFiles = new ArrayList<>();
             HashMap<String, ArrayList<SkinLibraryFile>> privateFiles = new HashMap<>();
-            for (SkinLibraryFile file : skinLibrary.getFiles()) {
-                String path = file.getPath();
+            for (SkinLibraryFile file : skinLibrary.files()) {
+                String path = file.path();
                 if (path.startsWith(Constants.PRIVATE)) {
                     int index = path.indexOf('/', Constants.PRIVATE.length() + 1);
                     if (index >= 0) {
@@ -255,7 +255,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             ModLog.debug("syncing library files {}/{} to '{}'.", publicFiles.size(), privateFiles.size(), name);
         }
 
-        public SkinLibrary getLibrary() {
+        public SkinLibrary library() {
             return skinLibrary;
         }
 
@@ -296,20 +296,20 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             return false;
         }
 
-        public int getVersion() {
+        public int version() {
             return version;
         }
 
-        public String getPublicKey() {
+        public String publicKey() {
             if (publicKey != null) {
                 return publicKey;
             }
-            var key = DataEncryptMethod.AUTH.key(getPrivateKey());
+            var key = DataEncryptMethod.AUTH.key(privateKey());
             publicKey = DataEncryptMethod.AUTH.signature(key);
             return publicKey;
         }
 
-        public String getPrivateKey() {
+        public String privateKey() {
             if (privateKey != null) {
                 return privateKey;
             }

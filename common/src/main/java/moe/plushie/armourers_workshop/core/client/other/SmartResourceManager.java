@@ -62,7 +62,7 @@ public class SmartResourceManager {
         return namespaces;
     }
 
-    public String getId() {
+    public String id() {
         return id;
     }
 }

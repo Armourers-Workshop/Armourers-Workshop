@@ -15,13 +15,13 @@ public class ServerToastWindow extends ToastWindow {
 
     public ServerToastWindow(ExecuteAlertPacket alertPacket) {
         super(new CGRect(0, 0, 160, 32));
-        this.setTitle(new NSString(alertPacket.getTitle()));
-        this.setMessage(new NSString(alertPacket.getMessage()));
-        if (alertPacket.getType() == 0x80000001) {
+        this.setTitle(new NSString(alertPacket.title()));
+        this.setMessage(new NSString(alertPacket.message()));
+        if (alertPacket.type() == 0x80000001) {
             this.setTitleColor(new UIColor(0xffff88ff));
         }
-        this.setIcon(alertPacket.getIcon());
-        if (this.getIcon() == null) {
+        this.setIcon(alertPacket.icon());
+        if (this.icon() == null) {
             float width = frame().width();
             this.titleLabel.setFrame(new CGRect(8, 7, width - 8 - 5, 9));
             this.messageLabel.setFrame(new CGRect(8, 18, width - 8 - 5, 9));

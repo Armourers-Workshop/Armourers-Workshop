@@ -152,7 +152,7 @@ public class ModEntityProfiles {
                     return; // not any change.
                 }
                 CUSTOM_ENTITIES.put(entityType, profile);
-                usedProfiles.put(profile.getRegistryName(), profile);
+                usedProfiles.put(profile.registryName(), profile);
             });
             // apply the patch
             difference(CUSTOM_PROFILES, usedProfiles, (registryName, entityProfile) -> {
@@ -205,7 +205,7 @@ public class ModEntityProfiles {
                 UPDATE_HANDLERS.forEach(handler -> handler.accept(entityType, entityProfile));
             });
             USING_PROFILES.clear();
-            entities.values().forEach(profile -> USING_PROFILES.put(profile.getRegistryName(), profile));
+            entities.values().forEach(profile -> USING_PROFILES.put(profile.registryName(), profile));
         }
 
         private static <K, V> void difference(Map<K, V> oldValue, Map<K, V> newValue, BiConsumer<K, V> removeHandler, BiConsumer<K, V> insertHandler, BiConsumer<K, V> updateHandler) {
@@ -244,12 +244,12 @@ public class ModEntityProfiles {
         }
 
         public static SimpleBuilder builtin(IResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.getPath(), "skin/profiles/");
+            var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
             return new SimpleBuilder(location.withPath("builtin/" + path));
         }
 
         public static SimpleBuilder custom(IResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.getPath(), "skin/profiles/");
+            var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
             return new SimpleBuilder(location.withPath(path));
         }
 

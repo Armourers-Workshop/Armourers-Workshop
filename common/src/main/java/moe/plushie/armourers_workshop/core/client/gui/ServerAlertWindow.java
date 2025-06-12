@@ -20,7 +20,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     private final ExecuteAlertPacket alertPacket;
 
     public ServerAlertWindow(ExecuteAlertPacket alertPacket) {
-        super(ClientMenuScreen.getEmptyMenu(), ClientMenuScreen.getEmptyInventory(), new NSString(alertPacket.getTitle()));
+        super(ClientMenuScreen.createEmptyMenu(), ClientMenuScreen.createEmptyInventory(), new NSString(alertPacket.title()));
         this.titleView.removeFromSuperview();
         this.inventoryView.removeFromSuperview();
         this.alertPacket = alertPacket;
@@ -29,19 +29,19 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     @Override
     public void init() {
         var dialog = new NotificationDialog();
-        dialog.setTitle(new NSString(alertPacket.getTitle()));
-        dialog.setMessage(new NSString(alertPacket.getMessage()));
-        if (alertPacket.getType() == 1) {
+        dialog.setTitle(new NSString(alertPacket.title()));
+        dialog.setMessage(new NSString(alertPacket.message()));
+        if (alertPacket.type() == 1) {
             dialog.setMessageColor(new UIColor(0xffff5555));
         }
-        dialog.setConfirmText(new NSString(alertPacket.getConfirm()));
+        dialog.setConfirmText(new NSString(alertPacket.confirm()));
         dialog.sizeToFit();
         dialog.showInView(this, this::dismiss);
     }
 
     public void showInScreen() {
         var minecraft = Minecraft.getInstance();
-        var screen = new WrappedScreen(this, alertPacket.getTitle());
+        var screen = new WrappedScreen(this, alertPacket.title());
         screen.setTarget(minecraft.screen);
         // we must the screen before set, otherwise it will cause the previous screen to close.
         minecraft.screen = null;
@@ -52,7 +52,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
         var minecraft = Minecraft.getInstance();
         if (minecraft.screen instanceof WrappedScreen screen) {
             // we need to switch back to the original screen again.
-            minecraft.setScreen(screen.getTarget());
+            minecraft.setScreen(screen.target());
         }
     }
 
@@ -88,7 +88,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
             this.targetScreen = screen;
         }
 
-        public Screen getTarget() {
+        public Screen target() {
             return targetScreen;
         }
     }

@@ -41,7 +41,7 @@ public class BoundingBox extends OpenRectangle3i {
         return Objects.hash(super.hashCode(), partType);
     }
 
-    public SkinPartType getPartType() {
+    public SkinPartType partType() {
         return partType;
     }
 

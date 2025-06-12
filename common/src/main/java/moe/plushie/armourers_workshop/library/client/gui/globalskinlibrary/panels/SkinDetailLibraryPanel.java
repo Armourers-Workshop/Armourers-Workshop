@@ -118,9 +118,9 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (this.buttonUserSkins == null) {
             return;
         }
-        var user = GlobalSkinLibrary.getInstance().getUser();
+        var user = GlobalSkinLibrary.getInstance().user();
         this.buttonEditSkin.setHidden(true);
-        if (entry != null && user.equals(entry.getUser())) {
+        if (entry != null && user.equals(entry.user())) {
             this.buttonEditSkin.setHidden(!user.hasPermission(ServerPermission.SKIN_OWNER_EDIT));
         } else {
             this.buttonEditSkin.setHidden(!user.hasPermission(ServerPermission.SKIN_MOD_EDIT));
@@ -135,7 +135,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         this.buttonDownload.setEnabled(true);
         this.reloadUI(entry);
         this.updateSkinJson();
-        if (GlobalSkinLibrary.getInstance().getUser().isMember()) {
+        if (GlobalSkinLibrary.getInstance().user().isMember()) {
             this.checkIfLiked();
         }
     }
@@ -143,7 +143,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     public void reloadUI(ServerSkin entry) {
         this.loadTicket.invalidate();
         this.entry = entry;
-        this.message = getMessage();
+        this.message = message();
         this.playerTexture = EntityTextureDescriptor.EMPTY;
         this.updateLikeButtons();
     }
@@ -159,13 +159,13 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     public void drawUserbox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
         if (playerTexture.isEmpty()) {
-            var user = entry.getUser();
-            if (!user.getName().isEmpty()) {
-                playerTexture = EntityTextureDescriptor.fromName(user.getName());
+            var user = entry.user();
+            if (!user.name().isEmpty()) {
+                playerTexture = EntityTextureDescriptor.fromName(user.name());
             }
         }
-        if (Strings.isNotBlank(playerTexture.getName())) {
-            context.drawText(getDisplayText("uploader", playerTexture.getName()), rect.x + 32, rect.y + 12, 0xffeeeeee);
+        if (Strings.isNotBlank(playerTexture.name())) {
+            context.drawText(getDisplayText("uploader", playerTexture.name()), rect.x + 32, rect.y + 12, 0xffeeeeee);
             RenderSystem.enableAlphaTest();
         }
     }
@@ -182,7 +182,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
-        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.descriptor(), loadTicket);
         if (bakedSkin != null) {
             float tx = rect.x;
             float ty = rect.y;
@@ -213,7 +213,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void searchUser(UIControl button) {
-        router.showSkinList(entry.getUser());
+        router.showSkinList(entry.user());
     }
 
     private void editSkin(UIControl button) {
@@ -221,7 +221,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void updateSkinRating(UIControl button) {
-        setSkinRating(buttonStarRating.getValue());
+        setSkinRating(buttonStarRating.value());
     }
 
     private void reportSkinPre(UIControl button) {
@@ -231,17 +231,17 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         dialog.setMessageColor(new UIColor(0xff7f0000));
         dialog.setMessage(getDisplayText("dialog.report_skin.label.report_warning"));
         dialog.setPlaceholder(getDisplayText("dialog.report_skin.optional_message"));
-        dialog.setReportTypes(Collections.compactMap(reportTypes, t -> new NSString(TranslateUtils.title(t.getLangKey()))));
+        dialog.setReportTypes(Collections.compactMap(reportTypes, t -> new NSString(TranslateUtils.title(t.toLangKey()))));
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
-                var reportType = reportTypes[dialog.getReportType()];
-                reportSkin(dialog.getText(), reportType);
+                var reportType = reportTypes[dialog.reportType()];
+                reportSkin(dialog.text(), reportType);
             }
         });
     }
 
     private void reportSkin(String message, ReportType reportType) {
-        ModLog.debug("report skin: '{}', text: '{}', type: {}", entry.getId(), message, reportType);
+        ModLog.debug("report skin: '{}', text: '{}', type: {}", entry.id(), message, reportType);
         entry.report(message, reportType, (result, exception) -> {
             if (exception == null) {
                 ModLog.debug("skin report sent.");
@@ -250,20 +250,20 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void downloadSkin(UIControl button) {
-        var skinId = entry.getId();
+        var skinId = entry.id();
         var idString = leftZeroPadding(skinId, 5);
-        var skinName = entry.getName();
+        var skinName = entry.name();
         var path = new File(EnvironmentManager.getSkinLibraryDirectory(), "downloads");
         var target = new File(path, makeFileNameValid(idString + " - " + skinName + ".armour"));
-        var skinDescriptor = entry.getDescriptor();
+        var skinDescriptor = entry.descriptor();
         buttonDownload.setEnabled(false);
         // yep, we directly download and save in the local.
-        GlobalSkinLibrary.getInstance().downloadSkin(entry.getId(), target, ((result, exception) -> {
+        GlobalSkinLibrary.getInstance().downloadSkin(entry.id(), target, ((result, exception) -> {
             if (exception != null) {
                 buttonDownload.setEnabled(true);
                 UserNotificationCenter.showToast(exception, new NSString(skinName), skinDescriptor.asItemStack());
             } else {
-                SkinLibraryManager.getClient().getLocalSkinLibrary().reload();
+                SkinLibraryManager.getClient().localLibrary().reload();
                 UserNotificationCenter.showToast(getDisplayText("downloadFinished"), new NSString(skinName), skinDescriptor.asItemStack());
             }
         }));
@@ -310,7 +310,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         entry.updateRate(rating, (result, exception) -> {
             if (exception == null) {
                 if (isNew) {
-                    entry.setRatingCount(entry.getRatingCount() + 1);
+                    entry.ratingCount(entry.ratingCount() + 1);
                 }
                 reloadUI(entry);
             }
@@ -337,7 +337,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 //        });
     }
 
-    private NSString getMessage() {
+    private NSString message() {
         var message = new NSMutableString("");
 
         message.append(getDisplayText("title"));
@@ -349,42 +349,42 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
         message.append(getDisplayText("name"));
         message.append(" ");
-        message.append(entry.getName());
+        message.append(entry.name());
         message.append("\n\n");
 
         if (entry.showsDownloads) {
             message.append(getDisplayText("downloads"));
             message.append(" ");
-            message.append("" + entry.getDownloads());
+            message.append("" + entry.downloads());
             message.append("\n\n");
         }
 
         if (entry.showsRating) {
             message.append(getDisplayText("rating"));
             message.append(" ");
-            message.append(String.format("(%d) %.1f/10.0", entry.getRatingCount(), entry.getRating()));
+            message.append(String.format("(%d) %.1f/10.0", entry.ratingCount(), entry.rating()));
             message.append("\n\n");
         }
 
-        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.getDescriptor(), loadTicket);
-        if (bakedSkin != null && bakedSkin.getSkin() != null) {
+        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.descriptor(), loadTicket);
+        if (bakedSkin != null && bakedSkin.skin() != null) {
             message.append(getDisplayText("author"));
             message.append(" ");
-            message.append(bakedSkin.getSkin().getAuthorName());
+            message.append(bakedSkin.skin().authorName());
             message.append("\n\n");
         }
 
         if (entry.showsGlobalId) {
             message.append(getDisplayText("global_id"));
             message.append(" ");
-            message.append("" + entry.getId());
+            message.append("" + entry.id());
             message.append("\n\n");
         }
 
-        if (Strings.isNotBlank(entry.getDescription())) {
+        if (Strings.isNotBlank(entry.description())) {
             message.append(getDisplayText("description"));
             message.append(" ");
-            message.append(entry.getDescription());
+            message.append(entry.description());
             message.append("\n\n");
         }
 

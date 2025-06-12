@@ -20,36 +20,36 @@ import java.util.function.Function;
 
 public class DocumentPartMapper {
 
-    private static final Set<SkinType> SINGLE_TYPES = Collections.immutableSet(builder -> {
-        builder.add(SkinTypes.ITEM_SWORD);
-        builder.add(SkinTypes.ITEM_SHIELD);
-        //builder.add(SkinTypes.ITEM_BOW);
-        builder.add(SkinTypes.ITEM_TRIDENT);
+    private static final Set<SkinType> SINGLE_TYPES = Collections.immutableSet(it -> {
+        it.add(SkinTypes.ITEM_SWORD);
+        it.add(SkinTypes.ITEM_SHIELD);
+        //it.add(SkinTypes.ITEM_BOW);
+        it.add(SkinTypes.ITEM_TRIDENT);
 
-        builder.add(SkinTypes.ITEM_PICKAXE);
-        builder.add(SkinTypes.ITEM_AXE);
-        builder.add(SkinTypes.ITEM_SHOVEL);
-        builder.add(SkinTypes.ITEM_HOE);
+        it.add(SkinTypes.ITEM_PICKAXE);
+        it.add(SkinTypes.ITEM_AXE);
+        it.add(SkinTypes.ITEM_SHOVEL);
+        it.add(SkinTypes.ITEM_HOE);
 
-        builder.add(SkinTypes.ITEM_FISHING);
-        builder.add(SkinTypes.ITEM_BACKPACK);
+        it.add(SkinTypes.ITEM_FISHING);
+        it.add(SkinTypes.ITEM_BACKPACK);
 
-        builder.add(SkinTypes.ITEM);
-        builder.add(SkinTypes.BLOCK);
+        it.add(SkinTypes.ITEM);
+        it.add(SkinTypes.BLOCK);
     });
 
-    private static final Map<String, SkinPartType> BOW_PARTS = Collections.immutableMap(builder -> {
-        builder.put("Arrow", SkinPartTypes.ITEM_ARROW);
-        builder.put("Frame0", SkinPartTypes.ITEM_BOW0);
-        builder.put("Frame1", SkinPartTypes.ITEM_BOW1);
-        builder.put("Frame2", SkinPartTypes.ITEM_BOW2);
-        builder.put("Frame3", SkinPartTypes.ITEM_BOW3);
+    private static final Map<String, SkinPartType> BOW_PARTS = Collections.immutableMap(it -> {
+        it.put("Arrow", SkinPartTypes.ITEM_ARROW);
+        it.put("Frame0", SkinPartTypes.ITEM_BOW0);
+        it.put("Frame1", SkinPartTypes.ITEM_BOW1);
+        it.put("Frame2", SkinPartTypes.ITEM_BOW2);
+        it.put("Frame3", SkinPartTypes.ITEM_BOW3);
     });
 
-    private static final Map<String, SkinPartType> FINISHING_PARTS = Collections.immutableMap(builder -> {
-        builder.put("Hook", SkinPartTypes.ITEM_FISHING_HOOK);
-        builder.put("Frame0", SkinPartTypes.ITEM_FISHING_ROD);
-        builder.put("Frame1", SkinPartTypes.ITEM_FISHING_ROD1);
+    private static final Map<String, SkinPartType> FINISHING_PARTS = Collections.immutableMap(it -> {
+        it.put("Hook", SkinPartTypes.ITEM_FISHING_HOOK);
+        it.put("Frame0", SkinPartTypes.ITEM_FISHING_ROD);
+        it.put("Frame1", SkinPartTypes.ITEM_FISHING_ROD1);
     });
 
     private final SkinType type;
@@ -78,9 +78,9 @@ public class DocumentPartMapper {
 
     private static DocumentPartMapper of(SkinType type, Armature armature) {
         return new DocumentPartMapper(type, name -> {
-            var joint = armature.getJoint(name);
+            var joint = armature.jointByName(name);
             if (joint != null) {
-                var partType = armature.getPartType(joint);
+                var partType = armature.typeByJoint(joint);
                 if (partType != null) {
                     return new Entry(joint, partType);
                 }
@@ -108,9 +108,9 @@ public class DocumentPartMapper {
     }
 
 
-    public Entry getRoot() {
+    public Entry root() {
         if (SINGLE_TYPES.contains(type)) {
-            for (var partType : type.getParts()) {
+            for (var partType : type.parts()) {
                 return new Entry(null, partType);
             }
         }
@@ -167,14 +167,14 @@ public class DocumentPartMapper {
 
     // <name>Locator => armourers:<name>
     private void register(Node node, SkinAttachmentType attachmentType) {
-        overrideNodes.put(node, Node.locator(attachmentType.getRegistryName().toString()));
+        overrideNodes.put(node, Node.locator(attachmentType.registryName().toString()));
     }
 
     // <name>Locator<index> => armourers:<name>.<index>
     private void registerMultiple(int count, Node node, SkinAttachmentType attachmentType) {
         for (int i = 0; i < count; i++) {
             var s1 = new Node(node.name + (i + 1), node.type);
-            var s2 = Node.locator(attachmentType.getRegistryName().toString() + "." + i);
+            var s2 = Node.locator(attachmentType.registryName().toString() + "." + i);
             overrideNodes.put(s1, s2);
         }
     }
@@ -194,14 +194,14 @@ public class DocumentPartMapper {
             return type != SkinPartTypes.ADVANCED;
         }
 
-        public OpenVector3f getOffset() {
+        public OpenVector3f offset() {
             if (type == SkinPartTypes.BIPPED_CHEST || type == SkinPartTypes.BIPPED_TORSO) {
                 return new OpenVector3f(0, 6, 0);
             }
             return OpenVector3f.ZERO;
         }
 
-        public SkinPartType getType() {
+        public SkinPartType type() {
             return type;
         }
     }
@@ -224,11 +224,11 @@ public class DocumentPartMapper {
             return new Node(name, SkinPartTypes.ADVANCED_LOCATOR);
         }
 
-        public String getName() {
+        public String name() {
             return name;
         }
 
-        public SkinPartType getType() {
+        public SkinPartType type() {
             return type;
         }
 

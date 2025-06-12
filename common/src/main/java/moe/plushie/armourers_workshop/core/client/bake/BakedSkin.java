@@ -77,7 +77,7 @@ public class BakedSkin {
         this.identifier = identifier;
         this.skin = skin;
         this.skinType = skinType;
-        this.animationControllers = resolveAnimationControllers(bakedParts, skin.getAnimations(), skin.getProperties());
+        this.animationControllers = resolveAnimationControllers(bakedParts, skin.animations(), skin.properties());
         this.skinParts = BakedSkinPartCombiner.apply(bakedParts); // depends `resolveAnimationControllers`
         this.paintScheme = paintScheme;
         this.colorDescriptor = colorDescriptor;
@@ -101,7 +101,7 @@ public class BakedSkin {
         // we can't bind textures to skin when the item stack rendering.
         if (PlaceholderManager.isPlaceholder(entity)) {
             var resolvedTexture = EntityTextureLoader.getInstance().getTextureLocation(entity);
-            if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
+            if (!Objects.equals(resolvedColorScheme.texture(), resolvedTexture)) {
                 resolvedColorScheme.setTexture(resolvedTexture);
             }
         }
@@ -109,68 +109,68 @@ public class BakedSkin {
         return resolvedColorScheme;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
-    public String getIdentifier() {
+    public String identifier() {
         return identifier;
     }
 
-    public Skin getSkin() {
+    public Skin skin() {
         return skin;
     }
 
-    public SkinType getType() {
+    public SkinType type() {
         return skinType;
     }
 
-    public List<BakedSkinPart> getParts() {
+    public List<BakedSkinPart> parts() {
         return skinParts;
     }
 
-    public SkinProperties getProperties() {
-        return skin.getProperties();
+    public SkinProperties properties() {
+        return skin.properties();
     }
 
-    public List<AnimationController> getAnimationControllers() {
+    public List<AnimationController> animationControllers() {
         return animationControllers;
     }
 
-    public SkinPaintScheme getPaintScheme() {
+    public SkinPaintScheme paintScheme() {
         return paintScheme;
     }
 
-    public ColorDescriptor getColorDescriptor() {
+    public ColorDescriptor colorDescriptor() {
         return colorDescriptor;
     }
 
-    public BakedItemTransform getItemTransform() {
+    public BakedItemTransform itemTransform() {
         return itemTransform;
     }
 
-    public Range<Integer> getUseTickRange() {
+    public Range<Integer> useTickRange() {
         return useTickRange;
     }
 
-    public SkinUsedCounter getUsedCounter() {
+    public SkinUsedCounter usedCounter() {
         return usedCounter;
     }
 
-    public BakedRenderInfo getRenderInfo() {
+    public BakedRenderInfo renderInfo() {
         return renderInfo;
     }
 
-    public Map<OpenVector3i, OpenRectangle3f> getBlockBounds() {
+    public Map<OpenVector3i, OpenRectangle3f> blockBounds() {
         return cachedBlockBounds;
     }
 
-    public OpenRectangle3f getRenderBounds() {
+    public OpenRectangle3f renderBounds() {
         return getRenderBounds(SkinItemTransform.NO_TRANSFORM, OpenItemDisplayContext.NONE);
     }
 
     public OpenRectangle3f getRenderBounds(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext) {
-        var rotation = itemTransform.getRotation();
+        var rotation = itemTransform.rotation();
         var key = PrimaryKey.of(rotation, displayContext);
         var bounds = cachedBounds.get(key);
         if (bounds != null) {
@@ -211,23 +211,23 @@ public class BakedSkin {
 
     private void loadPartTransforms(List<BakedSkinPart> skinParts) {
         // search all requires adapt mode parts, and then insert a adapter transform.
-        Collections.eachTree(skinParts, BakedSkinPart::getChildren, part -> {
-            if (part.getProperties().get(SkinProperty.USE_ADAPT_MODE)) {
+        Collections.eachTree(skinParts, BakedSkinPart::children, part -> {
+            if (part.properties().get(SkinProperty.USE_ADAPT_MODE)) {
                 var adapterTransform = new BakedAdapterJointTransform(part);
                 part.setJointTransformModifier(it -> adapterTransform);
                 animationHandler.normal((skin, entity, armature, context) -> adapterTransform.setup(entity, armature, context));
             }
         });
         // search all animated transform, we need to reset it before setup.
-        Collections.eachTree(skinParts, BakedSkinPart::getChildren, part -> part.getTransform().getChildren().forEach(transform -> {
+        Collections.eachTree(skinParts, BakedSkinPart::children, part -> part.transform().children().forEach(transform -> {
             if (transform instanceof AnimatedTransform animatedTransform) {
                 animationHandler.lowest((skin, entity, armature, context) -> animatedTransform.reset());
             }
         }));
         // search all wings transform.
-        skinParts.forEach(it -> it.getTransform().getChildren().forEach(transform -> {
+        skinParts.forEach(it -> it.transform().children().forEach(transform -> {
             if (transform instanceof WingPartTransform wingTransform) {
-                animationHandler.normal((skin, entity, armature, context) -> wingTransform.setup(entity, context.getAnimationTicks()));
+                animationHandler.normal((skin, entity, armature, context) -> wingTransform.setup(entity, context.animationTicks()));
             }
         }));
         // search all locator part, and then a attachment transform.
@@ -235,10 +235,10 @@ public class BakedSkin {
             animationHandler.normal((skin, entity, armature, context) -> attachmentTransform.setup(entity, armature, context));
         });
         // search all backpack part, and then attach a backpack part transform.
-        Collections.filter(skinParts, it -> it.getType() == SkinPartTypes.ITEM_BACKPACK).forEach(it -> {
+        Collections.filter(skinParts, it -> it.type() == SkinPartTypes.ITEM_BACKPACK).forEach(it -> {
             var backpackTransform = new BakedBackpackPartTransform();
-            it.getTransform().insertChild(backpackTransform, 0);
-            animationHandler.highest((skin, entity, armature, context) -> backpackTransform.setup(entity, context.getRenderData()));
+            it.transform().insertChild(backpackTransform, 0);
+            animationHandler.highest((skin, entity, armature, context) -> backpackTransform.setup(entity, context.renderData()));
         });
     }
 
@@ -247,7 +247,7 @@ public class BakedSkin {
             return;
         }
         for (var skinPart : skinParts) {
-            var bounds = skinPart.getPart().getBlockBounds();
+            var bounds = skinPart.part().blockBounds();
             if (bounds != null) {
                 cachedBlockBounds.putAll(bounds);
             }
@@ -259,8 +259,8 @@ public class BakedSkin {
         int maxUseTick = Integer.MIN_VALUE;
         int minUseTick = Integer.MAX_VALUE;
         for (var bakedPart : skinParts) {
-            if (bakedPart.getType() instanceof ICanUse partType) {
-                var range = partType.getUseRange();
+            if (bakedPart.type() instanceof ICanUse partType) {
+                var range = partType.useRange();
                 maxUseTick = Math.max(maxUseTick, range.upperEndpoint());
                 minUseTick = Math.min(minUseTick, range.lowerEndpoint());
                 count += 1;
@@ -273,8 +273,8 @@ public class BakedSkin {
     }
 
     private BakedItemTransform resolvedItemTransform(List<BakedSkinPart> skinParts, Skin skin) {
-        var itemTransforms = skin.getItemTransforms();
-        return BakedItemTransform.create(skinParts, itemTransforms, skin.getType());
+        var itemTransforms = skin.itemTransforms();
+        return BakedItemTransform.create(skinParts, itemTransforms, skin.type());
     }
 
     private List<AnimationController> resolveAnimationControllers(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations, SkinProperties properties) {
@@ -284,12 +284,12 @@ public class BakedSkin {
             return animationControllers;
         }
         var namedParts = new HashMap<String, SkinPartTransform>();
-        Collections.eachTree(skinParts, BakedSkinPart::getChildren, part -> {
-            var partName = part.getName();
+        Collections.eachTree(skinParts, BakedSkinPart::children, part -> {
+            var partName = part.name();
             if (partName.isEmpty()) {
-                partName = part.getType().getName();
+                partName = part.type().name();
             }
-            namedParts.put(partName, part.getTransform());
+            namedParts.put(partName, part.transform());
         });
         animations.forEach(animation -> {
             var controller = new AnimationController(animation, namedParts);
@@ -313,6 +313,6 @@ public class BakedSkin {
 
     @Override
     public String toString() {
-        return Objects.toString(this, "id", id, "skin", identifier, "type", skinType.getRegistryName().toString());
+        return Objects.toString(this, "id", id, "skin", identifier, "type", skinType.registryName().toString());
     }
 }

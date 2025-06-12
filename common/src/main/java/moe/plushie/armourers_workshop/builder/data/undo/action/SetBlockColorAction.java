@@ -22,7 +22,7 @@ public class SetBlockColorAction extends BlockUserAction {
 
     @Override
     public IUserAction apply() throws RuntimeException {
-        var target = (IBlockPaintable) getBlockEntity();
+        var target = (IBlockPaintable) blockEntity();
         var oldValue = new HashMap<OpenDirection, SkinPaintColor>();
         for (var direction : newValue.keySet()) {
             var paintColor = target.getColor(direction);
@@ -37,8 +37,8 @@ public class SetBlockColorAction extends BlockUserAction {
     }
 
     @Override
-    public BlockEntity getBlockEntity() {
-        var blockEntity = super.getBlockEntity();
+    public BlockEntity blockEntity() {
+        var blockEntity = super.blockEntity();
         if (blockEntity instanceof IBlockPaintable) {
             return blockEntity;
         }

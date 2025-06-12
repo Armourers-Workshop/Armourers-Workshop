@@ -54,7 +54,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -103,7 +102,7 @@ public class DataSerializers {
     public static final IEntitySerializer<SkinPaintColor> PAINT_COLOR = new IEntitySerializer<SkinPaintColor>() {
         @Override
         public void write(IFriendlyByteBuf buffer, SkinPaintColor color) {
-            buffer.writeInt(color.getRawValue());
+            buffer.writeInt(color.rawValue());
         }
 
         @Override
@@ -222,8 +221,8 @@ public class DataSerializers {
 
     public static final IMenuSerializer<SkinWardrobe> ENTITY_WARDROBE = new IMenuSerializer<SkinWardrobe>() {
         public void write(IFriendlyByteBuf buffer, Player player, SkinWardrobe wardrobe) {
-            buffer.writeInt(wardrobe.getId());
-            buffer.writeResourceLocation(wardrobe.getProfile().getRegistryName());
+            buffer.writeInt(wardrobe.id());
+            buffer.writeResourceLocation(wardrobe.profile().registryName());
         }
 
         public SkinWardrobe read(IFriendlyByteBuf buffer, Player player) {
@@ -271,7 +270,7 @@ public class DataSerializers {
 
         @Override
         public void write(IFriendlyByteBuf buffer, Player player, SkinType value) {
-            buffer.writeUtf(value.getRegistryName().toString());
+            buffer.writeUtf(value.registryName().toString());
         }
 
         @Override
@@ -307,15 +306,9 @@ public class DataSerializers {
     }
 
     public static GameProfile readGameProfile(CompoundTag tag) {
-        String name = null;
-        UUID id = null;
-        if (tag.contains("Name", 8)) {
-            name = tag.getString("Name");
-        }
-        if (tag.hasUUID("Id")) {
-            id = tag.getUUID("Id");
-        }
         try {
+            var name = tag.getOptionalString("Name").orElse(null);
+            var id = tag.getOptionalUUID("Id").orElse(null);
             return new GameProfile(id, name);
         } catch (Exception ignored) {
             return null;

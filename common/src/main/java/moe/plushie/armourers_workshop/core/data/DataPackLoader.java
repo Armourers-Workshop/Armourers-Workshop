@@ -77,9 +77,9 @@ public class DataPackLoader implements PreparableReloadListener {
                     if (object == null) {
                         return;
                     }
-                    var path = FileUtils.removeExtension(location.getPath());
+                    var path = FileUtils.removeExtension(location.path());
                     var location1 = location.withPath(path);
-                    ModLog.debug("Load entry '{}' in '{}'", location1, resource.getSource());
+                    ModLog.debug("Load entry '{}' in '{}'", location1, resource.source());
                     results.computeIfAbsent(location1, provider).append(object, location);
                 });
                 return results;

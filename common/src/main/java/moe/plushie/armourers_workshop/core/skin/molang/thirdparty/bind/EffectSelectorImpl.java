@@ -13,7 +13,7 @@ public class EffectSelectorImpl implements EffectSelector {
     }
 
     @Override
-    public int getLevel() {
+    public int level() {
         return effect.getAmplifier() + 1;
     }
 }

@@ -42,24 +42,24 @@ public class EntityDataStorage {
             this.variableStorage = LazyOptional.ofNullable(EntityVariableStorageImpl::new);
         }
 
-        public Optional<SkinWardrobe> getWardrobe() {
+        public Optional<SkinWardrobe> wardrobe() {
             return wardrobe.resolve();
         }
 
-        public Optional<SkinWardrobeJS> getWardrobeJS() {
+        public Optional<SkinWardrobeJS> wardrobeJS() {
             return wardrobeJS.resolve();
         }
 
-        public Optional<EntityAnimationState> getAnimationState() {
+        public Optional<EntityAnimationState> animationState() {
             return animationState.resolve();
         }
 
         @Environment(EnvType.CLIENT)
-        public Optional<EntityRenderData> getRenderData() {
+        public Optional<EntityRenderData> renderData() {
             return renderData.resolve();
         }
 
-        public Optional<EntityVariableStorageImpl> getVariableStorage() {
+        public Optional<EntityVariableStorageImpl> variableStorage() {
             return variableStorage.resolve();
         }
     }
@@ -76,16 +76,16 @@ public class EntityDataStorage {
             this.variableStorage = LazyOptional.ofNullable(EntityVariableStorageImpl::new);
         }
 
-        public Optional<BlockEntityAnimationState> getAnimationState() {
+        public Optional<BlockEntityAnimationState> animationState() {
             return animationState.resolve();
         }
 
         @Environment(EnvType.CLIENT)
-        public Optional<BlockEntityRenderData> getRenderData() {
+        public Optional<BlockEntityRenderData> renderData() {
             return renderData.resolve();
         }
 
-        public Optional<EntityVariableStorageImpl> getVariableStorage() {
+        public Optional<EntityVariableStorageImpl> variableStorage() {
             return variableStorage.resolve();
         }
     }

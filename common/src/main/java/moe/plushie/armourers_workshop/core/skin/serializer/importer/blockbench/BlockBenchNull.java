@@ -11,7 +11,7 @@ public class BlockBenchNull extends BlockBenchElement {
         this.position = position;
     }
 
-    public OpenVector3f getPosition() {
+    public OpenVector3f position() {
         return position;
     }
 

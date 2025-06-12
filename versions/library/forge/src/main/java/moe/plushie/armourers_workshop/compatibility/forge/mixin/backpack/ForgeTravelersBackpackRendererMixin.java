@@ -26,7 +26,7 @@ public class ForgeTravelersBackpackRendererMixin {
     @Inject(method = "renderBackpackLayer", at = @At("HEAD"), cancellable = true, remap = false)
     private static void aw2$renderBackpack(BackpackLayerModel<?> model, HumanoidModel<?> humanoidModel, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entity, ItemStack stack, CallbackInfo ci) {
         var renderData = EntityRenderData.of(entity);
-        if (renderData != null && renderData.getOverriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
+        if (renderData != null && renderData.overriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
             ci.cancel();
         }
     }

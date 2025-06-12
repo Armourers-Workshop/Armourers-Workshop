@@ -115,7 +115,7 @@ public class SkinLoader {
         if (descriptor.isEmpty()) {
             return null;
         }
-        return getSkin(descriptor.getIdentifier());
+        return getSkin(descriptor.identifier());
     }
 
     @Nullable
@@ -152,7 +152,7 @@ public class SkinLoader {
             if (needCopy) {
                 identifier = saveSkin(identifier, skin);
             }
-            return new SkinDescriptor(identifier, skin.getType(), scheme);
+            return new SkinDescriptor(identifier, skin.type(), scheme);
         }
         return SkinDescriptor.EMPTY;
     }
@@ -396,7 +396,7 @@ public class SkinLoader {
             }
             var newIdentifier = LOADER.saveSkin(identifier, skin);
             ModLog.debug("'{}' => did load global skin into database, target: '{}'", newIdentifier);
-            descriptor = new SkinDescriptor(newIdentifier, skin.getType(), SkinPaintScheme.EMPTY);
+            descriptor = new SkinDescriptor(newIdentifier, skin.type(), SkinPaintScheme.EMPTY);
             sendNotify();
         }
 
@@ -641,12 +641,12 @@ public class SkinLoader {
             var file = OpenResourceLocation.parse(path);
             var resourceManager = EnvironmentManager.getResourceManager();
             if (resourceManager.hasResource(file)) {
-                return resourceManager.readResource(file).getInputStream();
+                return resourceManager.readResource(file).inputStream();
             }
             // pk:<pack-id>:<skin-path>.armour
-            file = file.withPath(file.getPath() + Constants.EXT);
+            file = file.withPath(file.path() + Constants.EXT);
             if (resourceManager.hasResource(file)) {
-                return resourceManager.readResource(file).getInputStream();
+                return resourceManager.readResource(file).inputStream();
             }
             throw new FileNotFoundException(identifier);
         }
@@ -960,19 +960,19 @@ public class SkinLoader {
             var id = parts[0];
             var keyPath = parts[1];
             var skin = LOADER.loadSkin(id);
-            if (skin == null || !skin.getSettings().isEditable()) {
+            if (skin == null || !skin.settings().isEditable()) {
                 throw new RuntimeException("can't load skin " + id);
             }
-            var skinPart = extractPart(keyPath, skin.getParts());
+            var skinPart = extractPart(keyPath, skin.parts());
             if (skinPart == null) {
                 throw new RuntimeException("can't load part " + keyPath + " in " + id);
             }
             var builder = new Skin.Builder(SkinTypes.ADVANCED);
-            builder.paintData(skin.getPaintData());
-            builder.version(skin.getVersion());
+            builder.paintData(skin.paintData());
+            builder.version(skin.fileVersion());
             builder.parts(Collections.newList(skinPart));
-            builder.settings(skin.getSettings().copy());
-            builder.properties(skin.getProperties().copy());
+            builder.settings(skin.settings().copy());
+            builder.properties(skin.properties().copy());
             return builder.build();
         }
 
@@ -983,14 +983,14 @@ public class SkinLoader {
                 if (part == null) {
                     return null;
                 }
-                parts = part.getChildren();
+                parts = part.children();
             }
             return part;
         }
 
         SkinPart findPart(String key, List<SkinPart> parts) {
             for (var part : parts) {
-                if (key.equals(part.getName())) {
+                if (key.equals(part.name())) {
                     return part;
                 }
             }
@@ -1004,11 +1004,11 @@ public class SkinLoader {
         }
 
         boolean containsPart(Set<String> names, SkinPart part) {
-            var name = part.getName();
+            var name = part.name();
             if (name != null && names.contains(name)) {
                 return true;
             }
-            for (var child : part.getChildren()) {
+            for (var child : part.children()) {
                 if (containsPart(names, child)) {
                     return true;
                 }

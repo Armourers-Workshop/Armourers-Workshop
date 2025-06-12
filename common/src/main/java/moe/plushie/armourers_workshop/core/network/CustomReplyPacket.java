@@ -39,11 +39,11 @@ public class CustomReplyPacket<R> extends CustomPacket {
     }
 
     public void accept(final IServerPacketHandler packetHandler, final ServerPlayer player, final IResultHandler<R> reply) {
-        throw new UnsupportedOperationException("This packet (" + this.getPacketID() + ") does not implement a server side handler.");
+        throw new UnsupportedOperationException("This packet (" + packetId() + ") does not implement a server side handler.");
     }
 
     public void accept(final IClientPacketHandler packetHandler, final Player player, final IResultHandler<R> reply) {
-        throw new UnsupportedOperationException("This packet (" + this.getPacketID() + ") does not implement a client side handler.");
+        throw new UnsupportedOperationException("This packet (" + packetId() + ") does not implement a client side handler.");
     }
 
     @Override

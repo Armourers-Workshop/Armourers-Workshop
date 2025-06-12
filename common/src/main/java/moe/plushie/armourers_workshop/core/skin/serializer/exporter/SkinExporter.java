@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface SkinExporter {
 
-    Collection<String> getExtensions();
+    Collection<String> extensions();
 
     void exportSkin(Skin skin, File filePath, String filename, float scale) throws Exception;
 }

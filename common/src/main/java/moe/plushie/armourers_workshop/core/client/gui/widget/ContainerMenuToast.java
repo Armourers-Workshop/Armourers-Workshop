@@ -20,7 +20,7 @@ public class ContainerMenuToast<W extends ToastWindow> extends AbstractMenuToast
         this.manager.addWindow(window);
         this.manager.init();
 
-        var screenSize = getScreenSize();
+        var screenSize = screenSize();
         this.manager.layout(screenSize.width(), screenSize.height());
     }
 
@@ -31,8 +31,8 @@ public class ContainerMenuToast<W extends ToastWindow> extends AbstractMenuToast
     }
 
     @Override
-    public double getDuration() {
-        return window.getDuration();
+    public double duration() {
+        return window.duration();
     }
 
     private void none(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {

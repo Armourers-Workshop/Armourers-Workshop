@@ -44,19 +44,19 @@ public class ChunkFile {
     }
 
     @Nullable
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public int getType() {
+    public int type() {
         return type;
     }
 
-    public SkinProperties getProperties() {
+    public SkinProperties properties() {
         return properties;
     }
 
-    public ByteBuf getBytes() {
+    public ByteBuf bytes() {
         return bytes;
     }
 }

@@ -69,7 +69,7 @@ public class PartPickerView extends UIControl {
         }
     }
 
-    public SkinDescriptor getSelectedPart() {
+    public SkinDescriptor selectedPart() {
         return selectedPart;
     }
 
@@ -94,11 +94,11 @@ public class PartPickerView extends UIControl {
             importPartAction();
             return;
         }
-        setSelectedPart(selectedItem.getDescriptor());
+        setSelectedPart(selectedItem.descriptor());
     }
 
 
-    public Consumer<SkinDescriptor> getItemSelector() {
+    public Consumer<SkinDescriptor> itemSelector() {
         return itemSelector;
     }
 
@@ -110,7 +110,7 @@ public class PartPickerView extends UIControl {
         this.historySkins = historySkins;
     }
 
-    public Collection<SkinDescriptor> getHistorySkins() {
+    public Collection<SkinDescriptor> historySkins() {
         return historySkins;
     }
 
@@ -118,7 +118,7 @@ public class PartPickerView extends UIControl {
         this.itemImporter = itemImporter;
     }
 
-    public Runnable getImporter() {
+    public Runnable importer() {
         return itemImporter;
     }
 
@@ -126,15 +126,15 @@ public class PartPickerView extends UIControl {
         this.filter = filter;
     }
 
-    public Predicate<SkinDescriptor> getFilter() {
+    public Predicate<SkinDescriptor> filter() {
         return filter;
     }
 
     private void setupData() {
         var items = new ArrayList<List<PartItem>>();
         items.add(Collections.newList(PartItem.IMPORT, PartItem.CLEAR));
-        items.add(Collections.filter(getInventorySkins(), this::isValid));
-        items.add(Collections.filter(getImportedSkins(), this::isValid));
+        items.add(Collections.filter(inventorySkins(), this::isValid));
+        items.add(Collections.filter(importedSkins(), this::isValid));
         buildSections(items);
     }
 
@@ -184,10 +184,10 @@ public class PartPickerView extends UIControl {
     }
 
     private boolean isValid(PartItem item) {
-        return filter == null || filter.test(item.getDescriptor());
+        return filter == null || filter.test(item.descriptor());
     }
 
-    private ArrayList<PartItem> getInventorySkins() {
+    private ArrayList<PartItem> inventorySkins() {
         ArrayList<PartItem> allSkins = new ArrayList<>();
         Player player = EnvironmentManager.getPlayer();
         if (player == null) {
@@ -206,7 +206,7 @@ public class PartPickerView extends UIControl {
         return allSkins;
     }
 
-    private ArrayList<PartItem> getImportedSkins() {
+    private ArrayList<PartItem> importedSkins() {
         ArrayList<PartItem> allSkins = new ArrayList<>();
         if (historySkins != null) {
             historySkins.forEach(it -> allSkins.add(new PartItem(it)));

@@ -79,7 +79,7 @@ public class ModContext extends AbstractSavedData {
     }
 
     public static long time() {
-        return CLOCK.getTime();
+        return CLOCK.time();
     }
 
     @NotNull
@@ -159,7 +159,7 @@ public class ModContext extends AbstractSavedData {
 
     @Override
     public void serialize(IDataSerializer serializer) {
-        serializer.write(CodingKeys.CLOCK, CLOCK.getTime());
+        serializer.write(CodingKeys.CLOCK, CLOCK.time());
         serializer.write(CodingKeys.T0, t0);
         serializer.write(CodingKeys.T1, t1);
     }

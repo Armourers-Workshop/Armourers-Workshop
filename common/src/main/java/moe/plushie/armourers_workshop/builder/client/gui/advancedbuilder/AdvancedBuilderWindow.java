@@ -79,13 +79,13 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     public AdvancedBuilderWindow(AdvancedBuilderMenu container, AdvancedBuilderBlockEntity blockEntity, Inventory inventory, NSString title) {
         super(container, inventory, title);
         this.editor = new DocumentEditor(blockEntity);
-        this.doc = editor.getDocument();
+        this.doc = editor.document();
         this.cameraView = new AdvancedCameraPanel(editor);
         this.leftCard = new AdvancedLeftCardPanel(editor, new CGRect(0, 0, 200, UIScreen.bounds().height() * 2));
         this.rightCard = new AdvancedRightCardPanel(editor, new CGRect(0, 0, 200, UIScreen.bounds().height() * 2));
         this.inventoryView.setHidden(true);
-        this.minimapView = rightCard.getMinimapView();
-        this.typeListView = rightCard.getTypeListView();
+        this.minimapView = rightCard.minimapView();
+        this.typeListView = rightCard.typeListView();
         this.setup();
         this.cameraView.reset();
         this.documentDidReload();
@@ -189,18 +189,18 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     }
 
     private void importAction() {
-        var documentType = rightCard.getTypeListView().selectedType();
+        var documentType = rightCard.typeListView().selectedType();
         if (documentType == null) {
             return;
         }
-        importNewSkin(documentType.getSkinType(), skin -> {
-            var blockEntity = editor.getBlockEntity();
+        importNewSkin(documentType.skinType(), skin -> {
+            var blockEntity = editor.blockEntity();
             NetworkManager.sendToServer(new AdvancedImportPacket(blockEntity, skin, ""));
         });
     }
 
     private void exportAction() {
-        var documentType = rightCard.getTypeListView().selectedType();
+        var documentType = rightCard.typeListView().selectedType();
         if (documentType == null) {
             return;
         }
@@ -211,7 +211,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
             if (!alert.isCancelled()) {
                 var origin = Minecraft.getInstance().getUser().getGameProfile();
                 var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-                AdvancedExportPacket packet = new AdvancedExportPacket(editor.getBlockEntity(), nbt);
+                AdvancedExportPacket packet = new AdvancedExportPacket(editor.blockEntity(), nbt);
                 NetworkManager.sendToServer(packet);
             }
         });
@@ -244,8 +244,8 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         alert.setTitle(title);
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                var importer = new DocumentImporter(alert.getSelectedFile(), skinType);
-                var properties = alert.getProperties();
+                var importer = new DocumentImporter(alert.selectedFile(), skinType);
+                var properties = alert.properties();
                 importer.setAdaptMode(properties.get(SkinProperty.USE_ADAPT_MODE));
                 importer.setKeepItemTransforms(properties.get(SkinProperty.USE_ITEM_TRANSFORMS));
                 importer.execute(consumer);
@@ -283,7 +283,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
 
     @Override
     public void documentDidReload() {
-        documentDidChangeType(editor.getDocument().getType());
+        documentDidChangeType(editor.document().type());
         documentDidChangeSettings(new CompoundTag());
         documentDidChangeProperties(new CompoundTag());
     }
@@ -291,19 +291,19 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     @Override
     public void documentDidChangeType(SkinDocumentType type) {
         typeListView.setSelectedType(type);
-        var indexPath = minimapView.getSelectedIndex();
-        minimapView.reloadData(editor.getDocument().getRoot());
+        var indexPath = minimapView.selectedIndex();
+        minimapView.reloadData(editor.document().root());
         minimapView.setSelectedIndex(indexPath);
     }
 
     @Override
     public void documentDidChangeSettings(CompoundTag tag) {
-        editor.getConnector().update(editor.getDocument().getSettings());
+        editor.connector().update(editor.document().settings());
     }
 
     @Override
     public void documentDidChangeProperties(CompoundTag tag) {
-        editor.getConnector().update(editor.getDocument().getProperties());
+        editor.connector().update(editor.document().properties());
     }
 
     @Override
@@ -321,7 +321,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         if (tag.contains("Name")) {
             var nodeView = minimapView.findNode(node);
             if (nodeView != null) {
-                nodeView.setTitle(node.getName());
+                nodeView.setTitle(node.name());
             }
         }
     }
@@ -330,7 +330,7 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
     public void documentDidRemoveNode(SkinDocumentNode node) {
         var nodeView = minimapView.findNode(node);
         if (nodeView != null) {
-            var indexPath = minimapView.getSelectedIndex();
+            var indexPath = minimapView.selectedIndex();
             nodeView.removeFromParent();
             minimapView.setSelectedIndex(indexPath);
         }

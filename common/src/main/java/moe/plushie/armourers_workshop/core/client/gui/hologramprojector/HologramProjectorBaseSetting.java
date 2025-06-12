@@ -28,7 +28,7 @@ public abstract class HologramProjectorBaseSetting extends UIView {
         return subviews().stream().anyMatch(subview -> subview.pointInside(convertPointToView(point, subview), event));
     }
 
-    public NSString getTitle() {
+    public NSString title() {
         return NSString.localizedString(baseKey);
     }
 

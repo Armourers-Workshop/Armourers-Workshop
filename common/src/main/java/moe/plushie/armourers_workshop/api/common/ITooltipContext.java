@@ -4,5 +4,5 @@ import net.minecraft.world.item.TooltipFlag;
 
 public interface ITooltipContext {
 
-    TooltipFlag getFlags();
+    TooltipFlag flags();
 }

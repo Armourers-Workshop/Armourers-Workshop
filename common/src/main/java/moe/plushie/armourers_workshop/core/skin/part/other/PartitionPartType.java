@@ -13,8 +13,8 @@ public class PartitionPartType extends SkinPartType {
         this.buildingSpace = new OpenRectangle3i(-32, -32, -32, 64, 64, 64);
         this.guideSpace = OpenRectangle3i.ZERO;
         this.offset = OpenVector3i.ZERO;
-        this.renderOffset = new OpenVector3i(parentPartType.getRenderOffset());
-        this.renderPolygonOffset = parentPartType.getRenderPolygonOffset();
+        this.renderOffset = new OpenVector3i(parentPartType.renderOffset());
+        this.renderPolygonOffset = parentPartType.renderPolygonOffset();
         this.parentPartType = parentPartType;
     }
 }

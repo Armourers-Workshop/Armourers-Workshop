@@ -14,15 +14,15 @@ public class BlockBenchCubeFace {
         this.rect = rect;
     }
 
-    public int getTextureId() {
+    public int textureId() {
         return textureId;
     }
 
-    public int getRotation() {
+    public int rotation() {
         return rotation;
     }
 
-    public OpenRectangle2f getRect() {
+    public OpenRectangle2f rect() {
         return rect;
     }
 

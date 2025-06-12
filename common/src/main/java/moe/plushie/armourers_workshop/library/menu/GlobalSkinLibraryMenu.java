@@ -37,7 +37,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLib
         isVisible = visible;
     }
 
-    public ItemStack getInputStack() {
+    public ItemStack inputStack() {
         return inventory.getItem(0);
     }
 

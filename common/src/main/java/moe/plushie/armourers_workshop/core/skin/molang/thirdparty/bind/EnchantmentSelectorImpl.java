@@ -12,7 +12,7 @@ public class EnchantmentSelectorImpl implements EnchantmentSelector {
     }
 
     @Override
-    public int getLevel() {
+    public int level() {
         if (value instanceof Number number) {
             return number.intValue();
         }

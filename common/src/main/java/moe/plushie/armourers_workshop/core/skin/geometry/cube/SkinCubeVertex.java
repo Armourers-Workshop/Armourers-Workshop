@@ -19,11 +19,11 @@ public class SkinCubeVertex extends SkinGeometryVertex {
         this.color = color;
     }
 
-    public OpenRectangle3f getBoundingBox() {
-        return face.getBoundingBox();
+    public OpenRectangle3f boundingBox() {
+        return face.boundingBox();
     }
 
-    public OpenDirection getDirection() {
-        return face.getDirection();
+    public OpenDirection direction() {
+        return face.direction();
     }
 }

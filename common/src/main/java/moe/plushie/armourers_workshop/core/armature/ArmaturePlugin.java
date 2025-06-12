@@ -22,16 +22,16 @@ public abstract class ArmaturePlugin {
 
     public interface Context {
 
-        int getOverlay();
+        int overlay();
 
-        int getLightmap();
+        int lightmap();
 
-        float getPartialTicks();
+        float partialTicks();
 
-        double getAnimationTicks();
+        double animationTicks();
 
-        IPoseStack getPoseStack();
+        IPoseStack poseStack();
 
-        EntityRenderData getRenderData();
+        EntityRenderData renderData();
     }
 }

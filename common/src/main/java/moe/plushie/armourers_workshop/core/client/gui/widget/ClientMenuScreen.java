@@ -15,7 +15,7 @@ public class ClientMenuScreen extends ContainerMenuScreen<AbstractContainerMenu,
         super(window, window.menu, window.inventory, title);
     }
 
-    public static Inventory getEmptyInventory() {
+    public static Inventory createEmptyInventory() {
         var player = EnvironmentManager.getPlayer();
         if (player != null) {
             return player.getInventory();
@@ -23,7 +23,7 @@ public class ClientMenuScreen extends ContainerMenuScreen<AbstractContainerMenu,
         return null;
     }
 
-    public static AbstractContainerMenu getEmptyMenu() {
+    public static AbstractContainerMenu createEmptyMenu() {
         return new AbstractContainerMenu(null, 0) {
             @Override
             public boolean stillValid(Player player) {

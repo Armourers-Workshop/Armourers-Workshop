@@ -27,51 +27,51 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     public EntitySelectorImpl<T> apply(T entity, ContextSelectorImpl contextSelector) {
         this.entity = entity;
         this.contextSelector = contextSelector;
-        this.variableStorage = EntityDataStorage.of(entity).getVariableStorage().map(it -> it.get(contextSelector)).orElse(null);
+        this.variableStorage = EntityDataStorage.of(entity).variableStorage().map(it -> it.get(contextSelector)).orElse(null);
         return this;
     }
 
-    public T getEntity() {
+    public T entity() {
         return entity;
     }
 
     @Override
-    public double getEyeYaw() {
-        return entity.getViewXRot(getPartialTick());
+    public double eyeYaw() {
+        return entity.getViewXRot(partialTick());
     }
 
     @Override
-    public double getEyePitch() {
-        return entity.getViewYRot(getPartialTick());
+    public double eyePitch() {
+        return entity.getViewYRot(partialTick());
     }
 
     @Override
-    public double getHeadYaw() {
-        return entity.getHeadYaw(getPartialTick());
+    public double headYaw() {
+        return entity.getHeadYaw(partialTick());
     }
 
     @Override
-    public double getHeadPitch() {
-        return entity.getHeadPatch(getPartialTick());
+    public double headPitch() {
+        return entity.getHeadPatch(partialTick());
     }
 
     @Override
-    public double getX(double partialTicks) {
+    public double x(double partialTicks) {
         return MathHelper.lerp(partialTicks, entity.xo, entity.getX());
     }
 
     @Override
-    public double getY(double partialTicks) {
+    public double y(double partialTicks) {
         return MathHelper.lerp(partialTicks, entity.yo, entity.getY());
     }
 
     @Override
-    public double getZ(double partialTicks) {
+    public double z(double partialTicks) {
         return MathHelper.lerp(partialTicks, entity.zo, entity.getZ());
     }
 
     @Override
-    public int getCardinalFacing() {
+    public int cardinalFacing() {
         // 2 north, 3 south, 4 west, 5 east
         return entity.getDirection().get3DDataValue();
     }
@@ -92,20 +92,20 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     }
 
     @Override
-    public double getYawSpeed() {
+    public double yawSpeed() {
 //        float a = entity.getViewYRot((float) animTime - 0.1f);
 //        return entity.getViewYRot((float) animTime - a);
         return 20 * (entity.getYRot() - entity.yRotO);
     }
 
     @Override
-    public double getGroundSpeed() {
+    public double groundSpeed() {
         var velocity = entity.getDeltaMovement();
         return 20 * Math.sqrt(((velocity.x * velocity.x) + (velocity.z * velocity.z)));
     }
 
     @Override
-    public double getVerticalSpeed() {
+    public double verticalSpeed() {
         return 20 * (entity.position().y - entity.yo);
     }
 
@@ -180,7 +180,7 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
             return true;
         }
         var noise = (entity.getId() * 0.05);
-        var time = (contextSelector.getAnimationTicks() + noise) % 4.5;
+        var time = (contextSelector.animationTicks() + noise) % 4.5;
         return time > 4.25;
     }
 
@@ -195,25 +195,25 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     }
 
     @Override
-    public double getTicksFrozen() {
+    public double ticksFrozen() {
         return entity.getTicksFrozen();
     }
 
     @Override
-    public double getAirSupply() {
+    public double airSupply() {
         return entity.getAirSupply();
     }
 
     @Nullable
     @Override
-    public BiomeSelector getBiome() {
+    public BiomeSelector biome() {
         var level = entity.getLevel();
         var biome = AbstractRegistryManager.getBiome(level, entity.blockPosition());
         return biomeSelector.apply(biome);
     }
 
     @Override
-    public BlockSelector getRelativeBlock(int offsetX, int offsetY, int offsetZ) {
+    public BlockSelector relativeBlock(int offsetX, int offsetY, int offsetZ) {
         var level = entity.getLevel();
         double x = entity.getX() + offsetX;
         double y = entity.getX() + offsetX;
@@ -223,8 +223,8 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     }
 
     @Override
-    public float getPartialTick() {
-        return contextSelector.getPartialTick();
+    public float partialTick() {
+        return contextSelector.partialTick();
     }
 
 

@@ -52,48 +52,48 @@ public class SkinCubeFace extends SkinGeometryFace {
         return Helper.VERTICES[direction.get3DDataValue()];
     }
 
-    public OpenRectangle3f getBoundingBox() {
+    public OpenRectangle3f boundingBox() {
         return boundingBox;
     }
 
-    public SkinPaintColor getColor() {
+    public SkinPaintColor color() {
         return paintColor;
     }
 
-    public int getAlpha() {
+    public int alpha() {
         return alpha;
     }
 
-    public OpenDirection getDirection() {
+    public OpenDirection direction() {
         return direction;
     }
 
-    public SkinPaintType getPaintType() {
-        return paintColor.getPaintType();
+    public SkinPaintType paintType() {
+        return paintColor.paintType();
     }
 
     @Override
-    public SkinGeometryType getType() {
+    public SkinGeometryType type() {
         return type;
     }
 
     @Override
-    public SkinGeometryOptions getOptions() {
+    public SkinGeometryOptions options() {
         return options;
     }
 
     @Override
-    public SkinTexturePos getTexturePos() {
+    public SkinTexturePos texturePos() {
         if (texturePos != null) {
             return texturePos;
         }
-        return paintColor.getPaintType().getTexturePos();
+        return paintColor.paintType().texturePos();
     }
 
     @Override
-    public float getPriority() {
+    public float priority() {
         var priority = direction.get3DDataValue();
-        return switch (options.getRenderOrder()) {
+        return switch (options.renderOrder()) {
             case 1 -> priority - 1000; // behind
             case 2 -> priority + 1000; // in_front
             default -> priority;
@@ -102,13 +102,13 @@ public class SkinCubeFace extends SkinGeometryFace {
 
     @Override
     public boolean isVisible() {
-        return paintColor.getPaintType() != SkinPaintTypes.NONE;
+        return paintColor.paintType() != SkinPaintTypes.NONE;
     }
 
     @Override
-    public Iterable<? extends SkinGeometryVertex> getVertices() {
-        var id = getId();
-        var texturePos = getTexturePos();
+    public Iterable<? extends SkinGeometryVertex> vertices() {
+        var id = id();
+        var texturePos = texturePos();
         var textureRotation = getTextureRotation(texturePos);
 
         // https://learnopengl.com/Getting-started/Coordinate-Systems
@@ -119,10 +119,10 @@ public class SkinCubeFace extends SkinGeometryFace {
         var h = roundUp(boundingBox.height());
         var d = roundUp(boundingBox.depth());
 
-        var u = texturePos.getU();
-        var v = texturePos.getV();
-        var s = roundDown(texturePos.getWidth());
-        var t = roundDown(texturePos.getHeight());
+        var u = texturePos.u();
+        var v = texturePos.v();
+        var s = roundDown(texturePos.width());
+        var t = roundDown(texturePos.height());
 
         var color = new SkinGeometryVertex.Color(paintColor, alpha);
         var vertices = new ArrayList<SkinGeometryVertex>();
@@ -157,9 +157,9 @@ public class SkinCubeFace extends SkinGeometryFace {
     }
 
     private int getTextureRotation(SkinTexturePos key) {
-        var options = key.getOptions();
+        var options = key.options();
         if (options != null) {
-            return options.getRotation();
+            return options.rotation();
         }
         return 0;
     }

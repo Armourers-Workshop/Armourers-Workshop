@@ -25,31 +25,31 @@ public class BedrockParticle {
         this.format = format;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getMaterial() {
+    public String material() {
         return material;
     }
 
-    public String getTexture() {
+    public String texture() {
         return texture;
     }
 
-    public Map<String, BedrockCurve> getCurves() {
+    public Map<String, BedrockCurve> curves() {
         return curves;
     }
 
-    public Map<String, BedrockComponent> getComponents() {
+    public Map<String, BedrockComponent> components() {
         return components;
     }
 
-    public Map<String, BedrockEvent> getEvents() {
+    public Map<String, BedrockEvent> events() {
         return events;
     }
 
-    public String getFormat() {
+    public String format() {
         return format;
     }
 

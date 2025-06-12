@@ -18,12 +18,12 @@ public class Joint implements IJoint {
     }
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class Joint implements IJoint {
     }
 
     @Override
-    public Joint getParent() {
+    public Joint parent() {
         return parent;
     }
 

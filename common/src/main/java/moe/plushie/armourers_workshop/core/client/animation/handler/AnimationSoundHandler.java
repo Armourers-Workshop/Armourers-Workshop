@@ -24,11 +24,11 @@ public class AnimationSoundHandler implements OptimizedExpression<Object> {
     private final float pitch;
 
     public AnimationSoundHandler(SkinAnimationPoint.Sound sound) {
-        var soundProvider = sound.getProvider();
-        var soundProperties = soundProvider.getProperties();
-        this.name = sound.getEffect();
-        this.volume = soundProperties.getVolume();
-        this.pitch = soundProperties.getPitch();
+        var soundProvider = sound.provider();
+        var soundProperties = soundProvider.properties();
+        this.name = sound.effect();
+        this.volume = soundProperties.volume();
+        this.pitch = soundProperties.pitch();
         this.soundEvent = SmartSoundManager.getInstance().register(soundProvider);
     }
 
@@ -44,14 +44,14 @@ public class AnimationSoundHandler implements OptimizedExpression<Object> {
     }
 
     private void startPlay(SoundInstance sound) {
-        getSoundManager().play(sound);
+        soundManager().play(sound);
         if (ModConfig.Client.enableAnimationDebug) {
             ModLog.debug("start play {}", this);
         }
     }
 
     private void stopPlay(SoundInstance sound) {
-        getSoundManager().stop(sound);
+        soundManager().stop(sound);
         if (ModConfig.Client.enableAnimationDebug) {
             ModLog.debug("stop play {}", this);
         }
@@ -64,13 +64,13 @@ public class AnimationSoundHandler implements OptimizedExpression<Object> {
         }
         // the current entity is entity?
         if (context instanceof EntitySelectorImpl<?> entity) {
-            return SoundInstance.forEntity(soundEvent, entity.getEntity(), volume, pitch);
+            return SoundInstance.forEntity(soundEvent, entity.entity(), volume, pitch);
         }
         // the fallback is gui sounds, maybe?
         return SoundInstance.forUI(soundEvent, volume, pitch);
     }
 
-    private SoundManager getSoundManager() {
+    private SoundManager soundManager() {
         return Minecraft.getInstance().getSoundManager();
     }
 

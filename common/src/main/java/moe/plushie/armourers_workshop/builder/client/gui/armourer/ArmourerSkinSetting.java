@@ -29,14 +29,14 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
-    public static final Map<SkinType, Function<SkinProperties, ArmourerBaseSkinPanel>> REGISTERED = Collections.immutableMap(builder -> {
-        builder.put(SkinTypes.ARMOR_HEAD, ArmourerHeadSkinPanel::new);
-        builder.put(SkinTypes.ARMOR_CHEST, ArmourerChestSkinPanel::new);
-        builder.put(SkinTypes.ARMOR_LEGS, ArmourerLegSkinPanel::new);
-        builder.put(SkinTypes.ARMOR_FEET, ArmourerFeetSkinPanel::new);
-        builder.put(SkinTypes.ARMOR_WINGS, ArmourerWingsSkinPanel::new);
-        builder.put(SkinTypes.BLOCK, ArmourerBlockSkinPanel::new);
-        builder.put(SkinTypes.ADVANCED, ArmourerAdvancedSkinPanel::new);
+    public static final Map<SkinType, Function<SkinProperties, ArmourerBaseSkinPanel>> REGISTERED = Collections.immutableMap(it -> {
+        it.put(SkinTypes.ARMOR_HEAD, ArmourerHeadSkinPanel::new);
+        it.put(SkinTypes.ARMOR_CHEST, ArmourerChestSkinPanel::new);
+        it.put(SkinTypes.ARMOR_LEGS, ArmourerLegSkinPanel::new);
+        it.put(SkinTypes.ARMOR_FEET, ArmourerFeetSkinPanel::new);
+        it.put(SkinTypes.ARMOR_WINGS, ArmourerWingsSkinPanel::new);
+        it.put(SkinTypes.BLOCK, ArmourerBlockSkinPanel::new);
+        it.put(SkinTypes.ADVANCED, ArmourerAdvancedSkinPanel::new);
     });
 
     protected final DifferenceSkinProperties skinProperties = new DifferenceSkinProperties();
@@ -59,8 +59,8 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     @Override
     public void reloadData() {
-        var skinType = blockEntity.getSkinType();
-        skinProperties.reset(blockEntity.getSkinProperties());
+        var skinType = blockEntity.skinType();
+        skinProperties.reset(blockEntity.skinProperties());
         var supplier = REGISTERED.get(skinType);
         if (supplier != null) {
             updateScreen(supplier.apply(skinProperties));
@@ -79,9 +79,9 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
-        var newValue = blockEntity.getSkinProperties().copy();
+        var newValue = blockEntity.skinProperties().copy();
         this.skinProperties.applyTo(newValue);
-        if (newValue.equals(blockEntity.getSkinProperties())) {
+        if (newValue.equals(blockEntity.skinProperties())) {
             return; // no changes
         }
         this.skinProperties.reset(newValue);

@@ -218,28 +218,28 @@ public class OpenQuaternionf implements IQuaternionf {
         return fromUnnormalizedMatrix(mat.m00, mat.m01, mat.m02, mat.m10, mat.m11, mat.m12, mat.m20, mat.m21, mat.m22);
     }
 
-    public OpenVector3f getEulerAnglesXYZ() {
+    public OpenVector3f eulerAnglesXYZ() {
         float tx = OpenMath.atan2(x * w - y * z, 0.5f - x * x - y * y);
         float ty = OpenMath.safeAsin(2.0f * (x * z + y * w));
         float tz = OpenMath.atan2(z * w - x * y, 0.5f - y * y - z * z);
         return new OpenVector3f(tx, ty, tz);
     }
 
-    public OpenVector3f getEulerAnglesZYX() {
+    public OpenVector3f eulerAnglesZYX() {
         float tx = OpenMath.atan2(y * z + w * x, 0.5f - x * x + y * y);
         float ty = OpenMath.safeAsin(-2.0f * (x * z - w * y));
         float tz = OpenMath.atan2(x * y + w * z, 0.5f - y * y - z * z);
         return new OpenVector3f(tx, ty, tz);
     }
 
-    public OpenVector3f getEulerAnglesZXY() {
+    public OpenVector3f eulerAnglesZXY() {
         float tx = OpenMath.safeAsin(2.0f * (w * x + y * z));
         float ty = OpenMath.atan2(w * y - x * z, 0.5f - y * y - x * x);
         float tz = OpenMath.atan2(w * z - x * y, 0.5f - z * z - x * x);
         return new OpenVector3f(tx, ty, tz);
     }
 
-    public OpenVector3f getEulerAnglesYXZ() {
+    public OpenVector3f eulerAnglesYXZ() {
         float tx = OpenMath.safeAsin(-2.0f * (y * z - w * x));
         float ty = OpenMath.atan2(x * z + y * w, 0.5f - y * y - x * x);
         float tz = OpenMath.atan2(y * x + w * z, 0.5f - x * x - z * z);
@@ -274,8 +274,8 @@ public class OpenQuaternionf implements IQuaternionf {
         this.z = z;
     }
 
-    public float getW() {
-        return w;
+    public void setW(float w) {
+        this.w = w;
     }
 
     @Override

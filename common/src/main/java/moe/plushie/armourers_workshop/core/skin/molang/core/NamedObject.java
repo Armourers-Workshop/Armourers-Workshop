@@ -10,13 +10,13 @@ public class NamedObject {
         this.owner = owner;
     }
 
-    public String getName() {
+    public String name() {
         // this is root node.
         if (owner == null) {
             return name;
         }
         // the parent not name.
-        var parentName = owner.getName();
+        var parentName = owner.name();
         if (parentName == null) {
             return name;
         }
@@ -25,7 +25,7 @@ public class NamedObject {
 
     @Override
     public String toString() {
-        var name = getName();
+        var name = name();
         if (name != null) {
             return name;
         }

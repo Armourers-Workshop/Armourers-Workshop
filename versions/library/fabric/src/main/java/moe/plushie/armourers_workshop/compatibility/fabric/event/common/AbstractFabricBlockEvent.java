@@ -23,35 +23,35 @@ public class AbstractFabricBlockEvent {
             subscriber.accept(new BlockEvent.Place() {
 
                 @Override
-                public Entity getEntity() {
+                public Entity entity() {
                     return player;
                 }
 
                 @Override
-                public LevelAccessor getLevel() {
+                public LevelAccessor level() {
                     return level;
                 }
 
                 @Override
-                public BlockPos getPos() {
+                public BlockPos blockPos() {
                     return blockPos;
                 }
 
                 @Override
-                public BlockState getState() {
+                public BlockState blockState() {
                     return blockState;
                 }
 
                 @Override
-                public IBlockSnapshot getSnapshot() {
+                public IBlockSnapshot snapshot() {
                     return new IBlockSnapshot() {
                         @Override
-                        public BlockState getState() {
+                        public BlockState state() {
                             return level.getBlockState(blockPos);
                         }
 
                         @Override
-                        public CompoundTag getTag() {
+                        public CompoundTag tag() {
                             var oldBlockEntity = level.getBlockEntity(blockPos);
                             if (oldBlockEntity != null) {
                                 return oldBlockEntity.saveFullData(level.registryAccess());
@@ -70,35 +70,35 @@ public class AbstractFabricBlockEvent {
             subscriber.accept(new BlockEvent.Break() {
 
                 @Override
-                public Entity getEntity() {
+                public Entity entity() {
                     return player;
                 }
 
                 @Override
-                public LevelAccessor getLevel() {
+                public LevelAccessor level() {
                     return level;
                 }
 
                 @Override
-                public BlockPos getPos() {
+                public BlockPos blockPos() {
                     return pos;
                 }
 
                 @Override
-                public BlockState getState() {
+                public BlockState blockState() {
                     return null;
                 }
 
                 @Override
-                public IBlockSnapshot getSnapshot() {
+                public IBlockSnapshot snapshot() {
                     return new IBlockSnapshot() {
                         @Override
-                        public BlockState getState() {
+                        public BlockState state() {
                             return state;
                         }
 
                         @Override
-                        public CompoundTag getTag() {
+                        public CompoundTag tag() {
                             if (blockEntity != null) {
                                 return blockEntity.saveFullData(level.registryAccess());
                             }

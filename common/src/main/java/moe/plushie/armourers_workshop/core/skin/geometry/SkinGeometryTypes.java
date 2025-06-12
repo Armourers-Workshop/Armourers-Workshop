@@ -43,7 +43,7 @@ public final class SkinGeometryTypes {
 
     public static SkinGeometryType byBlock(Block block) {
         for (var cubeType : ALL_GEOMETRY_TYPES.values()) {
-            if (cubeType.getBlock() == block) {
+            if (cubeType.block() == block) {
                 return cubeType;
             }
         }
@@ -67,13 +67,13 @@ public final class SkinGeometryTypes {
     private static SkinGeometryType register(String name, int id, IRegistryHolder<Block> block) {
         var geometryType = new SkinGeometryType(id, block);
         geometryType.setRegistryName(OpenResourceLocation.create("armourers", name));
-        if (ALL_GEOMETRY_TYPES.containsKey(geometryType.getRegistryName().toString())) {
+        if (ALL_GEOMETRY_TYPES.containsKey(geometryType.registryName().toString())) {
             ModLog.warn("A mod tried to register a geometry type with an id that is in use.");
             return geometryType;
         }
-        ALL_GEOMETRY_TYPES.put(geometryType.getRegistryName().toString(), geometryType);
-        ALL_GEOMETRY_TYPE_MAPPING[geometryType.getId() & 0xFF] = geometryType;
-        ModLog.debug("Registering Skin Geometry '{}'", geometryType.getRegistryName());
+        ALL_GEOMETRY_TYPES.put(geometryType.registryName().toString(), geometryType);
+        ALL_GEOMETRY_TYPE_MAPPING[geometryType.id() & 0xFF] = geometryType;
+        ModLog.debug("Registering Skin Geometry '{}'", geometryType.registryName());
         return geometryType;
     }
 

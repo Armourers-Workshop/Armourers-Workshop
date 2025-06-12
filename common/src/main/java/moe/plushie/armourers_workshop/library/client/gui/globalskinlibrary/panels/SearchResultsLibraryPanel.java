@@ -92,7 +92,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     @Override
     public void layoutSubviews() {
         super.layoutSubviews();
-        int pageSize = skinPanelResults.getTotalCount();
+        int pageSize = skinPanelResults.totalCount();
         if (lastRequestSize > 0 && this.lastRequestSize != pageSize) {
             resize();
         } else {
@@ -135,7 +135,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.LIST_SEARCH);
     }
 
-    protected NSString getResultsTitle() {
+    protected NSString resultsTitle() {
         if (totalPages < 0) {
             return getDisplayText("label.searching");
         }
@@ -205,14 +205,14 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         skinPanelResults.setEntries(new ArrayList<>());
         skinPanelResults.reloadData();
         lastRequestSize = 0;
-        resultTitle.setText(getResultsTitle());
+        resultTitle.setText(resultsTitle());
     }
 
     protected void fetchPage(int pageIndex) {
         if (downloadingPages.contains(pageIndex) || downloadedPageList.containsKey(pageIndex)) {
             return; // downloading or downloaded, ignore
         }
-        lastRequestSize = skinPanelResults.getTotalCount();
+        lastRequestSize = skinPanelResults.totalCount();
         downloadingPages.add(pageIndex);
         ModLog.debug("request skin list {} of {}, page size: {}", pageIndex, totalPages, lastRequestSize);
         doSearch(pageIndex, lastRequestSize, skinType, (result, exception) -> {
@@ -231,9 +231,9 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     protected void onPageJsonDownload(int pageIndex, SearchResult result) {
-        var entries = result.getSkins();
-        totalPages = result.getTotalPages();
-        totalResults = result.getTotalResults();
+        var entries = result.skins();
+        totalPages = result.totalPages();
+        totalResults = result.totalResults();
         downloadedPageList.put(pageIndex, entries);
         RenderSystem.recordRenderCall(() -> {
             ModLog.debug("receive skin list {} of {}", pageIndex, totalPages);
@@ -249,12 +249,12 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         var entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
         skinPanelResults.setEntries(entries);
         skinPanelResults.reloadData();
-        resultTitle.setText(getResultsTitle());
+        resultTitle.setText(resultsTitle());
     }
 
     private Pair<Integer, Integer> getPageBySkin(String skinId) {
         for (var entry : downloadedPageList.entrySet()) {
-            int index = Collections.indexOf(entry.getValue(), e -> Objects.equals(e.getId(), skinId));
+            int index = Collections.indexOf(entry.getValue(), e -> Objects.equals(e.id(), skinId));
             if (index != -1) {
                 return Pair.of(entry.getKey(), index);
             }

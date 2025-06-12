@@ -34,7 +34,7 @@ public class SkinningTableBlockEntity extends UpdatableBlockEntity {
         this.options = options;
     }
 
-    public SkinDescriptor.Options getOptions() {
+    public SkinDescriptor.Options options() {
         return options;
     }
 

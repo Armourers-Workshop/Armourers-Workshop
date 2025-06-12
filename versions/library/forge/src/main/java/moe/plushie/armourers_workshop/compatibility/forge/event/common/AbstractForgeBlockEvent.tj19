@@ -18,35 +18,35 @@ public class AbstractForgeBlockEvent {
         return AbstractForgeCommonEventsImpl.BLOCK_PLACE.map(event -> new BlockEvent.Place() {
 
             @Override
-            public Entity getEntity() {
+            public Entity entity() {
                 return event.getEntity();
             }
 
             @Override
-            public LevelAccessor getLevel() {
+            public LevelAccessor level() {
                 return event.getLevel();
             }
 
             @Override
-            public BlockPos getPos() {
+            public BlockPos blockPos() {
                 return event.getPos();
             }
 
             @Override
-            public BlockState getState() {
+            public BlockState blockState() {
                 return event.getState();
             }
 
             @Override
-            public IBlockSnapshot getSnapshot() {
+            public IBlockSnapshot snapshot() {
                 return new IBlockSnapshot() {
                     @Override
-                    public BlockState getState() {
+                    public BlockState state() {
                         return event.getBlockSnapshot().getReplacedBlock();
                     }
 
                     @Override
-                    public CompoundTag getTag() {
+                    public CompoundTag tag() {
                         return event.getBlockSnapshot().getTag();
                     }
                 };
@@ -58,36 +58,36 @@ public class AbstractForgeBlockEvent {
         return AbstractForgeCommonEventsImpl.BLOCK_BREAK.map(event -> new BlockEvent.Break() {
 
             @Override
-            public Entity getEntity() {
+            public Entity entity() {
                 return event.getPlayer();
             }
 
             @Override
-            public LevelAccessor getLevel() {
+            public LevelAccessor level() {
                 return event.getLevel();
             }
 
             @Override
-            public BlockPos getPos() {
+            public BlockPos blockPos() {
                 return event.getPos();
             }
 
             @Override
-            public BlockState getState() {
+            public BlockState blockState() {
                 return null;
             }
 
             @Override
-            public IBlockSnapshot getSnapshot() {
+            public IBlockSnapshot snapshot() {
                 var level = event.getLevel();
                 return new IBlockSnapshot() {
                     @Override
-                    public BlockState getState() {
+                    public BlockState state() {
                         return event.getState();
                     }
 
                     @Override
-                    public CompoundTag getTag() {
+                    public CompoundTag tag() {
                         var blockEntity = level.getBlockEntity(event.getPos());
                         if (blockEntity != null) {
                             return blockEntity.saveFullData(level.registryAccess());

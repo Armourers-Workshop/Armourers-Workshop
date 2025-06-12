@@ -11,20 +11,20 @@ public class DefaultSkirtJointModifier extends JointModifier {
     @Override
     public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
         // ...
-        var body = model.getPart("body");
-        var leg1 = model.getPart("left_leg");
-        var leg2 = model.getPart("right_leg");
+        var body = model.partByName("body");
+        var leg1 = model.partByName("left_leg");
+        var leg2 = model.partByName("right_leg");
         // sorry, but we can't complete this convert.
         if (body == null || leg1 == null || leg2 == null) {
             return transform;
         }
         return poseStack -> {
-            var z = (leg1.pose().getZ() + leg2.pose().getZ()) / 2;
-            poseStack.translate(body.pose().getX(), leg1.pose().getY(), z);
-            if (body.pose().getYRot() != 0) {
-                poseStack.rotate(OpenVector3f.YP.rotation(body.pose().getYRot()));
+            var z = (leg1.pose().z() + leg2.pose().z()) / 2;
+            poseStack.translate(body.pose().x(), leg1.pose().y(), z);
+            if (body.pose().yRot() != 0) {
+                poseStack.rotate(OpenVector3f.YP.rotation(body.pose().yRot()));
             }
-            var xRot = (ort(leg1.pose().getXRot()) + ort(leg2.pose().getXRot())) / 2;
+            var xRot = (ort(leg1.pose().xRot()) + ort(leg2.pose().xRot())) / 2;
             if (Float.compare(xRot, 0) != 0) {
                 poseStack.rotate(OpenVector3f.XP.rotation(xRot));
             }

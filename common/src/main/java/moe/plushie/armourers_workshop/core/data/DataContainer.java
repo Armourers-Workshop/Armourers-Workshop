@@ -66,9 +66,9 @@ public class DataContainer implements IAssociatedContainerProvider {
     public <T> T getAssociatedObject(IAssociatedContainerKey<T> key) {
         var value = getValue(key);
         if (value != null) {
-            return key.getType().cast(value);
+            return key.type().cast(value);
         }
-        return key.getDefaultValue();
+        return key.defaultValue();
     }
 
     @Override

@@ -35,13 +35,13 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     public ChunkGeometrySlice(int startIndex, int endIndex, ChunkGeometrySelector selector, ChunkGeometrySection.Immutable section) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.base = selector.getIndex();
+        this.base = selector.index();
         this.stride = section.stride;
-        this.geometryType = section.getGeometryType();
-        this.geometryOptions = section.getGeometryOptions();
+        this.geometryType = section.geometryType();
+        this.geometryOptions = section.geometryOptions();
 
-        this.bytes = section.getBytes();
-        this.palette = section.getPalette();
+        this.bytes = section.bytes();
+        this.palette = section.palette();
 
         this.decoder = ChunkGeometrySerializers.createDecoder(geometryType, this);
     }
@@ -65,24 +65,24 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     }
 
     @Override
-    public int getStartIndex() {
+    public int startIndex() {
         return startIndex;
     }
 
     @Override
-    public int getEndIndex() {
+    public int endIndex() {
         return endIndex;
     }
 
-    public ChunkPaletteData getPalette() {
+    public ChunkPaletteData palette() {
         return palette;
     }
 
-    public SkinGeometryType getGeometryType() {
+    public SkinGeometryType geometryType() {
         return geometryType;
     }
 
-    public int getGeometryOptions() {
+    public int geometryOptions() {
         return geometryOptions;
     }
 
@@ -153,11 +153,11 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     }
 
     public SkinPaintColor getColor(int offset) {
-        return palette.readColor(getFixedInt(offset, palette.getColorIndexBytes()));
+        return palette.readColor(getFixedInt(offset, palette.colorIndexBytes()));
     }
 
     public OpenVector2f getTexturePos(int offset) {
-        int usedBytes = palette.getTextureIndexBytes();
+        int usedBytes = palette.textureIndexBytes();
         float x = getFixedFloat(offset, usedBytes);
         float y = getFixedFloat(offset + usedBytes, usedBytes);
         if (x == 0 && y == 0) {
@@ -167,7 +167,7 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     }
 
     public long getTextureOptions(int offset) {
-        int usedBytes = palette.getTextureIndexBytes();
+        int usedBytes = palette.textureIndexBytes();
         int x = getFixedInt(offset, usedBytes);
         int y = getFixedInt(offset + usedBytes, usedBytes);
         return ((long) y << 32) | x;

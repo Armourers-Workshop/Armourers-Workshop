@@ -52,7 +52,7 @@ public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     public static BooleanSupplier whenHeadVisible(IModel model) {
-        var modelPart = model.getPart("head");
+        var modelPart = model.partByName("head");
         if (modelPart != null) {
             return modelPart::isVisible;
         }
@@ -60,14 +60,14 @@ public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
     }
 
     public static BooleanSupplier whenAnyVisible(IModel model) {
-        for (var part : model.getAllParts()) {
+        for (var part : model.allParts()) {
             return part::isVisible;
         }
         return null;
     }
 
     public static BooleanSupplier whenBodyVisible(IModel model) {
-        var modelPart = model.getPart("body");
+        var modelPart = model.partByName("body");
         if (modelPart != null) {
             return modelPart::isVisible;
         }

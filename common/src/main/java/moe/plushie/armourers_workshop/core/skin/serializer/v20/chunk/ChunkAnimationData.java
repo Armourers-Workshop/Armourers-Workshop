@@ -24,7 +24,7 @@ public class ChunkAnimationData {
         this.animations = animations;
     }
 
-    public List<SkinAnimation> getAnimations() {
+    public List<SkinAnimation> animations() {
         return animations;
     }
 
@@ -47,10 +47,10 @@ public class ChunkAnimationData {
     public void writeToStream(ChunkOutputStream stream) throws IOException {
         stream.writeVarInt(animations.size());
         for (var animation : animations) {
-            stream.writeString(animation.getName());
-            stream.writeFloat(animation.getDuration());
-            stream.writeEnum(animation.getLoop());
-            writeKeyframesToStream(animation.getKeyframes(), stream);
+            stream.writeString(animation.name());
+            stream.writeFloat(animation.duration());
+            stream.writeEnum(animation.loop());
+            writeKeyframesToStream(animation.keyframes(), stream);
         }
     }
 
@@ -84,7 +84,7 @@ public class ChunkAnimationData {
         for (var entry1 : keyframes.entrySet()) {
             var bone = entry1.getKey();
             for (var entry2 : entry1.getValue()) {
-                var channel = entry2.getKey();
+                var channel = entry2.key();
                 sortedKeyframes.computeIfAbsent(channel, it -> new LinkedHashMap<>()).computeIfAbsent(bone, it -> new ArrayList<>()).add(entry2);
             }
         }
@@ -133,11 +133,11 @@ public class ChunkAnimationData {
             return;
         }
         // 1 is empty keyframe.
-        stream.writeVarInt(keyframe.getPoints().size() + 1);
-        stream.writeFloat(keyframe.getTime());
-        keyframe.getFunction().writeToStream(stream);
+        stream.writeVarInt(keyframe.points().size() + 1);
+        stream.writeFloat(keyframe.time());
+        keyframe.function().writeToStream(stream);
         // write all points into stream.
-        for (var point : keyframe.getPoints()) {
+        for (var point : keyframe.points()) {
             var serializer = PointSerializer.byValue(point);
             if (serializer == null) {
                 throw new IOException("can't write animation point: " + point);
@@ -164,9 +164,9 @@ public class ChunkAnimationData {
 
             @Override
             public void writeToStream(SkinAnimationPoint.Bone value, ChunkOutputStream stream) throws IOException {
-                writeField(value.getX(), stream);
-                writeField(value.getY(), stream);
-                writeField(value.getZ(), stream);
+                writeField(value.x(), stream);
+                writeField(value.y(), stream);
+                writeField(value.z(), stream);
             }
 
             private static OpenPrimitive readField(ChunkInputStream stream) throws IOException {
@@ -201,7 +201,7 @@ public class ChunkAnimationData {
 
             @Override
             public void writeToStream(SkinAnimationPoint.Instruct value, ChunkOutputStream stream) throws IOException {
-                stream.writeString(value.getScript());
+                stream.writeString(value.script());
             }
         };
 
@@ -213,24 +213,24 @@ public class ChunkAnimationData {
                 if (stream.fileVersion() < 23) {
                     var effect = stream.readString();
                     var file = stream.readFile();
-                    var sound = new SkinSoundData(file.getName(), file.getBytes(), SkinSoundProperties.EMPTY);
+                    var sound = new SkinSoundData(file.name(), file.bytes(), SkinSoundProperties.EMPTY);
                     return new SkinAnimationPoint.Sound(effect, sound);
                 }
                 var effect = stream.readString();
                 var properties = new SkinSoundProperties();
                 properties.readFromStream(stream);
                 var file = stream.readFile();
-                var sound = new SkinSoundData(file.getName(), file.getBytes(), properties);
+                var sound = new SkinSoundData(file.name(), file.bytes(), properties);
                 return new SkinAnimationPoint.Sound(effect, sound);
             }
 
             @Override
             public void writeToStream(SkinAnimationPoint.Sound value, ChunkOutputStream stream) throws IOException {
-                var sound = value.getProvider();
-                var properties = sound.getProperties();
-                stream.writeString(value.getEffect());
+                var sound = value.provider();
+                var properties = sound.properties();
+                stream.writeString(value.effect());
                 properties.writeToStream(stream);
-                stream.writeFile(ChunkFile.audio(sound.getName(), sound.getBuffer()));
+                stream.writeFile(ChunkFile.audio(sound.name(), sound.buffer()));
             }
         };
 
@@ -243,15 +243,15 @@ public class ChunkAnimationData {
                 var script = stream.readOptionalString();
                 var particleData = new ChunkParticleData();
                 particleData.readFromStream(stream);
-                return new SkinAnimationPoint.Particle(effect, locator.orElse(null), script.orElse(null), particleData.getParticle());
+                return new SkinAnimationPoint.Particle(effect, locator.orElse(null), script.orElse(null), particleData.particle());
             }
 
             @Override
             public void writeToStream(SkinAnimationPoint.Particle value, ChunkOutputStream stream) throws IOException {
-                var particle = value.getProvider();
-                stream.writeString(value.getEffect());
-                stream.writeOptionalString(value.getLocator());
-                stream.writeOptionalString(value.getScript());
+                var particle = value.provider();
+                stream.writeString(value.effect());
+                stream.writeOptionalString(value.locator());
+                stream.writeOptionalString(value.script());
                 var particleData = new ChunkParticleData(particle);
                 particleData.writeToStream(stream);
             }

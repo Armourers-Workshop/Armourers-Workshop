@@ -21,7 +21,7 @@ public class EpicFightJointBinder extends JointModifier {
             return transform;
         }
         return poseStack -> {
-            var jointPose = model.getAssociatedObject(EpicFlightTransformProvider.KEY).getJointPose(name);
+            var jointPose = model.getAssociatedObject(EpicFlightTransformProvider.KEY).poseByName(name);
 
             // the extra transforms is based on 1:1, but we own transforms is based on 1:16.
             // because we will zoom out the pose stack before the call apply,

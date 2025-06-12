@@ -25,15 +25,15 @@ public final class LegacyCubeHelper {
             byte g = (byte) (color >> 8 & 0xff);
             byte b = (byte) (color & 0xff);
             for (int i = 0; i < 6; i++) {
-                slice.setR(i, r);
-                slice.setG(i, g);
-                slice.setB(i, b);
+                slice.setRed(i, r);
+                slice.setGreen(i, g);
+                slice.setBlue(i, b);
             }
         } else {
             for (int i = 0; i < 6; i++) {
-                slice.setR(i, input.readByte());
-                slice.setG(i, input.readByte());
-                slice.setB(i, input.readByte());
+                slice.setRed(i, input.readByte());
+                slice.setGreen(i, input.readByte());
+                slice.setBlue(i, input.readByte());
             }
         }
     }
@@ -70,9 +70,9 @@ public final class LegacyCubeHelper {
         byte g = (byte) (color >> 8 & 0xff);
         byte b = (byte) (color & 0xff);
         for (int i = 0; i < 6; i++) {
-            slice.setR(i, r);
-            slice.setG(i, g);
-            slice.setB(i, b);
+            slice.setRed(i, r);
+            slice.setGreen(i, g);
+            slice.setBlue(i, b);
         }
     }
 }

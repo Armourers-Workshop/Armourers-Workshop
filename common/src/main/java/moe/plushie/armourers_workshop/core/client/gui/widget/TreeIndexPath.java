@@ -10,7 +10,7 @@ public class TreeIndexPath {
         this.indexes = indexes;
     }
 
-    public List<Integer> getIndexes() {
+    public List<Integer> indexes() {
         return indexes;
     }
 }

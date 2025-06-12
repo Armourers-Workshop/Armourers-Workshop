@@ -11,11 +11,11 @@ import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class EntityTextureDescriptor implements IDataSerializable.Immutable {
@@ -67,7 +67,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new EntityTextureDescriptor(new TagSerializer(entityTag.getCompound(Constants.Key.ENTITY_TEXTURE)));
+        descriptor = new EntityTextureDescriptor(entityTag.getOptionalCompound(Constants.Key.ENTITY_TEXTURE).map(TagSerializer::new).orElseGet(TagSerializer::new));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }
@@ -99,7 +99,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     @Nullable
-    public String getURL() {
+    public String url() {
         if (source == Source.URL) {
             return value;
         }
@@ -107,7 +107,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     @Nullable
-    public String getName() {
+    public String name() {
         if (source == Source.USER) {
             if (value != null) {
                 return value;
@@ -117,17 +117,17 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     @Nullable
-    public GameProfile getProfile() {
+    public GameProfile profile() {
         return profile;
     }
 
     @Nullable
-    public String getValue() {
+    public String value() {
         return value;
     }
 
     @Nullable
-    public Source getSource() {
+    public Source source() {
         return source;
     }
 

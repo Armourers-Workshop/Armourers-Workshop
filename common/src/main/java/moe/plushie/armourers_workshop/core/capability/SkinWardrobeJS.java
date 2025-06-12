@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -35,12 +35,12 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unused")
 public class SkinWardrobeJS {
 
-    private static final Map<String, BiConsumer<SkinWardrobe, Boolean>> OPTIONS = Collections.immutableMap(builder -> {
-        builder.put("render.head", (w, f) -> w.setRenderEquipment(EquipmentSlot.HEAD, f));
-        builder.put("render.chest", (w, f) -> w.setRenderEquipment(EquipmentSlot.CHEST, f));
-        builder.put("render.legs", (w, f) -> w.setRenderEquipment(EquipmentSlot.LEGS, f));
-        builder.put("render.feet", (w, f) -> w.setRenderEquipment(EquipmentSlot.FEET, f));
-        builder.put("render.extra", SkinWardrobe::setRenderExtra);
+    private static final Map<String, BiConsumer<SkinWardrobe, Boolean>> OPTIONS = Collections.immutableMap(it -> {
+        it.put("render.head", (w, f) -> w.setRenderEquipment(OpenEquipmentSlot.HEAD, f));
+        it.put("render.chest", (w, f) -> w.setRenderEquipment(OpenEquipmentSlot.CHEST, f));
+        it.put("render.legs", (w, f) -> w.setRenderEquipment(OpenEquipmentSlot.LEGS, f));
+        it.put("render.feet", (w, f) -> w.setRenderEquipment(OpenEquipmentSlot.FEET, f));
+        it.put("render.extra", SkinWardrobe::setRenderExtra);
     });
 
     private final SkinWardrobe wardrobe;
@@ -52,7 +52,7 @@ public class SkinWardrobeJS {
     public SkinDescriptorJS loadSkin(String identifier) {
         var skin = SkinLoader.getInstance().loadSkin(identifier);
         if (skin != null) {
-            return new SkinDescriptorJS(new SkinDescriptor(identifier, skin.getType(), SkinPaintScheme.EMPTY));
+            return new SkinDescriptorJS(new SkinDescriptor(identifier, skin.type(), SkinPaintScheme.EMPTY));
         }
         return null;
     }
@@ -145,11 +145,11 @@ public class SkinWardrobeJS {
         }
 
         public String getIdentifier() {
-            return descriptor.getIdentifier();
+            return descriptor.identifier();
         }
 
         public String getType() {
-            return descriptor.getType().getRegistryName().getPath();
+            return descriptor.type().registryName().path();
         }
 
         public ItemStack asItemStack() {

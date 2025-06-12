@@ -27,33 +27,33 @@ public class SkinGeometryVertex implements ISkinGeometryVertex {
     }
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public OpenVector3f getPosition() {
+    public OpenVector3f position() {
         return position;
     }
 
     @Override
-    public OpenVector3f getNormal() {
+    public OpenVector3f normal() {
         return normal;
     }
 
     @Override
-    public OpenVector2f getTextureCoords() {
+    public OpenVector2f textureCoords() {
         return textureCoords;
     }
 
     @Override
-    public Color getColor() {
+    public Color color() {
         return color;
     }
 
     @Override
     public String toString() {
-        return Objects.toString(this, "id", getId(), "position", getPosition(), "normal", getNormal(), "uv", getTextureCoords(), "color", getColor());
+        return Objects.toString(this, "id", id(), "position", position(), "normal", normal(), "uv", textureCoords(), "color", color());
     }
 
     public static class Color extends SkinPaintColor {
@@ -63,19 +63,19 @@ public class SkinGeometryVertex implements ISkinGeometryVertex {
         protected final int alpha;
 
         public Color(SkinPaintColor paintColor, int alpha) {
-            super(paintColor.getRawValue(), paintColor.getRGB(), paintColor.getPaintType());
+            super(paintColor.rawValue(), paintColor.getRGB(), paintColor.paintType());
             this.alpha = alpha;
         }
 
-        public int getAlpha() {
+        public int alpha() {
             return alpha;
         }
 
         @Override
         public String toString() {
-            var alpha = getAlpha();
+            var alpha = alpha();
             if (alpha < 255) {
-                return String.format("%s * %f", super.toString(), getAlpha() / 255f);
+                return String.format("%s * %f", super.toString(), alpha() / 255f);
             }
             return super.toString();
         }

@@ -60,12 +60,12 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         IKeyBinding binding1 = new IKeyBinding() {
 
             @Override
-            public Component getKeyName() {
+            public Component keyName() {
                 return binding.getTranslatedKeyMessage();
             }
 
             @Override
-            public IKeyModifier getKeyModifier() {
+            public IKeyModifier keyModifier() {
                 return binding.getOpenKeyModifier();
             }
         };

@@ -22,17 +22,17 @@ public class SkinPreviewData {
 
     public static SkinPreviewData of(Skin skin) {
         // we can't re-generate the preview data for a preview skin.
-        if (skin.getPreviewData() != null) {
-            return skin.getPreviewData();
+        if (skin.previewData() != null) {
+            return skin.previewData();
         }
         var allCubes = new ArrayList<Pair<ITransform, SkinGeometrySet<?>>>();
-        eachPart(skin.getParts(), part -> {
+        eachPart(skin.parts(), part -> {
             // apply the origin offset.
-            var pos = part.getType().getRenderOffset();
+            var pos = part.type().renderOffset();
             var offset = OpenTransform3f.createTranslateTransform(pos.x(), pos.y(), pos.z());
             // apply the marker rotation and offset.
             var transform = new SkinPartTransform(part, offset);
-            allCubes.add(Pair.of(transform, part.getGeometries()));
+            allCubes.add(Pair.of(transform, part.geometries()));
         });
         return new SkinPreviewData(allCubes);
     }
@@ -40,7 +40,7 @@ public class SkinPreviewData {
     private static void eachPart(Collection<SkinPart> parts, Consumer<SkinPart> consumer) {
         for (var part : parts) {
             consumer.accept(part);
-            eachPart(part.getChildren(), consumer);
+            eachPart(part.children(), consumer);
         }
     }
 

@@ -93,7 +93,7 @@ public class TypedRegistry<T> implements IRegistry<T> {
 
     public static <T> IResourceLocation findKey(T value) {
         for (var registry : INSTANCES) {
-            if (registry.getType().isInstance(value)) {
+            if (registry.type().isInstance(value)) {
                 TypedRegistry<T> registry1 = Objects.unsafeCast(registry);
                 return registry1.getKey(value);
             }
@@ -103,9 +103,9 @@ public class TypedRegistry<T> implements IRegistry<T> {
 
     public static <T> Collection<IRegistryHolder<? extends T>> findEntries(Class<T> clazz) {
         for (var registry : INSTANCES) {
-            if (clazz.isAssignableFrom(registry.getType())) {
+            if (clazz.isAssignableFrom(registry.type())) {
                 TypedRegistry<T> registry1 = Objects.unsafeCast(registry);
-                return registry1.getEntries();
+                return registry1.entries();
             }
         }
         return Collections.emptyList();
@@ -132,12 +132,12 @@ public class TypedRegistry<T> implements IRegistry<T> {
     }
 
     @Override
-    public List<IRegistryHolder<? extends T>> getEntries() {
+    public List<IRegistryHolder<? extends T>> entries() {
         return entries;
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<?> type() {
         return type;
     }
 
@@ -169,7 +169,7 @@ public class TypedRegistry<T> implements IRegistry<T> {
         }
 
         @Override
-        public IResourceLocation getRegistryName() {
+        public IResourceLocation registryName() {
             return registryName;
         }
 

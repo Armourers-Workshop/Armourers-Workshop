@@ -16,15 +16,15 @@ public class BlockBenchAnimation extends BlockBenchObject {
         this.animators = animators;
     }
 
-    public float getDuration() {
+    public float duration() {
         return duration;
     }
 
-    public String getLoop() {
+    public String loop() {
         return loop;
     }
 
-    public List<BlockBenchAnimator> getAnimators() {
+    public List<BlockBenchAnimator> animators() {
         return animators;
     }
 

@@ -24,7 +24,7 @@ public class TexturedPaintColor extends SkinPaintColor {
     }
 
     public static SkinPaintColor of(int rgb, SkinPaintType paintType) {
-        var value = (rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24);
+        var value = (rgb & 0xffffff) | ((paintType.id() & 0xff) << 24);
         var paintColor = POOL.getIfPresent(value);
         if (paintColor == null) {
             paintColor = new TexturedPaintColor(value, rgb, paintType);

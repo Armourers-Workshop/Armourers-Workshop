@@ -16,7 +16,7 @@ public class SkinPaintColor implements ISkinPaintColor {
             .maximumSize(2048)
             .build();
 
-    public static final IDataCodec<SkinPaintColor> CODEC = IDataCodec.INT.alternative(IDataCodec.STRING, SkinPaintColor::parseColor).xmap(SkinPaintColor::of, SkinPaintColor::getRawValue);
+    public static final IDataCodec<SkinPaintColor> CODEC = IDataCodec.INT.alternative(IDataCodec.STRING, SkinPaintColor::parseColor).xmap(SkinPaintColor::of, SkinPaintColor::rawValue);
 
     protected final int value;
     protected final int rgb;
@@ -40,7 +40,7 @@ public class SkinPaintColor implements ISkinPaintColor {
     }
 
     public static SkinPaintColor of(int rgb, SkinPaintType paintType) {
-        int value = (rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24);
+        int value = (rgb & 0xffffff) | ((paintType.id() & 0xff) << 24);
         var paintColor = POOL.getIfPresent(value);
         if (paintColor == null) {
             paintColor = new SkinPaintColor(value, rgb, paintType);
@@ -70,21 +70,21 @@ public class SkinPaintColor implements ISkinPaintColor {
     }
 
     public boolean isEmpty() {
-        return getPaintType() == SkinPaintTypes.NONE;
+        return paintType() == SkinPaintTypes.NONE;
     }
 
     @Override
-    public int getRed() {
+    public int red() {
         return (rgb >> 16) & 0xff;
     }
 
     @Override
-    public int getGreen() {
+    public int green() {
         return (rgb >> 8) & 0xff;
     }
 
     @Override
-    public int getBlue() {
+    public int blue() {
         return rgb & 0xff;
     }
 
@@ -94,12 +94,12 @@ public class SkinPaintColor implements ISkinPaintColor {
     }
 
     @Override
-    public int getRawValue() {
+    public int rawValue() {
         return value;
     }
 
     @Override
-    public SkinPaintType getPaintType() {
+    public SkinPaintType paintType() {
         return paintType;
     }
 

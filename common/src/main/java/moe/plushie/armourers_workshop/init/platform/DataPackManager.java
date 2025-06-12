@@ -13,10 +13,10 @@ import java.util.function.Function;
 
 public class DataPackManager {
 
-    private static final Map<DataPackType, DataPackLoader> INSTANCES = Collections.immutableMap(builder -> {
-        builder.put(DataPackType.SERVER_DATA, new Data());
-        builder.put(DataPackType.CLIENT_RESOURCES, new Resources());
-        builder.put(DataPackType.BUNDLED_DATA, new Bundle());
+    private static final Map<DataPackType, DataPackLoader> INSTANCES = Collections.immutableMap(it -> {
+        it.put(DataPackType.SERVER_DATA, new Data());
+        it.put(DataPackType.CLIENT_RESOURCES, new Resources());
+        it.put(DataPackType.BUNDLED_DATA, new Bundle());
     });
 
     public static DataPackLoader byType(DataPackType packType) {

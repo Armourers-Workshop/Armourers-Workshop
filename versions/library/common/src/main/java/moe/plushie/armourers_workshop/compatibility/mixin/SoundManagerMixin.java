@@ -49,7 +49,7 @@ public class SoundManagerMixin implements AbstractSoundManagerImpl {
 
     @Override
     public void aw2$register(ResourceLocation location, AbstractSimpleSound sound) {
-        var event = new WeighedSoundEvents(location, sound.getName());
+        var event = new WeighedSoundEvents(location, sound.name());
         event.addSound(Sound.create(sound));
         aw2$registry.put(location, event);
     }

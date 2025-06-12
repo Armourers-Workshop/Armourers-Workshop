@@ -22,50 +22,50 @@ public class SkinFile implements Comparable<SkinFile> {
         this.isPrivateDirectory = isPrivateDirectory;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public String getNamespace() {
+    public String namespace() {
         return domain.namespace();
     }
 
-    public String getPath() {
+    public String path() {
         return path;
     }
 
-    public int getLastModified() {
+    public int lastModified() {
         if (header != null) {
-            return header.getLastModified();
+            return header.lastModified();
         }
         return 0;
     }
 
-    public int getSkinVersion() {
+    public int skinVersion() {
         if (header != null) {
-            return header.getVersion();
+            return header.version();
         }
         return 0;
     }
 
-    public String getSkinIdentifier() {
-        return getNamespace() + ":" + getPath();
+    public String skinIdentifier() {
+        return namespace() + ":" + path();
     }
 
-    public SkinType getSkinType() {
+    public SkinType skinType() {
         if (header != null) {
-            return header.getType();
+            return header.type();
         }
         return null;
     }
 
-    public SkinFileHeader getSkinHeader() {
+    public SkinFileHeader skinHeader() {
         return header;
     }
 
-    public SkinProperties getSkinProperties() {
+    public SkinProperties skinProperties() {
         if (header != null) {
-            return header.getProperties();
+            return header.properties();
         }
         return null;
     }

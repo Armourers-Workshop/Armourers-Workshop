@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public interface IConfigurableToolProperty<T> {
 
-    String getName();
+    String name();
 
     T empty();
 

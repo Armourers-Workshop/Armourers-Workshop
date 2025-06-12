@@ -18,23 +18,23 @@ public class ItemSelectorImpl implements ItemSelector {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return AbstractRegistryManager.getItemKey(itemStack.getItem());
     }
 
     @Override
-    public int getDamage() {
+    public int damage() {
         return itemStack.getDamageValue();
     }
 
     @Override
-    public int getMaxDamage() {
+    public int maxDamage() {
         return itemStack.getMaxDamage();
     }
 
     @Nullable
     @Override
-    public EnchantmentSelector getEnchantment(String name) {
+    public EnchantmentSelector enchantmentByName(String name) {
         var enchantment = AbstractRegistryManager.getEnchantment(itemStack, name);
         if (enchantment != null) {
             return enchantmentSelector.apply(enchantment);

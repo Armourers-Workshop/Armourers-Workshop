@@ -26,7 +26,7 @@ public class NewComboItem {
         return items.get(index);
     }
 
-    public NSString getTitle() {
+    public NSString title() {
         return name;
     }
 

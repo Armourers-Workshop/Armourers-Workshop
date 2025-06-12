@@ -16,13 +16,13 @@ public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
     public BlockEntityRenderData(BlockEntity blockEntity) {
         super(blockEntity, new BlockEntityProvider(), new WardrobeProvider());
         this.renderPatch = new BlockEntityRenderPatch<>(blockEntity);
-        this.renderPatch.getRenderingContext().setAnimationManager(getAnimationManager());
+        this.renderPatch.renderingContext().setAnimationManager(animationManager());
     }
 
     @Nullable
     public static BlockEntityRenderData of(@Nullable BlockEntity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).getRenderData().orElse(null);
+            return EntityDataStorage.of(entity).renderData().orElse(null);
         }
         return null;
     }
@@ -32,7 +32,7 @@ public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
     }
 
 
-    public BlockEntityRenderPatch<? super BlockEntity> getRenderPatch() {
+    public BlockEntityRenderPatch<? super BlockEntity> renderPatch() {
         return renderPatch;
     }
 
@@ -40,7 +40,7 @@ public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
         this.customTextureProvider = customTextureProvider;
     }
 
-    public Object getCustomTextureProvider() {
+    public Object customTextureProvider() {
         return customTextureProvider;
     }
 }

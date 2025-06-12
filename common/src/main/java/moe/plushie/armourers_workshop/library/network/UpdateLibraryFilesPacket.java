@@ -44,7 +44,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
         this.publicFiles = new ArrayList<>();
         this.privateFiles = new ArrayList<>();
         for (var file : readCompressedBuffer(new ByteBufInputStream(buffer.asByteBuf()))) {
-            if (file.getPath().startsWith(Constants.PRIVATE)) {
+            if (file.path().startsWith(Constants.PRIVATE)) {
                 privateFiles.add(file);
             } else {
                 publicFiles.add(file);
@@ -63,8 +63,8 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     public void accept(IClientPacketHandler packetHandler, Player player) {
         var client = SkinLibraryManager.getClient();
         client.setSetting(setting);
-        client.getPublicSkinLibrary().reloadFiles(publicFiles);
-        client.getPrivateSkinLibrary().reloadFiles(privateFiles);
+        client.publicLibrary().reloadFiles(publicFiles);
+        client.privateLibrary().reloadFiles(privateFiles);
     }
 
     private void writeCompressedBuffer(ByteBufOutputStream stream, Iterable<SkinLibraryFile> files, int totalSize) {
@@ -73,13 +73,13 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
             var dataStream = new DataOutputStream(new GZIPOutputStream(stream));
             var outputStream = IOutputStream.of(dataStream);
             for (var file : files) {
-                var properties = Objects.safeCast(file.getSkinProperties(), SkinProperties.class);
-                outputStream.writeString(file.getPath());
+                var properties = Objects.safeCast(file.skinProperties(), SkinProperties.class);
+                outputStream.writeString(file.path());
                 outputStream.writeBoolean(properties == null); // is directory
                 if (properties != null) {
-                    outputStream.writeType(file.getSkinType());
-                    outputStream.writeInt(file.getSkinVersion());
-                    outputStream.writeInt(file.getLastModified());
+                    outputStream.writeType(file.skinType());
+                    outputStream.writeInt(file.skinVersion());
+                    outputStream.writeInt(file.lastModified());
                     properties.writeToStream(outputStream);
                 }
             }

@@ -124,7 +124,7 @@ public class UIWindow extends UIView {
         _dispatcher(event).remove(target);
         // when remove mouse move event, the first responder maybe changes.
         if (event == UIControl.Event.MOUSE_MOVED) {
-            var windowManager = getWindowManager();
+            var windowManager = windowManager();
             if (windowManager != null) {
                 windowManager._setNeedsUpdateFocus();
             }
@@ -156,7 +156,7 @@ public class UIWindow extends UIView {
     }
 
 
-    public UIWindowManager getWindowManager() {
+    public UIWindowManager windowManager() {
         if (windowManager != null) {
             return windowManager.get();
         }

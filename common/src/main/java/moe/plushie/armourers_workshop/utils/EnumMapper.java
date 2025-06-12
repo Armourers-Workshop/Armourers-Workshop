@@ -46,7 +46,7 @@ public class EnumMapper<K extends Enum<K>, V extends Enum<V>> {
             this.defaultValue = defaultValue;
         }
 
-        public void add(K key, V value) {
+        public void put(K key, V value) {
             keyMap.put(key, value);
             valueMap.put(value, key);
         }

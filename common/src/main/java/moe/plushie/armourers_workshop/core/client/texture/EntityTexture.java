@@ -29,7 +29,7 @@ public class EntityTexture {
         this.url = url;
     }
 
-    public String getModelType() {
+    public String modelType() {
         return modelType;
     }
 
@@ -37,15 +37,15 @@ public class EntityTexture {
         this.modelType = modelType;
     }
 
-    public EntityTextureDescriptor getDescriptor() {
+    public EntityTextureDescriptor descriptor() {
         return descriptor;
     }
 
-    public OpenResourceLocation getLocation() {
+    public OpenResourceLocation location() {
         return location;
     }
 
-    public String getURL() {
+    public String url() {
         return url;
     }
 
@@ -55,7 +55,7 @@ public class EntityTexture {
     }
 
     @Environment(EnvType.CLIENT)
-    public BakedEntityTexture getTexture() {
+    public BakedEntityTexture texture() {
         if (texture != null && texture.isLoaded()) {
             return texture;
         }

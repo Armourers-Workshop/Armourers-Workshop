@@ -87,21 +87,21 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         scrollView.setContentSize(new CGSize(0, listTop + 4));
         scrollView.setContentOffset(scrollView.contentOffset());
 
-        int pageSize = skinPanelRecentlyUploaded.getTotalCount();
+        int pageSize = skinPanelRecentlyUploaded.totalCount();
         if (lastRequestSize > 0 && lastRequestSize < pageSize) {
             reloadData();
         }
     }
 
     public void reloadData() {
-        int requestSize = skinPanelRecentlyUploaded.getTotalCount();
+        int requestSize = skinPanelRecentlyUploaded.totalCount();
         lastRequestSize = requestSize;
         ModLog.debug("refresh home skin list, page size: {}", lastRequestSize);
 
         // get recently uploaded skins.
         library.searchSkin("", 0, requestSize, SearchColumnType.DATE_CREATED, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
             if (result != null) {
-                skinPanelRecentlyUploaded.setEntries(result.getSkins());
+                skinPanelRecentlyUploaded.setEntries(result.skins());
                 skinPanelRecentlyUploaded.reloadData();
             }
         });
@@ -109,7 +109,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         // get most downloaded skins.
         library.searchSkin("", 0, requestSize, SearchColumnType.DOWNLOADS, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
             if (result != null) {
-                skinPanelMostDownloaded.setEntries(result.getSkins());
+                skinPanelMostDownloaded.setEntries(result.skins());
                 skinPanelMostDownloaded.reloadData();
             }
         });
@@ -117,7 +117,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         // get top rated skins.
         library.searchSkin("", 0, requestSize, SearchColumnType.RATING, SearchOrderType.DESC, SkinTypes.UNKNOWN, (result, exception) -> {
             if (result != null) {
-                skinPanelTopRated.setEntries(result.getSkins());
+                skinPanelTopRated.setEntries(result.skins());
                 skinPanelTopRated.reloadData();
             }
         });
@@ -125,7 +125,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         // get need rated skins.
         library.searchSkin("", 0, requestSize, SearchColumnType.RATING_COUNT, SearchOrderType.ASC, SkinTypes.UNKNOWN, (result, exception) -> {
             if (result != null) {
-                skinPanelNeedRated.setEntries(result.getSkins());
+                skinPanelNeedRated.setEntries(result.skins());
                 skinPanelNeedRated.reloadData();
             }
         });
@@ -172,7 +172,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
     }
 
     private int indexOf(ServerItemList list, String skinId) {
-        return Collections.indexOf(list.getEntries(), e -> Objects.equals(e.getId(), skinId));
+        return Collections.indexOf(list.entries(), e -> Objects.equals(e.id(), skinId));
     }
 
     private Iterable<ServerItemList> lists() {

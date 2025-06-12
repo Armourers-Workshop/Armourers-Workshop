@@ -25,12 +25,12 @@ import java.util.Set;
 
 public final class BlockUtils {
 
-    private static final Set<IRegistryHolder<Block>> SNAPSHOT_BLOCKS = Collections.immutableSet(builder -> {
-        builder.add(ModBlocks.SKIN_CUBE);
-        builder.add(ModBlocks.SKIN_CUBE_GLASS);
-        builder.add(ModBlocks.SKIN_CUBE_GLASS_GLOWING);
-        builder.add(ModBlocks.SKIN_CUBE_GLOWING);
-        builder.add(ModBlocks.ADVANCED_SKIN_BUILDER);
+    private static final Set<IRegistryHolder<Block>> SNAPSHOT_BLOCKS = Collections.immutableSet(it -> {
+        it.add(ModBlocks.SKIN_CUBE);
+        it.add(ModBlocks.SKIN_CUBE_GLASS);
+        it.add(ModBlocks.SKIN_CUBE_GLASS_GLOWING);
+        it.add(ModBlocks.SKIN_CUBE_GLOWING);
+        it.add(ModBlocks.ADVANCED_SKIN_BUILDER);
     });
 
     private static final ThreadLocal<Map<BlockEntity, Runnable>> SNAPSHOT_QUEUE = ThreadLocal.withInitial(() -> null);
@@ -54,7 +54,7 @@ public final class BlockUtils {
 
     public static void snapshot(BlockEvent event) {
         // only work in server side
-        if (!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof Level level)) {
+        if (!(event.entity() instanceof ServerPlayer player) || !(event.level() instanceof Level level)) {
             return;
         }
         // when action type is null, we can't snapshot it.
@@ -62,9 +62,9 @@ public final class BlockUtils {
         if (actionType == null) {
             return;
         }
-        var snapshot = event.getSnapshot();
-        var group = new NamedUserAction(actionType.getTitle());
-        group.push(new SetBlockAction(level, event.getPos(), snapshot.getState(), snapshot.getTag()));
+        var snapshot = event.snapshot();
+        var group = new NamedUserAction(actionType.title());
+        group.push(new SetBlockAction(level, event.blockPos(), snapshot.state(), snapshot.tag()));
         UndoManager.of(player.getUUID()).push(group);
     }
 
@@ -217,9 +217,9 @@ public final class BlockUtils {
     }
 
     private static boolean samePlane(BlockPos src, BlockPos dst, OpenDirection direction) {
-        if (direction.getStepX() == 0 || src.getX() == dst.getX()) {
-            if (direction.getStepY() == 0 || src.getY() == dst.getY()) {
-                return direction.getStepZ() == 0 || src.getZ() == dst.getZ();
+        if (direction.stepX() == 0 || src.getX() == dst.getX()) {
+            if (direction.stepY() == 0 || src.getY() == dst.getY()) {
+                return direction.stepZ() == 0 || src.getZ() == dst.getZ();
             }
         }
         return false;
@@ -239,19 +239,19 @@ public final class BlockUtils {
 
         public static ActionType of(BlockEvent event) {
             // is place skin cube block.
-            var blockState = event.getState();
+            var blockState = event.blockState();
             if (blockState != null && isSnapshotBlock(blockState.getBlock())) {
                 return new ActionType(Component.translatable("chat.armourers_workshop.undo.placeBlock"));
             }
             // is break skin cube block.
-            var snapshot = event.getSnapshot();
-            if (blockState == null && isSnapshotBlock(snapshot.getState().getBlock())) {
+            var snapshot = event.snapshot();
+            if (blockState == null && isSnapshotBlock(snapshot.state().getBlock())) {
                 return new ActionType(Component.translatable("chat.armourers_workshop.undo.breakBlock"));
             }
             return null;
         }
 
-        public Component getTitle() {
+        public Component title() {
             return title;
         }
     }

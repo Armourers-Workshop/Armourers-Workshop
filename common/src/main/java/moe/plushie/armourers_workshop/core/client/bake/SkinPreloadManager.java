@@ -52,7 +52,7 @@ public class SkinPreloadManager {
             if (descriptor.isEmpty()) {
                 continue;
             }
-            ModLog.debug("'{}' => start preload skin", descriptor.getIdentifier());
+            ModLog.debug("'{}' => start preload skin", descriptor.identifier());
             SkinBakery.getInstance().loadSkin(descriptor, Tickets.PRELOAD);
         }
     }

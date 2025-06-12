@@ -20,7 +20,7 @@ public class Palette {
         this(name, false, new int[MAX_COLORS_PER_PALETTE]);
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class Palette {
         return locked;
     }
 
-    public int[] getColors() {
+    public int[] colors() {
         return colors;
     }
 

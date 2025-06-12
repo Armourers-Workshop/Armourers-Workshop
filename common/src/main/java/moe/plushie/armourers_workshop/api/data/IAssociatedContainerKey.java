@@ -4,10 +4,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IAssociatedContainerKey<T> {
 
-    Class<T> getType();
+    Class<T> type();
 
     @Nullable
-    default T getDefaultValue() {
+    default T defaultValue() {
         return null;
     }
 }

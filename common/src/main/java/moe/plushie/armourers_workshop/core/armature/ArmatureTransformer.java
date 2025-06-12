@@ -22,22 +22,22 @@ public class ArmatureTransformer {
     }
 
     public void put(IJoint joint, IJointTransform transform) {
-        transforms[joint.getId()] = transform;
+        transforms[joint.id()] = transform;
     }
 
-    public Armature getArmature() {
+    public Armature armature() {
         return armature;
     }
 
-    public ArmaturePlugin[] getPlugins() {
+    public ArmaturePlugin[] plugins() {
         return plugins;
     }
 
-    public IJointTransform[] getTransforms() {
+    public IJointTransform[] transforms() {
         return transforms;
     }
 
-    public ArmatureTransformerContext getContext() {
+    public ArmatureTransformerContext context() {
         return context;
     }
 }

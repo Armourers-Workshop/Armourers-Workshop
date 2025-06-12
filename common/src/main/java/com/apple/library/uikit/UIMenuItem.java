@@ -15,16 +15,16 @@ import java.util.function.Supplier;
 
 public class UIMenuItem {
 
-    private static final Map<String, Predicate<UIEvent>> TESTER = Collections.immutableMap(builder -> {
-        builder.put("key.keyboard.control", event -> InputManagerImpl.hasControlDown());
-        builder.put("key.keyboard.shift", event -> InputManagerImpl.hasShiftDown());
-        builder.put("key.keyboard.alt", event -> InputManagerImpl.hasAltDown());
+    private static final Map<String, Predicate<UIEvent>> TESTER = Collections.immutableMap(it -> {
+        it.put("key.keyboard.control", event -> InputManagerImpl.hasControlDown());
+        it.put("key.keyboard.shift", event -> InputManagerImpl.hasShiftDown());
+        it.put("key.keyboard.alt", event -> InputManagerImpl.hasAltDown());
     });
 
-    private static final Map<String, Supplier<String>> TESTER_NAME = Collections.immutableMap(builder -> {
-        builder.put("key.keyboard.alt", () -> "ALT");
-        builder.put("key.keyboard.shift", () -> "SHIFT");
-        builder.put("key.keyboard.control", () -> {
+    private static final Map<String, Supplier<String>> TESTER_NAME = Collections.immutableMap(it -> {
+        it.put("key.keyboard.alt", () -> "ALT");
+        it.put("key.keyboard.shift", () -> "SHIFT");
+        it.put("key.keyboard.control", () -> {
             if (Minecraft.ON_OSX) {
                 return "CMD";
             }
@@ -136,7 +136,7 @@ public class UIMenuItem {
                 } else {
                     var key = InputKeyImpl.get(keyName);
                     conditions.add(event -> key.test(event.key(), event.keyModifier()));
-                    names.add(new NSString(key.getName()));
+                    names.add(new NSString(key.name()));
                 }
             }
             inputName = StringImpl.join(names, " + ");

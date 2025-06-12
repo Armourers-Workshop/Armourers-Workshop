@@ -12,7 +12,7 @@ public class BlockBenchElement extends BlockBenchObject {
         this.allowExport = allowExport;
     }
 
-    public String getType() {
+    public String type() {
         return type;
     }
 

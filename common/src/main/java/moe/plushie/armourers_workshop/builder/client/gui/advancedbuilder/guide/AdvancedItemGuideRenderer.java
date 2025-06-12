@@ -26,7 +26,7 @@ public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
 
     @Override
     public void render(SkinDocument document, IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
-        SkinDocumentNode node = findItemNode(document.getRoot());
+        SkinDocumentNode node = findItemNode(document.root());
         if (node == null) {
             return;
         }
@@ -50,7 +50,7 @@ public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
 
     protected SkinDocumentNode findItemNode(SkinDocumentNode node) {
         // find first item node.
-        if (node.getType() instanceof ICanHeld) {
+        if (node.type() instanceof ICanHeld) {
             return node;
         }
         for (var child : node.children()) {

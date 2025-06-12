@@ -20,20 +20,20 @@ public class BedrockCurve {
         this.parameters = parameters;
     }
 
-    public String getType() {
+    public String type() {
         return type;
     }
 
-    public OpenExpression getInput() {
+    public OpenExpression input() {
         return input;
     }
 
 
-    public OpenExpression getRange() {
+    public OpenExpression range() {
         return range;
     }
 
-    public List<Float> getParameters() {
+    public List<Float> parameters() {
         return parameters;
     }
 

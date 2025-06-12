@@ -22,7 +22,7 @@ public class ArmourerBaseSetting extends UIView {
     public void reloadData() {
     }
 
-    public NSString getTitle() {
+    public NSString title() {
         return NSString.localizedString(baseKey);
     }
 

@@ -93,8 +93,8 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         this.setContents(new CGGradient(UIColor.rgba(0xc0101010), UIColor.rgba(0xd0101010)));
         this.setFrame(new CGRect(0, 0, 640, 480));
         this.libraryManager.addListener(this);
-        this.selectedLibrary = libraryManager.getLocalSkinLibrary();
-        this.selectedPath = selectedLibrary.getRootPath();
+        this.selectedLibrary = libraryManager.localLibrary();
+        this.selectedPath = selectedLibrary.rootPath();
         this.playerInventory = inventory;
         this.inventoryView.removeFromSuperview();
     }
@@ -277,15 +277,15 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     public void reloadStatus() {
-        boolean isFile = selectedFile != null && (!selectedFile.isDirectory() || !selectedFile.getName().equals(".."));
+        boolean isFile = selectedFile != null && (!selectedFile.isDirectory() || !selectedFile.name().equals(".."));
         boolean isLoadable = isFile && !selectedFile.isDirectory();
         boolean isAuthorized = isAuthorized();
         fileOptionsBox.setSelected(SkinLibrarySettingWindow.hasChanges());
-        remotePublicButton.setEnabled(libraryManager.getPublicSkinLibrary().isReady());
-        remotePrivateButton.setEnabled(libraryManager.getPrivateSkinLibrary().isReady());
+        remotePublicButton.setEnabled(libraryManager.publicLibrary().isReady());
+        remotePrivateButton.setEnabled(libraryManager.privateLibrary().isReady());
         deleteButton.setEnabled(isAuthorized && isFile);
         newFolderButton.setEnabled(isAuthorized);
-        openFolderButton.setEnabled(libraryManager.getLocalSkinLibrary() == selectedLibrary);
+        openFolderButton.setEnabled(libraryManager.localLibrary() == selectedLibrary);
         if (hasInputSkin()) {
             actionButton.setEnabled(true);
             actionButton.setTitle(getDisplayText("save"), UIControl.State.ALL);
@@ -296,7 +296,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     public void reloadInputName() {
-        ItemStack itemStack = menu.getInputStack();
+        ItemStack itemStack = menu.inputStack();
         if (this.lastInputItem == itemStack) {
             return;
         }
@@ -305,7 +305,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
         var name = "";
         if (bakedSkin != null) {
-            name = bakedSkin.getSkin().getCustomName();
+            name = bakedSkin.skin().customName();
         }
         this.nameTextField.setText(name);
     }
@@ -323,20 +323,20 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private void selectLibrary(UIControl sender) {
-        var newLibrary = libraryManager.getLocalSkinLibrary();
+        var newLibrary = libraryManager.localLibrary();
         if (sender == remotePublicButton) {
-            newLibrary = libraryManager.getPublicSkinLibrary();
+            newLibrary = libraryManager.publicLibrary();
         }
         if (sender == remotePrivateButton) {
-            newLibrary = libraryManager.getPrivateSkinLibrary();
-            newLibrary.setRootPath("/private/" + menu.getPlayer().getStringUUID());
+            newLibrary = libraryManager.privateLibrary();
+            newLibrary.setRootPath("/private/" + menu.player().getStringUUID());
         }
         if (!newLibrary.isReady()) {
-            newLibrary = libraryManager.getLocalSkinLibrary();
+            newLibrary = libraryManager.localLibrary();
         }
         contentOffsets.clear();
         selectedLibrary = newLibrary;
-        setSelectedPath(newLibrary.getRootPath());
+        setSelectedPath(newLibrary.rootPath());
         if (isAuthorized()) {
             deleteButton.setTooltip(getDisplayText("rollover.deleteSkinSelect"), UIControl.State.DISABLED);
             newFolderButton.setTooltip(null, UIControl.State.DISABLED);
@@ -369,9 +369,9 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private void backFolder(UIControl sender) {
-        var entry = fileList.getItem(0);
-        if (entry != null && entry.isDirectory() && entry.getName().equals("..")) {
-            setSelectedPath(entry.getPath());
+        var entry = fileList.itemAtIndex(0);
+        if (entry != null && entry.isDirectory() && entry.name().equals("..")) {
+            setSelectedPath(entry.path());
             reloadData(sender);
         }
     }
@@ -390,10 +390,10 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private void loadOrSaveItem(UIControl button) {
-        if (!menu.getOutputStack().isEmpty()) {
+        if (!menu.outputStack().isEmpty()) {
             return; // output has many items.
         }
-        var descriptor = SkinDescriptor.of(menu.getInputStack());
+        var descriptor = SkinDescriptor.of(menu.inputStack());
         if (descriptor.isEmpty()) {
             loadSkin(null);
             return;
@@ -424,9 +424,9 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.delete"));
         dialog.setCancelText(getDisplayText("dialog.delete.close"));
-        dialog.setMessage(getDisplayText("dialog.delete.deleteFile", selectedFile.getName()));
+        dialog.setMessage(getDisplayText("dialog.delete.deleteFile", selectedFile.name()));
         if (selectedFile.isDirectory()) {
-            dialog.setMessage(getDisplayText("dialog.delete.deleteFolder", selectedFile.getName()));
+            dialog.setMessage(getDisplayText("dialog.delete.deleteFolder", selectedFile.name()));
         }
         dialog.showInView(this, () -> {
             if (!dialog.isCancelled()) {
@@ -439,11 +439,11 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         if (selectedFile == null || !isAuthorized()) {
             return;
         }
-        if (sender.equals(selectedFile.getName())) {
+        if (sender.equals(selectedFile.name())) {
             return; // not changes.
         }
         var ext = selectedFile.isDirectory() ? "" : Constants.EXT;
-        var newPath = FileUtils.normalize(selectedFile.getPath() + "/../" + sender + ext, true);
+        var newPath = FileUtils.normalize(selectedFile.path() + "/../" + sender + ext, true);
         if (selectedLibrary.get(newPath) != null) {
             overwriteItem(newPath, () -> selectedLibrary.rename(selectedFile, newPath));
             return;
@@ -479,17 +479,17 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
 
     private void selectFile(UIControl sender) {
         var oldValue = selectedFile;
-        var newValue = fileList.getSelectedItem();
+        var newValue = fileList.selectedItem();
         selectedFile = newValue;
-        boolean isFile = newValue != null && (!newValue.isDirectory() || !newValue.getName().equals(".."));
+        boolean isFile = newValue != null && (!newValue.isDirectory() || !newValue.name().equals(".."));
         if (isFile) {
-            nameTextField.setText(newValue.getName());
+            nameTextField.setText(newValue.name());
         } else {
             nameTextField.setText("");
         }
         reloadStatus();
         if (newValue != null && newValue.isDirectory() && oldValue == newValue) {
-            setSelectedPath(newValue.getPath());
+            setSelectedPath(newValue.path());
             reloadData(sender);
         }
     }
@@ -510,7 +510,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
             return; // skin not ready for using
         }
         // we can't save any read-only skin.
-        if (!bakedSkin.getSkin().getSettings().isSavable()) {
+        if (!bakedSkin.skin().settings().isSavable()) {
             ModLog.debug("can't save readonly skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalSkinMode"));
             return;
@@ -520,7 +520,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         // save 3: copy server skin to server library
         // save 4: download server skin to local library
         var options = SkinLibrarySettingWindow.getFileOptions();
-        var packet = new SaveSkinPacket(descriptor.getIdentifier(), null, selectedLibrary.getNamespace() + ":" + path, options);
+        var packet = new SaveSkinPacket(descriptor.identifier(), null, selectedLibrary.namespace() + ":" + path, options);
         if (!packet.isReady(playerInventory.player)) {
             ModLog.debug("can't save skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
@@ -556,18 +556,18 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
 //            source = DataDomain.DATABASE_LINK;
 //        }
         // check skin load status (only non-encrypted skin).
-        var descriptor = new SkinDescriptor(selectedFile.getSkinIdentifier(), selectedFile.getSkinType(), SkinPaintScheme.EMPTY);
+        var descriptor = new SkinDescriptor(selectedFile.skinIdentifier(), selectedFile.skinType(), SkinPaintScheme.EMPTY);
         if (securityData == null) {
             var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
             if (bakedSkin == null) {
-                ModLog.debug("can't load unbaked skin of '{}'", selectedFile.getSkinIdentifier());
+                ModLog.debug("can't load unbaked skin of '{}'", selectedFile.skinIdentifier());
                 return; // skin not ready for using
             }
         }
         // load 1: upload local skin to database
         // load 2: copy server skin to database
         // load 3: make item stack(db/link)
-        var packet = new SaveSkinPacket(descriptor.getIdentifier(), options, source.normalize(""), null);
+        var packet = new SaveSkinPacket(descriptor.identifier(), options, source.normalize(""), null);
         if (!packet.isReady(playerInventory.player)) {
             ModLog.debug("can't load skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
@@ -590,11 +590,11 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private String getSecurityData(ISkinLibrary.Entry entry) {
-        var header = entry.getSkinHeader();
+        var header = entry.skinHeader();
         if (header == null) {
             return null;
         }
-        var properties = header.getProperties();
+        var properties = header.properties();
         if (properties == null) {
             return null;
         }
@@ -602,12 +602,12 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private boolean hasInputSkin() {
-        return !SkinDescriptor.of(menu.getInputStack()).isEmpty();
+        return !SkinDescriptor.of(menu.inputStack()).isEmpty();
     }
 
     private boolean isAuthorized() {
         // op can manage the public folder.
-        if (selectedLibrary == libraryManager.getPublicSkinLibrary()) {
+        if (selectedLibrary == libraryManager.publicLibrary()) {
             return libraryManager.shouldMaintenanceFile(inventory.player);
         }
         return true;

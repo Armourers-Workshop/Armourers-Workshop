@@ -73,7 +73,7 @@ public class Armatures {
             object.get("joint").entrySet().forEach(it -> {
                 var value = it.getValue();
                 var joint = new Joint(it.getKey());
-                namedJoints.put(joint.getName(), joint);
+                namedJoints.put(joint.name(), joint);
                 loadType(value.get("id"), SkinPartTypes::byName, partType -> {
                     if (partType != null) {
                         linkedJoints.put(partType, joint);

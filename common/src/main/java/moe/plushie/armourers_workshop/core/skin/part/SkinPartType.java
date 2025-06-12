@@ -24,12 +24,12 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return registryName.toString();
     }
 
     @Override
-    public OpenResourceLocation getRegistryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 
@@ -39,36 +39,36 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public OpenRectangle3i getBuildingSpace() {
+    public OpenRectangle3i buildingSpace() {
         return this.buildingSpace;
     }
 
     @Override
-    public OpenRectangle3i getGuideSpace() {
+    public OpenRectangle3i guideSpace() {
         return this.guideSpace;
     }
 
-    public OpenRectangle3i getGuideSpace(EntityTextureDescriptor.Model model) {
-        return getGuideSpace();
+    public OpenRectangle3i guideSpace(EntityTextureDescriptor.Model model) {
+        return guideSpace();
     }
 
     @Override
-    public OpenVector3i getOffset() {
+    public OpenVector3i offset() {
         return this.offset;
     }
 
     @Override
-    public OpenRectangle3i getBounds() {
+    public OpenRectangle3i bounds() {
         return bounds;
     }
 
     @Override
-    public int getMinimumMarkersNeeded() {
+    public int minimumMarkersNeeded() {
         return 0;
     }
 
     @Override
-    public int getMaximumMarkersNeeded() {
+    public int maximumMarkersNeeded() {
         return 0;
     }
 
@@ -78,12 +78,12 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public OpenVector3i getRenderOffset() {
+    public OpenVector3i renderOffset() {
         return renderOffset;
     }
 
     @Override
-    public float getRenderPolygonOffset() {
+    public float renderPolygonOffset() {
         return renderPolygonOffset;
     }
 

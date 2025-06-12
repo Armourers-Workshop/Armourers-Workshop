@@ -22,19 +22,19 @@ public class BlockBenchKeyframe extends BlockBenchObject {
         this.points = points;
     }
 
-    public float getTime() {
+    public float time() {
         return time;
     }
 
-    public String getInterpolation() {
+    public String interpolation() {
         return interpolation;
     }
 
-    public List<Float> getParameters() {
+    public List<Float> parameters() {
         return parameters;
     }
 
-    public List<Map<String, OpenPrimitive>> getPoints() {
+    public List<Map<String, OpenPrimitive>> points() {
         return points;
     }
 

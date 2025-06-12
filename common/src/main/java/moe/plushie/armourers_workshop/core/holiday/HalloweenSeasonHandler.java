@@ -8,12 +8,12 @@ import net.minecraft.world.item.ItemStack;
 public class HalloweenSeasonHandler implements Holiday.IHandler {
 
     @Override
-    public int getBackgroundColor() {
+    public int backgroundColor() {
         return 0xe05900;
     }
 
     @Override
-    public int getForegroundColor() {
+    public int foregroundColor() {
         return 0xeeeeee;
     }
 
@@ -24,6 +24,6 @@ public class HalloweenSeasonHandler implements Holiday.IHandler {
         if (player != null) {
             entityData.setTexture(EntityTextureDescriptor.fromProfile(player.getGameProfile()));
         }
-        return entityData.getItemStack();
+        return entityData.itemStack();
     }
 }

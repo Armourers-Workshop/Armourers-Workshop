@@ -18,15 +18,15 @@ public class SearchResult {
         return result;
     }
 
-    public ArrayList<ServerSkin> getSkins() {
+    public ArrayList<ServerSkin> skins() {
         return skins;
     }
 
-    public int getTotalPages() {
+    public int totalPages() {
         return totalPages;
     }
 
-    public int getTotalResults() {
+    public int totalResults() {
         return totalResults;
     }
 }

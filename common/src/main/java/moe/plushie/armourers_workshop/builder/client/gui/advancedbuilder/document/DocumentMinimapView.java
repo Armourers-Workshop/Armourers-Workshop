@@ -29,7 +29,7 @@ public class DocumentMinimapView extends UIView {
 
     public void reloadData(SkinDocumentNode rootNode) {
         _applyToSubviews(rootNode, treeView.rootNode(), (node, nodeView) -> {
-            nodeView.setTitle(node.getName());
+            nodeView.setTitle(node.name());
             nodeView.setLocked(node.isLocked());
             nodeView.setContents(node);
         });
@@ -56,7 +56,7 @@ public class DocumentMinimapView extends UIView {
         treeView.selectNode(_findNode(indexPath));
     }
 
-    public TreeIndexPath getSelectedIndex() {
+    public TreeIndexPath selectedIndex() {
         return _findNodePath(treeView.selectedNode());
     }
 
@@ -64,7 +64,7 @@ public class DocumentMinimapView extends UIView {
         treeView.setDelegate(delegate);
     }
 
-    public TreeViewDelegate getDelegate() {
+    public TreeViewDelegate delegate() {
         return treeView.delegate();
     }
 
@@ -72,7 +72,7 @@ public class DocumentMinimapView extends UIView {
         treeView.setMenuController(menuController);
     }
 
-    public UIMenuController getMenuController() {
+    public UIMenuController menuController() {
         return treeView.menuController();
     }
 
@@ -86,7 +86,7 @@ public class DocumentMinimapView extends UIView {
             return null;
         }
         for (TreeNode childView : nodeView.children()) {
-            if (childView.getContents() == node) {
+            if (childView.contents() == node) {
                 return childView;
             }
         }
@@ -94,7 +94,7 @@ public class DocumentMinimapView extends UIView {
     }
 
     private TreeNode _findNode(TreeIndexPath indexPath) {
-        List<Integer> indexes = indexPath.getIndexes();
+        List<Integer> indexes = indexPath.indexes();
         if (indexes.isEmpty()) {
             indexes = Collections.newList(0);
         }

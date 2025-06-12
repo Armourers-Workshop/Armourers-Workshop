@@ -17,7 +17,7 @@ public class BakedSkinAnimationHandler {
 
     public BakedSkinAnimationHandler() {
         normal((skin, entity, armature, context) -> AnimationEngine.apply(entity, skin, context));
-        normal((skin, entity, armature, context) -> SkinRenderHelper.apply(entity, skin, armature, context.getItemSource()));
+        normal((skin, entity, armature, context) -> SkinRenderHelper.apply(entity, skin, armature, context.itemSource()));
     }
 
     public void lowest(Callback handler) {

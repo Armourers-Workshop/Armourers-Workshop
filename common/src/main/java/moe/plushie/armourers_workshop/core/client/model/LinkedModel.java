@@ -29,18 +29,18 @@ public class LinkedModel implements IModel {
         if (this.target == target) {
             return;
         }
-        HashSet<IModelPart> exists = new HashSet<>();
+        var exists = new HashSet<IModelPart>();
         this.target = target;
         this.allParts.clear();
         // link named parts.
         this.namedParts.forEach((key, value) -> {
-            IModelPart part = target.getPart(key);
+            var part = target.partByName(key);
             value.linkTo(part);
             allParts.add(value);
             exists.add(part);
         });
         // link unnamed parts.
-        for (IModelPart part : target.getAllParts()) {
+        for (var part : target.allParts()) {
             if (!exists.contains(part)) {
                 LinkedModelPart linkedPart = new LinkedModelPart(part);
                 linkedPart.linkTo(part);
@@ -51,22 +51,22 @@ public class LinkedModel implements IModel {
 
     @Nullable
     @Override
-    public IModelBabyPose getBabyPose() {
+    public IModelBabyPose babyPose() {
         if (target != null) {
-            return target.getBabyPose();
+            return target.babyPose();
         }
         if (parent != null) {
-            return parent.getBabyPose();
+            return parent.babyPose();
         }
         return null;
     }
 
     @Override
-    public LinkedModelPart getPart(String name) {
+    public LinkedModelPart partByName(String name) {
         return namedParts.computeIfAbsent(name, it -> {
             IModelPart part = null;
             if (parent != null) {
-                part = parent.getPart(name);
+                part = parent.partByName(name);
             }
             LinkedModelPart linkedPart = new LinkedModelPart(part);
             allParts.add(linkedPart);
@@ -75,19 +75,19 @@ public class LinkedModel implements IModel {
     }
 
     @Override
-    public Collection<? extends IModelPart> getAllParts() {
+    public Collection<? extends IModelPart> allParts() {
         return allParts;
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<?> type() {
         if (parent != null) {
-            return parent.getType();
+            return parent.type();
         }
         return getClass();
     }
 
-    public IModel getParent() {
+    public IModel parent() {
         return parent;
     }
 

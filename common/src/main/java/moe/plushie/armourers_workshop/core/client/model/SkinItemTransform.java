@@ -56,15 +56,15 @@ public class SkinItemTransform {
         }
     }
 
-    public OpenVector3f getTranslation() {
+    public OpenVector3f translation() {
         return translation;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
-    public OpenVector3f getScale() {
+    public OpenVector3f scale() {
         return scale;
     }
 

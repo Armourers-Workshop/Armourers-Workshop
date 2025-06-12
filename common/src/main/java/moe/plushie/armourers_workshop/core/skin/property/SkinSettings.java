@@ -77,7 +77,7 @@ public class SkinSettings {
     }
 
     public boolean isEncrypted() {
-        return getFlag(3) || getSecurityData() != null;
+        return getFlag(3) || securityData() != null;
     }
 
     public void setCompressed(boolean newValue) {
@@ -100,7 +100,7 @@ public class SkinSettings {
         this.securityData = securityData;
     }
 
-    public String getSecurityData() {
+    public String securityData() {
         return securityData;
     }
 
@@ -109,7 +109,7 @@ public class SkinSettings {
         this.itemTransforms = itemTransforms;
     }
 
-    public OpenItemTransforms getItemTransforms() {
+    public OpenItemTransforms itemTransforms() {
         return itemTransforms;
     }
 
@@ -117,7 +117,7 @@ public class SkinSettings {
         this.collisionBox = collisionBox;
     }
 
-    public List<OpenRectangle3f> getCollisionBox() {
+    public List<OpenRectangle3f> collisionBox() {
         return collisionBox;
     }
 
@@ -179,7 +179,7 @@ public class SkinSettings {
         settings.setExportable(options.getExportable(isExportable()));
         settings.setEncrypted(options.getEncrypted(isEncrypted())); // set old security state.
         settings.setCompressed(options.isCompressed());
-        settings.setSecurityData(options.getSecurityData()); // set new security data.
+        settings.setSecurityData(options.securityData()); // set new security data.
         return settings;
     }
 

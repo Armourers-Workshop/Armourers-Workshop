@@ -20,13 +20,13 @@ public class ItemEnchantmentLevel extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var item = entity.getEquippedItem(this.slot.evaluate(context).getAsString());
+        var item = entity.equippedItemBySlot(this.slot.evaluate(context).getAsString());
         if (item == null) {
             return 0;
         }
-        var enchantment = item.getEnchantment(this.enchantment.evaluate(context).getAsString());
+        var enchantment = item.enchantmentByName(this.enchantment.evaluate(context).getAsString());
         if (enchantment != null) {
-            return enchantment.getLevel();
+            return enchantment.level();
         }
         return 0;
     }

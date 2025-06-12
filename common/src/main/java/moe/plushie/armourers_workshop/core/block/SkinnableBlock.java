@@ -83,8 +83,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             return;
         }
         // add all part into level
-        context.getParts().forEach(part -> {
-            var target = blockPos.offset(part.getOffset());
+        context.parts().forEach(part -> {
+            var target = blockPos.offset(part.offset());
             level.setBlock(target, blockState, 11);
             var blockEntity = getBlockEntity(level, target);
             if (blockEntity != null) {

@@ -32,7 +32,7 @@ public abstract class SkinCube extends SkinGeometry {
         throw new UnsupportedOperationException();
     }
 
-    public OpenRectangle3f getBoundingBox() {
+    public OpenRectangle3f boundingBox() {
         return boundingBox;
     }
 
@@ -47,28 +47,28 @@ public abstract class SkinCube extends SkinGeometry {
         var id = dir.get3DDataValue();
         var texturePos = getTexture(dir);
         var paintColor = getPaintColor(dir);
-        var geometryType = getType();
+        var geometryType = type();
         var alpha = 255;
         if (SkinGeometryTypes.isGlassBlock(geometryType)) {
             alpha = 127;
         }
-        var transform = getTransform();
-        var boundingBox = getBoundingBox();
+        var transform = transform();
+        var boundingBox = boundingBox();
         return new SkinCubeFace(id, geometryType, options, transform, texturePos, boundingBox, dir, paintColor, alpha);
     }
 
     @Override
-    public OpenVoxelShape getShape() {
-        return OpenVoxelShape.box(getBoundingBox());
+    public OpenVoxelShape shape() {
+        return OpenVoxelShape.box(boundingBox());
     }
 
     @Override
-    public Iterable<SkinCubeFace> getFaces() {
+    public Iterable<SkinCubeFace> faces() {
         return Collections.compactMap(OpenDirection.values(), this::getFace);
     }
 
-    public OpenVector3i getBlockPos() {
-        var boundingBox = getBoundingBox();
+    public OpenVector3i blockPos() {
+        var boundingBox = boundingBox();
         return new OpenVector3i(boundingBox.x(), boundingBox.y(), boundingBox.z());
     }
 }

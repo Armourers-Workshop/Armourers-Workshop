@@ -22,19 +22,19 @@ public class SkinAnimation {
         this.keyframes = keyframes;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public SkinAnimationLoop getLoop() {
+    public SkinAnimationLoop loop() {
         return loop;
     }
 
-    public float getDuration() {
+    public float duration() {
         return duration;
     }
 
-    public Map<String, List<SkinAnimationKeyframe>> getKeyframes() {
+    public Map<String, List<SkinAnimationKeyframe>> keyframes() {
         return keyframes;
     }
 

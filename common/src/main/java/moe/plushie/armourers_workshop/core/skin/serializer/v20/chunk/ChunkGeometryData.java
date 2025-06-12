@@ -28,7 +28,7 @@ public class ChunkGeometryData implements ChunkVariable {
         this.palette = palette;
     }
 
-    public int getId() {
+    public int id() {
         return id;
     }
 
@@ -47,7 +47,7 @@ public class ChunkGeometryData implements ChunkVariable {
             if (!section.isResolved()) {
                 section.freeze(offset);
             }
-            offset += section.getGeometryTotal();
+            offset += section.geometryTotal();
         }
         // cleanup write context.
         pending.clear();
@@ -63,7 +63,7 @@ public class ChunkGeometryData implements ChunkVariable {
             }
             sections.put(_key(section), section);
             section.freeze(offset);
-            offset += section.getGeometryTotal();
+            offset += section.geometryTotal();
         }
     }
 
@@ -71,7 +71,7 @@ public class ChunkGeometryData implements ChunkVariable {
     public void writeToStream(ChunkOutputStream stream) throws IOException {
         // we need to make sure section in offset order.
         var sortedSections = new ArrayList<>(sections.values());
-        sortedSections.sort(Comparator.comparing(ChunkGeometrySection::getIndex));
+        sortedSections.sort(Comparator.comparing(ChunkGeometrySection::index));
         for (var section : sortedSections) {
             writeSectionToStream(section, stream);
         }
@@ -86,7 +86,7 @@ public class ChunkGeometryData implements ChunkVariable {
             int size = stream.readInt();
             var section = _sectionAt(index);
             if (section != null) {
-                int offset = index - section.getIndex();
+                int offset = index - section.index();
                 selectors.add(new ChunkGeometrySelector(section, offset, offset + size));
             }
         }
@@ -96,12 +96,12 @@ public class ChunkGeometryData implements ChunkVariable {
     public void writeReferenceToStream(SkinGeometrySet<?> geometries, ChunkDataOutputStream streamIn) throws IOException {
         // for the fast encoder mode,
         // we will reuse the geometry data.
-        if (streamIn.getContext().isEnableFastEncoder() && geometries instanceof ChunkGeometrySliceSet slices) {
-            var selectors = pending.computeIfAbsent(geometries, k -> slices.getSelectors());
-            palette.copyFrom(slices.getPalette());
+        if (streamIn.context().isEnableFastEncoder() && geometries instanceof ChunkGeometrySliceSet slices) {
+            var selectors = pending.computeIfAbsent(geometries, k -> slices.selectors());
+            palette.copyFrom(slices.palette());
             streamIn.writeVarInt(selectors.size());
             for (var selector : selectors) {
-                var section = selector.getSection();
+                var section = selector.section();
                 sections.put(_key(section), section);
                 streamIn.writeVariable(selector);
             }
@@ -111,11 +111,11 @@ public class ChunkGeometryData implements ChunkVariable {
         // so we just need encode the geometry set at first call.
         var selectors = pending.computeIfAbsent(geometries, k -> new ArrayList<>());
         if (selectors.isEmpty()) {
-            var changes = _encodeGeometryData(geometries, streamIn.getContext());
+            var changes = _encodeGeometryData(geometries, streamIn.context());
             changes.forEach((section, startIndex) -> {
                 // we record the once total at the start encode,
                 // and then record the total again at the end encode.
-                var endIndex = section.getGeometryTotal();
+                var endIndex = section.geometryTotal();
                 selectors.add(new ChunkGeometrySelector(section, startIndex, endIndex));
             });
         }
@@ -144,37 +144,37 @@ public class ChunkGeometryData implements ChunkVariable {
             stream.writeVarInt(0);
             return;
         }
-        stream.writeVarInt(section.getGeometryTotal());
-        stream.writeVarInt(section.getGeometryType().getId());
-        stream.writeVarInt(section.getGeometryOptions());
+        stream.writeVarInt(section.geometryTotal());
+        stream.writeVarInt(section.geometryType().id());
+        stream.writeVarInt(section.geometryOptions());
         section.writeToStream(stream);
     }
 
     private LinkedHashMap<ChunkGeometrySection, Integer> _encodeGeometryData(SkinGeometrySet<?> geometries, ChunkContext context) throws IOException {
         var changes = new LinkedHashMap<ChunkGeometrySection, Integer>();
         for (var geometry : geometries) {
-            var geometryType = geometry.getType();
+            var geometryType = geometry.type();
             var geometryEncoder = _encoderByType(geometryType);
             var geometryOptions = geometryEncoder.begin(Objects.unsafeCast(geometry));
             var section = _mutableSectionAt(geometryType, geometryOptions, context);
-            changes.putIfAbsent(section, section.getGeometryTotal()); // section, startIndex
+            changes.putIfAbsent(section, section.geometryTotal()); // section, startIndex
             section.write(geometryEncoder, palette);
         }
         return changes;
     }
 
     private Integer _key(ChunkGeometrySection section) {
-        return _key(section.getGeometryType(), section.getGeometryOptions());
+        return _key(section.geometryType(), section.geometryOptions());
     }
 
     private Integer _key(SkinGeometryType geometryType, int options) {
-        return geometryType.getId() << 24 | options;
+        return geometryType.id() << 24 | options;
     }
 
     private ChunkGeometrySection _sectionAt(int index) {
         for (var section : sections.values()) {
-            int startIndex = section.getIndex();
-            int endIndex = section.getGeometryTotal() + startIndex;
+            int startIndex = section.index();
+            int endIndex = section.geometryTotal() + startIndex;
             if (startIndex <= index && index < endIndex) {
                 return section;
             }

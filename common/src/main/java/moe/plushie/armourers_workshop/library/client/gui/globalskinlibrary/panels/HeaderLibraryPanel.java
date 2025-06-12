@@ -77,7 +77,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         iconButtonInfo.setHidden(false);
         iconButtonModeration.setHidden(true);
 
-        var user = library.getUser();
+        var user = library.user();
         if (!user.isMember() && library.isConnected()) {
             iconButtonJoin.setHidden(false);
         }
@@ -113,7 +113,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         var profile = new NSMutableString(" - ");
         profile.append(gameProfile.getName());
         int textColor = 0xFFAAAA;
-        var user = library.getUser();
+        var user = library.user();
         if (user.isMember()) {
             textColor = 0xFFFFAA;
         }
@@ -128,7 +128,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         return (self, sender) -> {
             switch (page) {
                 case HOME -> self.router.showNewHome();
-                case LIST_USER_SKINS -> self.router.showSkinList(library.getUser());
+                case LIST_USER_SKINS -> self.router.showSkinList(library.user());
                 default -> self.router.showPage(page);
             }
         };

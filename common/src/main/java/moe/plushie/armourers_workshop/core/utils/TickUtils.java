@@ -22,7 +22,7 @@ public class TickUtils {
 
     public static double animationTicksByTime(long time) {
         // (server ticks - client current ticks) / 1000 + client animation ticks
-        var delta = (time - TIMER.clock.getTime()) / 1000.0;
+        var delta = (time - TIMER.clock.time()) / 1000.0;
         return TIMER.animationTicks + delta;
     }
 
@@ -50,7 +50,7 @@ public class TickUtils {
             if (isPaused) {
                 return;
             }
-            var time = clock.getTime();
+            var time = clock.time();
             var delta = (time - lastTime) * modulator;
             animationTicks = baseTicks + delta;
         }
@@ -69,7 +69,7 @@ public class TickUtils {
 
         private void reset() {
             baseTicks = animationTicks;
-            lastTime = clock.getTime();
+            lastTime = clock.time();
         }
     }
 }

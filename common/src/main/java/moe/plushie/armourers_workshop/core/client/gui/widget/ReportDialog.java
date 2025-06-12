@@ -38,7 +38,7 @@ public class ReportDialog extends ConfirmDialog {
         messageLabel.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
     }
 
-    public String getText() {
+    public String text() {
         if (textView != null) {
             return textView.text();
         }
@@ -60,7 +60,7 @@ public class ReportDialog extends ConfirmDialog {
         textView.setPlaceholder(placeholderText);
     }
 
-    public int getReportType() {
+    public int reportType() {
         return comboBox.selectedIndex();
     }
 

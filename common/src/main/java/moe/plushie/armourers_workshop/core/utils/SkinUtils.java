@@ -38,7 +38,7 @@ public final class SkinUtils {
     public static Collection<String> getItemOverrides(SkinPartType partType) {
         var override = Objects.safeCast(partType, ICanOverride.class);
         if (override != null) {
-            return override.getItemOverrides();
+            return override.itemOverrides();
         }
         return Collections.emptyList();
     }
@@ -169,14 +169,14 @@ public final class SkinUtils {
         }
         // embedded skin is the highest priority
         var descriptor = SkinDescriptor.of(itemStack);
-        if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
+        if (Objects.equals(slotType.skinType(), descriptor.type())) {
             return itemStack;
         }
         var wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
             var itemStack1 = wardrobe.getItem(slotType, index);
             descriptor = SkinDescriptor.of(itemStack1);
-            if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
+            if (Objects.equals(slotType.skinType(), descriptor.type())) {
                 return itemStack1;
             }
         }

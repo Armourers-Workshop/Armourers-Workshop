@@ -4,7 +4,6 @@ import com.apple.library.coregraphics.CGAffineTransform;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.api.skin.part.features.ICanOverride;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.AdvancedBuilderWindow;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentConnector;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
@@ -21,7 +20,7 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
 
     public AdvancedGeneralPanel(DocumentEditor editor) {
         super(editor);
-        this.connector = editor.getConnector();
+        this.connector = editor.connector();
         this.barItem.setImage(UIImage.of(ModTextures.TAB_ICONS).uv(192, 0).fixed(16, 16).build());
         this.setup();
     }
@@ -55,8 +54,8 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
             pickerView.setTransform(transform);
             pickerView.setSelectedPart(connector.part.get());
             pickerView.setChangeListener(connector.part::set);
-            pickerView.setHistorySkins(connector.getEditor().getHistory());
-            pickerView.setFilter(it -> it.getType() == SkinTypes.ADVANCED);
+            pickerView.setHistorySkins(connector.getEditor().history());
+            pickerView.setFilter(it -> it.type() == SkinTypes.ADVANCED);
             pickerView.setImporter(this::pickAction);
             pickerView.showInView(sender);
         });
@@ -70,8 +69,8 @@ public class AdvancedGeneralPanel extends AdvancedPanel {
             return;
         }
         window.importNewSkin(SkinTypes.ADVANCED, skin -> {
-            var blockEntity = editor.getBlockEntity();
-            NetworkManager.sendToServer(new AdvancedImportPacket(blockEntity, skin, node.getId()));
+            var blockEntity = editor.blockEntity();
+            NetworkManager.sendToServer(new AdvancedImportPacket(blockEntity, skin, node.id()));
         });
     }
 }

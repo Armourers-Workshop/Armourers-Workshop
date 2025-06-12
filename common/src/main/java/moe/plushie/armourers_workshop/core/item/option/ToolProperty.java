@@ -17,7 +17,7 @@ public abstract class ToolProperty<T> implements IConfigurableToolProperty<T> {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 }

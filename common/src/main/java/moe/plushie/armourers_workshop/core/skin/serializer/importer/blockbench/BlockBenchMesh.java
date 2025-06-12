@@ -36,11 +36,11 @@ public class BlockBenchMesh extends BlockBenchElement {
         this.vertices = vertices;
     }
 
-    public OpenVector3f getOrigin() {
+    public OpenVector3f origin() {
         return origin;
     }
 
-    public OpenVector3f getRotation() {
+    public OpenVector3f rotation() {
         return rotation;
     }
 
@@ -52,19 +52,19 @@ public class BlockBenchMesh extends BlockBenchElement {
         return mirrorUV;
     }
 
-    public String getRenderOrder() {
+    public String renderOrder() {
         return renderOrder;
     }
 
-    public OpenVector2f getUVOffset() {
+    public OpenVector2f uvOffset() {
         return uvOffset;
     }
 
-    public Map<String, BlockBenchMeshFace> getFaces() {
+    public Map<String, BlockBenchMeshFace> faces() {
         return faces;
     }
 
-    public Map<String, OpenVector3f> getVertices() {
+    public Map<String, OpenVector3f> vertices() {
         return vertices;
     }
 

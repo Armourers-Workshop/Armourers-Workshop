@@ -25,19 +25,19 @@ public class SkinCubeFaceCuller {
     private static final int DIRECTION_SIZE = OpenDirection.values().length;
 
     // joints array:
-    private static final Map<SkinPartType, Partition> PARTITIONS2 = Collections.immutableMap(builder -> {
-        builder.put(SkinPartTypes.BIPPED_HAT, new Simple(SkinPartTypes.BIPPED_HAT));
-        builder.put(SkinPartTypes.BIPPED_HEAD, new Simple(SkinPartTypes.BIPPED_HEAD));
-        builder.put(SkinPartTypes.BIPPED_CHEST, new Limb(SkinPartTypes.BIPPED_CHEST, SkinPartTypes.BIPPED_TORSO, 6));
-        builder.put(SkinPartTypes.BIPPED_LEFT_ARM, new Limb(SkinPartTypes.BIPPED_LEFT_ARM, SkinPartTypes.BIPPED_LEFT_HAND, 4));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Limb(SkinPartTypes.BIPPED_RIGHT_ARM, SkinPartTypes.BIPPED_RIGHT_HAND, 4));
-        builder.put(SkinPartTypes.BIPPED_SKIRT, new Simple(SkinPartTypes.BIPPED_SKIRT));
-        builder.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Limb(SkinPartTypes.BIPPED_LEFT_THIGH, SkinPartTypes.BIPPED_LEFT_LEG, 6));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Limb(SkinPartTypes.BIPPED_RIGHT_THIGH, SkinPartTypes.BIPPED_RIGHT_LEG, 6));
-        builder.put(SkinPartTypes.BIPPED_LEFT_FOOT, new Simple(SkinPartTypes.BIPPED_LEFT_FOOT));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_FOOT, new Simple(SkinPartTypes.BIPPED_RIGHT_FOOT));
-        builder.put(SkinPartTypes.BIPPED_LEFT_WING, new Simple(SkinPartTypes.BIPPED_LEFT_WING));
-        builder.put(SkinPartTypes.BIPPED_RIGHT_WING, new Simple(SkinPartTypes.BIPPED_RIGHT_WING));
+    private static final Map<SkinPartType, Partition> PARTITIONS2 = Collections.immutableMap(it -> {
+        it.put(SkinPartTypes.BIPPED_HAT, new Simple(SkinPartTypes.BIPPED_HAT));
+        it.put(SkinPartTypes.BIPPED_HEAD, new Simple(SkinPartTypes.BIPPED_HEAD));
+        it.put(SkinPartTypes.BIPPED_CHEST, new Limb(SkinPartTypes.BIPPED_CHEST, SkinPartTypes.BIPPED_TORSO, 6));
+        it.put(SkinPartTypes.BIPPED_LEFT_ARM, new Limb(SkinPartTypes.BIPPED_LEFT_ARM, SkinPartTypes.BIPPED_LEFT_HAND, 4));
+        it.put(SkinPartTypes.BIPPED_RIGHT_ARM, new Limb(SkinPartTypes.BIPPED_RIGHT_ARM, SkinPartTypes.BIPPED_RIGHT_HAND, 4));
+        it.put(SkinPartTypes.BIPPED_SKIRT, new Simple(SkinPartTypes.BIPPED_SKIRT));
+        it.put(SkinPartTypes.BIPPED_LEFT_THIGH, new Limb(SkinPartTypes.BIPPED_LEFT_THIGH, SkinPartTypes.BIPPED_LEFT_LEG, 6));
+        it.put(SkinPartTypes.BIPPED_RIGHT_THIGH, new Limb(SkinPartTypes.BIPPED_RIGHT_THIGH, SkinPartTypes.BIPPED_RIGHT_LEG, 6));
+        it.put(SkinPartTypes.BIPPED_LEFT_FOOT, new Simple(SkinPartTypes.BIPPED_LEFT_FOOT));
+        it.put(SkinPartTypes.BIPPED_RIGHT_FOOT, new Simple(SkinPartTypes.BIPPED_RIGHT_FOOT));
+        it.put(SkinPartTypes.BIPPED_LEFT_WING, new Simple(SkinPartTypes.BIPPED_LEFT_WING));
+        it.put(SkinPartTypes.BIPPED_RIGHT_WING, new Simple(SkinPartTypes.BIPPED_RIGHT_WING));
     });
 
     interface Partition {
@@ -58,8 +58,8 @@ public class SkinCubeFaceCuller {
         var result = new SearchResult(partType, bounds, OpenVector3i.ZERO);
         for (int i = 0; i < geometries.size(); ++i) {
             var geometry = geometries.get(i);
-            result.addLog(geometry.getType());
-            for (var face : geometry.getFaces()) {
+            result.addLog(geometry.type());
+            for (var face : geometry.faces()) {
                 result.addFace(face);
             }
         }
@@ -70,7 +70,7 @@ public class SkinCubeFaceCuller {
         // The texture cube does not support static cull,
         // the slices are designed to contain multiple cube types,
         // but the skin culler can't support it now.
-        var supportedTypes = geometries.getSupportedTypes();
+        var supportedTypes = geometries.supportedTypes();
         if (supportedTypes != null && (supportedTypes.contains(SkinGeometryTypes.CUBE) || supportedTypes.contains(SkinGeometryTypes.CUBE_CULL) || supportedTypes.contains(SkinGeometryTypes.MESH) || supportedTypes.contains(SkinGeometryTypes.MESH_CULL))) {
             return allFaces(geometries, bounds, partType);
         }
@@ -83,7 +83,7 @@ public class SkinCubeFaceCuller {
         for (int i = 0; i < geometries.size(); ++i) {
             var geometry = (SkinCube) geometries.get(i);
             for (var result : results) {
-                result.addLog(geometry.getType());
+                result.addLog(geometry.type());
                 for (var dir : OpenDirection.values()) {
                     if (result.flags.get(i * DIRECTION_SIZE + dir.get3DDataValue())) {
                         var face = geometry.getFace(dir);
@@ -116,7 +116,7 @@ public class SkinCubeFaceCuller {
                 }
             }
         }
-        return result.getFaces();
+        return result.faces();
     }
 
     private static BitSet cullFaceFlags(SkinGeometrySet<?> geometries, IndexedMap map, OpenRectangle3i rect) {
@@ -139,13 +139,13 @@ public class SkinCubeFaceCuller {
                     continue;
                 }
                 var isBlank = false;
-                var targetGeometryType = geometries.get(targetIndex).getType();
+                var targetGeometryType = geometries.get(targetIndex).type();
                 if (SkinGeometryTypes.isGlassBlock(targetGeometryType)) {
                     pendingList.add(pos1);
                     // when source cube and target cube is linked glass, ignore.
                     int sourceIndex = map.get(pos);
                     if (sourceIndex != -1) {
-                        isBlank = SkinGeometryTypes.isGlassBlock(geometries.get(sourceIndex).getType());
+                        isBlank = SkinGeometryTypes.isGlassBlock(geometries.get(sourceIndex).type());
                     }
                 }
                 // first, when not any rotation of the cube, it's always facing north.
@@ -154,8 +154,8 @@ public class SkinCubeFaceCuller {
                 // but actually we reset the cube origin in the indexes, which causes the relationship
                 // between the forward direction and the facing is changed.
                 var facing = advance;
-                if (advance.getAxis() == OpenDirection.Axis.Z) {
-                    facing = advance.getOpposite();
+                if (advance.axis() == OpenDirection.Axis.Z) {
+                    facing = advance.opposite();
                 }
                 flags.set(targetIndex * DIRECTION_SIZE + facing.get3DDataValue(), !isBlank);
             }
@@ -244,23 +244,23 @@ public class SkinCubeFaceCuller {
             this.flags = cullFaceFlags(geometries, map, bounds);
         }
 
-        public SkinPartType getPartType() {
+        public SkinPartType partType() {
             return partType;
         }
 
-        public ArrayList<SkinGeometryFace> getFaces() {
+        public ArrayList<SkinGeometryFace> faces() {
             return faces;
         }
 
-        public SkinUsedCounter getUsedCounter() {
+        public SkinUsedCounter usedCounter() {
             return usedCounter;
         }
 
-        public OpenVector3i getOrigin() {
+        public OpenVector3i origin() {
             return origin;
         }
 
-        public OpenRectangle3i getBounds() {
+        public OpenRectangle3i bounds() {
             return bounds;
         }
     }
@@ -294,7 +294,7 @@ public class SkinCubeFaceCuller {
             int size = geometries.size();
             for (int i = 0; i < size; i++) {
                 var geometry = (SkinCube) geometries.get(i);
-                var blockPos = geometry.getBlockPos();
+                var blockPos = geometry.blockPos();
                 int x = blockPos.x() - this.x;
                 int y = blockPos.y() - this.y;
                 int z = blockPos.z() - this.z;

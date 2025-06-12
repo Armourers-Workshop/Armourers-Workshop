@@ -22,12 +22,12 @@ public class YSMBinding extends ContextBinding {
         variable("rendering_in_inventory", ContextSelector::isRenderingInInventory);
         variable("first_person_mod_hide", ContextSelector::isRenderingInFirstPersonMod);
 
-        variable("head_yaw", EntitySelector::getHeadYaw);
-        variable("head_pitch", EntitySelector::getHeadPitch);
+        variable("head_yaw", EntitySelector::headYaw);
+        variable("head_pitch", EntitySelector::headPitch);
 
-        variable("weather", LevelSelector::getWeather);
-        variable("dimension_name", LevelSelector::getDimensionId);
-        variable("fps", ContextSelector::getFPS);
+        variable("weather", LevelSelector::weather);
+        variable("dimension_name", LevelSelector::dimensionId);
+        variable("fps", ContextSelector::fps);
 
         variable("is_passenger", EntitySelector::isPassenger);
         variable("is_sleep", EntitySelector::isSleeping);
@@ -35,8 +35,8 @@ public class YSMBinding extends ContextBinding {
         variable("is_open_air", EntitySelector::canSeeSky);
         variable("is_close_eyes", EntitySelector::isCloseEyes);
         variable("eye_in_water", EntitySelector::isUnderWater);
-        variable("frozen_ticks", EntitySelector::getTicksFrozen);
-        variable("air_supply", EntitySelector::getAirSupply);
+        variable("frozen_ticks", EntitySelector::ticksFrozen);
+        variable("air_supply", EntitySelector::airSupply);
 
         variable("has_helmet", hasEquipmentSlot("head"));
         variable("has_chest_plate", hasEquipmentSlot("chest"));
@@ -47,22 +47,22 @@ public class YSMBinding extends ContextBinding {
         variable("has_elytra", hasEquipmentSlot("elytra"));
 
         variable("is_riptide", LivingEntitySelector::isAutoSpinAttack);
-        variable("armor_value", LivingEntitySelector::getArmorValue);
-        variable("hurt_time", LivingEntitySelector::getHurtTime);
+        variable("armor_value", LivingEntitySelector::armorValue);
+        variable("hurt_time", LivingEntitySelector::hurtTime);
         variable("on_ladder", LivingEntitySelector::isOnClimbable);
-        variable("ladder_facing", LivingEntitySelector::getLastClimbableFacing);
-        variable("arrow_count", LivingEntitySelector::getArrowCount);
-        variable("stinger_count", LivingEntitySelector::getStingerCount);
+        variable("ladder_facing", LivingEntitySelector::lastClimbableFacing);
+        variable("arrow_count", LivingEntitySelector::arrowCount);
+        variable("stinger_count", LivingEntitySelector::stingerCount);
 
-        variable("food_level", PlayerSelector::getFoodLevel);
-        variable("elytra_rot_x", PlayerSelector::getElytraYaw);
-        variable("elytra_rot_y", PlayerSelector::getElytraPitch);
-        variable("elytra_rot_z", PlayerSelector::getElytraRoll);
+        variable("food_level", PlayerSelector::foodLevel);
+        variable("elytra_rot_x", PlayerSelector::elytraYaw);
+        variable("elytra_rot_y", PlayerSelector::elytraPitch);
+        variable("elytra_rot_z", PlayerSelector::elytraRoll);
 
         variable("has_left_shoulder_parrot", PlayerSelector::hasLeftShoulderParrot);
         variable("has_right_shoulder_parrot", PlayerSelector::hasRightShoulderParrot);
-        variable("left_shoulder_parrot_variant", PlayerSelector::getLeftShoulderParrotVariant);
-        variable("right_shoulder_parrot_variant", PlayerSelector::getRightShoulderParrotVariant);
+        variable("left_shoulder_parrot_variant", PlayerSelector::leftShoulderParrotVariant);
+        variable("right_shoulder_parrot_variant", PlayerSelector::rightShoulderParrotVariant);
 
         variable("attack_damage", getAttributeValue("generic.attack_damage"));
         variable("attack_speed", getAttributeValue("generic.attack_speed"));
@@ -79,9 +79,9 @@ public class YSMBinding extends ContextBinding {
         variable("nametag_distance", getAttributeValue("forge:nametag_distance"));
 
         variable("in_ground", ProjectileEntitySelector::isOnGround);
-        variable("on_ground_time", ProjectileEntitySelector::getOnGroundTime);
+        variable("on_ground_time", ProjectileEntitySelector::onGroundTime);
         variable("is_spectral_arrow", ProjectileEntitySelector::isSpectral);
-        variable("projectile_owner", ProjectileEntitySelector::getOwner);
+        variable("projectile_owner", ProjectileEntitySelector::owner);
         variable("delta_movement_length", ProjectileEntitySelector::distanceFromMove);
 
         function("mod_version", ModVersionFunction::new);
@@ -107,15 +107,15 @@ public class YSMBinding extends ContextBinding {
     private static LivingEntityVariableBinding hasEquipmentSlot(String name) {
         // the elytra have a space handle.
         if (!name.equals("elytra")) {
-            return entity -> entity.getEquippedItem(name) != null;
+            return entity -> entity.equippedItemBySlot(name) != null;
         }
         return entity -> {
-            var item = entity.getEquippedItem("chest");
-            return item != null && item.getId().equals("minecraft:elytra");
+            var item = entity.equippedItemBySlot("chest");
+            return item != null && item.id().equals("minecraft:elytra");
         };
     }
 
     private static LivingEntityVariableBinding getAttributeValue(String name) {
-        return entity -> entity.getAttributeValue(name);
+        return entity -> entity.attributeValueByName(name);
     }
 }

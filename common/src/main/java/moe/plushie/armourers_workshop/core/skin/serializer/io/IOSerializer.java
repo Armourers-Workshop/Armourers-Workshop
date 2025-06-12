@@ -14,7 +14,7 @@ public interface IOSerializer {
 
     SkinFileHeader readInfoFromStream(IInputStream stream, SkinFileOptions options) throws IOException;
 
-    int getVersion();
+    int fileVersion();
 
     boolean isSupportedVersion(SkinFileOptions options);
 

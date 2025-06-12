@@ -47,7 +47,7 @@ public class ExecutionContextImpl extends ContextSelectorImpl implements Executi
         return entity;
     }
 
-    public Object getTarget() {
+    public Object target() {
         return target;
     }
 

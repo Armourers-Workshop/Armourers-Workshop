@@ -33,23 +33,23 @@ public class Report {
         }
     }
 
-    public String getUserId() {
+    public String userId() {
         return userId;
     }
 
-    public String getSkinId() {
+    public String skinId() {
         return skinId;
     }
 
-    public ReportType getReportType() {
+    public ReportType reportType() {
         return reportType;
     }
 
-    public String getMessage() {
+    public String message() {
         return message;
     }
 
-    public Date getDate() {
+    public Date date() {
         return date;
     }
 

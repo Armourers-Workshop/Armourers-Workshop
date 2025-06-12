@@ -17,11 +17,11 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
         this.frame = frame;
         this.buildingSpace = new OpenRectangle3i(-12, -42, -46, 24, 84, 64);
         this.guideSpace = new OpenRectangle3i(-2, -2, 2, 4, 4, 8);
-        this.offset = getFrameOffset(frame);
-        this.useRange = getFrameUseRange(frame);
+        this.offset = frameOffset(frame);
+        this.useRange = frameUseRange(frame);
     }
 
-    public static Range<Integer> getFrameUseRange(int frame) {
+    public static Range<Integer> frameUseRange(int frame) {
         // (float)(p_239429_0_.getUseDuration() - p_239429_2_.getUseItemRemainingTicks()) / 20.0F;
         // pulling: 1, 0
         // pulling: 1, 0.65
@@ -34,7 +34,7 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
         };
     }
 
-    public static OpenVector3i getFrameOffset(int frame) {
+    public static OpenVector3i frameOffset(int frame) {
         return switch (frame) {
             case 0 -> new OpenVector3i(-50, 0, 0);
             case 1 -> new OpenVector3i(-25, 0, 0);
@@ -45,17 +45,17 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
     }
 
     @Override
-    public Range<Integer> getUseRange() {
+    public Range<Integer> useRange() {
         return useRange;
     }
 
     @Override
-    public int getMinimumMarkersNeeded() {
+    public int minimumMarkersNeeded() {
         return 1;
     }
 
     @Override
-    public int getMaximumMarkersNeeded() {
+    public int maximumMarkersNeeded() {
         return 1;
     }
 

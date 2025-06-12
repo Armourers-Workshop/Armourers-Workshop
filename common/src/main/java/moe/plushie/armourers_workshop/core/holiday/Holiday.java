@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 public class Holiday {
 
-    public static final IDataCodec<Holiday> CODEC = IDataCodec.STRING.xmap(ModHolidays::byName, Holiday::getName);
+    public static final IDataCodec<Holiday> CODEC = IDataCodec.STRING.xmap(ModHolidays::byName, Holiday::name);
 
     protected final String name;
     protected final Calendar startDate;
@@ -28,19 +28,19 @@ public class Holiday {
         this.endDate = endDate;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Calendar getStartDate() {
+    public Calendar startDate() {
         return startDate;
     }
 
-    public Calendar getEndDate() {
+    public Calendar endDate() {
         return endDate;
     }
 
-    public IHandler getHandler() {
+    public IHandler handler() {
         return handler;
     }
 
@@ -80,11 +80,11 @@ public class Holiday {
 
         ItemStack getGift(Player player);
 
-        default int getBackgroundColor() {
+        default int backgroundColor() {
             return 0xffffff;
         }
 
-        default int getForegroundColor() {
+        default int foregroundColor() {
             return 0x333333;
         }
     }

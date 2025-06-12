@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.api.skin.property;
 
 public interface ISkinProperty<T> {
 
-    String getKey();
+    String key();
 
-    T getDefaultValue();
+    T defaultValue();
 }

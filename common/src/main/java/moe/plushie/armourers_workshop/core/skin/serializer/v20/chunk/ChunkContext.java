@@ -62,8 +62,8 @@ public class ChunkContext {
 
     private void setupWithOptions(SkinFileOptions options) throws Exception {
         // decode security key from options.
-        if (options.getSecurityData() != null && options.getSecurityKey() != null) {
-            securityKey = Objects.decodeHex(options.getSecurityKey().toCharArray());
+        if (options.securityData() != null && options.securityKey() != null) {
+            securityKey = Objects.decodeHex(options.securityKey().toCharArray());
         }
     }
 
@@ -113,10 +113,10 @@ public class ChunkContext {
 
     public <V, T> ChunkFlags createSerializerFlags(ChunkSerializer<V, T> serializer, V value) {
         var flags = new ChunkFlags();
-        if (options.isCompressed() && COMPRESSED_CHUNK_TYPES.contains(serializer.getChunkType())) {
+        if (options.isCompressed() && COMPRESSED_CHUNK_TYPES.contains(serializer.chunkType())) {
             flags.add(ChunkFlag.GZIP); // zip all sections.
         }
-        if (securityKey != null && ENCRYPTED_CHUNK_TYPES.contains(serializer.getChunkType())) {
+        if (securityKey != null && ENCRYPTED_CHUNK_TYPES.contains(serializer.chunkType())) {
             flags.add(ChunkFlag.ENCRYPT); // only encrypt important section.
         }
         return flags;
@@ -139,15 +139,15 @@ public class ChunkContext {
     }
 
     public int fileVersion() {
-        return options.getFileVersion();
+        return options.fileVersion();
     }
 
     public String securityData() {
-        return options.getSecurityData();
+        return options.securityData();
     }
 
     public String securityKey() {
-        return options.getSecurityKey();
+        return options.securityKey();
     }
 
     public ChunkFileData fileProvider() {

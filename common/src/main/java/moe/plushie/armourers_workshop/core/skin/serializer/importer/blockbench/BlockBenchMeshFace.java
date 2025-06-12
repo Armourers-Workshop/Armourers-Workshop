@@ -20,15 +20,15 @@ public class BlockBenchMeshFace {
         this.vertices = vertices;
     }
 
-    public int getTextureId() {
+    public int textureId() {
         return textureId;
     }
 
-    public Map<String, OpenVector2f> getUV() {
+    public Map<String, OpenVector2f> uv() {
         return uv;
     }
 
-    public List<String> getVertices() {
+    public List<String> vertices() {
         return vertices;
     }
 

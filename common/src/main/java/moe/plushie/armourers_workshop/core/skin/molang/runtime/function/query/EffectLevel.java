@@ -18,9 +18,9 @@ public class EffectLevel extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var effect = entity.getEffect(this.effect.evaluate(context).getAsString());
+        var effect = entity.effectByName(this.effect.evaluate(context).getAsString());
         if (effect != null) {
-            return effect.getLevel();
+            return effect.level();
         }
         return 0;
     }

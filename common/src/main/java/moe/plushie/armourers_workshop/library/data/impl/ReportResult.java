@@ -18,15 +18,15 @@ public class ReportResult {
         return result;
     }
 
-    public ArrayList<Report> getReports() {
+    public ArrayList<Report> reports() {
         return reports;
     }
 
-    public int getTotalPages() {
+    public int totalPages() {
         return totalPages;
     }
 
-    public int getTotalResults() {
+    public int totalResults() {
         return totalResults;
     }
 }

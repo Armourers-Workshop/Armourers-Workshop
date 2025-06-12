@@ -21,7 +21,7 @@ public class ArmatureTransformerContext {
         this.entityModel = entityModel;
     }
 
-    public EntityType<?> getEntityType() {
+    public EntityType<?> entityType() {
         return entityType;
     }
 
@@ -34,7 +34,7 @@ public class ArmatureTransformerContext {
         this.entityModel = entityModel;
     }
 
-    public IModel getEntityModel() {
+    public IModel entityModel() {
         return entityModel;
     }
 
@@ -47,7 +47,7 @@ public class ArmatureTransformerContext {
         this.entityRenderer = entityRenderer;
     }
 
-    public EntityRenderer<?> getEntityRenderer() {
+    public EntityRenderer<?> entityRenderer() {
         return entityRenderer;
     }
 

@@ -42,12 +42,12 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
 
 
     @Override
-    public String getPath() {
+    public String path() {
         return path;
     }
 
     @Override
-    public String getNamespace() {
+    public String namespace() {
         return namespace;
     }
 

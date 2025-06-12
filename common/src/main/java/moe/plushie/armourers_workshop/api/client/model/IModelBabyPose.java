@@ -4,19 +4,19 @@ import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 
 public interface IModelBabyPose {
 
-    float getHeadScale();
+    float headScale();
 
-    IVector3f getHeadOffset();
+    IVector3f headOffset();
 
     static IModelBabyPose of(float headScale, IVector3f headOffset) {
         return new IModelBabyPose() {
             @Override
-            public float getHeadScale() {
+            public float headScale() {
                 return headScale;
             }
 
             @Override
-            public IVector3f getHeadOffset() {
+            public IVector3f headOffset() {
                 return headOffset;
             }
         };

@@ -74,7 +74,7 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
         if (itemStack.isEmpty() || isEmpty()) {
             return false;
         }
-        var skinType = getType();
+        var skinType = type();
         if (skinType == SkinTypes.ITEM) {
             return true;
         }
@@ -125,26 +125,26 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
         return this == EMPTY || identifier.isEmpty();
     }
 
-    public SkinPaintScheme getPaintScheme() {
+    public SkinPaintScheme paintScheme() {
         return paintScheme;
     }
 
-    public SkinType getType() {
+    public SkinType type() {
         return type;
     }
 
-    public Options getOptions() {
+    public Options options() {
         return options;
     }
 
     @Override
-    public String getIdentifier() {
+    public String identifier() {
         return identifier;
     }
 
     @Override
     public String toString() {
-        return String.format("%s@%s[%s]", identifier, type.getRegistryName().getPath(), type.getId());
+        return String.format("%s@%s[%s]", identifier, type.registryName().path(), type.id());
     }
 
     @Override
@@ -238,7 +238,7 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
             this.enableEmbeddedItemRenderer = enableEmbeddedItemRenderer;
         }
 
-        public int getEmbeddedItemRenderer() {
+        public int embeddedItemRenderer() {
             return enableEmbeddedItemRenderer;
         }
     }

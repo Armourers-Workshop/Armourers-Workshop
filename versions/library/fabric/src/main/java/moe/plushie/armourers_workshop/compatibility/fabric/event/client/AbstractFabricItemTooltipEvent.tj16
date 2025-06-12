@@ -20,17 +20,17 @@ public class AbstractFabricItemTooltipEvent {
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
         return (priority, receiveCancelled, subscriber) -> ItemTooltipCallback.EVENT.register((stack, flags, lines) -> subscriber.accept(new ItemTooltipEvent.Gather() {
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return stack;
             }
 
             @Override
-            public List<Component> getTooltips() {
+            public List<Component> tooltips() {
                 return lines;
             }
 
             @Override
-            public ITooltipContext getContext() {
+            public ITooltipContext context() {
                 return new AbstractTooltipContext<>(null, flags);
             }
         }));
@@ -39,27 +39,27 @@ public class AbstractFabricItemTooltipEvent {
     public static IEventHandler<ItemTooltipEvent.Render> renderFactory() {
         return (priority, receiveCancelled, subscriber) -> RenderTooltipEvents.BEFORE.register((itemStack, x, y, width, height, screenWidth, screenHeight, context) -> subscriber.accept(new ItemTooltipEvent.Render() {
             @Override
-            public ItemStack getItemStack() {
+            public ItemStack itemStack() {
                 return itemStack;
             }
 
             @Override
-            public CGRect getFrame() {
+            public CGRect frame() {
                 return new CGRect(x, y, width, height);
             }
 
             @Override
-            public float getScreenWidth() {
+            public float screenWidth() {
                 return screenWidth;
             }
 
             @Override
-            public float getScreenHeight() {
+            public float screenHeight() {
                 return screenHeight;
             }
 
             @Override
-            public CGGraphicsContext getContext() {
+            public CGGraphicsContext context() {
                 return context;
             }
         }));

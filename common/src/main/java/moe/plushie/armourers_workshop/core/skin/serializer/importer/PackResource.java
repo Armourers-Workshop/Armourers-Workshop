@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public abstract class PackResource {
 
-    public abstract String getName();
+    public abstract String name();
 
-    public abstract InputStream getInputStream() throws IOException;
+    public abstract InputStream inputStream() throws IOException;
 }

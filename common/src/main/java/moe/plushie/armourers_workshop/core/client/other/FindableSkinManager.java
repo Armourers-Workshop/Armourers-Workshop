@@ -97,7 +97,7 @@ public class FindableSkinManager {
     private Entry loadSkinProvider(IResourceLocation id) {
         try {
             var resourceManager = EnvironmentManager.getResourceManager();
-            var location = id.withPath("models/" + id.getPath() + ".json");
+            var location = id.withPath("models/" + id.path() + ".json");
             var rootObject = JsonSerializer.readFromResource(resourceManager.readResource(location));
             if (rootObject == null) {
                 return null;
@@ -112,7 +112,7 @@ public class FindableSkinManager {
 
     public void didReload(DataPackEvent.Reloading event) {
         // when resource pack did changes, we need to clear invalid resource.
-        if (event.getType() == DataPackType.CLIENT_RESOURCES) {
+        if (event.type() == DataPackType.CLIENT_RESOURCES) {
             ModLog.debug("Reloading resource pack skins");
             allEntries.clear();
             bakedModels.clear();
@@ -148,7 +148,7 @@ public class FindableSkinManager {
                 return;
             }
             ModLog.debug("'{}' => did preload skin", identifier);
-            descriptor = new SkinDescriptor(identifier, bakedSkin.getType());
+            descriptor = new SkinDescriptor(identifier, bakedSkin.type());
         }
 
         public boolean canUse() {

@@ -69,7 +69,7 @@ public final class WorldUtils {
                 parts.add(skinPart);
             }
         } else {
-            for (var partType : skinType.getParts()) {
+            for (var partType : skinType.parts()) {
                 var skinPart = saveArmourPart(level, transform, partType, true);
                 if (skinPart != null) {
                     parts.add(skinPart);
@@ -88,16 +88,16 @@ public final class WorldUtils {
         var skin = builder.build();
 
         // check if there are any blocks in the build guides.
-        if (skin.getParts().isEmpty() && skin.getPaintData() == null) {
+        if (skin.parts().isEmpty() && skin.paintData() == null) {
             throw SkinSaveException.Type.NO_DATA.build("noting");
         }
 
         // check if the skin has all needed parts.
-        for (var partType : skinType.getParts()) {
+        for (var partType : skinType.parts()) {
             if (partType.isPartRequired()) {
                 boolean havePart = false;
-                for (var part : skin.getParts()) {
-                    if (partType == part.getType()) {
+                for (var part : skin.parts()) {
+                    if (partType == part.type()) {
                         havePart = true;
                         break;
                     }
@@ -132,8 +132,8 @@ public final class WorldUtils {
         var geometries = new SkinGeometrySetV1(cubeCount);
         var markerBlocks = new ArrayList<SkinMarker>();
 
-        var buildSpace = partType.getBuildingSpace();
-        var offset = partType.getOffset();
+        var buildSpace = partType.buildingSpace();
+        var offset = partType.offset();
 
         int i = 0;
         for (int ix = 0; ix < buildSpace.width(); ix++) {
@@ -164,11 +164,11 @@ public final class WorldUtils {
         }
 
         if (markerCheck) {
-            if (partType.getMinimumMarkersNeeded() > markerBlocks.size()) {
+            if (partType.minimumMarkersNeeded() > markerBlocks.size()) {
                 throw SkinSaveException.Type.MARKER_ERROR.build("missingMarker", TranslateUtils.Name.of(partType));
             }
 
-            if (markerBlocks.size() > partType.getMaximumMarkersNeeded()) {
+            if (markerBlocks.size() > partType.maximumMarkersNeeded()) {
                 throw SkinSaveException.Type.MARKER_ERROR.build("tooManyMarkers", TranslateUtils.Name.of(partType));
             }
         }
@@ -195,7 +195,7 @@ public final class WorldUtils {
             cube.setPaintColor(resolvedDir, paintColor);
         }
         if (marker != OptionalDirection.NONE) {
-            var markFacing = transform.invRotate(marker.getDirection());
+            var markFacing = transform.invRotate(marker.direction());
             var resolvedMarker = OptionalDirection.of(markFacing);
             markerBlocks.add(new SkinMarker((byte) ix, (byte) iy, (byte) iz, (byte) resolvedMarker.ordinal()));
         }
@@ -209,25 +209,25 @@ public final class WorldUtils {
      * @param skin      The skin to load.
      */
     public static void loadSkinIntoWorld(CubeChangesCollector collector, CubeTransform transform, Skin skin) {
-        for (var part : skin.getParts()) {
+        for (var part : skin.parts()) {
             loadSkinPartIntoWorld(collector, transform, part, false);
         }
     }
 
     private static void loadSkinPartIntoWorld(CubeChangesCollector collector, CubeTransform transform, SkinPart partData, boolean mirror) {
-        var skinPart = partData.getType();
-        var buildSpace = skinPart.getBuildingSpace();
-        var offset = skinPart.getOffset();
+        var skinPart = partData.type();
+        var buildSpace = skinPart.buildingSpace();
+        var offset = skinPart.offset();
         // only support vanilla cube.
-        for (var cube : Collections.collect(partData.getGeometries(), SkinCube.class)) {
-            var blockPos = cube.getBlockPos();
-            var geometryType = cube.getType();
+        for (var cube : Collections.collect(partData.geometries(), SkinCube.class)) {
+            var blockPos = cube.blockPos();
+            var geometryType = cube.type();
             var markerFacing = OptionalDirection.NONE;
-            for (var marker : partData.getMarkers()) {
-                var dir = marker.getDirection();
-                if (dir != null && blockPos.equals(marker.getPosition())) {
+            for (var marker : partData.markers()) {
+                var dir = marker.direction();
+                if (dir != null && blockPos.equals(marker.position())) {
                     var resolvedMarker = OptionalDirection.of(getResolvedDirection(dir, mirror));
-                    markerFacing = OptionalDirection.of(transform.rotate(resolvedMarker.getDirection()));
+                    markerFacing = OptionalDirection.of(transform.rotate(resolvedMarker.direction()));
                     break;
                 }
             }
@@ -245,13 +245,13 @@ public final class WorldUtils {
         }
 
         var target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
-        var targetCube = collector.getCube(target);
+        var targetCube = collector.cubeAtPos(target);
 
         if (targetCube.is(ModBlocks.BOUNDING_BOX.get())) {
             targetCube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), null);
         }
 
-        var targetBlock = geometryType.getBlock();
+        var targetBlock = geometryType.block();
         var targetState = SkinCubeBlock.setMarker(targetBlock.defaultBlockState(), markerFacing);
 
         var colors = new HashMap<OpenDirection, SkinPaintColor>();
@@ -273,7 +273,7 @@ public final class WorldUtils {
     }
 
     public static void replaceCubes(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, CubeReplacingEvent event) {
-        for (var skinPart : skinType.getParts()) {
+        for (var skinPart : skinType.parts()) {
             for (var offset : getResolvedBuildingSpace2(skinPart)) {
                 replaceCube(collector, transform.mul(offset), event);
             }
@@ -281,28 +281,28 @@ public final class WorldUtils {
     }
 
     public static void replaceCube(CubeChangesCollector collector, BlockPos pos, CubeReplacingEvent event) {
-        var cube = collector.getCube(pos);
+        var cube = collector.cubeAtPos(pos);
         if (event.accept(cube)) {
             event.apply(cube);
         }
     }
 
     public static void copyCubes(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, SkinPartType srcType, SkinPartType destType, boolean mirror) throws SkinSaveException {
-        var skinPart = saveArmourPart(collector.getLevel(), transform, srcType, false);
+        var skinPart = saveArmourPart(collector.level(), transform, srcType, false);
         if (skinPart != null) {
             var builder = new SkinPart.Builder(destType);
-            builder.name(skinPart.getName());
-            builder.transform(skinPart.getTransform());
-            builder.geometries(skinPart.getGeometries());
-            builder.markers(skinPart.getMarkers());
-            builder.children(skinPart.getChildren());
+            builder.name(skinPart.name());
+            builder.transform(skinPart.transform());
+            builder.geometries(skinPart.geometries());
+            builder.markers(skinPart.markers());
+            builder.children(skinPart.children());
             loadSkinPartIntoWorld(collector, transform, builder.build(), mirror);
         }
     }
 
     public static int clearMarkers(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, SkinPartType partType) {
         int blockCount = 0;
-        for (var skinPart : skinType.getParts()) {
+        for (var skinPart : skinType.parts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
                 if (partType != skinPart) {
                     continue;
@@ -326,8 +326,8 @@ public final class WorldUtils {
     private static int clearMarkersForSkinPart(CubeChangesCollector collector, CubeTransform transform, SkinPartType skinPart) {
         int blockCount = 0;
         for (var offset : getResolvedBuildingSpace2(skinPart)) {
-            var cube = collector.getCube(transform.mul(offset));
-            var targetState = cube.getBlockState();
+            var cube = collector.cubeAtPos(transform.mul(offset));
+            var targetState = cube.blockState();
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
                 cube.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
                 blockCount++;
@@ -338,7 +338,7 @@ public final class WorldUtils {
 
     public static int clearCubes(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, SkinPartType partType) {
         int blockCount = 0;
-        for (var skinPart : skinType.getParts()) {
+        for (var skinPart : skinType.parts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
                 if (partType != skinPart) {
                     continue;
@@ -362,7 +362,7 @@ public final class WorldUtils {
     private static int clearEquipmentCubesForSkinPart(CubeChangesCollector collector, CubeTransform transform, SkinPartType skinPart) {
         int blockCount = 0;
         for (var offset : getResolvedBuildingSpace2(skinPart)) {
-            var cube = collector.getCube(transform.mul(offset));
+            var cube = collector.cubeAtPos(transform.mul(offset));
             if (cube.is(SkinCubeBlock.class)) {
                 cube.setBlockStateAndTag(Blocks.AIR.defaultBlockState(), null);
                 blockCount++;
@@ -372,8 +372,8 @@ public final class WorldUtils {
     }
 
     public static OpenRectangle3i getResolvedBuildingSpace(SkinPartType skinPart) {
-        var origin = skinPart.getOffset();
-        var buildSpace = skinPart.getBuildingSpace();
+        var origin = skinPart.offset();
+        var buildSpace = skinPart.buildingSpace();
         int dx = -origin.x() + buildSpace.x();
         int dy = -origin.y();
         int dz = origin.z() + buildSpace.z();
@@ -397,8 +397,8 @@ public final class WorldUtils {
 
     private static OpenDirection getResolvedDirection(OpenDirection dir, boolean mirror) {
         // we're just mirroring the x-axis when if it needs.
-        if (mirror && dir.getAxis() == OpenDirection.Axis.X) {
-            return dir.getOpposite();
+        if (mirror && dir.axis() == OpenDirection.Axis.X) {
+            return dir.opposite();
         }
         return dir;
     }

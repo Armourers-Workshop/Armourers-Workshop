@@ -60,11 +60,11 @@ public class OpenOrientedBoundingBox {
         return false;
     }
 
-    public OpenQuaternionf getOrientation() {
+    public OpenQuaternionf orientation() {
         return orientation;
     }
 
-    public OpenAxisAlignedBoundingBox getBoundingBox() {
+    public OpenAxisAlignedBoundingBox boundingBox() {
         return boundingBox;
     }
 

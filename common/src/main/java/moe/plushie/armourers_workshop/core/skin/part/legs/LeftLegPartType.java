@@ -18,12 +18,12 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
     }
 
     @Override
-    public OpenVector2i getTextureSkinPos() {
+    public OpenVector2i textureSkinPos() {
         return new OpenVector2i(0, 16);
     }
 
     @Override
-    public OpenVector3i getTextureModelSize() {
+    public OpenVector3i textureModelSize() {
         return new OpenVector3i(4, 12, 4);
     }
 }

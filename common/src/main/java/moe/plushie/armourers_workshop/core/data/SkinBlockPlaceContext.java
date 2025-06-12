@@ -70,14 +70,14 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         if (descriptor.isEmpty()) {
             return;
         }
-        var skin = provider.apply(descriptor.getIdentifier());
+        var skin = provider.apply(descriptor.identifier());
         if (skin == null) {
             return;
         }
         var parts = new ArrayList<Part>();
         var parentParts = new ArrayList<ParentPart>();
         var blockPosList = new ArrayList<BlockPos>();
-        skin.getBlockBounds().forEach((pos, shape) -> {
+        skin.blockBounds().forEach((pos, shape) -> {
             var rect = new OpenRectangle3i(shape);
             if (pos.equals(OpenVector3i.ZERO)) {
                 var part = new ParentPart(BlockPos.ZERO, rect, descriptor, skin);
@@ -90,7 +90,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         });
         this.skin = descriptor;
         this.parts = parts;
-        this.properties = skin.getProperties();
+        this.properties = skin.properties();
         var state = ModBlocks.SKINNABLE.get().getStateForPlacement(this);
         if (state != null) {
             this.rotations = SkinnableBlockEntity.getRotations(state);
@@ -98,7 +98,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         }
         // copy all transformed block pose into list.
         for (var part : parts) {
-            blockPosList.add(part.getOffset());
+            blockPosList.add(part.offset());
         }
         parentParts.forEach(it -> it.setReferences(blockPosList));
     }
@@ -107,17 +107,17 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         if (properties != null && !properties.isEmpty()) {
             return properties.get(property);
         }
-        return property.getDefaultValue();
+        return property.defaultValue();
     }
 
     public boolean canPlace(Part part) {
         if (skin.isEmpty()) {
             return false;
         }
-        if (skin.getType() != SkinTypes.BLOCK) {
+        if (skin.type() != SkinTypes.BLOCK) {
             return false;
         }
-        BlockPos pos = super.getClickedPos().offset(part.getOffset());
+        BlockPos pos = super.getClickedPos().offset(part.offset());
         return this.getLevel().getBlockState(pos).canBeReplaced(this);
     }
 
@@ -131,11 +131,11 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         return new AttachedBlockPos(this, super.getClickedPos());
     }
 
-    public SkinDescriptor getSkin() {
+    public SkinDescriptor skin() {
         return skin;
     }
 
-    public ArrayList<Part> getParts() {
+    public ArrayList<Part> parts() {
         return parts;
     }
 
@@ -184,11 +184,11 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             shape = new OpenRectangle3i(Math.round(fixedShape.x()), Math.round(fixedShape.y()), Math.round(fixedShape.z()), Math.round(fixedShape.width()), Math.round(fixedShape.height()), Math.round(fixedShape.depth()));
         }
 
-        public BlockPos getOffset() {
+        public BlockPos offset() {
             return offset;
         }
 
-        public OpenRectangle3i getShape() {
+        public OpenRectangle3i shape() {
             return shape;
         }
     }
@@ -204,8 +204,8 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         public ParentPart(BlockPos offset, OpenRectangle3i shape, SkinDescriptor descriptor, Skin skin) {
             super(offset, shape);
             this.descriptor = descriptor;
-            this.properties = skin.getProperties();
-            this.markerList = Collections.newList(skin.getMarkers());
+            this.properties = skin.properties();
+            this.markerList = Collections.newList(skin.markers());
         }
 
         @Override
@@ -240,7 +240,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             this.references = blockPosList;
         }
 
-        public List<BlockPos> getReferences() {
+        public List<BlockPos> references() {
             return references;
         }
     }

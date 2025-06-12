@@ -275,29 +275,29 @@ public abstract class OpenProperties {
         }
 
         protected void readFromNBT(OpenProperties instance, CompoundTag nbt) {
-            for (var key : nbt.getAllKeys()) {
+            for (var key : nbt.keySet()) {
                 instance.properties.put(key, readValueFromNBT(instance, nbt.get(key)));
             }
         }
 
         protected Object readValueFromNBT(OpenProperties instance, Object value) {
             if (value instanceof StringTag stringTag) {
-                return stringTag.getAsString();
+                return stringTag.value();
             }
             if (value instanceof LongTag longTag) {
-                return longTag.getAsLong();
+                return longTag.longValue();
             }
             if (value instanceof IntTag intTag) {
-                return intTag.getAsInt();
+                return intTag.intValue();
             }
             if (value instanceof FloatTag floatTag) {
-                return floatTag.getAsFloat();
+                return floatTag.floatValue();
             }
             if (value instanceof DoubleTag doubleTag) {
-                return doubleTag.getAsDouble();
+                return doubleTag.doubleValue();
             }
             if (value instanceof ByteTag byteTag) {
-                return byteTag.getAsByte() != 0;
+                return byteTag.byteValue() != 0;
             }
             if (value instanceof ListTag listTag) {
                 var elements = new ArrayList<>();

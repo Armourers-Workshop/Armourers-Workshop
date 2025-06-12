@@ -14,7 +14,7 @@ public class SkinAttachmentType implements IRegistryEntry {
     }
 
     @Override
-    public OpenResourceLocation getRegistryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 

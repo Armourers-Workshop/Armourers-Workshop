@@ -13,30 +13,30 @@ public abstract class SkinGeometryFace implements ISkinGeometryFace {
     protected SkinTexturePos texturePos = SkinTexturePos.DEFAULT;
 
     @Override
-    public int getId() {
+    public int id() {
         return id;
     }
 
     @Override
-    public OpenTransform3f getTransform() {
+    public OpenTransform3f transform() {
         return transform;
     }
 
     @Override
-    public SkinTexturePos getTexturePos() {
+    public SkinTexturePos texturePos() {
         return texturePos;
     }
 
     @Override
-    public abstract SkinGeometryType getType();
+    public abstract SkinGeometryType type();
 
     @Override
-    public abstract SkinGeometryOptions getOptions();
+    public abstract SkinGeometryOptions options();
 
     @Override
-    public abstract Iterable<? extends SkinGeometryVertex> getVertices();
+    public abstract Iterable<? extends SkinGeometryVertex> vertices();
 
-    public float getPriority() {
+    public float priority() {
         return 0;
     }
 
@@ -46,6 +46,6 @@ public abstract class SkinGeometryFace implements ISkinGeometryFace {
 
     @Override
     public String toString() {
-        return Objects.toString(this, "id", getId(), "type", getType());
+        return Objects.toString(this, "id", id(), "type", type());
     }
 }

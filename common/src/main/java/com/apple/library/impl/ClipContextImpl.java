@@ -214,7 +214,7 @@ public class ClipContextImpl {
         }
 
 
-        private Buffer getBuffer() {
+        private Buffer buffer() {
             if (allBuffers.isEmpty()) {
                 return createBuffer();
             }
@@ -281,7 +281,7 @@ public class ClipContextImpl {
             private LinkedHashMap<Buffer, ArrayList<Pass>> otherPasses;
 
             public void add(CGRect rect) {
-                Buffer buffer = getBuffer();
+                Buffer buffer = buffer();
                 Pass pass = buffer.add(rect);
                 while (pass == null) {
                     buffer = createBuffer();

@@ -83,7 +83,7 @@ public class ContextBinding extends NamedObject implements ObjectBinding {
     }
 
     @Override
-    public Expression getProperty(String name) {
+    public Expression propertyByName(String name) {
         var key = name.toLowerCase();
         return children.get(key);
     }

@@ -104,7 +104,7 @@ public class AbstractForgeCapabilityManager {
         }
 
         @Override
-        public IResourceLocation getRegistryName() {
+        public IResourceLocation registryName() {
             return registryName;
         }
     }
@@ -124,7 +124,7 @@ public class AbstractForgeCapabilityManager {
         public static <T extends IDataSerializable.Mutable> IRegistryHolder<AttachmentType<CapabilitySerializer<T>>> register(IResourceLocation registryName, Function<Entity, Optional<T>> factory) {
             DATA_KEYS.add(registryName.toString());
             Function<IAttachmentHolder, CapabilitySerializer<T>> transformer = holder -> new CapabilitySerializer<>((Entity) holder, factory.apply((Entity) holder).orElse(null));
-            return AbstractForgeRegistries.ATTACHMENT_TYPES.register(registryName.getPath(), () -> AttachmentType.serializable(transformer).build());
+            return AbstractForgeRegistries.ATTACHMENT_TYPES.register(registryName.path(), () -> AttachmentType.serializable(transformer).build());
         }
 
         @Override

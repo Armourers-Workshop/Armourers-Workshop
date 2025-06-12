@@ -38,20 +38,20 @@ public class CubeWrapper implements IBlockPaintable {
     public boolean is(Class<?> clazz) {
         // for the block check, we need forwarding the call to `getBlock`.
         if (Block.class.isAssignableFrom(clazz)) {
-            return clazz.isInstance(getBlock());
+            return clazz.isInstance(block());
         }
-        return clazz.isInstance(getBlockEntity());
+        return clazz.isInstance(blockEntity());
     }
 
     public boolean is(Block block) {
-        return getBlockState().is(block);
+        return blockState().is(block);
     }
 
-    public Block getBlock() {
-        return getBlockState().getBlock();
+    public Block block() {
+        return blockState().getBlock();
     }
 
-    public BlockState getBlockState() {
+    public BlockState blockState() {
         if (this.state != null) {
             return this.state.get();
         }
@@ -78,7 +78,7 @@ public class CubeWrapper implements IBlockPaintable {
     }
 
     @Nullable
-    public BlockEntity getBlockEntity() {
+    public BlockEntity blockEntity() {
         if (this.blockEntity != null) {
             return this.blockEntity.get();
         }
@@ -91,8 +91,8 @@ public class CubeWrapper implements IBlockPaintable {
     }
 
     @Nullable
-    public CompoundTag getBlockTag() {
-        var blockEntity = getBlockEntity();
+    public CompoundTag blockTag() {
+        var blockEntity = blockEntity();
         if (blockEntity != null) {
             return blockEntity.saveFullData(level.registryAccess());
         }
@@ -101,7 +101,7 @@ public class CubeWrapper implements IBlockPaintable {
 
     @Override
     public SkinPaintColor getColor(OpenDirection direction) {
-        var target = getTarget();
+        var target = target();
         if (target != null) {
             return target.getColor(direction);
         }
@@ -120,29 +120,29 @@ public class CubeWrapper implements IBlockPaintable {
 
     @Override
     public boolean shouldChangeColor(OpenDirection direction) {
-        var target = getTarget();
+        var target = target();
         if (target != null) {
             return target.shouldChangeColor(direction);
         }
         return false;
     }
 
-    public BlockPos getPos() {
+    public BlockPos blockPos() {
         return pos;
     }
 
-    public void setPos(BlockPos pos) {
+    public void setBlockPos(BlockPos pos) {
         if (this.pos != pos) {
             this.submit();
         }
         this.pos = pos;
     }
 
-    private IBlockPaintable getTarget() {
+    private IBlockPaintable target() {
         if (this.target != null) {
             return this.target.get();
         }
-        var target = Objects.safeCast(getBlockEntity(), IBlockPaintable.class);
+        var target = Objects.safeCast(blockEntity(), IBlockPaintable.class);
         if (target != null) {
             this.target = () -> target;
             return target;

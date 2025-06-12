@@ -52,19 +52,19 @@ import java.util.function.Function;
 
 public class SkinnableBlockEntity extends RotableContainerBlockEntity implements ITickable {
 
-    private static final Map<?, OpenVector3f> FACING_TO_ROT = Collections.immutableMap(builder -> {
-        builder.put(Pair.of(AttachFace.CEILING, Direction.EAST), new OpenVector3f(180, 270, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.NORTH), new OpenVector3f(180, 180, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.WEST), new OpenVector3f(180, 90, 0));
-        builder.put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new OpenVector3f(180, 0, 0));
-        builder.put(Pair.of(AttachFace.WALL, Direction.EAST), new OpenVector3f(0, 270, 0));
-        builder.put(Pair.of(AttachFace.WALL, Direction.SOUTH), new OpenVector3f(0, 180, 0));
-        builder.put(Pair.of(AttachFace.WALL, Direction.WEST), new OpenVector3f(0, 90, 0));
-        builder.put(Pair.of(AttachFace.WALL, Direction.NORTH), new OpenVector3f(0, 0, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.EAST), new OpenVector3f(0, 270, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new OpenVector3f(0, 180, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.WEST), new OpenVector3f(0, 90, 0));
-        builder.put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new OpenVector3f(0, 0, 0));
+    private static final Map<?, OpenVector3f> FACING_TO_ROT = Collections.immutableMap(it -> {
+        it.put(Pair.of(AttachFace.CEILING, Direction.EAST), new OpenVector3f(180, 270, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.NORTH), new OpenVector3f(180, 180, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.WEST), new OpenVector3f(180, 90, 0));
+        it.put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new OpenVector3f(180, 0, 0));
+        it.put(Pair.of(AttachFace.WALL, Direction.EAST), new OpenVector3f(0, 270, 0));
+        it.put(Pair.of(AttachFace.WALL, Direction.SOUTH), new OpenVector3f(0, 180, 0));
+        it.put(Pair.of(AttachFace.WALL, Direction.WEST), new OpenVector3f(0, 90, 0));
+        it.put(Pair.of(AttachFace.WALL, Direction.NORTH), new OpenVector3f(0, 0, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.EAST), new OpenVector3f(0, 270, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new OpenVector3f(0, 180, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.WEST), new OpenVector3f(0, 90, 0));
+        it.put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new OpenVector3f(0, 0, 0));
     });
 
     private BlockPos reference = BlockPos.ZERO;
@@ -417,7 +417,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             return null;
         }
         var f = 1 / 16f;
-        var box = bakedSkin.getRenderBounds().copy();
+        var box = bakedSkin.renderBounds().copy();
         box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
         return box;
     }
@@ -471,7 +471,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (properties != null) {
             return properties.get(property);
         }
-        return property.getDefaultValue();
+        return property.defaultValue();
     }
 
     private LinkedSnapshot makeLinkedSnapshot() {
