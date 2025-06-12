@@ -1012,6 +1012,7 @@ public class BlockBenchExporter {
             var size = resolveTextureSize(texture, imageFrame);
             var animation = resolveTextureAnimation(texture, imageFrame);
             var properties = resolveTextureProperties(texture);
+            properties.setTranslucent(hasTranslucentChannel(imageBytes));
             textureData = new SkinTextureData(texture.getName(), size.width(), size.height(), animation, properties);
             textureData.load(Unpooled.wrappedBuffer(imageBytes));
             loadedTextures.put(texture.getUUID(), textureData);
@@ -1087,6 +1088,26 @@ public class BlockBenchExporter {
                 results.add(String.valueOf((char) ch));
             }
             return results;
+        }
+
+        private boolean hasTranslucentChannel(byte[] imageBytes) throws IOException {
+            // first check the image has an alpha channel?
+            var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+            if (!image.getColorModel().hasAlpha()) {
+                return false;
+            }
+            var width = image.getWidth();
+            var height = image.getHeight();
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    var argb = image.getRGB(x, y); // ARGB
+                    var alpha = (argb >> 24) & 0xff;
+                    if (alpha > 0 && alpha < 255) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 

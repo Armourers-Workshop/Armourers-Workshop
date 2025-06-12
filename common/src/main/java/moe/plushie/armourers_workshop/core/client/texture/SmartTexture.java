@@ -61,7 +61,7 @@ public class SmartTexture extends ReferenceCounted {
 
     public IRenderType getRenderType(SkinGeometryType type) {
         return bindingRenderTypes.computeIfAbsent(type, it -> {
-            var renderType = SkinRenderType.geometryFace(it, location, properties.isEmissive());
+            var renderType = SkinRenderType.geometryFace(it, location, properties.isTranslucent(), properties.isEmissive());
             DataContainer.set(renderType, this);
             return renderType;
         });

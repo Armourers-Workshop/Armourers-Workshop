@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AbstractRenderType extends SkinRenderType implements IAssociatedContainerProvider {
 
     private boolean isEmissive = false;
     private boolean isOutline = false;
+    private int ordinal = 0;
 
     private Target target = Target.MAIN;
     private Transparency transparency = Transparency.NONE;
@@ -76,6 +78,11 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
     }
 
     @Override
+    public int ordinal() {
+        return ordinal;
+    }
+
+    @Override
     public IVertexFormat.Mode mode() {
         return mode;
     }
@@ -119,6 +126,12 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
         @Override
         public IRenderTypeBuilder transparency(Transparency transparency) {
             updater.add(t -> t.transparency = transparency);
+            return this;
+        }
+
+        @Override
+        public IRenderTypeBuilder ordinal(int ordinal) {
+            updater.add(t -> t.ordinal = ordinal);
             return this;
         }
     }

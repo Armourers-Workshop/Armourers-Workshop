@@ -6,10 +6,12 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderTypeImpl;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
@@ -41,18 +43,15 @@ public abstract class SkinRenderType implements IRenderType {
     public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).build("aw_block_cube_glass_unsorted");
     public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build("aw_block_earth");
 
-    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).build("aw_face_sold");
-    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).build("aw_lighting_quad_face");
-    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_quad_face");
-    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).build("aw_translucent_lighting_quad_face");
+    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("aw_face_sold");
+    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("aw_lighting_quad_face");
+    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_translucent_quad_face");
+    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_translucent_lighting_quad_face");
 
     private static final IRenderType LINES = _line(1).build("aw_lines");
     private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
 
-    private static final ConcurrentHashMap<String, IRenderType> CUSTOM_FACE_SOLID_VARIANTS = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, IRenderType> CUSTOM_FACE_LIGHTING_VARIANTS = new ConcurrentHashMap<>();
-
-    private static final IRenderType[] RENDER_ORDERING_FACES = {BLOCK_FACE_SOLID, BLOCK_FACE_LIGHTING, BLOCK_FACE_TRANSLUCENT, BLOCK_FACE_LIGHTING_TRANSLUCENT};
+    private static final ConcurrentHashMap<String, IRenderType> CUSTOM_FACE_VARIANTS = new ConcurrentHashMap<>();
 
     public static IRenderType by(SkinGeometryType geometryType) {
         if (geometryType == SkinGeometryTypes.BLOCK_GLASS) {
@@ -67,50 +66,29 @@ public abstract class SkinRenderType implements IRenderType {
         return BLOCK_FACE_SOLID;
     }
 
-    public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isEmissive, boolean isCull) {
-        // select a variant container.
-        var variants = CUSTOM_FACE_SOLID_VARIANTS;
-        if (isEmissive) {
-            variants = CUSTOM_FACE_LIGHTING_VARIANTS;
-        }
+    public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
         var key = String.format("%s/%s", name, texture.getPath());
-        return variants.computeIfAbsent(key, it -> {
+        return CUSTOM_FACE_VARIANTS.computeIfAbsent(key, it -> {
             var builder = _customFace(format).texture(texture);
+            if (isTranslucent) {
+                builder = builder.transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT);
+            }
             if (isCull) {
                 builder = builder.cull();
+            }
+            if (isTranslucent) {
+                builder = builder.ordinal(400);
+            } else {
+                builder = builder.ordinal(200);
             }
             return builder.build(it);
         });
     }
 
-    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isEmissive) {
-        // ..
-        if (isEmissive) {
-            if (type == SkinGeometryTypes.CUBE) {
-                return customFace("aw_cube_lighting", SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, texture, true, false);
-            }
-            if (type == SkinGeometryTypes.CUBE_CULL) {
-                return customFace("aw_cube_lighting_cull", SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, texture, true, true);
-            }
-            if (type == SkinGeometryTypes.MESH) {
-                return customFace("aw_mesh_lighting", SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, texture, true, false);
-            }
-            if (type == SkinGeometryTypes.MESH_CULL) {
-                return customFace("aw_mesh_lighting_cull", SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, texture, true, true);
-            }
-        } else {
-            if (type == SkinGeometryTypes.CUBE) {
-                return customFace("aw_cube_solid", SkinVertexFormat.SKIN_CUBE_FACE, texture, false, false);
-            }
-            if (type == SkinGeometryTypes.CUBE_CULL) {
-                return customFace("aw_cube_solid_cull", SkinVertexFormat.SKIN_CUBE_FACE, texture, false, true);
-            }
-            if (type == SkinGeometryTypes.MESH) {
-                return customFace("aw_mesh_solid", SkinVertexFormat.SKIN_MESH_FACE, texture, false, false);
-            }
-            if (type == SkinGeometryTypes.MESH_CULL) {
-                return customFace("aw_mesh_solid_cull", SkinVertexFormat.SKIN_MESH_FACE, texture, false, true);
-            }
+    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isTranslucent, boolean isEmissive) {
+        var builder = GeometryFaceBuilder.search(type, isTranslucent, isEmissive);
+        if (builder != null) {
+            return builder.build(texture);
         }
         return by(type);
     }
@@ -135,25 +113,6 @@ public abstract class SkinRenderType implements IRenderType {
         return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().transparency(Transparency.TRANSLUCENT).build("aw_player_translucent");
     }
 
-    public static int getPriority(IRenderType renderType) {
-        int index = 1;
-        for (var target : SkinRenderType.RENDER_ORDERING_FACES) {
-            if (target == renderType) {
-                return index;
-            }
-            index += 1;
-        }
-        index += 1;
-        if (CUSTOM_FACE_SOLID_VARIANTS.containsValue(renderType)) {
-            return index;
-        }
-        index += 1;
-        if (CUSTOM_FACE_LIGHTING_VARIANTS.containsValue(renderType)) {
-            return index;
-        }
-        return 0;
-    }
-
     private static IRenderTypeBuilder _entity(SkinVertexFormat format, IResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
     }
@@ -167,7 +126,7 @@ public abstract class SkinRenderType implements IRenderType {
     }
 
     private static IRenderTypeBuilder _customFace(SkinVertexFormat format) {
-        return _builder(format).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).outline();
+        return _builder(format).outline();
     }
 
     private static IRenderTypeBuilder _texture(IResourceLocation texture) {
@@ -188,5 +147,60 @@ public abstract class SkinRenderType implements IRenderType {
 
     private static IRenderTypeBuilder _builder(SkinVertexFormat format) {
         return AbstractRenderTypeImpl.builder(format);
+    }
+
+    private static class GeometryFaceBuilder {
+
+        private static final List<GeometryFaceBuilder> BUILDERS = Collections.immutableList(it -> {
+
+            it.add(new GeometryFaceBuilder("aw_cube_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
+            it.add(new GeometryFaceBuilder("aw_cube_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_cube_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
+            it.add(new GeometryFaceBuilder("aw_cube_translucent_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+
+            it.add(new GeometryFaceBuilder("aw_cube_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
+            it.add(new GeometryFaceBuilder("aw_cube_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_cube_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
+            it.add(new GeometryFaceBuilder("aw_cube_translucent_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+
+            it.add(new GeometryFaceBuilder("aw_mesh_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_translucent_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+
+            it.add(new GeometryFaceBuilder("aw_mesh_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_translucent_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+        });
+
+        private final String name;
+        private final SkinGeometryType type;
+        private final SkinVertexFormat format;
+        private final boolean isTranslucent;
+        private final boolean isEmissive;
+        private final boolean isCull;
+
+        public GeometryFaceBuilder(String name, SkinGeometryType type, SkinVertexFormat format, boolean isTranslucent, boolean isEmissive, boolean isCull) {
+            this.name = name;
+            this.type = type;
+            this.format = format;
+            this.isTranslucent = isTranslucent;
+            this.isEmissive = isEmissive;
+            this.isCull = isCull;
+        }
+
+        public static GeometryFaceBuilder search(SkinGeometryType type, boolean isTranslucent, boolean isEmissive) {
+            for (var it : BUILDERS) {
+                if (type.equals(it.type) && isTranslucent == it.isTranslucent && isEmissive == it.isEmissive) {
+                    return it;
+                }
+            }
+            return null;
+        }
+
+        public IRenderType build(IResourceLocation texture) {
+            return customFace(name, format, texture, isTranslucent, isEmissive, isCull);
+        }
     }
 }

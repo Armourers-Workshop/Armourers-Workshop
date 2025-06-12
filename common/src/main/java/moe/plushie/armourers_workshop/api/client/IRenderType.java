@@ -18,6 +18,8 @@ public interface IRenderType extends Supplier<RenderType> {
 
     int bufferSize();
 
+    int ordinal();
+
     IVertexFormat.Mode mode();
 
     IVertexFormat format();

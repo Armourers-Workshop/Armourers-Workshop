@@ -71,7 +71,7 @@ public class ShaderVertexMerger {
     }
 
     private int getRenderOrder(ShaderVertexGroup group) {
-        int index = SkinRenderType.getPriority(group.getRenderType());
+        int index = group.getRenderType().ordinal();
         if (index > 0) {
             return index;
         }

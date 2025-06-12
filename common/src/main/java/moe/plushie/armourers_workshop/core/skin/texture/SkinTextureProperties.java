@@ -53,6 +53,15 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         return getFlag(0);
     }
 
+    public void setTranslucent(boolean newValue) {
+        setFlag(1, newValue);
+    }
+
+    @Override
+    public boolean isTranslucent() {
+        return getFlag(1);
+    }
+
     public void setSpecular(boolean isSpecular) {
         setFlag(2, isSpecular);
     }
@@ -101,6 +110,9 @@ public class SkinTextureProperties implements ISkinTextureProperties {
         var properties = storage.copy();
         if (isEmissive()) {
             properties.put("isEmissive", true);
+        }
+        if (isTranslucent()) {
+            properties.put("isTranslucent", true);
         }
         if (isNormal()) {
             properties.put("isNormal", true);

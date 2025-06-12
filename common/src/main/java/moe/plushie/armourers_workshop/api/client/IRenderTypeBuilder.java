@@ -45,5 +45,7 @@ public interface IRenderTypeBuilder {
 
     IRenderTypeBuilder sortOnUpload();
 
+    IRenderTypeBuilder ordinal(int ordinal);
+
     IRenderType build(String name);
 }
