@@ -116,9 +116,9 @@ public class CubeReplacingEvent {
                 }
             }
             var newColor = destinationBlockColor.getOrDefault(dir, SkinPaintColor.WHITE);
-            var color = newColor.getRGB();
+            var color = newColor.argb();
             if (keepColor) {
-                color = targetColor.getRGB();
+                color = targetColor.argb();
             }
             var paintType = newColor.paintType();
             if (keepPaintType) {

@@ -35,7 +35,7 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
         this.impl = renderType;
         this.mode = AbstractVertexFormat.of(renderType.mode());
         this.format = AbstractVertexFormat.of(renderType.format());
-        this.outline = renderType.outline().map(AbstractRenderType::new);
+        this.outline = renderType.outline().map(AbstractRenderType::of);
         this.isOutline = renderType.isOutline();
     }
 
@@ -45,6 +45,11 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
 
     public static IRenderTypeBuilder builder(SkinVertexFormat format) {
         return AbstractRenderTypeImpl.builder(format);
+    }
+
+    public void apply(ArrayList<Consumer<AbstractRenderType>> updater) {
+        updater.forEach(it -> it.accept(this));
+        outline.ifPresent(type -> ((AbstractRenderType) type).ordinal = ordinal);
     }
 
     @Override
@@ -100,6 +105,11 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
     @Override
     public RenderType get() {
         return impl;
+    }
+
+    @Override
+    public String toString() {
+        return impl.toString();
     }
 
     public static abstract class Builder implements IRenderTypeBuilder {

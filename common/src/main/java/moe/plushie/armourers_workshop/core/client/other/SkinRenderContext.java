@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -193,12 +192,9 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         if (bufferProvider != null) {
             return bufferProvider.apply(skin);
         }
-        var usedBufferSource = bufferSource;
-        if (outlineColor != 0) {
-            usedBufferSource = AbstractBufferSource.outline();
-        }
-        var bufferBuilder = SkinVertexBufferBuilder.of(usedBufferSource, skin.renderInfo());
-        return bufferBuilder.getBuffer(skin);
+        var isOutline = shouldRenderOutline();
+        var skinBufferSource = SkinVertexBufferSource.of(bufferSource, isOutline, skin.renderInfo());
+        return skinBufferSource.getBuffer(skin);
     }
 
     public void setBufferProvider(Function<BakedSkin, ConcurrentBufferBuilder> bufferProvider) {

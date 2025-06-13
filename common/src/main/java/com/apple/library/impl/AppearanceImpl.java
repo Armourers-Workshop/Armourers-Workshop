@@ -15,9 +15,9 @@ public class AppearanceImpl {
     public static final UIColor TEXT_CURSOR_COLOR = UIColor.of(0xffd0d0d0);
 
     public static final UIColor TREE_TEXT_COLOR = UIColor.WHITE;
-    public static final UIColor TREE_HIGHLIGHTED_TEXT_COLOR = new UIColor(0xffffffa0);
-    public static final UIColor TREE_HIGHLIGHTED_BACKGROUND_COLOR = new UIColor(0x44cccccc, true);
-    public static final UIColor TREE_SELECTED_BACKGROUND_COLOR = new UIColor(0x44ffff00, true);
+    public static final UIColor TREE_HIGHLIGHTED_TEXT_COLOR = UIColor.of(0xffffffa0);
+    public static final UIColor TREE_HIGHLIGHTED_BACKGROUND_COLOR = UIColor.of(0x44cccccc);
+    public static final UIColor TREE_SELECTED_BACKGROUND_COLOR = UIColor.of(0x44ffff00);
 
     public static final UIColor MENU_NORMAL_TEXT_COLOR = UIColor.WHITE;
     public static final UIColor MENU_HIGHLIGHTED_TEXT_COLOR = UIColor.WHITE;

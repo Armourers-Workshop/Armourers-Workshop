@@ -210,7 +210,7 @@ public class ConcurrentBufferCompiler {
         @Override
         protected void dispose() {
             RenderSystem.assertOnRenderThread();
-            if (this.bufferObject == null || this.mergedTasks == null || usingTypes == null) {
+            if (bufferObject == null || mergedTasks == null || usingTypes == null) {
                 return; // is release
             }
             this.isComplied = false;

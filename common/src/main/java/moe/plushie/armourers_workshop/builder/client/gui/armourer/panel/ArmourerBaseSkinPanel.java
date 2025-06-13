@@ -70,7 +70,7 @@ public class ArmourerBaseSkinPanel extends UIView {
     }
 
     protected UICheckBox addCheckBox(int x, int y, SkinProperty<Boolean> property) {
-        boolean oldValue = skinProperties.get(property);
+        var oldValue = skinProperties.get(property);
         var checkBox = new UICheckBox(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
         checkBox.setTitle(getDisplayText(property.key()));
         checkBox.setSelected(oldValue);
@@ -85,7 +85,7 @@ public class ArmourerBaseSkinPanel extends UIView {
     }
 
     protected UILabel addLabel(int x, int y, NSString message) {
-        UILabel label = new UILabel(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
+        var label = new UILabel(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
         label.setText(message);
         addSubview(label);
         return label;

@@ -43,7 +43,7 @@ public class SkinPaintColor implements ISkinPaintColor {
         int value = (rgb & 0xffffff) | ((paintType.id() & 0xff) << 24);
         var paintColor = POOL.getIfPresent(value);
         if (paintColor == null) {
-            paintColor = new SkinPaintColor(value, rgb, paintType);
+            paintColor = new SkinPaintColor(value, rgb | 0xff000000, paintType);
             POOL.put(value, paintColor);
         }
         return paintColor;
@@ -89,7 +89,7 @@ public class SkinPaintColor implements ISkinPaintColor {
     }
 
     @Override
-    public int getRGB() {
+    public int argb() {
         return rgb;
     }
 
@@ -126,8 +126,8 @@ public class SkinPaintColor implements ISkinPaintColor {
     }
 
     @Override
-    public SkinPaintColor withColor(int rgb) {
-        return SkinPaintColor.of(rgb, paintType);
+    public SkinPaintColor withColor(int argb) {
+        return SkinPaintColor.of(argb, paintType);
     }
 
     @Override

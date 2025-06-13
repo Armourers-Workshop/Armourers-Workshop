@@ -57,8 +57,8 @@ public abstract class AbstractLibraryPanel extends UIView {
     }
 
     protected CGGradient getDefaultColor() {
-        var startColor = UIColor.rgba(0xC0101010);
-        var endColor = UIColor.rgba(0xD0101010);
+        var startColor = UIColor.of(0xC0101010);
+        var endColor = UIColor.of(0xD0101010);
         return new CGGradient(startColor, CGPoint.ZERO, endColor, CGPoint.ZERO);
     }
 

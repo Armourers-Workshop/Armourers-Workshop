@@ -427,14 +427,14 @@ public class TextStorageImpl {
 
     private int defaultPlaceholderColor() {
         if (placeholderColor != null) {
-            return placeholderColor.getRGB();
+            return placeholderColor.value();
         }
         return 0xff333333;
     }
 
     private int defaultTextColor() {
         if (textColor != null) {
-            return textColor.getRGB();
+            return textColor.value();
         }
         return 0xffffffff;
     }

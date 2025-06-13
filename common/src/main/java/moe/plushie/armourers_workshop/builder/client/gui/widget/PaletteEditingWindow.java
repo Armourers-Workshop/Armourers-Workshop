@@ -56,20 +56,21 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
 
     protected void applyPaletteChange(UIControl button) {
         int index = paletteBox.selectedIndex();
-        Palette palette = selectedPalette();
-        if (palette != null) {
-            if (!palette.isLocked() && InputManagerImpl.hasShiftDown()) {
-                palette.setColor(index, paintColorView.color().getRGB());
-                paletteManager.markDirty();
-                return;
-            }
-            var selectedColor = palette.getColor(index);
-            if (selectedColor == 0) {
-                return;
-            }
-            setSelectedColor(new UIColor(selectedColor));
-            submitColorChange(button);
+        var palette = selectedPalette();
+        if (palette == null) {
+            return;
         }
+        if (!palette.isLocked() && InputManagerImpl.hasShiftDown()) {
+            palette.setColor(index, paintColorView.color().value());
+            paletteManager.markDirty();
+            return;
+        }
+        var selectedColor = palette.getColor(index);
+        if (selectedColor == 0) {
+            return;
+        }
+        setSelectedColor(UIColor.of(selectedColor));
+        submitColorChange(button);
     }
 
     protected void applyColorChange(UIControl button) {
@@ -125,8 +126,8 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void reloadPalettes() {
-        var selectedIndex = 0;
         palettes = new ArrayList<>();
+        var selectedIndex = 0;
         var items = new ArrayList<UIComboItem>();
         for (var palette : PaletteManager.getInstance().palettes()) {
             var item = new UIComboItem(new NSString(palette.name()));
@@ -157,7 +158,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void setColorComponents(float[] values) {
-        var newValue = new UIColor(ColorUtils.HSBtoRGB(values[0], values[1], values[2]));
+        var newValue = UIColor.of(ColorUtils.HSBtoRGB(values[0], values[1], values[2]));
         paintColorView.setColor(newValue);
         for (var slider : sliders) {
             slider.setValueWithComponents(values);

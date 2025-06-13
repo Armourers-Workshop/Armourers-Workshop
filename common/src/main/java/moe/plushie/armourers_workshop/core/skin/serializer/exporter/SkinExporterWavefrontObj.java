@@ -57,7 +57,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
                 if (!face.isVisible()) {
                     continue;
                 }
-                int color = face.color().getRGB() | 0xff000000;
+                int color = face.color().argb() | 0xff000000;
                 if (!colors.containsKey(color)) {
                     colors.put(color, colorIndex++);
                 }
@@ -150,7 +150,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         // TODO: add adv skin support.
         var scale = 1.0 / texture.width;
         for (var face : faces) {
-            int index = colors.getOrDefault(face.color().getRGB() | 0xff000000, 0);
+            int index = colors.getOrDefault(face.color().argb() | 0xff000000, 0);
 
             var ix = texture.x(index) + 0.5;
             var iy = texture.y(index) + 0.5;

@@ -29,7 +29,7 @@ public class PaintColorView extends UIView {
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
         var texture = paintType.texturePos();
-        var textureMatrix = TextureAnimationController.DEFAULT.textureMatrix(TickUtils.animationTicks());
+        var textureMatrix = TextureAnimationController.DEFAULT.getTextureMatrix(TickUtils.animationTicks());
         var textureOffset = OpenVector3f.ZERO.transforming(textureMatrix);
         var cu = texture.u();
         var cv = texture.v();
@@ -47,11 +47,11 @@ public class PaintColorView extends UIView {
     }
 
     public SkinPaintColor paintColor() {
-        return SkinPaintColor.of(color.getRGB(), paintType);
+        return SkinPaintColor.of(color.value(), paintType);
     }
 
     public void setPaintColor(SkinPaintColor color) {
-        setColor(new UIColor(color.getRGB()));
+        setColor(UIColor.of(color.argb()));
         setPaintType(color.paintType());
     }
 

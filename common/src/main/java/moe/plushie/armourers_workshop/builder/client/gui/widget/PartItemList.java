@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.builder.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
-import com.google.common.base.Objects;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinPreviewList;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,8 +54,8 @@ public class PartItemList extends SkinPreviewList<PartItem> {
 
     @Override
     protected int getItemBackgroundColor(PartItem entry, boolean isHovered) {
-        if (Objects.equal(selectedItem(), entry.descriptor()) && entry.hasSkin()) {
-            return 0xE0777711;
+        if (Objects.equals(selectedItem(), entry.descriptor()) && entry.hasSkin()) {
+            return 0xe0777711;
         }
         return super.getItemBackgroundColor(entry, isHovered);
     }

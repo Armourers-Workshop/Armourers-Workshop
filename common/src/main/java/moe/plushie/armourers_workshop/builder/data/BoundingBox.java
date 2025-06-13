@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.builder.data;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 
-import java.util.Objects;
 
 public class BoundingBox extends OpenRectangle3i {
 

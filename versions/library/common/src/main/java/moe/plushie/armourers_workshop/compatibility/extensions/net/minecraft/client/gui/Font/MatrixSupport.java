@@ -9,8 +9,8 @@ import org.joml.Matrix4f;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Extension
 @Available("[1.20, )")
+@Extension
 public class MatrixSupport {
 
     public static int drawInBatch(@This Font font, FormattedCharSequence sequence, float f, float g, int i, boolean bl, Matrix4f pose, MultiBufferSource buffers, boolean bl2, int j, int k) {

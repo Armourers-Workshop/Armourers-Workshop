@@ -236,7 +236,7 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
         public void setPaintColor(OpenDirection dir, SkinPaintColor paintColor) {
             int side = dir.get3DDataValue();
             int type = paintColor.paintType().id();
-            int rgb = paintColor.getRGB();
+            int rgb = paintColor.argb();
             setPaintType(side, (byte) type);
             setRGB(side, rgb);
         }

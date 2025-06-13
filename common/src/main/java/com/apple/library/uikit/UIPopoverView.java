@@ -12,7 +12,7 @@ public class UIPopoverView extends UIWindow {
     public UIPopoverView() {
         super(CGRect.ZERO);
         this.setLevel(400);
-        this.setBackgroundColor(new UIColor(0x3f000000, true));
+        this.setBackgroundColor(UIColor.of(0x3f000000));
     }
 
     public void dismiss() {

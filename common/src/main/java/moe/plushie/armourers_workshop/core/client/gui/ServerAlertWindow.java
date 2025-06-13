@@ -32,7 +32,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
         dialog.setTitle(new NSString(alertPacket.title()));
         dialog.setMessage(new NSString(alertPacket.message()));
         if (alertPacket.type() == 1) {
-            dialog.setMessageColor(new UIColor(0xffff5555));
+            dialog.setMessageColor(UIColor.of(0xffff5555));
         }
         dialog.setConfirmText(new NSString(alertPacket.confirm()));
         dialog.sizeToFit();
@@ -76,7 +76,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
         public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
             // we need reset mouse to impossible position to fool the original tooltip render.
             if (targetScreen != null) {
-                renderBackground(context, targetScreen, Integer.MIN_VALUE, Integer.MIN_VALUE, partialTicks);
+                targetScreen.render(context, Integer.MIN_VALUE, Integer.MIN_VALUE, partialTicks);
             }
             context.saveGraphicsState();
             context.translateCTM(0, 0, 500);

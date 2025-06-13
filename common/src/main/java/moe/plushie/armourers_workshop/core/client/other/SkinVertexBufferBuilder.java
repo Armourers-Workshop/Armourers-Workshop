@@ -1,171 +1,109 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
-import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractShader;
-import moe.plushie.armourers_workshop.core.client.bake.BakedRenderInfo;
+import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
+import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class SkinVertexBufferBuilder implements IBufferSource {
+public class SkinVertexBufferBuilder implements ConcurrentBufferBuilder {
 
-    private static SkinVertexBufferBuilder INSTANCE;
+    protected final BakedSkin skin;
+    protected final ConcurrentBufferCompiler compiler = new ConcurrentBufferCompiler();
+    protected final ConcurrentRenderingPipeline pipeline = new ConcurrentRenderingPipeline();
 
-    protected final HashMap<BakedSkin, SkinRenderObjectBuilder> skinBufferBuilders = new HashMap<>();
-    protected final HashMap<BakedSkin, SkinRenderObjectBuilder> startedSkinBufferBuilders = new HashMap<>();
-
-    protected final HashMap<IRenderType, AbstractBufferBuilder> userBufferBuilders = new HashMap<>();
-    protected final HashMap<IRenderType, AbstractBufferBuilder> startedUserBufferBuilders = new HashMap<>();
-
-    protected final Pipeline solidPipeline = new Pipeline();
-    protected final Pipeline outlinePipeline = new Pipeline();
-    protected final Pipeline translucentPipeline = new Pipeline();
-
-    public SkinVertexBufferBuilder() {
-    }
-
-    public static SkinVertexBufferBuilder getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SkinVertexBufferBuilder();
-        }
-        return INSTANCE;
-    }
-
-    public static SkinVertexBufferBuilder of(IBufferSource bufferSource) {
-        var builder = getInstance();
-        if (bufferSource == AbstractBufferSource.outline()) {
-            attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
-        } else {
-            attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
-        }
-        return builder;
-    }
-
-    public static SkinVertexBufferBuilder of(IBufferSource bufferSource, BakedRenderInfo renderInfo) {
-        var builder = getInstance();
-        if (bufferSource == AbstractBufferSource.outline()) {
-            attach(bufferSource, SkinRenderSheets.outlineSolidBlockSheet(), builder::endOutlineBatch);
-        } else {
-            attach(bufferSource, SkinRenderSheets.solidBlockSheet(), builder::endBatch);
-            if (renderInfo.hasTranslucent()) {
-                attach(bufferSource, SkinRenderSheets.glintTranslucentSheet(), builder::endTranslucentBatch);
-            }
-        }
-        return builder;
-    }
-
-    private static void attach(IBufferSource bufferSource, IRenderType renderType, Runnable action) {
-        var buffer = bufferSource.getBuffer(renderType);
-        if (renderType.get() instanceof IRenderAttachable attachable) {
-            attachable.attachRenderTask(buffer, action);
-        }
-    }
-
-    public static void clearAllCache() {
-        var builder = getInstance();
-        builder.skinBufferBuilders.clear();
-        builder.userBufferBuilders.clear();
-        builder.solidPipeline.clear();
-        builder.translucentPipeline.clear();
-        builder.outlinePipeline.clear();
-        ConcurrentBufferCompiler.clearAllCache();
-    }
-
-    @NotNull
-    public IBufferBuilder getBuffer(@NotNull IRenderType renderType) {
-        var buffer = startedUserBufferBuilders.get(renderType);
-        if (buffer != null) {
-            return buffer;
-        }
-        buffer = userBufferBuilders.computeIfAbsent(renderType, k -> new AbstractBufferBuilder(k.bufferSize()));
-        buffer.begin(renderType);
-        startedUserBufferBuilders.put(renderType, buffer);
-        return buffer;
-    }
-
-    public SkinRenderObjectBuilder getBuffer(@NotNull BakedSkin skin) {
-        var bufferBuilder = startedSkinBufferBuilders.get(skin);
-        if (bufferBuilder != null) {
-            return bufferBuilder;
-        }
-        bufferBuilder = skinBufferBuilders.computeIfAbsent(skin, SkinRenderObjectBuilder::new);
-        startedSkinBufferBuilders.put(skin, bufferBuilder);
-        return bufferBuilder;
+    public SkinVertexBufferBuilder(BakedSkin skin) {
+        this.skin = skin;
     }
 
     @Override
-    public void endBatch() {
-        if (!startedSkinBufferBuilders.isEmpty()) {
-            for (var builder : startedSkinBufferBuilders.values()) {
-                builder.endBatch(this::uploadPass);
+    public void addPart(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, ConcurrentRenderingContext context) {
+        // debug the vbo render.
+        if (ModDebugger.vbo) {
+            drawWithoutVBO(part, skin, scheme, context);
+            return;
+        }
+        draw(part, skin, scheme, false, context);
+        if (context.shouldRenderOutline()) {
+            draw(part, skin, scheme, true, context);
+        }
+    }
+
+    @Override
+    public void addShape(OpenVector3f origin, ConcurrentRenderingContext context) {
+        ShapeTesselator.vector(origin, 16, context.poseStack(), context.bufferSource());
+    }
+
+    @Override
+    public void addShape(OpenVoxelShape shape, int color, ConcurrentRenderingContext context) {
+        ShapeTesselator.stroke(shape.bounds(), color, context.poseStack(), context.bufferSource());
+    }
+
+    @Override
+    public void addShape(BakedArmature armature, ConcurrentRenderingContext context) {
+        var bufferSource = context.bufferSource();
+        var poseStack = context.poseStack();
+        var transforms = armature.transforms();
+        var armature1 = armature.armature();
+        for (var joint : armature1.allJoints()) {
+            var shape = armature1.shapeById(joint.id());
+            var transform = transforms[joint.id()];
+            if (ModDebugger.defaultArmature) {
+                transform = armature1.globalTransformById(joint.id());
             }
-            startedSkinBufferBuilders.clear();
-        }
-        solidPipeline.end();
-        if (!startedUserBufferBuilders.isEmpty()) {
-            startedUserBufferBuilders.forEach(AbstractBufferBuilder::upload);
-            startedUserBufferBuilders.clear();
-        }
-    }
-
-    public void endTranslucentBatch() {
-        translucentPipeline.end();
-    }
-
-    public void endOutlineBatch() {
-        endBatch();
-        outlinePipeline.end();
-    }
-
-    private void uploadPass(ShaderVertexObject pass) {
-        if (pass.isOutline()) {
-            outlinePipeline.add(pass);
-        } else {
-            if (pass.isTranslucent()) {
-                translucentPipeline.add(pass);
-            } else {
-                solidPipeline.add(pass);
+            if (shape != null && transform != null) {
+                poseStack.pushPose();
+                transform.apply(poseStack);
+//                ModDebugger.translate(context.pose().pose());
+//			poseStack.translate(box.o.getX(), box.o.getY(), box.o.getZ());
+                ShapeTesselator.stroke(shape, ColorUtils.getPaletteColor(joint.id()), poseStack, bufferSource);
+                ShapeTesselator.vector(0, 0, 0, 4, 4, 4, poseStack, bufferSource);
+                poseStack.popPose();
             }
         }
     }
 
-    public static class Pipeline {
+    public void endBatch(Consumer<ShaderVertexObject> consumer) {
+        pipeline.commit(consumer);
+    }
 
-        private final AbstractShader shader = new AbstractShader();
-        private final ShaderVertexMerger merger = new ShaderVertexMerger();
-
-        public void add(ShaderVertexObject pass) {
-            merger.add(pass);
+    private void draw(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, boolean isOutline, ConcurrentRenderingContext context) {
+        // we need compile the skin part, but not render when part invisible.
+        var group = compiler.compile(part, skin, scheme, isOutline);
+        if (group != null && !group.isEmpty() && part.isVisible()) {
+            pipeline.add(group, context);
         }
+    }
 
-        public void end() {
-            if (merger.isEmpty()) {
-                return;
-            }
-            merger.prepare();
+    private void drawWithoutVBO(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, ConcurrentRenderingContext context) {
+        var poseStack = context.poseStack();
+        var bufferSource = context.bufferSource();
+        part.quads().forEach((renderType, quads) -> {
+            var builder = bufferSource.getBuffer(renderType);
+            quads.forEach((transform, faces) -> {
+                poseStack.pushPose();
+                transform.apply(poseStack);
+                faces.forEach(face -> face.render(part, scheme, context.lightmap(), context.overlay(), poseStack, builder));
+                poseStack.popPose();
+            });
+        });
+    }
 
-            shader.begin();
-            merger.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
-            shader.end();
-
-            merger.reset();
-        }
-
-        public void clear() {
-            merger.reset();
-            merger.clear();
-        }
+    private void drawWithVBO(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
+        var pipeline1 = new ConcurrentRenderingPipeline();
+        var pipeline2 = new SkinVertexBufferSource.Pipeline();
+        pipeline1.add(group, context);
+        pipeline1.commit(pipeline2::add);
+        pipeline2.end();
     }
 }
-

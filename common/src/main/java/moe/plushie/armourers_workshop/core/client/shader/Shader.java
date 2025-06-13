@@ -48,7 +48,7 @@ public abstract class Shader {
     protected void prepare(ShaderVertexGroup group) {
         renderState.save();
         // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.textureMatrix(TickUtils.animationTicks()));
+        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
         RenderSystem.enablePolygonOffset();
     }
 

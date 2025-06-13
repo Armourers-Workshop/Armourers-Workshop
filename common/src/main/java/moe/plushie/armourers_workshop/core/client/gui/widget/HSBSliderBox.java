@@ -89,8 +89,8 @@ public class HSBSliderBox extends UIControl {
     public void setValueWithComponents(float[] values) {
         System.arraycopy(values, 0, this.values, 0, this.values.length);
         if (type == Type.SATURATION) {
-            this.hueColor = new UIColor(ColorUtils.HSBtoRGB(values[0], 1.0f, 1.0f));
-            this.brightnessColor = new UIColor(ColorUtils.HSBtoRGB(0.0f, 0.0f, values[2]));
+            this.hueColor = UIColor.of(ColorUtils.HSBtoRGB(values[0], 1.0f, 1.0f));
+            this.brightnessColor = UIColor.of(ColorUtils.HSBtoRGB(0.0f, 0.0f, values[2]));
         }
     }
 

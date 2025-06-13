@@ -23,7 +23,7 @@ public class SkinLibraryKeychainWindow {
         if (securityData.startsWith(DataEncryptMethod.PASSWORD.method() + ";")) {
             var dialog = new InputDialog();
             dialog.setTitle(NSString.localizedString("skin-library.dialog.passwordProvider.title"));
-            dialog.setMessageColor(new UIColor(0xffff5555));
+            dialog.setMessageColor(UIColor.of(0xffff5555));
             dialog.setPlaceholder(NSString.localizedString("skin-library.dialog.passwordProvider.enterPassword"));
             dialog.setVerifier(value -> !value.isEmpty());
             dialog.showInView(view, () -> {

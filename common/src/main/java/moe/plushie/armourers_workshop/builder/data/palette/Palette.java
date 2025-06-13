@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.builder.data.palette;
 
+import moe.plushie.armourers_workshop.core.utils.Objects;
+
 import java.util.Arrays;
-import java.util.Objects;
 
 public class Palette {
 

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.bake;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferSource;
 import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
@@ -66,7 +66,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             BAKERY.stopListenLibraryChanges();
             BAKERY.manager.shutdown();
             BAKERY = null;
-            SkinVertexBufferBuilder.clearAllCache();
+            SkinVertexBufferSource.clearAllCache();
             ModLog.debug("stop bakery");
         }
     }
@@ -74,7 +74,7 @@ public final class SkinBakery implements ISkinLibraryListener {
     public static void clear() {
         if (BAKERY != null) {
             BAKERY.manager.clear();
-            SkinVertexBufferBuilder.clearAllCache();
+            SkinVertexBufferSource.clearAllCache();
         }
     }
 

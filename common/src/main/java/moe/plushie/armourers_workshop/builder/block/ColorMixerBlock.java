@@ -58,7 +58,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements Abstract
             return 0xffffffff;
         }
         if (reader.getBlockEntity(blockPos) instanceof ColorMixerBlockEntity blockEntity) {
-            return blockEntity.color().getRGB() | 0xff000000;
+            return blockEntity.color().argb() | 0xff000000;
         }
         return 0xffffffff;
     }

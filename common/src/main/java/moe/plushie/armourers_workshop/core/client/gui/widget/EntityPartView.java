@@ -27,9 +27,9 @@ public class EntityPartView extends UIControl {
 
     public EntityPartView(CGRect frame) {
         super(frame);
-        this.partColor.setValueForState(new UIColor(0xccffff00, true), State.NORMAL);
-        this.partColor.setValueForState(new UIColor(0xccffffff, true), State.HIGHLIGHTED);
-        this.partColor.setValueForState(new UIColor(0xcc00ff00, true), State.SELECTED);
+        this.partColor.setValueForState(UIColor.of(0xccffff00), State.NORMAL);
+        this.partColor.setValueForState(UIColor.of(0xccffffff), State.HIGHLIGHTED);
+        this.partColor.setValueForState(UIColor.of(0xcc00ff00), State.SELECTED);
     }
 
     @Override

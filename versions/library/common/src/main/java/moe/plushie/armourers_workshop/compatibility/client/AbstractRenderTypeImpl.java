@@ -102,7 +102,6 @@ public class AbstractRenderTypeImpl extends RenderType {
 //            it.put(Texturing.ENTITY_COLOR_OFFSET, new TexturingStateShard("aw_offset_texturing", RenderSystem::setupColorOffsetState, RenderSystem::clearColorOffsetState));
         });
 
-
         private static final Map<IRenderType.Target, OutputStateShard> TABLE_OUTPUT = _make(it -> {
             it.put(IRenderType.Target.MAIN, MAIN_TARGET);
             it.put(IRenderType.Target.OUTLINE, OUTLINE_TARGET);
@@ -262,7 +261,7 @@ public class AbstractRenderTypeImpl extends RenderType {
         @Override
         public IRenderType build(String name) {
             var renderType = AbstractRenderType.of(RenderType.create(name, format, mode, 256, affectsCrumbling, sortOnUpload, stateBuilder.createCompositeState(isOutline)));
-            updater.forEach(it -> it.accept(renderType));
+            renderType.apply(updater);
             return renderType;
         }
 

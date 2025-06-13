@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanHeld;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferSource;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentNode;
@@ -34,7 +34,7 @@ public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
 
         applyOffset(poseStack);
 
-        var skinBufferSource = SkinVertexBufferBuilder.of(bufferSource);
+        var skinBufferSource = SkinVertexBufferSource.of(bufferSource);
         armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
         //poseStack.translate(0, -0.001f * f, 0);
         armTransparent.render(poseStack, skinBufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 0xbfffffff);

@@ -44,7 +44,7 @@ public class TextureAnimationController {
         return NONE;
     }
 
-    public OpenMatrix4f textureMatrix(double animationTime) {
+    public OpenMatrix4f getTextureMatrix(double animationTime) {
         if (frameCount != 0) {
             var idx = (int) (animationTime / frameTime);
             return frames[idx % frameCount];

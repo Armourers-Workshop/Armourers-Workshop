@@ -14,9 +14,6 @@ import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -155,7 +152,7 @@ public class PartPickerView extends UIControl {
                 emptyView.setTextColor(UIColor.LIGHT_GRAY);
                 emptyView.setNumberOfLines(0);
                 emptyView.setTextHorizontalAlignment(NSTextAlignment.Horizontal.CENTER);
-                emptyView.setBackgroundColor(UIColor.rgba(0x22AAAAAA));
+                emptyView.setBackgroundColor(UIColor.of(0x22AAAAAA));
                 contentView = emptyView;
             } else {
                 var sectionView = buildSectionView(x, y + 12, width, height);
@@ -188,16 +185,16 @@ public class PartPickerView extends UIControl {
     }
 
     private ArrayList<PartItem> inventorySkins() {
-        ArrayList<PartItem> allSkins = new ArrayList<>();
-        Player player = EnvironmentManager.getPlayer();
+        var allSkins = new ArrayList<PartItem>();
+        var player = EnvironmentManager.getPlayer();
         if (player == null) {
             return allSkins;
         }
-        Inventory inventory = player.getInventory();
-        int containerSize = inventory.getContainerSize();
+        var inventory = player.getInventory();
+        var containerSize = inventory.getContainerSize();
         for (int i = 0; i < containerSize; ++i) {
-            ItemStack itemStack = inventory.getItem(i);
-            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+            var itemStack = inventory.getItem(i);
+            var descriptor = SkinDescriptor.of(itemStack);
             if (descriptor.isEmpty()) {
                 continue;
             }
@@ -207,7 +204,7 @@ public class PartPickerView extends UIControl {
     }
 
     private ArrayList<PartItem> importedSkins() {
-        ArrayList<PartItem> allSkins = new ArrayList<>();
+        var allSkins = new ArrayList<PartItem>();
         if (historySkins != null) {
             historySkins.forEach(it -> allSkins.add(new PartItem(it)));
             return allSkins;

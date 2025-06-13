@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class ConcurrentRenderingPipeline {
 
-    protected final ArrayList<Group> passGroups = new ArrayList<>();
+    private final ArrayList<Group> passGroups = new ArrayList<>();
 
     public void add(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
         var pass = Group.POOL.get();
@@ -38,7 +38,7 @@ public class ConcurrentRenderingPipeline {
     }
 
 
-    public static class Group extends ReferenceCounted {
+    private static class Group extends ReferenceCounted {
 
         private static final ObjectPool<Group> POOL = ObjectPool.create(Group::new);
 
@@ -97,16 +97,16 @@ public class ConcurrentRenderingPipeline {
         }
     }
 
-    public static class Pass implements ShaderVertexObject {
+    private static class Pass implements ShaderVertexObject {
 
-        int overlay;
-        int lightmap;
-        int outlineColor;
+        private int overlay;
+        private int lightmap;
+        private int outlineColor;
 
-        float polygonOffset;
+        private float polygonOffset;
 
-        OpenPoseStack poseStack;
-        ConcurrentBufferCompiler.Pass compiledTask;
+        private OpenPoseStack poseStack;
+        private ConcurrentBufferCompiler.Pass compiledTask;
 
         private final Group group;
 
@@ -114,7 +114,7 @@ public class ConcurrentRenderingPipeline {
             this.group = group;
         }
 
-        public Pass fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
+        public void fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
             this.compiledTask = compiledTask;
             this.poseStack = poseStack;
             this.overlay = context.overlay();
@@ -122,7 +122,6 @@ public class ConcurrentRenderingPipeline {
             this.outlineColor = context.outlineColor();
             this.polygonOffset = compiledTask.polygonOffset + context.renderPriority();
             this.retain();
-            return this;
         }
 
         @Override

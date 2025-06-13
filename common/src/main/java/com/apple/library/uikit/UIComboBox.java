@@ -223,7 +223,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
 
     public static class Entry extends UITableViewCell {
 
-        private static final UIColor BACKGROUND_COLOR = new UIColor(0x44cccccc, true);
+        private static final UIColor BACKGROUND_COLOR = UIColor.of(0x44cccccc);
 
         public final UIButton titleView = new UIButton(CGRect.ZERO);
 
@@ -234,8 +234,8 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
             this.titleView.setHorizontalAlignment(NSTextAlignment.Horizontal.LEFT);
             this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 2, 0, 2));
             this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
-            this.titleView.setTitleColor(new UIColor(0xffffffa0), State.HIGHLIGHTED);
-            this.titleView.setTitleColor(new UIColor(0xffcc0000), State.DISABLED);
+            this.titleView.setTitleColor(UIColor.of(0xffffffa0), State.HIGHLIGHTED);
+            this.titleView.setTitleColor(UIColor.of(0xffcc0000), State.DISABLED);
             this.titleView.setCanBecomeFocused(false);
             this.addSubview(titleView);
         }

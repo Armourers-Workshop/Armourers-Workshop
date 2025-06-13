@@ -63,7 +63,7 @@ public class SkinGeometryVertex implements ISkinGeometryVertex {
         protected final int alpha;
 
         public Color(SkinPaintColor paintColor, int alpha) {
-            super(paintColor.rawValue(), paintColor.getRGB(), paintColor.paintType());
+            super(paintColor.rawValue(), paintColor.argb(), paintColor.paintType());
             this.alpha = alpha;
         }
 

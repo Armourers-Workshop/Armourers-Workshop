@@ -78,7 +78,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
             if (cube.shouldChangeColor(dir)) {
                 var paintColor = cube.getColor(dir);
                 if (paintColor != null) {
-                    colors.add(paintColor.getRGB());
+                    colors.add(paintColor.argb());
                 }
             }
         });

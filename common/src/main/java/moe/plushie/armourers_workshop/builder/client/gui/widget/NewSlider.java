@@ -16,8 +16,8 @@ import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
-import com.google.common.base.Objects;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 
 import java.util.Optional;
@@ -303,7 +303,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     }
 
     private void inputBegin() {
-        UIWindow window = window();
+        var window = window();
         if (window == null) {
             return;
         }
@@ -342,7 +342,7 @@ public class NewSlider extends UIControl implements UITextFieldDelegate {
     }
 
     private void updateEditing(boolean value) {
-        if (Objects.equal(isEditing, value)) {
+        if (Objects.equals(isEditing, value)) {
             return;
         }
         isEditing = value;

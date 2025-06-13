@@ -43,10 +43,10 @@ public abstract class SkinRenderType implements IRenderType {
     public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).build("aw_block_cube_glass_unsorted");
     public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build("aw_block_earth");
 
-    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("aw_face_sold");
-    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("aw_lighting_quad_face");
-    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_translucent_quad_face");
-    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_translucent_lighting_quad_face");
+    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("aw_block_face_sold");
+    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("aw_block_face_lighting");
+    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_block_face_translucent");
+    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_block_face_translucent_lighting");
 
     private static final IRenderType LINES = _line(1).build("aw_lines");
     private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
@@ -153,25 +153,25 @@ public abstract class SkinRenderType implements IRenderType {
 
         private static final List<GeometryFaceBuilder> BUILDERS = Collections.immutableList(it -> {
 
-            it.add(new GeometryFaceBuilder("aw_cube_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, false));
-            it.add(new GeometryFaceBuilder("aw_cube_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_translucent_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, false));
 
-            it.add(new GeometryFaceBuilder("aw_cube_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, true));
-            it.add(new GeometryFaceBuilder("aw_cube_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_translucent_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, true));
 
-            it.add(new GeometryFaceBuilder("aw_mesh_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_translucent_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, false));
 
-            it.add(new GeometryFaceBuilder("aw_mesh_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_translucent_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, true));
         });
 
         private final String name;

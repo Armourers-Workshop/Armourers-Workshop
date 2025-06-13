@@ -102,7 +102,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     private void removeSkinPre(UIControl button) {
         var dialog = new ConfirmDialog();
         dialog.setTitle(getDisplayText("dialog.delete.title"));
-        dialog.setMessageColor(new UIColor(0xffff5555));
+        dialog.setMessageColor(UIColor.of(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.ok"));
         dialog.setCancelText(getDisplayText("dialog.delete.cancel"));
         dialog.setMessage(getDisplayText("dialog.delete.message", entry.name()));

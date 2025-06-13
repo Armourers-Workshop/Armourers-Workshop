@@ -60,7 +60,7 @@ public class AdvancedHeaderView extends UIView implements UITextFieldDelegate {
         contentView.addSubview(partEmptyView);
 
         partPreviewView.setUserInteractionEnabled(false);
-        partPreviewView.setBackgroundColor(UIColor.rgba(0x22AAAAAA));
+        partPreviewView.setBackgroundColor(UIColor.of(0x22AAAAAA));
         partPreviewView.setFrame(contentView.bounds());
         partPreviewView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         partPreviewView.setHidden(true);

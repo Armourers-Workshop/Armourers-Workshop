@@ -217,7 +217,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         private void updateColor(SkinPaintColor paintColor) {
             color = paintColor;
             if (!paintColor.isEmpty()) {
-                colorView.setBackgroundColor(new UIColor(paintColor.getRGB()));
+                colorView.setBackgroundColor(UIColor.of(paintColor.argb()));
             } else {
                 colorView.setBackgroundColor(null);
             }

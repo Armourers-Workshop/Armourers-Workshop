@@ -66,9 +66,9 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     public GlobalSkinLibraryWindow(GlobalSkinLibraryMenu container, Inventory inventory, NSString title) {
         super(container, inventory, title);
-        this.setContents(new CGGradient(UIColor.rgba(0xc0101010), UIColor.rgba(0xd0101010)));
+        this.setContents(new CGGradient(UIColor.of(0xc0101010), UIColor.of(0xd0101010)));
         this.setFrame(new CGRect(0, 0, 640, 480));
-        this.titleView.setTextColor(new UIColor(0xffcccccc));
+        this.titleView.setTextColor(UIColor.of(0xffcccccc));
         this.inventoryView.setHidden(true);
     }
 

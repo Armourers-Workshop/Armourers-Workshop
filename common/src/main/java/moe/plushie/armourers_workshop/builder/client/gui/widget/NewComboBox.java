@@ -49,8 +49,8 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
         this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 4, 0, 4));
         this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 4, 0, 0));
         this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
-        this.titleView.setTitleColor(new UIColor(0xffffffa0), State.HIGHLIGHTED);
-        this.titleView.setTitleColor(new UIColor(0xffcc0000), State.DISABLED);
+        this.titleView.setTitleColor(UIColor.of(0xffffffa0), State.HIGHLIGHTED);
+        this.titleView.setTitleColor(UIColor.of(0xffcc0000), State.DISABLED);
         this.titleView.setCanBecomeFocused(false);
         this.titleView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
         this.addSubview(titleView);
@@ -259,7 +259,7 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
 
     public static class Cell extends UITableViewCell {
 
-        private static final UIColor BACKGROUND_COLOR = new UIColor(0x44cccccc, true);
+        private static final UIColor BACKGROUND_COLOR = UIColor.of(0x44cccccc);
 
         public final UIButton titleView = new UIButton(CGRect.ZERO);
 
@@ -270,8 +270,8 @@ public class NewComboBox extends UIControl implements UITableViewDataSource, UIT
             this.titleView.setContentEdgeInsets(new UIEdgeInsets(0, 8, 0, 4));
             this.titleView.setTitleEdgeInsets(new UIEdgeInsets(0, 4, 0, 0));
             this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
-            this.titleView.setTitleColor(new UIColor(0xffffffa0), State.HIGHLIGHTED);
-            this.titleView.setTitleColor(new UIColor(0xffcc0000), State.DISABLED);
+            this.titleView.setTitleColor(UIColor.of(0xffffffa0), State.HIGHLIGHTED);
+            this.titleView.setTitleColor(UIColor.of(0xffcc0000), State.DISABLED);
             this.titleView.setCanBecomeFocused(false);
             this.titleView.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
             this.addSubview(titleView);

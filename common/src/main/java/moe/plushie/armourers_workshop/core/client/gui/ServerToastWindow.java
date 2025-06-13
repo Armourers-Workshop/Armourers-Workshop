@@ -18,7 +18,7 @@ public class ServerToastWindow extends ToastWindow {
         this.setTitle(new NSString(alertPacket.title()));
         this.setMessage(new NSString(alertPacket.message()));
         if (alertPacket.type() == 0x80000001) {
-            this.setTitleColor(new UIColor(0xffff88ff));
+            this.setTitleColor(UIColor.of(0xffff88ff));
         }
         this.setIcon(alertPacket.icon());
         if (this.icon() == null) {

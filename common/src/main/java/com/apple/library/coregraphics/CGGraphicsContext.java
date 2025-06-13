@@ -81,7 +81,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
         if (color == null) {
             color = AppearanceImpl.DEFAULT_TEXT_COLOR;
         }
-        drawText(text, x, y, color.getRGB(), shadowColor != null, font, 0);
+        drawText(text, x, y, color.value(), shadowColor != null, font, 0);
     }
 
     public void drawTooltip(Object tooltip, CGRect rect) {
@@ -132,7 +132,7 @@ public class CGGraphicsContext implements GraphicsContextImpl {
 
     public void fillRect(CGRect rect, UIColor color) {
         if (color != null && color != UIColor.CLEAR) {
-            fillRect(rect, color.getRGB());
+            fillRect(rect, color.value());
         }
     }
 
@@ -145,17 +145,17 @@ public class CGGraphicsContext implements GraphicsContextImpl {
     }
 
     public void fillRect(CGGradient gradient, CGRect rect) {
-        int color1 = gradient.startColor.getRGB();
-        int color2 = gradient.endColor.getRGB();
+        int color1 = gradient.startColor.value();
+        int color2 = gradient.endColor.value();
         drawColor(rect.minX(), rect.minY(), rect.maxX(), rect.maxY(), 0, color1, color2);
     }
 
     public void strokeRect(CGRect rect, UIColor color) {
-        strokeRect(rect, 1, color.getRGB());
+        strokeRect(rect, 1, color.value());
     }
 
     public void strokeRect(CGRect rect, float lineHeight, UIColor color) {
-        strokeRect(rect, lineHeight, color.getRGB());
+        strokeRect(rect, lineHeight, color.value());
     }
 
     public void strokeRect(CGRect rect, float lineHeight, int rgb) {

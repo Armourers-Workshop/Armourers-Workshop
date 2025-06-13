@@ -74,7 +74,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void setup() {
-        gradient = new CGGradient(UIColor.rgba(0x22888888), CGPoint.ZERO, UIColor.rgba(0x22CCCCCC), CGPoint.ZERO);
+        gradient = new CGGradient(UIColor.of(0x22888888), CGPoint.ZERO, UIColor.of(0x22CCCCCC), CGPoint.ZERO);
 
         var bounds = bounds();
         float minX = 2;
@@ -228,7 +228,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         var reportTypes = ReportType.values();
         var dialog = new ReportDialog();
         dialog.setTitle(getDisplayText("dialog.report_skin.title"));
-        dialog.setMessageColor(new UIColor(0xff7f0000));
+        dialog.setMessageColor(UIColor.of(0xff7f0000));
         dialog.setMessage(getDisplayText("dialog.report_skin.label.report_warning"));
         dialog.setPlaceholder(getDisplayText("dialog.report_skin.optional_message"));
         dialog.setReportTypes(Collections.compactMap(reportTypes, t -> new NSString(TranslateUtils.title(t.toLangKey()))));

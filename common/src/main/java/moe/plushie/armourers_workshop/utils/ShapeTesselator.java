@@ -245,35 +245,35 @@ public class ShapeTesselator {
     }
 
     public static void stroke(AABB rect, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(rect, color.getRGB(), poseStack, bufferSource);
+        stroke(rect, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(IRectangle3f rect, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(rect, color.getRGB(), poseStack, bufferSource);
+        stroke(rect, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(IRectangle3i rect, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(rect, color.getRGB(), poseStack, bufferSource);
+        stroke(rect, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(OpenAxisAlignedBoundingBox aabb, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(aabb, color.getRGB(), poseStack, bufferSource);
+        stroke(aabb, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(OpenOrientedBoundingBox obb, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(obb, color.getRGB(), poseStack, bufferSource);
+        stroke(obb, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(OpenTransformedBoundingBox tbb, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(tbb, color.getRGB(), poseStack, bufferSource);
+        stroke(tbb, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(JointShape shape, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(shape, color.getRGB(), poseStack, bufferSource);
+        stroke(shape, color.value(), poseStack, bufferSource);
     }
 
     public static void stroke(float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, IPoseStack poseStack, IBufferSource bufferSource) {
-        stroke(x0, y0, z0, x1, y1, z1, color.getRGB(), poseStack, bufferSource);
+        stroke(x0, y0, z0, x1, y1, z1, color.value(), poseStack, bufferSource);
     }
 
     public static void fill(float x0, float y0, float z0, float x1, float y1, float z1, int color, IPoseStack poseStack, IVertexConsumer builder) {
@@ -309,7 +309,7 @@ public class ShapeTesselator {
     }
 
     public static void fill(float x0, float y0, float z0, float x1, float y1, float z1, UIColor color, IPoseStack poseStack, IVertexConsumer builder) {
-        fill(x0, y0, z0, x1, y1, z1, color.getRGB(), poseStack, builder);
+        fill(x0, y0, z0, x1, y1, z1, color.value(), poseStack, builder);
     }
 
 

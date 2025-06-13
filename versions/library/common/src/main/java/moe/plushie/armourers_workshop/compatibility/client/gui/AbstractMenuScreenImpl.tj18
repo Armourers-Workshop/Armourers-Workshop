@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -51,10 +50,6 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     public void renderBackground(CGGraphicsContext context) {
         super.renderBackground(AbstractGraphicsRenderer.of(context));
-    }
-
-    public void renderBackground(CGGraphicsContext context, Screen screen, int mouseX, int mouseY, float partialTicks) {
-        screen.render(AbstractGraphicsRenderer.of(context), mouseX, mouseY, partialTicks);
     }
 
     @Override

@@ -10,7 +10,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
@@ -37,16 +36,15 @@ public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     protected UISliderBox addSliderBox(int x, int y, int width, int height, List<Double> values, String suffix, SkinProperty<Double> property) {
-        Function<Double, Integer> transform = Double::intValue;
-        UISliderBox slider = addSliderBox(x, y, width, height, 0, values.size(), suffix, property);
-        slider.setFormatter(value -> new NSString(String.format("%.2f%s", values.get(transform.apply(value)), suffix)));
+        var slider = addSliderBox(x, y, width, height, 0, values.size(), suffix, property);
+        slider.setFormatter(value -> new NSString(String.format("%.2f%s", values.get(value.intValue()), suffix)));
         slider.setMaxValue(values.size() - 1);
         slider.setMinValue(0);
         slider.setValue(values.indexOf(skinProperties.get(property)));
         slider.removeTarget(this, UIControl.Event.EDITING_DID_END);
         slider.addTarget(this, UIControl.Event.EDITING_DID_END, (self, box) -> {
             double value = ((UISliderBox) box).value();
-            skinProperties.put(property, values.get(transform.apply(value)));
+            skinProperties.put(property, values.get((int) value));
             apply();
         });
         return slider;

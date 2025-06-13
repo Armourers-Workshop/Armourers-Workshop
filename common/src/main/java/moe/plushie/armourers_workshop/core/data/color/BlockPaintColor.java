@@ -6,12 +6,12 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class BlockPaintColor implements IDataSerializable.Immutable {
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.data.cache;
 
-import java.util.Objects;
+
+import moe.plushie.armourers_workshop.core.utils.Objects;
 
 public abstract class PrimaryKey {
 

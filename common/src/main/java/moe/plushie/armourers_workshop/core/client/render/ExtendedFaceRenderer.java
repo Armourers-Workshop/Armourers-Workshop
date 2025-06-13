@@ -48,7 +48,7 @@ public class ExtendedFaceRenderer {
         var entry = poseStack.last();
         var u = 0;
         var v = 0;
-        var color = paintColor.getRGB();
+        var color = paintColor.argb();
         var vertexes = FACE_MARK_VERTEXES[direction.get3DDataValue()];
         for (var i = 0; i < 4; ++i) {
             builder.vertex(entry, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])

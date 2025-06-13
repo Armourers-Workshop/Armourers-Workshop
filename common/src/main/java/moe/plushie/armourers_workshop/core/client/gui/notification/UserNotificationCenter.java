@@ -53,7 +53,7 @@ public class UserNotificationCenter {
     public static void showToast(NSString message, @Nullable UIColor messageColor, NSString title, Object icon) {
         var window = new ToastWindow(new CGRect(0, 0, 160, 32));
         window.setTitle(title);
-        window.setTitleColor(new UIColor(0xffff88ff));
+        window.setTitleColor(UIColor.of(0xffff88ff));
         window.setMessage(message);
         window.setMessageColor(messageColor);
         window.setIcon(icon);

@@ -35,7 +35,7 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     public void applySlot(UIControl sender) {
-        CGPoint offset = inventoryBox.offset();
+        var offset = inventoryBox.offset();
         int width = (int) (offset.x / 10) + 1;
         int height = (int) (offset.y / 10) + 1;
         skinProperties.put(SkinProperty.BLOCK_INVENTORY_WIDTH, width);
@@ -63,7 +63,7 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     protected InventoryBox addInventoryBox(int x, int y) {
-        InventoryBox box = new InventoryBox(new CGRect(cursorX + x, cursorY + y, 9 * 10, 6 * 10));
+        var box = new InventoryBox(new CGRect(cursorX + x, cursorY + y, 9 * 10, 6 * 10));
         box.addTarget(this, UIControl.Event.VALUE_CHANGED, ArmourerBlockSkinPanel::applySlot);
         addSubview(box);
         return box;
@@ -73,9 +73,9 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
         if (inventorySlot == null) {
             return;
         }
-        boolean isEnabled = blockInventory.isEnabled() && blockInventory.isSelected();
-        int width = skinProperties.get(SkinProperty.BLOCK_INVENTORY_WIDTH);
-        int height = skinProperties.get(SkinProperty.BLOCK_INVENTORY_HEIGHT);
+        var isEnabled = blockInventory.isEnabled() && blockInventory.isSelected();
+        var width = skinProperties.get(SkinProperty.BLOCK_INVENTORY_WIDTH);
+        var height = skinProperties.get(SkinProperty.BLOCK_INVENTORY_HEIGHT);
         inventorySlot.setText(getDisplayText("label.inventorySlots", width * height, width, height));
         inventoryBox.setOffset(new CGPoint(Math.max(width - 1, 0) * 10, Math.max(height - 1, 0) * 10));
         inventoryTitle.setHidden(!isEnabled);

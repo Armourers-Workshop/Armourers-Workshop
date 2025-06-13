@@ -99,7 +99,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
         var dialog = new ArmourerReplaceDialog();
         dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
-            Level level = Minecraft.getInstance().level;
+            var level = Minecraft.getInstance().level;
             if (dialog.isCancelled() || level == null) {
                 return;
             }

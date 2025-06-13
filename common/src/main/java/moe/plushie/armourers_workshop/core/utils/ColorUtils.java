@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -204,12 +203,12 @@ public class ColorUtils {
             return getRainbowRGB();
         }
         if (paintType == SkinPaintTypes.PULSE_1) {
-            return getPulse1Color(paintColor.getRGB());
+            return getPulse1Color(paintColor.argb());
         }
         if (paintType == SkinPaintTypes.PULSE_2) {
-            return getPulse2Color(paintColor.getRGB());
+            return getPulse2Color(paintColor.argb());
         }
-        return paintColor.getRGB();
+        return paintColor.argb();
     }
 
     public static int getDisplayRGB(ItemStack itemStack) {
@@ -240,7 +239,7 @@ public class ColorUtils {
 
     public static ArrayList<Component> getColorTooltips(SkinPaintColor color, boolean useDisplayColor) {
         var tooltips = new ArrayList<Component>();
-        int rgb = color.getRGB();
+        int rgb = color.argb();
         if (useDisplayColor) {
             rgb = getDisplayRGB(color);
         }

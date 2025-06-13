@@ -242,7 +242,7 @@ public class CubePaintingEvent {
 
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
-            int rgb = sourceColor.getRGB();
+            int rgb = sourceColor.argb();
             rgb = ColorUtils.makeColorBighter(rgb, intensity);
             return sourceColor.withColor(rgb);
         }
@@ -276,7 +276,7 @@ public class CubePaintingEvent {
 
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
-            int rgb = sourceColor.getRGB();
+            int rgb = sourceColor.argb();
             if (isShadeOnly) {
                 rgb = ColorUtils.addShadeNoise(rgb, intensity, getRandom(pos, dir));
             } else {
@@ -329,8 +329,8 @@ public class CubePaintingEvent {
 
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
-            var sourceHSB = ColorUtils.RGBtoHSB(sourceColor.getRGB());
-            var destinationHSB = ColorUtils.RGBtoHSB(destinationColor.getRGB());
+            var sourceHSB = ColorUtils.RGBtoHSB(sourceColor.argb());
+            var destinationHSB = ColorUtils.RGBtoHSB(destinationColor.argb());
             if (!changeHue) {
                 destinationHSB[0] = sourceHSB[0];
             }
@@ -371,12 +371,12 @@ public class CubePaintingEvent {
 
         @Override
         public SkinPaintColor resolve(BlockPos pos, OpenDirection dir, SkinPaintColor sourceColor) {
-            int destRGB = destinationColor.getRGB();
+            int destRGB = destinationColor.argb();
             int destR = ColorUtils.getRed(destRGB);
             int destG = ColorUtils.getGreen(destRGB);
             int destB = ColorUtils.getBlue(destRGB);
 
-            int sourceRGB = sourceColor.getRGB();
+            int sourceRGB = sourceColor.argb();
             int oldR = ColorUtils.getRed(sourceRGB);
             int oldG = ColorUtils.getGreen(sourceRGB);
             int oldB = ColorUtils.getBlue(sourceRGB);

@@ -1,13 +1,11 @@
 package com.apple.library.uikit;
 
-import java.util.Objects;
-
 @SuppressWarnings("unused")
 public class UIColor {
 
-    public static final UIColor CLEAR = new UIColor(0x00000000, true);
+    public static final UIColor CLEAR = new UIColor(0x00000000);
 
-    public static final UIColor WHITE = new UIColor(255, 255, 255);
+    public static final UIColor WHITE = new UIColor(0xffffffff);
     public static final UIColor LIGHT_GRAY = new UIColor(192, 192, 192);
     public static final UIColor GRAY = new UIColor(128, 128, 128);
     public static final UIColor DARK_GRAY = new UIColor(64, 64, 64);
@@ -31,48 +29,36 @@ public class UIColor {
         value = ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF));
     }
 
-    public UIColor(int rgba, boolean hasAlpha) {
-        if (hasAlpha) {
-            value = rgba;
-        } else {
-            value = 0xff000000 | rgba;
-        }
+    public UIColor(int argb) {
+        value = argb;
     }
 
-    public UIColor(int rgb) {
-        value = 0xff000000 | rgb;
-    }
-
-    public static UIColor of(int rgb) {
-        return new UIColor(rgb);
-    }
-
-    public static UIColor rgba(int rgba) {
-        return new UIColor(rgba, true);
+    public static UIColor of(int argb) {
+        return new UIColor(argb);
     }
 
     public static UIColor decode(String nm) throws NumberFormatException {
         int i = Integer.decode(nm);
-        return new UIColor((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+        return new UIColor((i >> 16) & 0xff, (i >> 8) & 0xff, i & 0xff);
     }
 
     public int red() {
-        return (getRGB() >> 16) & 0xFF;
+        return (value >> 16) & 0xff;
     }
 
     public int green() {
-        return (getRGB() >> 8) & 0xFF;
+        return (value >> 8) & 0xff;
     }
 
     public int blue() {
-        return (getRGB()) & 0xFF;
+        return (value) & 0xff;
     }
 
     public int alpha() {
-        return (getRGB() >> 24) & 0xff;
+        return (value >> 24) & 0xff;
     }
 
-    public int getRGB() {
+    public int value() {
         return value;
     }
 
@@ -85,7 +71,7 @@ public class UIColor {
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return value;
     }
 
     @Override
