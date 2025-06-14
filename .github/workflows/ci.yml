@@ -1,95 +1,94 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI
+name: Release
 
 on:
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
   build:
     strategy:
       matrix:
-        version: ["1.16.5", "1.18.2", "1.19.2", "1.20.1", "1.21.1"]
-            
+        version: [ '1.16.5', '1.18.2', '1.19.2', '1.20.1', '1.21.1' ]
+
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '21'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
-    - name: Setup release version
-      id: release-version
-      run: |
-        version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
-        echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Setup gradle from cache
+        uses: actions/cache/restore@v4
+        with:
+          key: build-cache-${{ matrix.version }}
+          path: |
+            .gradle
+            ~/.gradle/caches
+            ~/.gradle/wrapper
 
-    - name: Switch ${{ matrix.version }}
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
+      - name: Setup release version
+        id: release-version
+        run: |
+          version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
+          echo "version=$version" >> $GITHUB_OUTPUT
 
-    - name: Build ${{ matrix.version }}
-      uses: gradle/gradle-build-action@v2
-      env:
-        AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
-        AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
-        AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
-        AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
-      with:
-        arguments: -Pversion=${{ steps.release-version.outputs.version }} build
+      - name: Switch ${{ matrix.version }}
+        run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
 
-    - name: Upload Fabric ${{ matrix.version }}
-      uses: Kir-Antipov/mc-publish@v3.3
-      with:
-        name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-        version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-        version-type: beta
-        #version-type: release
+      - name: Build ${{ matrix.version }}
+        run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} build
+        env:
+          AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
+          AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
+          AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
+          AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
 
-        files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
+      - name: Upload Fabric ${{ matrix.version }}
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          version-type: beta
+          #version-type: release
 
-        game-versions: ${{ matrix.version }}
+          files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+          game-versions: ${{ matrix.version }}
 
-        modrinth-id: y4JF3gXL
-        modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-        curseforge-id: 229523
-        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+          modrinth-id: y4JF3gXL
+          modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
-        retry-attempts: 6
-        retry-delay: 30000
-        fail-mode: warn
+          curseforge-id: 229523
+          curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
 
-    - name: Upload Forge ${{ matrix.version }}
-      uses: Kir-Antipov/mc-publish@v3.3
-      with:
-        name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-        version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-        version-type: beta
+          retry-attempts: 6
+          retry-delay: 30000
+          fail-mode: warn
 
-        files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
+      - name: Upload Forge ${{ matrix.version }}
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          version-type: beta
 
-        game-versions: ${{ matrix.version }}
+          files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+          game-versions: ${{ matrix.version }}
 
-        modrinth-id: y4JF3gXL
-        modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-        curseforge-id: 229523
-        curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+          modrinth-id: y4JF3gXL
+          modrinth-token: ${{ secrets.AW_MODRINTH_TOKEN }}
 
-        retry-attempts: 6
-        retry-delay: 30000
-        fail-mode: warn
+          curseforge-id: 229523
+          curseforge-token: ${{ secrets.AW_CURSEFORGE_TOKEN }}
+
+          retry-attempts: 6
+          retry-delay: 30000
+          fail-mode: warn

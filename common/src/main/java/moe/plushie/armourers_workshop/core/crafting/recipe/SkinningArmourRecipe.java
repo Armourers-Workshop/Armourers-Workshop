@@ -18,7 +18,7 @@ public class SkinningArmourRecipe extends SkinningRecipe {
     @Override
     protected boolean isValidTarget(ItemStack itemStack) {
         if (slotType != null) {
-            return slotType == itemStack.getEquipmentSlot();
+            return slotType == itemStack.getExtendedEquipmentSlot();
         }
         return false;
     }

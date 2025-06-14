@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        version: [ '1.16.5', '1.18.2', '1.19.2', '1.20.1', '1.21.1' ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup gradle from cache
+        uses: actions/cache@v4
+        with:
+          key: build-cache-${{ matrix.version }}
+          path: |
+            .gradle
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+
+      - name: Setup release version
+        id: release-version
+        run: |
+          version=${{ github.sha }}
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Switch ${{ matrix.version }}
+        run: ./gradlew -p "versions/${{ matrix.version }}"
+
+      - name: Build ${{ matrix.version }}
+        run: ./gradlew build
+        env:
+          AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
+          AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
+          AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
+          AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
