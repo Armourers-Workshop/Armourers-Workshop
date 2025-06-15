@@ -3,8 +3,8 @@
   "package": "moe.plushie.armourers_workshop.init.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "BlockEntityRenderDispatcherMixin",
-    "ClientDataAttachMixin"
+    "ClientDataAttachMixin",
+    "BlockEntityRenderDispatcherMixin"
   ],
   "mixins": [
     "DataFixMixin",

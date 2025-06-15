@@ -43,6 +43,10 @@ dependencies {
 
     // modOptionalApi 'curse.maven:mine-mine-no-mi-78726:4181345'
     //modOptionalApi 'moe.plushie.armourers_workshop:armourersworkshop-plugin-mod:1.0.3'
+
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.10.0"
+    testImplementation "org.junit.platform:junit-platform-launcher:1.10.2"
 }
 
 processResources {
@@ -64,6 +68,14 @@ shadowJar {
     exclude "architectury.common.json"
 
     //relocate 'gg.moonflower', 'moe.plushie.armourers_workshop.runtime'
+}
+
+runClientTest {
+    selectPackage("moe.plushie.armourers_workshop.gametest")
+}
+
+runServerTest {
+    selectPackage("moe.plushie.armourers_workshop.gametest")
 }
 
 publishing {

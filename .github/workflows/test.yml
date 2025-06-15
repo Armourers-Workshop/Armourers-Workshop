@@ -14,11 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Java version
+        id: java-version
+        run: |
+          case "${{ matrix.version }}" in
+            '1.16.5' | '1.18.2' | '1.19.2')
+              echo "version=17" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "version=21" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: ${{ steps.java-version.outputs.version }}
 
       - name: Setup gradle from cache
         uses: actions/cache@v4
@@ -29,19 +41,11 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
 
-      - name: Setup release version
-        id: release-version
-        run: |
-          version=${{ github.sha }}
-          echo "version=$version" >> $GITHUB_OUTPUT
-
       - name: Switch ${{ matrix.version }}
         run: ./gradlew -p "versions/${{ matrix.version }}"
 
       - name: Build ${{ matrix.version }}
         run: ./gradlew build
-        env:
-          AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
-          AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
-          AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
-          AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
+
+      - name: Test ${{ matrix.version }}
+        run: ./gradlew runServerTest

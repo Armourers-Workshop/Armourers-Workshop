@@ -4,7 +4,7 @@ plugins {
     id "java"
     id "architectury-plugin" version "3.4.161"
     id "dev.architectury.loom" version "1.10.430" apply false
-    id "moe.plushie.armourers_workshop.loom" version "2.1.8" apply false
+    id "moe.plushie.armourers_workshop.loom" version "2.3.1" apply false
 }
 
 architectury {
@@ -20,6 +20,8 @@ subprojects {
         it.resources.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/resources"
         it.java.srcDirs "../versions/library/${project.name}/src/${it.name}/java"
         it.resources.srcDirs "../versions/library/${project.name}/src/${it.name}/resources"
+        it.java.srcDirs "../versions/gametest/${project.name}/src/${it.name}/java"
+        it.resources.srcDirs "../versions/gametest/${project.name}/src/${it.name}/resources"
     }
 
     dependencies {
@@ -28,6 +30,13 @@ subprojects {
         mappings loom.officialMojangMappings()
         // The following line declares the yarn mappings you may select this one as well.
         // mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
+    }
+
+    signJar {
+        alias = System.getenv("AW_SIGN_ALIAS")
+        keyPass = System.getenv("AW_SIGN_KEY_PASS")
+        keyStore = System.getenv("AW_SIGN_STORE")
+        keyStorePass = System.getenv("AW_SIGN_STORE_PASS")
     }
 }
 
@@ -63,8 +72,8 @@ allprojects {
     dependencies {
         compileOnly "systems.manifold:manifold-ext:${rootProject.manifold_version}"
         annotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
-//        compileOnly "systems.manifold:manifold-typealias:${rootProject.manifold_version}"
-//        annotationProcessor "systems.manifold:manifold-typealias:${rootProject.manifold_version}"
+        testCompileOnly "systems.manifold:manifold-ext:${rootProject.manifold_version}"
+        testAnnotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
     }
 
     tasks.withType(JavaCompile) {

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.gametest.init.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "ClientGameTestMixin"
+  ],
+  "mixins": [
+    "CommonGameTestMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
