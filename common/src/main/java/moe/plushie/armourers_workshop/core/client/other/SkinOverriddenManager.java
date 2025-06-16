@@ -162,14 +162,14 @@ public class SkinOverriddenManager<T> {
     private ItemStack setItem(T source, OpenEquipmentSlot slotType, ItemStack itemStack) {
         // for the player, using `setItemSlot` will cause play sound.
         if (source instanceof Player player) {
-            var itemStack1 = player.getItemBySlot(slotType);
-            player.setItemSlotDirect(slotType, itemStack1);
-            return itemStack1;
+            var oldItemStack = player.getItemBySlot(slotType);
+            player.setItemSlotDirect(slotType, itemStack);
+            return oldItemStack;
         }
         if (source instanceof LivingEntity livingEntity) {
-            var itemStack1 = livingEntity.getItemBySlot(slotType);
+            var oldItemStack = livingEntity.getItemBySlot(slotType);
             livingEntity.setItemSlot(slotType, itemStack);
-            return itemStack1;
+            return oldItemStack;
         }
         return itemStack;
     }
