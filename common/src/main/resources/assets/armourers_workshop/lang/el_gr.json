@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Λείπει η ένδειξη για %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Πάρα πολλοί δείκτες για %s.",
   "exception.armourers_workshop.load.notFound": "Το αρχείο skin δεν βρέθηκε.",
-  "exception.armourers_workshop.load.notSupported": "Ο τύπος του skin δεν υποστηρίζεται.",
+  "exception.armourers_workshop.load.notSupportType": "Ο τύπος του skin δεν υποστηρίζεται.",
   "exception.armourers_workshop.load.notEditable": "Η επεξεργασία του skin δεν είναι επεξεργάσιμη.",
   "exception.armourers_workshop.load.notFoundNodePart": "Δεν μπορεί να φορτωθεί το Skin \"%1$s\" για τον κόμβο \"%2$s\".",
   "action.armourers_workshop.block.load": "Φόρτωση μπλοκ από το δέρμα",

@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Lipsește marcajul pentru %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Prea multe marcaje pentru %s.",
   "exception.armourers_workshop.load.notFound": "Fişierul skinului nu a fost găsit.",
-  "exception.armourers_workshop.load.notSupported": "Tipul de piele nu este suportat.",
+  "exception.armourers_workshop.load.notSupportType": "Tipul de piele nu este suportat.",
   "exception.armourers_workshop.load.notEditable": "Editarea pielii nu este editabilă.",
   "exception.armourers_workshop.load.notFoundNodePart": "Nu se poate încărca skin-ul \"%1$s\" pentru nodul \"%2$s\".",
   "action.armourers_workshop.block.load": "Încarcă blocuri din piele",

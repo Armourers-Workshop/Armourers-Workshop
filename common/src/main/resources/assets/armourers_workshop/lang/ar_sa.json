@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "علامة مفقودة ل %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "عدد كبير جدا من العلامات ل %s.",
   "exception.armourers_workshop.load.notFound": "لم يتم العثور على ملف الجلد.",
-  "exception.armourers_workshop.load.notSupported": "نوع الجلد غير مدعوم.",
+  "exception.armourers_workshop.load.notSupportType": "نوع الجلد غير مدعوم.",
   "exception.armourers_workshop.load.notEditable": "لا يمكن تعديل الجلد",
   "exception.armourers_workshop.load.notFoundNodePart": "لا يمكن تحميل الجلد \"%1$s\" للعقدة \"%2$s\".",
   "action.armourers_workshop.block.load": "تحميل الكتل البرمجية من الجلد",

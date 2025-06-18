@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "%sのマーカーがありません。",
   "exception.armourers_workshop.save.tooManyMarkers": "%sのマーカーが多すぎます。",
   "exception.armourers_workshop.load.notFound": "スキンファイルが見つかりませんでした。",
-  "exception.armourers_workshop.load.notSupported": "スキンタイプがサポートされていません。",
+  "exception.armourers_workshop.load.notSupportType": "スキンタイプがサポートされていません。",
   "exception.armourers_workshop.load.notEditable": "このスキンは編集できません。",
   "exception.armourers_workshop.load.notFoundNodePart": "ノード\"%2$s\"のスキン\"%1$s\"を読み込めません。",
   "action.armourers_workshop.block.load": "スキンからブロックを読み込む",

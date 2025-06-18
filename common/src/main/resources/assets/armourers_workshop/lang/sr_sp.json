@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Недостаје маркер за %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Превише маркера за %s.",
   "exception.armourers_workshop.load.notFound": "Фајл маске није пронађен.",
-  "exception.armourers_workshop.load.notSupported": "Тип коже није подржан.",
+  "exception.armourers_workshop.load.notSupportType": "Тип коже није подржан.",
   "exception.armourers_workshop.load.notEditable": "Уређивање коже није могуће мењати.",
   "exception.armourers_workshop.load.notFoundNodePart": "Није могуће учитати Скин \"%1$s\" за чвор \"%2$s\".",
   "action.armourers_workshop.block.load": "Учитајте блокове са коже",

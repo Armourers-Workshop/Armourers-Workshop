@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Отсутствует маркер для %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Слишком много маркеров для %s.",
   "exception.armourers_workshop.load.notFound": "Файл скина не найден.",
-  "exception.armourers_workshop.load.notSupported": "Тип кожи не поддерживается.",
+  "exception.armourers_workshop.load.notSupportType": "Тип кожи не поддерживается.",
   "exception.armourers_workshop.load.notEditable": "Редактирование скина не редактируется.",
   "exception.armourers_workshop.load.notFoundNodePart": "Невозможно загрузить скин \"%1$s\" для узла \"%2$s\".",
   "action.armourers_workshop.block.load": "Загрузить блоки со скина",

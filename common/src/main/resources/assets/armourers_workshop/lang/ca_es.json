@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Falta el marcador per a %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Hi ha massa marcadors per a %s.",
   "exception.armourers_workshop.load.notFound": "No s'ha trobat l'arxiu de la pell.",
-  "exception.armourers_workshop.load.notSupported": "El tipus de pell no és compatible.",
+  "exception.armourers_workshop.load.notSupportType": "El tipus de pell no és compatible.",
   "exception.armourers_workshop.load.notEditable": "L'edició de la pell no es pot editar.",
   "exception.armourers_workshop.load.notFoundNodePart": "No es pot carregar la pell \"%1$s\" per al node \"%2$s\".",
   "action.armourers_workshop.block.load": "Carregueu blocs de la pell",

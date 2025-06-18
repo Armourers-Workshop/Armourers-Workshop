@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Falta un marcador para %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Demasiados marcadores para %s.",
   "exception.armourers_workshop.load.notFound": "Archivo de aspecto no encontrado.",
-  "exception.armourers_workshop.load.notSupported": "Tipo de aspecto no compatible.",
+  "exception.armourers_workshop.load.notSupportType": "Tipo de aspecto no compatible.",
   "exception.armourers_workshop.load.notEditable": "Edición del aspecto no editable.",
   "exception.armourers_workshop.load.notFoundNodePart": "No se puede cargar el aspecto \"%1$s\" para el nodo \"%2$s\".",
   "action.armourers_workshop.block.load": "Cargar bloques de la piel",

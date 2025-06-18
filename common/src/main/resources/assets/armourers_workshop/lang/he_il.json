@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "חסר סמן עבור %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "יותר מדי סמנים עבור %s.",
   "exception.armourers_workshop.load.notFound": "קובץ העור לא נמצא.",
-  "exception.armourers_workshop.load.notSupported": "סוג העור אינו נתמך.",
+  "exception.armourers_workshop.load.notSupportType": "סוג העור אינו נתמך.",
   "exception.armourers_workshop.load.notEditable": "עריכת עור לא ניתנת לעריכה.",
   "exception.armourers_workshop.load.notFoundNodePart": "לא ניתן לטעון את העור \"%1$s\" עבור הצומת \"%2$s\".",
   "action.armourers_workshop.block.load": "טען בלוקים מהעור",

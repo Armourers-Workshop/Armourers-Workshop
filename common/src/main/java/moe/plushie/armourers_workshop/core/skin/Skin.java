@@ -5,12 +5,14 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.property.SkinSettings;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -167,6 +170,32 @@ public class Skin implements ISkin {
 
     public Object blobs() {
         return blobs;
+    }
+
+    public boolean isBasicOnly() {
+        // basic requirements:
+        // 1. not contains animations.
+        // 2. not contains item transforms.
+        // 3. not contains collision box.
+        if (!animations().isEmpty() || settings.itemTransforms() != null || settings.collisionBox() != null) {
+            return false;
+        }
+        // 4. not contains child part.
+        // 5. not contains cube/mesh geometry type.
+        for (var part : parts()) {
+            if (!part.children().isEmpty()) {
+                return false;
+            }
+            var supportedTypes = new HashSet<>(Objects.compactMap(part.geometries().supportedTypes(), Collections.emptyList()));
+            supportedTypes.remove(SkinGeometryTypes.BLOCK_SOLID);
+            supportedTypes.remove(SkinGeometryTypes.BLOCK_GLOWING);
+            supportedTypes.remove(SkinGeometryTypes.BLOCK_GLASS);
+            supportedTypes.remove(SkinGeometryTypes.BLOCK_GLASS_GLOWING);
+            if (!supportedTypes.isEmpty()) {
+                return false; // found a cube/mesh geometry type.
+            }
+        }
+        return true;
     }
 
     @Override

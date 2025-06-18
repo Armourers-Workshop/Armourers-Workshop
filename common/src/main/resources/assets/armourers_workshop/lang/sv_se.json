@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Markör för %s saknas.",
   "exception.armourers_workshop.save.tooManyMarkers": "För många markörer för %s.",
   "exception.armourers_workshop.load.notFound": "Skinnfilen kunde inte hittas.",
-  "exception.armourers_workshop.load.notSupported": "Hudtyp stöds inte.",
+  "exception.armourers_workshop.load.notSupportType": "Hudtyp stöds inte.",
   "exception.armourers_workshop.load.notEditable": "Skinn redigering inte redigerbar.",
   "exception.armourers_workshop.load.notFoundNodePart": "Kan inte ladda utseendet \"%1$s\" för noden \"%2$s\".",
   "action.armourers_workshop.block.load": "Ladda block från skin",

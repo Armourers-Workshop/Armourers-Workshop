@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Marqueur manquant pour %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Trop de marqueurs pour %s.",
   "exception.armourers_workshop.load.notFound": "Fichier de thème introuvable.",
-  "exception.armourers_workshop.load.notSupported": "Type de skin non pris en charge.",
+  "exception.armourers_workshop.load.notSupportType": "Type de skin non pris en charge.",
   "exception.armourers_workshop.load.notEditable": "Modification du skin non modifiable.",
   "exception.armourers_workshop.load.notFoundNodePart": "Impossible de charger le Skin \"%1$s\" pour le noeud \"%2$s\".",
   "action.armourers_workshop.block.load": "Charger des blocs depuis le skin",

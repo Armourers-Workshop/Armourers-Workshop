@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "A %sjelölője hiányzik.",
   "exception.armourers_workshop.save.tooManyMarkers": "Túl sok jelölő a %sszámára.",
   "exception.armourers_workshop.load.notFound": "Skin fájl nem található.",
-  "exception.armourers_workshop.load.notSupported": "A bőrtípus nem támogatott.",
+  "exception.armourers_workshop.load.notSupportType": "A bőrtípus nem támogatott.",
   "exception.armourers_workshop.load.notEditable": "Skin szerkesztés nem szerkeszthető.",
   "exception.armourers_workshop.load.notFoundNodePart": "A \"%1$s\" felszín nem tölthető be a \"%2$s\" csomóponthoz.",
   "action.armourers_workshop.block.load": "Töltsön le blokkokat a bőrről",

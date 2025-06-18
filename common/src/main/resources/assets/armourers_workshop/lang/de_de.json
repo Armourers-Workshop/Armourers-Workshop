@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Fehlender Marker für %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Zu viele Markierungen für %s.",
   "exception.armourers_workshop.load.notFound": "Skin-Datei nicht gefunden.",
-  "exception.armourers_workshop.load.notSupported": "Skin-Typ wird nicht unterstützt.",
+  "exception.armourers_workshop.load.notSupportType": "Skin-Typ wird nicht unterstützt.",
   "exception.armourers_workshop.load.notEditable": "Skin Bearbeitung nicht editierbar.",
   "exception.armourers_workshop.load.notFoundNodePart": "Skin \"%1$s\" für Knoten \"%2$s \" kann nicht geladen werden.",
   "action.armourers_workshop.block.load": "Blöcke vom Skin laden",

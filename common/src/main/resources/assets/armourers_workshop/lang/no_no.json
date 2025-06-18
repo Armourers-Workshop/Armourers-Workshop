@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Mangler markør for %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "For mange markører for %s.",
   "exception.armourers_workshop.load.notFound": "Skin fil ikke funnet.",
-  "exception.armourers_workshop.load.notSupported": "Skin type støttes ikke.",
+  "exception.armourers_workshop.load.notSupportType": "Skin type støttes ikke.",
   "exception.armourers_workshop.load.notEditable": "Skalledigering kan ikke redigeres.",
   "exception.armourers_workshop.load.notFoundNodePart": "Kan ikke laste inn skall \"%1$s\" for node \"%2$s\".",
   "action.armourers_workshop.block.load": "Last blokker fra skinn",

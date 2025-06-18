@@ -78,7 +78,7 @@
   "exception.armourers_workshop.save.missingMarker": "Marcador ausente para %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Muitos marcadores para %s.",
   "exception.armourers_workshop.load.notFound": "Arquivo de skin não encontrado.",
-  "exception.armourers_workshop.load.notSupported": "Tipo de tema não suportado.",
+  "exception.armourers_workshop.load.notSupportType": "Tipo de tema não suportado.",
   "exception.armourers_workshop.load.notEditable": "Edição de tema não editável.",
   "exception.armourers_workshop.load.notFoundNodePart": "Não é possível carregar a skin \"%1$s\" para o nó \"%2$s\".",
   "action.armourers_workshop.block.load": "Carregar blocos da skin",

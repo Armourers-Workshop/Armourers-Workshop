@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Brakuje znacznika dla %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Zbyt wiele znaczników dla %s.",
   "exception.armourers_workshop.load.notFound": "Plik skórki nie został znaleziony.",
-  "exception.armourers_workshop.load.notSupported": "Typ skórki nie jest obsługiwany.",
+  "exception.armourers_workshop.load.notSupportType": "Typ skórki nie jest obsługiwany.",
   "exception.armourers_workshop.load.notEditable": "Edycja skórki nie jest edytowalna.",
   "exception.armourers_workshop.load.notFoundNodePart": "Nie można załadować Skórki \"%1$s\" dla węzła \"%2$s\".",
   "action.armourers_workshop.block.load": "Załaduj bloki ze skóry",

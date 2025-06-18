@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Відсутній маркер для %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Занадто багато маркерів для %s.",
   "exception.armourers_workshop.load.notFound": "Файл скіна не знайдено.",
-  "exception.armourers_workshop.load.notSupported": "Тип скіна не підтримується.",
+  "exception.armourers_workshop.load.notSupportType": "Тип скіна не підтримується.",
   "exception.armourers_workshop.load.notEditable": "Шкіра не відредагована для редагування.",
   "exception.armourers_workshop.load.notFoundNodePart": "Не вдається завантажити оболонку \"%1$s\" для вузла \"%2$s\".",
   "action.armourers_workshop.block.load": "Завантажити блоки зі шкіри",

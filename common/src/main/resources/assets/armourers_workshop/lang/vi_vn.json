@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Thiếu dấu hiệu cho %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Quá nhiều điểm đánh dấu cho %s.",
   "exception.armourers_workshop.load.notFound": "Không tìm thấy tệp skin.",
-  "exception.armourers_workshop.load.notSupported": "Loại da không được hỗ trợ.",
+  "exception.armourers_workshop.load.notSupportType": "Loại da không được hỗ trợ.",
   "exception.armourers_workshop.load.notEditable": "Không thể chỉnh sửa giao diện.",
   "exception.armourers_workshop.load.notFoundNodePart": "Không thể tải Skin \"%1$s\" cho nút \"%2$s\".",
   "action.armourers_workshop.block.load": "Tải khối từ da",

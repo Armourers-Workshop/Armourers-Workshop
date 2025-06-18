@@ -18,19 +18,22 @@ import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
 
     private final ArrayList<SkinGeometry> entities = new ArrayList<>();
+    private final HashSet<SkinGeometryType> supportedTypes = new HashSet<>();
 
     public void addBox(Box box) {
         entities.add(box);
+        supportedTypes.add(SkinGeometryTypes.CUBE);
     }
 
     public void addMesh(Mesh mesh) {
         entities.add(mesh);
+        supportedTypes.add(SkinGeometryTypes.MESH);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class SkinGeometrySetV2 extends SkinGeometrySet<SkinGeometry> {
 
     @Override
     public Collection<SkinGeometryType> supportedTypes() {
-        return Collections.singleton(SkinGeometryTypes.CUBE);
+        return supportedTypes;
     }
 
     public static class Box extends SkinCube {

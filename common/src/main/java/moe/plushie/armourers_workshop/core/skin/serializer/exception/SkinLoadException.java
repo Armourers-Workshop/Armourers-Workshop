@@ -15,7 +15,8 @@ public class SkinLoadException extends TranslatableException {
 
     public enum Type {
         NOT_FOUND,
-        NOT_SUPPORTED,
+        NOT_SUPPORTED_TYPE,
+        NOT_SUPPORTED_CONTENT,
         NOT_EDITABLE;
 
         public SkinLoadException build(String message, Object... args) {

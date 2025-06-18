@@ -133,12 +133,16 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
                 throw SkinLoadException.Type.NOT_FOUND.build("notFound");
             }
             // because descriptor maybe is a wrong skin type.
-            if (skin.type() != blockEntity.skinType() || skin.fileVersion() >= 20) {
-                throw SkinLoadException.Type.NOT_SUPPORTED.build("notSupported");
+            if (skin.type() != blockEntity.skinType()) {
+                throw SkinLoadException.Type.NOT_SUPPORTED_TYPE.build("notSupportType");
+            }
+            if (!skin.isBasicOnly()) {
+                throw SkinLoadException.Type.NOT_SUPPORTED_CONTENT.build("notSupportContent");
             }
             if (!skin.settings().isEditable()) {
                 throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
             }
+
             blockEntity.setSkinProperties(skin.properties());
             blockEntity.setPaintData(skin.paintData());
 

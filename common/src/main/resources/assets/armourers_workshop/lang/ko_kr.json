@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "%s에 대한 마커가 없습니다.",
   "exception.armourers_workshop.save.tooManyMarkers": "%s에 대한 마커가 너무 많습니다.",
   "exception.armourers_workshop.load.notFound": "스킨 파일을 찾을 수 없습니다.",
-  "exception.armourers_workshop.load.notSupported": "피부 타입이 지원되지 않습니다.",
+  "exception.armourers_workshop.load.notSupportType": "피부 타입이 지원되지 않습니다.",
   "exception.armourers_workshop.load.notEditable": "스킨 편집이 불가능합니다.",
   "exception.armourers_workshop.load.notFoundNodePart": "노드 \"%2$s\"에 대해 스킨 \"%1$s\"을 로드할 수 없습니다.",
   "action.armourers_workshop.block.load": "스킨에서 블록 로드",

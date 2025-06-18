@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Ontbrekende merker vir %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Te veel merkers vir %s.",
   "exception.armourers_workshop.load.notFound": "Vellêer nie gevind nie.",
-  "exception.armourers_workshop.load.notSupported": "Veltipe word nie ondersteun nie.",
+  "exception.armourers_workshop.load.notSupportType": "Veltipe word nie ondersteun nie.",
   "exception.armourers_workshop.load.notEditable": "Velwysiging nie redigeerbaar nie.",
   "exception.armourers_workshop.load.notFoundNodePart": "Kan nie vel \"%1$s\" vir node \"%2$s\" laai nie.",
   "action.armourers_workshop.block.load": "Laai blokke van die vel af",

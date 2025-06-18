@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Marcatori mancanti per %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Troppi marcatori per %s.",
   "exception.armourers_workshop.load.notFound": "File Skin non trovato.",
-  "exception.armourers_workshop.load.notSupported": "Tipo di pelle non supportato.",
+  "exception.armourers_workshop.load.notSupportType": "Tipo di pelle non supportato.",
   "exception.armourers_workshop.load.notEditable": "Modifica skin non modificabile.",
   "exception.armourers_workshop.load.notFoundNodePart": "Impossibile caricare Skin \"%1$s\" per nodo \"%2$s\".",
   "action.armourers_workshop.block.load": "Carica blocchi dalla skin",

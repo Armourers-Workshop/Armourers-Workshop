@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Manglende markør for %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "For mange markører for %s.",
   "exception.armourers_workshop.load.notFound": "Skin fil ikke fundet.",
-  "exception.armourers_workshop.load.notSupported": "Hudtypen understøttes ikke.",
+  "exception.armourers_workshop.load.notSupportType": "Hudtypen understøttes ikke.",
   "exception.armourers_workshop.load.notEditable": "Skin redigering ikke redigerbar.",
   "exception.armourers_workshop.load.notFoundNodePart": "Kan ikke indlæse Skin \"%1$s\" for node \"%2$s\".",
   "action.armourers_workshop.block.load": "Hent blokke fra huden",

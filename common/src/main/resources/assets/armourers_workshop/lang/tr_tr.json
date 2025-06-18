@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "%siçin eksik işaretleyici.",
   "exception.armourers_workshop.save.tooManyMarkers": "%siçin çok fazla işaretleyici var.",
   "exception.armourers_workshop.load.notFound": "Skin dosyası bulunamadı.",
-  "exception.armourers_workshop.load.notSupported": "Cilt tipi desteklenmiyor.",
+  "exception.armourers_workshop.load.notSupportType": "Cilt tipi desteklenmiyor.",
   "exception.armourers_workshop.load.notEditable": "Cilt düzenlemesi düzenlenemez.",
   "exception.armourers_workshop.load.notFoundNodePart": "\"%2$s\" düğümü için \"%1$s\" Skin'i yüklenemiyor.",
   "action.armourers_workshop.block.load": "Blokları deriden yükleyin",

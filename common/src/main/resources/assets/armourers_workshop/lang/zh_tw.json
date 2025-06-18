@@ -77,7 +77,7 @@
   "exception.armourers_workshop.save.missingMarker": "无法找到 %s 的標記點。",
   "exception.armourers_workshop.save.tooManyMarkers": "%s 的標記點太多了。",
   "exception.armourers_workshop.load.notFound": "沒有找到時裝文件。",
-  "exception.armourers_workshop.load.notSupported": "不支援的時裝類型。",
+  "exception.armourers_workshop.load.notSupportType": "不支援的時裝類型。",
   "exception.armourers_workshop.load.notEditable": "該時裝不可編輯。",
   "exception.armourers_workshop.load.notFoundNodePart": "無法載入節點\"%2$s\"的\"%1$s\"時裝。",
   "action.armourers_workshop.block.load": "從時裝加載造型方塊",

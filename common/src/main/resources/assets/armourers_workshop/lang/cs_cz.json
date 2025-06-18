@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Chybí značka pro %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Příliš mnoho značek pro %s.",
   "exception.armourers_workshop.load.notFound": "Soubor skinu nebyl nalezen.",
-  "exception.armourers_workshop.load.notSupported": "Typ skinu není podporován.",
+  "exception.armourers_workshop.load.notSupportType": "Typ skinu není podporován.",
   "exception.armourers_workshop.load.notEditable": "Úprava skinu není upravitelná.",
   "exception.armourers_workshop.load.notFoundNodePart": "Nelze načíst skin \"%1$s\" pro uzel \"%2$s\".",
   "action.armourers_workshop.block.load": "Načíst bloky z vzhledu",

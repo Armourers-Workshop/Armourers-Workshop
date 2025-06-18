@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Ontbrekende markering voor %s.",
   "exception.armourers_workshop.save.tooManyMarkers": "Te veel markeringen voor %s.",
   "exception.armourers_workshop.load.notFound": "Skin bestand niet gevonden.",
-  "exception.armourers_workshop.load.notSupported": "Skin type wordt niet ondersteund.",
+  "exception.armourers_workshop.load.notSupportType": "Skin type wordt niet ondersteund.",
   "exception.armourers_workshop.load.notEditable": "Skin bewerken niet bewerkbaar",
   "exception.armourers_workshop.load.notFoundNodePart": "Kan Skin niet laden \"%1$s\" voor node \"%2$s\".",
   "action.armourers_workshop.block.load": "Laad blokken uit de skin",

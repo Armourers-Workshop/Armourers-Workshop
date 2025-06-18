@@ -79,7 +79,7 @@
   "exception.armourers_workshop.save.missingMarker": "Puuttuva merkki %slle.",
   "exception.armourers_workshop.save.tooManyMarkers": "Liian monta merkkiä %slle.",
   "exception.armourers_workshop.load.notFound": "Ulkoasun tiedostoa ei löydy.",
-  "exception.armourers_workshop.load.notSupported": "Ulkoasun tyyppiä ei tueta.",
+  "exception.armourers_workshop.load.notSupportType": "Ulkoasun tyyppiä ei tueta.",
   "exception.armourers_workshop.load.notEditable": "Ulkoasun muokkaus ei ole muokattavissa.",
   "exception.armourers_workshop.load.notFoundNodePart": "Ei voi ladata ulkoasua \"%1$s\" palvelimelle \"%2$s\".",
   "action.armourers_workshop.block.load": "Lataa kuutiot ulkoasusta",
