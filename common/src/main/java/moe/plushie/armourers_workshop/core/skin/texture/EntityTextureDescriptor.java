@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class EntityTextureDescriptor implements IDataSerializable.Immutable {
@@ -121,14 +122,12 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         return profile;
     }
 
-    @Nullable
-    public String value() {
-        return value;
+    public Optional<String> value() {
+        return Optional.ofNullable(value);
     }
 
-    @Nullable
-    public Source source() {
-        return source;
+    public Optional<Source> source() {
+        return Optional.ofNullable(source);
     }
 
     @Override

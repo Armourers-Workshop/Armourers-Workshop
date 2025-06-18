@@ -47,7 +47,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
     private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.STEVE;
-    private EntityTextureDescriptor.Source lastTextureSource = null;
+    private EntityTextureDescriptor.Source lastTextureSource = EntityTextureDescriptor.Source.USER;
 
     public ArmourerDisplaySetting(ArmourerMenu container) {
         super("armourer.displaySettings");
@@ -72,25 +72,17 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         inputType.setText(getDisplayText("label.username"));
         addSubview(inputType);
 
-
-        var defaultValue = defaultValues.get(lastTextureSource);
         textField.setMaxLength(1024);
         textField.setDelegate(this);
-        if (Strings.isNotBlank(defaultValue)) {
-            textField.setText(defaultValue);
-        }
+        textField.setText(Objects.compactMap(defaultValues.get(lastTextureSource), ""));
         addSubview(textField);
 
         confirmView = addCommonButton(10, 120, 100, 20, "set", this::submit);
 
-        var label2 = new UILabel(new CGRect(10, 50, 160, 10));
-        label2.setText(getDisplayText("label.textureSource"));
-        addSubview(label2);
-        sourceComboView = addComboBox(10, 60, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
+        addLabel(10, 20, 160, 10, "label.textureModel");
+        addLabel(10, 50, 160, 10, "label.textureSource");
 
-        var label1 = new UILabel(new CGRect(10, 20, 160, 10));
-        label1.setText(getDisplayText("label.textureModel"));
-        addSubview(label1);
+        sourceComboView = addComboBox(10, 60, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
         modelComboView = addComboBox(10, 30, 80, 14, "textureModel", lastTextureModel, this::applyTextureModel);
 
         reloadStatus();
@@ -125,13 +117,14 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     }
 
     private void prepareDefaultValue() {
-        defaultValues.clear();
         if (blockEntity != null) {
             lastDescriptor = blockEntity.textureDescriptor();
             lastTextureModel = blockEntity.textureModel();
         }
-        lastTextureSource = lastDescriptor.source();
-        defaultValues.put(lastTextureSource, lastDescriptor.value());
+        lastTextureSource = lastDescriptor.source().orElse(EntityTextureDescriptor.Source.USER);
+        // reset the default value.
+        defaultValues.clear();
+        defaultValues.put(lastTextureSource, lastDescriptor.value().orElse(""));
     }
 
     private void submit(Object button) {
@@ -149,14 +142,13 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
                 return; // no changes
             }
             lastDescriptor = newValue;
-            lastTextureSource = null;
+            lastTextureSource = null; // set to null, and the immediately update it.
             blockEntity.setTextureDescriptor(newValue);
             NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR.buildPacket(blockEntity, newValue));
             // update to use
-            var newTexutreSource = newValue.source();
-            var newTextureValue = Objects.flatMap(newValue, EntityTextureDescriptor::value, "");
-            defaultValues.put(newTexutreSource, newTextureValue);
-            applyTextureSource(newTexutreSource);
+            var newSource = newValue.source().orElse(EntityTextureDescriptor.Source.USER);
+            defaultValues.put(newSource, newValue.value().orElse(""));
+            applyTextureSource(newSource);
         });
     }
 
@@ -165,7 +157,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             return;
         }
         defaultValues.put(lastTextureSource, textField.text());
-        textField.setText(Objects.flatMap(defaultValues.get(newValue), it -> it, ""));
+        textField.setText(Objects.compactMap(defaultValues.get(newValue), ""));
         textField.resignFirstResponder();
         //textBox.moveCursorToStart();
         sourceComboView.setSelectedIndex(newValue.ordinal());
@@ -219,6 +211,13 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, (self, e) -> handler.accept(e));
         addSubview(button);
         return button;
+    }
+
+    private UILabel addLabel(float x, float y, float width, float height, String key) {
+        var label = new UILabel(new CGRect(x, y, width, height));
+        label.setText(getDisplayText(key));
+        addSubview(label);
+        return label;
     }
 
     private EntityTextureDescriptor textureDescriptor() {

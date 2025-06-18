@@ -41,7 +41,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
 
     private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
     private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.STEVE;
-    private EntityTextureDescriptor.Source lastTextureSource = null;
+    private EntityTextureDescriptor.Source lastTextureSource = EntityTextureDescriptor.Source.USER;
 
     public SkinWardrobeTextureSetting(SkinWardrobe wardrobe) {
         super("wardrobe.man_texture");
@@ -58,10 +58,9 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     }
 
     public void setupTextField() {
-        var defaultValue = defaultValues.getOrDefault(lastTextureSource, "");
         textField.setDelegate(this);
         textField.setMaxLength(1024);
-        textField.setText(defaultValue);
+        textField.setText(Objects.compactMap(defaultValues.get(lastTextureSource), ""));
         addSubview(textField);
     }
 
@@ -69,11 +68,12 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         if (!(wardrobe.entity() instanceof MannequinEntity entity)) {
             return;
         }
-        defaultValues.clear();
         lastDescriptor = entity.getTextureDescriptor();
         lastTextureModel = entity.getTextureModel();
-        lastTextureSource = entity.getTextureDescriptor().source();
-        defaultValues.put(lastTextureSource, lastDescriptor.value());
+        lastTextureSource = lastDescriptor.source().orElse(EntityTextureDescriptor.Source.USER);
+        // reset the default value.
+        defaultValues.clear();
+        defaultValues.put(lastTextureSource, lastDescriptor.value().orElse(""));
     }
 
     private void applyTextureSource(EntityTextureDescriptor.Source newValue) {
@@ -81,7 +81,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
             return;
         }
         defaultValues.put(lastTextureSource, textField.text());
-        textField.setText(Objects.flatMap(defaultValues.get(newValue), it -> it, ""));
+        textField.setText(Objects.compactMap(defaultValues.get(newValue), ""));
         textField.resignFirstResponder();
         textField.setSelectedTextRange(new NSTextRange(textField.beginOfDocument()));
         sourceComboView.setSelectedIndex(newValue.ordinal());
@@ -112,11 +112,12 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
                 return; // no changes
             }
             lastDescriptor = newValue;
-            lastTextureSource = null;
+            lastTextureSource = null; // set to null, and the immediately update it.
             NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_TEXTURE.buildPacket(wardrobe, newValue));
             // update to use
-            defaultValues.put(newValue.source(), newValue.value());
-            applyTextureSource(newValue.source());
+            var newSource = newValue.source().orElse(EntityTextureDescriptor.Source.USER);
+            defaultValues.put(newSource, newValue.value().orElse(""));
+            applyTextureSource(newSource);
         });
     }
 

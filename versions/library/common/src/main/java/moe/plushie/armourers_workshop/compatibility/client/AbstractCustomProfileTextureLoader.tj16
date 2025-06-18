@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compatibility.client;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -19,6 +20,10 @@ public class AbstractCustomProfileTextureLoader {
 
     private static void load(GameProfile profile, long endTime, ResultHandler handler) {
         Minecraft.getInstance().getSkinManager().registerSkins(profile, (type, location, profileTexture) -> {
+            // the callback maybe call three times: skin/cape/elytra.
+            if (type != MinecraftProfileTexture.Type.SKIN) {
+                return; // ignore all except file of the skin
+            }
             // in some cases will get a placeholder result (url is null),
             // this means the game profile still loading phase,
             // we need to try again in the request valid time.

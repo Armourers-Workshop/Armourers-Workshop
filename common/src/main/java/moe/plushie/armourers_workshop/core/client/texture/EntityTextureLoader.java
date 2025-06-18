@@ -178,7 +178,7 @@ public class EntityTextureLoader {
         }
         ModLog.debug("load entity texture: {}", profile);
         AbstractCustomProfileTextureLoader.load(profile, (location, url, modelType) -> {
-            ModLog.debug("accept entity texture from vanilla loader: {}", location);
+            ModLog.debug("accept entity texture from vanilla loader: {}, {}", location, profile);
             task.accept(buildEntityTexture(descriptor, location, url, modelType));
         });
     }
