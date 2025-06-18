@@ -65,6 +65,7 @@ public class ModCommands {
     private static final DynamicCommandExceptionType ERROR_NOT_RUNNING_IN_SERVER = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.notRunningInServer"));
     private static final DynamicCommandExceptionType ERROR_MISSING_DYE_SLOT = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingDyeSlot", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingSkin", ob));
+    private static final DynamicCommandExceptionType ERROR_NOT_FOUND_SKIN = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.notFoundSkin", ob));
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob));
 
     public static void init(RegisterCommandsEvent event) {
@@ -407,14 +408,19 @@ public class ModCommands {
             if (containsNode(context, "dying")) {
                 scheme = ColorSchemeArgumentType.getColorScheme(context, "dying");
             }
-            boolean needCopy = false;
+            var needCopy = false;
             if (identifier.startsWith("/")) {
                 identifier = DataDomain.DEDICATED_SERVER.normalize(identifier);
                 needCopy = true; // save the skin to the database
             }
+            // the user requires resource pack can't check on the server side,
+            // so we will generate the skin descriptor directly.
+            if (DataDomain.RESOURCE_PACK.matches(identifier)) {
+                return new SkinDescriptor(identifier);
+            }
             var descriptor = SkinLoader.getInstance().loadSkinFromDB(identifier, scheme, needCopy);
             if (descriptor.isEmpty()) {
-                throw ERROR_MISSING_SKIN.create(identifier);
+                throw ERROR_NOT_FOUND_SKIN.create(identifier);
             }
             return descriptor;
         }
