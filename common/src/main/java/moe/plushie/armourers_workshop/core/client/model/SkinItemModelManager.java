@@ -245,11 +245,6 @@ public class SkinItemModelManager {
             super(scale(translation, new OpenVector3f(-1, -1, 1), OpenVector3f.ZERO), scale(rotation, new OpenVector3f(-1, -1, 1), OpenVector3f.ZERO), optimize(scale, OpenVector3f.ONE));
         }
 
-        private static OpenVector3f scale(OpenVector3f value, OpenVector3f scale, OpenVector3f defaultValue) {
-            var result = value.scaling(scale);
-            return optimize(result, defaultValue);
-        }
-
         @Override
         public void apply(boolean applyLeftHandTransform, IPoseStack poseStack) {
             super.apply(applyLeftHandTransform, poseStack);
@@ -257,6 +252,20 @@ public class SkinItemModelManager {
             if (applyLeftHandTransform) {
                 poseStack.scale(-1, 1, 1);
             }
+        }
+
+        private static float scale(float a, float b) {
+            if (a != 0) {
+                return a * b;
+            }
+            return a;
+        }
+
+        private static OpenVector3f scale(OpenVector3f value, OpenVector3f scale, OpenVector3f defaultValue) {
+            var x = scale(value.x(), scale.x());
+            var y = scale(value.y(), scale.y());
+            var z = scale(value.z(), scale.z());
+            return optimize(new OpenVector3f(x, y, z), defaultValue);
         }
     }
 }
