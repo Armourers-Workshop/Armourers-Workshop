@@ -27,7 +27,7 @@ public class AbstractForgeRegistries {
 
     public static final auto ITEMS = AbstractForgeRegistry.create("Item", Item.class, ForgeRegistries.ITEMS);
     public static final auto ITEM_GROUPS = AbstractForgeRegistry.create("Creative Mode Tab", CreativeModeTab.class, Registries.CREATIVE_MODE_TAB);
-    public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create("Loot Function Type", LootItemFunctionType.class, Registries.LOOT_FUNCTION_TYPE);
+    public static final auto ITEM_LOOT_FUNCTIONS = AbstractForgeRegistry.create("Loot Item Function Type", LootItemFunctionType.class, Registries.LOOT_FUNCTION_TYPE);
     public static final auto ITEM_TAGS = TypedRegistry.factory("Item Tag", IItemTag.class, registryName -> {
         var tag = TagKey.create(ForgeRegistries.Keys.ITEMS, registryName.toLocation());
         return itemStack -> itemStack.is(tag);

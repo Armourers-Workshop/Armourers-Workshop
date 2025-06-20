@@ -36,7 +36,7 @@ jobs:
             ~/.gradle/wrapper
 
       - name: Remove game test
-        run: find . -path "*/src/*" -name "*gametest*" -exec rm -rv {} +
+        run: rm -rf "versions/gametest"
 
       - name: Switch ${{ matrix.version }}
         run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"

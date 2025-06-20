@@ -29,7 +29,6 @@ public class ArgumentTypeBuilderImpl<T extends ArgumentType<?>> implements IArgu
     @Override
     public IRegistryHolder<T> build(String name) {
         IResourceLocation registryName = ModConstants.key(name);
-//        ModLog.debug("Registering Argument Type '{}'", registryName);
         AbstractForgeArgumentType.register(registryName, argumentType, argumentSerializer.get());
         return TypedRegistry.Entry.ofValue(registryName, null);
     }

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.gametest.init.mixin;
 
 import moe.plushie.armourers_workshop.gametest.init.Launcher;
+import moe.plushie.armourers_workshop.gametest.init.Logger;
 import net.minecraft.client.main.Main;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,6 +13,7 @@ public class ClientGameTestMixin {
 
     @Inject(method = "<clinit>", at = @At("TAIL"), remap = false)
     private static void aw2$init(CallbackInfo ci) {
+        Logger.init();
         Launcher.init();
     }
 }

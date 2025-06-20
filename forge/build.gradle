@@ -71,11 +71,17 @@ shadowJar {
 }
 
 runClientTest {
-    selectPackage("moe.plushie.armourers_workshop.gametest")
+    selectPackage("moe.plushie.armourers_workshop.gametest.common")
+    selectPackage("moe.plushie.armourers_workshop.gametest.client")
+    selectPackage("moe.plushie.armourers_workshop.gametest.forge.common")
+    selectPackage("moe.plushie.armourers_workshop.gametest.forge.client")
 }
 
 runServerTest {
-    selectPackage("moe.plushie.armourers_workshop.gametest")
+    selectPackage("moe.plushie.armourers_workshop.gametest.common")
+    selectPackage("moe.plushie.armourers_workshop.gametest.server")
+    selectPackage("moe.plushie.armourers_workshop.gametest.forge.common")
+    selectPackage("moe.plushie.armourers_workshop.gametest.forge.server")
 }
 
 publishing {

@@ -1,0 +1,115 @@
+package moe.plushie.armourers_workshop.gametest.client;
+
+import moe.plushie.armourers_workshop.gametest.utils.Asynchronous;
+import org.junit.jupiter.api.Test;
+
+import static moe.plushie.armourers_workshop.gametest.utils.AssertLog.assertPrintLog;
+
+@Asynchronous
+public class TestRegistryCase {
+
+    @Test
+    public void testEntityRendererRegisters() {
+        assertPrintLog("Attach Entity Renderer 'minecraft:boat'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:chest_boat'");
+        assertPrintLog("Attach Entity Renderer 'railways:conductor'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:pig'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:wolf'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:guardian'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:phantom'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:shulker'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:slime'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:ghast'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:chicken'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:creeper'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:horse'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:skeleton_horse'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:zombie_horse'");
+        assertPrintLog("Attach Entity Renderer 'armourers_workshop:mannequin'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:minecart'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:citizen'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:visitor'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:mercenary'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:barbarian'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:archerbarbarian'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:chiefbarbarian'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:pirate'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:archerpirate'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:chiefpirate'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:mummy'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:archermummy'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:pharao'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:amazon'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:amazonspearman'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:amazonchief'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:shieldmaiden'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:norsemenarcher'");
+        assertPrintLog("Attach Entity Renderer 'minecolonies:norsemenchief'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:skeleton'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:stray'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:wither_skeleton'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:zombie'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:husk'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:zombie_villager'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:drowned'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:evoker'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:illusioner'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:pillager'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:vindicator'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:vex'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:piglin'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:piglin_brute'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:zombified_piglin'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:enderman'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:allay'");
+        assertPrintLog("Attach Entity Renderer 'customnpcs:customnpc'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:humanoid'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:humanoid_slim'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:skeleton'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:villager'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:zombie'");
+        assertPrintLog("Attach Entity Renderer 'easy_npc:zombie_villager'");
+        assertPrintLog("Attach Entity Renderer 'guardvillagers:guard'");
+        assertPrintLog("Attach Entity Renderer 'humancompanions:arbalist'");
+        assertPrintLog("Attach Entity Renderer 'humancompanions:archer'");
+        assertPrintLog("Attach Entity Renderer 'humancompanions:axeguard'");
+        assertPrintLog("Attach Entity Renderer 'humancompanions:knight'");
+        assertPrintLog("Attach Entity Renderer 'mca:female_villager'");
+        assertPrintLog("Attach Entity Renderer 'mca:female_zombie_villager'");
+        assertPrintLog("Attach Entity Renderer 'mca:grim_reaper'");
+        assertPrintLog("Attach Entity Renderer 'mca:male_villager'");
+        assertPrintLog("Attach Entity Renderer 'mca:male_zombie_villager'");
+        assertPrintLog("Attach Entity Renderer 'player_mobs:player_mob'");
+        assertPrintLog("Attach Entity Renderer 'recruits:bowman'");
+        assertPrintLog("Attach Entity Renderer 'recruits:crossbowman'");
+        assertPrintLog("Attach Entity Renderer 'recruits:horseman'");
+        assertPrintLog("Attach Entity Renderer 'recruits:nomad'");
+        assertPrintLog("Attach Entity Renderer 'recruits:recruit'");
+        assertPrintLog("Attach Entity Renderer 'recruits:recruit_shieldman'");
+        assertPrintLog("Attach Entity Renderer 'workers:miner'");
+        assertPrintLog("Attach Entity Renderer 'workers:lumberjack'");
+        assertPrintLog("Attach Entity Renderer 'workers:fisherman'");
+        assertPrintLog("Attach Entity Renderer 'workers:merchant'");
+        assertPrintLog("Attach Entity Renderer 'workers:shepherd'");
+        assertPrintLog("Attach Entity Renderer 'workers:swineherd'");
+        assertPrintLog("Attach Entity Renderer 'workers:cattle_farmer'");
+        assertPrintLog("Attach Entity Renderer 'workers:chicken_farmer'");
+        assertPrintLog("Attach Entity Renderer 'workers:farmer'");
+        assertPrintLog("Attach Entity Renderer 'taterzens:npc'");
+        assertPrintLog("Attach Entity Renderer 'modulargolems:humanoid_golem'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:player'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:arrow'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:trident'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:spectral_arrow'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:fishing_bobber'");
+        assertPrintLog("Attach Entity Renderer 'vampirism:hunter'");
+        assertPrintLog("Attach Entity Renderer 'vampirism:hunter_minion'");
+        assertPrintLog("Attach Entity Renderer 'vampirism:vampire'");
+        assertPrintLog("Attach Entity Renderer 'vampirism:vampire_minion'");
+        assertPrintLog("Attach Entity Renderer 'vampirism:vampire_minion_s'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:villager'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:witch'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:wandering_trader'");
+        assertPrintLog("Attach Entity Renderer 'minecraft:iron_golem'");
+    }
+}

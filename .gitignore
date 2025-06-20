@@ -1,8 +1,5 @@
 build/
 *.ipr
-run
-fabric/run
-forge/run
 *.iws
 out/
 *.iml
@@ -21,3 +18,8 @@ classes/
 .vscode
 .settings
 *.launch
+
+/run
+/common/run
+/fabric/run
+/forge/run
