@@ -32,6 +32,7 @@ public class Launcher {
                 thread.setContextClassLoader(newLoader);
                 var constructor = newLoader.loadClass(agentClass).getConstructor(String[].class);
                 ((Runnable) constructor.newInstance((Object) args)).run();
+                Logger.init(); // only setup logger when the junit init successfully.
             } finally {
                 thread.setContextClassLoader(oldLoader);
             }

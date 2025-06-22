@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
+import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
@@ -181,9 +182,13 @@ public class Skin implements ISkin {
             return false;
         }
         // 4. not contains child part.
-        // 5. not contains cube/mesh geometry type.
+        // 5. not contains part transform.
+        // 6. not contains cube/mesh geometry type.
         for (var part : parts()) {
             if (!part.children().isEmpty()) {
+                return false;
+            }
+            if (!part.transform().equals(OpenTransform3f.IDENTITY)) {
                 return false;
             }
             var supportedTypes = new HashSet<>(Objects.compactMap(part.geometries().supportedTypes(), Collections.emptyList()));

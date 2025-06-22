@@ -90,9 +90,8 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
             if (skin == null) {
                 continue;
             }
-            // TODO: no support!!
-            if (skin.fileVersion() >= 20) {
-                throw SkinLoadException.Type.NOT_SUPPORTED_TYPE.build("notSupported");
+            if (!skin.isBasicOnly()) {
+                throw SkinLoadException.Type.NOT_SUPPORTED_CONTENT.build("notSupportContent");
             }
             if (!skin.settings().isEditable()) {
                 throw SkinLoadException.Type.NOT_EDITABLE.build("notEditable");
