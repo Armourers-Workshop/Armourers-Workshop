@@ -39,7 +39,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
 
     private final UICheckBox checkShowGuides = new UICheckBox(new CGRect(10, 145, 160, 9));
     private final UICheckBox checkShowModelGuides = new UICheckBox(new CGRect(10, 160, 160, 9));
-    private final UICheckBox checkShowHelper = new UICheckBox(new CGRect(10, 145, 190, 9));
+    private final UICheckBox checkShowHelper = new UICheckBox(new CGRect(10, 175, 160, 9));
 
     private UIButton confirmView;
     private UIComboBox sourceComboView;

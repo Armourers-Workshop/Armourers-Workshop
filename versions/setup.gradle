@@ -1,4 +1,6 @@
 import com.github.hexomod.macro.PreprocessorPlugin
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 buildscript {
     repositories {
@@ -75,6 +77,75 @@ def renameDataPack = { version, old_name, new_name, content_handler = null ->
             it.resources.matching { it.include "data/**/$new_name/" }.forEach(content_handler)
         }
     }
+}
+
+def transformRecipeData = { contents, version ->
+    // version 1.12.2~1.21.1: { "item": "minecraft:item" }
+    // version 1.12.2~1.21.1: { "tag": "minecraft:tag" }
+    // version 1.12.2~1.21.1: [ { "item": "minecraft:item" }, { "tag": "#minecraft:tag" } ]
+    // version 1.21.2+: "minecraft:item"
+    // version 1.21.2+: "#minecraft:tag"
+    // version 1.21.2+: [ "minecraft:item", "#minecraft:tag" ]
+    def applyInputVersion = null
+    applyInputVersion = { it ->
+        //
+        if (it instanceof List) {
+            return it.collect(applyInputVersion)
+        }
+        if (it instanceof String) {
+            if (it.startsWith("#")) {
+                it = [tag: it.substring(1)]
+            } else {
+                it = [item: it]
+            }
+        }
+        if (version >= 12102) {
+            if (it.tag != null) {
+                return "#${it.tag}"
+            }
+            return it.item
+        }
+        return it
+    }
+    // 1.12.2~1.20.1: { "item": "minecraft:item" }
+    // 1.20.2+: { "id": "minecraft:item" }
+    // 1.21.2+: "minecraft:item"
+    def applyOutputVersion = { it ->
+        var id = it.id ?: it.item
+        it.remove("id")
+        it.remove("item")
+        if (version >= 12002) {
+            return [id: id] + it
+        } else {
+            return [item: id] + it
+        }
+    }
+
+    // "minecraft:crafting_shaped": [ "key:d", "result:r" ]
+    // "minecraft:crafting_shapeless": [ "ingredients:a", "result:r" ]
+    // "minecraft:campfire_cooking": [ "ingredient:e", "result:r" ]
+    // "minecraft:stonecutting": [ "ingredient:e", "result:r" ]
+    // "minecraft:blasting": [ "ingredient:e", "result:r" ]
+    // "minecraft:smoking": [ "ingredient:e", "result:r" ]
+    // "minecraft:smelting": [ "ingredient:e", "result:r" ]
+    // "minecraft:smithing_trim": [ "base:e", "addition:e", "template:e", "result:r" ]
+    // "minecraft:crafting_transmute": [ "input:e", "material:e", "result:s" ]
+    def keys = ["key:d", "ingredients:a", "ingredient:e", "base:e", "addition:e", "template:e", "input:e", "material:e", "result:r"]
+    def values = [
+            e: { applyInputVersion(it) },
+            a: { it.collect { v -> applyInputVersion(v) } },
+            d: { it.collectEntries { k, v -> [(k): applyInputVersion(v)] } },
+            r: { applyOutputVersion(it) }
+    ]
+    def json = new JsonSlurper().parseText(contents)
+    for (key in keys) {
+        var func = values[key.split(":")[1]]
+        var value = json[key.split(":")[0]]
+        if (value != null && func != null) {
+            json[key.split(":")[0]] = func(value)
+        }
+    }
+    return JsonOutput.prettyPrint(JsonOutput.toJson(json)).replaceAll(" {4}", "  ")
 }
 
 targets.forEach {
@@ -162,12 +233,7 @@ tasks.register("applyCoreResources") {
     renameDataPack(12100, "loot_tables", "loot_table")
     renameDataPack(12100, "recipes", "recipe") {
         def oldValue = it.getText("UTF-8")
-        def newValue = oldValue
-        if (minecraft_version_number >= 12005) {
-            newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")item("\s*:.+?}.+?})/, /$1id$2/)
-        } else {
-            newValue = oldValue.replaceFirst(/(?sm)(\{.+?"result":\s*\{.+?")id("\s*:.+?}.+?})/, /$1item$2/)
-        }
+        def newValue = transformRecipeData(oldValue, minecraft_version_number)
         if (newValue != oldValue) {
             it.setText(newValue, "UTF-8")
         }
