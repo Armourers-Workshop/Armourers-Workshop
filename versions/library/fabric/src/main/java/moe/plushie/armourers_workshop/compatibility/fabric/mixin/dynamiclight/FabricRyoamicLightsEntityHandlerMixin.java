@@ -18,7 +18,7 @@ import org.thinkingstudio.ryoamiclights.api.DynamicLightHandlers;
 @Mixin(DynamicLightHandlers.class)
 public class FabricRyoamicLightsEntityHandlerMixin {
 
-    @Redirect(method = "getLuminanceFrom(Lnet/minecraft/world/entity/Entity;)I", at = @At(value = "INVOKE", target = "Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandlers;getDynamicLightHandler(Lnet/minecraft/world/entity/EntityType;)Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandler;", remap = false), remap = false)
+    @Redirect(method = "getLuminanceFrom(Lnet/minecraft/world/entity/Entity;)I", at = @At(value = "INVOKE", target = "Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandlers;getDynamicLightHandler(Lnet/minecraft/world/entity/EntityType;)Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandler;"))
     private static <T extends Entity> DynamicLightHandler<T> aw2$getLuminanceFromEntity(EntityType<T> type, T entity) {
         var handler = DynamicLightHandlers.getDynamicLightHandler(type);
         return ClientDynamicLightHandler.apply(handler, entity, data -> new DynamicLightHandler<T>() {
@@ -34,7 +34,7 @@ public class FabricRyoamicLightsEntityHandlerMixin {
         });
     }
 
-    @Redirect(method = "getLuminanceFrom(Lnet/minecraft/world/level/block/entity/BlockEntity;)I", at = @At(value = "INVOKE", target = "Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandlers;getDynamicLightHandler(Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandler;", remap = false), remap = false)
+    @Redirect(method = "getLuminanceFrom(Lnet/minecraft/world/level/block/entity/BlockEntity;)I", at = @At(value = "INVOKE", target = "Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandlers;getDynamicLightHandler(Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lorg/thinkingstudio/ryoamiclights/api/DynamicLightHandler;"))
     private static <T extends BlockEntity> DynamicLightHandler<T> aw2$getLuminanceFromBlockEntity(BlockEntityType<T> type, T entity) {
         var handler = DynamicLightHandlers.getDynamicLightHandler(type);
         return ClientDynamicLightHandler.apply(handler, entity, data -> new DynamicLightHandler<T>() {
