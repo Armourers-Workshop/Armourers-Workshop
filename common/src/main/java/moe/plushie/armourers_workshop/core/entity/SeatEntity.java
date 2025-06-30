@@ -29,6 +29,8 @@ public class SeatEntity extends AbstractLivingEntity implements IDataSerializabl
 
     public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
         super(entityType, level);
+        this.setInvisible(true);
+        this.setInvulnerable(true);
         this.setYBodyRot(0.0f);
         //this.maxUpStep = 0.0f;
         this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
