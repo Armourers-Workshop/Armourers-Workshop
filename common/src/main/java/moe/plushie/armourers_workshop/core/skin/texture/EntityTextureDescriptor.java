@@ -142,6 +142,14 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         return Objects.hash(source, value);
     }
 
+    @Override
+    public String toString() {
+        if (!isEmpty()) {
+            return value;
+        }
+        return "<empty>";
+    }
+
     private static class CodingKeys {
 
         public static final IDataSerializerKey<String> URL = IDataSerializerKey.create("URL", IDataCodec.STRING, null);

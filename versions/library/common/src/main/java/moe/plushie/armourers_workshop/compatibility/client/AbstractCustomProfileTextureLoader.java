@@ -19,17 +19,22 @@ public class AbstractCustomProfileTextureLoader {
 
     private static void load(GameProfile profile, long endTime, ResultHandler handler) {
         EnvironmentManager.getClient().getSkinManager().getOrLoad(profile).thenAcceptAsync(skin -> {
+            var url = skin.textureUrl();
+            var location = OpenResourceLocation.create(skin.texture());
+            var modelType = skin.model().id();
+            // when this is a unknown user, it only call back a placeholder result.
+            if (profile.getProperties().isEmpty()) {
+                handler.accept(location, url, modelType);
+                return;
+            }
             // in some cases will get a placeholder result (url is null),
             // this means the game profile still loading phase,
             // we need to try again in the request valid time.
-            var url = skin.textureUrl();
             if (url == null && System.currentTimeMillis() < endTime) {
                 Executors.sleep(500); // 500ms
                 load(profile, endTime, handler);
                 return;
             }
-            var location = OpenResourceLocation.create(skin.texture());
-            var modelType = skin.model().id();
             handler.accept(location, url, modelType);
         });
     }

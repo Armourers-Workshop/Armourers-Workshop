@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.math;
 
-import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
 
 import java.util.Stack;

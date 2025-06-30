@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 
 @Available("[1.16, 1.21)")
 @Environment(EnvType.CLIENT)
@@ -20,23 +20,31 @@ public class AbstractCustomProfileTextureLoader {
     }
 
     private static void load(GameProfile profile, long endTime, ResultHandler handler) {
-        EnvironmentManager.getClient().getSkinManager().registerSkins(profile, (type, location, profileTexture) -> {
+        // when this is a unknown user, it only call back a placeholder result.
+        if (profile.getProperties().isEmpty()) {
+            var location = OpenResourceLocation.create(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
+            var modelType = DefaultPlayerSkin.getSkinModelName(profile.getId());
+            handler.accept(location, null, modelType);
+            return;
+        }
+        EnvironmentManager.getClient().getSkinManager().registerSkins(profile, (type, texture, profile1) -> {
             // the callback maybe call three times: skin/cape/elytra.
             if (type != MinecraftProfileTexture.Type.SKIN) {
                 return; // ignore all except file of the skin
             }
+            var location = OpenResourceLocation.create(texture);
+            var url = profile1.getUrl();
+            var modelType = profile1.getMetadata("model");
             // in some cases will get a placeholder result (url is null),
             // this means the game profile still loading phase,
             // we need to try again in the request valid time.
-            var url = profileTexture.getUrl();
             if (url == null && System.currentTimeMillis() < endTime) {
                 Executors.sleep(500); // 500ms
                 load(profile, endTime, handler);
                 return;
             }
-            var modelType = profileTexture.getMetadata("model");
-            handler.accept(OpenResourceLocation.create(location), url, modelType);
-        }, true);
+            handler.accept(location, url, modelType);
+        }, false);
     }
 
     public interface ResultHandler {

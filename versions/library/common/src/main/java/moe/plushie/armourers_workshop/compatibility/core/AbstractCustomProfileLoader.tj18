@@ -10,12 +10,7 @@ public class AbstractCustomProfileLoader {
 
     public static void load(GameProfile profile, IResultHandler<GameProfile> handler) {
         SkullBlockEntity.updateGameprofile(profile, profile1 -> {
-            // when properties is empty, we will assume the user can't found.
-            if (profile1 != null && profile1.getProperties() != null && !profile1.getProperties().isEmpty()) {
-                handler.accept(profile1);
-            } else {
-                handler.abort(new RuntimeException("Not Found Game Profile: " + profile.getName()));
-            }
+            handler.accept(profile1);
         });
     }
 }

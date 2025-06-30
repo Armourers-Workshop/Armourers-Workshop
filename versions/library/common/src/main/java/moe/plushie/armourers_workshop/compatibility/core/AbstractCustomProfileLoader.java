@@ -10,13 +10,7 @@ public class AbstractCustomProfileLoader {
 
     public static void load(GameProfile profile, IResultHandler<GameProfile> handler) {
         SkullBlockEntity.fetchGameProfile(profile.getName()).thenAcceptAsync(result -> {
-            // when properties is empty, we will assume the user can't found.
-            var profile1 = result.orElse(profile);
-            if (!profile1.getProperties().isEmpty()) {
-                handler.accept(profile1);
-            } else {
-                handler.abort(new RuntimeException("Not Found Game Profile: " + profile.getName()));
-            }
+            handler.accept(result.orElse(profile));
         });
     }
 }

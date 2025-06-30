@@ -11,12 +11,7 @@ public class AbstractCustomProfileLoader {
     public static void load(GameProfile profile, IResultHandler<GameProfile> handler) {
         try {
             // when properties is empty, we will assume the user can't found.
-            var profile1 = SkullBlockEntity.updateGameprofile(profile);
-            if (profile1 != null && profile1.getProperties() != null && !profile1.getProperties().isEmpty()) {
-                handler.accept(profile1);
-                return;
-            }
-            handler.abort(new RuntimeException("Not Found Game Profile: " + profile.getName()));
+            handler.accept(SkullBlockEntity.updateGameprofile(profile));
         } catch (Exception exception) {
             handler.abort(exception); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
         }
