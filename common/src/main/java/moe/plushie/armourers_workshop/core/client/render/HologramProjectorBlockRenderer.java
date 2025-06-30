@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,7 +76,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
 
         renderingContext.setPoseStack(poseStack);
         renderingContext.setBufferSource(bufferSource);
-        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        renderingContext.setModelViewStack(AbstractModelViewStack.getInstance());
 
         for (var entry : renderingTasks) {
             var itemSource = SkinItemSource.create(entry.itemStack());

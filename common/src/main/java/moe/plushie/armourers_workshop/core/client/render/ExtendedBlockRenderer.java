@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
@@ -37,7 +36,7 @@ public class ExtendedBlockRenderer {
 
         context.setPoseStack(poseStack);
         context.setBufferSource(bufferSource);
-        context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        context.setModelViewStack(AbstractModelViewStack.getInstance());
 
         skin.setupAnim(entity, armature, context);
         SkinRenderer.render(entity, armature, skin, SkinPaintScheme.EMPTY, context);

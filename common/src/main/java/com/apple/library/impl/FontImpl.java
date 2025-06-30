@@ -1,8 +1,8 @@
 package com.apple.library.impl;
 
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -26,7 +26,7 @@ public abstract class FontImpl {
     }
 
     protected static Font defaultFont() {
-        return Minecraft.getInstance().font;
+        return EnvironmentManager.getClient().font;
     }
 
     public float lineHeight() {

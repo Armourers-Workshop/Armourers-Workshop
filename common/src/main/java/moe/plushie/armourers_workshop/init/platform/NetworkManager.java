@@ -69,12 +69,12 @@ public class NetworkManager {
     }
 
     public static <R> void sendTo(final CustomReplyPacket<R> message, final ServerPlayer player, IResultHandler<R> handler) {
-        CustomReplyPacket.Receiver.await(message, handler);
+        CustomReplyPacket.Receiver.listen(message, handler);
         sendTo(message, player);
     }
 
     public static <R> void sendToServer(final CustomReplyPacket<R> message, IResultHandler<R> handler) {
-        CustomReplyPacket.Receiver.await(message, handler);
+        CustomReplyPacket.Receiver.listen(message, handler);
         sendToServer(message);
     }
 

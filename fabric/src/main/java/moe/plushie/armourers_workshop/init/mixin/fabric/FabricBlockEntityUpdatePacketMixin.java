@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.mixin.fabric;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ public class FabricBlockEntityUpdatePacketMixin {
 
     @Inject(method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V", at = @At("RETURN"))
     private void aw2$handleBlockEntityData(ClientGamePacketListener clientGamePacketListener, CallbackInfo ci) {
-        var level = Minecraft.getInstance().level;
+        var level = EnvironmentManager.getClient().level;
         if (level == null) {
             return;
         }

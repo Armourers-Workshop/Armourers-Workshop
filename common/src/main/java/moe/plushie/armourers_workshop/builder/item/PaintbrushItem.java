@@ -22,9 +22,9 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -104,7 +104,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     @Environment(EnvType.CLIENT)
     public void openPaletteGUI(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
         var window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
-        Minecraft.getInstance().setScreen(window.asScreen());
+        EnvironmentManager.getClient().setScreen(window.asScreen());
     }
 
     @Override

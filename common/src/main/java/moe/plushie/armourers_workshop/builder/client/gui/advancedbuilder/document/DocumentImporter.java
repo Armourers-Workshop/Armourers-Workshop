@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.importer.blockbench.B
 import moe.plushie.armourers_workshop.core.skin.serializer.importer.blockbench.BlockBenchPackReader;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,9 +98,9 @@ public class DocumentImporter {
                 if (skin == null || skin.parts().isEmpty()) {
                     throw new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalModelFormat");
                 }
-                Minecraft.getInstance().execute(() -> resultHandler.accept(apply(skin)));
+                EnvironmentManager.getClient().execute(() -> resultHandler.accept(apply(skin)));
             } catch (Exception e) {
-                Minecraft.getInstance().execute(() -> resultHandler.abort(e));
+                EnvironmentManager.getClient().execute(() -> resultHandler.abort(e));
             }
         });
     }

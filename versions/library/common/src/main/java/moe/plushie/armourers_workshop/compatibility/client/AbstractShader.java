@@ -17,9 +17,6 @@ public class AbstractShader extends Shader {
     public void begin() {
         super.begin();
         // yep we reset it.
-        RenderSystem.getExtendedModelViewStack().pushPose();
-        RenderSystem.getExtendedModelViewStack().setIdentity();
-        RenderSystem.applyModelViewMatrix();
         RenderSystem.resetTextureMatrix();
         // ..
         BufferUploader.reset();
@@ -28,9 +25,6 @@ public class AbstractShader extends Shader {
     @Override
     public void end() {
         super.end();
-        // ..
-        RenderSystem.getExtendedModelViewStack().popPose();
-        RenderSystem.applyModelViewMatrix();
     }
 
     public void apply(ShaderVertexGroup group, Runnable action) {

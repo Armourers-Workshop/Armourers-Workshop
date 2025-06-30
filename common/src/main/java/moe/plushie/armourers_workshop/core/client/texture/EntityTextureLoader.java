@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -193,7 +192,7 @@ public class EntityTextureLoader {
         ModLog.debug("load entity texture: {}", url);
         var identifier = Objects.md5(url);
         var location = OpenResourceLocation.parse("skins/aw-" + identifier);
-        var textureManager = Minecraft.getInstance().getTextureManager();
+        var textureManager = EnvironmentManager.getClient().getTextureManager();
         //var processingTexture = textureManager.getTexture(location.toLocation(), null);
         //if (processingTexture != null) {
         //    return; // wait the texture download complete.

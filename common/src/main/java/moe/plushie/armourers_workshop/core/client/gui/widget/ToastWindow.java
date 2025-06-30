@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -104,7 +104,7 @@ public class ToastWindow extends UIWindow {
         tag.getOptionalString("Image").ifPresent(imageId -> {
             this.icon = new CustomTexture(imageId, tag);
         });
-        var level = Minecraft.getInstance().level;
+        var level = EnvironmentManager.getClient().level;
         if (tag.contains("id") && level != null) {
             this.icon = ItemStack.parse(level.registryAccess(), tag).orElse(ItemStack.EMPTY);
         }

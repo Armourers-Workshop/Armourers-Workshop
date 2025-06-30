@@ -47,10 +47,11 @@ public class AbstractShader extends Shader {
     @Override
     public void render(ShaderVertexObject object) {
         var count = object.total();
-        var poseStack = object.poseStack();
+        var modelViewStack = AbstractModelViewStack.getInstance();
 
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(poseStack.last().pose()));
+        modelViewStack.pushMatrix();
+
+        modelViewStack.last().multiply(object.poseStack().last().pose());
 
         // https://sites.google.com/site/threejstuts/home/polygon_offset
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
@@ -89,6 +90,6 @@ public class AbstractShader extends Shader {
 
         object.format().get().clearBufferState();
 
-        RenderSystem.popMatrix();
+        modelViewStack.popMatrix();
     }
 }

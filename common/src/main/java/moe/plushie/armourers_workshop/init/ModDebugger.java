@@ -59,7 +59,7 @@ public class ModDebugger {
     public static boolean tooltip = false;
     public static boolean properties = false;
 
-    public static boolean vbo = false;
+    public static int vbo = 0; // 0: async vbo, 1: sync vbo, 2: disable vbo
     public static boolean wireframeRender = false;
 
     public static boolean viewHierarchy = false;

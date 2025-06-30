@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.client;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
@@ -15,7 +15,7 @@ public class AbstractVertexArrayObject extends VertexArrayObject {
 
     public static VertexArrayObject create(IVertexFormat format, long offset, VertexBufferObject bufferObject, VertexIndexObject indexObject) {
         var arrayObject = new VertexArrayObject();
-        var state = new SkinRenderState();
+        var state = new ShaderRenderState();
         state.save();
 
         // in the newer version rendering system, we will use a shader.

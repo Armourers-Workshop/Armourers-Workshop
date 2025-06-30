@@ -14,9 +14,9 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -73,7 +73,7 @@ public class AbstractGraphicsRenderer implements CGGraphicsRenderer, CGGraphicsS
 
     @Override
     public void renderItem(ItemStack itemStack, int x, int y, CGGraphicsContext context) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(itemStack, x, y);
+        EnvironmentManager.getClient().getItemRenderer().renderAndDecorateFakeItem(itemStack, x, y);
     }
 
     @Override

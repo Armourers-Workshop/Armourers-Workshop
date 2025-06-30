@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
@@ -41,7 +41,7 @@ public class PlaceholderManager {
 
         @Override
         public T get() {
-            var level = Minecraft.getInstance().level;
+            var level = EnvironmentManager.getClient().level;
             if (entity == null) {
                 entity = provider.apply(level);
                 entity.setId(PLACEHOLDER_ENTITY_ID);

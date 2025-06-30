@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractSimpleSound;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractSoundManagerImpl;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;
@@ -35,7 +35,7 @@ public class SoundManagerMixin implements AbstractSoundManagerImpl {
             if (resource != null) {
                 return Optional.of(resource);
             }
-            return Minecraft.getInstance().getResourceManager().getResource(location);
+            return EnvironmentManager.getClient().getResourceManager().getResource(location);
         };
     }
 

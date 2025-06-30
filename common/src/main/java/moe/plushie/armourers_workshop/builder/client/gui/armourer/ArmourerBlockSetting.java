@@ -18,10 +18,10 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
         var dialog = new ArmourerReplaceDialog();
         dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
-            var level = Minecraft.getInstance().level;
+            var level = EnvironmentManager.getClient().level;
             if (dialog.isCancelled() || level == null) {
                 return;
             }

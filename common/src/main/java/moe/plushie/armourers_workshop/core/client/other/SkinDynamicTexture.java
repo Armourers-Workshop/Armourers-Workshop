@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -29,7 +29,7 @@ public class SkinDynamicTexture extends DynamicTexture {
 
     public SkinDynamicTexture() {
         super(EntityTextureModel.TEXTURE_WIDTH, EntityTextureModel.TEXTURE_HEIGHT, true);
-        this.textureManager = Minecraft.getInstance().getTextureManager();
+        this.textureManager = EnvironmentManager.getClient().getTextureManager();
     }
 
     public OpenResourceLocation refer() {

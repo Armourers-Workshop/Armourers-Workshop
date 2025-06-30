@@ -13,7 +13,7 @@ import manifold.ext.rt.api.This;
 @Extension
 public class EquippableProvider {
 
-    public static OpenEquipmentSlot getExtendedEquipmentSlot(@This ItemStack itemStack) {
+    public static OpenEquipmentSlot getEquipmentSlot(@This ItemStack itemStack) {
         var equipable = Equipable.get(itemStack);
         if (equipable != null) {
             return AbstractEquipmentSlot.wrap(equipable.getEquipmentSlot());

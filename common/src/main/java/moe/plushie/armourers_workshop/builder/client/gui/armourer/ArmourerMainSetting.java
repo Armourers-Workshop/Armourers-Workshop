@@ -26,7 +26,6 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.List;
@@ -203,7 +202,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         if (player == null || !container.shouldSaveArmourItem(player)) {
             return;
         }
-        var origin = Minecraft.getInstance().getUser().getGameProfile();
+        var origin = EnvironmentManager.getClient().getUser().getGameProfile();
         var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
         NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_SAVE.buildPacket(blockEntity, nbt));
     }

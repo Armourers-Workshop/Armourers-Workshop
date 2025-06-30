@@ -327,7 +327,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 //                    return;
 //                }
 //                entry = new SkinFileList.Entry(result);
-//                Minecraft.getInstance().execute(() -> reloadUI(entry));
+//                EnvironmentManager.getClient().execute(() -> reloadUI(entry));
 //            }
 //
 //            @Override

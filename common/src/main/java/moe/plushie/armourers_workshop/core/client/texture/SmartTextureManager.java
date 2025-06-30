@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 import java.util.IdentityHashMap;
@@ -57,7 +57,7 @@ public class SmartTextureManager {
     }
 
     public TextureManager textureManager() {
-        return Minecraft.getInstance().getTextureManager();
+        return EnvironmentManager.getClient().getTextureManager();
     }
 
     protected void uploadTexture(SmartTexture texture) {

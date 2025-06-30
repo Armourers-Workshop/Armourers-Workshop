@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexFormat;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderContext;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,7 +30,7 @@ public class AbstractRenderTypeImpl extends RenderType {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(RenderSystem.getExtendedTextureMatrix()));
+        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(ShaderContext.getInstance().textureMatrix()));
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);

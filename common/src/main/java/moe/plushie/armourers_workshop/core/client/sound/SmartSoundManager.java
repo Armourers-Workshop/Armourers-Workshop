@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractSoundManagerI
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.IdentityHashMap;
@@ -56,7 +56,7 @@ public class SmartSoundManager {
     }
 
     public AbstractSoundManagerImpl getSoundManager() {
-        return (AbstractSoundManagerImpl) Minecraft.getInstance().getSoundManager();
+        return (AbstractSoundManagerImpl) EnvironmentManager.getClient().getSoundManager();
     }
 
     protected void uploadSound(SmartSound sound) {

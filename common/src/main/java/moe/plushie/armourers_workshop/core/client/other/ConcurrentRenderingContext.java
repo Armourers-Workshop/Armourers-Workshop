@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,8 @@ public interface ConcurrentRenderingContext {
 
     IPoseStack poseStack();
 
+    IModelViewStack modelViewStack();
+
     IBufferSource bufferSource();
 
     default IVertexConsumer getBuffer(IRenderType renderType) {
@@ -34,6 +37,4 @@ public interface ConcurrentRenderingContext {
     }
 
     ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin);
-
-    IPoseStack modelViewStack();
 }

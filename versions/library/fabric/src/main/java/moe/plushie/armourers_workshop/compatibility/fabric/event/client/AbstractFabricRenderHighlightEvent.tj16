@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -39,7 +39,7 @@ public class AbstractFabricRenderHighlightEvent {
 
                 @Override
                 public BlockHitResult getTarget() {
-                    var minecraft = Minecraft.getInstance();
+                    var minecraft = EnvironmentManager.getClient();
                     return Objects.safeCast(minecraft.hitResult, BlockHitResult.class);
                 }
             });

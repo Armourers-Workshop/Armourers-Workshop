@@ -4,6 +4,7 @@ import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
@@ -18,11 +19,11 @@ import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +92,7 @@ public final class ExtendedItemRenderer {
 
         tesselator.setPoseStack(poseStack);
         tesselator.setBufferSource(bufferSource);
-        tesselator.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        tesselator.setModelViewStack(AbstractModelViewStack.getInstance());
 
         counter = tesselator.draw();
 
@@ -126,7 +127,7 @@ public final class ExtendedItemRenderer {
         poseStack.scale(newScale, newScale, newScale);
         poseStack.translate(-rect.midX(), -rect.midY(), -rect.midZ()); // to model center
 
-        var rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        var rendererManager = EnvironmentManager.getClient().getEntityRenderDispatcher();
         RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, AbstractPoseStack.unwrap(poseStack), AbstractBufferSource.unwrap(bufferSource), light));
 
         poseStack.popPose();

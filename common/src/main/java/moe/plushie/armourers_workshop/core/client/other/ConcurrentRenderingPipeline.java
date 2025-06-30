@@ -16,17 +16,14 @@ public class ConcurrentRenderingPipeline {
 
     public void add(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
         var pass = Group.POOL.get();
-        var poseStack = context.poseStack();
-        var modelViewStack = context.modelViewStack();
-        var last = pass.poseStack.last();
-        var lastPose = last.pose();
-        var lastNormal = last.normal();
-        lastPose.set(modelViewStack.last().pose());
-        lastPose.multiply(poseStack.last().pose());
-        lastNormal.set(modelViewStack.last().normal());
-        lastNormal.multiply(poseStack.last().normal());
+        var ms = context.modelViewStack();
+        var src = context.poseStack().last();
+        var dest = pass.poseStack.last();
         // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-        last.setProperties(poseStack.last().properties());
+        dest.setProperties(src.properties());
+        dest.pose().set(ms.last());
+        dest.pose().multiply(src.pose());
+        dest.normal().set(src.normal());
         passGroups.add(pass.fill(group, context));
     }
 
@@ -43,6 +40,7 @@ public class ConcurrentRenderingPipeline {
         private static final ObjectPool<Group> POOL = ObjectPool.create(Group::new);
 
         private final OpenPoseStack poseStack = new OpenPoseStack();
+
         private final ArrayList<Pass> pendingQueue = new ArrayList<>();
 
         private int usedCount = 0;

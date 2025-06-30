@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OptimizedExpression;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvent;
@@ -71,7 +71,7 @@ public class AnimationSoundHandler implements OptimizedExpression<Object> {
     }
 
     private SoundManager soundManager() {
-        return Minecraft.getInstance().getSoundManager();
+        return EnvironmentManager.getClient().getSoundManager();
     }
 
     @Override

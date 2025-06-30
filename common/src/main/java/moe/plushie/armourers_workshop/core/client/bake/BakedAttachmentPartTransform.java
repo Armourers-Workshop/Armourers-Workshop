@@ -16,8 +16,8 @@ import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentType;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,7 +140,7 @@ public class BakedAttachmentPartTransform {
 
                 poseStack.pushPose();
                 poseStack.setIdentity();
-                var cameraPos = Minecraft.getInstance().getCameraPosition();
+                var cameraPos = EnvironmentManager.getClient().getCameraPosition();
                 var mat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
                 mat.rotate(OpenVector3f.YP.rotationDegrees(180 - entity.getViewYRot(partialTicks)));
                 mat.scale(-1, -1, 1);

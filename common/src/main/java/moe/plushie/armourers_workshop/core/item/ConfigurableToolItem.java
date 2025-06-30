@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.core.client.gui.ConfigurableToolWindow;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -61,6 +61,6 @@ public abstract class ConfigurableToolItem extends FlavouredItem implements ICon
     @Environment(EnvType.CLIENT)
     public void openContainerGUI(Component title, ArrayList<IConfigurableToolProperty<?>> properties, InteractionHand hand, ItemStack itemStack) {
         var window = new ConfigurableToolWindow(title, properties, itemStack, hand);
-        Minecraft.getInstance().setScreen(window.asScreen());
+        EnvironmentManager.getClient().setScreen(window.asScreen());
     }
 }

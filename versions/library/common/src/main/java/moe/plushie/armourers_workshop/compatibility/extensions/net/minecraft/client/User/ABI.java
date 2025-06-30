@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compatibility.extensions.net.minecraft.cl
 
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.User;
 
 import manifold.ext.rt.api.Extension;
@@ -17,6 +17,6 @@ public class ABI {
     }
 
     public static GameProfile getGameProfile(@This User user) {
-        return Minecraft.getInstance().getGameProfile();
+        return EnvironmentManager.getClient().getGameProfile();
     }
 }

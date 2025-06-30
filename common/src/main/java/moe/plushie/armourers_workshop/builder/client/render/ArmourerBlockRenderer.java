@@ -218,7 +218,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
         // TODO: @SAGESSE replace to new impl.
 //        @Override
 //        protected void finalize() throws Throwable {
-//            Minecraft.getInstance().getTextureManager().release(displayTextureLocation);
+//            EnvironmentManager.getClient().getTextureManager().release(displayTextureLocation);
 //            super.finalize();
 //        }
 

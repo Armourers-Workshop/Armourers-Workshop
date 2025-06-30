@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.entity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenNearPlane;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.CameraType;
@@ -14,10 +15,10 @@ public class CameraEntity extends SeatEntity {
     private float zoom = 0;
 
     private CameraType cameraType;
-    private final Minecraft minecraft = Minecraft.getInstance();
+    private final Minecraft minecraft = EnvironmentManager.getClient();
 
     public CameraEntity() {
-        super(ModEntityTypes.SEAT.get().get(), Minecraft.getInstance().level);
+        super(ModEntityTypes.SEAT.get().get(), EnvironmentManager.getClient().level);
     }
 
     public void connect() {

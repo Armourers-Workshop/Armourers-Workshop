@@ -49,11 +49,6 @@ public abstract class ShaderUniform {
         return name.hashCode();
     }
 
-    public interface Factory<T> {
-
-        ShaderUniform create(String name, int program, int location, Supplier<T> value);
-    }
-
     public static class Int extends ShaderUniform {
 
         private final Supplier<Integer> value;
@@ -149,32 +144,6 @@ public abstract class ShaderUniform {
                 cachedValue.load(buffer);
                 buffer.rewind();
                 GL20.glUniformMatrix3fv(location, false, buffer);
-            }
-        }
-    }
-
-    public static class Loader {
-
-        final int programId;
-        final ArrayList<String> registeredNames = new ArrayList<>();
-        final ArrayList<ShaderUniform> uniforms = new ArrayList<>();
-
-        public Loader(int programId) {
-            this.programId = programId;
-            register("aw_MatrixFlags", RenderSystem::getExtendedMatrixFlags, Int::new);
-            register("aw_OverlayTextureMatrix", RenderSystem::getExtendedOverlayTextureMatrix, Matrix4f::new);
-            register("aw_LightmapTextureMatrix", RenderSystem::getExtendedLightmapTextureMatrix, Matrix4f::new);
-            register("aw_TextureMatrix", RenderSystem::getExtendedTextureMatrix, Matrix4f::new);
-            register("aw_NormalMatrix", RenderSystem::getExtendedNormalMatrix, Matrix3f::new);
-            register("aw_ModelViewMat", RenderSystem::getExtendedModelViewMatrix, Matrix4f::new);
-            register("aw_ColorModulator", RenderSystem::getExtendedColorModulator, Vec4f::new);
-        }
-
-        private <T> void register(String name, Supplier<T> supplier, Factory<T> factory) {
-            int location = GL20.glGetUniformLocation(programId, name);
-            if (location != -1) {
-                uniforms.add(factory.create(name, programId, location, supplier));
-                registeredNames.add(name);
             }
         }
     }

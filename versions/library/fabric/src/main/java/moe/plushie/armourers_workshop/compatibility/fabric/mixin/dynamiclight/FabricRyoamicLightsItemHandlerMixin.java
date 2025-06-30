@@ -15,7 +15,7 @@ import org.thinkingstudio.ryoamiclights.api.item.ItemLightSources;
 @Mixin(ItemLightSources.class)
 public class FabricRyoamicLightsItemHandlerMixin {
 
-    @Inject(method = "getLuminance", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getLuminance", at = @At("HEAD"), cancellable = true, remap = false)
     private static void aw2$getLuminance(ItemStack stack, boolean submergedInWater, CallbackInfoReturnable<Integer> cir) {
         ClientDynamicLightHandler.apply(stack, submergedInWater, cir);
     }

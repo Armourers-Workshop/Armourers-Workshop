@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +43,7 @@ public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
         }
         // find registry access on the client.
         var client = EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> {
-            var connection = Minecraft.getInstance().getConnection();
+            var connection = EnvironmentManager.getClient().getConnection();
             if (connection != null) {
                 return connection.registryAccess();
             }

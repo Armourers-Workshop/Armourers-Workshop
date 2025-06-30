@@ -18,24 +18,25 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class SkinVertexBufferBuilder implements ConcurrentBufferBuilder {
 
-    protected final BakedSkin skin;
     protected final ConcurrentBufferCompiler compiler = new ConcurrentBufferCompiler();
     protected final ConcurrentRenderingPipeline pipeline = new ConcurrentRenderingPipeline();
 
-    public SkinVertexBufferBuilder(BakedSkin skin) {
-        this.skin = skin;
-    }
-
     @Override
     public void addPart(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, ConcurrentRenderingContext context) {
-        // debug the vbo render.
-        if (ModDebugger.vbo) {
+        // debug render without vbo.
+        if (ModDebugger.vbo == 2) {
             drawWithoutVBO(part, skin, scheme, context);
             return;
         }
         draw(part, skin, scheme, false, context);
         if (context.shouldRenderOutline()) {
             draw(part, skin, scheme, true, context);
+        }
+        // debug render with sync vbo.
+        if (ModDebugger.vbo == 1) {
+            var pipeline2 = new SkinVertexBufferSource.Pipeline();
+            pipeline.commit(pipeline2::add);
+            pipeline2.end();
         }
     }
 
@@ -97,13 +98,5 @@ public class SkinVertexBufferBuilder implements ConcurrentBufferBuilder {
                 poseStack.popPose();
             });
         });
-    }
-
-    private void drawWithVBO(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
-        var pipeline1 = new ConcurrentRenderingPipeline();
-        var pipeline2 = new SkinVertexBufferSource.Pipeline();
-        pipeline1.add(group, context);
-        pipeline1.commit(pipeline2::add);
-        pipeline2.end();
     }
 }

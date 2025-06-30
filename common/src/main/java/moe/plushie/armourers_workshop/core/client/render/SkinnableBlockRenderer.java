@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ShapeTesselator;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -65,7 +64,7 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
 
         renderingContext.setPoseStack(poseStack);
         renderingContext.setBufferSource(bufferSource);
-        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        renderingContext.setModelViewStack(AbstractModelViewStack.getInstance());
 
         for (var entry : renderingTasks) {
             var skin = entry.skin();

@@ -10,8 +10,8 @@ import java.util.Stack;
 @SuppressWarnings("unused")
 public class OpenPoseStack implements IPoseStack {
 
-    private Pose entry = new Pose();
-    private Stack<Pose> stack;
+    protected Pose entry = new Pose();
+    protected Stack<Pose> stack;
 
     public OpenPoseStack() {
     }
@@ -99,9 +99,10 @@ public class OpenPoseStack implements IPoseStack {
 
     public static class Pose implements IPoseStack.Pose {
 
-        private final OpenMatrix4f pose;
-        private final OpenMatrix3f normal;
-        private int properties;
+        protected final OpenMatrix4f pose;
+        protected final OpenMatrix3f normal;
+
+        protected int properties;
 
         public Pose() {
             this.pose = OpenMatrix4f.createScaleMatrix(1, 1, 1);

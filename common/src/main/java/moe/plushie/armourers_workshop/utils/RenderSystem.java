@@ -10,9 +10,9 @@ import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
@@ -21,15 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Environment(EnvType.CLIENT)
 public final class RenderSystem extends AbstractRenderSystem {
 
-    private static final AtomicInteger extendedMatrixFlags = new AtomicInteger();
     private static final AtomicInteger extendedScissorFlags = new AtomicInteger();
-
-    private static final Storage<OpenMatrix3f> extendedNormalMatrix = new Storage<>(OpenMatrix3f.createScaleMatrix(1, 1, 1));
-    private static final Storage<OpenMatrix4f> extendedTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<OpenMatrix4f> extendedOverlayTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<OpenMatrix4f> extendedLightmapTextureMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<OpenMatrix4f> extendedModelViewMatrix = new Storage<>(OpenMatrix4f.createScaleMatrix(1, 1, 1));
-    private static final Storage<OpenVector4f> extendedColorModulator = new Storage<>(OpenVector4f.ONE);
 
     private static final FloatBuffer BUFFER = MatrixUtils.createFloatBuffer(3);
 
@@ -42,7 +34,7 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
     public static int getPixelColor(float x, float y) {
-        Window window = Minecraft.getInstance().getWindow();
+        Window window = EnvironmentManager.getClient().getWindow();
         double guiScale = window.getGuiScale();
         int sx = (int) (x * guiScale);
         int sy = (int) ((window.getGuiScaledHeight() - y) * guiScale);
@@ -76,108 +68,11 @@ public final class RenderSystem extends AbstractRenderSystem {
     }
 
 
-    public static OpenVector4f getExtendedColorModulator() {
-        return extendedColorModulator.get();
-    }
-
-    public static void setExtendedColorModulator(OpenVector4f value) {
-        extendedColorModulator.set(value);
-    }
-
-    public static OpenMatrix3f getExtendedNormalMatrix() {
-        return extendedNormalMatrix.get();
-    }
-
-    public static void setExtendedNormalMatrix(OpenMatrix3f value) {
-        extendedNormalMatrix.set(value);
-    }
-
-    public static OpenMatrix4f getExtendedTextureMatrix() {
-        return extendedTextureMatrix.get();
-    }
-
-    public static void setExtendedTextureMatrix(OpenMatrix4f value) {
-        extendedTextureMatrix.set(value);
-    }
-
-    public static OpenMatrix4f getExtendedOverlayTextureMatrix() {
-        return extendedOverlayTextureMatrix.get();
-    }
-
-    public static void setExtendedOverlayTextureMatrix(OpenMatrix4f value) {
-        extendedOverlayTextureMatrix.set(value);
-    }
-
-    public static OpenMatrix4f getExtendedLightmapTextureMatrix() {
-        return extendedLightmapTextureMatrix.get();
-    }
-
-    public static void setExtendedLightmapTextureMatrix(OpenMatrix4f value) {
-        extendedLightmapTextureMatrix.set(value);
-    }
-
-    public static OpenMatrix4f getExtendedModelViewMatrix() {
-        return extendedModelViewMatrix.get();
-    }
-
-    public static void setExtendedModelViewMatrix(OpenMatrix4f value) {
-        extendedModelViewMatrix.set(value);
-    }
-
-    public static void setExtendedMatrixFlags(int options) {
-        extendedMatrixFlags.set(options);
-    }
-
-    public static int getExtendedMatrixFlags() {
-        return extendedMatrixFlags.get();
-    }
-
     public static void setExtendedScissorFlags(int flags) {
         extendedScissorFlags.set(flags);
     }
 
     public static int getExtendedScissorFlags() {
         return extendedScissorFlags.get();
-    }
-
-    public static void backupExtendedMatrix() {
-        extendedTextureMatrix.save();
-        extendedNormalMatrix.save();
-        extendedLightmapTextureMatrix.save();
-        extendedModelViewMatrix.save();
-    }
-
-    public static void restoreExtendedMatrix() {
-        extendedTextureMatrix.load();
-        extendedNormalMatrix.load();
-        extendedLightmapTextureMatrix.load();
-        extendedModelViewMatrix.load();
-    }
-
-    private static class Storage<T> {
-
-        private T value;
-        private T backup;
-
-        public Storage(T value) {
-            this.value = value;
-            this.backup = value;
-        }
-
-        public void save() {
-            backup = value;
-        }
-
-        public void load() {
-            value = backup;
-        }
-
-        public void set(T value) {
-            this.value = value;
-        }
-
-        public T get() {
-            return value;
-        }
     }
 }

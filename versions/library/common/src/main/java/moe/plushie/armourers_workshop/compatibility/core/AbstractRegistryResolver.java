@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -123,7 +122,7 @@ public class AbstractRegistryResolver {
         }
         // find registry access on the client.
         var client = EnvironmentExecutor.callOn(EnvironmentType.CLIENT, () -> () -> {
-            var connection = Minecraft.getInstance().getConnection();
+            var connection = EnvironmentManager.getClient().getConnection();
             if (connection != null) {
                 return connection.registryAccess();
             }

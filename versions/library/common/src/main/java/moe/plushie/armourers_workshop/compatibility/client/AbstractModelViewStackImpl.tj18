@@ -1,0 +1,33 @@
+package moe.plushie.armourers_workshop.compatibility.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+
+@Available("[1.18, 1.21)")
+public class AbstractModelViewStackImpl implements IModelViewStack {
+
+    private final IPoseStack stack = AbstractPoseStack.wrap(RenderSystem.getModelViewStack());
+
+    @Override
+    public void pushMatrix() {
+        stack.pushPose();
+    }
+
+    @Override
+    public void popMatrix() {
+        stack.popPose();
+        apply();
+    }
+
+    public void apply() {
+        RenderSystem.applyModelViewMatrix();
+    }
+
+    @Override
+    public IMatrix4f last() {
+        return stack.last().pose();
+    }
+}

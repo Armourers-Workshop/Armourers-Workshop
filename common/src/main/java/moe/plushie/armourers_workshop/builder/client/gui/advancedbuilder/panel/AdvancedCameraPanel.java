@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.math.OpenAxisAlignedBoundingBox;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.Options;
 
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class AdvancedCameraPanel extends UIView {
 
     public AdvancedCameraPanel(DocumentEditor editor) {
         super(CGRect.ZERO);
-        this.options = Minecraft.getInstance().options;
+        this.options = EnvironmentManager.getClient().options;
         this.blockEntity = editor.blockEntity();
     }
 

@@ -11,12 +11,12 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -66,7 +66,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        this.renderPlayerProfile(context, Minecraft.getInstance().getUser().getGameProfile());
+        this.renderPlayerProfile(context, EnvironmentManager.getClient().getUser().getGameProfile());
     }
 
     public void reloadData() {

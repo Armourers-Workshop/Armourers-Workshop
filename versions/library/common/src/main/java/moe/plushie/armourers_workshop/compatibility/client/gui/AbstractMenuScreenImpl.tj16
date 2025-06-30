@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.uikit.UIView;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -35,13 +35,13 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
 
     public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
         var poseStack = AbstractGraphicsRenderer.of(context);
-        var modelViewStack = RenderSystem.getExtendedModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.translate(0, 0, zLevel);
-        RenderSystem.applyModelViewMatrix();
+        var modelViewStack = AbstractModelViewStack.getInstance();
+        modelViewStack.pushMatrix();
+        modelViewStack.last().translate(0, 0, zLevel);
+        modelViewStack.apply();
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        modelViewStack.popPose();
-        RenderSystem.applyModelViewMatrix();
+        modelViewStack.popMatrix();
+        modelViewStack.apply();
         super.renderTooltip(poseStack, mouseX, mouseY);
     }
 

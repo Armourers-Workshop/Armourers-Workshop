@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compatibility.client.gui;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.math.OpenSize2i;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,5 +30,9 @@ public abstract class AbstractMenuToast implements Toast {
             return Visibility.HIDE;
         }
         return Toast.Visibility.SHOW;
+    }
+
+    public static void showToast(AbstractMenuToast toast) {
+        EnvironmentManager.getClient().getToasts().addToast(toast);
     }
 }

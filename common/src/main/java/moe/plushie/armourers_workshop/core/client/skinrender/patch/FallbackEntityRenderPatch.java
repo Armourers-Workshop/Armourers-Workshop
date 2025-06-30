@@ -2,14 +2,13 @@ package moe.plushie.armourers_workshop.core.client.skinrender.patch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
@@ -65,7 +64,7 @@ public class FallbackEntityRenderPatch<T extends Entity> extends EntityRenderPat
 
         renderingContext.setPoseStack(pluginContext.poseStack());
         renderingContext.setBufferSource(AbstractBufferSource.wrap(bufferSourceIn));
-        renderingContext.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        renderingContext.setModelViewStack(AbstractModelViewStack.getInstance());
 
         // like the SkinWardrobeLayer
         for (var entry : renderData.itemSkins()) {

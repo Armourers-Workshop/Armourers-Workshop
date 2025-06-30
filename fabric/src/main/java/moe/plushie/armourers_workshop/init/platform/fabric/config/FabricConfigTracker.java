@@ -77,7 +77,7 @@ public class FabricConfigTracker {
     }
 
 //    public void receiveSyncedConfig(final FMLHandshakeMessages.S2CConfigData s2CConfigData, final Supplier<NetworkEvent.Context> contextSupplier) {
-//        if (!Minecraft.getInstance().isLocalServer()) {
+//        if (!EnvironmentManager.getClient().isLocalServer()) {
 //            Optional.ofNullable(fileMap.get(s2CConfigData.getFileName())).ifPresent(mc-> {
 //                mc.setConfigData(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(s2CConfigData.getBytes())));
 //                mc.fireEvent(new FabricConfig.Reloading(mc));

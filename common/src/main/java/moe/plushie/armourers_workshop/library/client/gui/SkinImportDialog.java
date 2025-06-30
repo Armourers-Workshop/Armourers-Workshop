@@ -301,7 +301,7 @@
 //        exporter.add(SkinProperty.ALL_CUSTOM_NAME, textName.text());
 //        exporter.add(SkinProperty.ALL_FLAVOUR_TEXT, textDescription.text());
 //
-//        GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
+//        GameProfile origin = EnvironmentManager.getClient().getUser().getGameProfile();
 //        exporter.add(SkinProperty.ALL_AUTHOR_NAME, origin.getName());
 //        if (origin.getId() != null) {
 //            exporter.add(SkinProperty.ALL_AUTHOR_UUID, origin.getId().toString());

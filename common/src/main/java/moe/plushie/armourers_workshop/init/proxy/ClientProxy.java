@@ -54,7 +54,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.MinecraftAuth;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -75,22 +74,22 @@ public class ClientProxy {
         MinecraftAuth.init(new MinecraftAuth.UserProvider() {
             @Override
             public String id() {
-                return Minecraft.getInstance().getUser().getUuid();
+                return EnvironmentManager.getClient().getUser().getUuid();
             }
 
             @Override
             public String name() {
-                return Minecraft.getInstance().getUser().getName();
+                return EnvironmentManager.getClient().getUser().getName();
             }
 
             @Override
             public String accessToken() {
-                return Minecraft.getInstance().getUser().getAccessToken();
+                return EnvironmentManager.getClient().getUser().getAccessToken();
             }
         });
 
         EnvironmentExecutor.willSetup(EnvironmentType.CLIENT, () -> () -> {
-            var resourceManager = Minecraft.getInstance().getResourceManager();
+            var resourceManager = EnvironmentManager.getClient().getResourceManager();
             var packLoader = DataPackManager.byType(DataPackType.CLIENT_RESOURCES);
             ((ReloadableResourceManager) resourceManager).registerReloadListener(packLoader);
         });

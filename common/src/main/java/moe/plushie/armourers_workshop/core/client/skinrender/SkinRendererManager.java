@@ -32,10 +32,10 @@ import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.EntityType;
 
@@ -69,7 +69,7 @@ public class SkinRendererManager {
         }
 
         public static void reload() {
-            var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+            var entityRenderManager = EnvironmentManager.getClient().getEntityRenderDispatcher();
             if (entityRenderManager == null) {
                 // call again later!!!
                 RenderSystem.recordRenderCall(SkinRendererManager::reload);
@@ -88,7 +88,7 @@ public class SkinRendererManager {
             if (resolvedEntityType == null) {
                 return;
             }
-            var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+            var entityRenderManager = EnvironmentManager.getClient().getEntityRenderDispatcher();
             if (entityRenderManager == null) {
                 return;
             }

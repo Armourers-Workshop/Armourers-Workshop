@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.math.OpenModelViewStack;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -44,9 +46,9 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     protected AnimationManager animationManager;
     protected OpenItemDisplayContext displayContext = OpenItemDisplayContext.NONE;
 
+    protected final IModelViewStack modelViewStack = new OpenModelViewStack();
     protected final IPoseStack defaultPoseStack;
     protected IPoseStack poseStack;
-    protected IPoseStack modelViewStack;
 
     public SkinRenderContext() {
         this(new AbstractPoseStack());
@@ -252,6 +254,16 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return poseStack;
     }
 
+    public void setModelViewStack(IModelViewStack modelViewStack) {
+        // froze the model view stack.
+        this.modelViewStack.last().set(modelViewStack.last());
+    }
+
+    @Override
+    public IModelViewStack modelViewStack() {
+        return modelViewStack;
+    }
+
     public void setBufferSource(IBufferSource bufferSource) {
         this.bufferSource = bufferSource;
     }
@@ -259,14 +271,5 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     @Override
     public IBufferSource bufferSource() {
         return bufferSource;
-    }
-
-    public void setModelViewStack(IPoseStack modelViewStack) {
-        this.modelViewStack = modelViewStack;
-    }
-
-    @Override
-    public IPoseStack modelViewStack() {
-        return modelViewStack;
     }
 }

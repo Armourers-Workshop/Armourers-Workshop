@@ -7,7 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class ShaderUniforms {
@@ -65,8 +67,7 @@ public class ShaderUniforms {
         private List<ShaderUniform> changes;
 
         public State(int program) {
-            var loader = new ShaderUniform.Loader(program);
-            this.uniforms = loader.uniforms;
+            this.uniforms = Builder.of(program).built(ShaderContext.getInstance()).build();
         }
 
         public void apply() {
@@ -91,5 +92,47 @@ public class ShaderUniforms {
         public boolean isChanged() {
             return changes != null;
         }
+    }
+
+    private static class Builder {
+
+        final int programId;
+        final ArrayList<ShaderUniform> uniforms = new ArrayList<>();
+
+        private Builder(int programId) {
+            this.programId = programId;
+        }
+
+        public static Builder of(int programId) {
+            return new Builder(programId);
+        }
+
+        public Builder built(ShaderContext context) {
+            add("aw_MatrixFlags", context::matrixFlags, ShaderUniform.Int::new);
+            add("aw_NormalMatrix", context::objectNormalMatrix, ShaderUniform.Matrix3f::new);
+            add("aw_ModelViewMatrix", context::objectViewMatrix, ShaderUniform.Matrix4f::new);
+            add("aw_OverlayTextureMatrix", context::overlayTextureMatrix, ShaderUniform.Matrix4f::new);
+            add("aw_LightmapTextureMatrix", context::lightmapTextureMatrix, ShaderUniform.Matrix4f::new);
+            add("aw_TextureMatrix", context::textureMatrix, ShaderUniform.Matrix4f::new);
+            add("aw_ColorModulator", context::colorModulator, ShaderUniform.Vec4f::new);
+            return this;
+        }
+
+        public <T> Builder add(String name, Supplier<T> supplier, Factory<T> factory) {
+            int location = GL20.glGetUniformLocation(programId, name);
+            if (location != -1) {
+                uniforms.add(factory.create(name, programId, location, supplier));
+            }
+            return this;
+        }
+
+        public ArrayList<ShaderUniform> build() {
+            return uniforms;
+        }
+    }
+
+    private interface Factory<T> {
+
+        ShaderUniform create(String name, int program, int location, Supplier<T> value);
     }
 }

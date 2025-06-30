@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.client;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -26,6 +27,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -46,7 +48,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
@@ -104,7 +105,7 @@ public class ClientWardrobeHandler {
 
         context.setPoseStack(poseStack);
         context.setBufferSource(bufferSource);
-        context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        context.setModelViewStack(AbstractModelViewStack.getInstance());
 
         context.setOutlineColor(0); // no show in head?
 
@@ -249,7 +250,7 @@ public class ClientWardrobeHandler {
 
                     context.setPoseStack(poseStack);
                     context.setBufferSource(bufferSource);
-                    context.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+                    context.setModelViewStack(AbstractModelViewStack.getInstance());
 
                     context.setOutlineColor(outlineColor);
 
@@ -323,7 +324,7 @@ public class ClientWardrobeHandler {
 
         tesselator.setPoseStack(poseStack);
         tesselator.setBufferSource(bufferSource);
-        tesselator.setModelViewStack(AbstractPoseStack.create(RenderSystem.getExtendedModelViewStack()));
+        tesselator.setModelViewStack(AbstractModelViewStack.getInstance());
 
         tesselator.setColorScheme(descriptor.paintScheme());
         tesselator.setItemSource(SkinItemSource.create(800, itemModel.sourceStack(), displayContext, itemModel.properties()));

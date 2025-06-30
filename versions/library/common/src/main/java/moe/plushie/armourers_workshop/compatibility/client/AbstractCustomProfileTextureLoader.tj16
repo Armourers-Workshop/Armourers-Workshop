@@ -5,6 +5,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,7 @@ public class AbstractCustomProfileTextureLoader {
     }
 
     private static void load(GameProfile profile, long endTime, ResultHandler handler) {
-        Minecraft.getInstance().getSkinManager().registerSkins(profile, (type, location, profileTexture) -> {
+        EnvironmentManager.getClient().getSkinManager().registerSkins(profile, (type, location, profileTexture) -> {
             // the callback maybe call three times: skin/cape/elytra.
             if (type != MinecraftProfileTexture.Type.SKIN) {
                 return; // ignore all except file of the skin

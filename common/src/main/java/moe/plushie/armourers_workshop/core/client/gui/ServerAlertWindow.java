@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.NotificationDialog;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     public void showInScreen() {
-        var minecraft = Minecraft.getInstance();
+        var minecraft = EnvironmentManager.getClient();
         var screen = new WrappedScreen(this, alertPacket.title());
         screen.setTarget(minecraft.screen);
         // we must the screen before set, otherwise it will cause the previous screen to close.
@@ -49,7 +50,7 @@ public class ServerAlertWindow extends MenuWindow<AbstractContainerMenu> {
     }
 
     public void dismiss() {
-        var minecraft = Minecraft.getInstance();
+        var minecraft = EnvironmentManager.getClient();
         if (minecraft.screen instanceof WrappedScreen screen) {
             // we need to switch back to the original screen again.
             minecraft.setScreen(screen.target());

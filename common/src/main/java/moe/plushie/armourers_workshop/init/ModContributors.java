@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 
@@ -83,7 +82,7 @@ public class ModContributors {
         if (EnvironmentManager.isDevelopment()) {
             return dev;
         }
-        return of(Minecraft.getInstance().getUser().getGameProfile());
+        return of(EnvironmentManager.getClient().getUser().getGameProfile());
     }
 
     public enum ContributionFlags {

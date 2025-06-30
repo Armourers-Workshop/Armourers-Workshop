@@ -1,6 +1,7 @@
 package com.apple.library.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyboardHandler;
@@ -24,11 +25,11 @@ public class InputManagerImpl {
     }
 
     public static boolean hasSprintDown() {
-        return Minecraft.getInstance().options.keySprint.isDown();
+        return EnvironmentManager.getClient().options.keySprint.isDown();
     }
 
     public static boolean hasSneakDown() {
-        return Minecraft.getInstance().options.keyShift.isDown();
+        return EnvironmentManager.getClient().options.keyShift.isDown();
     }
 
     public static boolean hasSpaceDown() {
@@ -36,7 +37,7 @@ public class InputManagerImpl {
     }
 
     public static boolean isKeyDown(int key) {
-        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), key);
+        return InputConstants.isKeyDown(EnvironmentManager.getClient().getWindow().getWindow(), key);
     }
 
     public static boolean isCut(int i) {
@@ -92,6 +93,6 @@ public class InputManagerImpl {
     }
 
     private static KeyboardHandler keyboardHandler() {
-        return Minecraft.getInstance().keyboardHandler;
+        return EnvironmentManager.getClient().keyboardHandler;
     }
 }

@@ -31,10 +31,10 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -340,7 +340,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
         public void layerDidDraw(CGGraphicsContext context) {
             super.layerDidDraw(context);
             // the table view will enable clip, so we need to submit all the data immediately.
-            Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
+            EnvironmentManager.getClient().renderBuffers().bufferSource().endBatch();
         }
     }
 

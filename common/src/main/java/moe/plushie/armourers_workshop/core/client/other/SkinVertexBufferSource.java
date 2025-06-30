@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractShader;
 import moe.plushie.armourers_workshop.core.client.bake.BakedRenderInfo;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import net.fabricmc.api.EnvType;
@@ -66,7 +67,7 @@ public class SkinVertexBufferSource implements IBufferSource {
         if (buffer != null) {
             return buffer;
         }
-        buffer = bufferBuilders.computeIfAbsent(renderType, k -> new AbstractBufferBuilder(k.bufferSize()));
+        buffer = bufferBuilders.computeIfAbsent(renderType, it -> new AbstractBufferBuilder(it.bufferSize()));
         buffer.begin(renderType);
         startedBufferBuilders.put(renderType, buffer);
         return buffer;
@@ -77,7 +78,7 @@ public class SkinVertexBufferSource implements IBufferSource {
         if (bufferBuilder != null) {
             return bufferBuilder;
         }
-        bufferBuilder = skinBufferBuilders.computeIfAbsent(skin, SkinVertexBufferBuilder::new);
+        bufferBuilder = skinBufferBuilders.computeIfAbsent(skin, it -> new SkinVertexBufferBuilder());
         startedSkinBufferBuilders.put(skin, bufferBuilder);
         return bufferBuilder;
     }
@@ -132,7 +133,7 @@ public class SkinVertexBufferSource implements IBufferSource {
 
     public static class Pipeline {
 
-        private final AbstractShader shader = new AbstractShader();
+        private final Shader shader = new AbstractShader();
         private final ShaderVertexMerger merger = new ShaderVertexMerger();
 
         public void add(ShaderVertexObject pass) {

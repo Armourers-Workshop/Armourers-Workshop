@@ -43,7 +43,7 @@ public class ShaderPreprocessor {
         builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
         builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMat", "vec3($2 * vec4($1, 1))");
+        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
         return build("iris", builder);
     }
 
@@ -53,7 +53,7 @@ public class ShaderPreprocessor {
         builder.attribute("aw_UV2", "ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.attribute("aw_Color", "vec4", "vaColor", "vec4", "aw_ColorModulator", "($2 * $1)");
         builder.attribute("aw_Normal", "vec3", "vaNormal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "vaPosition", "mat4", "aw_ModelViewMat", "vec3($2 * vec4($1, 1))");
+        builder.attribute("aw_Position", "vec3", "vaPosition", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
         return build("optifine", builder);
     }
 
@@ -63,7 +63,7 @@ public class ShaderPreprocessor {
 //        builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
 //        builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
 //        builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-//        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMat", "vec3($2 * vec4($1, 1))");
+//        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
         return build("canvas", builder);
     }
 
@@ -73,7 +73,7 @@ public class ShaderPreprocessor {
         builder.attribute("aw_UV2", "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
         builder.attribute("aw_Color", "vec4", "Color", "vec4", "aw_ColorModulator", "($2 * $1)");
         builder.attribute("aw_Normal", "vec3", "Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "Position", "mat4", "aw_ModelViewMat", "vec3($2 * vec4($1, 1))");
+        builder.attribute("aw_Position", "vec3", "Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
         return build("vanilla", builder);
     }
 

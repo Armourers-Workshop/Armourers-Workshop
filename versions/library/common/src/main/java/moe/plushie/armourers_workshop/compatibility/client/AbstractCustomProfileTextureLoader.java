@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 
 @Available("[1.21, )")
 @Environment(EnvType.CLIENT)
@@ -18,7 +18,7 @@ public class AbstractCustomProfileTextureLoader {
     }
 
     private static void load(GameProfile profile, long endTime, ResultHandler handler) {
-        Minecraft.getInstance().getSkinManager().getOrLoad(profile).thenAcceptAsync(skin -> {
+        EnvironmentManager.getClient().getSkinManager().getOrLoad(profile).thenAcceptAsync(skin -> {
             // in some cases will get a placeholder result (url is null),
             // this means the game profile still loading phase,
             // we need to try again in the request valid time.

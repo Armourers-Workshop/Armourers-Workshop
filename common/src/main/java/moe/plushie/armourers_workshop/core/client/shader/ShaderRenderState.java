@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.core.client.other;
+package moe.plushie.armourers_workshop.core.client.shader;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-public class SkinRenderState {
+public class ShaderRenderState {
 
     private int vao = 0;
     private int vbo = 0;

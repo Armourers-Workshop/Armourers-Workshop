@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "dev.lambdaurora.lambdynlights.resource.item.ItemLightSources")
 public class FabricLambDynamicLightsItemHandlerMixin {
 
-    @Inject(method = "getLuminance", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getLuminance", at = @At("HEAD"), cancellable = true, remap = false)
     private void aw2$getLuminance(ItemStack stack, boolean submergedInWater, CallbackInfoReturnable<Integer> cir) {
         ClientDynamicLightHandler.apply(stack, submergedInWater, cir);
     }

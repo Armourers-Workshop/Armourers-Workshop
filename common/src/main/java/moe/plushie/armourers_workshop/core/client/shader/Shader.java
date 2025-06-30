@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
@@ -9,7 +8,6 @@ import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,41 +17,45 @@ import org.lwjgl.opengl.GL15;
 @Environment(EnvType.CLIENT)
 public abstract class Shader {
 
-    private final Int2ObjectOpenHashMap<OpenMatrix4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
-    private final Int2ObjectOpenHashMap<OpenMatrix4f> lightmapMatrices = new Int2ObjectOpenHashMap<>();
-    private final Int2ObjectOpenHashMap<OpenVector4f> outlineColors = new Int2ObjectOpenHashMap<>();
-    private final SkinRenderState renderState = new SkinRenderState();
+    protected final Int2ObjectOpenHashMap<OpenMatrix4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
+    protected final Int2ObjectOpenHashMap<OpenMatrix4f> lightmapMatrices = new Int2ObjectOpenHashMap<>();
+    protected final Int2ObjectOpenHashMap<OpenVector4f> outlineColors = new Int2ObjectOpenHashMap<>();
+
+    protected final ShaderContext context = ShaderContext.getInstance();
+    protected final ShaderRenderState renderState = new ShaderRenderState();
 
     public void begin() {
-        RenderSystem.backupExtendedMatrix();
-        RenderSystem.setExtendedMatrixFlags(0x01);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        context.saveState();
+        context.setModelViewMatrix(OpenMatrix4f.identity());
+        context.setMatrixFlags(0x01);
+        context.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         ShaderUniforms.begin();
 
         if (ModDebugger.wireframeRender) {
-            RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            context.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         }
     }
 
     public void end() {
         if (ModDebugger.wireframeRender) {
-            RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            context.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         }
 
         ShaderUniforms.end();
-        RenderSystem.setExtendedMatrixFlags(0x00);
-        RenderSystem.restoreExtendedMatrix();
+
+        context.setMatrixFlags(0x00);
+        context.restoreState();
     }
 
     protected void prepare(ShaderVertexGroup group) {
         renderState.save();
         // apply changes of texture animation.
-        RenderSystem.setExtendedTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
-        RenderSystem.enablePolygonOffset();
+        context.setTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
+        context.enablePolygonOffset();
     }
 
     protected void clean(ShaderVertexGroup group) {
-        RenderSystem.disablePolygonOffset();
+        context.disablePolygonOffset();
         VertexArrayObject.unbind();
         renderState.load();
     }
@@ -69,18 +71,18 @@ public abstract class Shader {
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
-        RenderSystem.setExtendedOverlayTextureMatrix(getOverlayTextureMatrix(object));
-        RenderSystem.setExtendedLightmapTextureMatrix(getLightmapTextureMatrix(object));
-        RenderSystem.setExtendedColorModulator(getColorColorModulator(object));
-        RenderSystem.setExtendedMatrixFlags(entry.properties() | 0x01);
-        RenderSystem.setExtendedNormalMatrix(entry.normal());
-        RenderSystem.setExtendedModelViewMatrix(entry.pose());
+        context.setObjectViewMatrix(entry.pose());
+        context.setObjectNormalMatrix(entry.normal());
+        context.setOverlayTextureMatrix(getOverlayTextureMatrix(object));
+        context.setLightmapTextureMatrix(getLightmapTextureMatrix(object));
+        context.setColorModulator(getColorColorModulator(object));
+        context.setMatrixFlags(entry.properties() | 0x01);
 
         // https://web.archive.org/web/20201010072314/https://sites.google.com/site/threejstuts/home/polygon_offset
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
         // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
         // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
-        RenderSystem.polygonOffset(0.0f, -50.0f + object.polygonOffset() * -1f);
+        context.polygonOffset(0.0f, -50.0f + object.polygonOffset() * -1f);
 
         // yes, we need update the uniform every render call.
         // maybe need query uniform from current shader.

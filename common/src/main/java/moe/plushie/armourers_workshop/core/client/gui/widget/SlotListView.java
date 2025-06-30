@@ -7,9 +7,9 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -95,7 +95,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
             super(menu, inventory, component);
             this.inventory = inventory;
             // yep, we need init it.
-            this.init(Minecraft.getInstance(), 640, 480);
+            this.init(EnvironmentManager.getClient(), 640, 480);
         }
 
         @Override
@@ -105,7 +105,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
 
         public void setup(CGRect rect, CGRect bounds) {
             setContentSize(new CGSize(rect.width, rect.height));
-            resize(Minecraft.getInstance(), (int) bounds.width, (int) bounds.height);
+            resize(EnvironmentManager.getClient(), (int) bounds.width, (int) bounds.height);
             setContentOffset(new CGPoint(rect.x, rect.y));
         }
 

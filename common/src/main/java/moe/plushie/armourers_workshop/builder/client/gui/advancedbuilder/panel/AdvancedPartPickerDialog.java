@@ -42,7 +42,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.panel;
 //
 //    private ArrayList<PartItem> loadInventoryContents() {
 //        ArrayList<PartItem> allSkins = new ArrayList<>();
-//        Player player = Minecraft.getInstance().player;
+//        Player player = EnvironmentManager.getClient().player;
 //        if (player == null) {
 //            return allSkins;
 //        }

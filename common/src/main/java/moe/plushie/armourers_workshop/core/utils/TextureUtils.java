@@ -7,9 +7,9 @@ import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public final class TextureUtils {
 
     public static IResourceLocation registerTexture(String key, DynamicTexture texture) {
-        var location = Minecraft.getInstance().getTextureManager().register(key, texture);
+        var location = EnvironmentManager.getClient().getTextureManager().register(key, texture);
         return OpenResourceLocation.create(location);
     }
 
@@ -36,7 +36,7 @@ public final class TextureUtils {
         if (bakedTexture != null && bakedTexture.isDownloaded()) {
             return bakedTexture.location();
         }
-//        ClientPlayer player = Minecraft.getInstance().player;
+//        ClientPlayer player = EnvironmentManager.getClient().player;
 //        if (player != null) {
 //            return player.getSkinTextureLocation();
 //        }

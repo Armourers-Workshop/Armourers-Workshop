@@ -67,13 +67,18 @@ public class EnvironmentManager {
     }
 
     @Environment(EnvType.CLIENT)
+    public static Minecraft getClient() {
+        return Minecraft.getInstance();
+    }
+
+    @Environment(EnvType.CLIENT)
     public static Player getPlayer() {
-        return Minecraft.getInstance().player;
+        return getClient().player;
     }
 
     @Environment(EnvType.CLIENT)
     public static IResourceManager getResourceManager() {
-        return Minecraft.getInstance().getResourceManager().asResourceManager();
+        return getClient().getResourceManager().asResourceManager();
     }
 
     public static boolean isDedicatedServer() {

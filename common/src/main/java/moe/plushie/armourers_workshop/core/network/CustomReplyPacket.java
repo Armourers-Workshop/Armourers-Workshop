@@ -113,7 +113,7 @@ public class CustomReplyPacket<R> extends CustomPacket {
             }
         }
 
-        public static <R> void await(CustomReplyPacket<R> packet, IResultHandler<R> handler) {
+        public static <R> void listen(CustomReplyPacket<R> packet, IResultHandler<R> handler) {
             int id = packet.id;
             int timeout = 30;
             REQUESTS.put(id, new Request<>(packet, handler));

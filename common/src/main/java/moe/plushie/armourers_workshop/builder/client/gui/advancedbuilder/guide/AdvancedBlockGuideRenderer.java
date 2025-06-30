@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.block.Blocks;
@@ -21,7 +21,7 @@ public class AdvancedBlockGuideRenderer extends AdvancedAbstractGuideRenderer {
 
     public AdvancedBlockGuideRenderer() {
         this.blockState = Blocks.GRASS_BLOCK.defaultBlockState();
-        this.blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        this.blockRenderer = EnvironmentManager.getClient().getBlockRenderer();
     }
 
     @Override

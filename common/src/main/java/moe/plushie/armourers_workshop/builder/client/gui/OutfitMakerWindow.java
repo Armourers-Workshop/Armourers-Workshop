@@ -12,11 +12,11 @@ import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -62,7 +62,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         if (!menu.shouldCrafting()) {
             return;
         }
-        var origin = Minecraft.getInstance().getUser().getGameProfile();
+        var origin = EnvironmentManager.getClient().getUser().getGameProfile();
         var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
         NetworkManager.sendToServer(UpdateOutfitMakerPacket.Field.ITEM_CRAFTING.buildPacket(blockEntity, nbt));
     }

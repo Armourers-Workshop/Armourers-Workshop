@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItem
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
@@ -28,7 +28,7 @@ public class MannequinItemRenderer extends AbstractItemStackRenderer {
         if (itemStack.isEmpty()) {
             return;
         }
-        var bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
+        var bakedModel = EnvironmentManager.getClient().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         var transform = bakedModel.getTransform(itemDisplayContext);
 
         poseStack.pushPose();

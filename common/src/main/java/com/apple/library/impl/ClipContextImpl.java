@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
@@ -102,7 +102,7 @@ public class ClipContextImpl {
     public static class ScissorRenderer {
 
         private CGRect clipBox;
-        private final Window window = Minecraft.getInstance().getWindow();
+        private final Window window = EnvironmentManager.getClient().getWindow();
 
         public void render(@Nullable CGRect rect) {
             if (Objects.equal(clipBox, rect)) {
@@ -124,7 +124,7 @@ public class ClipContextImpl {
 
     public static class OffscreenRenderer {
 
-        private final Window window = Minecraft.getInstance().getWindow();
+        private final Window window = EnvironmentManager.getClient().getWindow();
         private final Stack<Buffer> allBuffers = new Stack<>();
         private final Stack<Buffer> reusableBuffers = new Stack<>();
         private final Stack<Group> allGroups = new Stack<>();
