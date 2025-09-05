@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import yesman.epicfight.client.renderer.patched.item.RenderShield;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-@Available("[1.20, 1.21)")
+@Available("[1.20, 1.22)")
 @Pseudo
 @Mixin(RenderShield.class)
 public abstract class ForgeEpicFightShieldRendererMixin {
