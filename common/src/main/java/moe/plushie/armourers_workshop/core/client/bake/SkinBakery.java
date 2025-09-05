@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiFunction;
@@ -41,6 +42,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             .transformCount(ModConfig.Client.modelBakingThreadCount)
             .loader(this::loadSkin0)
             .transformer(this::bakeSkin0)
+            .cleaner(Duration.ofSeconds(30), this::invalidateSkin0)
             .build();
 
     public SkinBakery() {

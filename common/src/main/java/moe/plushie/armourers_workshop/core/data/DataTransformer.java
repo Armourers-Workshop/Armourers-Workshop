@@ -7,24 +7,28 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DataTransformer<K, V, T> {
 
     private final ExecutorService mainThread;
     private final ExecutorService transformThread;
+    private final ExecutorService cleanThread;
 
     private final LoadHandler<K, T> loader;
     private final TransformHandler<K, T, V> transformer;
 
-    private final Validator validator = new Validator();
+    private final Validator<K> validator = new Validator<>();
 
     private final LinkedList<Entry> loadQueue = new LinkedList<>();
     private final LinkedList<Entry> transformQueue = new LinkedList<>();
@@ -36,9 +40,10 @@ public class DataTransformer<K, V, T> {
     private final int maxLoadCount;
     private final int maxTransformCount;
 
-    public DataTransformer(ThreadFactory config, LoadHandler<K, T> loader, TransformHandler<K, T, V> transformer, int maxLoadCount, int maxTransformCount) {
+    protected DataTransformer(ThreadFactory config, LoadHandler<K, T> loader, TransformHandler<K, T, V> transformer, CleanHandler<K> cleaner, int maxLoadCount, int maxTransformCount) {
         this.mainThread = Executors.newFixedThreadPool(1, config);
         this.transformThread = Executors.newFixedThreadPool(maxTransformCount, config);
+        this.cleanThread = createCleanThread(cleaner);
         this.loader = loader;
         this.transformer = transformer;
         this.maxLoadCount = maxLoadCount;
@@ -96,6 +101,9 @@ public class DataTransformer<K, V, T> {
     public void shutdown() {
         mainThread.shutdown();
         transformThread.shutdown();
+        if (cleanThread != null) {
+            cleanThread.shutdown();
+        }
         clear();
     }
 
@@ -149,6 +157,20 @@ public class DataTransformer<K, V, T> {
         }
     }
 
+    private void doCleanIfNeeded(Duration duration, Consumer<K> handler) {
+        var startTime = System.currentTimeMillis() - duration.toMillis();
+        var cleanQueue = new LinkedList<Entry>();
+        allEntries.forEach((key, entry) -> {
+            if (entry.lastAccessTime < startTime) {
+                cleanQueue.add(entry);
+            }
+        });
+        cleanQueue.forEach(it -> {
+            allEntries.remove(it.key);
+            handler.accept(it.key);
+        });
+    }
+
     private void load(Entry entry) {
         loading.incrementAndGet();
         loader.accept(entry.key, (result, exception) -> mainThread.execute(() -> {
@@ -174,15 +196,20 @@ public class DataTransformer<K, V, T> {
 
     private void abort(Entry entry) {
         entry.abort();
-        allEntries.remove(entry.key);
     }
 
     private Entry getEntry(K key) {
-        return allEntries.get(key);
+        var entry = allEntries.get(key);
+        if (entry != null) {
+            entry.touch();
+        }
+        return entry;
     }
 
     private Entry getEntryAndCreate(K key) {
-        return allEntries.computeIfAbsent(key, Entry::new);
+        var entry = allEntries.computeIfAbsent(key, Entry::new);
+        entry.touch();
+        return entry;
     }
 
     @Nullable
@@ -200,6 +227,19 @@ public class DataTransformer<K, V, T> {
         return lastEntry;
     }
 
+    private ExecutorService createCleanThread(CleanHandler<K> cleanHandler) {
+        // we need use the cleaner?
+        if (cleanHandler == null) {
+            return null;
+        }
+        // check the queue pre 5 seconds.
+        var thread = Executors.newSingleThreadScheduledExecutor();
+        var duration = cleanHandler.duration;
+        var handler = cleanHandler.handler;
+        thread.scheduleAtFixedRate(() -> doCleanIfNeeded(duration, handler), 0, 5, TimeUnit.SECONDS);
+        return thread;
+    }
+
     protected class Entry {
 
         private final K key;
@@ -210,6 +250,7 @@ public class DataTransformer<K, V, T> {
         private Pair<V, Exception> transformedData;
 
         private float priority = 0;
+        private long lastAccessTime = 0;
 
         private boolean isLoading = false;
         private boolean isTransforming = false;
@@ -222,6 +263,10 @@ public class DataTransformer<K, V, T> {
             if (this.priority < priority) {
                 this.priority = priority;
             }
+        }
+
+        public void touch() {
+            lastAccessTime = System.currentTimeMillis();
         }
 
         public void listen(IResultHandler<V> callback) {
@@ -278,7 +323,7 @@ public class DataTransformer<K, V, T> {
         }
     }
 
-    public class Validator implements Predicate<K> {
+    protected static class Validator<K> implements Predicate<K> {
 
         private final LinkedList<WeakReference<Ticket>> tickets = new LinkedList<>();
 
@@ -324,6 +369,7 @@ public class DataTransformer<K, V, T> {
 
         private LoadHandler<K, T> loader;
         private TransformHandler<K, T, V> transformer;
+        private CleanHandler<K> cleaner;
 
         public Builder<K, V, T> thread(String name, int newPriority) {
             this.configure = r -> {
@@ -354,8 +400,13 @@ public class DataTransformer<K, V, T> {
             return this;
         }
 
+        public Builder<K, V, T> cleaner(Duration duration, Consumer<K> handler) {
+            this.cleaner = new CleanHandler<>(duration, handler);
+            return this;
+        }
+
         public DataTransformer<K, V, T> build() {
-            return new DataTransformer<>(configure, loader, transformer, maxLoadCount, maxTransformCount);
+            return new DataTransformer<>(configure, loader, transformer, cleaner, maxLoadCount, maxTransformCount);
         }
     }
 
@@ -368,5 +419,16 @@ public class DataTransformer<K, V, T> {
 
         void accept(T1 t1, T2 t2, IResultHandler<T3> t3);
 
+    }
+
+    protected static class CleanHandler<K> {
+
+        private final Duration duration;
+        private final Consumer<K> handler;
+
+        public CleanHandler(Duration duration, Consumer<K> handler) {
+            this.duration = duration;
+            this.handler = handler;
+        }
     }
 }
