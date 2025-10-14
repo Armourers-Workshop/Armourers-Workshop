@@ -6,29 +6,27 @@ import moe.plushie.armourers_workshop.core.utils.Executors;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.WeakReference;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class DataTransformer<K, V, T> {
 
     private final ExecutorService mainThread;
     private final ExecutorService transformThread;
-    private final ExecutorService cleanThread;
+    private final Optional<ExecutorService> cleanThread;
 
     private final LoadHandler<K, T> loader;
     private final TransformHandler<K, T, V> transformer;
-
-    private final Validator<K> validator = new Validator<>();
 
     private final LinkedList<Entry> loadQueue = new LinkedList<>();
     private final LinkedList<Entry> transformQueue = new LinkedList<>();
@@ -64,22 +62,24 @@ public class DataTransformer<K, V, T> {
     }
 
     @Nullable
-    public Pair<V, Exception> getOrLoad(K key, Ticket ticket) {
-        var entry = getEntryAndCreate(key);
+    public Pair<V, Exception> getOrLoad(Ticket<K> ticket) {
+        var entry = getEntryAndCreate(ticket.get());
         if (!entry.isCompleted()) {
-            load(key, ticket, null);
+            load(ticket, null);
+        } else {
+            entry.updateTicket(ticket);
         }
         return entry.transformedData;
     }
 
-    public void load(K key, Ticket ticket, IResultHandler<V> resultHandler) {
-        var entry = getEntryAndCreate(key);
-        validator.update(key, ticket);
+    public void load(Ticket<K> ticket, IResultHandler<V> resultHandler) {
+        var entry = getEntryAndCreate(ticket.get());
+        entry.updateTicket(ticket);
         entry.listen(resultHandler);
         if (entry.isCompleted()) {
             return;
         }
-        entry.elevate(ticket.priority(key));
+        entry.elevate(ticket.priority());
         mainThread.execute(() -> {
             // check and add enqueue;
             if (!entry.isLoading) {
@@ -101,9 +101,7 @@ public class DataTransformer<K, V, T> {
     public void shutdown() {
         mainThread.shutdown();
         transformThread.shutdown();
-        if (cleanThread != null) {
-            cleanThread.shutdown();
-        }
+        cleanThread.ifPresent(ExecutorService::shutdown);
         clear();
     }
 
@@ -125,7 +123,7 @@ public class DataTransformer<K, V, T> {
             if (entry.isCompleted()) {
                 continue;
             }
-            if (!validator.test(entry.key)) {
+            if (!entry.checkTicket()) {
                 abort(entry);
                 continue;
             }
@@ -148,7 +146,7 @@ public class DataTransformer<K, V, T> {
                 continue;
             }
             T value = entry.getLoadedValue();
-            if (value == null || !validator.test(entry.key)) {
+            if (value == null || !entry.checkTicket()) {
                 abort(entry);
                 continue;
             }
@@ -159,15 +157,19 @@ public class DataTransformer<K, V, T> {
 
     private void doCleanIfNeeded(Duration duration, Consumer<K> handler) {
         var startTime = System.currentTimeMillis() - duration.toMillis();
-        var cleanQueue = new LinkedList<Entry>();
+        var cleanQueue = new LinkedList<K>();
         allEntries.forEach((key, entry) -> {
-            if (entry.lastAccessTime < startTime) {
-                cleanQueue.add(entry);
+            if (entry.expiredTime < 0) {
+                if (!entry.checkTicket()) {
+                    entry.expiredTime = System.currentTimeMillis();
+                }
+            } else if (entry.expiredTime < startTime) {
+                cleanQueue.add(entry.key);
             }
         });
         cleanQueue.forEach(it -> {
-            allEntries.remove(it.key);
-            handler.accept(it.key);
+            allEntries.remove(it);
+            handler.accept(it);
         });
     }
 
@@ -199,17 +201,11 @@ public class DataTransformer<K, V, T> {
     }
 
     private Entry getEntry(K key) {
-        var entry = allEntries.get(key);
-        if (entry != null) {
-            entry.touch();
-        }
-        return entry;
+        return allEntries.get(key);
     }
 
     private Entry getEntryAndCreate(K key) {
-        var entry = allEntries.computeIfAbsent(key, Entry::new);
-        entry.touch();
-        return entry;
+        return allEntries.computeIfAbsent(key, Entry::new);
     }
 
     @Nullable
@@ -227,22 +223,23 @@ public class DataTransformer<K, V, T> {
         return lastEntry;
     }
 
-    private ExecutorService createCleanThread(CleanHandler<K> cleanHandler) {
+    private Optional<ExecutorService> createCleanThread(CleanHandler<K> cleanHandler) {
         // we need use the cleaner?
         if (cleanHandler == null) {
-            return null;
+            return Optional.empty();
         }
-        // check the queue pre 5 seconds.
-        var thread = Executors.newSingleThreadScheduledExecutor();
+        var scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         var duration = cleanHandler.duration;
         var handler = cleanHandler.handler;
-        thread.scheduleAtFixedRate(() -> doCleanIfNeeded(duration, handler), 0, 5, TimeUnit.SECONDS);
-        return thread;
+        var processRate = Math.max(duration.toMillis() / 2, 500);
+        scheduledExecutor.scheduleAtFixedRate(() -> doCleanIfNeeded(duration, handler), 0, processRate, TimeUnit.MILLISECONDS);
+        return Optional.of(scheduledExecutor);
     }
 
     protected class Entry {
 
         private final K key;
+        private final HashSet<Ticket<K>> tickets;
 
         private ArrayList<IResultHandler<V>> callbacks;
 
@@ -250,23 +247,30 @@ public class DataTransformer<K, V, T> {
         private Pair<V, Exception> transformedData;
 
         private float priority = 0;
-        private long lastAccessTime = 0;
+        private long expiredTime = 0;
 
         private boolean isLoading = false;
         private boolean isTransforming = false;
 
         Entry(K key) {
             this.key = key;
+            this.tickets = new HashSet<>();
+        }
+
+        public synchronized void updateTicket(Ticket<K> ticket) {
+            expiredTime = -1; // mark it never expires
+            tickets.add(ticket);
+        }
+
+        public synchronized boolean checkTicket() {
+            tickets.removeIf(Ticket::invalid);
+            return !tickets.isEmpty();
         }
 
         public void elevate(float priority) {
             if (this.priority < priority) {
                 this.priority = priority;
             }
-        }
-
-        public void touch() {
-            lastAccessTime = System.currentTimeMillis();
         }
 
         public void listen(IResultHandler<V> callback) {
@@ -320,43 +324,6 @@ public class DataTransformer<K, V, T> {
 
         public boolean isCompleted() {
             return transformedData != null;
-        }
-    }
-
-    protected static class Validator<K> implements Predicate<K> {
-
-        private final LinkedList<WeakReference<Ticket>> tickets = new LinkedList<>();
-
-        @Override
-        public synchronized boolean test(K key) {
-            for (var ticket : tickets) {
-                var oldTicket = ticket.get();
-                if (oldTicket != null) {
-                    if (oldTicket.contains(key)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public synchronized void update(K key, Ticket ticket) {
-            ticket.add(key);
-            addTicket(ticket);
-        }
-
-        private void addTicket(Ticket ticket) {
-            var iterator = tickets.iterator();
-            while (iterator.hasNext()) {
-                var oldTicket = iterator.next().get();
-                if (oldTicket == ticket) {
-                    return; // yep, we found the old ticket.
-                }
-                if (oldTicket == null) {
-                    iterator.remove();
-                }
-            }
-            tickets.add(new WeakReference<>(ticket));
         }
     }
 

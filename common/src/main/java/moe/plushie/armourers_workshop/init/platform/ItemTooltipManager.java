@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
@@ -56,7 +56,7 @@ public class ItemTooltipManager {
             }
             return tooltip;
         }
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TOOLTIP.get(descriptor));
         if (bakedSkin == null) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skindownloading", descriptor.identifier()));
             return tooltip;
@@ -186,7 +186,7 @@ public class ItemTooltipManager {
         if (!options.contains(SkinDescriptor.TooltipFlags.PREVIEW)) {
             return;
         }
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.TOOLTIP);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TOOLTIP.get(descriptor));
         if (bakedSkin == null) {
             return;
         }

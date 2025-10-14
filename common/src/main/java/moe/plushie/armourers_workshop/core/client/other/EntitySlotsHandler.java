@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
@@ -32,7 +32,6 @@ import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -63,12 +62,11 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     private final HashMap<SkinDescriptor, BakedSkin> activeSkins = new HashMap<>();
     private final HashMap<SkinDescriptor, BakedSkin> animatedSkins = new HashMap<>();
 
-
-    private final Ticket loadTicket = Ticket.wardrobe();
     private final AnimationManager animationManager;
     private final SkinOverriddenManager<T> overriddenManager;
     private final SkinLuminanceManager<T> luminanceManager;
 
+    private final TicketHolder tickets = new TicketHolder("EntitySlotsHandler");
     private final DataContainer dataStorage = new DataContainer();
     private final SkinAttachmentContainer attachmentStorage = new SkinAttachmentContainer();
 
@@ -141,7 +139,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         animatedSkins.clear();
         overriddenManager.clear();
 
-        loadTicket.invalidate();
+        tickets.invalidate();
     }
 
     private void loadSkin(ItemStack itemStack, float renderPriority, EntitySlot.Type slotType) {
@@ -149,7 +147,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         if (descriptor.isEmpty()) {
             return;
         }
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(descriptor));
         if (bakedSkin == null) {
             missingSkins.add(descriptor.identifier());
             return;

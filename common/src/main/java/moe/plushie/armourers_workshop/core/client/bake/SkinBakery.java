@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTransform;
@@ -101,27 +100,19 @@ public final class SkinBakery implements ISkinLibraryListener {
     }
 
     @Nullable
-    public BakedSkin loadSkin(String identifier, Ticket ticket) {
-        if (identifier.isEmpty()) {
+    public BakedSkin loadSkin(Ticket<String> ticket) {
+        if (ticket.get().isEmpty()) {
             return null;
         }
-        var pair = manager.getOrLoad(identifier, ticket);
+        var pair = manager.getOrLoad(ticket);
         if (pair != null) {
             return pair.getKey();
         }
         return null;
     }
 
-    @Nullable
-    public BakedSkin loadSkin(SkinDescriptor descriptor, Ticket ticket) {
-        if (!descriptor.isEmpty()) {
-            return loadSkin(descriptor.identifier(), ticket);
-        }
-        return null;
-    }
-
-    public void loadSkin(String identifier, Ticket ticket, IResultHandler<BakedSkin> handler) {
-        manager.load(identifier, ticket, handler);
+    public void loadSkin(Ticket<String> ticket, IResultHandler<BakedSkin> handler) {
+        manager.load(ticket, handler);
     }
 
 
@@ -142,6 +133,7 @@ public final class SkinBakery implements ISkinLibraryListener {
     }
 
     private void invalidateSkin0(String identifier) {
+        ModLog.debug("'{}' => invalidate baked skin", identifier);
         SkinLoader.getInstance().removeSkin(identifier);
         manager.remove(identifier);
     }

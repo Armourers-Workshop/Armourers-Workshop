@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.FallbackEntityRenderPatch;
 import moe.plushie.armourers_workshop.core.client.skinrender.patch.LivingEntityRenderPatch;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -280,7 +280,7 @@ public class ClientWardrobeHandler {
     private static int _renderEmbeddedSkinInBox(ItemStack itemStack, OpenItemDisplayContext displayContext, BakedModel bakedModel, EmbeddedItemModel itemModel, int packedLight, int overlay, int outlineColor, PoseStack poseStackIn, MultiBufferSource buffersIn) {
         int count = 0;
         var descriptor = itemModel.sourceSkin();
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));
         if (bakedSkin == null) {
             return count;
         }
@@ -307,7 +307,7 @@ public class ClientWardrobeHandler {
     private static int _renderEmbeddedSkin(ItemStack itemStack, OpenItemDisplayContext displayContext, BakedModel bakedModel, EmbeddedItemModel itemModel, int packedLight, int overlay, int outlineColor, PoseStack poseStackIn, MultiBufferSource buffersIn) {
         int count = 0;
         var descriptor = itemModel.sourceSkin();
-        var tesselator = SkinRenderTesselator.create(descriptor, Tickets.INVENTORY);
+        var tesselator = SkinRenderTesselator.create(TicketManager.INVENTORY.get(descriptor));
         if (tesselator == null) {
             return count;
         }

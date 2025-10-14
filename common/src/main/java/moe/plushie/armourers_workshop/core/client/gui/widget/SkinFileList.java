@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.api.skin.serializer.ISkinFileHeader;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -46,7 +46,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
     private final EntryList tableView = new EntryList(CGRect.ZERO);
     private final EntryListIndicator scrollIndicator = new EntryListIndicator(new CGRect(0, 0, 10, 100));
 
-    private final Ticket loadTicket = Ticket.list();
+    private final TicketHolder tickets = new TicketHolder("SkinFileList");
     private final ArrayList<Entry> cells = new ArrayList<>();
 
     private Entry selectedItem;
@@ -80,7 +80,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
     }
 
     public void reloadData(Collection<T> entries) {
-        loadTicket.invalidate();
+        tickets.invalidate();
         cells.clear();
         entries.forEach(entry -> cells.add(new Entry(entry)));
         tableView.reloadData();
@@ -91,7 +91,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
     @Override
     public void removeFromSuperview() {
         super.removeFromSuperview();
-        this.loadTicket.invalidate();
+        this.tickets.invalidate();
     }
 
     @Override
@@ -260,7 +260,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
                 context.drawResizableImage(ModTextures.LIST, x + (width - 12) / 2f, y + (height - 12) / 2f, 12, 12, u, 0, 16, 16, 256, 256);
                 return;
             }
-            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(descriptor));
             if (bakedSkin == null) {
                 return;
             }
@@ -277,7 +277,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
                 context.drawTooltip(NSString.localizedString("skin-library.rollover.canNotPreview"), rect);
                 return;
             }
-            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor(), loadTicket);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(descriptor()));
             if (bakedSkin == null) {
                 return;
             }

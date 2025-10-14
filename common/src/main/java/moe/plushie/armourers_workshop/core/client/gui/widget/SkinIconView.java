@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
@@ -19,7 +19,7 @@ public class SkinIconView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
-    private final Ticket loadTicket = Ticket.list();
+    private final TicketHolder tickets = new TicketHolder("SkinIconView");
 
     public SkinIconView(CGRect frame) {
         super(frame);
@@ -29,7 +29,7 @@ public class SkinIconView extends UIControl {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(descriptor));
         if (bakedSkin == null) {
             return;
         }
@@ -60,7 +60,7 @@ public class SkinIconView extends UIControl {
     }
 
     public void setSkin(SkinDescriptor descriptor) {
-        this.loadTicket.invalidate();
+        this.tickets.invalidate();
         this.descriptor = descriptor;
     }
 }

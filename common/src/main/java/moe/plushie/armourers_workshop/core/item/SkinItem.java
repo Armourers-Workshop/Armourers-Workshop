@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -94,7 +94,7 @@ public class SkinItem extends BlockItem implements IItemPropertiesProvider {
     public void createModelProperties(BiConsumer<IResourceLocation, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("loading"), (itemStack, level, entity, id) -> {
             var descriptor = SkinDescriptor.of(itemStack);
-            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));
             if (bakedSkin != null) {
                 return 0;
             }

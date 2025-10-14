@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -139,7 +139,7 @@ public class FindableSkinManager {
             }
             ModLog.debug("'{}' => start preload skin", identifier);
             descriptor = new SkinDescriptor(identifier);
-            bakery.loadSkin(identifier, Tickets.PRELOAD, this::complete);
+            bakery.loadSkin(TicketManager.PRELOAD.get(identifier), this::complete);
         }
 
         public void complete(BakedSkin bakedSkin, Exception exception) {

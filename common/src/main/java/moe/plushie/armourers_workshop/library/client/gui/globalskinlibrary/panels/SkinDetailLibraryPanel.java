@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificat
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -65,7 +65,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private GlobalSkinLibraryWindow.Page returnPage;
     private EntityTextureDescriptor playerTexture = EntityTextureDescriptor.EMPTY;
 
-    private final Ticket loadTicket = Ticket.wardrobe();
+    private final TicketHolder tickets = new TicketHolder("SkinDetailLibraryPanel");
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
     public SkinDetailLibraryPanel() {
@@ -141,7 +141,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     public void reloadUI(ServerSkin entry) {
-        this.loadTicket.invalidate();
+        this.tickets.invalidate();
         this.entry = entry;
         this.message = message();
         this.playerTexture = EntityTextureDescriptor.EMPTY;
@@ -182,7 +182,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
-        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.descriptor(), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(entry.descriptor()));
         if (bakedSkin != null) {
             float tx = rect.x;
             float ty = rect.y;
@@ -366,7 +366,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
             message.append("\n\n");
         }
 
-        var bakedSkin = SkinBakery.getInstance().loadSkin(entry.descriptor(), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(entry.descriptor()));
         if (bakedSkin != null && bakedSkin.skin() != null) {
             message.append(getDisplayText("author"));
             message.append(" ");

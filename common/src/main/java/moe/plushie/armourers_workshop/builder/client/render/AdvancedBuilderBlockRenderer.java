@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.SkinItemModelManager;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTesselator;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -208,7 +208,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity> 
         }
 
         var descriptor = node.skin();
-        var tesselator = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
+        var tesselator = SkinRenderTesselator.create(TicketManager.RENDERER.get(descriptor));
         if (tesselator != null) {
             tesselator.setLightmap(0xf000f0);
             tesselator.setPartialTicks(partialTicks);

@@ -24,7 +24,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinComboBox;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinFileList;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -302,7 +302,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         }
         this.lastInputItem = itemStack;
         var descriptor = SkinDescriptor.of(itemStack);
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.RENDERER.get(descriptor));
         var name = "";
         if (bakedSkin != null) {
             name = bakedSkin.skin().customName();
@@ -504,7 +504,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
 
     private void saveSkin(SkinDescriptor descriptor, String path) {
         // check skin load status
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.RENDERER.get(descriptor));
         if (bakedSkin == null || !menu.shouldSaveStack()) {
             ModLog.debug("can't save unbaked skin of '{}'", descriptor);
             return; // skin not ready for using
@@ -558,7 +558,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
         // check skin load status (only non-encrypted skin).
         var descriptor = new SkinDescriptor(selectedFile.skinIdentifier(), selectedFile.skinType(), SkinPaintScheme.EMPTY);
         if (securityData == null) {
-            var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.RENDERER);
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.RENDERER.get(descriptor));
             if (bakedSkin == null) {
                 ModLog.debug("can't load unbaked skin of '{}'", selectedFile.skinIdentifier());
                 return; // skin not ready for using

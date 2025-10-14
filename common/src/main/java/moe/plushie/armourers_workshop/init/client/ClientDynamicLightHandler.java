@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinLuminanceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.fabricmc.api.EnvType;
@@ -49,7 +49,7 @@ public class ClientDynamicLightHandler {
             return;
         }
         var descriptor = itemModel.sourceSkin();
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, Tickets.INVENTORY);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));
         if (bakedSkin != null) {
             cir.setReturnValue(bakedSkin.renderInfo().luminance());
         }

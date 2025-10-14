@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.core.client.other.FindableSkinManager;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -53,7 +53,7 @@ public class SkinPreloadManager {
                 continue;
             }
             ModLog.debug("'{}' => start preload skin", descriptor.identifier());
-            SkinBakery.getInstance().loadSkin(descriptor, Tickets.PRELOAD);
+            SkinBakery.getInstance().loadSkin(TicketManager.PRELOAD.get(descriptor));
         }
     }
 }

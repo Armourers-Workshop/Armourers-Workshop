@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.SimpleContainer;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -412,7 +412,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     @Environment(EnvType.CLIENT)
     @Override
     public OpenRectangle3f getRenderShape(BlockState blockState) {
-        var bakedSkin = SkinBakery.getInstance().loadSkin(getSkin(), Tickets.TEST);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(getSkin()));
         if (bakedSkin == null) {
             return null;
         }

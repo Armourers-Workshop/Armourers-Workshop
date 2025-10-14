@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinPreviewView;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -71,7 +71,7 @@ public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
         if (descriptor.isEmpty()) {
             handler.accept(null);
         } else {
-            SkinBakery.getInstance().loadSkin(descriptor.identifier(), Ticket.list(), (skin, except) -> handler.accept(skin));
+            SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(descriptor), (skin, except) -> handler.accept(skin));
         }
     }
 }

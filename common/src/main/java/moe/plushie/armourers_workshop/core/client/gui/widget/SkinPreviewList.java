@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
-import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -35,7 +35,7 @@ public abstract class SkinPreviewList<T> extends UIView {
     protected UIFont font = UIFont.systemFont();
     protected Consumer<T> itemSelector;
     protected ArrayList<T> entries = new ArrayList<>();
-    protected Ticket loadTicket = Ticket.list();
+    protected TicketHolder tickets = new TicketHolder("SkinPreviewList");
 
     protected int minimumLineSpacing = 1;
     protected int minimumInteritemSpacing = 1;
@@ -87,7 +87,7 @@ public abstract class SkinPreviewList<T> extends UIView {
     @Override
     public void removeFromSuperview() {
         super.removeFromSuperview();
-        this.loadTicket.invalidate();
+        this.tickets.invalidate();
     }
 
     public ArrayList<T> entries() {
@@ -95,7 +95,7 @@ public abstract class SkinPreviewList<T> extends UIView {
     }
 
     public void setEntries(ArrayList<T> entries) {
-        this.loadTicket.invalidate();
+        this.tickets.invalidate();
         this.entries = new ArrayList<>(entries);
     }
 
@@ -169,7 +169,7 @@ public abstract class SkinPreviewList<T> extends UIView {
     }
 
     public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, IBufferSource bufferSource, CGGraphicsContext context) {
-        var bakedSkin = SkinBakery.getInstance().loadSkin(getItemDescriptor(entry), loadTicket);
+        var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(getItemDescriptor(entry)));
         if (bakedSkin == null) {
             int speed = 60;
             int frames = 18;

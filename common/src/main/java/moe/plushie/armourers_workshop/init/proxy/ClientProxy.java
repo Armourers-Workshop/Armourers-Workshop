@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.cache.AutoreleasePool;
-import moe.plushie.armourers_workshop.core.data.ticket.Tickets;
+import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -153,7 +153,7 @@ public class ClientProxy {
             }
             SkinPreloadManager.stop();
             SkinBakery.stop();
-            Tickets.invalidateAll();
+            TicketManager.invalidateAll();
             EntityTextureLoader.getInstance().stop();
             SmartSoundManager.getInstance().stop();
             SmartTextureManager.getInstance().stop();

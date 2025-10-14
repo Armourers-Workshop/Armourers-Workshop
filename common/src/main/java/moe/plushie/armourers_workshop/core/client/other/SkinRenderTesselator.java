@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -24,8 +23,8 @@ public class SkinRenderTesselator extends SkinRenderContext {
         this.bakedArmature = bakedArmature;
     }
 
-    public static SkinRenderTesselator create(SkinDescriptor descriptor, Ticket ticket) {
-        var bakedSkin = SkinBakery.getInstance().loadSkin(descriptor, ticket);
+    public static SkinRenderTesselator create(Ticket<String> ticket) {
+        var bakedSkin = SkinBakery.getInstance().loadSkin(ticket);
         if (bakedSkin != null) {
             return create(bakedSkin);
         }

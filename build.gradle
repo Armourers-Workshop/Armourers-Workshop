@@ -2,8 +2,8 @@
 // https://maven.shedaniel.me/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 plugins {
     id "java"
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.10-SNAPSHOT" apply false
+    id "architectury-plugin" version "3.4.162"
+    id "dev.architectury.loom" version "1.10.437" apply false
     id "moe.plushie.armourers_workshop.loom" version "2.3.10" apply false
 }
 
