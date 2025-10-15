@@ -5,8 +5,7 @@ import moe.plushie.armourers_workshop.core.client.model.EmbeddedItemModel;
 import moe.plushie.armourers_workshop.core.client.model.EmbeddedItemModels;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.SkinLuminanceManager;
-import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.client.other.SkinLightSource;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -18,12 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class ClientDynamicLightHandler {
+public class ClientDynamicLightHandler<T> {
 
     private static Entity TICKING_ENTITY;
 
@@ -39,50 +35,49 @@ public class ClientDynamicLightHandler {
         TICKING_ENTITY = null;
     }
 
-    public static void apply(ItemStack itemStack, boolean submergedInWater, CallbackInfoReturnable<Integer> cir) {
+    public static SkinLightSource getLightSource(Entity entity) {
         // the user requires disable the skin dynamic light handler.
         if (!ModConfig.enableDynamicLightHandler()) {
-            return;
-        }
-        var itemModel = getItemModel(itemStack);
-        if (itemModel == null) {
-            return;
-        }
-        var descriptor = itemModel.sourceSkin();
-        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));
-        if (bakedSkin != null) {
-            cir.setReturnValue(bakedSkin.renderInfo().luminance());
-        }
-    }
-
-    public static <T extends Entity, A> A apply(A handler, T entity, Function<SkinLuminanceManager<? super T>, A> builder) {
-        // the user requires disable the skin dynamic light handler.
-        if (!ModConfig.enableDynamicLightHandler()) {
-            return handler;
+            return null;
         }
         var renderData = EntityRenderData.of(entity);
         if (renderData != null) {
-            var manger = renderData.luminanceManager();
-            if (manger.isEnabled()) {
-                return DataContainer.of(manger, builder);
+            var lightSource = renderData.lightSource();
+            if (lightSource.isEnabled()) {
+                return lightSource;
             }
         }
-        return handler;
+        return null;
     }
 
-    public static <T extends BlockEntity, A> A apply(A handler, T entity, Function<SkinLuminanceManager<? super T>, A> builder) {
+    public static SkinLightSource getLightSource(BlockEntity entity) {
         // the user requires disable the skin dynamic light handler.
         if (!ModConfig.enableDynamicLightHandler()) {
-            return handler;
+            return null;
         }
         var renderData = BlockEntityRenderData.of(entity);
         if (renderData != null) {
-            var manager = renderData.luminanceManager();
-            if (manager.isEnabled()) {
-                return DataContainer.of(manager, builder);
+            var lightSource = renderData.lightSource();
+            if (lightSource.isEnabled()) {
+                return lightSource;
             }
         }
-        return handler;
+        return null;
+    }
+
+    public static SkinLightSource getLightSource(ItemStack itemStack, boolean submergedInWater) {
+        // the user requires disable the skin dynamic light handler.
+        if (!ModConfig.enableDynamicLightHandler()) {
+            return null;
+        }
+        var itemModel = getItemModel(itemStack);
+        if (itemModel != null) {
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(itemModel.sourceSkin()));
+            if (bakedSkin != null) {
+                return bakedSkin.renderInfo().lightSource();
+            }
+        }
+        return null;
     }
 
     private static EmbeddedItemModel getItemModel(ItemStack itemStack) {

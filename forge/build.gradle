@@ -38,8 +38,9 @@ dependencies {
     modOptionalCompileOnly project.travelersbackpack_api_version
     modOptionalCompileOnly project.mrcrayfishbackpack_api_version
     modOptionalCompileOnly project.sophisticatedbackpack_api_version
-    modOptionalCompileOnly project.ryoamicLights_api_version
+    modOptionalCompileOnly project.ryoamiclights_api_version
     modOptionalCompileOnly project.lambdynamiclights_api_version
+    modOptionalCompileOnly project.sodiumdynamiclights_api_version
 
     // modOptionalApi 'curse.maven:mine-mine-no-mi-78726:4181345'
     //modOptionalApi 'moe.plushie.armourers_workshop:armourersworkshop-plugin-mod:1.0.3'

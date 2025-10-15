@@ -64,11 +64,11 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
 
     private final AnimationManager animationManager;
     private final SkinOverriddenManager<T> overriddenManager;
-    private final SkinLuminanceManager<T> luminanceManager;
 
     private final TicketHolder tickets = new TicketHolder("EntitySlotsHandler");
     private final DataContainer dataStorage = new DataContainer();
     private final SkinAttachmentContainer attachmentStorage = new SkinAttachmentContainer();
+    private final SkinLightSource lightSource = new SkinLightSource();
 
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
@@ -83,7 +83,6 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         // initialize the animation manager and overridden manager.
         this.animationManager = new AnimationManager(entity);
         this.overriddenManager = new SkinOverriddenManager<>();
-        this.luminanceManager = new SkinLuminanceManager<>();
     }
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
@@ -198,10 +197,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     private void loadSkinLightInfos(T source) {
         int luminance = 0;
         for (var skin : activeSkins.values()) {
-            var info = skin.renderInfo();
-            luminance = Math.max(luminance, info.luminance());
+            var lightSource1 = skin.renderInfo().lightSource();
+            luminance = lightSource1.get(luminance);
         }
-        luminanceManager.update(luminance);
+        lightSource.update(luminance);
     }
 
     private void loadArmourEquipments(T source) {
@@ -325,12 +324,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return overriddenManager;
     }
 
-    public SkinLuminanceManager<T> luminanceManager() {
-        return luminanceManager;
-    }
-
     public AnimationManager animationManager() {
         return animationManager;
+    }
+
+    public SkinLightSource lightSource() {
+        return lightSource;
     }
 
     public boolean shouldRenderExtra() {

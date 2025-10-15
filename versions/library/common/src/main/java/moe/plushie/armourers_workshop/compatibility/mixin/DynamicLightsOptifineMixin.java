@@ -21,7 +21,10 @@ public class DynamicLightsOptifineMixin {
 
     @Inject(method = "getLightLevel(Lnet/minecraft/world/item/ItemStack;)I", at = @At("HEAD"), cancellable = true)
     private static void aw2$getLightLevel(ItemStack itemStack, CallbackInfoReturnable<Integer> cir) {
-        ClientDynamicLightHandler.apply(itemStack, false, cir);
+        var lightSource = ClientDynamicLightHandler.getLightSource(itemStack, false);
+        if (lightSource != null) {
+            cir.setReturnValue(lightSource.get(0));
+        }
     }
 
     @Inject(method = "getLightLevel(Lnet/minecraft/world/entity/Entity;)I", at = @At(value = "INVOKE", target = "Lnet/optifine/DynamicLights;getLightLevel(Lnet/minecraft/world/item/ItemStack;)I"))
@@ -36,9 +39,9 @@ public class DynamicLightsOptifineMixin {
 
     @Inject(method = "getLightLevel(Lnet/minecraft/world/entity/Entity;)I", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isOnFire()Z"), cancellable = true)
     private static void aw2$getLightLevel(Entity entity, CallbackInfoReturnable<Integer> cir) {
-        var manager = ClientDynamicLightHandler.apply(null, entity, data -> data);
-        if (manager != null) {
-            cir.setReturnValue(manager.getLuminance(entity));
+        var lightSource = ClientDynamicLightHandler.getLightSource(entity);
+        if (lightSource != null) {
+            cir.setReturnValue(lightSource.get(0));
         }
     }
 

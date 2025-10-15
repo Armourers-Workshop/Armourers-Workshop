@@ -224,7 +224,7 @@ public final class SkinBakery implements ISkinLibraryListener {
 
         // collect light info from the all child parts.
         if (renderInfo.hasEmissive() && ModConfig.enableDynamicLightHandler()) {
-            renderInfo.setLuminance(BakedLuminanceCalculator.apply(bakedParts));
+            renderInfo.lightSource().update(BakedLuminanceCalculator.apply(bakedParts));
         }
 
         usedCounter.addPaintType(colorInfo.paintTypes());

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinLightSource;
 
 public class BakedRenderInfo {
 
@@ -8,7 +9,7 @@ public class BakedRenderInfo {
     private boolean hasTranslucent = false;
     private boolean hasEmissive = false;
 
-    private int luminance = 0;
+    private final SkinLightSource lightSource = new SkinLightSource();
 
     public void add(IRenderType renderType) {
         if (renderType.isTranslucent()) {
@@ -21,14 +22,6 @@ public class BakedRenderInfo {
         }
     }
 
-    public void setLuminance(int luminance) {
-        this.luminance = luminance;
-    }
-
-    public int luminance() {
-        return luminance;
-    }
-
     public boolean hasSolid() {
         return hasSolid;
     }
@@ -39,5 +32,9 @@ public class BakedRenderInfo {
 
     public boolean hasEmissive() {
         return hasEmissive;
+    }
+
+    public SkinLightSource lightSource() {
+        return lightSource;
     }
 }
