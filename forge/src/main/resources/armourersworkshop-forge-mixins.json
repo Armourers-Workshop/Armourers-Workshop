@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "ForgeLivingRendererMixin",
-    "ForgeScreenREIMixin",
-    "ForgeScreenFTBMixin",
     "ForgeReplayMixin"
   ],
   "mixins": [

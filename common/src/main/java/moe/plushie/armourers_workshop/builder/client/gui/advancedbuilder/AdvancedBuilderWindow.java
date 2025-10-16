@@ -354,7 +354,6 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         return false;
     }
 
-
     public static class Options {
         public static final Options SHOWS_LEFT_CARD = new Options("advanced.showLeftCard");
         public static final Options SHOWS_RIGHT_CARD = new Options("advanced.showRightCard");

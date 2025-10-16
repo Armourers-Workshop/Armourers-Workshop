@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScree
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -42,11 +41,6 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
         var rect = window.bounds();
         setContentSize(new CGSize(rect.width, rect.height));
         super.init();
-    }
-
-    @Override
-    public void resize(Minecraft minecraft, int width, int height) {
-        super.resize(minecraft, width, height);
     }
 
     @Override

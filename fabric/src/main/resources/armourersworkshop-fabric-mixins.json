@@ -6,8 +6,6 @@
     "FabricBlockEntityUpdatePacketMixin",
     "FabricLivingRendererMixin",
     "FabricPlayerRendererMixin",
-    "FabricScreenREIMixin",
-    "FabricScreenFTBMixin",
     "FabricReplayMixin",
     "FabricMinecraftMixin"
   ],

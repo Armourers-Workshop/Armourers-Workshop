@@ -8,6 +8,7 @@
     "ItemRendererREIMixin",
     "ItemRendererMixin",
     "InventoryScreenMixin",
+    "ExtendedScreenMixin",
     "HttpTextureMixin",
     "FallbackResourceManagerMixin",
     "ModelBakeryMixin$ModelPatch",

@@ -87,9 +87,4 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         textField.addTarget(this, UIControl.Event.EDITING_DID_END, OutfitMakerWindow::saveSkinInfo);
         addSubview(textField);
     }
-
-    @Override
-    public boolean shouldRenderExtendScreen() {
-        return true;
-    }
 }

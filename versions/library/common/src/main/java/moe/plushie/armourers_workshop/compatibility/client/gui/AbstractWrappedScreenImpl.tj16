@@ -1,0 +1,29 @@
+package moe.plushie.armourers_workshop.compatibility.client.gui;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
+
+@Available("[1.16, 1.20)")
+@Environment(EnvType.CLIENT)
+public class AbstractWrappedScreenImpl extends Screen {
+
+    protected final Screen screen;
+
+    public AbstractWrappedScreenImpl(Screen screen) {
+        super(screen.getTitle());
+        this.screen = screen;
+    }
+
+    @Override
+    public final void render(PoseStack poseStack, int i, int j, float f) {
+        screen.render(poseStack, i, j, f);
+    }
+
+    @Override
+    public final boolean mouseScrolled(double d, double e, double f) {
+        return screen.mouseScrolled(d, e, f);
+    }
+}
