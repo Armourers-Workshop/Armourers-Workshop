@@ -14,6 +14,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Function;
+
 @Available("[1.16, 1.19)")
 public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
 
@@ -29,6 +31,10 @@ public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
             source = new FriendlyByteBuf(buf);
         }
         return source;
+    }
+
+    protected static FriendlyByteBuf map(ByteBuf buf, Function<ByteBuf, ByteBuf> transform) {
+        return new FriendlyByteBuf(transform.apply(buf));
     }
 
     @Override

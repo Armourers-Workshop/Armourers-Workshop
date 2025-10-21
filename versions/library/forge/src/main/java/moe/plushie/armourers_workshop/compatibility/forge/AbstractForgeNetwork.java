@@ -53,12 +53,12 @@ public class AbstractForgeNetwork {
         public void handleServerboundData(Proxy proxy, IPayloadContext context) {
             var player = (ServerPlayer) context.player();
             IServerPacketHandler packetHandler = context::enqueueWork;
-            didReceivePacket(packetHandler, proxy.payload, player);
+            didReceivePacket(packetHandler, proxy.payload.duplicate(), player);
         }
 
         public void handleClientboundData(Proxy proxy, IPayloadContext context) {
             IClientPacketHandler packetHandler = context::enqueueWork;
-            didReceivePacket(packetHandler, proxy.payload, null);
+            didReceivePacket(packetHandler, proxy.payload.duplicate(), null);
         }
     }
 

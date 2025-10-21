@@ -60,7 +60,7 @@ public class ConcurrentBufferCompiler {
             }
             return null; // wait compile
         }
-        group = new Group(part, skin, options, scheme);
+        group = new Group(part, skin, options, scheme.copy());
         CACHING.put(key.copy(), group);
         startBatch(group);
         return null; // wait compile

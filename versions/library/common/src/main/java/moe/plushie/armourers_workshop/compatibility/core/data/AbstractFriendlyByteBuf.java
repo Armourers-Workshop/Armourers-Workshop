@@ -2,17 +2,23 @@ package moe.plushie.armourers_workshop.compatibility.core.data;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 public class AbstractFriendlyByteBuf extends AbstractFriendlyByteBufImpl {
 
     protected AbstractFriendlyByteBuf(ByteBuf source) {
         super(cast(source));
+    }
+
+    protected AbstractFriendlyByteBuf(ByteBuf source, Function<ByteBuf, ByteBuf> transform) {
+        super(map(source, transform));
     }
 
     public static AbstractFriendlyByteBuf wrap(ByteBuf source) {
@@ -167,6 +173,31 @@ public class AbstractFriendlyByteBuf extends AbstractFriendlyByteBufImpl {
     @Override
     public void writeNbt(CompoundTag tag) {
         source.writeNbt(tag);
+    }
+
+    @Override
+    public IFriendlyByteBuf copy() {
+        return new AbstractFriendlyByteBuf(map(source, ByteBuf::copy));
+    }
+
+    @Override
+    public IFriendlyByteBuf slice() {
+        return new AbstractFriendlyByteBuf(source, ByteBuf::slice);
+    }
+
+    @Override
+    public IFriendlyByteBuf retainedSlice() {
+        return new AbstractFriendlyByteBuf(source, ByteBuf::retainedSlice);
+    }
+
+    @Override
+    public IFriendlyByteBuf duplicate() {
+        return new AbstractFriendlyByteBuf(source, ByteBuf::duplicate);
+    }
+
+    @Override
+    public IFriendlyByteBuf retainedDuplicate() {
+        return new AbstractFriendlyByteBuf(source, ByteBuf::retainedDuplicate);
     }
 
     @Override

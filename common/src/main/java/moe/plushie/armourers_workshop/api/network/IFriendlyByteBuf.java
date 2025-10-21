@@ -95,5 +95,33 @@ public interface IFriendlyByteBuf {
 
     void writeComponent(Component component);
 
+    /**
+     * Returns a copy of this buffer's readable bytes. Modifying the content of the returned buffer or this buffer does not affect each other at all.
+     */
+    IFriendlyByteBuf copy();
+
+    /**
+     * Returns a slice of this buffer's readable bytes. Modifying the content of the returned buffer or this buffer affects each other's content while they maintain separate indexes and marks.
+     */
+    IFriendlyByteBuf slice();
+
+    /**
+     * Returns a retained slice of this buffer's readable bytes. Modifying the content of the returned buffer or this buffer affects each other's content while they maintain separate indexes and marks.
+     */
+    IFriendlyByteBuf retainedSlice();
+
+    /**
+     * Returns a buffer which shares the whole region of this buffer. Modifying the content of the returned buffer or this buffer affects each other's content while they maintain separate indexes and marks.
+     */
+    IFriendlyByteBuf duplicate();
+
+    /**
+     * Returns a retained buffer which shares the whole region of this buffer. Modifying the content of the returned buffer or this buffer affects each other's content while they maintain separate indexes and marks.
+     */
+    IFriendlyByteBuf retainedDuplicate();
+
+    /**
+     * Exposes this buffer's readable bytes as an ByteBuf.
+     */
     ByteBuf asByteBuf();
 }

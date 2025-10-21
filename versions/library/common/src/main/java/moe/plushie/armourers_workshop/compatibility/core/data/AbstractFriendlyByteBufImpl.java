@@ -18,6 +18,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Function;
+
 @Available("[1.21, )")
 public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
 
@@ -33,6 +35,13 @@ public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
             return source;
         }
         return new RegistryFriendlyByteBuf(buf, findRegistryAccess());
+    }
+
+    protected static RegistryFriendlyByteBuf map(ByteBuf buf, Function<ByteBuf, ByteBuf> transform) {
+        if (buf instanceof RegistryFriendlyByteBuf source) {
+            return new RegistryFriendlyByteBuf(transform.apply(buf), source.registryAccess());
+        }
+        return new RegistryFriendlyByteBuf(transform.apply(buf), findRegistryAccess());
     }
 
     protected static RegistryAccess findRegistryAccess() {

@@ -39,8 +39,9 @@ public class ServerReplayPacket extends CustomPacket {
     public void encode(IFriendlyByteBuf buffer) {
         buffer.writeEnum(event);
         if (parameters != null) {
-            buffer.writeInt(parameters.readableBytes());
-            buffer.writeBytes(parameters);
+            var buf = parameters.slice();
+            buffer.writeInt(buf.readableBytes());
+            buffer.writeBytes(buf);
         } else {
             buffer.writeInt(0);
         }
