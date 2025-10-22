@@ -26,7 +26,7 @@ import java.util.function.Function;
 @Mixin(BackpackLayer.class)
 public class FabricTravelersBackpackRendererMixin {
 
-    @Inject(method = "renderBackpackLayer", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "renderBackpackLayer", at = @At("HEAD"), cancellable = true, remap = false, require = 0)
     private static void aw2$renderBackpack(HumanoidModel<?> humanoidModel, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, LivingEntity entity, ItemStack stack, CallbackInfo ci) {
         var renderData = EntityRenderData.of(entity);
         if (renderData != null && renderData.overriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BackpackLayerRenderer.class)
 public class FabricSophisticatedBackpackRendererMixin {
 
-    @Inject(method = "renderBackpack", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "renderBackpack", at = @At("HEAD"), cancellable = true, remap = false, require = 0)
     private static void aw2$renderBackpack(EntityModel<?> parentModel, LivingEntity livingEntity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, ItemStack backpack, boolean wearsArmor, IBackpackModel model, CallbackInfo ci) {
         var renderData = EntityRenderData.of(livingEntity);
         if (renderData != null && renderData.overriddenManager().contains(SkinProperty.OVERRIDE_MODEL_BACKPACK)) {
