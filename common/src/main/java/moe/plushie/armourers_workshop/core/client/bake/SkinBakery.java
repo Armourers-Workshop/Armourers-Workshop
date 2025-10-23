@@ -146,7 +146,7 @@ public final class SkinBakery implements ISkinLibraryListener {
         try {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            ModLog.error("can't bake skin '{}'", identifier, exception);
             complete.abort(exception);
         }
     }

@@ -49,7 +49,10 @@ public class DataTransformer<K, V, T> {
     }
 
     public void remove(K key) {
-        allEntries.remove(key);
+        var entry = allEntries.remove(key);
+        if (entry != null && entry.isPending()) {
+            entry.abort(new RuntimeException("user cancelled!"));
+        }
     }
 
     @Nullable
@@ -123,10 +126,6 @@ public class DataTransformer<K, V, T> {
             if (entry.isCompleted()) {
                 continue;
             }
-            if (!entry.checkTicket()) {
-                abort(entry);
-                continue;
-            }
             load(entry);
             break;
         }
@@ -145,11 +144,12 @@ public class DataTransformer<K, V, T> {
             if (entry.isCompleted()) {
                 continue;
             }
-            T value = entry.getLoadedValue();
-            if (value == null || !entry.checkTicket()) {
-                abort(entry);
+            // when the load is throw an error, ignore it.
+            var error = entry.getLoadedError();
+            if (error != null) {
                 continue;
             }
+            var value = entry.getLoadedValue();
             transform(value, entry);
             break;
         }
@@ -196,10 +196,6 @@ public class DataTransformer<K, V, T> {
         })));
     }
 
-    private void abort(Entry entry) {
-        entry.abort();
-    }
-
     private Entry getEntry(K key) {
         return allEntries.get(key);
     }
@@ -236,7 +232,7 @@ public class DataTransformer<K, V, T> {
         return Optional.of(scheduledExecutor);
     }
 
-    protected class Entry {
+    private class Entry {
 
         private final K key;
         private final HashSet<Ticket<K>> tickets;
@@ -298,8 +294,8 @@ public class DataTransformer<K, V, T> {
             this.sendNotify();
         }
 
-        public void abort() {
-            this.transformedData = Pair.of(null, new RuntimeException("abort"));
+        public void abort(Exception exception) {
+            this.transformedData = Pair.of(null, exception);
             this.sendNotify();
         }
 
@@ -320,6 +316,18 @@ public class DataTransformer<K, V, T> {
                 return loadedData.getKey();
             }
             return null;
+        }
+
+        @Nullable
+        public Exception getLoadedError() {
+            if (loadedData != null) {
+                return loadedData.getValue();
+            }
+            return null;
+        }
+
+        public boolean isPending() {
+            return isLoading || isTransforming;
         }
 
         public boolean isCompleted() {
