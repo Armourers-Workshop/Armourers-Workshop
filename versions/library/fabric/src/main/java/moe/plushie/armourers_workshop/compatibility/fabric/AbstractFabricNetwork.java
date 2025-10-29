@@ -101,13 +101,13 @@ public class AbstractFabricNetwork {
 
         public void onServerEvent(Proxy proxy, ServerPlayNetworking.Context context) {
             IServerPacketHandler packetHandler = context.player().server::execute;
-            didReceivePacket(packetHandler, proxy.payload.duplicate(), context.player());
+            didReceivePacket(packetHandler, proxy.payload.slice(), context.player());
         }
 
         @Environment(EnvType.CLIENT)
         public void onClientEvent(Proxy proxy, ClientPlayNetworking.Context context) {
             IClientPacketHandler packetHandler = context.client()::execute;
-            didReceivePacket(packetHandler, proxy.payload.duplicate(), null);
+            didReceivePacket(packetHandler, proxy.payload.slice(), null);
         }
     }
 
