@@ -14,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -42,21 +44,26 @@ public class BlockBenchPackReader {
     protected BlockBenchPack parsePackObject(PackObject object) throws IOException {
         var builder = new BlockBenchPack.Builder();
 
+        // in the block bench 5.x, all group already extracted into a alone table.
+        var groups = new HashMap<String, PackObject>();
+
         // pack info
         object.at("name", it -> builder.name(it.stringValue()));
 //        object.at("description", it -> builder.description(it.stringValue()));
 //        object.at("author", it -> builder.author(it.collect(IDataPackObject::stringValue)));
+//        object.at("model_identifier", it -> builder.modelIdentifier(it.stringValue()));
         object.at("meta.format_version", it -> builder.version(it.stringValue()));
         object.at("meta.model_format", it -> builder.format(it.stringValue()));
 
         object.at("resolution", it -> builder.resolution(it.size2fValue()));
         object.at("display", it -> builder.setUseItemTransforms(true));
 
+        object.each("groups", it -> groups.put(it.get("uuid").stringValue(), it));
         object.each("elements", it -> builder.addElement(parseElementObject(it)));
         object.each("textures", it -> builder.addTexture(parseTextureObject(it)));
         object.each("animations", it -> builder.addAnimation(parseAnimationObject(it)));
 
-        object.each("outliner", it -> builder.addOutliner(parseChildOutlinerObject(it)));
+        object.each("outliner", it -> builder.addOutliner(parseChildOutlinerObject(it, groups)));
 
         object.each("display", (name, it) -> builder.addDisplay(name, parseTransformObject(it)));
 
@@ -149,27 +156,30 @@ public class BlockBenchPackReader {
         };
     }
 
-    protected BlockBenchOutliner parseOutlinerObject(PackObject object) throws IOException {
+    protected BlockBenchOutliner parseOutlinerObject(PackObject object, Map<String, PackObject> groups) throws IOException {
         var builder = new BlockBenchOutliner.Builder();
 
-        object.at("uuid", it -> builder.uuid(it.stringValue()));
-        object.at("name", it -> builder.name(it.stringValue()));
+        // in block bench 4.x, the group is itself.
+        var group = groups.getOrDefault(object.get("uuid").stringValue(), object);
 
-        object.at("origin", it -> builder.origin(it.vector3fValue()));
-        object.at("rotation", it -> builder.rotation(it.vector3fValue()));
+        group.at("uuid", it -> builder.uuid(it.stringValue()));
+        group.at("name", it -> builder.name(it.stringValue()));
 
-        object.at("export", it -> builder.export(it.boolValue()));
+        group.at("origin", it -> builder.origin(it.vector3fValue()));
+        group.at("rotation", it -> builder.rotation(it.vector3fValue()));
 
-        object.each("children", it -> builder.addChild(parseChildOutlinerObject(it)));
+        group.at("export", it -> builder.export(it.boolValue()));
+
+        object.each("children", it -> builder.addChild(parseChildOutlinerObject(it, groups)));
 
         return builder.build();
     }
 
-    protected Object parseChildOutlinerObject(PackObject object) throws IOException {
+    protected Object parseChildOutlinerObject(PackObject object, Map<String, PackObject> groups) throws IOException {
         if (object.type() == IODataObject.Type.STRING) {
             return object.stringValue();
         }
-        return parseOutlinerObject(object);
+        return parseOutlinerObject(object, groups);
     }
 
     protected BlockBenchDisplay parseTransformObject(PackObject object) throws IOException {
@@ -246,6 +256,7 @@ public class BlockBenchPackReader {
                     var key = entry.getKey();
                     var value = entry.getValue();
                     switch (value.type()) {
+                        case BOOLEAN -> point.put(key, OpenPrimitive.of(value.boolValue()));
                         case NUMBER -> point.put(key, OpenPrimitive.of(value.floatValue()));
                         case STRING -> point.put(key, OpenPrimitive.of(value.stringValue()));
                         default -> throw new IOException("a unknown point type of " + value);

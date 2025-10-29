@@ -55,6 +55,39 @@ public class OpenPrimitive {
         return new OpenPrimitive(value);
     }
 
+
+    public OpenPrimitive negative() {
+        if (value instanceof Boolean booleanValue) {
+            return of(!booleanValue);
+        }
+        if (value instanceof Byte byteValue) {
+            return of(-byteValue);
+        }
+        if (value instanceof Short shortValue) {
+            return of(-shortValue);
+        }
+        if (value instanceof Integer integerValue) {
+            return of(-integerValue);
+        }
+        if (value instanceof Long longValue) {
+            return of(-longValue);
+        }
+        if (value instanceof Float floatValue) {
+            return of(-floatValue);
+        }
+        if (value instanceof Double doubleValue) {
+            return of(-doubleValue);
+        }
+        if (value instanceof String stringValue) {
+            var fixed = "-(" + stringValue + ")";
+            if (fixed.startsWith("-(-(") && fixed.endsWith("))")) {
+                fixed = fixed.substring(4, fixed.length() - 2);
+            }
+            return of(fixed);
+        }
+        return this;
+    }
+
     public boolean booleanValue() {
         if (value instanceof Boolean booleanValue) {
             return booleanValue;

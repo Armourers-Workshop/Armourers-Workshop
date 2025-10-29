@@ -107,6 +107,20 @@ public class BlockBenchPack {
         return objects.get(uuid);
     }
 
+    public boolean shouldRevertAnimationPosition() {
+        // in the block bench 5+, we need to revert the animation position.x.
+        return majorVersion() >= 5;
+    }
+
+    public boolean shouldRevertAnimationRotation() {
+        // in the block bench 5+, we need to revert the animation rotation.x and rotation.y.
+        return majorVersion() >= 5;
+    }
+
+    private int majorVersion() {
+        return Integer.parseInt(version.split("\\.")[0]);
+    }
+
     protected static class Builder {
 
         private String name;

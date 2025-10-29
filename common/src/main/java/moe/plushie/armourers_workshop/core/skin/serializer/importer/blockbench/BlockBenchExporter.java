@@ -263,7 +263,7 @@ public class BlockBenchExporter {
 
     protected List<SkinAnimation> exportAnimations(List<BlockBenchAnimation> allAnimations) {
         var results = new ArrayList<SkinAnimation>();
-        var animator = new Animator(virtualMachine());
+        var animator = new Animator(pack, virtualMachine());
         allAnimations.forEach(animation -> {
             var name = animation.name();
             var duration = animation.duration();
@@ -617,9 +617,11 @@ public class BlockBenchExporter {
 
     protected static class Animator {
 
+        private final BlockBenchPack pack;
         private final MolangVirtualMachine virtualMachine;
 
-        public Animator(MolangVirtualMachine virtualMachine) {
+        public Animator(BlockBenchPack pack, MolangVirtualMachine virtualMachine) {
+            this.pack = pack;
             this.virtualMachine = virtualMachine;
         }
 
@@ -679,7 +681,16 @@ public class BlockBenchExporter {
             var y = convertToAnimationPoint(point.getOrDefault("y", OpenPrimitive.FLOAT_ZERO));
             var z = convertToAnimationPoint(point.getOrDefault("z", OpenPrimitive.FLOAT_ZERO));
             if (channel.equals("position")) {
-                y = convertToNegativeAnimationPoint(y);
+                if (pack.shouldRevertAnimationPosition()) {
+                    x = x.negative();
+                }
+                y = y.negative();
+            }
+            if (channel.equals("rotation")) {
+                if (pack.shouldRevertAnimationRotation()) {
+                    x = x.negative();
+                    y = y.negative();
+                }
             }
             return new SkinAnimationPoint.Bone(x, y, z);
         }
@@ -728,17 +739,6 @@ public class BlockBenchExporter {
                 }
             }
             return OpenPrimitive.FLOAT_ZERO;
-        }
-
-        public OpenPrimitive convertToNegativeAnimationPoint(OpenPrimitive point) {
-            if (point.isNumber()) {
-                return OpenPrimitive.of(-point.floatValue());
-            }
-            if (point.isString()) {
-                var script = "-(" + point.stringValue() + ")";
-                return OpenPrimitive.of(script);
-            }
-            return point;
         }
 
         public SkinAnimationLoop convertToAnimationLoop(String value) {
