@@ -10,11 +10,8 @@ import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateSkinningTablePacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class SkinningTableWindow extends MenuWindow<SkinningTableMenu> {
 
     public SkinningTableWindow(SkinningTableMenu container, Inventory inventory, NSString title) {

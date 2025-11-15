@@ -1,32 +1,30 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import com.apple.library.uikit.UIColor;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.core.client.model.SkinItemModel;
-import moe.plushie.armourers_workshop.core.client.model.SkinItemModelManager;
-import moe.plushie.armourers_workshop.core.client.model.SkinItemOverride;
-import moe.plushie.armourers_workshop.core.client.model.SkinItemTransform;
-import moe.plushie.armourers_workshop.core.client.other.SkinItemProperties;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
+import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModel;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelManager;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemOverride;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
+import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
+import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class BakedItemTransform {
 
     protected final SkinItemModel itemModel;
@@ -47,11 +45,11 @@ public abstract class BakedItemTransform {
     }
 
     private static BakedItemTransform create(List<BakedSkinPart> skinParts, OpenItemTransforms itemTransforms) {
-        var transforms = new EnumMap<OpenItemDisplayContext, SkinItemTransform>(OpenItemDisplayContext.class);
+        var transforms = new EnumMap<OpenItemDisplayContext, OpenItemTransform>(OpenItemDisplayContext.class);
         for (var value : OpenItemDisplayContext.values()) {
             var itemTransform = itemTransforms.get(value);
             if (itemTransform != null) {
-                transforms.put(value, SkinItemTransform.create(itemTransform));
+                transforms.put(value, OpenItemTransform.create(itemTransform));
             }
         }
         var overrides = new ArrayList<SkinItemOverride>();
@@ -65,38 +63,31 @@ public abstract class BakedItemTransform {
         return new Custom(itemModel, itemTransforms.offset());
     }
 
-    public void apply(IPoseStack poseStack, @Nullable Entity entity, BakedSkin skin, SkinRenderContext context) {
+    public void apply(EntityRenderState renderState, BakedSkin skin, BakedArmature armature, ConcurrentRenderingContext context) {
+
+        if (ModDebugger.targetBounds) {
+            context.draw(ShapeElement.arrow(0, 0, 0, 16, 16, 16));
+            context.draw(ShapeElement.stroke(-8, -8, -8, 16, 16, 16, 0xff00ffff));
+        }
+
         var itemSource = context.itemSource();
-        var itemModel = resolve(entity, itemSource.item(), itemSource.properties(), itemSource.displayContext());
-        if (itemModel == null) {
-            return; // can't found a item model, ignore.
+        var itemTransform = resolveItemTransform(itemSource, itemSource.itemModelResolver());
+        if (itemTransform != OpenItemTransform.NO_TRANSFORM) {
+            applyItemTransform(itemTransform, itemSource.displayContext(), context.ctm());
         }
 
         if (ModDebugger.targetBounds) {
-            var tesselator = AbstractBufferSource.tesselator();
-            ShapeTesselator.vector(0, 0, 0, 16, 16, 16, poseStack, tesselator);
-            ShapeTesselator.stroke(-8, -8, -8, 8, 8, 8, UIColor.CYAN, poseStack, tesselator);
-            tesselator.endBatch();
+            context.draw(ShapeElement.arrow(0, 0, 0, 16, 16, 16));
+            context.draw(ShapeElement.stroke(-8, -8, -8, 16, 16, 16, 0xffffff00));
         }
 
-        var displayContext = itemSource.displayContext();
-        var itemTransform = itemModel.getTransform(displayContext);
-        applyItemTransform(itemTransform, displayContext, poseStack);
-
-        if (ModDebugger.targetBounds) {
-            var tesselator = AbstractBufferSource.tesselator();
-            ShapeTesselator.vector(0, 0, 0, 16, 16, 16, poseStack, tesselator);
-            ShapeTesselator.stroke(-8, -8, -8, 8, 8, 8, UIColor.YELLOW, poseStack, tesselator);
-            tesselator.endBatch();
-        }
-
-        var displayBox = context.displayBox();
+        var displayBox = itemSource.displayBox();
         if (displayBox != null) {
-            applyScaleInBox(itemTransform, displayContext, skin, displayBox, poseStack);
+            applyScaleInBox(itemTransform, itemSource.displayContext(), skin, displayBox, context.ctm());
         }
     }
 
-    protected void applyItemTransform(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext, IPoseStack poseStack) {
+    protected void applyItemTransform(OpenItemTransform itemTransform, OpenItemDisplayContext displayContext, IPoseStack poseStack) {
         // apply left item transform.
         itemTransform.apply(displayContext.isLeftHand(), poseStack);
         // apply right item transform.
@@ -105,29 +96,35 @@ public abstract class BakedItemTransform {
         }
     }
 
-    protected void applyScaleInBox(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext, BakedSkin skin, OpenVector3f displayBox, IPoseStack poseStack) {
+    protected void applyScaleInBox(OpenItemTransform itemTransform, OpenItemDisplayContext displayContext, BakedSkin skin, OpenRectangle3f displayBox, IPoseStack poseStack) {
         var renderBounds = skin.getRenderBounds(itemTransform, displayContext);
         // calculate and apply skin scale.
-        float dx = displayBox.x() * 16;
-        float dy = displayBox.y() * 16;
-        float dz = displayBox.z() * 16;
+        float dx = displayBox.width() * 16;
+        float dy = displayBox.height() * 16;
+        float dz = displayBox.depth() * 16;
         float scale = Math.min(Math.min(dx / renderBounds.width(), dy / renderBounds.height()), dz / renderBounds.depth());
         //poseStack.scale(scale / scale.getX(), scale / scale.getY(), scale / scale.getZ());
         poseStack.scale(scale, scale, scale);
         poseStack.translate(-renderBounds.midX(), -renderBounds.midY(), -renderBounds.midZ());
     }
 
-    protected SkinItemModel resolve(Entity entity, ItemStack itemStack, SkinItemProperties itemProperties, OpenItemDisplayContext displayContext) {
-        // not provided!
-        if (entity == null) {
-            return null;
-        }
+    protected SkinItemModel resolveItemModel(SkinItemSource itemSource, SkinItemModelResolver itemModelResolver) {
         // in some cases we need to disable item overrides, users:
         //  Epic Fight Mod (Shield Render)
+        var itemProperties = itemSource.properties();
         if (itemProperties != null && !itemProperties.isAllowOverrides()) {
             return itemModel;
         }
-        return itemModel.resolve(itemStack, entity, entity.getLevel(), 0, displayContext);
+        return itemModelResolver.resolve(itemModel, itemSource.itemStack(), 0, itemSource.displayContext());
+    }
+
+    protected OpenItemTransform resolveItemTransform(SkinItemSource itemSource, @Nullable SkinItemModelResolver itemModelResolver) {
+        // the user provided a custom item model?
+        if (itemModelResolver != null) {
+            var itemModel = resolveItemModel(itemSource, itemModelResolver);
+            return itemModel.getTransform(itemSource.displayContext());
+        }
+        return OpenItemTransform.NO_TRANSFORM;
     }
 
     private static class Builtin extends BakedItemTransform {
@@ -144,7 +141,7 @@ public abstract class BakedItemTransform {
         }
 
         @Override
-        protected void applyItemTransform(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext, IPoseStack poseStack) {
+        protected void applyItemTransform(OpenItemTransform itemTransform, OpenItemDisplayContext displayContext, IPoseStack poseStack) {
             // in normal case will be provided by the custom item transforms.
             if (displayContext != OpenItemDisplayContext.NONE) {
                 super.applyItemTransform(itemTransform, displayContext, poseStack);
@@ -152,7 +149,7 @@ public abstract class BakedItemTransform {
         }
 
         @Override
-        protected void applyScaleInBox(SkinItemTransform itemTransform, OpenItemDisplayContext displayContext, BakedSkin skin, OpenVector3f displayBox, IPoseStack poseStack) {
+        protected void applyScaleInBox(OpenItemTransform itemTransform, OpenItemDisplayContext displayContext, BakedSkin skin, OpenRectangle3f displayBox, IPoseStack poseStack) {
             // in the none case, we need render it in display box inside if specified.
             if (displayContext == OpenItemDisplayContext.NONE) {
                 super.applyScaleInBox(itemTransform, displayContext, skin, displayBox, poseStack);

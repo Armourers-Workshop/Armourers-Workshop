@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.item.ItemStack;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Optional;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[1.16, 1.21)")
+public class Constructor {
+
+    public static CompoundTag save(@This ItemStack itemStack, Object registryAccess, CompoundTag tag) {
+        return itemStack.save(tag);
+    }
+
+    public static Optional<ItemStack> parse(@ThisClass Class<?> clazz, Object registryAccess, CompoundTag tag) {
+        if (!tag.isEmpty()) {
+            return Optional.of(ItemStack.of(tag));
+        }
+        return Optional.empty();
+    }
+}

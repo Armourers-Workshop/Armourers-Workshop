@@ -10,6 +10,7 @@ public class OpenUUID {
      */
     private static final SecureRandom RANDOM = new SecureRandom();
 
+    private static final int LENGTH = 10;
     private static final char[] ALPHABET = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890".toCharArray();
 
     private final String value;
@@ -19,18 +20,19 @@ public class OpenUUID {
     }
 
     public OpenUUID(long... values) {
-        int idx = 0;
-        var words = new int[10];
-        for (long value : values) {
+        var idx = 0;
+        var base = ALPHABET.length;
+        var words = new int[LENGTH];
+        for (var value : values) {
             while (value != 0) {
-                words[idx % 10] += (int) (value % 62);
-                value /= 62;
+                words[idx % LENGTH] += (int) (value % base);
+                value /= base;
                 idx += 1;
             }
         }
-        var builder = new StringBuilder(10);
-        for (int word : words) {
-            builder.append(ALPHABET[Math.abs(word % 62)]);
+        var builder = new StringBuilder(LENGTH);
+        for (var word : words) {
+            builder.append(ALPHABET[Math.abs(word % base)]);
         }
         this.value = builder.reverse().toString();
     }

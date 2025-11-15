@@ -16,13 +16,10 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContributors;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 
-@Environment(EnvType.CLIENT)
 public class SkinWardrobeWindow<M extends SkinWardrobeMenu> extends MenuWindow<M> {
 
     private final Entity entity;

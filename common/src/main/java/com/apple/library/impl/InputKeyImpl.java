@@ -1,6 +1,7 @@
 package com.apple.library.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -145,7 +146,7 @@ public class InputKeyImpl {
     }
 
     public static InputKeyImpl register(String name, int keyCode) {
-        return register(name, InputConstants.getKey(keyCode, -1));
+        return register(name, AbstractKeyEvent.create(keyCode, -1));
     }
 
     public static InputKeyImpl register(String name, InputConstants.Key key) {

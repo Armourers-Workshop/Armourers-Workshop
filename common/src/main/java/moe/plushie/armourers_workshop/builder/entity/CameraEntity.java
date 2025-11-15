@@ -3,22 +3,18 @@ package moe.plushie.armourers_workshop.builder.entity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenNearPlane;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 
-@Environment(EnvType.CLIENT)
 public class CameraEntity extends SeatEntity {
 
     private float zoom = 0;
 
     private CameraType cameraType;
-    private final Minecraft minecraft = EnvironmentManager.getClient();
+    private final Minecraft minecraft = Minecraft.getInstance();
 
     public CameraEntity() {
-        super(ModEntityTypes.SEAT.get().get(), EnvironmentManager.getClient().level);
+        super(ModEntityTypes.SEAT.get().get(), Minecraft.getInstance().level);
     }
 
     public void connect() {
@@ -30,16 +26,6 @@ public class CameraEntity extends SeatEntity {
     public void disconnect() {
         minecraft.setCameraEntity(null);
         minecraft.options.setCameraType(cameraType);
-    }
-
-    @Override
-    public float getViewXRot(float f) {
-        return getXRot();
-    }
-
-    @Override
-    public float getViewYRot(float f) {
-        return getYRot();
     }
 
     public void setZoom(float zoom) {
@@ -55,11 +41,21 @@ public class CameraEntity extends SeatEntity {
     }
 
     public OpenNearPlane getNearPlane() {
-        float rx = getXRot();
-        float ry = getYRot();
+        float rx = abi$getXRot();
+        float ry = abi$getYRot();
         float width = minecraft.getWindow().getWidth();
         float height = minecraft.getWindow().getHeight();
         float fov = minecraft.options.getCameraFOV();
         return new OpenNearPlane(rx, ry, width, height, fov);
+    }
+
+    @Override
+    protected float abi$getViewXRot(float f) {
+        return abi$getXRot();
+    }
+
+    @Override
+    protected float abi$getViewYRot(float f) {
+        return abi$getYRot();
     }
 }

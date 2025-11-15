@@ -1,15 +1,18 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockHandler;
-import moe.plushie.armourers_workshop.api.common.ILootContext;
-import moe.plushie.armourers_workshop.api.common.ILootContextParam;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.api.common.ILootBuilder;
+import moe.plushie.armourers_workshop.compat.core.AbstractLootContextParams;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.OpenEntitySpawnReason;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
@@ -19,13 +22,10 @@ import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,8 +41,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -54,16 +53,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider, IBlockHandler {
+public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider {
 
-    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final Property<Boolean> LIT = BlockStateProperties.LIT;
+    public static final Property<Boolean> OCCUPIED = BlockStateProperties.OCCUPIED;
 
-    public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
-    public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
+    public static final Property<BedPart> PART = BlockStateProperties.BED_PART;
 
     public SkinnableBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
+        this.registerDefaultState(stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(FACE, AttachFace.WALL)
                 .setValue(LIT, false)
@@ -72,12 +71,12 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+    public BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return ModBlockEntityTypes.SKINNABLE.get().create(level, blockPos, blockState);
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity entity, ItemStack itemStack) {
+    protected void abi$setPlacedBy(BlockState blockState, Level level, BlockPos blockPos, @Nullable LivingEntity entity, ItemStack itemStack) {
         var context = SkinBlockPlaceContext.of(blockPos);
         if (context == null) {
             return;
@@ -88,28 +87,28 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
             level.setBlock(target, blockState, 11);
             var blockEntity = getBlockEntity(level, target);
             if (blockEntity != null) {
-                var serializer = new TagSerializer(new CompoundTag(), level);
+                var serializer = new TagSerializer(SerializationContext.from(blockEntity));
                 part.serialize(serializer);
                 blockEntity.readAdditionalData(serializer);
                 blockEntity.updateBlockStates();
             }
         });
-        super.setPlacedBy(level, blockPos, blockState, entity, itemStack);
+        super.abi$setPlacedBy(blockState, level, blockPos, entity, itemStack);
     }
 
     @Override
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    protected void abi$onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         // update the block state also calls `onRemove`.
         if (!blockState.is(blockState2.getBlock())) {
             this.brokenByAnything(level, blockPos, blockState, null);
         }
-        super.onRemove(blockState, level, blockPos, blockState2, bl);
+        super.abi$onRemove(blockState, level, blockPos, blockState2, bl);
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState blockState, ILootContext context) {
-        var results = super.getDrops(blockState, context);
-        var blockEntity = context.getOptionalParameter(ILootContextParam.BLOCK_ENTITY);
+    protected List<ItemStack> abi$getDrops(BlockState blockState, BlockPos blockPos, BlockGetter blockGetter, ILootBuilder context) {
+        var results = super.abi$getDrops(blockState, blockPos, blockGetter, context);
+        var blockEntity = context.getOptionalParameter(AbstractLootContextParams.BLOCK_ENTITY);
         if (!(blockEntity instanceof SkinnableBlockEntity blockEntity1) || results.isEmpty()) {
             return results;
         }
@@ -131,57 +130,57 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public BlockState destroyByPlayer(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    protected BlockState abi$playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         this.brokenByAnything(level, blockPos, blockState, player);
-        return super.destroyByPlayer(level, blockPos, blockState, player);
+        return super.abi$playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+    protected OpenInteractionResult abi$useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult) {
         var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity == null) {
-            return InteractionResult.FAIL;
+            return OpenInteractionResult.FAIL;
         }
         if (blockEntity.isLinked()) {
             var result = blockEntity.getLinkedValueFromParent((level1, pos) -> {
                 var state = level1.getBlockState(pos);
-                return super.useWithoutItem(state, level1, pos, player, blockHitResult);
+                return super.abi$useWithoutItem(state, level1, pos, player, interactionHand, blockHitResult);
             });
-            return result.orElse(InteractionResult.FAIL);
+            return result.orElse(OpenInteractionResult.FAIL);
         }
         if (blockEntity.isBed() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(blockEntity, player)) {
                 var bedState = Blocks.RED_BED.defaultBlockState().setValue(PART, BedPart.HEAD);
-                return super.useWithoutItem(bedState, level, blockEntity.getBedPos(), player, blockHitResult);
+                return super.abi$useWithoutItem(bedState, level, blockEntity.getBedPos(), player, interactionHand, blockHitResult);
             }
         }
         if (blockEntity.isSeat() && !player.isSecondaryUseActive()) {
             if (ModPermissions.SKINNABLE_SIT.accept(blockEntity, player)) {
                 if (level.isClientSide()) {
-                    return InteractionResult.CONSUME;
+                    return OpenInteractionResult.CONSUME;
                 }
                 var seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
                 var seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
-                    return InteractionResult.FAIL; // it is using
+                    return OpenInteractionResult.FAIL; // it is using
                 }
-                player.startRiding(seatEntity, true);
-                return InteractionResult.SUCCESS;
+                player.startRiding(seatEntity);
+                return OpenInteractionResult.SUCCESS;
             }
         }
         if (blockEntity.isInventory()) {
-            var result = ModMenuTypes.SKINNABLE.get().openMenu(player, level.getBlockEntity(blockPos));
+            var result = player.openMenu(ModMenuTypes.SKINNABLE, level, blockPos);
             if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
             return result;
         }
-        return InteractionResult.FAIL;
+        return OpenInteractionResult.FAIL;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        var state = super.getStateForPlacement(context);
+    protected BlockState abi$getStateForPlacement(BlockPlaceContext context) {
+        var state = super.abi$getStateForPlacement(context);
         if (state != null && context instanceof SkinBlockPlaceContext context1) {
             if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
                 state = state.setValue(LIT, true);
@@ -191,7 +190,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
+    protected ItemStack abi$getCloneItemStack(BlockState blockState, LevelReader blockGetter, BlockPos blockPos) {
         var blockEntity = getParentBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getSkin().asItemStack();
@@ -200,7 +199,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public boolean isCustomBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
+    protected boolean abi$isBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
         var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.isBed();
@@ -209,7 +208,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public boolean isCustomLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
+    protected boolean abi$isLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
         var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.isLadder();
@@ -218,31 +217,31 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void abi$createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, FACE, LIT, PART, OCCUPIED);
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState blockState) {
+    protected boolean abi$hasAnalogOutputSignal(BlockState blockState) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+    protected int abi$getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction dir) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
-            return blockEntity.getAnalogOutputSignal();
+            return blockEntity.getAnalogOutputSignal(dir);
         }
         return 0;
     }
 
     @Override
-    public boolean isSignalSource(BlockState state) {
+    protected boolean abi$isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    public int getSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
+    protected int abi$getSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getSignal(direction);
@@ -251,7 +250,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public int getDirectSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
+    protected int abi$getDirectSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getDirectSignal(direction);
@@ -260,7 +259,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    protected VoxelShape abi$getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         var blockEntity = getBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getShape();
@@ -269,7 +268,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    protected VoxelShape abi$getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         var blockEntity = getBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getCollisionShape();
@@ -301,8 +300,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     public void killSeatEntities(Level level, BlockPos blockPos) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
-            OpenVector3d seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-            killSeatEntity(level, blockEntity.getParentPos(), seatPos);
+            var seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+            killSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
         }
     }
 
@@ -349,18 +348,18 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 return null; // is using
             }
         }
-        var entity = ModEntityTypes.SEAT.get().create(level, BlockPos.ZERO, null, MobSpawnType.SPAWN_EGG);
+        var entity = ModEntityTypes.SEAT.get().create(level, BlockPos.ZERO, null, OpenEntitySpawnReason.SPAWN_ITEM_USE);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);
         return entity;
     }
 
-    private void killSeatEntity(Level level, BlockPos blockPos, OpenVector3d pos) {
+    private void killSeatEntity(ServerLevel level, BlockPos blockPos, OpenVector3d pos) {
         var searchRect = new AABB(pos.x(), pos.y(), pos.z(), pos.x() + 1, pos.y() + 1, pos.z() + 1);
         for (var entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
-                entity.kill();
+                entity.kill(level);
             }
         }
     }

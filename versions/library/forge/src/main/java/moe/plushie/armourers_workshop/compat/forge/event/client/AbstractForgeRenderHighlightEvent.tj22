@@ -1,0 +1,42 @@
+package moe.plushie.armourers_workshop.compat.forge.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeBlockOutlineRenderer;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
+import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
+import net.minecraft.client.Camera;
+import net.minecraft.world.phys.BlockHitResult;
+
+@Available("[1.22, )")
+public class AbstractForgeRenderHighlightEvent {
+
+    public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
+        return AbstractForgeClientEventsImpl.EXTRACT_BLOCK_OUTLINE_REGISTRY.map(event -> {
+            var outlineRenderer = new AbstractForgeBlockOutlineRenderer();
+            event.addCustomRenderer(outlineRenderer);
+            return new RenderHighlightEvent.Block() {
+                @Override
+                public float partialTicks() {
+                    return 1.0f;
+                }
+
+                @Override
+                public Camera camera() {
+                    return event.getCamera();
+                }
+
+                @Override
+                public BlockHitResult target() {
+                    return event.getHitResult();
+                }
+
+                @Override
+                public IGraphicsContext context() {
+                    return outlineRenderer;
+                }
+            };
+        });
+    }
+}

@@ -21,14 +21,11 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITextFieldDelegate {
 
     protected final ArmourerBlockEntity blockEntity;
@@ -46,7 +43,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private UIComboBox modelComboView;
 
     private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
-    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.STEVE;
+    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.WIDE;
     private EntityTextureDescriptor.Source lastTextureSource = EntityTextureDescriptor.Source.USER;
 
     public ArmourerDisplaySetting(ArmourerMenu container) {

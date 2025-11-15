@@ -14,8 +14,7 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
@@ -65,7 +65,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         container.deserialize(serializer);
         modelAngle = serializer.read(CodingKeys.ANGLE);
         modelOffset = serializer.read(CodingKeys.OFFSET);
@@ -79,7 +79,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         container.serialize(serializer);
         serializer.write(CodingKeys.ANGLE, modelAngle);
         serializer.write(CodingKeys.OFFSET, modelOffset);
@@ -222,59 +222,61 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public OpenQuaternionf getRenderRotations(BlockState blockState) {
-        if (renderRotations != null) {
+    public Optional<OpenQuaternionf> getRenderRotations(BlockState blockState) {
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            if (renderRotations != null) {
+                return renderRotations;
+            }
+            var face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
+            var facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
+            var rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), OpenVector3f.ZERO);
+            renderRotations = new OpenQuaternionf(rot.x(), rot.y(), rot.z(), true);
             return renderRotations;
-        }
-        var face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
-        var facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
-        var rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), OpenVector3f.ZERO);
-        renderRotations = new OpenQuaternionf(rot.x(), rot.y(), rot.z(), true);
-        return renderRotations;
+        });
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public OpenRectangle3f getRenderShape(BlockState blockState) {
-        if (!isPowered()) {
-            return null;
-        }
-        var descriptor = SkinDescriptor.of(getItem(0));
-        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(descriptor));
-        if (bakedSkin == null) {
-            return null;
-        }
-        var rect = bakedSkin.renderBounds();
-        var f = 1 / 16f;
-        var scale = getModelScale() * f;
-        var modelRadius = 0.0f;
-        var rotationRadius = 0.0f;
+    public Optional<OpenRectangle3f> getRenderShape(BlockState blockState) {
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            if (!isPowered()) {
+                return null;
+            }
+            var descriptor = SkinDescriptor.of(getItem(0));
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(descriptor));
+            if (bakedSkin == null) {
+                return null;
+            }
+            var rect = bakedSkin.renderBounds();
+            var f = 1 / 16f;
+            var scale = getModelScale() * f;
+            var modelRadius = 0.0f;
+            var rotationRadius = 0.0f;
 
-        if (!rect.equals(OpenRectangle3f.ZERO)) {
-            float x = Math.max(Math.abs(rect.minX()), Math.abs(rect.maxX()));
-            float y = Math.max(Math.abs(rect.minY()), Math.abs(rect.maxY()));
-            float z = Math.max(Math.abs(rect.minZ()), Math.abs(rect.maxZ()));
-            modelRadius = OpenMath.sqrt(x * x + y * y + z * z);
-        }
+            if (!rect.equals(OpenRectangle3f.ZERO)) {
+                float x = Math.max(Math.abs(rect.minX()), Math.abs(rect.maxX()));
+                float y = Math.max(Math.abs(rect.minY()), Math.abs(rect.maxY()));
+                float z = Math.max(Math.abs(rect.minZ()), Math.abs(rect.maxZ()));
+                modelRadius = OpenMath.sqrt(x * x + y * y + z * z);
+            }
 
-        if (!rotationOffset.equals(OpenVector3f.ZERO)) {
-            var x = Math.abs(rotationOffset.x());
-            var y = Math.abs(rotationOffset.y());
-            var z = Math.abs(rotationOffset.z());
-            rotationRadius = OpenMath.sqrt(x * x + y * y + z * z);
-        }
+            if (!rotationOffset.equals(OpenVector3f.ZERO)) {
+                var x = Math.abs(rotationOffset.x());
+                var y = Math.abs(rotationOffset.y());
+                var z = Math.abs(rotationOffset.z());
+                rotationRadius = OpenMath.sqrt(x * x + y * y + z * z);
+            }
 
-        var tr = (rotationRadius + modelRadius) * scale;
-        var tx = (modelOffset.x()) * scale;
-        var ty = (modelOffset.y()) * scale + 0.5f;
-        var tz = (modelOffset.z()) * scale;
+            var tr = (rotationRadius + modelRadius) * scale;
+            var tx = (modelOffset.x()) * scale;
+            var ty = (modelOffset.y()) * scale + 0.5f;
+            var tz = (modelOffset.z()) * scale;
 
-        if (isOverrideOrigin()) {
-            ty += rect.maxY() * scale;
-        }
+            if (isOverrideOrigin()) {
+                ty += rect.maxY() * scale;
+            }
 
-        return new OpenRectangle3f(tx - tr, ty - tr, tz - tr, tr * 2, tr * 2, tr * 2);
+            return new OpenRectangle3f(tx - tr, ty - tr, tz - tr, tr * 2, tr * 2, tr * 2);
+        });
     }
 
     private static class CodingKeys {

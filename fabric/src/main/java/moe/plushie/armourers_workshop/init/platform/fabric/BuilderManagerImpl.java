@@ -1,47 +1,46 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.common.IEntityType;
-import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IItemTag;
-import moe.plushie.armourers_workshop.api.common.ILootFunction;
+import moe.plushie.armourers_workshop.api.common.ILootItemFunction;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.api.registry.IBlockEntityCapabilityBuilder;
 import moe.plushie.armourers_workshop.api.registry.IBlockEntityTypeBuilder;
+import moe.plushie.armourers_workshop.api.registry.ICreativeModeTabBuilder;
 import moe.plushie.armourers_workshop.api.registry.IDataComponentTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntityCapabilityBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
-import moe.plushie.armourers_workshop.api.registry.IItemGroupBuilder;
-import moe.plushie.armourers_workshop.api.registry.IItemTagBuilder;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.api.registry.ILootFunctionTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
+import moe.plushie.armourers_workshop.api.registry.ITagKeyBuilder;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ArgumentTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockEntityCapabilityBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.BlockEntityTypeBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.CreativeModeTabBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.DataComponentTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntityCapabilityBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntitySerializerBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.EntityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemBuilderImpl;
-import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemGroupBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ItemTagBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.LootFunctionTypeBuilderImpl;
@@ -52,6 +51,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -61,13 +61,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class BuilderManagerImpl implements BuilderManager.Impl {
-
-    private static final BuilderManagerImpl INSTANCE = new BuilderManagerImpl();
-
-    public static BuilderManager.Impl getInstance() {
-        return INSTANCE;
-    }
+public class BuilderManagerImpl extends BuilderManager {
 
     @Override
     public <T extends Item> IItemBuilder<T> createItemBuilder(Function<Item.Properties, T> supplier) {
@@ -75,13 +69,13 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends IItemTag> IItemTagBuilder<T> createItemTagBuilder() {
+    public <T extends Item> ITagKeyBuilder<T> createItemTagBuilder() {
         return new ItemTagBuilderImpl<>();
     }
 
     @Override
-    public <T extends IItemGroup> IItemGroupBuilder<T> createItemGroupBuilder() {
-        return new ItemGroupBuilderImpl<>();
+    public <T extends CreativeModeTab> ICreativeModeTabBuilder<T> createItemGroupBuilder() {
+        return new CreativeModeTabBuilderImpl<>();
     }
 
     @Override
@@ -100,7 +94,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T> IEntitySerializerBuilder<T> createEntitySerializerBuilder(IEntitySerializer<T> serializer) {
+    public <T> IEntitySerializerBuilder<T> createEntitySerializerBuilder(IEntityDataSerializer<T> serializer) {
         return new EntitySerializerBuilderImpl<>(serializer);
     }
 
@@ -110,8 +104,8 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends ArgumentType<?>> IArgumentTypeBuilder<T> createArgumentTypeBuilder(Class<T> argumentType) {
-        return new ArgumentTypeBuilderImpl<>(argumentType);
+    public <T extends IArgumentType<?>> IArgumentTypeBuilder<T> createArgumentTypeBuilder(IArgumentSerializer<T> serializer) {
+        return new ArgumentTypeBuilderImpl<>(serializer);
     }
 
     @Override
@@ -130,7 +124,7 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends ILootFunction> ILootFunctionTypeBuilder<T> createLootFunctionTypeBuilder(MapCodec<T> codec) {
+    public <T extends ILootItemFunction> ILootFunctionTypeBuilder<T> createLootFunctionTypeBuilder(IDataMapCodec<T> codec) {
         return new LootFunctionTypeBuilderImpl<>(codec);
     }
 

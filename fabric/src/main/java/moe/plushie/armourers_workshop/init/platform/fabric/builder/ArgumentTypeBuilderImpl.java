@@ -1,36 +1,22 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricArgumentType;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
-import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.compat.fabric.builder.AbstractFabricArgumentTypeBuilder;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 
-import java.util.function.Supplier;
+public class ArgumentTypeBuilderImpl<T extends IArgumentType<?>> implements IArgumentTypeBuilder<T> {
 
-public class ArgumentTypeBuilderImpl<T extends ArgumentType<?>> implements IArgumentTypeBuilder<T> {
+    private final AbstractFabricArgumentTypeBuilder<T> builder;
 
-    private final Class<T> argumentType;
-    private Supplier<IArgumentSerializer<T>> argumentSerializer;
-
-    public ArgumentTypeBuilderImpl(Class<T> argumentType) {
-        this.argumentType = argumentType;
-    }
-
-    @Override
-    public IArgumentTypeBuilder<T> serializer(Supplier<IArgumentSerializer<T>> argumentSerializer) {
-        this.argumentSerializer = argumentSerializer;
-        return this;
+    public ArgumentTypeBuilderImpl(IArgumentSerializer<T> serializer) {
+        this.builder = new AbstractFabricArgumentTypeBuilder<>(serializer);
     }
 
     @Override
     public IRegistryHolder<T> build(String name) {
-        var registryName = ModConstants.key(name);
-        ModLog.debug("Registering Argument Type '{}'", registryName);
-        AbstractFabricArgumentType.register(registryName, argumentType, argumentSerializer.get());
-        return TypedRegistry.Entry.ofValue(registryName, null);
+        return Registries.COMMAND_ARGUMENT_TYPES.register(name, builder::build);
     }
 }

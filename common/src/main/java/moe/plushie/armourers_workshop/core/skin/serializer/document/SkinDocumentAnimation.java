@@ -5,10 +5,11 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 
 public class SkinDocumentAnimation implements IDataSerializable.Immutable {
 
-    public static IDataCodec<SkinDocumentAnimation> CODEC = IDataCodec.COMPOUND_TAG.serializer(SkinDocumentAnimation::new);
+    public static IDataCodec<SkinDocumentAnimation> CODEC = ExtraCodecs.serializable(SkinDocumentAnimation::new);
 
     private final String name;
     private final SkinDescriptor descriptor;

@@ -1,193 +1,98 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.api.registry.IRegistry;
+import com.mojang.serialization.DataResult;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class TypedRegistry<T> implements IRegistry<T> {
+public class TypedRegistry<T> implements TypedProvider<T> {
 
-    private static final ArrayList<TypedRegistry<?>> INSTANCES = new ArrayList<>();
+    private final String name;
+    private final TypedProvider<T> provider;
 
-    private final Class<?> type;
-    private final ArrayList<IRegistryHolder<? extends T>> entries = new ArrayList<>();
-    private final String typeName;
+    private final ArrayList<TypedHolder<? extends T>> holders = new ArrayList<>();
+    private final HashMap<OpenResourceLocation, TypedHolder<? extends T>> idToValue = new HashMap<>();
 
-    private final KeyProvider<T> keyProvider;
-    private final ValueProvider<T> valueProvider;
-    private final RegisterProvider<T> registerProvider;
-
-    public TypedRegistry(String name, Class<?> type, KeyProvider<T> keyProvider, ValueProvider<T> valueProvider, RegisterProvider<T> registerProvider) {
-        this.type = type;
-        this.typeName = name;
-        this.keyProvider = keyProvider;
-        this.valueProvider = valueProvider;
-        this.registerProvider = registerProvider;
-        // we need found it.
-        INSTANCES.add(this);
+    public TypedRegistry(String name, TypedProvider<T> provider) {
+        this.name = name;
+        this.provider = provider;
     }
 
-    public static <T> TypedRegistry<T> create(String name, Class<?> type, Registry<T> registry) {
-        return create(name, type, registry::getKey, registry::get, new RegisterProvider<T>() {
-            @Override
-            public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {
-                I value = provider.get();
-                Registry.register(registry, registryName.toLocation(), value);
-                return () -> value;
-            }
-        });
-    }
-
-    public static <T> TypedRegistry<T> create(String name, Class<?> type, Function<T, ResourceLocation> keyProvider, Function<ResourceLocation, T> valueProvider, RegisterProvider<T> registerProvider) {
-        KeyProvider<T> keyProvider1 = value -> Objects.flatMap(keyProvider.apply(value), OpenResourceLocation::create);
-        ValueProvider<T> valueProvider1 = key -> valueProvider.apply(key.toLocation());
-        return new TypedRegistry<>(name, type, keyProvider1, valueProvider1, registerProvider);
-    }
-
-    public static <T> TypedRegistry<T> factory(String name, Class<? extends T> type, Function<IResourceLocation, T> factory) {
-        return factory(name, type, new RegisterProvider<T>() {
-            @Override
-            public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {
-                T value = factory.apply(registryName);
-                // noinspection unchecked
-                return () -> (I) value;
-            }
-        });
-    }
-
-    public static <T> TypedRegistry<T> factory(String name, Class<?> type, RegisterProvider<T> registerProvider) {
-        return new TypedRegistry<>(name, type, null, null, registerProvider);
-    }
-
-    public static <T> TypedRegistry<T> map(String name, Class<? extends T> type, BiConsumer<IResourceLocation, T> consumer) {
-        return new TypedRegistry<>(name, type, null, null, new RegisterProvider<T>() {
-            @Override
-            public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {
-                I value = provider.get();
-                consumer.accept(registryName, value);
-                return () -> value;
-            }
-        });
-    }
-
-    public static <T> TypedRegistry<T> passthrough(String name, Class<?> type) {
-        return new TypedRegistry<>(name, type, null, null, new RegisterProvider<T>() {
-            @Override
-            public <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider) {
-                I value = provider.get();
-                return () -> value;
-            }
-        });
-    }
-
-
-    public static <T> IResourceLocation findKey(T value) {
-        for (var registry : INSTANCES) {
-            if (registry.type().isInstance(value)) {
-                TypedRegistry<T> registry1 = Objects.unsafeCast(registry);
-                return registry1.getKey(value);
-            }
-        }
-        return OpenResourceLocation.create("minecraft", "air");
-    }
-
-    public static <T> Collection<IRegistryHolder<? extends T>> findEntries(Class<T> clazz) {
-        for (var registry : INSTANCES) {
-            if (clazz.isAssignableFrom(registry.type())) {
-                TypedRegistry<T> registry1 = Objects.unsafeCast(registry);
-                return registry1.entries();
-            }
-        }
-        return Collections.emptyList();
+    /**
+     * Adds a new supplier to the list of entries to be registered, and returns a RegistryObject that will be populated with the created entry automatically.
+     *
+     * @param name     The new entry's name, it will automatically have the modid prefixed.
+     * @param supplier A factory for the new entry, it should return a new instance every time it is called.
+     * @return A RegistryObject that will be updated with when the entries in the registry change.
+     */
+    public <I extends T> TypedHolder<I> register(String name, Function<OpenResourceLocation, ? extends I> supplier) {
+        return register(ModConstants.key(name), supplier);
     }
 
     @Override
-    public <I extends T> IRegistryHolder<I> register(String name, Supplier<? extends I> provider) {
-        var registryName = ModConstants.key(name);
-        Supplier<I> object = registerProvider.register(registryName, provider);
-        IRegistryHolder<I> entry = Entry.of(registryName, object);
-        entries.add(entry);
-        ModLog.debug("Registering {} '{}'", typeName, registryName);
+    public <I extends T> TypedHolder<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+        Supplier<I> object = provider.register(registryName, supplier);
+        TypedHolder<I> entry = TypedHolder.of(registryName, object);
+        holders.add(entry);
+        idToValue.put(registryName, entry);
+        ModLog.debug("Registering {} '{}'", this.name, registryName);
         return entry;
     }
 
-    @Override
-    public T getValue(IResourceLocation registryName) {
-        return valueProvider.apply(registryName);
+    public void forEach(Consumer<? super TypedHolder<? extends T>> action) {
+        holders.forEach(action);
     }
 
     @Override
-    public IResourceLocation getKey(T object) {
-        return keyProvider.apply(object);
+    public T getValue(OpenResourceLocation registryName) {
+        var holder = idToValue.get(registryName);
+        if (holder != null) {
+            return holder.get();
+        }
+        return provider.getValue(registryName);
     }
 
     @Override
-    public List<IRegistryHolder<? extends T>> entries() {
-        return entries;
+    public OpenResourceLocation getKey(T value) {
+        for (var holder : holders) {
+            if (holder.get() == value) {
+                return holder.registryName();
+            }
+        }
+        return provider.getKey(value);
     }
 
-    @Override
-    public Class<?> type() {
-        return type;
+    public Collection<TypedHolder<? extends T>> values() {
+        return holders;
     }
 
-    public static class Entry<T> implements IRegistryHolder<T> {
-
-        private final Supplier<T> value;
-        private final IResourceLocation registryName;
-
-        public Entry(IResourceLocation registryName, Supplier<T> value) {
-            this.value = value;
-            this.registryName = registryName;
-        }
-
-        public static <T> Entry<T> of(IResourceLocation registryName, Supplier<T> value) {
-            return new Entry<>(registryName, value);
-        }
-
-        public static <T extends S, S> Entry<T> cast(IResourceLocation registryName, Supplier<S> value) {
-            Supplier<T> targetValue = Objects.unsafeCast(value);
-            return new Entry<>(registryName, targetValue);
-        }
-
-        public static <T> Entry<T> ofValue(IResourceLocation registryName, T value) {
-            return of(registryName, () -> value);
-        }
-
-        public static <T extends S, S> Entry<T> castValue(IResourceLocation registryName, S value) {
-            return cast(registryName, () -> value);
-        }
-
-        @Override
-        public IResourceLocation registryName() {
-            return registryName;
-        }
-
-        @Override
-        public T get() {
-            return value.get();
-        }
+    public Set<Map.Entry<OpenResourceLocation, TypedHolder<? extends T>>> entitySet() {
+        return idToValue.entrySet();
     }
 
-    public interface KeyProvider<T> extends Function<T, IResourceLocation> {
-    }
-
-    public interface ValueProvider<T> extends Function<IResourceLocation, T> {
-    }
-
-    public interface RegisterProvider<T> {
-
-        <I extends T> Supplier<I> register(IResourceLocation registryName, Supplier<? extends I> provider);
+    public IDataCodec<T> codec() {
+        return OpenResourceLocation.CODEC.flatXmap(key -> {
+            var value = getValue(key);
+            if (value == null) {
+                return DataResult.error(() -> "Unknown element id: " + key);
+            }
+            return DataResult.success(value);
+        }, value -> {
+            var key = getKey(value);
+            if (key == null) {
+                return DataResult.error(() -> "Element with unknown id: " + value);
+            }
+            return DataResult.success(key);
+        });
     }
 }
 

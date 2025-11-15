@@ -2,7 +2,7 @@ package com.apple.library.uikit;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.util.function.IntFunction;
@@ -10,7 +10,7 @@ import java.util.function.IntFunction;
 @SuppressWarnings("unused")
 public class UIImage {
 
-    protected final IResourceLocation rl;
+    protected final OpenResourceLocation rl;
     protected final CGPoint uv;
     protected final CGSize size;
     protected final CGSize source;
@@ -19,7 +19,7 @@ public class UIImage {
     protected final AnimationData animationData;
     protected final IntFunction<CGPoint> mapping;
 
-    private UIImage(IResourceLocation rl, CGPoint uv, CGSize size, CGSize source, CGSize limit, ClipData clipData, AnimationData animationData, IntFunction<CGPoint> mapping) {
+    private UIImage(OpenResourceLocation rl, CGPoint uv, CGSize size, CGSize source, CGSize limit, ClipData clipData, AnimationData animationData, IntFunction<CGPoint> mapping) {
         this.rl = rl;
         this.uv = uv;
         this.size = size;
@@ -30,7 +30,7 @@ public class UIImage {
         this.mapping = mapping;
     }
 
-    public static Builder of(IResourceLocation rl) {
+    public static Builder of(OpenResourceLocation rl) {
         return Builder.of(rl);
     }
 
@@ -61,7 +61,7 @@ public class UIImage {
         return builder.build();
     }
 
-    public IResourceLocation rl() {
+    public OpenResourceLocation rl() {
         return rl;
     }
 
@@ -115,7 +115,7 @@ public class UIImage {
 
     public static class Builder {
 
-        private IResourceLocation rl;
+        private OpenResourceLocation rl;
         private CGPoint uv;
         private CGSize size;
         private CGSize source;
@@ -125,7 +125,7 @@ public class UIImage {
         private AnimationData animationData;
 
         public static Builder of(UIImage img) {
-            Builder builder = new Builder();
+            var builder = new Builder();
             builder.rl = img.rl;
             builder.uv = img.uv;
             builder.size = img.size;
@@ -136,8 +136,8 @@ public class UIImage {
             return builder;
         }
 
-        public static Builder of(IResourceLocation rl) {
-            Builder builder = new Builder();
+        public static Builder of(OpenResourceLocation rl) {
+            var builder = new Builder();
             builder.rl = rl;
             return builder;
         }

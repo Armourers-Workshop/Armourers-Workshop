@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -43,13 +43,13 @@ public class PaletteManager {
 
     public void createDefaultPalettes() {
         ModLog.debug("Creating default palettes.");
-        putPaletteInMap(new Palette("☆ Minecraft", true, ColorUtils.PALETTE_MINECRAFT));
-        putPaletteInMap(new Palette("☆ Shades", true, ColorUtils.PALETTE_SHADES));
-        putPaletteInMap(new Palette("☆ Warm32", true, ColorUtils.PALETTE_WARM32));
-        putPaletteInMap(new Palette("☆ Pastel-64 A", true, ColorUtils.PALETTE_PASTEL_64_A));
-        putPaletteInMap(new Palette("☆ Pastel-64 B", true, ColorUtils.PALETTE_PASTEL_64_B));
-        putPaletteInMap(new Palette("☆ SoftMilk32", true, ColorUtils.PALETTE_SOFTMILK32));
-        putPaletteInMap(new Palette("☆ Endesga 32", true, ColorUtils.PALETTE_ENDESGA_32));
+        putPaletteInMap(new Palette("☆ Minecraft", true, Colors.PALETTE_MINECRAFT));
+        putPaletteInMap(new Palette("☆ Shades", true, Colors.PALETTE_SHADES));
+        putPaletteInMap(new Palette("☆ Warm32", true, Colors.PALETTE_WARM32));
+        putPaletteInMap(new Palette("☆ Pastel-64 A", true, Colors.PALETTE_PASTEL_64_A));
+        putPaletteInMap(new Palette("☆ Pastel-64 B", true, Colors.PALETTE_PASTEL_64_B));
+        putPaletteInMap(new Palette("☆ SoftMilk32", true, Colors.PALETTE_SOFTMILK32));
+        putPaletteInMap(new Palette("☆ Endesga 32", true, Colors.PALETTE_ENDESGA_32));
     }
 
     private void putPaletteInMap(Palette palette) {

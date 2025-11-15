@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
 import moe.plushie.armourers_workshop.api.common.ITickable;
-import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
@@ -21,10 +20,11 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -80,7 +80,6 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private SkinDescriptor skin = SkinDescriptor.EMPTY;
 
     private OpenQuaternionf renderRotations;
-    private AABB renderBoundingBox;
 
     private VoxelShape cachedRenderShape = null;
     private VoxelShape cachedCollisionShape = null;
@@ -103,7 +102,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         reference = serializer.read(CodingKeys.REFERENCE);
         collisionShape = serializer.read(CodingKeys.SHAPE);
         cachedRenderShape = null;
@@ -127,7 +126,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         serializer.write(CodingKeys.REFERENCE, reference);
         serializer.write(CodingKeys.SHAPE, collisionShape);
         if (!isParent()) {
@@ -256,8 +255,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         return getParent();
     }
 
-    public int getAnalogOutputSignal() {
-        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getAnalogOutputSignal(level, pos)).orElse(0);
+    public int getAnalogOutputSignal(Direction dir) {
+        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getAnalogOutputSignal(level, pos, dir)).orElse(0);
     }
 
     public int getSignal(Direction dir) {
@@ -390,7 +389,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Nullable
     @Override
-    public <T> T getCapability(IBlockEntityCapability<T> capability, @Nullable Direction dir) {
+    protected <T> T abi$getCapability(IBlockEntityCapability<T> capability, @Nullable OpenDirection dir) {
         return getLinkedValueFromParent((level, pos) -> {
             var state = level.getBlockState(pos);
             var entity = level.getBlockEntity(pos);
@@ -399,27 +398,29 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public OpenQuaternionf getRenderRotations(BlockState blockState) {
-        if (renderRotations != null) {
+    public Optional<OpenQuaternionf> getRenderRotations(BlockState blockState) {
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            if (renderRotations != null) {
+                return renderRotations;
+            }
+            var r = getRotations(blockState);
+            renderRotations = new OpenQuaternionf(r.x(), r.y(), r.z(), true);
             return renderRotations;
-        }
-        var r = getRotations(blockState);
-        renderRotations = new OpenQuaternionf(r.x(), r.y(), r.z(), true);
-        return renderRotations;
+        });
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public OpenRectangle3f getRenderShape(BlockState blockState) {
-        var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(getSkin()));
-        if (bakedSkin == null) {
-            return null;
-        }
-        var f = 1 / 16f;
-        var box = bakedSkin.renderBounds().copy();
-        box.mul(OpenMatrix4f.createScaleMatrix(-f, -f, f));
-        return box;
+    public Optional<OpenRectangle3f> getRenderShape(BlockState blockState) {
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TEST.get(getSkin()));
+            if (bakedSkin == null) {
+                return null;
+            }
+            var f = 1 / 16f;
+            var box = bakedSkin.renderBounds().copy();
+            box.transform(OpenMatrix4f.createScaleMatrix(-f, -f, f));
+            return box;
+        });
     }
 
 
@@ -479,7 +480,9 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             var snapshot = new LinkedSnapshot();
             var state = level.getBlockState(pos);
             if (state.hasAnalogOutputSignal()) {
-                snapshot.analogOutputSignal = state.getAnalogOutputSignal(level, pos);
+                for (var dir : Direction.values()) {
+                    snapshot.analogOutputSignal[dir.get3DDataValue()] = state.getAnalogOutputSignal(level, pos, dir);
+                }
             }
             for (var dir : Direction.values()) {
                 snapshot.redstoneSignal[dir.get3DDataValue()] = state.getSignal(level, pos, dir);
@@ -506,7 +509,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     private static class LinkedSnapshot {
 
-        private int analogOutputSignal = 0;
+        private final int[] analogOutputSignal = new int[]{0, 0, 0, 0, 0, 0};
         private final int[] redstoneSignal = new int[]{0, 0, 0, 0, 0, 0};
         private final int[] directRedstoneSignal = new int[]{0, 0, 0, 0, 0, 0};
 
@@ -514,12 +517,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         public final boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof LinkedSnapshot snapshot)) return false;
-            return analogOutputSignal == snapshot.analogOutputSignal && Arrays.equals(redstoneSignal, snapshot.redstoneSignal) && Arrays.equals(directRedstoneSignal, snapshot.directRedstoneSignal);
+            return Arrays.equals(analogOutputSignal, snapshot.analogOutputSignal) && Arrays.equals(redstoneSignal, snapshot.redstoneSignal) && Arrays.equals(directRedstoneSignal, snapshot.directRedstoneSignal);
         }
 
         @Override
         public int hashCode() {
-            int result = analogOutputSignal;
+            int result = Arrays.hashCode(analogOutputSignal);
             result = 31 * result + Arrays.hashCode(redstoneSignal);
             result = 31 * result + Arrays.hashCode(directRedstoneSignal);
             return result;
@@ -528,12 +531,12 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<BlockPos> REFERENCE = IDataSerializerKey.create("Refer", IDataCodec.BLOCK_POS, BlockPos.ZERO);
+        public static final IDataSerializerKey<BlockPos> REFERENCE = IDataSerializerKey.create("Refer", ExtraCodecs.BLOCK_POS, BlockPos.ZERO);
         public static final IDataSerializerKey<OpenRectangle3i> SHAPE = IDataSerializerKey.create("Shape", OpenRectangle3i.CODEC, OpenRectangle3i.ZERO);
-        public static final IDataSerializerKey<GlobalPos> LINKED_POS = IDataSerializerKey.create("LinkedPos", IDataCodec.GLOBAL_POS, null);
+        public static final IDataSerializerKey<GlobalPos> LINKED_POS = IDataSerializerKey.create("LinkedPos", ExtraCodecs.GLOBAL_POS, null);
         public static final IDataSerializerKey<SkinDescriptor> SKIN = IDataSerializerKey.create("Skin", SkinDescriptor.CODEC, SkinDescriptor.EMPTY);
         public static final IDataSerializerKey<SkinProperties> SKIN_PROPERTIES = IDataSerializerKey.create("SkinProperties", SkinProperties.CODEC, SkinProperties.EMPTY, SkinProperties.EMPTY::copy);
-        public static final IDataSerializerKey<List<BlockPos>> REFERENCES = IDataSerializerKey.create("Refers", IDataCodec.BLOCK_POS.listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<BlockPos>> REFERENCES = IDataSerializerKey.create("Refers", ExtraCodecs.BLOCK_POS.listOf(), Collections.emptyList());
         public static final IDataSerializerKey<List<SkinMarker>> MARKERS = IDataSerializerKey.create("Markers", SkinMarker.CODEC.listOf(), Collections.emptyList());
     }
 }

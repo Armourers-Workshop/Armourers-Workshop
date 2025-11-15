@@ -1,18 +1,15 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -26,22 +23,23 @@ public abstract class AbstractAttachedHorizontalBlock extends AbstractHorizontal
 
     public AbstractAttachedHorizontalBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return true;
+    protected void abi$createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.abi$createBlockStateDefinition(builder);
+        builder.add(FACE);
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    protected BlockState abi$getStateForPlacement(BlockPlaceContext context) {
         for (var direction : context.getNearestLookingDirections()) {
             BlockState blockstate;
             if (direction.getAxis() == Direction.Axis.Y) {
-                blockstate = this.defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection().getOpposite());
+                blockstate = defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(FACING, context.getHorizontalDirection().getOpposite());
             } else {
-                blockstate = this.defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOpposite());
+                blockstate = defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(FACING, direction.getOpposite());
             }
             if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
                 return blockstate;
@@ -51,9 +49,8 @@ public abstract class AbstractAttachedHorizontalBlock extends AbstractHorizontal
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
-        super.appendHoverText(itemStack, tooltips, context);
+    protected void abi$appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
+        super.abi$appendHoverText(itemStack, tooltips, context);
         tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
     }
 }

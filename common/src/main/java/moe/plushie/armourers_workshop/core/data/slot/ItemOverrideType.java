@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
-import moe.plushie.armourers_workshop.api.common.IItemTag;
+import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemMatchers;
 import moe.plushie.armourers_workshop.init.ModItemTags;
+import moe.plushie.armourers_workshop.init.registry.Registries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,11 +32,11 @@ public enum ItemOverrideType {
 
     ITEM("item", null, null);
 
-    private final IRegistryHolder<IItemTag> tag;
+    private final IRegistryHolder<ITagKey<Item>> tag;
     private final String serializedName;
     private final ItemMatcher matcher;
 
-    ItemOverrideType(String serializedName, IRegistryHolder<IItemTag> tag, ItemMatcher matcher) {
+    ItemOverrideType(String serializedName, IRegistryHolder<ITagKey<Item>> tag, ItemMatcher matcher) {
         this.serializedName = serializedName;
         this.tag = tag;
         this.matcher = matcher;
@@ -57,12 +58,12 @@ public enum ItemOverrideType {
             return true;
         }
         // test by overrides of the config system.
-        var registryName = TypedRegistry.findKey(itemStack.getItem());
+        var registryName = Registries.ITEMS.getKey(itemStack.getItem());
         if (ModConfig.Common.overrides.contains(serializedName + ":" + registryName)) {
             return true;
         }
-        // test by vanilla's tag system.
-        if (tag != null && tag.get().contains(itemStack)) {
+        // test by vanilla's object system.
+        if (tag != null && itemStack.is(tag.get())) {
             return true;
         }
         // test by item id matching system.

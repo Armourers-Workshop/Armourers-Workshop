@@ -1,22 +1,19 @@
 package moe.plushie.armourers_workshop.init.event.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.BlockHitResult;
 
 public interface RenderHighlightEvent {
 
     interface Block {
 
-        float getPartialTick();
+        float partialTicks();
 
-        Camera getCamera();
+        Camera camera();
 
-        PoseStack getPoseStack();
+        BlockHitResult target();
 
-        MultiBufferSource getMultiBufferSource();
-
-        BlockHitResult getTarget();
+        IGraphicsContext context();
     }
 }

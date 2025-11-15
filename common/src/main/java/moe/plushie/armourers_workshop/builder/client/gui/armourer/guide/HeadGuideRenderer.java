@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class HeadGuideRenderer extends AbstractGuideRenderer {
 
     protected final OpenModelPart head;
@@ -26,10 +23,10 @@ public class HeadGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPPED_HEAD, this::render);
     }
 
-    public void render(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
-        head.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
+        context.draw(ModelPartElement.newInstance(head, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_HAT)) {
-            hat.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            context.draw(ModelPartElement.newInstance(hat, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
         }
     }
 }

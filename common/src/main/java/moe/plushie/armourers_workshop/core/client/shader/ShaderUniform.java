@@ -4,18 +4,13 @@ import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL20;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public abstract class ShaderUniform {
 
     protected final String name;

@@ -1,0 +1,24 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResultHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.blockentity.state.SkullBlockRenderState;
+import net.minecraft.client.renderer.special.SkullSpecialRenderer;
+import net.minecraft.server.players.CachedUserNameToIdResolver;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
+
+@Available("[1.22, )")
+public class AbstractGameProfileResolver {
+
+    public static void load(GameProfile profile, IResultHandler<GameProfile> handler) {
+        //SkullBlockRenderState
+        // TODO: NO IMPL - 1.22
+        //CachedUserNameToIdResolver.lookupGameProfi
+//        SkullBlockEntity.fetchGameProfile(profile.getName()).thenAcceptAsync(result -> {
+//            handler.accept(result.orElse(profile));
+//        });
+    }
+}

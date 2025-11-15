@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.data.ItemStackStorage;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -20,7 +21,7 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 
-    public static final IDataCodec<SkinDescriptor> CODEC = IDataCodec.COMPOUND_TAG.alternative(IDataCodec.STRING, TagSerializer::parse).serializer(SkinDescriptor::new);
+    public static final IDataCodec<SkinDescriptor> CODEC = ExtraCodecs.serializable(ExtraCodecs.COMPOUND_TAG.alternative(IDataCodec.STRING, TagSerializer::parse), SkinDescriptor::new);
 
     private final String identifier;
     private final SkinType type;
@@ -174,7 +175,7 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
 
         public static Options DEFAULT = new Options();
 
-        public static final IDataCodec<Options> CODEC = IDataCodec.COMPOUND_TAG.serializer(Options::new);
+        public static final IDataCodec<Options> CODEC = ExtraCodecs.serializable(Options::new);
 
         private int tooltipFlags = 0;
         private int enableEmbeddedItemRenderer = 0;

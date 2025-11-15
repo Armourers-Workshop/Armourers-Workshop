@@ -5,12 +5,9 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextFieldDelegate;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.function.Predicate;
 
-@Environment(EnvType.CLIENT)
 public class InputDialog extends ConfirmDialog implements UITextFieldDelegate {
 
     protected final UITextField textField = new UITextField(new CGRect(10, 30, 100, 20));

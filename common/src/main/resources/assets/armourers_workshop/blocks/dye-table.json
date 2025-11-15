@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/dye-table",
+    "render_type": "cutout"
+  }
+}

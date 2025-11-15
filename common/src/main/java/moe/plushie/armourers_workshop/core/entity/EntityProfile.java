@@ -4,12 +4,12 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,14 +19,14 @@ import java.util.function.Function;
 
 public class EntityProfile implements IDataSerializable.Immutable {
 
-    public static final IDataCodec<EntityProfile> CODEC = IDataCodec.COMPOUND_TAG.serializer(EntityProfile::new);
+    public static final IDataCodec<EntityProfile> CODEC = ExtraCodecs.serializable(EntityProfile::new);
 
-    private final IResourceLocation registryName;
+    private final OpenResourceLocation registryName;
+    private final List<OpenResourceLocation> transformers;
     private final SupportMap supports;
-    private final List<IResourceLocation> transformers;
     private final boolean locked;
 
-    public EntityProfile(IResourceLocation registryName, Map<SkinSlotType, String> supports, List<IResourceLocation> transformers, boolean locked) {
+    public EntityProfile(OpenResourceLocation registryName, List<OpenResourceLocation> transformers, Map<SkinSlotType, String> supports, boolean locked) {
         this.registryName = registryName;
         this.supports = new SupportMap(supports);
         this.transformers = transformers;
@@ -71,11 +71,11 @@ public class EntityProfile implements IDataSerializable.Immutable {
         return supports.slots();
     }
 
-    public List<IResourceLocation> transformers() {
+    public List<OpenResourceLocation> transformers() {
         return transformers;
     }
 
-    public IResourceLocation registryName() {
+    public OpenResourceLocation registryName() {
         return registryName;
     }
 
@@ -102,9 +102,9 @@ public class EntityProfile implements IDataSerializable.Immutable {
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<IResourceLocation> NAME = IDataSerializerKey.create("Name", DataSerializers.RESOURCE_LOCATION, null);
+        public static final IDataSerializerKey<OpenResourceLocation> NAME = IDataSerializerKey.create("Name", OpenResourceLocation.CODEC, null);
         public static final IDataSerializerKey<Boolean> LOCKED = IDataSerializerKey.create("Locked", IDataCodec.BOOL, false);
-        public static final IDataSerializerKey<List<IResourceLocation>> TRANSFORMERS = IDataSerializerKey.create("Transformers", DataSerializers.RESOURCE_LOCATION.listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<OpenResourceLocation>> TRANSFORMERS = IDataSerializerKey.create("Transformers", OpenResourceLocation.CODEC.listOf(), Collections.emptyList());
 
         public static final IDataSerializerKey<SupportMap> SLOTS = IDataSerializerKey.create("Slots", SupportMap.CODEC, new SupportMap(new HashMap<>()));
 
@@ -119,7 +119,7 @@ public class EntityProfile implements IDataSerializable.Immutable {
 
     private static class SupportMap implements IDataSerializable.Immutable {
 
-        public static final IDataCodec<SupportMap> CODEC = IDataCodec.COMPOUND_TAG.serializer(SupportMap::new);
+        public static final IDataCodec<SupportMap> CODEC = ExtraCodecs.serializable(SupportMap::new);
 
         private final Map<SkinSlotType, String> supports;
 

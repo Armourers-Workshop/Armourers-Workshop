@@ -1,15 +1,11 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
+import moe.plushie.armourers_workshop.compat.builder.AbstractBlockBuilder;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -17,153 +13,139 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
+@SuppressWarnings("Convert2MethodRef")
 public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
 
-    private BlockBehaviour.Properties properties;
-    private IRegistryBinder<T> binder;
-    private final Function<BlockBehaviour.Properties, T> supplier;
+    private final AbstractBlockBuilder<T> builder;
 
-    public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
-        this.properties = BlockBehaviour.Properties.of(material, materialColor);
-        this.supplier = supplier;
+    public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> factory, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
+        this.builder = new AbstractBlockBuilder<>(factory, material, materialColor);
     }
 
     @Override
     public IBlockBuilder<T> noCollission() {
-        this.properties = properties.noCollission();
+        this.builder.apply(it -> it.noCollission());
         return this;
     }
 
     @Override
     public IBlockBuilder<T> noOcclusion() {
-        this.properties = properties.noOcclusion();
+        this.builder.apply(it -> it.noOcclusion());
         return this;
     }
 
     @Override
     public IBlockBuilder<T> friction(float f) {
-        this.properties = properties.friction(f);
+        this.builder.apply(it -> it.friction(f));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> speedFactor(float f) {
-        this.properties = properties.speedFactor(f);
+        this.builder.apply(it -> it.speedFactor(f));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> jumpFactor(float f) {
-        this.properties = properties.jumpFactor(f);
+        this.builder.apply(it -> it.jumpFactor(f));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> sound(SoundType soundType) {
-        this.properties = properties.sound(soundType);
+        this.builder.apply(it -> it.sound(soundType));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> lightLevel(ToIntFunction<BlockState> toIntFunction) {
-        this.properties = properties.lightLevel(toIntFunction);
+    public IBlockBuilder<T> lightLevel(ToIntFunction<BlockState> provider) {
+        this.builder.apply(it -> it.lightLevel(provider));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> strength(float f, float g) {
-        this.properties = properties.strength(f, g);
+        this.builder.apply(it -> it.strength(f, g));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> randomTicks() {
-        this.properties = properties.randomTicks();
+        this.builder.apply(it -> it.randomTicks());
         return this;
     }
 
     @Override
     public IBlockBuilder<T> dynamicShape() {
-        this.properties = properties.dynamicShape();
+        this.builder.apply(it -> it.dynamicShape());
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> noDrops() {
-        this.properties = properties.noLootTable();
+    public IBlockBuilder<T> noLootTable() {
+        this.builder.apply(it -> it.noLootTable());
         return this;
     }
 
     @Override
     public IBlockBuilder<T> air() {
-        this.properties = properties.air();
+        this.builder.apply(it -> it.air());
         return this;
     }
 
     @Override
     public IBlockBuilder<T> forceSolid() {
-        this.properties = properties.forceSolidOn();
+        this.builder.apply(it -> it.forceSolidOn());
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> stateArgumentPredicate) {
-        this.properties = properties.isValidSpawn(stateArgumentPredicate);
+    public IBlockBuilder<T> isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> state) {
+        this.builder.apply(it -> it.isValidSpawn(state));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> isRedstoneConductor(BlockBehaviour.StatePredicate statePredicate) {
-        this.properties = properties.isRedstoneConductor(statePredicate);
+    public IBlockBuilder<T> isRedstoneConductor(BlockBehaviour.StatePredicate state) {
+        this.builder.apply(it -> it.isRedstoneConductor(state));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> isSuffocating(BlockBehaviour.StatePredicate statePredicate) {
-        this.properties = properties.isSuffocating(statePredicate);
+    public IBlockBuilder<T> isSuffocating(BlockBehaviour.StatePredicate state) {
+        this.builder.apply(it -> it.isSuffocating(state));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> isViewBlocking(BlockBehaviour.StatePredicate statePredicate) {
-        this.properties = properties.isViewBlocking(statePredicate);
+    public IBlockBuilder<T> isViewBlocking(BlockBehaviour.StatePredicate state) {
+        this.builder.apply(it -> it.isViewBlocking(state));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> hasPostProcess(BlockBehaviour.StatePredicate statePredicate) {
-        this.properties = properties.hasPostProcess(statePredicate);
+    public IBlockBuilder<T> hasPostProcess(BlockBehaviour.StatePredicate state) {
+        this.builder.apply(it -> it.hasPostProcess(state));
         return this;
     }
 
     @Override
-    public IBlockBuilder<T> emissiveRendering(BlockBehaviour.StatePredicate statePredicate) {
-        this.properties = properties.emissiveRendering(statePredicate);
+    public IBlockBuilder<T> emissiveRendering(BlockBehaviour.StatePredicate state) {
+        this.builder.apply(it -> it.emissiveRendering(state));
         return this;
     }
 
     @Override
     public IBlockBuilder<T> requiresCorrectToolForDrops() {
-        this.properties = properties.requiresCorrectToolForDrops();
-        return this;
-    }
-
-    @Override
-    public IBlockBuilder<T> bind(Supplier<Supplier<IRenderType>> provider) {
-        this.binder = () -> block -> {
-            // here is safe call client registry.
-            BlockRenderLayerMap.INSTANCE.putBlock(block.get(), provider.get().get().get());
-        };
+        this.builder.apply(it -> it.requiresCorrectToolForDrops());
         return this;
     }
 
     @Override
     public IRegistryHolder<T> build(String name) {
-        var object = AbstractFabricRegistries.BLOCKS.register(name, () -> supplier.apply(properties));
-        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return object;
+        return Registries.BLOCKS.register(name, builder::build);
     }
 }

@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop.library.block;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -25,23 +26,23 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements Abstrac
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+    public BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return ModBlockEntityTypes.SKIN_LIBRARY.get().create(level, blockPos, blockState);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+    protected OpenInteractionResult abi$useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
-            return ModMenuTypes.SKIN_LIBRARY_CREATIVE.get().openMenu(player, level.getBlockEntity(blockPos));
+            return player.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, level, blockPos);
         }
         if (this == ModBlocks.SKIN_LIBRARY.get()) {
-            return ModMenuTypes.SKIN_LIBRARY.get().openMenu(player, level.getBlockEntity(blockPos));
+            return player.openMenu(ModMenuTypes.SKIN_LIBRARY, level, blockPos);
         }
-        return InteractionResult.CONSUME;
+        return OpenInteractionResult.CONSUME;
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
+    protected void abi$onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
         if (state.is(newState.getBlock())) {
             return;
         }
@@ -49,6 +50,6 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements Abstrac
         if (blockEntity != null) {
             DataSerializers.dropContents(level, pos, blockEntity.getInventory());
         }
-        super.onRemove(state, level, pos, newState, p_196243_5_);
+        super.abi$onRemove(state, level, pos, newState, p_196243_5_);
     }
 }

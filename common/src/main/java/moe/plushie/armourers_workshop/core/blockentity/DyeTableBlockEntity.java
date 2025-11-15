@@ -15,12 +15,12 @@ public class DyeTableBlockEntity extends UpdatableContainerBlockEntity {
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         container.deserialize(serializer);
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         container.serialize(serializer);
     }
 

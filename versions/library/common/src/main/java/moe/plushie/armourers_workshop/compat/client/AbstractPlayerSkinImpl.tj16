@@ -1,0 +1,21 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.IdentityHashMap;
+
+@Available("[1.16, 1.21)")
+public class AbstractPlayerSkinImpl {
+
+    private static final IdentityHashMap<ResourceLocation, AbstractPlayerSkin> CACHES = new IdentityHashMap<>();
+
+    public static AbstractPlayerSkin of(ResourceLocation skin) {
+        return CACHES.computeIfAbsent(skin, it -> {
+            var body = OpenResourceLocation.of(it);
+            return new AbstractPlayerSkin(body, null, null, EntityTextureDescriptor.Model.SLIM);
+        });
+    }
+}

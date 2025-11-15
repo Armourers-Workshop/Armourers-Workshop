@@ -3,10 +3,7 @@ package moe.plushie.armourers_workshop.core.client.gui.widget;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIFont;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class NotificationDialog extends ConfirmDialog {
 
     public NotificationDialog() {

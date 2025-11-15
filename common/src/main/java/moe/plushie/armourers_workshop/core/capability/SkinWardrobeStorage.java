@@ -7,9 +7,7 @@ import moe.plushie.armourers_workshop.core.data.EntityCollisionContainer;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
-import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -22,12 +20,12 @@ import java.util.Objects;
 
 public class SkinWardrobeStorage {
 
-    public static IDataSerializer decoder(Entity entity, CompoundTag inputTag) {
-        return new TagSerializer(inputTag, entity);
+    public static IDataSerializer decoder(Entity entity, IDataSerializer serializer) {
+        return serializer;
     }
 
-    public static IDataSerializer encoder(Entity entity, CompoundTag outputTag) {
-        return new TagSerializer(outputTag, entity);
+    public static IDataSerializer encoder(Entity entity, IDataSerializer serializer) {
+        return serializer;
     }
 
     public static void saveDataFixer(SkinWardrobe wardrobe, IDataSerializer serializer) {
@@ -118,7 +116,6 @@ public class SkinWardrobeStorage {
             }
         }
     }
-
 
 
     private static void moveSlots(Container inventory, int src, int dest, int size, String reason) {

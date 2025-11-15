@@ -1,0 +1,17 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/colour-mixer",
+    "render_type": "cutout",
+    "tints": [
+      {
+        "type": "armourers_workshop:dye",
+        "index": 0
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 1
+      }
+    ]
+  }
+}

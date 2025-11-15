@@ -8,13 +8,12 @@ import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
 import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterial;
-import moe.plushie.armourers_workshop.compatibility.api.AbstractBlockMaterialColor;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderSheets;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
@@ -39,7 +38,7 @@ public class ModBlocks {
     public static final IRegistryHolder<Block> SKIN_LIBRARY_GLOBAL = half(GlobalSkinLibraryBlock::new).build("skin-library-global");
 
     public static final IRegistryHolder<Block> OUTFIT_MAKER = half(OutfitMakerBlock::new).build("outfit-maker");
-    public static final IRegistryHolder<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> SkinRenderSheets::cutoutSheet).build("colour-mixer");
+    public static final IRegistryHolder<Block> COLOR_MIXER = normal(ColorMixerBlock::new).build("colour-mixer");
     public static final IRegistryHolder<Block> ARMOURER = normal(ArmourerBlock::new).build("armourer");
     public static final IRegistryHolder<Block> ADVANCED_SKIN_BUILDER = half(AdvancedBuilderBlock::new).build("advanced-skin-builder");
 
@@ -48,7 +47,7 @@ public class ModBlocks {
     public static final IRegistryHolder<Block> SKIN_CUBE_GLOWING = half(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glowing");
     public static final IRegistryHolder<Block> SKIN_CUBE_GLASS_GLOWING = glass(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glass-glowing");
 
-    public static final IRegistryHolder<Block> BOUNDING_BOX = glass(BoundingBoxBlock::new).noDrops().noCollission().build("bounding-box");
+    public static final IRegistryHolder<Block> BOUNDING_BOX = glass(BoundingBoxBlock::new).noLootTable().noCollission().build("bounding-box");
 
     private static ToIntFunction<BlockState> lit(int level) {
         return state -> state.getValue(SkinnableBlock.LIT) ? level : 0;
@@ -63,11 +62,11 @@ public class ModBlocks {
     }
 
     private static IBlockBuilder<Block> half(Function<BlockBehaviour.Properties, Block> supplier) {
-        return normal(supplier).noOcclusion().bind(() -> SkinRenderSheets::cutoutSheet);
+        return normal(supplier).noOcclusion();
     }
 
     private static IBlockBuilder<Block> glass(Function<BlockBehaviour.Properties, Block> supplier) {
-        return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion().bind(() -> SkinRenderSheets::translucentSheet);
+        return create(supplier, AbstractBlockMaterial.GLASS, AbstractBlockMaterialColor.NONE).noOcclusion();
     }
 
     public static void init() {

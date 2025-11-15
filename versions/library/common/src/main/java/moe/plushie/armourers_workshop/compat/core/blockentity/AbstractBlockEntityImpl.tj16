@@ -1,0 +1,76 @@
+package moe.plushie.armourers_workshop.compat.core.blockentity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.core.network.BlockEntityDataPacket;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.DoubleSupplier;
+
+@Available("[1.16, 1.18)")
+public abstract class AbstractBlockEntityImpl extends BlockEntity {
+
+    private DoubleSupplier viewDistanceProvider;
+
+    public AbstractBlockEntityImpl(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType);
+    }
+
+    public abstract void readAdditionalData(IDataSerializer serializer);
+
+    public abstract void writeAdditionalData(IDataSerializer serializer);
+
+    @Override
+    public final void load(BlockState state, CompoundTag tag) {
+        super.load(state, tag);
+        this.readAdditionalData(new TagSerializer(tag, SerializationContext.from(this)));
+    }
+
+    @Override
+    public final CompoundTag save(CompoundTag tag) {
+        super.save(tag);
+        this.writeAdditionalData(new TagSerializer(tag, SerializationContext.from(this)));
+        return tag;
+    }
+
+    @Nullable
+    public BlockEntityDataPacket getUpdateDataPacket() {
+        return null;
+    }
+
+    @Override
+    public final ClientboundBlockEntityDataPacket getUpdatePacket() {
+        // when block not support updates, don't create an update packet.
+        var packet = getUpdateDataPacket();
+        if (packet != null) {
+            var serializer = new TagSerializer(SerializationContext.from(this));
+            this.writeAdditionalData(serializer);
+            return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, serializer.tag());
+        }
+        return null;
+    }
+
+    @Override
+    public final CompoundTag getUpdateTag() {
+        var serializer = new TagSerializer(SerializationContext.from(this));
+        this.saveFullData(serializer);
+        return serializer.tag();
+    }
+
+    // TODO: 1.22 remove only in
+    @Override
+    public final double getViewDistance() {
+        if (viewDistanceProvider == null) {
+            viewDistanceProvider = createViewDistanceProvider();
+        }
+        return viewDistanceProvider.getAsDouble();
+    }
+}

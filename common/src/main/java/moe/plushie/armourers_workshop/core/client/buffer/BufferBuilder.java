@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.buffer;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferBuilder;
+import moe.plushie.armourers_workshop.compat.client.AbstractBufferBuilder;
 
 public class BufferBuilder extends AbstractBufferBuilder {
 
     private final IRenderType renderType;
 
     public BufferBuilder(IRenderType renderType, int size) {
-        super(size * 8 * renderType.format().vertexSize());
+        super(size * 8 * renderType.format().byteSize());
         this.renderType = renderType;
         this.begin(renderType);
     }

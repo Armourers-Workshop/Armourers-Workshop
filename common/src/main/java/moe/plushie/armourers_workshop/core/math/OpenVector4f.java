@@ -129,10 +129,10 @@ public class OpenVector4f {
 
     public void transform(OpenQuaternionf q) {
         var quaternion = new OpenQuaternionf(q);
-        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        quaternion.multiply(new OpenQuaternionf(x, y, z, 0.0F));
         var quaternion1 = new OpenQuaternionf(q);
         quaternion1.conjugate();
-        quaternion.mul(quaternion1);
+        quaternion.multiply(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z(), w);
     }
 

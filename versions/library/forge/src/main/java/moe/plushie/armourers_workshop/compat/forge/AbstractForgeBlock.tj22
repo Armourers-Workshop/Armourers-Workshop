@@ -1,0 +1,43 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.common.extensions.IBlockExtension;
+
+@Available("[1.22, )")
+@SuppressWarnings("NullableProblems")
+public interface AbstractForgeBlock extends IBlockExtension {
+
+    @Override
+    boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper);
+
+    @Override
+    boolean isLadder(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity);
+
+    @Override
+    default boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
+        var block = (AbstractBlock) Objects.unsafeCast(this);
+        var result = block.attackBlock(level, pos, state, Direction.NORTH, player, OpenInteractionHand.MAIN_HAND);
+        if (result == OpenInteractionResult.PASS) {
+            return IBlockExtension.super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
+        }
+        if (result == OpenInteractionResult.SUCCESS) {
+            // when the result is successful, we need to add the break effects.
+            block.playerWillDestroy(level, pos, state, player);
+        }
+        return result.consumesAction();
+    }
+}

@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "armourers_workshop:item/mannequin",
+    "model": {
+      "type": "armourers_workshop:mannequin"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IRandomSource;
+
+import java.util.Random;
+
+@Available("[1.16, 1.19)")
+public class AbstractRandomSource implements IRandomSource {
+
+    private final Random random;
+
+    public AbstractRandomSource(Random random) {
+        this.random = random;
+    }
+
+    public static IRandomSource wrap(Random source) {
+        return new AbstractRandomSource(source);
+    }
+
+    public static Random unwrap(IRandomSource source) {
+        return ((AbstractRandomSource) source).random;
+    }
+
+    @Override
+    public int nextInt() {
+        return random.nextInt();
+    }
+
+    @Override
+    public int nextInt(int i) {
+        return random.nextInt(i);
+    }
+
+}

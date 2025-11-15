@@ -3,10 +3,7 @@ package moe.plushie.armourers_workshop.builder.item;
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
-import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.builder.client.gui.PaletteToolWindow;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
@@ -16,52 +13,45 @@ import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
 import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PaintbrushItem extends AbstractColoredToolItem implements IItemTintColorProvider, IItemPropertiesProvider, IItemPaintable, IBlockPaintViewer, IPaintToolPicker {
+public class PaintbrushItem extends AbstractColoredToolItem implements IItemPaintable, IBlockPaintViewer, IPaintToolPicker {
 
     public PaintbrushItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        var resultType = usePickTool(context);
-        if (resultType.consumesAction()) {
-            return resultType;
-        }
-        return super.useOn(context);
-    }
-
-    @Override
-    public InteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
+    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
         if (blockEntity instanceof IPaintProvider provider) {
             setItemColor(context.getItemInHand(), provider.color());
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return OpenInteractionResult.sidedSuccess(level.isClientSide());
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 
     @Override
@@ -81,18 +71,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     }
 
     @Override
-    public void createModelProperties(BiConsumer<IResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> itemStack.get(PaintingToolOptions.FULL_BLOCK_MODE) ? 0 : 1);
-    }
-
-    @Override
-    public void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
-        var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
-        tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
-    }
-
-    @Override
-    public boolean openContainer(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
+    public boolean openContainer(Level level, Player player, OpenInteractionHand hand, ItemStack itemStack) {
         // when the play hold ctrl, we need to open the built-in palette.
         if (level.isClientSide() && EnvironmentExecutorIO.hasControlDown()) {
             openPaletteGUI(level, player, hand, itemStack);
@@ -101,10 +80,17 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
         return super.openContainer(level, player, hand, itemStack);
     }
 
-    @Environment(EnvType.CLIENT)
-    public void openPaletteGUI(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
-        var window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
-        EnvironmentManager.getClient().setScreen(window.asScreen());
+    public void openPaletteGUI(Level level, Player player, OpenInteractionHand hand, ItemStack itemStack) {
+        EnvironmentExecutor.runOnClient(() -> () -> {
+            var window = new PaletteToolWindow(itemStack.getHoverName(), itemStack, hand);
+            Minecraft.getInstance().setScreen(window.asScreen());
+        });
+    }
+
+    @Override
+    protected void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
+        var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
+        tooltips.addAll(Colors.getColorTooltips(paintColor, true));
     }
 
     @Override
@@ -118,20 +104,34 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemTint
     }
 
     @Override
-    public int getTintColor(ItemStack itemStack, int index) {
-        if (index == 1) {
-            return ColorUtils.getDisplayRGB(itemStack);
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+        return ModSoundEvents.PAINT;
+    }
+
+    @Override
+    public OpenInteractionResult abi$useOn(UseOnContext context) {
+        var resultType = usePickTool(context);
+        if (resultType.consumesAction()) {
+            return resultType;
+        }
+        return super.abi$useOn(context);
+    }
+
+    @Override
+    protected int abi$getModelTintColor(ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity, int layerIndex) {
+        if (layerIndex == 1) {
+            return Colors.getDisplayRGB(itemStack);
         }
         return 0xffffffff;
     }
 
     @Override
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.PAINT;
+    public void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+        builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> itemStack.get(PaintingToolOptions.FULL_BLOCK_MODE) ? 0 : 1);
     }
 
     @Override
-    public boolean isFoil(ItemStack itemStack) {
+    protected boolean abi$isFoil(ItemStack itemStack) {
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
         return paintColor.paintType() != SkinPaintTypes.NORMAL;
     }

@@ -1,40 +1,40 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
+@OnlyIn(Dist.CLIENT)
 public class EntityTexture {
 
     public static final EntityTexture EMPTY = new EntityTexture(null, null, null);
 
     private final EntityTextureDescriptor descriptor;
-    private final String url;
     private final OpenResourceLocation location;
+    private final EntityTextureDescriptor.Model model;
+    private final String url;
 
-    private String modelType;
+    private OpenNativeImage image;
 
-    @Environment(EnvType.CLIENT)
-    private BakedEntityTexture texture;
-
-    public EntityTexture(OpenResourceLocation location, String url, String modelType) {
-        this(EntityTextureDescriptor.EMPTY, location, url, modelType);
+    public EntityTexture(OpenResourceLocation location, String url, EntityTextureDescriptor.Model model) {
+        this(EntityTextureDescriptor.EMPTY, location, url, model);
     }
 
-    public EntityTexture(EntityTextureDescriptor descriptor, OpenResourceLocation location, String url, String modelType) {
+    public EntityTexture(EntityTextureDescriptor descriptor, OpenResourceLocation location, String url, EntityTextureDescriptor.Model model) {
         this.descriptor = descriptor;
         this.location = location;
-        this.modelType = modelType;
+        this.model = model;
         this.url = url;
     }
 
-    public String modelType() {
-        return modelType;
+    public void setImage(OpenNativeImage image) {
+        this.image = image;
     }
 
-    public void setModelType(String modelType) {
-        this.modelType = modelType;
+    public OpenNativeImage image() {
+        return image;
     }
 
     public EntityTextureDescriptor descriptor() {
@@ -45,25 +45,11 @@ public class EntityTexture {
         return location;
     }
 
+    public EntityTextureDescriptor.Model model() {
+        return model;
+    }
+
     public String url() {
         return url;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public boolean isDownloaded() {
-        return texture != null && texture.isLoaded();
-    }
-
-    @Environment(EnvType.CLIENT)
-    public BakedEntityTexture texture() {
-        if (texture != null && texture.isLoaded()) {
-            return texture;
-        }
-        return null;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void setTexture(BakedEntityTexture texture) {
-        this.texture = texture;
     }
 }

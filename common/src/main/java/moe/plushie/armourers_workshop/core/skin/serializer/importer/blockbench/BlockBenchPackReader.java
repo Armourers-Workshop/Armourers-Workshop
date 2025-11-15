@@ -49,6 +49,7 @@ public class BlockBenchPackReader {
 
         // pack info
         object.at("name", it -> builder.name(it.stringValue()));
+        //object.at("model_identifier", it -> builder.name(it.stringValue())); // 5.x
 //        object.at("description", it -> builder.description(it.stringValue()));
 //        object.at("author", it -> builder.author(it.collect(IDataPackObject::stringValue)));
 //        object.at("model_identifier", it -> builder.modelIdentifier(it.stringValue()));

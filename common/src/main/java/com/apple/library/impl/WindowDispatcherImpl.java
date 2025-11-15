@@ -1,8 +1,9 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
+import com.apple.library.impl.event.InputKeyEvent;
+import com.apple.library.impl.event.InputMouseEvent;
 import com.apple.library.uikit.UIView;
 
 public class WindowDispatcherImpl {
@@ -35,31 +36,31 @@ public class WindowDispatcherImpl {
     public void render(CGGraphicsContext context) {
     }
 
-    public InvokerResult keyUp(int key, int i, int j) {
+    public InvokerResult keyUp(InputKeyEvent event) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult keyDown(int key, int i, int j) {
+    public InvokerResult keyDown(InputKeyEvent event) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult charTyped(int key, int i, int j) {
+    public InvokerResult charTyped(InputKeyEvent event) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseDown(double mouseX, double mouseY, int button) {
+    public InvokerResult mouseDown(InputMouseEvent event, boolean bl) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseMoved(double mouseX, double mouseY, int button) {
+    public InvokerResult mouseUp(InputMouseEvent event) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseWheel(double mouseX, double mouseY, CGPoint delta) {
+    public InvokerResult mouseMoved(InputMouseEvent event) {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseUp(double mouseX, double mouseY, int button) {
+    public InvokerResult mouseWheel(InputMouseEvent event) {
         return InvokerResult.PASS;
     }
 
@@ -67,7 +68,7 @@ public class WindowDispatcherImpl {
         return InvokerResult.PASS;
     }
 
-    public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
+    public InvokerResult mouseIsInside(InputMouseEvent event) {
         return InvokerResult.PASS;
     }
 

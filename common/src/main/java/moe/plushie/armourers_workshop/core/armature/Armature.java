@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class Armature {
 
-    private final IJoint[] joints;
+    private final Joint[] joints;
     private final SkinPartType[] partTypes;
-    private final Map<String, IJoint> namedJoints;
-    private final Map<SkinPartType, IJoint> linkedJoints;
-    private final IJoint wildcardJoint;
+    private final Map<String, Joint> namedJoints;
+    private final Map<SkinPartType, Joint> linkedJoints;
+    private final Joint wildcardJoint;
 
     private final IJointTransform[] localTransforms;
     private final IJointTransform[] globalTransforms;
@@ -23,7 +23,7 @@ public class Armature {
     private final JointShape[] shapes;
 
     public Armature(Map<String, Joint> joints, Map<Joint, IJointTransform> transforms, Map<SkinPartType, Joint> linkedJoints, @Nullable Joint wildcardJoint, Map<Joint, JointShape> shapes) {
-        this.joints = new IJoint[joints.size()];
+        this.joints = new Joint[joints.size()];
         this.partTypes = new SkinPartType[joints.size()];
         this.localTransforms = new IJointTransform[joints.size()];
         this.globalTransforms = new IJointTransform[joints.size()];
@@ -46,16 +46,16 @@ public class Armature {
     }
 
     @Nullable
-    public IJoint jointByName(String name) {
+    public Joint jointByName(String name) {
         return namedJoints.get(name);
     }
 
-    public IJoint jointById(int id) {
+    public Joint jointById(int id) {
         return joints[id];
     }
 
     @Nullable
-    public IJoint jointByType(SkinPartType partType) {
+    public Joint jointByType(SkinPartType partType) {
         // ...
         return linkedJoints.getOrDefault(partType, wildcardJoint);
     }
@@ -77,7 +77,7 @@ public class Armature {
         return shapes[id];
     }
 
-    public Collection<IJoint> allJoints() {
+    public Collection<Joint> allJoints() {
         return namedJoints.values();
     }
 

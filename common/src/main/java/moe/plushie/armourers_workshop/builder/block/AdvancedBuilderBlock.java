@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -21,12 +22,12 @@ public class AdvancedBuilderBlock extends AbstractHorizontalBlock implements Abs
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+    public BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return ModBlockEntityTypes.ADVANCED_SKIN_BUILDER.get().create(level, blockPos, blockState);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        return ModMenuTypes.ADVANCED_SKIN_BUILDER.get().openMenu(player, level.getBlockEntity(blockPos));
+    protected OpenInteractionResult abi$useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult) {
+        return player.openMenu(ModMenuTypes.ADVANCED_SKIN_BUILDER, level, blockPos);
     }
 }

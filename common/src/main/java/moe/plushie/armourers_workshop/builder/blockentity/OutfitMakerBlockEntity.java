@@ -22,13 +22,13 @@ public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
         super(blockEntityType, blockPos, blockState);
     }
 
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         container.deserialize(serializer);
         itemName = serializer.read(CodingKeys.MAKER_NAME);
         itemFlavour = serializer.read(CodingKeys.MAKER_FLAVOUR);
     }
 
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         container.serialize(serializer);
         if (Strings.isNotEmpty(itemName)) {
             serializer.write(CodingKeys.MAKER_NAME, itemName);

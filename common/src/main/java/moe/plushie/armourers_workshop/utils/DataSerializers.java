@@ -1,16 +1,14 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.EntityCollisionShape;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -39,7 +37,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.util.Strings;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,18 +57,28 @@ import java.util.zip.GZIPOutputStream;
 @SuppressWarnings("unused")
 public class DataSerializers {
 
-    public static final IDataCodec<IResourceLocation> RESOURCE_LOCATION = IDataCodec.STRING.xmap(OpenResourceLocation::parse, IResourceLocation::toString);
     public static final IDataCodec<OpenRectangle3f> BOUNDING_BOX = IDataCodec.FLOAT.listOf().xmap(OpenRectangle3f::new, OpenRectangle3f::toList);
     public static final IDataCodec<SkinPaintData> COMPRESSED_PAINT_DATA = IDataCodec.BYTE_BUFFER.xmap(DataSerializers::decompressPaintData, DataSerializers::compressPaintData);
     public static final IDataCodec<EntityTextureDescriptor.Model> ENTITY_TEXTURE_MODEL = IDataCodec.INT.xmap(DataSerializers::parseTextureModel, EntityTextureDescriptor.Model::ordinal);
 
-    public static final IEntitySerializer<CompoundTag> COMPOUND_TAG = of(EntityDataSerializers.COMPOUND_TAG);
-    public static final IEntitySerializer<Integer> INT = of(EntityDataSerializers.INT);
-    public static final IEntitySerializer<String> STRING = of(EntityDataSerializers.STRING);
-    public static final IEntitySerializer<Boolean> BOOLEAN = of(EntityDataSerializers.BOOLEAN);
-    public static final IEntitySerializer<Float> FLOAT = of(EntityDataSerializers.FLOAT);
+    public static final IEntityDataSerializer<Integer> INT = of(EntityDataSerializers.INT);
+    public static final IEntityDataSerializer<String> STRING = of(EntityDataSerializers.STRING);
+    public static final IEntityDataSerializer<Boolean> BOOLEAN = of(EntityDataSerializers.BOOLEAN);
+    public static final IEntityDataSerializer<Float> FLOAT = of(EntityDataSerializers.FLOAT);
 
-    public static final IEntitySerializer<Vec3> VECTOR_3D = new IEntitySerializer<Vec3>() {
+    public static final IEntityDataSerializer<CompoundTag> COMPOUND_TAG = new IEntityDataSerializer<CompoundTag>() {
+        @Override
+        public CompoundTag read(IFriendlyByteBuf buffer) {
+            return buffer.readNbt();
+        }
+
+        @Override
+        public void write(IFriendlyByteBuf buffer, CompoundTag value) {
+            buffer.writeNbt(value);
+        }
+    };
+
+    public static final IEntityDataSerializer<Vec3> VECTOR_3D = new IEntityDataSerializer<Vec3>() {
         @Override
         public void write(IFriendlyByteBuf buffer, Vec3 pos) {
             buffer.writeDouble(pos.x());
@@ -85,7 +92,7 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<OpenVector3f> VECTOR_3F = new IEntitySerializer<OpenVector3f>() {
+    public static final IEntityDataSerializer<OpenVector3f> VECTOR_3F = new IEntityDataSerializer<OpenVector3f>() {
         @Override
         public void write(IFriendlyByteBuf buffer, OpenVector3f pos) {
             buffer.writeFloat(pos.x());
@@ -99,7 +106,7 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<SkinPaintColor> PAINT_COLOR = new IEntitySerializer<SkinPaintColor>() {
+    public static final IEntityDataSerializer<SkinPaintColor> PAINT_COLOR = new IEntityDataSerializer<SkinPaintColor>() {
         @Override
         public void write(IFriendlyByteBuf buffer, SkinPaintColor color) {
             buffer.writeInt(color.rawValue());
@@ -111,7 +118,7 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<EntityTextureDescriptor> PLAYER_TEXTURE = new IEntitySerializer<EntityTextureDescriptor>() {
+    public static final IEntityDataSerializer<EntityTextureDescriptor> PLAYER_TEXTURE = new IEntityDataSerializer<EntityTextureDescriptor>() {
 
         @Override
         public void write(IFriendlyByteBuf buffer, EntityTextureDescriptor descriptor) {
@@ -124,7 +131,7 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = new IEntitySerializer<EntityTextureDescriptor.Model>() {
+    public static final IEntityDataSerializer<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = new IEntityDataSerializer<EntityTextureDescriptor.Model>() {
 
         @Override
         public void write(IFriendlyByteBuf buffer, EntityTextureDescriptor.Model descriptor) {
@@ -138,7 +145,7 @@ public class DataSerializers {
     };
 
 
-    public static final IEntitySerializer<EntityCollisionShape> COLLISION_SHAPE_OPT = new IEntitySerializer<EntityCollisionShape>() {
+    public static final IEntityDataSerializer<EntityCollisionShape> COLLISION_SHAPE_OPT = new IEntityDataSerializer<EntityCollisionShape>() {
         @Override
         public EntityCollisionShape read(IFriendlyByteBuf buffer) {
             int size = buffer.readVarInt();
@@ -165,8 +172,9 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntitySerializer<Exception> EXCEPTION = new IEntitySerializer<Exception>() {
+    public static final IEntityDataSerializer<Exception> EXCEPTION = new IEntityDataSerializer<Exception>() {
 
+        @Override
         public void write(IFriendlyByteBuf buffer, Exception exception) {
             OutputStream outputStream = null;
             ObjectOutputStream objectOutputStream = null;
@@ -183,6 +191,7 @@ public class DataSerializers {
             }
         }
 
+        @Override
         public Exception read(IFriendlyByteBuf buffer) {
             InputStream inputStream = null;
             ObjectInputStream objectInputStream = null;
@@ -222,17 +231,17 @@ public class DataSerializers {
     public static final IMenuSerializer<SkinWardrobe> ENTITY_WARDROBE = new IMenuSerializer<SkinWardrobe>() {
         public void write(IFriendlyByteBuf buffer, Player player, SkinWardrobe wardrobe) {
             buffer.writeInt(wardrobe.id());
-            buffer.writeResourceLocation(wardrobe.profile().registryName());
+            buffer.writeUtf(wardrobe.profile().registryName().toString());
         }
 
         public SkinWardrobe read(IFriendlyByteBuf buffer, Player player) {
-            if (player == null || player.getLevel() == null) {
+            if (player == null) {
                 return null;
             }
             var entityId = buffer.readInt();
-            var entity = player.getLevel().getEntity(entityId);
+            var entity = player.level().getEntity(entityId);
             if (entity == null) {
-                for (Player player1 : player.getLevel().players()) {
+                for (Player player1 : player.level().players()) {
                     if (player1.getId() == entityId) {
                         entity = player1;
                         break;
@@ -240,7 +249,7 @@ public class DataSerializers {
                 }
             }
             var wardrobe = SkinWardrobe.of(entity);
-            var serverProfile = ModEntityProfiles.getProfile(buffer.readResourceLocation());
+            var serverProfile = ModEntityProfiles.getProfile(OpenResourceLocation.parse(buffer.readUtf()));
             if (wardrobe != null && serverProfile != null) {
                 // we need to maintain consistency of the entity profile,
                 // some strange mods(e.g.: taterzens) deliberately make the
@@ -253,16 +262,16 @@ public class DataSerializers {
 
     public static final IMenuSerializer<IGlobalPos> GLOBAL_POS = new IMenuSerializer<IGlobalPos>() {
         public void write(IFriendlyByteBuf buffer, Player player, IGlobalPos callable) {
-            var pos1 = callable.evaluate((world, pos) -> pos);
+            var pos1 = callable.evaluate((level, pos) -> pos);
             buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
         }
 
         public IGlobalPos read(IFriendlyByteBuf buffer, Player player) {
-            if (player == null || player.getLevel() == null) {
+            if (player == null) {
                 return null;
             }
             var blockPos = buffer.readBlockPos();
-            return IGlobalPos.create(player.getLevel(), blockPos);
+            return IGlobalPos.create(player.level(), blockPos);
         }
     };
 
@@ -301,31 +310,8 @@ public class DataSerializers {
 
     private static final Random RANDOM = new Random();
 
-    public static <T> IEntitySerializer<T> of(EntityDataSerializer<T> serializer) {
+    public static <T> IEntityDataSerializer<T> of(EntityDataSerializer<T> serializer) {
         return AbstractEntityDataSerializer.wrap(serializer);
-    }
-
-    public static GameProfile readGameProfile(CompoundTag tag) {
-        try {
-            var name = tag.getOptionalString("Name").orElse(null);
-            var id = tag.getOptionalUUID("Id").orElse(null);
-            return new GameProfile(id, name);
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
-
-    public static CompoundTag writeGameProfile(CompoundTag tag, GameProfile value) {
-        if (value == null) {
-            return tag;
-        }
-        if (Strings.isNotBlank(value.getName())) {
-            tag.putString("Name", value.getName());
-        }
-        if (value.getId() != null) {
-            tag.putUUID("Id", value.getId());
-        }
-        return tag;
     }
 
     public static void dropContents(Level level, BlockPos blockPos, Container container) {
@@ -403,6 +389,6 @@ public class DataSerializers {
         if (index < values.length) {
             return values[index];
         }
-        return EntityTextureDescriptor.Model.STEVE;
+        return EntityTextureDescriptor.Model.WIDE;
     }
 }

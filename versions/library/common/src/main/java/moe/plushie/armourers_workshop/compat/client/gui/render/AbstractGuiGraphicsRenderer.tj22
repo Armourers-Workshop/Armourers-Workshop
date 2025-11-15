@@ -1,0 +1,163 @@
+package moe.plushie.armourers_workshop.compat.client.gui.render;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGGraphicsElement;
+import com.apple.library.coregraphics.CGGraphicsParameters;
+import com.apple.library.coregraphics.CGGraphicsRenderer;
+import com.apple.library.coregraphics.CGGraphicsState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.client.gui.element.ClipGuiElement;
+import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
+import net.minecraft.client.gui.GuiGraphics;
+import org.joml.Matrix3x2f;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
+
+    private final int width;
+    private final int height;
+
+    private final CGGraphicsState state;
+    private final GuiGraphics graphics;
+
+    private final ArrayList<Entry> lazyEntries = new ArrayList<>();
+    private final ArrayList<Entry> offscreenEntries = new ArrayList<>();
+
+    private final ArrayList<AbstractComposeGuiGraphicsState> pipelines = new ArrayList<>();
+
+    private AbstractGuiGraphicsRenderer(GuiGraphics graphics, float width, float height) {
+        this.state = new CGGraphicsState(AbstractPoseStack.wrap(new PoseStack()));
+        this.graphics = graphics;
+        this.width = (int) width;
+        this.height = (int) height;
+
+    }
+
+    public static void wrap(GuiGraphics graphics, float width, float height, float mouseX, float mouseY, float partialTicks, Consumer<CGGraphicsContext> action) {
+        var param = new CGGraphicsParameters(width, height, mouseX, mouseY, partialTicks, graphics);
+        var renderer = new AbstractGuiGraphicsRenderer(graphics, width, height);
+        var context = new CGGraphicsContext(renderer.state, param, renderer);
+        context.draw(StateGuiElement.beginComposeLayer("main"));
+        action.accept(context);
+        context.draw(StateGuiElement.endComposeLayer("main"));
+    }
+
+    public static void unwrap(CGGraphicsContext context, String name, Consumer<GuiGraphics> action) {
+        var graphics = (GuiGraphics) context.param().context();
+        context.draw(StateGuiElement.beginComposeLayer(name));
+        action.accept(graphics);
+        context.draw(StateGuiElement.endComposeLayer(name));
+    }
+
+    @Override
+    public void render(CGGraphicsElement element) {
+        // we don't need to submit the transparency layer info to graphics.
+        if (element instanceof StateGuiElement.BeginTransparencyLayer || element instanceof StateGuiElement.EndTransparencyLayer) {
+            return;
+        }
+        // before the draw layer, we need to attach some operations.
+        if (element instanceof StateGuiElement.BeginComposeLayer composeLayer) {
+            switch (composeLayer.name()) {
+                case "main" -> beginBatch();
+                case "container" -> addPipeline("background", 0);
+            }
+            // submit all changes after begin layer.
+            submitAllChanges();
+            return;
+        }
+        // after the draw layer, we need to attach some operations.
+        if (element instanceof StateGuiElement.EndComposeLayer composeLayer) {
+            // submit all changes before end layer to ensure that all elements are flushed.
+            submitAllChanges();
+            switch (composeLayer.name()) {
+                case "container" -> addPipeline("foreground", 100);
+                case "main" -> endBatch();
+            }
+            return;
+        }
+        // the element allows render in the offscreen?
+        if (element.shouldOffscreenRender()) {
+            offscreenEntries.add(new Entry(element));
+            return;
+        }
+        lazyEntries.add(new Entry(element));
+    }
+
+    private void submitAllChanges() {
+        if (lazyEntries.isEmpty()) {
+            return;
+        }
+        var frozenState = state.snapshot();
+        var frozenEntries = new ArrayList<>(lazyEntries);
+        lazyEntries.clear();
+        var tesselator = AbstractBufferSource.tesselator();
+        for (var entry : frozenEntries) {
+            state.apply(entry.snapshot);
+            entry.element.render(state.ctm(), tesselator);
+        }
+        tesselator.endBatch();
+        state.apply(frozenState);
+    }
+
+    private void addPipeline(String name, int zIndex) {
+        var pipeline = new AbstractComposeGuiGraphicsState(name, new Matrix3x2f(graphics.pose()), 0, 0, width, height, 1.0f, zIndex);
+        graphics.guiRenderState.submitPicturesInPictureState(pipeline);
+        pipelines.add(pipeline);
+    }
+
+    private void beginBatch() {
+        // nop.
+    }
+
+    private void endBatch() {
+        // add a default layer when the content is missing.
+        if (pipelines.isEmpty()) {
+            addPipeline("default", 0);
+        }
+        // submit entry into layer.
+        for (var entry : offscreenEntries) {
+            // the clip element must apply into all pipelines.
+            if (entry.element instanceof ClipGuiElement) {
+                pipelines.forEach(it -> it.submit(entry.element, entry.snapshot));
+                continue;
+            }
+            // assign to suitable pipeline by according z index.
+            // min_value | 0 | 1 | max_value => (min_value, 0], (0, 1], (1, max_value]
+            var selectedPipeline = pipelines.get(pipelines.size() - 1);
+            for (var childPipeline : pipelines) {
+                if (entry.zIndex <= childPipeline.zIndex()) {
+                    selectedPipeline = childPipeline;
+                    break;
+                }
+            }
+            selectedPipeline.submit(entry.element, entry.snapshot);
+        }
+    }
+
+    private class Entry {
+
+        private final float zIndex;
+        private final CGGraphicsState.Snapshot snapshot;
+        private final CGGraphicsElement element;
+
+        public Entry(CGGraphicsElement element) {
+            this.snapshot = state.snapshot();
+            this.element = element;
+            this.zIndex = snapshot.ctm().pose().m32;
+        }
+
+        @Override
+        public String toString() {
+            return element.getClass().getName().replaceFirst("^.+\\.([^.]+)$", "$1");
+        }
+    }
+}

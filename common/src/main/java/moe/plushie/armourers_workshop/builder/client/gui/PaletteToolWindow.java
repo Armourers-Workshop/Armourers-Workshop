@@ -14,31 +14,28 @@ import com.apple.library.uikit.UITextFieldDelegate;
 import moe.plushie.armourers_workshop.builder.client.gui.widget.PaletteEditingWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.HSBSliderBox;
-import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.ContainerMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
-public class PaletteToolWindow extends PaletteEditingWindow<AbstractContainerMenu> implements UITextFieldDelegate {
+public class PaletteToolWindow extends PaletteEditingWindow<ContainerMenu> implements UITextFieldDelegate {
 
-    private final InteractionHand hand;
+    private final OpenInteractionHand hand;
     private final ItemStack itemStack;
 
-    public PaletteToolWindow(Component title, ItemStack itemStack, InteractionHand hand) {
+    public PaletteToolWindow(Component title, ItemStack itemStack, OpenInteractionHand hand) {
         super(ClientMenuScreen.createEmptyMenu(), ClientMenuScreen.createEmptyInventory(), new NSString(title));
         this.hand = hand;
         this.itemStack = itemStack;

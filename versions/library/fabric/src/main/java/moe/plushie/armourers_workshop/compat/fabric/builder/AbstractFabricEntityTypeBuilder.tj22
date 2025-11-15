@@ -1,0 +1,15 @@
+package moe.plushie.armourers_workshop.compat.fabric.builder;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
+import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+
+@Available("[1.22, )")
+public class AbstractFabricEntityTypeBuilder<T extends Entity> extends AbstractEntityTypeBuilder<T> {
+
+    public AbstractFabricEntityTypeBuilder(IEntityType.Serializer<T> serializer, MobCategory category) {
+        super(serializer, category);
+    }
+}

@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.client.renderer.GameRenderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractItemSpecialRenderer;
+import net.minecraft.world.item.Item;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.22, )")
+@Extension
+public class ItemRendererExt {
+
+    public static void registerItemSpecialRendererFA(@ThisClass Class<?> clazz, IRegistryHolder<? extends Item> item, AbstractItemSpecialRenderer provider) {
+        // vanilla will be automatically registered by assets/<mod id>/items/<item id>.json
+    }
+}
+

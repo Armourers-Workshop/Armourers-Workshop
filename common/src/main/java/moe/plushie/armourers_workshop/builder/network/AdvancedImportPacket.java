@@ -49,7 +49,7 @@ public class AdvancedImportPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // this is an unauthorized operation, ignore it
-        var blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.level().getBlockEntity(pos);
         if (!(blockEntity instanceof AdvancedBuilderBlockEntity blockEntity1) || !(player.containerMenu instanceof AdvancedBuilderMenu) || skin == null) {
             abort(player, "unauthorized", "user status is incorrect or the skin is invalid");
             return;

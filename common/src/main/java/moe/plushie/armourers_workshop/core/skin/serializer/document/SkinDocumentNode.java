@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenUUID;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class SkinDocumentNode implements IDataSerializable.Immutable {
 
-    public static final IDataCodec<SkinDocumentNode> CODEC = IDataCodec.COMPOUND_TAG.serializer(SkinDocumentNode::new);
+    public static final IDataCodec<SkinDocumentNode> CODEC = ExtraCodecs.serializable(SkinDocumentNode::new);
 
     private OpenVector3f location = OpenVector3f.ZERO;
     private OpenVector3f rotation = OpenVector3f.ZERO;

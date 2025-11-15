@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.api.network;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractFriendlyByteBuf;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractFriendlyByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -61,11 +60,7 @@ public interface IFriendlyByteBuf {
 
     <T extends Enum<T>> T readEnum(Class<T> clazz);
 
-    void writeEnum(Enum<?> value);
-
-    IResourceLocation readResourceLocation();
-
-    void writeResourceLocation(IResourceLocation value);
+    <T extends Enum<T>> void writeEnum(T value);
 
     ItemStack readItem();
 

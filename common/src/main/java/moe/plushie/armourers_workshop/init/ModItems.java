@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.common.IItemGroup;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
-import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
 import moe.plushie.armourers_workshop.builder.item.BlendingToolItem;
 import moe.plushie.armourers_workshop.builder.item.BlockMarkerItem;
 import moe.plushie.armourers_workshop.builder.item.BurnToolItem;
@@ -16,10 +14,9 @@ import moe.plushie.armourers_workshop.builder.item.PaintbrushItem;
 import moe.plushie.armourers_workshop.builder.item.ShadeNoiseToolItem;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.builder.item.SoapItem;
-import moe.plushie.armourers_workshop.core.client.render.MannequinItemRenderer;
-import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.item.ArmourersHammerItem;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.FlavouredBlockItem;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
 import moe.plushie.armourers_workshop.core.item.LinkingToolItem;
@@ -29,9 +26,8 @@ import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.item.SkinUnlockItem;
 import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
-import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -43,12 +39,12 @@ import java.util.function.Supplier;
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class ModItems {
 
-    private static final ItemBuilder MAIN = new ItemBuilder(ModItemGroups.MAIN_GROUP);
-    private static final ItemBuilder BUILDING = new ItemBuilder(ModItemGroups.BUILDING_GROUP);
+    private static final ItemBuilder MAIN = new ItemBuilder(ModCreativeModeTabs.MAIN_GROUP);
+    private static final ItemBuilder BUILDING = new ItemBuilder(ModCreativeModeTabs.BUILDING_GROUP);
     private static final ItemBuilder NONE = new ItemBuilder(null);
 
-    public static final IRegistryHolder<Item> SKIN = NONE.skin(ModBlocks.SKINNABLE).bind(() -> SkinItemRenderer::getInstance).build("skin");
-    public static final IRegistryHolder<Item> MANNEQUIN = MAIN.normal(MannequinItem::new).rarity(Rarity.RARE).bind(() -> MannequinItemRenderer::getInstance).build("mannequin");
+    public static final IRegistryHolder<Item> SKIN = NONE.skin(ModBlocks.SKINNABLE).build("skin");
+    public static final IRegistryHolder<Item> MANNEQUIN = MAIN.normal(MannequinItem::new).rarity(Rarity.RARE).build("mannequin");
 
     public static final IRegistryHolder<Item> SKIN_LIBRARY = MAIN.block(ModBlocks.SKIN_LIBRARY).build("skin-library");
     public static final IRegistryHolder<Item> SKIN_LIBRARY_CREATIVE = MAIN.block(ModBlocks.SKIN_LIBRARY_CREATIVE).rarity(Rarity.EPIC).build("skin-library-creative");
@@ -101,34 +97,34 @@ public class ModItems {
 
     private static class ItemBuilder {
 
-        IRegistryHolder<IItemGroup> group;
+        private final IRegistryHolder<CreativeModeTab> group;
 
-        ItemBuilder(IRegistryHolder<IItemGroup> group) {
+        private ItemBuilder(IRegistryHolder<CreativeModeTab> group) {
             this.group = group;
         }
 
-        IItemBuilder<Item> normal(Function<Item.Properties, Item> factory) {
+        public IItemBuilder<Item> normal(Function<Item.Properties, Item> factory) {
             return _create(factory).stacksTo(1).group(group);
         }
 
-        IItemBuilder<Item> block(IRegistryHolder<Block> block) {
-            return _create(BlockItem::new, block).stacksTo(64).rarity(Rarity.RARE);
+        public IItemBuilder<Item> block(IRegistryHolder<Block> block) {
+            return _create(FlavouredBlockItem::new, block).useDescriptionPrefix("block").stacksTo(64).rarity(Rarity.RARE);
         }
 
-        IItemBuilder<Item> cube(IRegistryHolder<Block> block) {
-            return _create(SkinCubeItem::new, block).stacksTo(64).bind(() -> SkinCubeItemRenderer::getInstance);
+        public IItemBuilder<Item> cube(IRegistryHolder<Block> block) {
+            return _create(SkinCubeItem::new, block).useDescriptionPrefix("block").stacksTo(64);
         }
 
-        IItemBuilder<Item> skin(IRegistryHolder<Block> block) {
-            return _create(SkinItem::new, block).stacksTo(1);
+        public IItemBuilder<Item> skin(IRegistryHolder<Block> block) {
+            return _create(SkinItem::new, block).useDescriptionPrefix("block").stacksTo(1);
         }
 
-        IItemBuilder<Item> unlock(SkinSlotType slotType) {
+        public IItemBuilder<Item> unlock(SkinSlotType slotType) {
             return _create(SkinUnlockItem::new, () -> slotType).stacksTo(16).rarity(Rarity.UNCOMMON);
         }
 
         private IItemBuilder<Item> _create(Function<Item.Properties, Item> factory) {
-            return Objects.unsafeCast(BuilderManager.getInstance().createItemBuilder(factory));
+            return BuilderManager.getInstance().createItemBuilder(factory);
         }
 
         private <T> IItemBuilder<Item> _create(BiFunction<T, Item.Properties, Item> factory, Supplier<T> supplier) {

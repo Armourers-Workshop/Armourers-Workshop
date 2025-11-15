@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.EnchantmentSelector;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.ItemSelector;
 import net.minecraft.world.item.ItemStack;

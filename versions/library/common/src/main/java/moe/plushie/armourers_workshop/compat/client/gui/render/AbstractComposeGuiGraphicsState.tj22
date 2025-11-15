@@ -1,0 +1,123 @@
+package moe.plushie.armourers_workshop.compat.client.gui.render;
+
+import com.apple.library.coregraphics.CGGraphicsElement;
+import com.apple.library.coregraphics.CGGraphicsState;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.client.gui.element.ClipGuiElement;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2f;
+
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractComposeGuiGraphicsState implements PictureInPictureRenderState {
+
+    private final String name;
+    private final ScreenRectangle bounds;
+
+    private final ArrayList<Pair<CGGraphicsState.Snapshot, CGGraphicsElement>> entries = new ArrayList<>();
+
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+    private final int zIndex;
+
+    private final float scale;
+    private final Matrix3x2f pose;
+
+    public AbstractComposeGuiGraphicsState(String name, Matrix3x2f pose, int x, int y, int width, int height, float scale, int zIndex) {
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.zIndex = zIndex;
+        this.width = width;
+        this.height = height;
+        this.scale = scale;
+        this.pose = pose;
+        this.bounds = new ScreenRectangle(x, y, width, height);
+    }
+
+    public void submit(CGGraphicsElement element, CGGraphicsState.Snapshot snapshot) {
+        // when the end clip layer, we need check the render content element exists.
+        if (element instanceof ClipGuiElement.EndClipLayer) {
+            if (entries.isEmpty()) {
+                return; // illegal state.
+            }
+            var lastIndex = entries.size() - 1;
+            if (entries.get(lastIndex).getRight() instanceof ClipGuiElement.BeginClipLayer) {
+                entries.remove(lastIndex);
+                return; // not any content element, skip the clip layer group.
+            }
+        }
+        entries.add(Pair.of(snapshot, element));
+    }
+
+    public void forEach(BiConsumer<CGGraphicsState.Snapshot, CGGraphicsElement> consumer) {
+        for (var entry : entries) {
+            consumer.accept(entry.getLeft(), entry.getRight());
+        }
+    }
+
+    @Override
+    public int x0() {
+        return x;
+    }
+
+    @Override
+    public int x1() {
+        return x + width;
+    }
+
+    @Override
+    public int y0() {
+        return y;
+    }
+
+    @Override
+    public int y1() {
+        return y + height;
+    }
+
+    @Override
+    public float scale() {
+        return scale;
+    }
+
+    public int zIndex() {
+        return zIndex;
+    }
+
+    @Nullable
+    @Override
+    public ScreenRectangle scissorArea() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ScreenRectangle bounds() {
+        return bounds;
+    }
+
+    @Override
+    public Matrix3x2f pose() {
+        return pose;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public boolean isEmpty() {
+        return entries.isEmpty();
+    }
+}

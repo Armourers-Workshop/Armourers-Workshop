@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.core.utils.Colors;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -82,12 +82,12 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
                 }
             }
         });
-        var paintColor = SkinPaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
+        var paintColor = SkinPaintColor.of(Colors.getAverageColor(colors), SkinPaintTypes.NORMAL);
         return new CubePaintingEvent.BlendingAction(paintColor, intensity);
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
+    protected void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
         int intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         int radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
         int radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
@@ -99,6 +99,6 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
 
     @Override
     public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.PAINT;
+        return ModSoundEvents.PAINT;
     }
 }

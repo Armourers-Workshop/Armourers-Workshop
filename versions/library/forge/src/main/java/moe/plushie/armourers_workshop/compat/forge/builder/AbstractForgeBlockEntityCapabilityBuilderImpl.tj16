@@ -1,0 +1,16 @@
+package moe.plushie.armourers_workshop.compat.forge.builder;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+
+import manifold.ext.rt.api.auto;
+
+@Available("[1.16, 1.19)")
+public class AbstractForgeBlockEntityCapabilityBuilderImpl {
+
+    public static final auto BLOCK_ITEM_HANDLER = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    public static final auto BLOCK_FLUID_HANDLER = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+    public static final auto BLOCK_ENERGY_HANDLER = CapabilityEnergy.ENERGY;
+}

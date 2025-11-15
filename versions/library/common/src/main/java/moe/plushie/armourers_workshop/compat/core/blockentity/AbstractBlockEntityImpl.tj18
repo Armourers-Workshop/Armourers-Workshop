@@ -1,0 +1,63 @@
+package moe.plushie.armourers_workshop.compat.core.blockentity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.core.network.BlockEntityDataPacket;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+@Available("[1.18, 1.21)")
+public abstract class AbstractBlockEntityImpl extends BlockEntity {
+
+    public AbstractBlockEntityImpl(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
+    }
+
+    public abstract void readAdditionalData(IDataSerializer serializer);
+
+    public abstract void writeAdditionalData(IDataSerializer serializer);
+
+    @Override
+    public final void load(CompoundTag tag) {
+        super.load(tag);
+        this.readAdditionalData(new TagSerializer(tag, SerializationContext.from(this)));
+    }
+
+    @Override
+    protected final void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        this.writeAdditionalData(new TagSerializer(tag, SerializationContext.from(this)));
+    }
+
+    @Nullable
+    public BlockEntityDataPacket getUpdateDataPacket() {
+        return null;
+    }
+
+    @Override
+    public final ClientboundBlockEntityDataPacket getUpdatePacket() {
+        // when block not support updates, don't create an update packet.
+        var packet = getUpdateDataPacket();
+        if (packet != null) {
+            var serializer = new TagSerializer(SerializationContext.from(this));
+            this.writeAdditionalData(serializer);
+            return ClientboundBlockEntityDataPacket.create(this, be -> serializer.tag());
+        }
+        return null;
+    }
+
+    @Override
+    public final CompoundTag getUpdateTag() {
+        var serializer = new TagSerializer(SerializationContext.from(this));
+        saveFullData(serializer);
+        return serializer.tag();
+    }
+}
+

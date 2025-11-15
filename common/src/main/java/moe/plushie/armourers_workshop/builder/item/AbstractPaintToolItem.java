@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.item.ConfigurableToolItem;
 import moe.plushie.armourers_workshop.init.ModHolidays;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.context.UseOnContext;
@@ -24,7 +24,7 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
             return;
         }
         if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
-            soundEvent = ModSounds.BOI;
+            soundEvent = ModSoundEvents.BOI;
         }
         var pitch = getItemSoundPitch(context);
         var level = context.getLevel();

@@ -59,10 +59,10 @@ public class UITextView extends UIScrollView implements TextInputTraits {
 
     @Override
     public void keyDown(UIEvent event) {
-        if (shouldInputText() && input.keyDown(event.key)) {
+        if (shouldInputText() && input.keyDown(event.key())) {
             return;
         }
-        if (isFocused() && event.key == GLFW.GLFW_KEY_ESCAPE) {
+        if (isFocused() && event.key().is(GLFW.GLFW_KEY_ESCAPE)) {
             resignFirstResponder();
             return;
         }
@@ -71,7 +71,7 @@ public class UITextView extends UIScrollView implements TextInputTraits {
 
     @Override
     public void charTyped(UIEvent event) {
-        if (shouldInputText() && input.charTyped((char) event.key)) {
+        if (shouldInputText() && input.charTyped(event.key())) {
             return;
         }
         super.charTyped(event);
@@ -86,9 +86,9 @@ public class UITextView extends UIScrollView implements TextInputTraits {
             context.fillRect(bounds, borderColor());
             context.fillRect(fixedBounds, fillColor());
         }
-        context.addClip(UIScreen.convertRectFromView(fixedBounds, this));
+        context.addClipPath(UIScreen.convertRectFromView(fixedBounds, this));
         storage.render(point, context);
-        context.removeClip();
+        context.removeClipPath();
     }
 
     public boolean isEditable() {

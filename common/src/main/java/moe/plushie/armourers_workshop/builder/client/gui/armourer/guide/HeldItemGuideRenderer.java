@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class HeldItemGuideRenderer extends AbstractGuideRenderer {
 
     private final OpenModelPart armSolid;
@@ -37,13 +34,13 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.ITEM, this::render);
     }
 
-    public void render(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
+    public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
         float f = 1 / 16f;
-        poseStack.pushPose();
-        poseStack.rotate(OpenVector3f.XP.rotationDegrees(-90));
-        armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
-        poseStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), light, overlay, 0xbfffffff);
-        poseStack.popPose();
+        context.saveGraphicsState();
+        context.rotateCTM(OpenVector3f.XP.rotationDegrees(-90));
+        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.translateCTM(0, -0.001f * f, 0);
+        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderType.PLAYER_TRANSLUCENT));
+        context.restoreGraphicsState();
     }
 }

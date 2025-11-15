@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -14,22 +16,20 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
+public class DyeTableMenu extends BlockEntityContainerMenu<DyeTableBlockEntity> {
 
     private final SkinPaintType[] paintTypes = {SkinPaintTypes.DYE_1, SkinPaintTypes.DYE_2, SkinPaintTypes.DYE_3, SkinPaintTypes.DYE_4, SkinPaintTypes.DYE_5, SkinPaintTypes.DYE_6, SkinPaintTypes.DYE_7, SkinPaintTypes.DYE_8};
     private final Container inventory;
 
     private ArrayList<SkinPaintType> lockedPaintTypes = new ArrayList<>();
 
-    public DyeTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
+    public DyeTableMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.inventory = blockEntity.getInventory();
         this.addPlayerSlots(playerInventory, 8, 108);
@@ -59,48 +59,42 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         inventory.setItem(9, itemStack);
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size() - 1);
-    }
-
     protected void addInputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
 
             @Override
-            public boolean mayPickup(Player player) {
+            protected void abi$setChanged() {
+                super.abi$setChanged();
+                if (inventory.getItem(9).isEmpty()) {
+                    loadSkin(getItem());
+                }
+            }
+
+            @Override
+            protected boolean abi$mayPickup(Player player) {
                 return false;
             }
 
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            protected boolean abi$mayPlace(ItemStack itemStack) {
                 return !SkinDescriptor.of(itemStack).isEmpty();
-            }
-
-            @Override
-            public void setChanged() {
-                super.setChanged();
-                if (inventory.getItem(9).isEmpty()) {
-                    loadSkin(getItem());
-                }
             }
         });
     }
 
     protected void addOutputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
-
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
-                return false;
-            }
-
-            @Override
-            public void setChanged() {
-                super.setChanged();
+            protected void abi$setChanged() {
+                super.abi$setChanged();
                 if (!hasItem()) {
                     loadSkin(ItemStack.EMPTY);
                 }
+            }
+
+            @Override
+            protected boolean abi$mayPlace(ItemStack itemStack) {
+                return false;
             }
         });
     }
@@ -154,6 +148,11 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         setOutputStack(newItemStack);
     }
 
+    @Override
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
+        return abi$quickMoveStack(player, index, slots.size() - 1);
+    }
+
     public class LockableSlot extends SkinSlot {
 
         private final SkinPaintType paintType;
@@ -163,8 +162,18 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
             this.paintType = paintType;
         }
 
+        protected boolean isLocked() {
+            return lockedPaintTypes != null && lockedPaintTypes.contains(paintType);
+        }
+
         @Override
-        public boolean mayPlace(ItemStack itemStack) {
+        protected void abi$setChanged() {
+            super.abi$setChanged();
+            applySkin(outputStack());
+        }
+
+        @Override
+        protected boolean abi$mayPlace(ItemStack itemStack) {
             // when not have input, place will cause the bottle lost.
             if (inputStack().isEmpty()) {
                 return false;
@@ -173,17 +182,7 @@ public class DyeTableMenu extends AbstractBlockEntityMenu<DyeTableBlockEntity> {
         }
 
         @Override
-        public void setChanged() {
-            super.setChanged();
-            applySkin(outputStack());
-        }
-
-        public boolean isLocked() {
-            return lockedPaintTypes != null && lockedPaintTypes.contains(paintType);
-        }
-
-        @Override
-        public boolean isActive() {
+        protected boolean abi$isActive() {
             return !isLocked();
         }
     }

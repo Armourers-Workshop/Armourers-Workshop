@@ -2,6 +2,9 @@ package com.apple.library.uikit;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.impl.InvokerResult;
+import com.apple.library.impl.event.InputKeyEvent;
+import com.apple.library.impl.event.InputMouseEvent;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class UIEvent {
@@ -9,29 +12,21 @@ public class UIEvent {
     private InvokerResult result = InvokerResult.PASS;
     private boolean isCancelled = false;
 
-    protected final int key;
-    protected final int keyModifier;
-
     protected final long timestamp;
     protected final CGPoint delta;
     protected final CGPoint location;
     protected final Type type;
 
-    public UIEvent(Type type, int key, int keyModifier, CGPoint location, CGPoint delta) {
+    protected final InputKeyEvent key;
+    protected final InputMouseEvent mouse;
+
+    public UIEvent(Type type, CGPoint location, CGPoint delta, @Nullable InputKeyEvent key, @Nullable InputMouseEvent mouse) {
         this.type = type;
         this.location = location;
         this.timestamp = System.currentTimeMillis();
         this.delta = delta;
         this.key = key;
-        this.keyModifier = keyModifier;
-    }
-
-    public int key() {
-        return key;
-    }
-
-    public int keyModifier() {
-        return keyModifier;
+        this.mouse = mouse;
     }
 
     public Type type() {
@@ -69,6 +64,14 @@ public class UIEvent {
 
     public boolean isCancelled() {
         return isCancelled;
+    }
+
+    public InputKeyEvent key() {
+        return key;
+    }
+
+    public InputMouseEvent mouse() {
+        return mouse;
     }
 
     public enum Type {

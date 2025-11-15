@@ -298,7 +298,7 @@ public class OpenQuaternionf implements IQuaternionf {
         return this.w;
     }
 
-    public void mul(OpenQuaternionf other) {
+    public OpenQuaternionf multiply(OpenQuaternionf other) {
         float f = x;
         float g = y;
         float h = z;
@@ -311,13 +311,15 @@ public class OpenQuaternionf implements IQuaternionf {
         this.y = i * k - f * l + g * m + h * j;
         this.z = i * l + f * k - g * j + h * m;
         this.w = i * m - f * j - g * k - h * l;
+        return this;
     }
 
-    public void mul(float f) {
+    public OpenQuaternionf multiply(float f) {
         this.x *= f;
         this.y *= f;
         this.z *= f;
         this.w *= f;
+        return this;
     }
 
     public float dot(OpenQuaternionf other) {

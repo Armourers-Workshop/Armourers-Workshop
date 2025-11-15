@@ -4,112 +4,120 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.client.other.ConcurrentBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.element.SkinPartElement;
+import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
 public class SkinRenderer {
 
-    public static void render(Entity entity, BakedArmature armature, BakedSkin bakedSkin, SkinPaintScheme scheme, ConcurrentRenderingContext context) {
-        var poseStack = context.poseStack();
-        var bufferBuilder = context.getBuffer(bakedSkin);
-        for (var bakedPart : bakedSkin.parts()) {
-            var jointTransform = armature.transformByPart(bakedPart);
+    public static int render(BakedSkin skin, SkinPaintScheme scheme, BakedArmature armature, ConcurrentRenderingContext context) {
+        var poseStack = context.ctm();
+        for (var part : skin.parts()) {
+            var jointTransform = armature.transformByPart(part);
             if (jointTransform == null) {
                 continue;
             }
             poseStack.pushPose();
             jointTransform.apply(poseStack);
-            bakedPart.transform().apply(poseStack);
-            bufferBuilder.addPart(bakedPart, bakedSkin, scheme, context);
-            renderChild(entity, bakedPart, bakedSkin, scheme, bakedPart.isVisible(), bufferBuilder, context);
-            renderDebugger(entity, bakedPart, bakedSkin, scheme, bakedPart.isVisible(), bufferBuilder, context);
+            part.transform().apply(poseStack);
+            context.draw(SkinPartElement.newInstance(part, skin, scheme, context));
+            renderChild(part, skin, scheme, part.isVisible(), context);
+            renderDebugger(part, skin, part.isVisible(), context);
             poseStack.popPose();
         }
         if (ModDebugger.skinBounds) {
-            bufferBuilder.addShape(getShape(entity, armature, bakedSkin, poseStack), 0xffff0000, context);
+            var shape = getShape(skin, armature, new OpenPoseStack());
+            context.draw(ShapeElement.stroke(shape, Colors.RED));
         }
         if (ModDebugger.skinOrigin) {
-            bufferBuilder.addShape(OpenVector3f.ZERO, context);
+            context.draw(ShapeElement.arrow());
         }
         if (ModDebugger.armature) {
-            bufferBuilder.addShape(armature, context);
+            context.draw(ShapeElement.stroke(armature, true));
         }
+        return getRenderCount(skin);
     }
 
-    private static void renderChild(Entity entity, BakedSkinPart parentPart, BakedSkin skin, SkinPaintScheme scheme, boolean isVisible, ConcurrentBufferBuilder bufferBuilder, ConcurrentRenderingContext context) {
-        var poseStack = context.poseStack();
+    private static void renderChild(BakedSkinPart parentPart, BakedSkin skin, SkinPaintScheme scheme, boolean isVisible, ConcurrentRenderingContext context) {
+        var poseStack = context.ctm();
         for (var part : parentPart.children()) {
             poseStack.pushPose();
             part.transform().apply(poseStack);
-            bufferBuilder.addPart(part, skin, scheme, context);
-            renderChild(entity, part, skin, scheme, isVisible, bufferBuilder, context);
-            renderDebugger(entity, part, skin, scheme, isVisible, bufferBuilder, context);
+            context.draw(SkinPartElement.newInstance(part, skin, scheme, context));
+            renderChild(part, skin, scheme, isVisible, context);
+            renderDebugger(part, skin, isVisible, context);
             poseStack.popPose();
         }
     }
 
-    private static void renderDebugger(Entity entity, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinPaintScheme scheme, boolean isVisible, ConcurrentBufferBuilder builder, ConcurrentRenderingContext context) {
+    private static void renderDebugger(BakedSkinPart part, BakedSkin skin, boolean isVisible, ConcurrentRenderingContext context) {
         if (!isVisible) {
             return;
         }
         if (ModDebugger.skinPartBounds) {
-            builder.addShape(bakedPart.renderShape(), ColorUtils.getPaletteColor(bakedPart.id()), context);
+            context.draw(ShapeElement.stroke(part.renderShape(), Colors.getPaletteColor(part.id())));
         }
-        if (ModDebugger.skinPartOrigin && bakedPart.type() != SkinPartTypes.ADVANCED_LOCATOR) {
-            builder.addShape(OpenVector3f.ZERO, context);
+        if (ModDebugger.skinPartOrigin && part.type() != SkinPartTypes.ADVANCED_LOCATOR) {
+            context.draw(ShapeElement.arrow());
         }
-        if (ModDebugger.skinLocatorOrigin && bakedPart.type() == SkinPartTypes.ADVANCED_LOCATOR) {
-            builder.addShape(OpenVector3f.ZERO, context);
+        if (ModDebugger.skinLocatorOrigin && part.type() == SkinPartTypes.ADVANCED_LOCATOR) {
+            context.draw(ShapeElement.arrow());
         }
     }
 
-    public static OpenVoxelShape getShape(Entity entity, BakedArmature armature, BakedSkin bakedSkin, IPoseStack poseStack) {
+    public static OpenVoxelShape getShape(BakedSkin skin, BakedArmature armature, IPoseStack poseStack) {
         var voxelShape = new OpenVoxelShape();
-        for (var part : bakedSkin.parts()) {
+        for (var part : skin.parts()) {
             if (!part.isVisible()) {
                 continue; // ignore invisible part.
             }
-            getShape(entity, voxelShape, part, bakedSkin, armature, poseStack);
+            getShape(part, skin, armature, poseStack, voxelShape);
         }
         return voxelShape;
     }
 
-    private static void getShape(Entity entity, OpenVoxelShape shape, BakedSkinPart bakedPart, BakedSkin bakedSkin, BakedArmature armature, IPoseStack poseStack) {
-        var jointTransform = armature.transformByPart(bakedPart);
+    private static void getShape(BakedSkinPart part, BakedSkin skin, BakedArmature armature, IPoseStack poseStack, OpenVoxelShape shape) {
+        var jointTransform = armature.transformByPart(part);
         if (jointTransform == null) {
             return;
         }
-        var shape1 = bakedPart.renderShape().copy();
+        var shape1 = part.renderShape().copy();
         poseStack.pushPose();
         jointTransform.apply(poseStack);
-        bakedPart.transform().apply(poseStack);
+        part.transform().apply(poseStack);
         shape1.mul(poseStack.last().pose());
         shape.add(shape1);
-        for (var childPart : bakedPart.children()) {
-            getChildShape(shape, childPart, poseStack);
+        for (var childPart : part.children()) {
+            getChildShape(childPart, skin, poseStack, shape);
         }
         poseStack.popPose();
     }
 
-    private static void getChildShape(OpenVoxelShape shape, BakedSkinPart bakedPart, IPoseStack poseStack) {
-        var shape1 = bakedPart.renderShape().copy();
+    private static void getChildShape(BakedSkinPart part, BakedSkin skin, IPoseStack poseStack, OpenVoxelShape shape) {
+        var shape1 = part.renderShape().copy();
         poseStack.pushPose();
-        bakedPart.transform().apply(poseStack);
+        part.transform().apply(poseStack);
         shape1.mul(poseStack.last().pose());
         shape.add(shape1);
-        for (var childPart : bakedPart.children()) {
-            getChildShape(shape, childPart, poseStack);
+        for (var childPart : part.children()) {
+            getChildShape(childPart, skin, poseStack, shape);
         }
         poseStack.popPose();
+    }
+
+    private static int getRenderCount(BakedSkin bakedSkin) {
+        int count = 0;
+        for (var part : bakedSkin.parts()) {
+            if (part.isVisible()) {
+                count += 1;
+            }
+        }
+        return count;
     }
 }

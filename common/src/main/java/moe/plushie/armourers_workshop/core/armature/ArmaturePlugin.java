@@ -1,24 +1,23 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 
 public abstract class ArmaturePlugin {
 
-    public void prepare(Entity entity, Context context) {
+    public void prepare(EntityRenderState renderState, Entity entity, float partialTicks) {
     }
 
-    public void activate(Entity entity, Context context) {
+    public void activate(EntityRenderState renderState, int lightmap, int overlay, IGraphicsContext context) {
     }
 
-    public void deactivate(Entity entity, Context context) {
+    public void deactivate(EntityRenderState renderState, int lightmap, int overlay, IGraphicsContext context) {
     }
 
     public boolean freeze() {
         return true;
     }
-
 
     public interface Context {
 
@@ -29,9 +28,5 @@ public abstract class ArmaturePlugin {
         float partialTicks();
 
         double animationTicks();
-
-        IPoseStack poseStack();
-
-        EntityRenderData renderData();
     }
 }

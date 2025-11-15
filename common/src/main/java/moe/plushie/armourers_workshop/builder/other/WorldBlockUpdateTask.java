@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
@@ -73,7 +75,8 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
         if (nbt != null) {
             var blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity != null) {
-                blockEntity.loadFullData(nbt, level.registryAccess());
+                var serializer = new TagSerializer(nbt, SerializationContext.from(blockEntity));
+                blockEntity.loadFullData(serializer);
             }
         }
         if (modifier != null) {

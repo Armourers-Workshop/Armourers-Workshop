@@ -244,7 +244,7 @@ public class SkinLibrary implements ISkinLibrary {
         try {
             FileUtils.forceMkdir(basePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            ModLog.error("can't make directory '{}'", basePath, e);
         }
     }
 

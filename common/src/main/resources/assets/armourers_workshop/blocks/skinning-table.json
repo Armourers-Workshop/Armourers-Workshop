@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/skinning-table",
+    "render_type": "cutout"
+  }
+}

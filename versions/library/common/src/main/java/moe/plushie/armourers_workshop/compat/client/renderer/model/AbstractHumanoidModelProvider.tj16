@@ -1,0 +1,39 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+
+import java.util.function.Function;
+
+@Available("[1.16, 1.18)")
+@OnlyIn(Dist.CLIENT)
+public interface AbstractHumanoidModelProvider<M, A> {
+
+    EntityRenderDispatcher context();
+
+    M createEntityModel(float inflate, boolean slim);
+
+    A createArmourModel(float inflate, boolean slim);
+
+    static <M, A> AbstractHumanoidModelProvider<M, A> create(EntityRenderDispatcher context, Function<AbstractHumanoidModel.Context, M> entityModelProvider, Function<AbstractHumanoidArmourModel.Context, A> entityArmourProvider) {
+        return new AbstractHumanoidModelProvider<>() {
+
+            @Override
+            public EntityRenderDispatcher context() {
+                return context;
+            }
+
+            @Override
+            public M createEntityModel(float inflate, boolean slim) {
+                return entityModelProvider.apply(AbstractHumanoidModel.Context.create(inflate, slim));
+            }
+
+            @Override
+            public A createArmourModel(float inflate, boolean slim) {
+                return entityArmourProvider.apply(AbstractHumanoidArmourModel.Context.create(inflate, slim));
+            }
+        };
+    }
+}

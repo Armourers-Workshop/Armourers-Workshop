@@ -7,15 +7,12 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 
-@Environment(EnvType.CLIENT)
 public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};
@@ -68,10 +65,10 @@ public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
         if (!(entity instanceof MannequinEntity mannequinEntity)) {
             return;
         }
-        Vec3 pos = mannequinEntity.position();
-        double[] xyz = {pos.x(), pos.y(), pos.z()};
-        xyz[axis] += step;
-        pos = new Vec3(xyz[0], xyz[1], xyz[2]);
+        var pos = mannequinEntity.getPosition();
+        float[] values = {pos.x(), pos.y(), pos.z()};
+        values[axis] += step;
+        pos = new OpenVector3f(values[0], values[1], values[2]);
         NetworkManager.sendToServer(UpdateWardrobePacket.Field.MANNEQUIN_POSITION.buildPacket(wardrobe, pos));
     }
 }

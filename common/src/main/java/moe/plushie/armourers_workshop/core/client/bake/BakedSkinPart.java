@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
@@ -11,14 +13,12 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class BakedSkinPart {
 
     private final int id = OpenRandomSource.nextInt(BakedSkinPart.class);
@@ -70,9 +70,9 @@ public class BakedSkinPart {
                 needsEntityTexture = true;
             }
         }
-        if (needsEntityTexture && EntityTextureLoader.getInstance().getTextureModel(scheme.texture()) != null) {
+        if (needsEntityTexture && EntityTextureLoader.getInstance().getTextureModel(scheme.entityTexture()) != null) {
             requirements.add(SkinPaintTypes.TEXTURE.id());
-            requirements.add(scheme.texture());
+            requirements.add(scheme.entityTexture());
         }
         return requirements;
     }

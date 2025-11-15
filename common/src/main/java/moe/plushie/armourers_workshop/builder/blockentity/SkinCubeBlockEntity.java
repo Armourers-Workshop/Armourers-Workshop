@@ -28,13 +28,13 @@ public class SkinCubeBlockEntity extends UpdatableBlockEntity implements IBlockP
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         colors = serializer.read(CodingKeys.COLORS);
         customRenderer = checkRendererFromColors();
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         serializer.write(CodingKeys.COLORS, colors);
 //        // we must need to tracking the facing at the save it,
 //        // because we need to get the colors based facing from copied NBT.

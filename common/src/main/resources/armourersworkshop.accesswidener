@@ -4,18 +4,24 @@ accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/min
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 accessible method net/minecraft/client/renderer/LevelRenderer shouldShowEntityOutlines ()Z
 
-##if MC >= 12100
-accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+##if MC >= 12106
+### accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher equipmentAssets Lnet/minecraft/client/resources/model/EquipmentAssetManager;
+### accessible field net/minecraft/client/renderer/item/BlockModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
+### accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecraft/client/gui/render/state/GuiRenderState;
 ##endif
 
-##if MC >= 11900
+# fix manifold compile issue, because fabric modify the access permissions.
+##if MC >= 12102
+### accessible method net/minecraft/world/entity/player/Player hurtArmor (Lnet/minecraft/world/damagesource/DamageSource;F)V
+### accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/minecraft/world/damagesource/DamageSource;F)V
+##elseif MC >= 11900
 accessible method net/minecraft/world/entity/player/Player hurtArmor (Lnet/minecraft/world/damagesource/DamageSource;F)V
 accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/minecraft/world/damagesource/DamageSource;F)V
 accessible method net/minecraft/world/entity/player/Player hurtCurrentlyUsedShield (F)V
 ##endif
 
-##if MC >= 12000
-accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
+##if MC >= 12100 && MC < 12200
+accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 ##endif
 
 ##if MC >= 12100
@@ -26,15 +32,29 @@ extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlaye
 ### extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/world/damagesource/DamageSource;)V
 ##endif
 
+##if MC >= 12000
+accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
+##endif
+
 accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
 accessible field net/minecraft/client/renderer/entity/LivingEntityRenderer layers Ljava/util/List;
 
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher playerRenderers Ljava/util/Map;
 
+##if MC < 12200
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer innerModel Lnet/minecraft/client/model/HumanoidModel;
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer outerModel Lnet/minecraft/client/model/HumanoidModel;
+##endif
 
+##if MC >= 12106
+### accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+### accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder <init> ()V
+##elseif MC >= 11800
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+##endif
+
+##if MC < 12102
 accessible field net/minecraft/client/model/AgeableListModel scaleHead Z
 accessible field net/minecraft/client/model/AgeableListModel bodyYOffset F
 accessible field net/minecraft/client/model/AgeableListModel babyHeadScale F
@@ -46,9 +66,6 @@ accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ### accessible field net/minecraft/client/model/AgeableListModel yHeadOffset F
 ### accessible field net/minecraft/client/model/AgeableListModel zHeadOffset F
 ##endif
-
-##if MC >= 11800
-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 ##endif
 
 ##if MC < 12000

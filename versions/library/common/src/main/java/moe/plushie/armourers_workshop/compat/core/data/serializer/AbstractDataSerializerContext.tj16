@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.core.data.serializer;
+
+import com.mojang.serialization.DynamicOps;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import org.jetbrains.annotations.Nullable;
+
+@Available("[1.16, 1.21)")
+public class AbstractDataSerializerContext {
+
+    private final Object context;
+
+    public AbstractDataSerializerContext(@Nullable Object context) {
+        this.context = context;
+    }
+
+    public <V> DynamicOps<V> create(DynamicOps<V> ops) {
+        return ops;
+    }
+
+    public Object context() {
+        return context;
+    }
+}

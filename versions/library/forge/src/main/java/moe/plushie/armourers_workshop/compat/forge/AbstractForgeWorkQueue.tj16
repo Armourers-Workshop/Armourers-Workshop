@@ -1,0 +1,14 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraftforge.fml.LogicalSidedProvider;
+import net.minecraftforge.fml.network.NetworkDirection;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeWorkQueue {
+
+    public static BlockableEventLoop<?> get(NetworkDirection direction) {
+        return LogicalSidedProvider.WORKQUEUE.get(direction.getOriginationSide());
+    }
+}

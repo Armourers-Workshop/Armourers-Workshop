@@ -1,16 +1,15 @@
 package moe.plushie.armourers_workshop.init.client;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.model.EmbeddedItemModel;
-import moe.plushie.armourers_workshop.core.client.model.EmbeddedItemModels;
 import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinLightSource;
+import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModel;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -18,8 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
-public class ClientDynamicLightHandler<T> {
+@OnlyIn(Dist.CLIENT)
+public class ClientDynamicLightHandler {
 
     private static Entity TICKING_ENTITY;
 
@@ -72,7 +71,7 @@ public class ClientDynamicLightHandler<T> {
         }
         var itemModel = getItemModel(itemStack);
         if (itemModel != null) {
-            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(itemModel.sourceSkin()));
+            var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(itemModel.skin()));
             if (bakedSkin != null) {
                 return bakedSkin.renderInfo().lightSource();
             }
@@ -82,14 +81,13 @@ public class ClientDynamicLightHandler<T> {
 
     private static EmbeddedItemModel getItemModel(ItemStack itemStack) {
         if (TICKING_ENTITY instanceof LivingEntity entity) {
-            return getItemModel(itemStack, entity.getLevel(), entity);
+            return getItemModel(itemStack, entity.level(), entity);
         }
         return getItemModel(itemStack, null, null);
     }
 
     private static EmbeddedItemModel getItemModel(ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity) {
-        var model = EnvironmentManager.getClient().getItemModel(itemStack, level, entity, 0);
-        var itemModels = EmbeddedItemModels.of(itemStack);
-        return itemModels.get(model);
+        var model = Minecraft.getInstance().getItemModel(itemStack, level, entity, 0);
+        return itemStack.getEmbeddedItemModel(model);
     }
 }

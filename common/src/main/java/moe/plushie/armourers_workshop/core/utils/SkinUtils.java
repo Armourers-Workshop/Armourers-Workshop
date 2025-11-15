@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +42,7 @@ public final class SkinUtils {
         return Collections.emptyList();
     }
 
-    public static boolean shouldKeepWardrobe(Player entity) {
+    public static boolean shouldKeepWardrobe(ServerLevel level, Player entity) {
         if (entity.isSpectator()) {
             return true;
         }
@@ -57,16 +56,16 @@ public final class SkinUtils {
         if (keep == 2) {
             return false;
         }
-        return entity.getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+        return level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
     }
 
-    public static void dropAllIfNeeded(Player player) {
-        if (SkinUtils.shouldKeepWardrobe(player)) {
+    public static void dropAllIfNeeded(ServerLevel level, Player player) {
+        if (SkinUtils.shouldKeepWardrobe(level, player)) {
             return; // ignore
         }
-        SkinWardrobe oldWardrobe = SkinWardrobe.of(player);
+        var oldWardrobe = SkinWardrobe.of(player);
         if (oldWardrobe != null) {
-            oldWardrobe.dropAll(player::spawnAtLocation);
+            oldWardrobe.dropAll(it -> player.spawnAtLocation(level, it));
             oldWardrobe.broadcast();
         }
     }
@@ -112,10 +111,10 @@ public final class SkinUtils {
         var oldWardrobe = SkinWardrobe.of(from);
         var newWardrobe = SkinWardrobe.of(to);
         if (newWardrobe != null && oldWardrobe != null) {
-            var serializer = new TagSerializer(new CompoundTag(), to);
+            var serializer = new TagSerializer(SerializationContext.from(to));
             oldWardrobe.serialize(serializer);
             newWardrobe.deserialize(serializer);
-            if (!to.getLevel().isClientSide()) {
+            if (!to.level().isClientSide()) {
                 newWardrobe.broadcast();
             }
         }

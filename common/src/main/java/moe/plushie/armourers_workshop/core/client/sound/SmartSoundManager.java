@@ -1,18 +1,18 @@
 package moe.plushie.armourers_workshop.core.client.sound;
 
-import moe.plushie.armourers_workshop.compatibility.client.AbstractSimpleSound;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractSoundManagerImpl;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.AbstractSimpleSound;
+import moe.plushie.armourers_workshop.compat.client.AbstractSoundManagerImpl;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.IdentityHashMap;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class SmartSoundManager {
 
     private static final SmartSoundManager INSTANCE = new SmartSoundManager();
@@ -56,7 +56,7 @@ public class SmartSoundManager {
     }
 
     public AbstractSoundManagerImpl getSoundManager() {
-        return (AbstractSoundManagerImpl) EnvironmentManager.getClient().getSoundManager();
+        return (AbstractSoundManagerImpl) Minecraft.getInstance().getSoundManager();
     }
 
     protected void uploadSound(SmartSound sound) {

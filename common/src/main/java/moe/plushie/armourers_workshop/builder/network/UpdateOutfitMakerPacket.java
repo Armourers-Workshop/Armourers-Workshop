@@ -1,16 +1,18 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
+import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.core.data.GenericProperties;
 import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.core.data.GenericValue;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +46,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
 
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
-        var blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.level().getBlockEntity(pos);
         if (!(blockEntity instanceof OutfitMakerBlockEntity blockEntity1) || !(fieldValue.property() instanceof Field<?> field)) {
             return;
         }
@@ -63,8 +65,8 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
             return;
         }
         if (player.containerMenu instanceof OutfitMakerMenu menu) {
-            var nbt = (CompoundTag) fieldValue.value();
-            var profile = DataSerializers.readGameProfile(nbt);
+            var serializer = new TagSerializer((CompoundTag) fieldValue.value());
+            var profile = serializer.decode(ExtraCodecs.GAME_PROFILE);
             menu.saveArmourItem(player, profile);
         }
     }
@@ -79,13 +81,13 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
 
         private FieldAction<T> action;
 
-        private static <T> Field<T> create(FieldAction<T> action, IEntitySerializer<T> dataSerializer) {
+        private static <T> Field<T> create(FieldAction<T> action, IEntityDataSerializer<T> dataSerializer) {
             Field<T> field = TYPE.create(dataSerializer).build(Field::new);
             field.action = action;
             return field;
         }
 
-        private static <T> Field<T> create(Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+        private static <T> Field<T> create(Function<OutfitMakerBlockEntity, T> supplier, BiConsumer<OutfitMakerBlockEntity, T> applier, IEntityDataSerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);
         }
 

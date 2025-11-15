@@ -17,7 +17,7 @@ public class UIMenuPopoverView extends UIPopoverView {
     @Override
     public void keyDown(UIEvent event) {
         //
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key().is(GLFW.GLFW_KEY_ESCAPE)) {
             event.cancel(InvokerResult.SUCCESS);
             event.setCancelled(true);
             dismiss();

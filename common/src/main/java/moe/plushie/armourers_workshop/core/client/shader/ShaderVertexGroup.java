@@ -3,13 +3,10 @@ package moe.plushie.armourers_workshop.core.client.shader;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ShaderVertexGroup {
 
     public int maxVertexCount;
@@ -35,11 +32,20 @@ public class ShaderVertexGroup {
         return objects.size();
     }
 
+    public int vertexCount() {
+        var vertexTotal = 0;
+        for (var object : objects) {
+            vertexTotal += object.vertexCount();
+        }
+        return vertexTotal;
+    }
+
     public boolean isEmpty() {
         return objects.isEmpty();
     }
 
     public void add(ShaderVertexObject object) {
+        object.retain();
         objects.add(object);
     }
 

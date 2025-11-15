@@ -8,10 +8,7 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.builder.data.palette.Palette;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class PaletteBox extends UIControl {
 
     private int row = 4;

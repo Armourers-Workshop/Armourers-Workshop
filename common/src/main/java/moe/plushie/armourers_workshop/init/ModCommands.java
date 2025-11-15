@@ -24,7 +24,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.command.ColorArgumentType;
 import moe.plushie.armourers_workshop.init.command.ColorSchemeArgumentType;
 import moe.plushie.armourers_workshop.init.command.FileArgumentType;
@@ -34,6 +33,7 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.event.common.RegisterCommandsEvent;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -338,7 +338,7 @@ public class ModCommands {
             if (overrideType == null || itemStack.isEmpty()) {
                 throw ERROR_MISSING_ITEM_STACK.create(player.getScoreboardName());
             }
-            var identifier = TypedRegistry.findKey(itemStack.getItem());
+            var identifier = Registries.ITEMS.getKey(itemStack.getItem());
             var key = String.format("%s:%s", overrideType.serializedName(), identifier);
             // we always remove and then add again
             if (operator.equals("add")) {
@@ -375,7 +375,7 @@ public class ModCommands {
             for (var entity : EntityArgument.getEntities(context, "entities")) {
                 var wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
-                    ModMenuTypes.WARDROBE_OP.get().openMenu(player, wardrobe);
+                    player.openMenu(ModMenuTypes.WARDROBE_OP, wardrobe);
                     break;
                 }
             }

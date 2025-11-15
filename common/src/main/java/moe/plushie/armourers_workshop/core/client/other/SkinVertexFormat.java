@@ -5,13 +5,11 @@ public enum SkinVertexFormat {
     LINE,
     LINE_STRIP,
 
-    IMAGE,
-
     BLIT_MASK,
+    BLIT_TEXTURED,
 
-    GUI_IMAGE,
     GUI_COLOR,
-    GUI_HIGHLIGHTED_TEXT,
+    GUI_TEXTURED,
 
     BLOCK,
     BLOCK_CUTOUT,

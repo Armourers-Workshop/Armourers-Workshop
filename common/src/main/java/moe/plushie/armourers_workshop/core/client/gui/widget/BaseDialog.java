@@ -9,11 +9,8 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIPopoverView;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
 
-@Environment(EnvType.CLIENT)
 public abstract class BaseDialog extends UIView {
 
     private Runnable completeHandler;
@@ -33,7 +30,7 @@ public abstract class BaseDialog extends UIView {
 
     @Override
     public void keyDown(UIEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key().is(GLFW.GLFW_KEY_ESCAPE)) {
             dismiss();
             return;
         }

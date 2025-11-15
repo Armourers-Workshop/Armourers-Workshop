@@ -43,7 +43,7 @@ public class UpdateSkinningTablePacket extends CustomPacket {
     }
 
     private void apply(Player player, boolean needForwarding) {
-        var entity = player.getLevel().getBlockEntity(pos);
+        var entity = player.level().getBlockEntity(pos);
         if (entity instanceof SkinningTableBlockEntity blockEntity && player.containerMenu instanceof SkinningTableMenu menu) {
             blockEntity.setOptions(options);
             menu.onCraftSlotChanges();

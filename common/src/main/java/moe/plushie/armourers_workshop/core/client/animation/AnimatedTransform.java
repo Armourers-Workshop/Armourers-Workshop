@@ -27,11 +27,6 @@ public class AnimatedTransform implements ITransform {
     private final List<AnimatedPoint> defaultPoints = new ArrayList<>();
     private final List<AnimatedPoint> mixedPoints = new ArrayList<>();
 
-    private final OpenVector3f lastPivot = new OpenVector3f(0, 0, 0);
-    private final OpenVector3f lastTranslate = new OpenVector3f(0, 0, 0);
-    private final OpenVector3f lastRotation = new OpenVector3f(0, 0, 0);
-    private final OpenVector3f lastScale = new OpenVector3f(1, 1, 1);
-
     protected AnimatedOutputPoint controller;
     protected AnimatedPoint snapshot;
     protected int dirty = 0;

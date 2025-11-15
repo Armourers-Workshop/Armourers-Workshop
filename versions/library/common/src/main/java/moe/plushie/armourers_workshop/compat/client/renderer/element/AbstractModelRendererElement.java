@@ -1,0 +1,44 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.element;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderable;
+import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+@Available("[1.21, 1.22)")
+@OnlyIn(Dist.CLIENT)
+public class AbstractModelRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
+
+    private final Model model;
+
+    private final int lightmap;
+    private final int overlay;
+    private final int color;
+    private final IRenderType renderType;
+
+    protected AbstractModelRendererElement(Model model, int lightmap, int overlay, int color, IRenderType renderType) {
+        this.model = model;
+        this.lightmap = lightmap;
+        this.overlay = overlay;
+        this.color = color;
+        this.renderType = renderType;
+    }
+
+    public static AbstractModelRendererElement newInstance(IEntityModel<?> entityModel, EntityRenderState entityRenderState, int lightmap, int overlay, int color, IRenderType renderType) {
+        return new AbstractModelRendererElement(Objects.unsafeCast(entityModel), lightmap, overlay, color, renderType);
+    }
+
+    @Override
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource) {
+        var builder = bufferSource.getBuffer(renderType.get());
+        model.renderToBuffer(poseStack, builder, lightmap, overlay, color);
+    }
+}

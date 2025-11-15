@@ -1,29 +1,24 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
-import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.compat.core.entity.AbstractEntityHandler;
+import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricClientPickBlock;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientStartupEvents;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.client.player.ClientPickBlockGatherCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-@Environment(EnvType.CLIENT)
 public class ClientProxyImpl implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
         EnvironmentExecutor.willInit(EnvironmentType.CLIENT);
-
-        ClientPickBlockGatherCallback.EVENT.register(this::onPickItem);
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
@@ -37,11 +32,13 @@ public class ClientProxyImpl implements ClientModInitializer {
             EnvironmentExecutor.didInit(EnvironmentType.CLIENT);
             EnvironmentExecutor.didSetup(EnvironmentType.CLIENT);
         });
+
+        AbstractFabricClientPickBlock.EVENT.register(this::onPickItem);
     }
 
     public ItemStack onPickItem(Player player, HitResult result) {
-        if (result instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof IEntityHandler handler) {
-            return handler.getCustomPickResult(result);
+        if (result instanceof EntityHitResult hitResult && hitResult.getEntity() instanceof AbstractEntityHandler handler) {
+            return handler.getPickedResult(result);
         }
         return ItemStack.EMPTY;
     }

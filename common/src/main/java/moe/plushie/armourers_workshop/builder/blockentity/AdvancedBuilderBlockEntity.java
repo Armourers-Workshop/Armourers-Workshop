@@ -54,12 +54,12 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         document.deserialize(serializer);
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         document.serialize(serializer);
     }
 
@@ -107,7 +107,7 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         EnvironmentExecutor.runOnBackground(() -> () -> {
             try {
                 var skin = exporter.execute(player, profile);
-                player.server.execute(() -> {
+                player.server().execute(() -> {
                     var identifier = SkinLoader.getInstance().saveSkin("", skin);
                     var descriptor = new SkinDescriptor(identifier, skin.type());
                     var itemStack = descriptor.asItemStack();

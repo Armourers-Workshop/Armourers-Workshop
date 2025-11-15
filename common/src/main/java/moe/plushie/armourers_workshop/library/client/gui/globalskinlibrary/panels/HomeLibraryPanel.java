@@ -18,13 +18,10 @@ import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
     private final UIScrollView scrollView = new UIScrollView(CGRect.ZERO);

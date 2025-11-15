@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.plugin;
 
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import net.minecraft.world.entity.Entity;
 
 public class ArrowModelArmaturePlugin extends ArmaturePlugin {
 
@@ -11,10 +12,9 @@ public class ArrowModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void activate(Entity entity, Context context) {
-        var poseStack = context.poseStack();
-        poseStack.rotate(OpenVector3f.XP.rotationDegrees(-45));
-        poseStack.rotate(OpenVector3f.YP.rotationDegrees(-90));
-        poseStack.translate(0, 0, -0.0625f); // 0, 0, -1
+    public void activate(EntityRenderState renderState, int lightmap, int overlay, IGraphicsContext context) {
+        context.rotateCTM(OpenVector3f.XP.rotationDegrees(-45));
+        context.rotateCTM(OpenVector3f.YP.rotationDegrees(-90));
+        context.translateCTM(0, 0, -0.0625f); // 0, 0, -1
     }
 }

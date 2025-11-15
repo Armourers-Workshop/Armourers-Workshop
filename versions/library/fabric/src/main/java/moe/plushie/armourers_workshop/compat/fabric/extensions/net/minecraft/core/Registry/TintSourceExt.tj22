@@ -1,0 +1,26 @@
+package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;
+import moe.plushie.armourers_workshop.api.client.IItemTintSourceType;
+import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
+import moe.plushie.armourers_workshop.core.utils.TypedProvider;
+import net.minecraft.client.color.item.ItemTintSources;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.22, )")
+@Extension
+public class TintSourceExt {
+
+    public static TypedProvider<IItemTintSourceType<?>> createItemTintSourceRegistryFA(@ThisClass Class<?> clazz) {
+        return TypedProvider.passthrough((registryName, value) -> {
+            ItemTintSources.ID_MAPPER.put(registryName.toLocation(), AbstractItemTintSource.getCodec(value));
+        });
+    }
+
+    public static TypedProvider<IBlockTintSourceType<?>> createBlockTintSourceRegistryFA(@ThisClass Class<?> clazz) {
+        return TypedProvider.passthrough();
+    }
+}

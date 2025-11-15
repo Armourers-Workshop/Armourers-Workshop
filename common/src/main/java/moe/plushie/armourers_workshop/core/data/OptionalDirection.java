@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;

@@ -8,27 +8,23 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractMenuWindowProvider;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricMenuType;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricRegistries;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
+import moe.plushie.armourers_workshop.compat.client.AbstractMenuWindowProvider;
+import moe.plushie.armourers_workshop.compat.fabric.builder.AbstractFabricMenuTypeBuilder;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.event.client.RegisterScreensEvent;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 
 import java.util.function.Supplier;
 
-public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements IMenuTypeBuilder<T> {
+public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, V> implements IMenuTypeBuilder<T> {
 
-    private final IMenuProvider<T, D> factory;
-    private final IMenuSerializer<D> serializer;
-    private IRegistryBinder<MenuType<T>> binder;
+    private IRegistryBinder<IMenuType<T>> binder;
+    private final AbstractFabricMenuTypeBuilder<T, V> builder;
 
-    public MenuTypeBuilderImpl(IMenuProvider<T, D> factory, IMenuSerializer<D> serializer) {
-        this.factory = factory;
-        this.serializer = serializer;
+    public MenuTypeBuilderImpl(IMenuProvider<T, V> factory, IMenuSerializer<V> serializer) {
+        this.builder = new AbstractFabricMenuTypeBuilder<>(factory, serializer);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
         this.binder = () -> menuType -> {
             // here is safe call client registry.
             EventBus.register(RegisterScreensEvent.class, event -> {
-                event.register(menuType.get(), provider.get()::createScreen);
+                event.register(menuType.get().get(), provider.get()::createScreen);
             });
         };
         return this;
@@ -44,10 +40,8 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
 
     @Override
     public IRegistryHolder<IMenuType<T>> build(String name) {
-        var menuType = AbstractFabricMenuType.create(factory, serializer);
-        var object = AbstractFabricRegistries.MENU_TYPES.register(name, menuType::getType);
-        menuType.setRegistryName(object.registryName());
-        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return TypedRegistry.Entry.of(object.registryName(), () -> menuType);
+        var entry = Registries.MENU_TYPES.register(name, builder::build);
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, entry));
+        return entry;
     }
 }

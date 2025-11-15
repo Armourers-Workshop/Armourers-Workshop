@@ -11,14 +11,11 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class ReportList extends UIScrollView {
 
     private final ArrayList<GuiDetailListColumn> columns = new ArrayList<>();

@@ -7,12 +7,9 @@ import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerWingsSkinPanel extends ArmourerBaseSkinPanel {
 
     public ArmourerWingsSkinPanel(SkinProperties skinProperties) {

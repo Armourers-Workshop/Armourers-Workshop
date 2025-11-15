@@ -13,13 +13,10 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class SkinEditLibraryPanel extends AbstractLibraryPanel {
 
     private UITextField textName;

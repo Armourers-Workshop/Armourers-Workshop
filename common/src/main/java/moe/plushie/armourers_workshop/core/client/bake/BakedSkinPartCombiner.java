@@ -25,7 +25,7 @@ public class BakedSkinPartCombiner {
     }
 
     private static BakedSkinPart clip(BakedSkinPart rootPart) {
-        // single node, no needs any clip.
+        // single node, no needs any clipLayer.
         if (rootPart.children().isEmpty()) {
             return rootPart;
         }

@@ -11,22 +11,16 @@ import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public abstract class SkinPreviewList<T> extends UIView {
 
     protected UIEdgeInsets contentInset = new UIEdgeInsets(0, 0, 0, 0);
@@ -120,25 +114,23 @@ public abstract class SkinPreviewList<T> extends UIView {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        CGRect rect = bounds();
-        float x = rect.x;
-        float y = rect.y;
-        float width = rect.width;
-        float height = rect.height;
+        var rect = bounds();
+        var x = rect.x;
+        var y = rect.y;
+        var width = rect.width;
+        var height = rect.height;
         if ((backgroundColor & 0xff000000) != 0) {
             context.fillRect(x, y, x + width, y + height, backgroundColor);
         }
-        var buffers = AbstractBufferSource.buffer();
         for (int i = 0; i < totalCount; ++i) {
-            renderItem(context, i, false, buffers);
+            renderItem(i, false, context);
         }
-        buffers.endBatch();
         for (int i = 0; i < totalCount; ++i) {
-            renderItem(context, i, true, buffers);
+            renderItem(i, true, context);
         }
     }
 
-    public void renderItem(CGGraphicsContext context, int index, boolean allowsHovered, IBufferSource bufferSource) {
+    public void renderItem(int index, boolean allowsHovered, CGGraphicsContext context) {
         if (index >= entries.size()) {
             return;
         }
@@ -153,22 +145,23 @@ public abstract class SkinPreviewList<T> extends UIView {
         if (isHovered != allowsHovered) {
             return;
         }
-        CGRect clipBox = UIScreen.convertRectFromView(new CGRect(ix, iy, iw, ih), this);
+        var contentScale = 1.0f;
+        var clipBox = UIScreen.convertRectFromView(new CGRect(ix, iy, iw, ih), this);
         if (!context.boundingBoxOfClipPath().intersects(clipBox)) {
             return;
         }
         renderItemBackground(ix, iy, iw, ih, isHovered, entry, context);
         if (isHovered) {
-            context.addClip(clipBox.insetBy(1, 1, 1, 1));
+            context.addClipPath(clipBox.insetBy(1, 1, 1, 1));
+            contentScale = 1.5f;
         }
-        renderItemContent(ix, iy, iw, ih, isHovered, entry, bufferSource, context);
+        renderItemContent(ix, iy, iw, ih, contentScale, entry, context);
         if (isHovered) {
-            bufferSource.endBatch();
-            context.removeClip();
+            context.removeClipPath();
         }
     }
 
-    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, T entry, IBufferSource bufferSource, CGGraphicsContext context) {
+    public void renderItemContent(float x, float y, float width, float height, float contentScale, T entry, CGGraphicsContext context) {
         var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(getItemDescriptor(entry)));
         if (bakedSkin == null) {
             int speed = 60;
@@ -184,7 +177,7 @@ public abstract class SkinPreviewList<T> extends UIView {
             var name = new NSString(getItemName(entry));
             var properties = name.split(font, width - 2);
             float iy = y + height - properties.size() * font.lineHeight() - 2;
-            context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font, 0);
+            context.drawText(properties, x + 1, iy, 0xffeeeeee, false, font);
         }
 
         var texture = ArmourersWorkshop.getItemIcon(bakedSkin.type());
@@ -192,15 +185,11 @@ public abstract class SkinPreviewList<T> extends UIView {
             context.drawResizableImage(texture, x + 1, y + 1, width / 4, height / 4, 0, 0, 16, 16, 16, 16);
         }
 
-        float dx = x + width / 2, dy = y + height / 2, dw = width, dh = height;
-        if (isHovered) {
-            dw *= 1.5f;
-            dh *= 1.5f;
-        }
-
-        float tx = dx - dw / 2;
-        float ty = dy - dh / 2;
-        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, dw, dh, 20, 45, 0, context.state().ctm(), bufferSource);
+        var dx = x + width / 2;
+        var dy = y + height / 2;
+        var dw = width * contentScale;
+        var dh = height * contentScale;
+        context.draw(SkinGuiElement.blit(bakedSkin, dx - dw / 2, dy - dh / 2, 100, dw, dh, 20, 45, 0));
     }
 
     public void renderItemBackground(float x, float y, float width, float height, boolean isHovered, T entry, CGGraphicsContext context) {
@@ -212,8 +201,6 @@ public abstract class SkinPreviewList<T> extends UIView {
         context.fillRect(x, y, x + width - 1, y + 1, borderColor);
         context.fillRect(x + 1, y + height - 1, x + width, y + height, borderColor);
         context.fillRect(x + width - 1, y, x + width, y + height - 1, borderColor);
-
-        RenderSystem.enableAlphaTest();
     }
 
     public CGSize itemSize() {

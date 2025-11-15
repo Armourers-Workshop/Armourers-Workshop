@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.api.core.utils.IInteractionResult;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public interface OpenInteractionResult {
+public interface OpenInteractionResult extends IInteractionResult {
 
     Success SUCCESS = new Success(SwingSource.CLIENT, ItemContext.DEFAULT);
     Success SUCCESS_SERVER = new Success(SwingSource.SERVER, ItemContext.DEFAULT);

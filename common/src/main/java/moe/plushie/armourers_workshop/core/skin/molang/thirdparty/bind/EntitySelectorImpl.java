@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Name;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
@@ -83,12 +83,12 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
 
     @Override
     public double distanceFromMove() {
-        return entity.walkDist;
+        return entity.walkDist();
     }
 
     @Override
     public double distanceFromWalk() {
-        return entity.moveDist;
+        return entity.moveDist();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
 
     @Override
     public boolean canSeeSky() {
-        var level = entity.getLevel();
+        var level = entity.level();
         var pos = entity.blockPosition();
         if (!level.canSeeSky(pos)) {
             return false;
@@ -207,14 +207,14 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     @Nullable
     @Override
     public BiomeSelector biome() {
-        var level = entity.getLevel();
+        var level = entity.level();
         var biome = AbstractRegistryManager.getBiome(level, entity.blockPosition());
         return biomeSelector.apply(biome);
     }
 
     @Override
     public BlockSelector relativeBlock(int offsetX, int offsetY, int offsetZ) {
-        var level = entity.getLevel();
+        var level = entity.level();
         double x = entity.getX() + offsetX;
         double y = entity.getX() + offsetX;
         double z = entity.getX() + offsetX;

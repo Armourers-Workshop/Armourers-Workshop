@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.armature.core.AfterTransformModifier;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultOverriddenArmaturePlugin;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
@@ -20,19 +18,19 @@ import java.util.Objects;
 
 public abstract class ArmatureTransformerBuilder {
 
-    protected IResourceLocation parent;
+    protected OpenResourceLocation parent;
     protected Armature armature;
     protected IODataObject contents;
 
-    protected final IResourceLocation name;
-    protected final ArrayList<IResourceLocation> models = new ArrayList<>();
-    protected final ArrayList<IEntityTypeProvider<?>> entities = new ArrayList<>();
+    protected final OpenResourceLocation name;
+    protected final ArrayList<OpenResourceLocation> models = new ArrayList<>();
+    protected final ArrayList<IRegistryHolder<?>> entities = new ArrayList<>();
     protected final ArrayList<String> pluginModifiers = new ArrayList<>();
     protected final HashMap<String, Collection<String>> overrideModifiers = new HashMap<>();
-    protected final HashMap<IJoint, Collection<JointModifier>> jointModifiers = new HashMap<>();
-    protected final HashMap<IJoint, Collection<JointModifier>> transformModifiers = new HashMap<>();
+    protected final HashMap<Joint, Collection<JointModifier>> jointModifiers = new HashMap<>();
+    protected final HashMap<Joint, Collection<JointModifier>> transformModifiers = new HashMap<>();
 
-    public ArmatureTransformerBuilder(IResourceLocation name) {
+    public ArmatureTransformerBuilder(OpenResourceLocation name) {
         this.name = name;
     }
 
@@ -67,14 +65,15 @@ public abstract class ArmatureTransformerBuilder {
 
     public ArmatureTransformer build(ArmatureTransformerContext context) {
         var plugins = new ArrayList<ArmaturePlugin>();
-        var modifiers = new HashMap<IJoint, ArrayList<JointModifier>>();
+        var modifiers = new HashMap<Joint, ArrayList<JointModifier>>();
         plugins.add(new DefaultOverriddenArmaturePlugin(overrideModifiers, context));
         jointModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         transformModifiers.forEach((joint, modifiers1) -> modifiers.computeIfAbsent(joint, k -> new ArrayList<>()).addAll(modifiers1));
         pluginModifiers.forEach(it -> plugins.add(buildPlugin(it, context)));
         plugins.removeIf(Objects::isNull);
         var transformer = new ArmatureTransformer(armature, plugins, context);
-        modifiers.forEach((joint, values) -> transformer.put(joint, buildTransform(joint, values, context)));
+        var jointContext = new JointContext(transformer, context);
+        modifiers.forEach((joint, values) -> transformer.put(joint, buildTransform(joint, values, jointContext)));
         return transformer;
     }
 
@@ -86,30 +85,29 @@ public abstract class ArmatureTransformerBuilder {
         return null;
     }
 
-    protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
-        var model = context.entityModel();
+    protected IJointTransform buildTransform(Joint joint, Collection<JointModifier> modifiers, JointContext context) {
         var transform = IJointTransform.NONE;
         for (var modifier : modifiers) {
-            transform = modifier.apply(joint, model, transform);
+            transform = modifier.apply(transform, joint, context);
         }
         return transform;
     }
 
     protected abstract JointModifier buildJointTarget(String name, IODataObject parameters);
 
-    public ArrayList<IResourceLocation> models() {
+    public ArrayList<OpenResourceLocation> models() {
         return models;
     }
 
-    public ArrayList<IEntityTypeProvider<?>> entities() {
+    public ArrayList<IRegistryHolder<?>> entities() {
         return entities;
     }
 
-    public IResourceLocation parent() {
+    public OpenResourceLocation parent() {
         return parent;
     }
 
-    public IResourceLocation name() {
+    public OpenResourceLocation name() {
         return name;
     }
 
@@ -269,17 +267,17 @@ public abstract class ArmatureTransformerBuilder {
 
     private void _addTransformModifier(String name, JointModifier modifier) {
         // ..
-        Collection<? extends IJoint> joints;
+        Collection<? extends Joint> joints;
         if (name.equals("") || name.equals("*")) {
             joints = armature.allJoints();
         } else {
-            IJoint joint = armature.jointByName(name);
+            var joint = armature.jointByName(name);
             if (joint == null) {
                 return;
             }
             joints = Collections.singleton(joint);
         }
-        for (IJoint joint : joints) {
+        for (var joint : joints) {
             transformModifiers.computeIfAbsent(joint, k -> new ArrayList<>()).add(modifier);
         }
     }
@@ -294,9 +292,5 @@ public abstract class ArmatureTransformerBuilder {
 
     private <V> void _mergeTo(Collection<V> other, Collection<V> result) {
         result.addAll(other);
-    }
-
-    private interface ArmatureModifierBuilder {
-        JointModifier apply(OpenVector3f t1, OpenVector3f t2, OpenVector3f t3);
     }
 }

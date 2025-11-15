@@ -1,0 +1,55 @@
+package moe.plushie.armourers_workshop.compat.forge.event.client;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+
+@Available("[1.22, )")
+public interface AbstractForgeRenderLivingEventImpl {
+
+    class Extract<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends Event {
+
+        private final T entity;
+        private final S renderState;
+        private final LivingEntityRenderer<T, S, M> renderer;
+        private final float partialTick;
+
+        public Extract(T entity, S renderState, LivingEntityRenderer<T, S, M> renderer, float partialTick) {
+            this.entity = entity;
+            this.renderState = renderState;
+            this.renderer = renderer;
+            this.partialTick = partialTick;
+        }
+
+        public T getEntity() {
+            return entity;
+        }
+
+        public S getRenderState() {
+            return renderState;
+        }
+
+        public float getPartialTick() {
+            return partialTick;
+        }
+
+        public LivingEntityRenderer<T, S, M> getRenderer() {
+            return renderer;
+        }
+    }
+
+    class Apply<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLivingEvent<T, S, M> implements ICancellableEvent {
+
+        public Apply(S renderState, LivingEntityRenderer<T, S, M> renderer, float partialTick, PoseStack poseStack, SubmitNodeCollector submitNodeCollector) {
+            super(renderState, renderer, partialTick, poseStack, submitNodeCollector);
+        }
+    }
+}

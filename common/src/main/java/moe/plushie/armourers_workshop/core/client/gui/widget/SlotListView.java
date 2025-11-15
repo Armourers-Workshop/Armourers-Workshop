@@ -6,17 +6,14 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 
-@Environment(EnvType.CLIENT)
 public class SlotListView<M extends AbstractContainerMenu> extends UIView {
 
     protected final M menu;
@@ -46,25 +43,24 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         if (!isReady) {
             return;
         }
-        int mouseX = (int) context.state().mousePos().x();
-        int mouseY = (int) context.state().mousePos().y();
+        var param = context.param();
         var offset = screen.contentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.x, -offset.y, 0);
-        screen.renderInView(this, 400, mouseX, mouseY, context.state().partialTicks(), context);
+        screen.renderInView(this, 400, (int) param.mouseX(), (int) param.mouseY(), param.partialTicks(), context);
         context.restoreGraphicsState();
     }
 
     @Override
     public void mouseDown(UIEvent event) {
         var point = locationInScreen(event);
-        screen.mouseClicked(point.x, point.y, event.key());
+        screen.mouseClicked(point, event);
     }
 
     @Override
     public void mouseUp(UIEvent event) {
         var point = locationInScreen(event);
-        screen.mouseReleased(point.x, point.y, event.key());
+        screen.mouseReleased(point, event);
     }
 
     @Override
@@ -95,7 +91,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
             super(menu, inventory, component);
             this.inventory = inventory;
             // yep, we need init it.
-            this.init(EnvironmentManager.getClient(), 640, 480);
+            this.init(Minecraft.getInstance(), 640, 480);
         }
 
         @Override
@@ -105,7 +101,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
 
         public void setup(CGRect rect, CGRect bounds) {
             setContentSize(new CGSize(rect.width, rect.height));
-            resize(EnvironmentManager.getClient(), (int) bounds.width, (int) bounds.height);
+            resize(Minecraft.getInstance(), (int) bounds.width, (int) bounds.height);
             setContentOffset(new CGPoint(rect.x, rect.y));
         }
 

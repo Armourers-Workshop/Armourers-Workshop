@@ -109,8 +109,7 @@ public class EntityCollisionContainer {
 
     private SkinContainerEvaluator createIfNeeded(SimpleContainer container, Entity entity) {
         // evaluator only work in the server side.
-        var level = entity.getLevel();
-        if (level == null || level.isClientSide()) {
+        if (entity.level().isClientSide()) {
             return null;
         }
         var evaluator = new SkinContainerEvaluator(container);

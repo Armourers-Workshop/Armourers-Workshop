@@ -24,15 +24,15 @@ public class MannequinHitResult extends BlockHitResult {
     }
 
     public static MannequinHitResult test(Player player, Vec3 origin, Vec3 target, BlockPos pos) {
-        Level level = player.getLevel();
-        ItemStack itemStack = player.getMainHandItem();
-        float scale = MannequinItem.getScale(itemStack);
-        float rotation = (float) OpenMath.getAngleDegrees(origin.x(), origin.z(), target.x(), target.z()) + 90.0f;
+        var level = player.level();
+        var itemStack = player.getMainHandItem();
+        var scale = MannequinItem.getScale(itemStack);
+        var rotation = (float) OpenMath.getAngleDegrees(origin.x(), origin.z(), target.x(), target.z()) + 90.0f;
 
         if (MannequinItem.isSmall(itemStack)) {
             scale *= 0.5f;
         }
-        BlockState blockState = level.getBlockState(pos);
+        var blockState = level.getBlockState(pos);
 
         if (player.isSecondaryUseActive()) {
             var shape = blockState.getShape(level, pos);

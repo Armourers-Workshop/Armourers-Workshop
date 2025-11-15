@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.brigadier.arguments.ArgumentType;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IArgumentTypeBuilder;
 import moe.plushie.armourers_workshop.init.command.ColorArgumentType;
@@ -12,13 +13,13 @@ import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 @SuppressWarnings("unused")
 public class ModArgumentTypes {
 
-    public static IRegistryHolder<?> ITEMS = normal(ListArgumentType.class).serializer(ListArgumentType.Serializer::new).build("items");
-    public static IRegistryHolder<?> FILES = normal(FileArgumentType.class).serializer(FileArgumentType.Serializer::new).build("files");
-    public static IRegistryHolder<?> DYE = normal(ColorSchemeArgumentType.class).serializer(ColorSchemeArgumentType.Serializer::new).build("dye");
-    public static IRegistryHolder<?> COLOR = normal(ColorArgumentType.class).serializer(ColorArgumentType.Serializer::new).build("color");
+    public static IRegistryHolder<ListArgumentType> ITEMS = normal(ListArgumentType.TYPE).build("items");
+    public static IRegistryHolder<FileArgumentType> FILES = normal(FileArgumentType.TYPE).build("files");
+    public static IRegistryHolder<ColorSchemeArgumentType> DYE = normal(ColorSchemeArgumentType.TYPE).build("dye");
+    public static IRegistryHolder<ColorArgumentType> COLOR = normal(ColorArgumentType.TYPE).build("color");
 
-    private static <T extends ArgumentType<?>> IArgumentTypeBuilder<T> normal(Class<T> clazz) {
-        return BuilderManager.getInstance().createArgumentTypeBuilder(clazz);
+    private static <T extends IArgumentType<?>> IArgumentTypeBuilder<T> normal(IArgumentSerializer<T> serializer) {
+        return BuilderManager.getInstance().createArgumentTypeBuilder(serializer);
     }
 
     public static void init() {

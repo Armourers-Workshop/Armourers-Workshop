@@ -4,12 +4,9 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.HashMap;
 
-@Environment(EnvType.CLIENT)
 public class ModTextures {
 
     public static final OpenResourceLocation WARDROBE_1 = res("textures/gui/wardrobe/wardrobe-1.png");
@@ -41,7 +38,6 @@ public class ModTextures {
 
     public static final OpenResourceLocation CUBE = res("textures/armour/cube.png");
     public static final OpenResourceLocation LIGHTING_CUBE = res("textures/armour/glowcube.png");
-    public static final OpenResourceLocation CIRCLE = res("textures/other/nanoha-circle.png");
     public static final OpenResourceLocation EARTH = res("textures/blockentity/global-skin-library.png");
 
     public static final OpenResourceLocation MANNEQUIN_DEFAULT = res("textures/entity/mannequin.png");

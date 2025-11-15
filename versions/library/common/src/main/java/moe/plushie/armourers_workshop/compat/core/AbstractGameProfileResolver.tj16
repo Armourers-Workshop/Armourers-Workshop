@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResultHandler;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
+
+@Available("[1.16, 1.18)")
+public class AbstractGameProfileResolver {
+
+    public static void load(GameProfile profile, IResultHandler<GameProfile> handler) {
+        try {
+            // when properties is empty, we will assume the user can't found.
+            handler.accept(SkullBlockEntity.updateGameprofile(profile));
+        } catch (Exception exception) {
+            handler.abort(exception); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
+        }
+    }
+}

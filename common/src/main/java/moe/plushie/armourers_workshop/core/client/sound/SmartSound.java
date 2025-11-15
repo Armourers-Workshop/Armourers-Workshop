@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.sound;
 
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.skin.sound.ISkinSoundProvider;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
@@ -16,6 +18,7 @@ import net.minecraft.sounds.SoundEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public class SmartSound extends ReferenceCounted {
 
     private final String name;

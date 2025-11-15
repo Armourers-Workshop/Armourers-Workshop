@@ -6,11 +6,7 @@ import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuToast;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ToastWindow;
 import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 
-@Environment(EnvType.CLIENT)
 public class ServerToastWindow extends ToastWindow {
 
     public ServerToastWindow(ExecuteAlertPacket alertPacket) {
@@ -29,6 +25,6 @@ public class ServerToastWindow extends ToastWindow {
     }
 
     public void showInScreen() {
-        Minecraft.getInstance().getToasts().addToast(new ContainerMenuToast<>(this));
+        ContainerMenuToast.showToast(new ContainerMenuToast<>(this));
     }
 }

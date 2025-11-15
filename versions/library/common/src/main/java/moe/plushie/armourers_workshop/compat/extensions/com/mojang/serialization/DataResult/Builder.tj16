@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compat.extensions.com.mojang.serialization.DataResult;
+
+import com.mojang.serialization.DataResult;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.16, 1.20)")
+@Extension
+public class Builder {
+
+    public static <R> DataResult<R> error(@ThisClass Class<?> clazz, Supplier<String> message) {
+        return DataResult.error(message.get());
+    }
+}

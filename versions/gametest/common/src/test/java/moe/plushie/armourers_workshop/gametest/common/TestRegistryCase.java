@@ -276,7 +276,7 @@ public class TestRegistryCase {
 
     @Test
     public void testLootItemFunctionTypeRegisters() {
-        assertPrintLog("Registering Loot Item Function Type 'armourers_workshop:skin_randomly'");
+        assertPrintLog("Registering Item Loot Function Type 'armourers_workshop:skin_randomly'");
     }
 
     @Test
@@ -391,9 +391,9 @@ public class TestRegistryCase {
 
     @Test
     public void testCommandArgumentTypeRegisters() {
-        assertPrintLog("Registering Argument Type 'armourers_workshop:items'");
-        assertPrintLog("Registering Argument Type 'armourers_workshop:files'");
-        assertPrintLog("Registering Argument Type 'armourers_workshop:dye'");
-        assertPrintLog("Registering Argument Type 'armourers_workshop:color'");
+        assertPrintLog("Registering Command Argument Type 'armourers_workshop:items'");
+        assertPrintLog("Registering Command Argument Type 'armourers_workshop:files'");
+        assertPrintLog("Registering Command Argument Type 'armourers_workshop:dye'");
+        assertPrintLog("Registering Command Argument Type 'armourers_workshop:color'");
     }
 }

@@ -40,16 +40,14 @@ public enum OpenDirection implements IDirection {
     private static final ConcurrentHashMap<Integer, Collection<OpenDirection>> SET_TO_VALUES = new ConcurrentHashMap<>();
 
 
-    OpenDirection(
-            final int j, final int k, final int l, final String string2, final AxisDirection axisDirection, final Axis axis, final OpenVector3i vec3i
-    ) {
-        this.data3d = j;
-        this.data2d = l;
-        this.oppositeIndex = k;
-        this.name = string2;
+    OpenDirection(int data3d, int oppositeIndex, int data2d, String name, AxisDirection axisDirection, Axis axis, OpenVector3i normal) {
+        this.data3d = data3d;
+        this.data2d = data2d;
+        this.oppositeIndex = oppositeIndex;
+        this.name = name;
         this.axis = axis;
         this.axisDirection = axisDirection;
-        this.normal = vec3i;
+        this.normal = normal;
     }
 
     public static Collection<OpenDirection> valuesFromSet(int set) {
@@ -127,6 +125,10 @@ public enum OpenDirection implements IDirection {
         return this.axis;
     }
 
+    public OpenVector3i normal() {
+        return this.normal;
+    }
+
     public static OpenDirection from3DDataValue(int i) {
         return BY_3D_DATA[Math.abs(i % BY_3D_DATA.length)];
     }
@@ -150,50 +152,46 @@ public enum OpenDirection implements IDirection {
         throw new IllegalArgumentException("No such direction: " + axisDirection + " " + axis);
     }
 
-    public OpenVector3i getNormal() {
-        return this.normal;
-    }
-
 
     public enum Axis implements Predicate<OpenDirection> {
         X("x") {
             @Override
-            public int choose(int i, int j, int k) {
-                return i;
+            public int choose(int x, int y, int z) {
+                return x;
             }
 
             @Override
-            public double choose(double d, double e, double f) {
-                return d;
+            public double choose(double x, double y, double z) {
+                return x;
             }
         },
         Y("y") {
             @Override
-            public int choose(int i, int j, int k) {
-                return j;
+            public int choose(int x, int y, int z) {
+                return y;
             }
 
             @Override
-            public double choose(double d, double e, double f) {
-                return e;
+            public double choose(double x, double y, double z) {
+                return y;
             }
         },
         Z("z") {
             @Override
-            public int choose(int i, int j, int k) {
-                return k;
+            public int choose(int x, int y, int z) {
+                return z;
             }
 
             @Override
-            public double choose(double d, double e, double f) {
-                return f;
+            public double choose(double x, double y, double z) {
+                return z;
             }
         };
 
         private final String name;
 
-        Axis(final String string2) {
-            this.name = string2;
+        Axis(String name) {
+            this.name = name;
         }
 
         public boolean isVertical() {
@@ -204,25 +202,26 @@ public enum OpenDirection implements IDirection {
             return this == X || this == Z;
         }
 
+        @Override
         public String toString() {
             return this.name;
         }
 
-
+        @Override
         public boolean test(@Nullable OpenDirection direction) {
             return direction != null && direction.axis() == this;
         }
 
-        public Plane getPlane() {
+        public Plane plane() {
             return switch (this) {
                 case X, Z -> Plane.HORIZONTAL;
                 case Y -> Plane.VERTICAL;
             };
         }
 
-        public abstract int choose(int i, int j, int k);
+        public abstract int choose(int x, int y, int z);
 
-        public abstract double choose(double d, double e, double f);
+        public abstract double choose(double x, double y, double z);
     }
 
     public enum AxisDirection {
@@ -241,13 +240,13 @@ public enum OpenDirection implements IDirection {
             return this.step;
         }
 
+        public AxisDirection opposite() {
+            return this == POSITIVE ? NEGATIVE : POSITIVE;
+        }
+
         @Override
         public String toString() {
             return this.name;
-        }
-
-        public AxisDirection opposite() {
-            return this == POSITIVE ? NEGATIVE : POSITIVE;
         }
     }
 
@@ -263,8 +262,9 @@ public enum OpenDirection implements IDirection {
             this.axis = axiss;
         }
 
+        @Override
         public boolean test(@Nullable OpenDirection direction) {
-            return direction != null && direction.axis().getPlane() == this;
+            return direction != null && direction.axis().plane() == this;
         }
 
         public int length() {

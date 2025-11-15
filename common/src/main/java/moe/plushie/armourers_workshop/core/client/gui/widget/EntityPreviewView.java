@@ -8,11 +8,8 @@ import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
 public class EntityPreviewView extends UIControl {
 
     private CGPoint lastMousePos;
@@ -39,6 +36,7 @@ public class EntityPreviewView extends UIControl {
         context.rotateCTM(lastPlayerRotation.x(), 0, 0);
         context.rotateCTM(0, lastPlayerRotation.y(), 0);
         context.translateCTM(0, 0, -50);
+
         context.drawEntity(entity, CGPoint.ZERO, 45, CGPoint.ZERO);
 
         context.restoreGraphicsState();

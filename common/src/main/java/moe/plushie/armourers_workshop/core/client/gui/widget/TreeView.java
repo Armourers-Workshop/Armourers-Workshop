@@ -146,7 +146,7 @@ public class TreeView extends UIScrollView implements UIMenuControllerDelegate {
                 addSubview(entry);
             }
             // update the entry content.
-            float iconSize = itemSize.height;
+            var iconSize = itemSize.height;
             entry.setup(node, rect, x, iconSize);
             entry.setSelected(node == selectedNode);
             // update the all content size.
@@ -154,14 +154,14 @@ public class TreeView extends UIScrollView implements UIMenuControllerDelegate {
             contentSize.height = y + itemSize.height;
             x += iconSize;
         }
-        // when the node is folding, ignore all child entries.
+        // when the node is folding, ignore all child tasks.
         if (node.isFolding()) {
             return;
         }
         // add all child into view.
-        int index = 0;
+        var index = 0;
         for (var child : node.children()) {
-            String key1 = key + ":" + index++;
+            var key1 = key + ":" + index++;
             buildEntry(key1, x, contentSize.height, itemSize, contentSize, child, removedEntries);
         }
     }
@@ -282,7 +282,7 @@ public class TreeView extends UIScrollView implements UIMenuControllerDelegate {
 
         private void updateTitleIfNeeded() {
             if (node != null) {
-                String value = node.title();
+                var value = node.title();
                 if (title != value) {
                     title = value;
                     cachedTitle = new NSString(value);

@@ -1,11 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 @SuppressWarnings("unused")
 public class ModDebugger {
@@ -47,6 +44,8 @@ public class ModDebugger {
 
     public static boolean mannequinCulling = false;
 
+    public static boolean cubeItem = false;
+
     public static boolean itemOverride = false;
     public static boolean handOverride = false;
     public static boolean modelOverride = false;
@@ -59,7 +58,9 @@ public class ModDebugger {
     public static boolean tooltip = false;
     public static boolean properties = false;
 
-    public static int vbo = 0; // 0: async vbo, 1: sync vbo, 2: disable vbo
+    public static boolean withoutVBO = false;
+    public static boolean withoutAsyncVBO = false;
+
     public static boolean wireframeRender = false;
 
     public static boolean viewHierarchy = false;
@@ -71,33 +72,17 @@ public class ModDebugger {
     public static boolean armourerDebugRender;
     public static boolean lodLevels;
     public static boolean skinBlockBounds;
-    public static boolean skinRenderBounds;
     public static boolean sortOrderToolTip;
 
     public static void rotate(IPoseStack poseStack) {
         poseStack.rotate(new OpenQuaternionf(rx, ry, rz, true));
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void rotate(PoseStack poseStack) {
-        poseStack.mulPose(new OpenQuaternionf(rx, ry, rz, true));
-    }
-
     public static void scale(IPoseStack poseStack) {
         poseStack.scale(sx, sy, sz);
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void scale(PoseStack poseStack) {
-        poseStack.scale(sx, sy, sz);
-    }
-
     public static void translate(IPoseStack poseStack) {
-        poseStack.translate(tx, ty, tz);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void translate(PoseStack poseStack) {
         poseStack.translate(tx, ty, tz);
     }
 

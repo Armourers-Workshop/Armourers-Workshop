@@ -1,0 +1,32 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
+import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
+import net.minecraft.nbt.CompoundTag;
+
+@Available("[1.16, 1.21)")
+public class AbstractTypedEntityData<T> {
+
+    protected final CompoundTag impl;
+
+    protected AbstractTypedEntityData(CompoundTag impl) {
+        this.impl = impl;
+    }
+
+    public static <T> IDataCodec<AbstractTypedEntityData<?>> codec(TypedRegistry<T> registry) {
+        return IDataCodec.wrap(CompoundTag.CODEC).xmap(AbstractTypedEntityData::new, AbstractTypedEntityData::impl);
+    }
+
+    public static <T> AbstractTypedEntityData<T> of(T type, CompoundTag tag) {
+        return new AbstractTypedEntityData<>(tag);
+    }
+
+    public CompoundTag getUnsafe() {
+        return impl;
+    }
+
+    public CompoundTag impl() {
+        return impl;
+    }
+}

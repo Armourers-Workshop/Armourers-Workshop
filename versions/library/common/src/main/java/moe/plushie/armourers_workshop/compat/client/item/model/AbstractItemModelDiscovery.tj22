@@ -1,0 +1,24 @@
+package moe.plushie.armourers_workshop.compat.client.item.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
+
+@Available("[1.22, )")
+public class AbstractItemModelDiscovery {
+
+    public static final ResourceLocation MARKER_ID = ResourceLocation.withDefaultNamespace("skin/generated");
+
+    public static void bake(ResourceLocation id, UnbakedModel unbakedModel, ItemModel bakedModel) {
+        // only support the skin model.
+        var parent = unbakedModel.parent();
+        if (parent == null || !parent.equals(MARKER_ID)) {
+            return;
+        }
+        var model = OpenResourceLocation.of(id);
+        EmbeddedItemModelDiscovery.bake(bakedModel, model);
+    }
+}

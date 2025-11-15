@@ -2,11 +2,13 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
+import moe.plushie.armourers_workshop.core.menu.BlockEntityContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -18,27 +20,19 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
+public class ArmourerMenu extends BlockEntityContainerMenu<ArmourerBlockEntity> {
 
     private final SimpleContainer inventory = new SimpleContainer(4);
     private Group group = null;
 
-    public ArmourerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
+    public ArmourerMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 8, 142, visibleSlotBuilder(this::shouldRenderInventory));
         this.addCustomSlot(inventory, 0, 64, 21);
         this.addCustomSlot(inventory, 1, 147, 21);
-    }
-
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
-        this.clearContainer(player, inventory);
     }
 
     public boolean shouldLoadArmourItem(Player player) {
@@ -82,11 +76,11 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
             var stackInput = inventory.getItem(0);
             var skinProps = blockEntity.skinProperties().copy();
 
-            skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+            skinProps.put(SkinProperty.ALL_AUTHOR_NAME, profile.name());
 
             // in the offline server the `player.getStringUUID()` is not real player uuid.
-            if (profile.getId() != null) {
-                skinProps.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
+            if (profile.id() != null) {
+                skinProps.put(SkinProperty.ALL_AUTHOR_UUID, profile.id().toString());
             }
 
             if (customName != null) {
@@ -163,16 +157,11 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         }
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size() - 1);
-    }
-
     protected void addCustomSlot(Container inventory, int slot, int x, int y) {
         addSlot(new GroupSlot(inventory, slot, x, y) {
 
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            protected boolean abi$mayPlace(ItemStack itemStack) {
                 if (slot == 0) {
                     // we can put the skin template to save skin in the survival mode.
                     if (itemStack.is(ModItems.SKIN_TEMPLATE.get())) {
@@ -197,18 +186,29 @@ public class ArmourerMenu extends AbstractBlockEntityMenu<ArmourerBlockEntity> {
         return group == Group.MAIN;
     }
 
+    @Override
+    protected void abi$removed(Player player) {
+        super.abi$removed(player);
+        abi$clearContainer(player, inventory);
+    }
+
+    @Override
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
+        return abi$quickMoveStack(player, index, slots.size() - 1);
+    }
+
     public enum Group {
         MAIN, SKIN, DISPLAY, BLOCK
     }
 
-    public class GroupSlot extends Slot {
+    public class GroupSlot extends AbstractContainerSlot {
 
         public GroupSlot(Container inventory, int index, int x, int y) {
             super(inventory, index, x, y);
         }
 
         @Override
-        public boolean isActive() {
+        protected boolean abi$isActive() {
             return shouldRenderInventory();
         }
     }

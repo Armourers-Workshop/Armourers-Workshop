@@ -19,12 +19,12 @@ public class ColorMixerBlockEntity extends UpdatableBlockEntity implements IPain
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         color = serializer.read(CodingKeys.COLOR);
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         serializer.write(CodingKeys.COLOR, color);
     }
 

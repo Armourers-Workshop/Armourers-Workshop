@@ -18,13 +18,12 @@ import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Environment(EnvType.CLIENT)
 public class AnimationManager {
 
     public static final AnimationManager NONE = new AnimationManager(null);
@@ -414,7 +412,7 @@ public class AnimationManager {
         public static final IDataSerializerKey<Integer> REPEAT = IDataSerializerKey.create("repeat", IDataCodec.INT, 0);
         public static final IDataSerializerKey<Boolean> LOCK = IDataSerializerKey.create("lock", IDataCodec.BOOL, true);
 
-        public static final IDataCodec<Properties> CODEC = IDataCodec.COMPOUND_TAG.serializer(Properties::new);
+        public static final IDataCodec<Properties> CODEC = ExtraCodecs.serializable(Properties::new);
 
         private final float speed;
         private final int playCount;

@@ -11,22 +11,18 @@ import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.Armoure
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerReplaceDialog;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
-import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected final ArmourerBlockEntity blockEntity;
@@ -69,12 +65,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             if (dialog.isCancelled()) {
                 return;
             }
-            var nbt = new CompoundTag();
-            nbt.putBoolean(Constants.Key.SKIN_CUBES, dialog.isClearBlocks());
-            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isClearPaints());
-            nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
-            nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.selectedPartType().registryName().toString());
-            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_CLEAR.buildPacket(blockEntity, nbt));
+            var serializer = new TagSerializer();
+            serializer.write(UpdateArmourerPacket.CodingKeys.PART_TYPE, dialog.selectedPartType());
+            serializer.write(UpdateArmourerPacket.CodingKeys.CLEAR_CUBES, dialog.isClearBlocks());
+            serializer.write(UpdateArmourerPacket.CodingKeys.CLEAR_MARKERS, dialog.isClearMarkers());
+            serializer.write(UpdateArmourerPacket.CodingKeys.CLEAR_PAINTS, dialog.isClearPaints());
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_CLEAR.buildPacket(blockEntity, serializer.tag()));
         });
     }
 
@@ -85,12 +81,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             if (dialog.isCancelled()) {
                 return;
             }
-            var nbt = new CompoundTag();
-            nbt.putBoolean(Constants.Key.MIRROR, dialog.isMirror());
-            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isCopyPaintData());
-            nbt.putString(Constants.Key.SOURCE, dialog.sourcePartType().registryName().toString());
-            nbt.putString(Constants.Key.DESTINATION, dialog.destinationPartType().registryName().toString());
-            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_COPY.buildPacket(blockEntity, nbt));
+            var serializer = new TagSerializer();
+            serializer.write(UpdateArmourerPacket.CodingKeys.SOURCE_PART_TYPE, dialog.sourcePartType());
+            serializer.write(UpdateArmourerPacket.CodingKeys.DESTINATION_PART_TYPE, dialog.destinationPartType());
+            serializer.write(UpdateArmourerPacket.CodingKeys.COPY_MIRROR, dialog.isMirror());
+            serializer.write(UpdateArmourerPacket.CodingKeys.COPY_PAINT_DATA, dialog.isCopyPaintData());
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_COPY.buildPacket(blockEntity, serializer.tag()));
         });
     }
 
@@ -98,29 +94,21 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
         var dialog = new ArmourerReplaceDialog();
         dialog.setTitle(NSString.localizedString("armourer.dialog.replace.title"));
         dialog.showInView(this, () -> {
-            var level = EnvironmentManager.getClient().level;
+            var level = Minecraft.getInstance().level;
             if (dialog.isCancelled() || level == null) {
                 return;
             }
-            var source = new CompoundTag();
             var selector = dialog.selector();
-            if (selector.getItem() instanceof IItemPaintable) {
-                selector.save(level.registryAccess(), source);
-            }
-            var destination = new CompoundTag();
             var applier = dialog.applier();
-            if (applier.getItem() instanceof IItemPaintable) {
-                applier.save(level.registryAccess(), destination);
-            }
-            if (source.isEmpty() && destination.isEmpty()) {
+            if (selector.isEmpty() && applier.isEmpty()) {
                 return;
             }
-            var nbt = new CompoundTag();
-            nbt.put(Constants.Key.SOURCE, source);
-            nbt.put(Constants.Key.DESTINATION, destination);
-            nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog.isKeepColor());
-            nbt.putBoolean(Constants.Key.KEEP_PAINT_TYPE, dialog.isKeepPaintType());
-            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_REPLACE.buildPacket(blockEntity, nbt));
+            var serializer = new TagSerializer(SerializationContext.from(level));
+            serializer.write(UpdateArmourerPacket.CodingKeys.SOURCE_ITEM, selector);
+            serializer.write(UpdateArmourerPacket.CodingKeys.DESTINATION_ITEM, applier);
+            serializer.write(UpdateArmourerPacket.CodingKeys.KEEP_COLOR, dialog.isKeepColor());
+            serializer.write(UpdateArmourerPacket.CodingKeys.KEEP_PAINT_TYPE, dialog.isKeepPaintType());
+            NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_REPLACE.buildPacket(blockEntity, serializer.tag()));
         });
     }
 

@@ -1,5 +1,6 @@
 package com.apple.library.impl;
 
+import com.apple.library.coregraphics.CGBlendMode;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
@@ -10,10 +11,6 @@ import com.apple.library.foundation.NSTextPosition;
 import com.apple.library.foundation.NSTextRange;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIFont;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,19 +20,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
-@Environment(EnvType.CLIENT)
 public class TextStorageImpl {
 
     public CGPoint offset = CGPoint.ZERO;
     public int maxLength = 1000;
 
-    public BiConsumer<CGRect, CGSize> sizeDidChange = (c, s) -> {
-    };
-    public BiConsumer<String, String> valueDidChange = (o, n) -> {
-    };
+    public BiConsumer<CGRect, CGSize> sizeDidChange = (c, s) -> {};
+    public BiConsumer<String, String> valueDidChange = (o, n) -> {};
     public BiPredicate<NSRange, String> valueShouldChange = (o, n) -> true;
-    public Runnable selectionDidChange = () -> {
-    };
+    public Runnable selectionDidChange = () -> {};
 
     private String value = "";
 
@@ -135,11 +128,11 @@ public class TextStorageImpl {
 
         if (placeholder != null && cachedTextLines.isEmpty()) {
             var placeholderColor = defaultPlaceholderColor();
-            context.drawText(placeholder, 1, 0, placeholderColor, true, font, 0);
+            context.drawText(placeholder, 1, 0, placeholderColor, true, font);
         }
         for (var line : cachedTextLines) {
-            context.drawText(line.formattedText, line.rect.x, line.rect.y, textColor, true, font, 0);
-            context.strokeDebugRect(line.index, line.rect);
+            context.drawText(line.formattedText, line.rect.x, line.rect.y, textColor, true, font);
+            context.strokeDebugRect(line.rect, line.index);
         }
 
         renderHighlightedRectIfNeeded(context);
@@ -163,18 +156,11 @@ public class TextStorageImpl {
         if (!isFocused || highlightedRects == null || highlightedRects.isEmpty()) {
             return;
         }
-        var pose = context.state().ctm().last();
-        var buffers = AbstractBufferSource.buffer();
-        var builder = buffers.getBuffer(SkinRenderType.GUI_HIGHLIGHTED_TEXT);
-        for (var rect : highlightedRects) {
-            builder.vertex(pose, rect.minX(), rect.maxY(), 0).endVertex();
-            builder.vertex(pose, rect.maxX(), rect.maxY(), 0).endVertex();
-            builder.vertex(pose, rect.maxX(), rect.minY(), 0).endVertex();
-            builder.vertex(pose, rect.minX(), rect.minY(), 0).endVertex();
+        context.setBlendMode(CGBlendMode.DIFFERENCE);
+        for (var highlightedRect : highlightedRects) {
+            context.fillRect(highlightedRect.offset(0, -1), AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
         }
-        context.setBlendColor(AppearanceImpl.TEXT_HIGHLIGHTED_COLOR);
-        buffers.endBatch();
-        context.setBlendColor(UIColor.WHITE);
+        context.setBlendMode(CGBlendMode.NORMAL);
     }
 
     public String value() {

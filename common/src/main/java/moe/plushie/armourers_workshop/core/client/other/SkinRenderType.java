@@ -1,57 +1,52 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IRenderTypeBuilder;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractRenderTypeImpl;
+import moe.plushie.armourers_workshop.compat.client.AbstractRenderTypeImpl;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
-@Environment(EnvType.CLIENT)
 public abstract class SkinRenderType implements IRenderType {
 
-    public static final IRenderType BLIT_COLOR = _builder(SkinVertexFormat.BLIT_MASK).build("aw_blit_color");
-    public static final IRenderType BLIT_MASK = _builder(SkinVertexFormat.BLIT_MASK).writeMask(WriteMask.NONE).build("aw_blit_mask");
-    public static final IRenderType BLIT_IMAGE = _builder(SkinVertexFormat.GUI_IMAGE).build("aw_blit_image");
+    public static final IRenderType BLIT_COLOR = _builder(SkinVertexFormat.BLIT_MASK).build("blit_color");
+    public static final IRenderType BLIT_MASK = _builder(SkinVertexFormat.BLIT_MASK).colorWrite(false).depthWrite(false).build("blit_mask");
+    public static final IRenderType BLIT_TEXTURED = _builder(SkinVertexFormat.BLIT_TEXTURED).build("blit_image");
 
-    public static final IRenderType GUI_COLOR = _builder(SkinVertexFormat.GUI_COLOR).transparency(Transparency.DEFAULT).build("aw_gui_color");
-    public static final IRenderType GUI_IMAGE = _builder(SkinVertexFormat.GUI_IMAGE).transparency(Transparency.TRANSLUCENT).build("aw_gui_image");
-    public static final IRenderType GUI_HIGHLIGHTED_TEXT = _builder(SkinVertexFormat.GUI_HIGHLIGHTED_TEXT).transparency(Transparency.TRANSLUCENT).colorLogic(ColorLogic.OR_REVERSE).depthTest(DepthTest.NONE).build("aw_highlighted_text");
+    public static final IRenderType GUI_COLOR = _builder(SkinVertexFormat.GUI_COLOR).blend(BlendMode.TRANSLUCENT).build("gui_color");
+    public static final IRenderType GUI_REVERSED_COLOR = _builder(SkinVertexFormat.GUI_COLOR).blend(BlendMode.TRANSLUCENT).colorLogic(LogicOp.OR_REVERSE).depthTest(DepthTestMode.NO_DEPTH_TEST).build("gui_reversed_color");
 
-    public static final IRenderType IMAGE_MAGIC = _texture(ModTextures.CIRCLE).writeMask(WriteMask.COLOR_WRITE).sortOnUpload().build("aw_image_magic");
+    public static final IRenderType IMAGE_GUIDE = _blockCutout(ModTextures.GUIDES).polygonOffset(-1, -10).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).build("image_guide");
+    public static final IRenderType IMAGE_MARKER = _blockCutout(ModTextures.MARKERS).polygonOffset(-1, -10).cull().build("image_marker");
 
-    public static final IRenderType IMAGE_GUIDE = _texture(ModTextures.GUIDES).polygonOffset(-1, -10).build("aw_image_guide");
-    public static final IRenderType IMAGE_MARKER = _texture2(ModTextures.MARKERS).polygonOffset(-1, -10).cull().build("aw_image_marker");
-
-    public static final IRenderType HIGHLIGHTED_LINES = _line(2).depthTest(DepthTest.NONE).build("aw_lines_ndt");
-    public static final IRenderType HIGHLIGHTED_ENTITY_LINES = _entityHighlight(ModTextures.MANNEQUIN_HIGHLIGHT).build("aw_entity_lines");
+    public static final IRenderType HIGHLIGHTED_LINES = _line(1).depthTest(DepthTestMode.NO_DEPTH_TEST).build("lines_ndt");
+    public static final IRenderType HIGHLIGHTED_ENTITY_LINES = _entityHighlight(ModTextures.MANNEQUIN_HIGHLIGHT).build("entity_lines");
 
     public static final IRenderType PLAYER_CUTOUT = entityCutout(ModTextures.MANNEQUIN_DEFAULT);
     public static final IRenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(ModTextures.MANNEQUIN_DEFAULT);
     public static final IRenderType PLAYER_TRANSLUCENT = entityTranslucentCull(ModTextures.MANNEQUIN_DEFAULT);
 
-    public static final IRenderType BLOCK_CUBE = _block(ModTextures.BLOCK_CUBE).build("aw_block_cube");
-    public static final IRenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).sortOnUpload().build("aw_block_cube_glass");
-    public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).transparency(Transparency.TRANSLUCENT).build("aw_block_cube_glass_unsorted");
-    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build("aw_block_earth");
+    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build("block_earth");
 
-    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("aw_block_face_sold");
-    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("aw_block_face_lighting");
-    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_block_face_translucent");
-    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("aw_block_face_translucent_lighting");
+    public static final IRenderType BLOCK_CUBE = _block(ModTextures.BLOCK_CUBE).build("block_cube");
+    public static final IRenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).sortOnUpload().build("block_cube_glass");
+    public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).build("block_cube_glass_unsorted");
 
-    private static final IRenderType LINES = _line(1).build("aw_lines");
-    private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("aw_line_strip");
+    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("block_face_sold");
+    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("block_face_lighting");
+    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("block_face_translucent");
+    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("block_face_translucent_lighting");
+
+    private static final IRenderType LINES = _line(1).build("lines");
+    private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("line_strip");
 
     private static final ConcurrentHashMap<String, IRenderType> CUSTOM_FACE_VARIANTS = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, IRenderType> CUSTOM_GUI_IMAGES = new ConcurrentHashMap<>();
 
     public static IRenderType by(SkinGeometryType geometryType) {
         if (geometryType == SkinGeometryTypes.BLOCK_GLASS) {
@@ -71,7 +66,7 @@ public abstract class SkinRenderType implements IRenderType {
         return CUSTOM_FACE_VARIANTS.computeIfAbsent(key, it -> {
             var builder = _customFace(format).texture(texture);
             if (isTranslucent) {
-                builder = builder.transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT);
+                builder = builder.blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT);
             }
             if (isCull) {
                 builder = builder.cull();
@@ -93,7 +88,7 @@ public abstract class SkinRenderType implements IRenderType {
         return by(type);
     }
 
-    public static IRenderType lines() {
+    public static IRenderType line() {
         return LINES;
     }
 
@@ -101,51 +96,52 @@ public abstract class SkinRenderType implements IRenderType {
         return LINE_STRIP;
     }
 
+    public static IRenderType customImage(IResourceLocation texture) {
+        var key = String.format("gui_image/%s", texture.path());
+        return CUSTOM_GUI_IMAGES.computeIfAbsent(key, it -> _builder(SkinVertexFormat.GUI_TEXTURED).texture(texture).blend(BlendMode.TRANSLUCENT).build(it));
+    }
+
     public static IRenderType entityCutout(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).cull().build("aw_player_solid");
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).cull().build("player_solid");
     }
 
     public static IRenderType entityCutoutNoCull(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).build("aw_player_cutout");
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).build("player_cutout");
     }
 
     public static IRenderType entityTranslucentCull(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().transparency(Transparency.TRANSLUCENT).build("aw_player_translucent");
+        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().blend(BlendMode.TRANSLUCENT).build("player_translucent");
     }
 
-    private static IRenderTypeBuilder _entity(SkinVertexFormat format, IResourceLocation texture) {
+    private static Builder _entity(SkinVertexFormat format, IResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
     }
 
-    private static IRenderTypeBuilder _entityHighlight(IResourceLocation texture) {
+    private static Builder _entityHighlight(IResourceLocation texture) {
         return _builder(SkinVertexFormat.ENTITY_ALPHA).texture(texture).overlay().lightmap();
     }
 
-    private static IRenderTypeBuilder _blockFace(SkinVertexFormat format) {
+    private static Builder _blockFace(SkinVertexFormat format) {
         return _builder(format).outline();
     }
 
-    private static IRenderTypeBuilder _customFace(SkinVertexFormat format) {
+    private static Builder _customFace(SkinVertexFormat format) {
         return _builder(format).outline();
     }
 
-    private static IRenderTypeBuilder _texture(IResourceLocation texture) {
-        return _builder(SkinVertexFormat.IMAGE).texture(texture).transparency(Transparency.TRANSLUCENT).target(Target.TRANSLUCENT);
-    }
-
-    private static IRenderTypeBuilder _texture2(IResourceLocation texture) {
+    private static Builder _blockCutout(IResourceLocation texture) {
         return _builder(SkinVertexFormat.BLOCK_CUTOUT).texture(texture).overlay().lightmap();
     }
 
-    private static IRenderTypeBuilder _block(IResourceLocation texture) {
+    private static Builder _block(IResourceLocation texture) {
         return _builder(SkinVertexFormat.BLOCK).texture(texture).overlay().lightmap();
     }
 
-    private static IRenderTypeBuilder _line(float lineWidth) {
+    private static Builder _line(float lineWidth) {
         return _builder(SkinVertexFormat.LINE).lineWidth(lineWidth).polygonOffset(0, 10);
     }
 
-    private static IRenderTypeBuilder _builder(SkinVertexFormat format) {
+    private static Builder _builder(SkinVertexFormat format) {
         return AbstractRenderTypeImpl.builder(format);
     }
 

@@ -1,0 +1,61 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.utils.NamedClass;
+import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.ChickenModel;
+import net.minecraft.client.model.CreeperModel;
+import net.minecraft.client.model.EndermanModel;
+import net.minecraft.client.model.GhastModel;
+import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.IllagerModel;
+import net.minecraft.client.model.IronGolemModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.QuadrupedModel;
+import net.minecraft.client.model.SlimeModel;
+import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.WolfModel;
+import net.minecraft.client.model.ZombieVillagerModel;
+import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
+import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
+import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
+
+@Available("[1.16, 1.19)")
+@OnlyIn(Dist.CLIENT)
+public class AbstractClientNamedClass extends NamedClass {
+
+    public static void registerLayerClasses() {
+        define("minecraft:layer/villager_profession", VillagerProfessionLayer.class);
+        define("minecraft:layer/drowned_outer", DrownedOuterLayer.class);
+        define("minecraft:layer/stray_clothing", StrayClothingLayer.class);
+    }
+
+    public static void registerModelClasses() {
+        define("minecraft:model/slime", SlimeModel.class);
+        define("minecraft:model/ghast", GhastModel.class);
+
+        define("minecraft:model/quadruped", QuadrupedModel.class);
+        define("minecraft:model/humanoid", HumanoidModel.class);
+        define("minecraft:model/player", PlayerModel.class);
+
+        define("minecraft:model/enderman", EndermanModel.class);
+        define("minecraft:model/zombie_villager", ZombieVillagerModel.class);
+
+        define("minecraft:model/illager", IllagerModel.class);
+        define("minecraft:model/villager", VillagerModel.class);
+        define("minecraft:model/iron_golem", IronGolemModel.class);
+
+        define("minecraft:model/chicken", ChickenModel.class);
+        define("minecraft:model/wolf", WolfModel.class);
+        define("minecraft:model/horse", HorseModel.class);
+        //define("minecraft:model/allay", AllayModel.class);
+
+        define("minecraft:model/creeper", CreeperModel.class);
+
+        define("minecraft:model/boat", BoatModel.class);
+        //define("minecraft:model/raft", AbstractSkinnableModel.RAFT);
+    }
+}

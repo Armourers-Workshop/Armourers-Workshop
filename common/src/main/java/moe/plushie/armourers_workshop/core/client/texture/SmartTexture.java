@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.core.client.texture;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
@@ -20,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public class SmartTexture extends ReferenceCounted {
 
     private final OpenResourceLocation location;
@@ -59,7 +62,7 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public IRenderType renderType(SkinGeometryType type) {
+    public IRenderType getRenderType(SkinGeometryType type) {
         return bindingRenderTypes.computeIfAbsent(type, it -> {
             var renderType = SkinRenderType.geometryFace(it, location, properties.isTranslucent(), properties.isEmissive());
             DataContainer.set(renderType, this);

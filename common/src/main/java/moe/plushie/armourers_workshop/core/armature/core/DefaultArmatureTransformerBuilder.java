@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerBuilder;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 public class DefaultArmatureTransformerBuilder extends ArmatureTransformerBuilder {
 
-    public DefaultArmatureTransformerBuilder(IResourceLocation name) {
+    public DefaultArmatureTransformerBuilder(OpenResourceLocation name) {
         super(name);
     }
 

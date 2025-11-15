@@ -231,7 +231,7 @@ public class SkinWardrobe implements IDataSerializable.Mutable {
     }
 
     public boolean isEditable(Player player) {
-        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE.get(), entity(), player)) {
+        if (!ModPermissions.OPEN.accept(ModMenuTypes.WARDROBE, entity(), player)) {
             return false;
         }
         // can't edit another player's wardrobe

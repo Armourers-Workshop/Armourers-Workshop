@@ -1,0 +1,53 @@
+package moe.plushie.armourers_workshop.compat.core.data.serializer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
+
+@Available("[1.22, )")
+public interface AbstractDataSerializer extends IDataSerializer {
+
+    static IDataSerializer wrap(CompoundTag tag, @Nullable Object context) {
+        return new AbstractTagDataSerializer(tag, SerializationContext.from(context));
+    }
+
+    static IDataSerializer wrap(CompoundTag tag) {
+        return new AbstractTagDataSerializer(tag, SerializationContext.EMPTY);
+    }
+
+    static IDataSerializer wrap(ValueInput input) {
+        return new AbstractValueDataSerializer(input, null);
+    }
+
+    static IDataSerializer wrap(ValueOutput output) {
+        return new AbstractValueDataSerializer(null, output);
+    }
+
+    static ValueInput unwrapToInput(IDataSerializer serializer) {
+        if (serializer instanceof AbstractValueDataSerializer valueDataSerializer) {
+            return valueDataSerializer.input();
+        }
+        if (serializer instanceof AbstractTagDataSerializer tagDataSerializer) {
+            var report = new ProblemReporter.Collector();
+            return TagValueInput.create(report, tagDataSerializer.context().provider(), tagDataSerializer.tag);
+        }
+        throw new RuntimeException("can't supported type " + serializer.getClass().getSimpleName());
+    }
+
+    static ValueOutput unwrapToOutput(IDataSerializer serializer) {
+        if (serializer instanceof AbstractValueDataSerializer valueDataSerializer) {
+            return valueDataSerializer.output();
+        }
+//        if (serializer instanceof AbstractTagDataSerializer tagDataSerializer) {
+//            var report = new ProblemReporter.Collector();
+//             TagValueOutput.createWithContext(report, tagDataSerializer.provider, tagDataSerializer.tag);
+//        }
+        throw new RuntimeException("can't supported type " + serializer.getClass().getSimpleName());
+    }
+}

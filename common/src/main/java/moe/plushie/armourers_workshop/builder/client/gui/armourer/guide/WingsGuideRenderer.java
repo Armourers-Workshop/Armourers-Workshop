@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class WingsGuideRenderer extends AbstractGuideRenderer {
 
     private final ChestGuideRenderer chestGuideRenderer = new ChestGuideRenderer();
@@ -25,11 +24,11 @@ public class WingsGuideRenderer extends AbstractGuideRenderer {
     }
 
 
-    public void render(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
+    public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
         float f = 1 / 16f;
-        poseStack.pushPose();
-        poseStack.translate(0, 0, -2 * f);
-        chestGuideRenderer.render(poseStack, provider, light, overlay, bufferSource);
-        poseStack.popPose();
+        context.saveGraphicsState();
+        context.translateCTM(0, 0, -2 * f);
+        chestGuideRenderer.render(provider, lightmap, overlay, context);
+        context.restoreGraphicsState();
     }
 }

@@ -3,10 +3,9 @@ package moe.plushie.armourers_workshop.core.holiday;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedData;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataType;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -17,14 +16,12 @@ import java.util.List;
 
 public class HolidayTracker extends AbstractSavedData {
 
+    public static final AbstractSavedDataType<HolidayTracker> TYPE = AbstractSavedDataType.create(HolidayTracker::new, "HolidayTracker");
+
     private final Calendar calendar = Calendar.getInstance();
     private final HashSet<String> logs = new HashSet<>();
 
     public HolidayTracker() {
-    }
-
-    public static HolidayTracker of(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(HolidayTracker::new, 0, Constants.Key.HOLIDAY_TRACKER);
     }
 
     public void add(Player player, Holiday holiday) {

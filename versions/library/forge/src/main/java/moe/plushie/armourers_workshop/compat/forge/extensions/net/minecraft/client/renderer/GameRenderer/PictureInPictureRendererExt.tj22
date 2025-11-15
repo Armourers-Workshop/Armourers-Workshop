@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.client.renderer.GameRenderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+import java.util.function.Function;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.22, )")
+@Extension
+public class PictureInPictureRendererExt {
+
+    public static <T extends PictureInPictureRenderState> void registerPictureInPictureRendererFO(@ThisClass Class<?> clazz, Class<T> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<T>> factory) {
+        AbstractForgeClientEventsImpl.PICTURE_IN_PICTURE_RENDERERS_REGISTRY.listen(event -> {
+            event.register(stateClass, factory);
+        });
+    }
+}

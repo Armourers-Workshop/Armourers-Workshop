@@ -9,10 +9,7 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class InventoryBox extends UIControl {
 
     protected NSString message;

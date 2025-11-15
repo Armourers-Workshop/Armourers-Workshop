@@ -1,24 +1,20 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.state.SkinnableRenderState;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
-public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
+@OnlyIn(Dist.CLIENT)
+public class SkinnableBlockRenderer<T extends SkinnableBlockEntity, S extends SkinnableRenderState> extends AbstractBlockEntityRenderer<T, S> {
 
     private final BakedArmature armature = new BakedArmature(Armatures.ANY);
 
@@ -27,82 +23,45 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity> extends Abst
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        var renderData = BlockEntityRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        renderData.tick(entity);
-        var renderingTasks = renderData.allSkins();
-        if (renderingTasks.isEmpty()) {
-            return;
-        }
-        var f = 1 / 16f;
-
-        var blockState = entity.getBlockState();
-        var rotations = entity.getRenderRotations(blockState);
-
-        var renderPatch = renderData.renderPatch();
-        var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.rotate(rotations);
-
-        poseStack.scale(f, f, f);
-        poseStack.scale(-1, -1, 1);
-
-        renderPatch.activate(entity, partialTicks, light, overlay, poseStack);
-
-        var pluginContext = renderPatch.pluginContext();
-        var renderingContext = renderPatch.renderingContext();
-
-        renderingContext.setOverlay(pluginContext.overlay());
-        renderingContext.setLightmap(pluginContext.lightmap());
-        renderingContext.setPartialTicks(pluginContext.partialTicks());
-        renderingContext.setAnimationTicks(pluginContext.animationTicks());
-
-        renderingContext.setPoseStack(poseStack);
-        renderingContext.setBufferSource(bufferSource);
-        renderingContext.setModelViewStack(AbstractModelViewStack.getInstance());
-
-        for (var entry : renderingTasks) {
-            var skin = entry.skin();
-            skin.setupAnim(mannequinEntity, armature, renderingContext);
-            var colorScheme = skin.resolve(mannequinEntity, entry.paintScheme());
-            SkinRenderer.render(mannequinEntity, armature, skin, colorScheme, renderingContext);
-            if (ModDebugger.skinnable) {
-                skin.blockBounds().forEach((pos, rect) -> {
-                    poseStack.pushPose();
-                    poseStack.scale(-1, -1, 1);
-                    poseStack.translate(pos.x() * 16f, pos.y() * 16f, pos.z() * 16f);
-                    ShapeTesselator.stroke(rect, UIColor.RED, poseStack, bufferSource);
-                    poseStack.popPose();
-                });
-            }
-        }
-
-        renderPatch.deactivate(entity);
-
-        poseStack.popPose();
-
-        if (ModDebugger.skinnable) {
-            var pos = entity.getBlockPos();
-            poseStack.pushPose();
-            poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
-            poseStack.popPose();
-        }
-    }
-
-    @Override
-    public int getViewDistance() {
+    protected int abi$getViewDistance() {
         return ModConfig.Client.renderDistanceBlockSkin;
     }
 
     @Override
-    public boolean shouldRender(T entity) {
+    protected boolean abi$shouldRender(T entity) {
         // only use custom render in the parent block entity.
         return entity.isParent();
+    }
+
+    @Override
+    protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        var model = renderState.slots();
+        if (model.isEmpty()) {
+            return;
+        }
+        context.saveGraphicsState();
+
+        context.translateCTM(0.5f, 0.5f, 0.5f);
+        context.rotateCTM(renderState.renderRotations());
+        context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
+
+        model.setPartialTicks(renderState.partialTicks());
+        model.setAnimationTicks(renderState.animationTicks());
+        model.setAnimationManager(renderState.animationManager());
+        model.setOutlineColor(0); // never show outline in the skinnable block.
+
+        model.render(null, armature, lightmap, overlay, context);
+
+        if (ModDebugger.skinnable) {
+            model.slots().forEach(it -> it.skin().blockBounds().forEach((pos, rect) -> {
+                context.saveGraphicsState();
+                context.scaleCTM(-1, -1, 1);
+                context.translateCTM(pos.x() * 16f, pos.y() * 16f, pos.z() * 16f);
+                context.draw(ShapeElement.stroke(rect, Colors.RED));
+                context.restoreGraphicsState();
+            }));
+        }
+
+        context.restoreGraphicsState();
     }
 }

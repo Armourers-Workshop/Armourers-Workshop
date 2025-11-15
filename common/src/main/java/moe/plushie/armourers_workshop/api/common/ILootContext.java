@@ -5,8 +5,12 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public interface ILootContext {
 
-    <T> T getParameter(ILootContextParam<T> param);
+    boolean hasParameter(IContextKey<?> key);
+
+    <T> T getParameter(IContextKey<T> key);
 
     @Nullable
-    <T> T getOptionalParameter(ILootContextParam<T> param);
+    <T> T getOptionalParameter(IContextKey<T> key);
+
+    IRandomSource randomSource();
 }

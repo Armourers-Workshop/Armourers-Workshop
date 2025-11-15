@@ -1,0 +1,28 @@
+package moe.plushie.armourers_workshop.compat.fabric.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientFrameRenderEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.16, 1.21)")
+@Mixin(GameRenderer.class)
+public class FabricClientFrameRenderMixin {
+
+    @Inject(method = "render", at = @At("HEAD"))
+    private void aw2$renderPre(float f, long l, boolean bl, CallbackInfo ci) {
+        var delta = new AbstractDeltaTracker(f, Minecraft.getInstance().isPaused(), false);
+        ClientFrameRenderEvents.START.invoker().onStart(delta);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    private void aw2$renderPost(float f, long l, boolean bl, CallbackInfo ci) {
+        var delta = new AbstractDeltaTracker(f, Minecraft.getInstance().isPaused(), false);
+        ClientFrameRenderEvents.END.invoker().onEnd(delta);
+    }
+}

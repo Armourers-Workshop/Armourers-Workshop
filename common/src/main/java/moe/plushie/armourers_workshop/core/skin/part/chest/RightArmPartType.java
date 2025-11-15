@@ -23,7 +23,7 @@ public class RightArmPartType extends SkinPartType implements ISkinPartTypeTextu
 
     @Override
     public OpenRectangle3i guideSpace(EntityTextureDescriptor.Model model) {
-        if (model == EntityTextureDescriptor.Model.ALEX) {
+        if (model == EntityTextureDescriptor.Model.SLIM) {
             return guideSpaceSlim;
         }
         return guideSpace;

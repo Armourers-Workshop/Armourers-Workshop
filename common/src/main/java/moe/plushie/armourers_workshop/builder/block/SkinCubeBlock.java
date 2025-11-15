@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -18,18 +18,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
-public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider, IBlockTintColorProvider {
+public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBlockEntityProvider {
 
     // a better solution is use `OptionalDirectionProperty` as marker flags,
     // but some third-party mods will rotate this block, such as world edit's.
     // they usually to handle `DirectionProperty` for the compatible vanilla,
     // so we use vanilla API to avoid problems
-    public static final DirectionProperty MARKER = DirectionProperty.create("marker", Direction.values());
-    public static final BooleanProperty HAS_MARKER = BooleanProperty.create("has_marker");
+    public static final Property<Direction> MARKER = BlockStateProperties.createDirectionProperty("marker");
+    public static final Property<Boolean> HAS_MARKER = BlockStateProperties.createBooleanProperty("has_marker");
 
     public SkinCubeBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -53,51 +53,50 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+    public BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return ModBlockEntityTypes.SKIN_CUBE.get().create(level, blockPos, blockState);
     }
 
     @Override
-    public boolean skipRendering(BlockState state, BlockState state1, Direction dir) {
+    protected boolean abi$skipRendering(BlockState state, BlockState state1, Direction dir) {
         // the same block can be omitted
         return state.getBlock() == state1.getBlock();
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
+    protected void abi$createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.abi$createBlockStateDefinition(builder);
         builder.add(MARKER);
         builder.add(HAS_MARKER);
     }
 
     @Override
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
+    protected BlockState abi$rotate(BlockState blockState, Rotation rotation) {
         var facing = rotation.rotate(blockState.getValue(FACING));
         var marker = rotation.rotate(blockState.getValue(MARKER));
         return blockState.setValue(FACING, facing).setValue(MARKER, marker);
     }
 
     @Override
-    public BlockState mirror(BlockState blockState, Mirror mirror) {
-        return rotate(blockState, mirror.getRotation(blockState.getValue(FACING)));
+    protected BlockState abi$mirror(BlockState blockState, Mirror mirror) {
+        return abi$rotate(blockState, mirror.getRotation(blockState.getValue(FACING)));
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+    protected boolean abi$propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return true;
     }
 
     @Override
-    public int getTintColor(BlockState blockState, @Nullable BlockGetter reader, @Nullable BlockPos blockPos, int index) {
-        if (reader == null || blockPos == null) {
+    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos, int layerIndex) {
+        if (level == null || blockPos == null) {
             return 0xffffffff;
         }
         var direction = OpenDirection.NORTH;
-        if (index > 0 && index < 7) {
-            direction = OpenDirection.values()[index - 1];
+        if (layerIndex > 0 && layerIndex < 7) {
+            direction = OpenDirection.values()[layerIndex - 1];
         }
-        var blockEntity = reader.getBlockEntity(blockPos);
-        if (blockEntity instanceof IBlockPaintable paintable) {
+        if (level.getBlockEntity(blockPos) instanceof IBlockPaintable paintable) {
             var paintColor = paintable.getColor(direction);
             if (paintColor != null) {
                 return paintColor.argb() | 0xff000000;

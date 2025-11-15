@@ -1,21 +1,18 @@
 package moe.plushie.armourers_workshop.library.client.render;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
-import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 
-@Environment(EnvType.CLIENT)
-public class GlobalSkinLibraryBlockRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
+@OnlyIn(Dist.CLIENT)
+public class GlobalSkinLibraryBlockRenderer<T extends GlobalSkinLibraryBlockEntity, S extends GlobalSkinLibraryRenderState> extends AbstractBlockEntityRenderer<T, S> {
 
     private final OpenModelPart model = OpenModelPartBuilder.of(64, 32).cube(-8, -8, -8, 16, 16, 16).build();
 
@@ -24,33 +21,30 @@ public class GlobalSkinLibraryBlockRenderer<T extends BlockEntity> extends Abstr
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        poseStack.pushPose();
-        poseStack.translate(0.5f, 1.75f, 0.5f);
-        poseStack.scale(-1, -1, 1);
+    protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        context.saveGraphicsState();
+        context.translateCTM(0.5f, 1.75f, 0.5f);
+        context.scaleCTM(-1, -1, 1);
 
-        float f = 0.0625f;
-        float xPos = 2.5f;
-        float zPos = 4.6f;
-        float yPos = 4.0f;
-        BlockState state = entity.getBlockState();
-        Direction direction = state.getValue(GlobalSkinLibraryBlock.FACING).getOpposite();
-        poseStack.translate(
+        var f = 0.0625f;
+        var xPos = 2.5f;
+        var zPos = 4.6f;
+        var yPos = 4.0f;
+
+        var direction = renderState.facing().getOpposite();
+        context.translateCTM(
                 (xPos * -direction.getStepZ() + zPos * direction.getStepX()) * f,
                 yPos * f,
                 (xPos * -direction.getStepX() + zPos * -direction.getStepZ()) * f
         );
 
-        poseStack.scale(0.2f, 0.2f, 0.2f);
+        context.scaleCTM(0.2f, 0.2f, 0.2f);
 
-        if (entity.getLevel() != null) {
-            float angle = (entity.getLevel().getGameTime()) % 360 + partialTicks;
-            poseStack.rotate(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
-        }
+        var angle = renderState.gameTime() % 360 + renderState.partialTicks();
+        context.rotateCTM(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
 
-        var builder = bufferSource.getBuffer(SkinRenderType.BLOCK_EARTH);
-        model.render(poseStack, builder, 0xf000f0, overlay, 0x7fffffff);
+        context.draw(ModelPartElement.newInstance(model, lightmap, overlay, 0x7fffffff, SkinRenderType.BLOCK_EARTH));
 
-        poseStack.popPose();
+        context.restoreGraphicsState();
     }
 }

@@ -1,0 +1,51 @@
+package moe.plushie.armourers_workshop.compat.builder;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
+import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
+import moe.plushie.armourers_workshop.core.utils.FastMapper;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+
+import java.util.ArrayList;
+import java.util.function.Function;
+
+@Available("[1.16, 1.20)")
+public class AbstractBlockBuilder<T extends Block> {
+
+    private static final FastMapper<AbstractBlockMaterial, Material> MATERIALS = FastMapper.builder(it -> {
+        it.put(AbstractBlockMaterial.STONE, Material.STONE);
+        it.put(AbstractBlockMaterial.GLASS, Material.GLASS);
+    });
+
+    private static final FastMapper<AbstractBlockMaterialColor, MaterialColor> MATERIAL_COLORS = FastMapper.builder(it -> {
+        it.put(AbstractBlockMaterialColor.NONE, MaterialColor.NONE);
+    });
+
+    protected final AbstractBlockMaterial material;
+    protected final AbstractBlockMaterialColor materialColor;
+
+    protected final Function<BlockBehaviour.Properties, T> factory;
+    protected final ArrayList<Function<BlockBehaviour.Properties, BlockBehaviour.Properties>> updaters = new ArrayList<>();
+
+    public AbstractBlockBuilder(Function<BlockBehaviour.Properties, T> factory, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
+        this.factory = factory;
+        this.material = material;
+        this.materialColor = materialColor;
+    }
+
+    public void apply(Function<BlockBehaviour.Properties, BlockBehaviour.Properties> updater) {
+        this.updaters.add(updater);
+    }
+
+    public T build(OpenResourceLocation registryName) {
+        var properties = BlockBehaviour.Properties.of(MATERIALS.getValue(material), MATERIAL_COLORS.getValue(materialColor));
+        for (var updater : updaters) {
+            properties = updater.apply(properties);
+        }
+        return factory.apply(properties.setId(registryName));
+    }
+}

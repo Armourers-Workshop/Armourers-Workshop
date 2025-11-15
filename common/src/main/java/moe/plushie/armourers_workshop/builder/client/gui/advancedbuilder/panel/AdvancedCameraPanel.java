@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.math.OpenAxisAlignedBoundingBox;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 
 import java.util.Collection;
@@ -43,7 +44,7 @@ public class AdvancedCameraPanel extends UIView {
 
     public AdvancedCameraPanel(DocumentEditor editor) {
         super(CGRect.ZERO);
-        this.options = EnvironmentManager.getClient().options;
+        this.options = Minecraft.getInstance().options;
         this.blockEntity = editor.blockEntity();
     }
 
@@ -204,7 +205,7 @@ public class AdvancedCameraPanel extends UIView {
 //
 //        tesselator.setLightmap(0xf000f0);
 //        tesselator.setPartialTicks(0);
-//        tesselator.setBufferProvider(skin -> (bakedPart, bakedSkin, scheme, shouldRender, context) -> {
+//        tesselator.setBufferProvider(skin -> (bakedPart, skin, scheme, shouldRender, context) -> {
 //            if (shouldRender) {
 //                OpenMatrix4f mat = new OpenMatrix4f(context.pose().lastPose());
 //                mat.invert();

@@ -1,0 +1,10 @@
+package moe.plushie.armourers_workshop.compat.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.gui.render.GuiRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[1.22, )")
+@Mixin(GuiRenderer.class)
+public class GuiRendererMixin {
+}

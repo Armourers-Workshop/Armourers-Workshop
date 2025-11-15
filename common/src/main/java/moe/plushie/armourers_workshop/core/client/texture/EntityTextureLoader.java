@@ -1,49 +1,38 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractCustomProfileTextureLoader;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractCustomProfileLoader;
-import moe.plushie.armourers_workshop.core.client.other.SkinRemoteTexture;
+import moe.plushie.armourers_workshop.compat.core.AbstractGameProfileResolver;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Executors;
-import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class EntityTextureLoader {
-
-    public static final OpenResourceLocation STEVE_SKIN_LOCATION = OpenResourceLocation.parse("textures/entity/steve.png");
-    public static final OpenResourceLocation ALEX_SKIN_LOCATION = OpenResourceLocation.parse("textures/entity/alex.png");
 
     private static final UUID NIL_UUID = new UUID(0, 0);
     private static final EntityTextureLoader LOADER = new EntityTextureLoader();
 
     private final TaskQueue<String, GameProfile> namedProfiles = new TaskQueue<>(this::loadGameProfile);
     private final TaskQueue<EntityTextureDescriptor, EntityTexture> namedTextures = new TaskQueue<>(this::loadTexture);
-
-    private final TaskQueue<OpenResourceLocation, BakedEntityTexture> registeredModels = new TaskQueue<>(this::loadTexture);
-    private final HashMap<String, BakedEntityTexture> downloadedModels = new HashMap<>();
+    private final TaskQueue<OpenResourceLocation, BakedEntityTexture> registeredModels = new TaskQueue<>(this::bakeTexture);
 
     private final Executor workThread = Executors.newFixedThreadPool(1, "AW-SKIN/T-LD");
 
@@ -74,21 +63,20 @@ public class EntityTextureLoader {
 
     @Nullable
     public BakedEntityTexture getTextureModel(OpenResourceLocation location) {
-        if (location == null) {
-            return null;
+        if (location != null) {
+            return registeredModels.getOrCreate(location).get();
         }
-        return registeredModels.getOrCreate(location).get();
+        return null;
     }
 
     public OpenResourceLocation getTextureLocation(Entity entity) {
         if (entity instanceof MannequinEntity mannequin) {
-            var descriptor = mannequin.getTextureDescriptor();
-            var texture = loadTexture(descriptor);
+            var texture = loadTexture(mannequin.getTextureDescriptor());
             if (texture != null && texture.location() != null) {
                 return texture.location();
             }
         }
-        return TextureUtils.getTexture(entity);
+        return entity.skin().body();
     }
 
     public OpenResourceLocation getTextureLocation(EntityTextureDescriptor descriptor) {
@@ -116,7 +104,7 @@ public class EntityTextureLoader {
     private void loadGameProfile(String name, Task<GameProfile> task) {
         workThread.execute(() -> {
             var profile = new GameProfile(NIL_UUID, name);
-            AbstractCustomProfileLoader.load(profile, task);
+            AbstractGameProfileResolver.load(profile, task);
         });
     }
 
@@ -158,8 +146,10 @@ public class EntityTextureLoader {
     }
 
     private void loadTextureWithName(String name, Task<EntityTexture> task) {
+        ModLog.debug("load game profile: {}", name);
         loadGameProfile(name, (profile, exception) -> {
             if (profile != null) {
+                ModLog.debug("accept game profile: {} => {}", name, profile);
                 loadTextureWithProfile(profile, task);
             } else {
                 exception.printStackTrace();
@@ -176,9 +166,10 @@ public class EntityTextureLoader {
             return;
         }
         ModLog.debug("load entity texture: {}", profile);
-        AbstractCustomProfileTextureLoader.load(profile, (location, url, modelType) -> {
-            ModLog.debug("accept entity texture from vanilla loader: {}, {}", location, profile);
-            task.accept(buildEntityTexture(descriptor, location, url, modelType));
+        EntityTextureDownloader.downloadAndRegisterSkin(descriptor).thenAcceptAsync(texture -> {
+            ModLog.debug("accept entity texture from vanilla loader: {}, {}", texture.location(), profile);
+            bakeTexture(texture.location(), texture);
+            task.accept(texture);
         });
     }
 
@@ -190,65 +181,59 @@ public class EntityTextureLoader {
             return;
         }
         ModLog.debug("load entity texture: {}", url);
-        var identifier = Objects.md5(url);
-        var location = OpenResourceLocation.parse("skins/aw-" + identifier);
-        var textureManager = EnvironmentManager.getClient().getTextureManager();
-        //var processingTexture = textureManager.getTexture(location.toLocation(), null);
-        //if (processingTexture != null) {
-        //    return; // wait the texture download complete.
-        //}
-        var prefix = identifier.substring(0, 2);
-        var path = new File(EnvironmentManager.getRootDirectory() + "/skin-textures/" + prefix + "/" + identifier);
-        var downloadingTexture = new SkinRemoteTexture(url, path, ModTextures.MANNEQUIN_DEFAULT, true, () -> {
-            ModLog.debug("accept entity texture from custom loader => {}", location);
-            task.accept(buildEntityTexture(descriptor, location, url, null));
-        });
-        textureManager.register(location.toLocation(), downloadingTexture);
-    }
-
-    private void loadTexture(OpenResourceLocation location, Task<BakedEntityTexture> task) {
-        var steve = location.equals(STEVE_SKIN_LOCATION);
-        var alex = location.equals(ALEX_SKIN_LOCATION);
-        if (!steve && !alex) {
-            return;
-        }
-        workThread.execute(() -> {
-            var texture = new BakedEntityTexture(location, alex);
+        EntityTextureDownloader.downloadAndRegisterSkin(descriptor).thenAcceptAsync(texture -> {
+            ModLog.debug("accept entity texture from custom loader: {}", texture.url());
+            bakeTexture(texture.location(), texture);
             task.accept(texture);
         });
     }
 
-
-    public void receivePlayerTexture(String url, OpenNativeImage image, boolean slim) {
-        if (image == null) {
+    private void bakeTexture(OpenResourceLocation location, Task<BakedEntityTexture> task) {
+        var textureModel = getModelType(location.toString());
+        if (textureModel == null) {
+            task.accept(null);
             return;
         }
-        var newImage = image.clone();
         workThread.execute(() -> {
-            var bakedTexture = getDownloadedTexture(url);
-            if (bakedTexture.modelType() == null) {
-                bakedTexture.setModelType("default");
-                if (slim) {
-                    bakedTexture.setModelType("slim");
-                }
+            try {
+                var resourceManager = EnvironmentManager.getClientResourceManager();
+                var bakedTexture = new BakedEntityTexture(location, textureModel);
+                bakedTexture.loadImage(resourceManager.readResource(location));
+                task.accept(bakedTexture);
+                ModLog.debug("baked a entity default texture: '{}', model: {}", bakedTexture.location(), textureModel);
+            } catch (Exception e) {
+                e.printStackTrace();
+                task.abort(e);
             }
-            bakedTexture.loadImage(newImage, Objects.equals(bakedTexture.modelType(), "slim"));
-            ModLog.debug("baked a player texture => {}, url: {}, slim: {}", bakedTexture.location(), url, slim);
         });
     }
 
-    private synchronized BakedEntityTexture getDownloadedTexture(String url) {
-        return downloadedModels.computeIfAbsent(url, k -> new BakedEntityTexture());
+    private void bakeTexture(OpenResourceLocation location, EntityTexture texture) {
+        var task = registeredModels.getOrCreate(location);
+        workThread.execute(() -> {
+            var bakedTexture = new BakedEntityTexture(location, texture.model());
+            if (texture.image() != null) {
+                bakedTexture.loadImage(texture.image());
+            }
+            task.accept(bakedTexture);
+            ModLog.debug("baked a entity custom texture: '{}', model: {}, url: {}", bakedTexture.location(), texture.model(), texture.url());
+        });
     }
 
-    private synchronized EntityTexture buildEntityTexture(EntityTextureDescriptor descriptor, OpenResourceLocation location, String url, String modelType) {
-        var texture = new EntityTexture(descriptor, location, url, modelType);
-        var model = getDownloadedTexture(url);
-        model.setResourceLocation(location);
-        model.setModelType(modelType);
-        texture.setTexture(model);
-        registeredModels.getOrCreate(location).accept(model);
-        return texture;
+    // minecraft:textures/entity/steve.png
+    // minecraft:textures/entity/alex.png
+    // minecraft:textures/entity/player/slim/kai.png
+    // minecraft:textures/entity/player/wide/steve.png
+    private EntityTextureDescriptor.Model getModelType(String name) {
+        // is a slim model?
+        if (name.equals("minecraft:textures/entity/alex.png") || name.startsWith("minecraft:textures/entity/player/slim")) {
+            return EntityTextureDescriptor.Model.SLIM;
+        }
+        // is a wide model?
+        if (name.equals("minecraft:textures/entity/steve.png") || name.startsWith("minecraft:textures/entity/player/wide")) {
+            return EntityTextureDescriptor.Model.WIDE;
+        }
+        return null;
     }
 
     private static class Task<V> implements IResultHandler<V> {

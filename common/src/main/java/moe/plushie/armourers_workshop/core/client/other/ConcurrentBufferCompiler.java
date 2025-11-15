@@ -3,23 +3,24 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractVertexArrayObject;
+import moe.plushie.armourers_workshop.compat.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.buffer.BufferBuilder;
 import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTexture;
-import moe.plushie.armourers_workshop.core.data.cache.CacheQueue;
-import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
+import moe.plushie.armourers_workshop.core.utils.CacheQueue;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Executors;
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
@@ -45,7 +46,7 @@ public class ConcurrentBufferCompiler {
 
     private ArrayList<Group> pendingTasks;
 
-    public static void clearAllCache() {
+    public void clear() {
         CACHING.clearAll();
     }
 
@@ -100,11 +101,11 @@ public class ConcurrentBufferCompiler {
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
                     transform.apply(poseStack1);
-                    faces.forEach(face -> face.render(part, scheme, 0xf000f0, OverlayTexture.NO_OVERLAY, poseStack1, builder));
+                    faces.forEach(face -> face.render(part, scheme, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack1, builder));
                     poseStack1.popPose();
                 });
                 var renderedBuffer = builder.end();
-                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), task.isOutline());
+                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), task);
                 usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
@@ -238,6 +239,8 @@ public class ConcurrentBufferCompiler {
 
     public static class Pass {
 
+        final Group group;
+
         final boolean isEmissive;
         final boolean isTranslucent;
         final boolean isOutline;
@@ -259,14 +262,15 @@ public class ConcurrentBufferCompiler {
 
         boolean isCompiled = false;
 
-        Pass(IRenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, SkinPartType partType, boolean isOutline) {
+        Pass(IRenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, SkinPartType partType, Group group) {
+            this.group = group;
             this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
             this.isEmissive = renderType.isEmissive();
             this.isTranslucent = renderType.isTranslucent();
-            this.isOutline = isOutline;
+            this.isOutline = group.isOutline();
             this.isUsingIndex = renderType.mode() == IVertexFormat.Mode.QUADS;
         }
 
@@ -284,30 +288,39 @@ public class ConcurrentBufferCompiler {
             this.indexObject = null;
             this.arrayObject = null;
         }
+
+        public void retain() {
+            group.retain();
+        }
+
+        public void release() {
+            group.release();
+        }
     }
 
-    public static class Key {
+    private static class Key {
 
-        protected static final ObjectPool<Key> POOL = ObjectPool.create(Key::new);
+        private static final ObjectPool<Key> POOL = ObjectPool.create(Key::new);
 
         private int p1;
         private int p2;
         private Object p3;
         private int hash;
 
-        private Key set(int hash, int p1, int p2, Object p3) {
-            this.hash = hash;
-            this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
-            return this;
+        private static Key newInstance(int hash, int p1, int p2, Object p3) {
+            var that = POOL.alloc();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            return that;
         }
 
         public static Key of(int p1, int p2, Object p3) {
             int hash = p1;
             hash = 31 * hash + p2;
             hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
-            return POOL.get().set(hash, p1, p2, p3);
+            return Key.newInstance(hash, p1, p2, p3);
         }
 
         @Override
@@ -323,7 +336,12 @@ public class ConcurrentBufferCompiler {
         }
 
         public Key copy() {
-            return new Key().set(hash, p1, p2, p3);
+            var that = new Key();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            return that;
         }
     }
 }

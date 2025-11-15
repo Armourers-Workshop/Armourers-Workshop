@@ -1,0 +1,43 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderRenderState;
+
+@Available("[1.18, )")
+public class AbstractVertexArrayObject extends VertexArrayObject {
+
+    public static VertexArrayObject create(IVertexFormat format, long offset, VertexBufferObject bufferObject, VertexIndexObject indexObject) {
+        var arrayObject = new VertexArrayObject();
+        var state = new ShaderRenderState();
+        state.save();
+
+        // in the newer version rendering system, we will use a shader.
+        // and shader requires we to split the quad into two triangles,
+        // so we need use index buffer to control size of the vertex data.
+        arrayObject.bind();
+        bufferObject.bind();
+        if (indexObject != null) {
+            indexObject.bind();
+        }
+
+        // the vertex offset no longer supported in vanilla,
+        // so we need a special version of the format setup.
+        format.setupBufferState(offset);
+
+        // unbind the VBO/VAO to prevent accidentally modify VAO.
+        VertexArrayObject.unbind();
+        VertexBufferObject.unbind();
+
+        // because the setup state by each format maybe different,
+        // so we need to clear state first.
+        format.clearBufferState();
+
+        state.load();
+        return arrayObject;
+    }
+
+}

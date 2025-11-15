@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 
+@SuppressWarnings("unused")
 public final class ModEntityTypes {
 
     public static final IRegistryHolder<IEntityType<MannequinEntity>> MANNEQUIN = normal(MannequinEntity::new).fixed(0.6f, 1.88f).bind(() -> MannequinEntityRenderer::new).build(ModConstants.ENTITY_MANNEQUIN);

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
+import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -23,25 +23,25 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("unused")
 public class ModEntityProfiles {
 
-    private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
-    private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
-    private static final ArrayList<BiConsumer<IEntityTypeProvider<?>, EntityProfile>> UPDATE_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IRegistryHolder<?>, EntityProfile>> INSERT_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IRegistryHolder<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
+    private static final ArrayList<BiConsumer<IRegistryHolder<?>, EntityProfile>> UPDATE_HANDLERS = new ArrayList<>();
 
-    private static final Map<IResourceLocation, EntityProfile> USING_PROFILES = new LinkedHashMap<>();
-    private static final Map<IResourceLocation, EntityProfile> CUSTOM_PROFILES = new LinkedHashMap<>();
-    private static final Map<IResourceLocation, EntityProfile> BUILTIN_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceLocation, EntityProfile> USING_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceLocation, EntityProfile> CUSTOM_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceLocation, EntityProfile> BUILTIN_PROFILES = new LinkedHashMap<>();
 
-    private static final Map<IEntityTypeProvider<?>, EntityProfile> USING_ENTITIES = new LinkedHashMap<>();
-    private static final Map<IEntityTypeProvider<?>, EntityProfile> CUSTOM_ENTITIES = new LinkedHashMap<>();
-    private static final Map<IEntityTypeProvider<?>, EntityProfile> BUILTIN_ENTITIES = new LinkedHashMap<>();
-    private static final Map<IEntityTypeProvider<?>, EntityProfile> SERVER_ENTITIES = new LinkedHashMap<>();
+    private static final Map<IRegistryHolder<?>, EntityProfile> USING_ENTITIES = new LinkedHashMap<>();
+    private static final Map<IRegistryHolder<?>, EntityProfile> CUSTOM_ENTITIES = new LinkedHashMap<>();
+    private static final Map<IRegistryHolder<?>, EntityProfile> BUILTIN_ENTITIES = new LinkedHashMap<>();
+    private static final Map<IRegistryHolder<?>, EntityProfile> SERVER_ENTITIES = new LinkedHashMap<>();
 
     public static void init() {
         DataPackManager.register(DataPackType.SERVER_DATA, "skin/profiles", SimpleLoader::custom, null, SimpleLoader::freezeCustom, 1);
         DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/profiles", SimpleLoader::builtin, null, SimpleLoader::freezeBuiltin, 1);
     }
 
-    public static void addListener(BiConsumer<IEntityTypeProvider<?>, EntityProfile> changeHandler) {
+    public static void addListener(BiConsumer<IRegistryHolder<?>, EntityProfile> changeHandler) {
         REMOVE_HANDLERS.add((entityType, entityProfile) -> changeHandler.accept(entityType, null));
         INSERT_HANDLERS.add(changeHandler);
         UPDATE_HANDLERS.add(changeHandler);
@@ -66,11 +66,11 @@ public class ModEntityProfiles {
     }
 
     @Nullable
-    public static EntityProfile getProfile(IResourceLocation registryName) {
+    public static EntityProfile getProfile(OpenResourceLocation registryName) {
         return USING_PROFILES.get(registryName);
     }
 
-    public static void setCustomProfiles(Map<IEntityTypeProvider<?>, EntityProfile> snapshot) {
+    public static void setCustomProfiles(Map<IRegistryHolder<?>, EntityProfile> snapshot) {
         // ignore when no changes.
         if (SERVER_ENTITIES.equals(snapshot)) {
             return;
@@ -81,14 +81,14 @@ public class ModEntityProfiles {
         SimpleLoader.freeze();
     }
 
-    public static Map<IEntityTypeProvider<?>, EntityProfile> getCustomProfiles() {
+    public static Map<IRegistryHolder<?>, EntityProfile> getCustomProfiles() {
         return CUSTOM_ENTITIES;
     }
 
     private static class SimpleLoader implements DataPackBuilder {
 
-        private static final Map<IResourceLocation, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();
-        private static final Map<IResourceLocation, SimpleBuilder> BUILTIN_PROFILE_BUILDERS = new LinkedHashMap<>();
+        private static final Map<OpenResourceLocation, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();
+        private static final Map<OpenResourceLocation, SimpleBuilder> BUILTIN_PROFILE_BUILDERS = new LinkedHashMap<>();
 
         private final SimpleBuilder builder;
 
@@ -96,16 +96,16 @@ public class ModEntityProfiles {
             this.builder = builder;
         }
 
-        public static SimpleLoader builtin(IResourceLocation registryName) {
+        public static SimpleLoader builtin(OpenResourceLocation registryName) {
             return new SimpleLoader(BUILTIN_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::builtin));
         }
 
-        public static SimpleLoader custom(IResourceLocation registryName) {
+        public static SimpleLoader custom(OpenResourceLocation registryName) {
             return new SimpleLoader(CUSTOM_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::custom));
         }
 
         @Override
-        public void append(IODataObject object, IResourceLocation location) {
+        public void append(IODataObject object, OpenResourceLocation location) {
             if (object.get("replace").boolValue()) {
                 builder.isLocked = false;
                 builder.supports.clear();
@@ -126,7 +126,7 @@ public class ModEntityProfiles {
                 builder.transformers.add(OpenResourceLocation.parse(o.stringValue()));
             });
             object.get("entities").allValues().forEach(o -> {
-                builder.entities.add(IEntityTypeProvider.of(o.stringValue()));
+                builder.entities.add(AbstractEntityTypeBuilder.lazy(o.stringValue()));
             });
         }
 
@@ -137,7 +137,7 @@ public class ModEntityProfiles {
 
         private static void freezeCustom() {
             // regenerate all entity profile.
-            var newEntities = new LinkedHashMap<IEntityTypeProvider<?>, EntityProfile>();
+            var newEntities = new LinkedHashMap<IRegistryHolder<?>, EntityProfile>();
             CUSTOM_ENTITIES.clear();
             CUSTOM_PROFILE_BUILDERS.forEach((key, builder) -> {
                 var profile = builder.build();
@@ -145,7 +145,7 @@ public class ModEntityProfiles {
             });
             CUSTOM_PROFILE_BUILDERS.clear();
             // only use when custom profile changed.
-            var usedProfiles = new LinkedHashMap<IResourceLocation, EntityProfile>();
+            var usedProfiles = new LinkedHashMap<OpenResourceLocation, EntityProfile>();
             newEntities.forEach((entityType, profile) -> {
                 var oldProfile = BUILTIN_ENTITIES.get(entityType);
                 if (oldProfile != null && EntityProfile.same(oldProfile, profile)) {
@@ -168,7 +168,7 @@ public class ModEntityProfiles {
 
         private static void freezeBuiltin() {
             // regenerate all entity profile.
-            var newProfiles = new LinkedHashMap<IResourceLocation, EntityProfile>();
+            var newProfiles = new LinkedHashMap<OpenResourceLocation, EntityProfile>();
             BUILTIN_ENTITIES.clear();
             BUILTIN_PROFILE_BUILDERS.forEach((key, builder) -> {
                 var profile = builder.build();
@@ -190,7 +190,7 @@ public class ModEntityProfiles {
 
         private static void freeze() {
             // apply the patch.
-            var entities = new LinkedHashMap<IEntityTypeProvider<?>, EntityProfile>();
+            var entities = new LinkedHashMap<IRegistryHolder<?>, EntityProfile>();
             entities.putAll(BUILTIN_ENTITIES);
             entities.putAll(CUSTOM_ENTITIES);
             entities.putAll(SERVER_ENTITIES);
@@ -230,31 +230,31 @@ public class ModEntityProfiles {
 
     private static class SimpleBuilder {
 
-        private final IResourceLocation registryName;
+        private final OpenResourceLocation registryName;
 
-        private final List<IEntityTypeProvider<?>> entities = new ArrayList<>();
-        private final List<IResourceLocation> transformers = new ArrayList<>();
+        private final List<IRegistryHolder<?>> entities = new ArrayList<>();
+        private final List<OpenResourceLocation> transformers = new ArrayList<>();
 
         private final Map<SkinSlotType, String> supports = new LinkedHashMap<>();
 
         private boolean isLocked = false;
 
-        public SimpleBuilder(IResourceLocation registryName) {
+        public SimpleBuilder(OpenResourceLocation registryName) {
             this.registryName = registryName;
         }
 
-        public static SimpleBuilder builtin(IResourceLocation location) {
+        public static SimpleBuilder builtin(OpenResourceLocation location) {
             var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
             return new SimpleBuilder(location.withPath("builtin/" + path));
         }
 
-        public static SimpleBuilder custom(IResourceLocation location) {
+        public static SimpleBuilder custom(OpenResourceLocation location) {
             var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
             return new SimpleBuilder(location.withPath(path));
         }
 
         public EntityProfile build() {
-            return new EntityProfile(registryName, supports, transformers, isLocked);
+            return new EntityProfile(registryName, transformers, supports, isLocked);
         }
     }
 }

@@ -648,11 +648,11 @@ public final class Lexer {
 
         /**
          * Determines if this token kind has a certain
-         * tag.
+         * object.
          *
-         * @param tag The tag to check.
+         * @param tag The object to check.
          * @return True if this token kind is tagged with
-         * the given tag
+         * the given object
          */
         public boolean hasTag(final Tag tag) {
             return tags.contains(tag);
@@ -664,7 +664,7 @@ public final class Lexer {
          */
         public enum Tag {
             /**
-             * A token kind with HAS_VALUE tag will have a variable value,
+             * A token kind with HAS_VALUE object will have a variable value,
              * for example, double or string literal tokens have variable
              * values, but they are still parsed with the same token kind.
              */

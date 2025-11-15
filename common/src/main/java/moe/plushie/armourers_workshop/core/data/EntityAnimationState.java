@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.core.data.action.EntityAction;
 import moe.plushie.armourers_workshop.core.data.action.EntityActionSet;
-import moe.plushie.armourers_workshop.core.skin.part.wings.WingPartTransform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +117,11 @@ public class EntityAnimationState extends EntityActionSet {
     }
 
     private boolean isFlying(LivingEntity entity) {
-        return WingPartTransform.isFlying(entity);
+        // the player maybe is in creative flying.
+        if (entity instanceof Player player && player.getAbilities().flying) {
+            return true;
+        }
+        return entity.isFallFlying();
     }
 
     private boolean isBoat(Entity entity) {

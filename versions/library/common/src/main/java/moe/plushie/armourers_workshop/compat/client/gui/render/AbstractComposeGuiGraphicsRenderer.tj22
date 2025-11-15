@@ -1,0 +1,133 @@
+package moe.plushie.armourers_workshop.compat.client.gui.render;
+
+import com.apple.library.coregraphics.CGGraphicsElement;
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
+import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.gui.render.state.GuiRenderState;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractComposeGuiGraphicsRenderer extends PictureInPictureRenderer<AbstractComposeGuiGraphicsState> {
+
+    public AbstractComposeGuiGraphicsRenderer(MultiBufferSource.BufferSource bufferSource) {
+        super(bufferSource);
+    }
+
+    @Override
+    public void prepare(AbstractComposeGuiGraphicsState renderState, GuiRenderState guiRenderState, int i) {
+        // ignore when the element is empty.
+        if (!renderState.isEmpty()) {
+            super.prepare(renderState, guiRenderState, i);
+        }
+    }
+
+    protected void renderToTexture(AbstractComposeGuiGraphicsState renderState, IPoseStack poseStack, IBufferSource bufferSource) {
+        var dispatcher = new OffscreenDispatcherImpl(poseStack, bufferSource);
+        renderState.forEach((snapshot, element) -> {
+            // make sure everything is draw correctly.
+            if (element instanceof StateGuiElement.Flush) {
+                dispatcher.flush();
+                return;
+            }
+            poseStack.pushPose();
+            poseStack.multiply(snapshot.ctm().pose());
+            poseStack.multiply(snapshot.ctm().normal());
+
+            dispatcher.submit(element);
+
+            poseStack.popPose();
+        });
+        dispatcher.flush();
+    }
+
+    @Override
+    protected void renderToTexture(AbstractComposeGuiGraphicsState renderState, PoseStack poseStack) {
+        var width = renderState.x1() - renderState.x0();
+        var height = renderState.y1() - renderState.y0();
+        poseStack.scale(1.0f, 1.0f, -1.0f); // fix direction
+        poseStack.translate(-width / 2.0f, -height, 0.0f); // fix position
+        renderToTexture(renderState, AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(bufferSource));
+    }
+
+    public float getNear() {
+        return -10000;
+    }
+
+    public float getFar() {
+        return 10000;
+    }
+
+    @Override
+    protected String getTextureLabel() {
+        return "core-graphics-implement";
+    }
+
+    @Override
+    public Class<AbstractComposeGuiGraphicsState> getRenderStateClass() {
+        return AbstractComposeGuiGraphicsState.class;
+    }
+
+    private static class OffscreenDispatcherImpl {
+
+        private final IPoseStack poseStack;
+        private final IBufferSource bufferSource;
+
+        private int gamePassTotal = 0;
+        private int normalPassTotal = 0;
+
+        private IBufferSource gameBufferSource;
+        private OpenGraphicsContext gameContext;
+
+        public OffscreenDispatcherImpl(IPoseStack poseStack, IBufferSource bufferSource) {
+            this.poseStack = poseStack;
+            this.bufferSource = bufferSource;
+        }
+
+        public void submit(CGGraphicsElement element) {
+            // forwarding the game element into game graphics.
+            if (element instanceof IGraphicsElement element1) {
+                gameContext().draw(element1);
+                gamePassTotal += 1;
+            } else {
+                element.render(poseStack, bufferSource);
+                normalPassTotal += 1;
+            }
+        }
+
+        public void flush() {
+            // submit all feature render pass into gpu.
+            if (gameBufferSource != null && gamePassTotal != 0) {
+                gameContext.flush();
+                gameBufferSource.endBatch();
+                gamePassTotal = 0;
+            }
+            // submit all normal pass into gpu.
+            if (normalPassTotal != 0) {
+                bufferSource.endBatch();
+                normalPassTotal = 0;
+            }
+        }
+
+        public IGraphicsContext gameContext() {
+            if (gameContext == null) {
+                gameContext = AbstractGraphicsRenderer.wrap(AbstractPoseStack.unwrap(poseStack));
+                gameBufferSource = AbstractBufferSource.shared();
+            }
+            return gameContext;
+        }
+    }
+}
+

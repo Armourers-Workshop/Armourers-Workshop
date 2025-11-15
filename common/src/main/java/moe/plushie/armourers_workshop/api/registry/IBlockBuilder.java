@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.api.registry;
 
-import moe.plushie.armourers_workshop.api.client.IRenderType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
@@ -17,7 +15,7 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> noOcclusion();
 
-    IBlockBuilder<T> noDrops();
+    IBlockBuilder<T> noLootTable();
 
     IBlockBuilder<T> friction(float f);
 
@@ -52,8 +50,6 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
     IBlockBuilder<T> emissiveRendering(BlockBehaviour.StatePredicate statePredicate);
 
     IBlockBuilder<T> requiresCorrectToolForDrops();
-
-    IBlockBuilder<T> bind(Supplier<Supplier<IRenderType>> provider);
 
     default IBlockBuilder<T> lightLevel(int level) {
         return lightLevel(state -> level);

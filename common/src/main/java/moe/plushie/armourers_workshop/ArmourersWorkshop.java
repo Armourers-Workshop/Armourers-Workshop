@@ -8,26 +8,29 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModArgumentTypes;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
+import moe.plushie.armourers_workshop.init.ModBlockTags;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModCapabilities;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.ModCreativeModeTabs;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModHolidays;
-import moe.plushie.armourers_workshop.init.ModItemGroups;
+import moe.plushie.armourers_workshop.init.ModItemTags;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModLootFunctions;
+import moe.plushie.armourers_workshop.init.ModLootFunctionTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.ModMolangBindings;
 import moe.plushie.armourers_workshop.init.ModPackets;
 import moe.plushie.armourers_workshop.init.ModPermissions;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.platform.PlatformLoader;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
@@ -38,8 +41,10 @@ public class ArmourersWorkshop {
 
     public static void init() {
         ModDataComponents.init();
-        ModItemGroups.init();
+        ModCreativeModeTabs.init();
+        ModItemTags.init();
         ModItems.init();
+        ModBlockTags.init();
         ModBlocks.init();
         ModBlockEntityTypes.init();
         ModEntityTypes.init();
@@ -47,8 +52,8 @@ public class ArmourersWorkshop {
         ModEntityProfiles.init();
         ModCapabilities.init();
         ModMenuTypes.init();
-        ModLootFunctions.init();
-        ModSounds.init();
+        ModLootFunctionTypes.init();
+        ModSoundEvents.init();
         ModConfig.init();
         ModArgumentTypes.init();
         // setup common objects.

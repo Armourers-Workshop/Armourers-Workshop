@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractBlockEntityProvider;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,17 +23,17 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+    public BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
         return ModBlockEntityTypes.DYE_TABLE.get().create(level, blockPos, blockState);
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        return ModMenuTypes.DYE_TABLE.get().openMenu(player, level.getBlockEntity(blockPos));
+    protected OpenInteractionResult abi$useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult) {
+        return player.openMenu(ModMenuTypes.DYE_TABLE, level, blockPos);
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos blockPos, BlockState newState, boolean p_196243_5_) {
+    protected void abi$onRemove(BlockState state, Level level, BlockPos blockPos, BlockState newState, boolean p_196243_5_) {
         if (state.is(newState.getBlock())) {
             return;
         }
@@ -41,7 +41,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements AbstractBl
         if (blockEntity != null) {
             DataSerializers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), blockEntity.getItem(9));
         }
-        super.onRemove(state, level, blockPos, newState, p_196243_5_);
+        super.abi$onRemove(state, level, blockPos, newState, p_196243_5_);
     }
 
     private DyeTableBlockEntity getBlockEntity(Level level, BlockPos blockPos) {

@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.core.armature.thirdparty;
 
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerBuilder;
-import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
+import moe.plushie.armourers_workshop.core.armature.Joint;
+import moe.plushie.armourers_workshop.core.armature.JointContext;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 import java.util.Collection;
 
 public class EpicFightArmatureTransformerBuilder extends ArmatureTransformerBuilder {
 
-    public EpicFightArmatureTransformerBuilder(IResourceLocation name) {
+    public EpicFightArmatureTransformerBuilder(OpenResourceLocation name) {
         super(name);
     }
 
     @Override
-    protected IJointTransform buildTransform(IJoint joint, Collection<JointModifier> modifiers, ArmatureTransformerContext context) {
+    protected IJointTransform buildTransform(Joint joint, Collection<JointModifier> modifiers, JointContext context) {
         var transform = super.buildTransform(joint, modifiers, context);
         return poseStack -> {
             transform.apply(poseStack);

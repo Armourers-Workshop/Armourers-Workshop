@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL30;
 
-@Environment(EnvType.CLIENT)
 public class VertexArrayObject {
 
     private final int id;

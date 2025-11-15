@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.forgespi.language.IModFileInfo;
+
+import java.nio.file.Path;
+
+@Available("[1.16, 1.21)")
+public class AbstractForgeEnvironment {
+
+    public static IModFileInfo getModFileById(String modId) {
+        return ModList.get().getModFileById(modId);
+    }
+
+    public static Dist getDist() {
+        return FMLEnvironment.dist;
+    }
+
+    public static Path getGameDir() {
+        return FMLPaths.GAMEDIR.get();
+    }
+
+    public static boolean isProduction() {
+        return FMLEnvironment.production;
+    }
+}

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
+import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -9,7 +10,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SkinWardrobeMenu extends AbstractContainerMenu {
+public class SkinWardrobeMenu extends ContainerMenu {
 
     private final Player player;
     private final SkinWardrobe wardrobe;
@@ -30,7 +30,7 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     private Group group = null;
 
-    public SkinWardrobeMenu(MenuType<?> menuType, int containerId, Inventory inventory, SkinWardrobe wardrobe) {
+    public SkinWardrobeMenu(IMenuType<?> menuType, int containerId, Inventory inventory, SkinWardrobe wardrobe) {
         super(menuType, containerId);
         this.wardrobe = wardrobe;
         this.player = inventory.player;
@@ -100,17 +100,17 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
         var slot = new SkinSlot(inventory, index, x, y, slotTypes) {
 
             @Override
-            public boolean isActive() {
+            protected boolean abi$isActive() {
                 return group() == group;
             }
 
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            protected boolean abi$mayPlace(ItemStack itemStack) {
                 // when onlySkinIntoSlots is enabled, we will can't accept non-skin item.
                 if (ModConfig.Common.onlySkinIntoSlots && !itemStack.is(ModItems.SKIN.get())) {
                     return false;
                 }
-                return super.mayPlace(itemStack);
+                return super.abi$mayPlace(itemStack);
             }
         };
         addSlot(slot);
@@ -130,16 +130,39 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        var entity = entity();
-        if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
-            return false;
+    protected void abi$broadcastChanges() {
+        super.abi$broadcastChanges();
+        // no need listen slot changes for client side.
+        if (player.level().isClientSide()) {
+            return;
         }
-        return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;
+        // in normal, the size is inconsistent this will only happen when the container is first loaded.
+        if (lastSyncSlot.size() != slots.size()) {
+            lastSyncSlot.ensureCapacity(slots.size());
+            slots.forEach(s -> lastSyncSlot.add(s.getItem()));
+            return;
+        }
+        // if slots is ready, we check all slots and fast synchronize changes to all players if changes.
+        var changes = 0;
+        for (var index = 0; index < slots.size(); ++index) {
+            // the first 36 slots we defined as player slots, no synchronize is required.
+            if (index < 36) {
+                continue;
+            }
+            var newItemStack = slots.get(index).getItem();
+            if (!lastSyncSlot.get(index).equals(newItemStack)) {
+                lastSyncSlot.set(index, newItemStack);
+                changes += 1;
+            }
+        }
+        if (changes != 0) {
+            ModLog.debug("observer slots has {} changes, sync to players", changes);
+            wardrobe.broadcast();
+        }
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
         var slot = slots.get(index);
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
@@ -173,35 +196,12 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-        // no need listen slot changes for client side.
-        if (player.getLevel().isClientSide()) {
-            return;
+    protected boolean abi$stillValid(Player player) {
+        var entity = entity();
+        if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
+            return false;
         }
-        // in normal, the size is inconsistent this will only happen when the container is first loaded.
-        if (lastSyncSlot.size() != slots.size()) {
-            lastSyncSlot.ensureCapacity(slots.size());
-            slots.forEach(s -> lastSyncSlot.add(s.getItem()));
-            return;
-        }
-        // if slots is ready, we check all slots and fast synchronize changes to all players if changes.
-        var changes = 0;
-        for (var index = 0; index < slots.size(); ++index) {
-            // the first 36 slots we defined as player slots, no synchronize is required.
-            if (index < 36) {
-                continue;
-            }
-            var newItemStack = slots.get(index).getItem();
-            if (!lastSyncSlot.get(index).equals(newItemStack)) {
-                lastSyncSlot.set(index, newItemStack);
-                changes += 1;
-            }
-        }
-        if (changes != 0) {
-            ModLog.debug("observer slots has {} changes, sync to players", changes);
-            wardrobe.broadcast();
-        }
+        return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;
     }
 
     public boolean shouldRenderInventory() {

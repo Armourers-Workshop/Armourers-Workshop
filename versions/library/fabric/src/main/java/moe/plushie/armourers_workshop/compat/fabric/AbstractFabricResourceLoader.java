@@ -1,0 +1,37 @@
+package moe.plushie.armourers_workshop.compat.fabric;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceLoader;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
+@Available("[1.16, 1.22)")
+public class AbstractFabricResourceLoader implements IdentifiableResourceReloadListener {
+
+    private final ResourceLocation name;
+    private final IResourceLoader impl;
+
+    public AbstractFabricResourceLoader(ResourceLocation name, IResourceLoader impl) {
+        this.name = name;
+        this.impl = impl;
+    }
+
+    @Override
+    public ResourceLocation getFabricId() {
+        return name;
+    }
+
+    @Override
+    public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager resourceManager, ProfilerFiller profilerFiller, ProfilerFiller profilerFiller2, Executor executor, Executor executor2) {
+        var resourceManager1 = new AbstractResourceManager(resourceManager);
+        var taskQueue = new IResourceLoader.TaskQueue(executor);
+        impl.load(resourceManager1, taskQueue);
+        return taskQueue.prepare().thenCompose(barrier::wait).thenAcceptAsync(it -> taskQueue.run(), executor2);
+    }
+}

@@ -19,14 +19,11 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class ColorMixerWindow extends PaletteEditingWindow<ColorMixerMenu> implements UITextFieldDelegate {
 
     public ColorMixerWindow(ColorMixerMenu container, Inventory inventory, NSString title) {

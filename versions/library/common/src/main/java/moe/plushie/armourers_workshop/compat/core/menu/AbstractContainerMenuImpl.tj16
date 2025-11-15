@@ -1,0 +1,24 @@
+package moe.plushie.armourers_workshop.compat.core.menu;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.18)")
+public abstract class AbstractContainerMenuImpl extends AbstractContainerMenu {
+
+    public AbstractContainerMenuImpl(@Nullable IMenuType<?> menuType, int menuId) {
+        super(Objects.flatMap(menuType, Supplier::get), menuId);
+    }
+
+    protected void clearContainer(Player player, Container container) {
+        this.clearContainer(player, player.level(), container);
+    }
+}

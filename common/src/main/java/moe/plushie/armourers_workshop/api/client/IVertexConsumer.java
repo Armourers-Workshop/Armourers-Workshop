@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.api.client;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 
 public interface IVertexConsumer {
 
@@ -34,7 +33,11 @@ public interface IVertexConsumer {
     }
 
     default IVertexConsumer color(int color) {
-        return color(ColorUtils.getRed(color), ColorUtils.getGreen(color), ColorUtils.getBlue(color), ColorUtils.getAlpha(color));
+        var red = (color >> 16) & 0xff;
+        var green = (color >> 8) & 0xff;
+        var blue = color & 0xff;
+        var alpha = (color >> 24) & 0xff;
+        return color(red, green, blue, alpha);
     }
 
     default IVertexConsumer uv2(int i) {
@@ -45,15 +48,15 @@ public interface IVertexConsumer {
         return this.overlayCoords(i & 0xffff, i >> 16 & 0xffff);
     }
 
-    default IVertexConsumer vertex(IPoseStack.Pose entry, float x, float y, float z) {
+    default IVertexConsumer vertex(IPoseStack.Pose pose, float x, float y, float z) {
         float[] values = {x, y, z, 1};
-        entry.transformPose(values);
+        pose.transformPose(values);
         return vertex(values[0], values[1], values[2]);
     }
 
-    default IVertexConsumer normal(IPoseStack.Pose entry, float x, float y, float z) {
+    default IVertexConsumer normal(IPoseStack.Pose pose, float x, float y, float z) {
         float[] values = {x, y, z};
-        entry.transformNormal(values);
+        pose.transformNormal(values);
         return normal(values[0], values[1], values[2]);
     }
 }

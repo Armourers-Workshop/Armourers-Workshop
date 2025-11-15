@@ -4,18 +4,13 @@ import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolApplier;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
-import net.minecraft.world.InteractionResult;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 
 public abstract class AbstractColoredToolItem extends AbstractPaintToolItem implements IPaintToolApplier {
 
     public AbstractColoredToolItem(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        return usePaintTool(context);
     }
 
     @Override
@@ -33,5 +28,10 @@ public abstract class AbstractColoredToolItem extends AbstractPaintToolItem impl
 
     public boolean shouldUseFullMode(UseOnContext context) {
         return context.getItemInHand().get(PaintingToolOptions.FULL_BLOCK_MODE);
+    }
+
+    @Override
+    protected OpenInteractionResult abi$useOn(UseOnContext context) {
+        return usePaintTool(context);
     }
 }

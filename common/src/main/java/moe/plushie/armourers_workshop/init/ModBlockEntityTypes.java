@@ -27,33 +27,33 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 @SuppressWarnings("unused")
 public final class ModBlockEntityTypes {
 
-    public static final IRegistryHolder<IBlockEntityType<HologramProjectorBlockEntity>> HOLOGRAM_PROJECTOR = create(HologramProjectorBlockEntity::new).of(ModBlocks.HOLOGRAM_PROJECTOR).bind(() -> HologramProjectorBlockRenderer::new).build(ModConstants.BLOCK_HOLOGRAM_PROJECTOR);
-    public static final IRegistryHolder<IBlockEntityType<OutfitMakerBlockEntity>> OUTFIT_MAKER = create(OutfitMakerBlockEntity::new).of(ModBlocks.OUTFIT_MAKER).build(ModConstants.BLOCK_OUTFIT_MAKER);
-    public static final IRegistryHolder<IBlockEntityType<DyeTableBlockEntity>> DYE_TABLE = create(DyeTableBlockEntity::new).of(ModBlocks.DYE_TABLE).build(ModConstants.BLOCK_DYE_TABLE);
-    public static final IRegistryHolder<IBlockEntityType<SkinningTableBlockEntity>> SKINNING_TABLE = create(SkinningTableBlockEntity::new).of(ModBlocks.SKINNING_TABLE).build(ModConstants.BLOCK_SKINNING_TABLE);
+    public static final IRegistryHolder<IBlockEntityType<HologramProjectorBlockEntity>> HOLOGRAM_PROJECTOR = normal(HologramProjectorBlockEntity::new).of(ModBlocks.HOLOGRAM_PROJECTOR).bind(() -> HologramProjectorBlockRenderer::new).build(ModConstants.BLOCK_HOLOGRAM_PROJECTOR);
+    public static final IRegistryHolder<IBlockEntityType<OutfitMakerBlockEntity>> OUTFIT_MAKER = normal(OutfitMakerBlockEntity::new).of(ModBlocks.OUTFIT_MAKER).build(ModConstants.BLOCK_OUTFIT_MAKER);
+    public static final IRegistryHolder<IBlockEntityType<DyeTableBlockEntity>> DYE_TABLE = normal(DyeTableBlockEntity::new).of(ModBlocks.DYE_TABLE).build(ModConstants.BLOCK_DYE_TABLE);
+    public static final IRegistryHolder<IBlockEntityType<SkinningTableBlockEntity>> SKINNING_TABLE = normal(SkinningTableBlockEntity::new).of(ModBlocks.SKINNING_TABLE).build(ModConstants.BLOCK_SKINNING_TABLE);
 
-    public static final IRegistryHolder<IBlockEntityType<ColorMixerBlockEntity>> COLOR_MIXER = create(ColorMixerBlockEntity::new).of(ModBlocks.COLOR_MIXER).build(ModConstants.BLOCK_COLOR_MIXER);
-    public static final IRegistryHolder<IBlockEntityType<ArmourerBlockEntity>> ARMOURER = create(ArmourerBlockEntity::new).of(ModBlocks.ARMOURER).bind(() -> ArmourerBlockRenderer::new).build(ModConstants.BLOCK_ARMOURER);
-    public static final IRegistryHolder<IBlockEntityType<AdvancedBuilderBlockEntity>> ADVANCED_SKIN_BUILDER = create(AdvancedBuilderBlockEntity::new).of(ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedBuilderBlockRenderer::new).build(ModConstants.BLOCK_ADVANCED_SKIN_BUILDER);
+    public static final IRegistryHolder<IBlockEntityType<ColorMixerBlockEntity>> COLOR_MIXER = normal(ColorMixerBlockEntity::new).of(ModBlocks.COLOR_MIXER).build(ModConstants.BLOCK_COLOR_MIXER);
+    public static final IRegistryHolder<IBlockEntityType<ArmourerBlockEntity>> ARMOURER = normal(ArmourerBlockEntity::new).of(ModBlocks.ARMOURER).bind(() -> ArmourerBlockRenderer::new).build(ModConstants.BLOCK_ARMOURER);
+    public static final IRegistryHolder<IBlockEntityType<AdvancedBuilderBlockEntity>> ADVANCED_SKIN_BUILDER = normal(AdvancedBuilderBlockEntity::new).of(ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedBuilderBlockRenderer::new).build(ModConstants.BLOCK_ADVANCED_SKIN_BUILDER);
 
-    public static final IRegistryHolder<IBlockEntityType<SkinLibraryBlockEntity>> SKIN_LIBRARY = create(SkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY).of(ModBlocks.SKIN_LIBRARY_CREATIVE).build(ModConstants.BLOCK_SKIN_LIBRARY);
-    public static final IRegistryHolder<IBlockEntityType<GlobalSkinLibraryBlockEntity>> SKIN_LIBRARY_GLOBAL = create(GlobalSkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY_GLOBAL).bind(() -> GlobalSkinLibraryBlockRenderer::new).build(ModConstants.BLOCK_SKIN_LIBRARY_GLOBAL);
+    public static final IRegistryHolder<IBlockEntityType<SkinLibraryBlockEntity>> SKIN_LIBRARY = normal(SkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY).of(ModBlocks.SKIN_LIBRARY_CREATIVE).build(ModConstants.BLOCK_SKIN_LIBRARY);
+    public static final IRegistryHolder<IBlockEntityType<GlobalSkinLibraryBlockEntity>> SKIN_LIBRARY_GLOBAL = normal(GlobalSkinLibraryBlockEntity::new).of(ModBlocks.SKIN_LIBRARY_GLOBAL).bind(() -> GlobalSkinLibraryBlockRenderer::new).build(ModConstants.BLOCK_SKIN_LIBRARY_GLOBAL);
 
-    public static final IRegistryHolder<IBlockEntityType<SkinnableBlockEntity>> SKINNABLE = create(SkinnableBlockEntity::new).of(ModBlocks.SKINNABLE).bind(() -> SkinnableBlockRenderer::new).build(ModConstants.BLOCK_SKINNABLE);
-    public static final IRegistryHolder<IBlockEntityType<BoundingBoxBlockEntity>> BOUNDING_BOX = create(BoundingBoxBlockEntity::new).of(ModBlocks.BOUNDING_BOX).bind(() -> SkinCubeBlockRenderer::new).build(ModConstants.BLOCK_BOUNDING_BOX);
-    public static final IRegistryHolder<IBlockEntityType<SkinCubeBlockEntity>> SKIN_CUBE = create(SkinCubeBlockEntity::new).of(ModBlocks.SKIN_CUBE).of(ModBlocks.SKIN_CUBE_GLASS).of(ModBlocks.SKIN_CUBE_GLASS_GLOWING).of(ModBlocks.SKIN_CUBE_GLOWING).bind(() -> SkinCubeBlockRenderer::new).build(ModConstants.BLOCK_SKIN_CUBE);
+    public static final IRegistryHolder<IBlockEntityType<SkinnableBlockEntity>> SKINNABLE = normal(SkinnableBlockEntity::new).of(ModBlocks.SKINNABLE).bind(() -> SkinnableBlockRenderer::new).build(ModConstants.BLOCK_SKINNABLE);
+    public static final IRegistryHolder<IBlockEntityType<BoundingBoxBlockEntity>> BOUNDING_BOX = normal(BoundingBoxBlockEntity::new).of(ModBlocks.BOUNDING_BOX).bind(() -> SkinCubeBlockRenderer::new).build(ModConstants.BLOCK_BOUNDING_BOX);
+    public static final IRegistryHolder<IBlockEntityType<SkinCubeBlockEntity>> SKIN_CUBE = normal(SkinCubeBlockEntity::new).of(ModBlocks.SKIN_CUBE).of(ModBlocks.SKIN_CUBE_GLASS).of(ModBlocks.SKIN_CUBE_GLASS_GLOWING).of(ModBlocks.SKIN_CUBE_GLOWING).bind(() -> SkinCubeBlockRenderer::new).build(ModConstants.BLOCK_SKIN_CUBE);
 
     // legacy
-    private static final IRegistryHolder<IBlockEntityType<SkinnableBlockEntity>> SKINNABLE_SR = createLegacy(SKINNABLE).of(ModBlocks.SKINNABLE).build("skinnable-sr");
-    private static final IRegistryHolder<IBlockEntityType<BoundingBoxBlockEntity>> BOUNDING_BOX_SR = createLegacy(BOUNDING_BOX).of(ModBlocks.BOUNDING_BOX).build("bounding-box-sr");
-    private static final IRegistryHolder<IBlockEntityType<SkinCubeBlockEntity>> SKIN_CUBE_SR = createLegacy(SKIN_CUBE).of(ModBlocks.SKIN_CUBE).of(ModBlocks.SKIN_CUBE_GLASS).of(ModBlocks.SKIN_CUBE_GLASS_GLOWING).of(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-sr");
+    private static final IRegistryHolder<IBlockEntityType<SkinnableBlockEntity>> SKINNABLE_SR = legacy(SKINNABLE).of(ModBlocks.SKINNABLE).build("skinnable-sr");
+    private static final IRegistryHolder<IBlockEntityType<BoundingBoxBlockEntity>> BOUNDING_BOX_SR = legacy(BOUNDING_BOX).of(ModBlocks.BOUNDING_BOX).build("bounding-box-sr");
+    private static final IRegistryHolder<IBlockEntityType<SkinCubeBlockEntity>> SKIN_CUBE_SR = legacy(SKIN_CUBE).of(ModBlocks.SKIN_CUBE).of(ModBlocks.SKIN_CUBE_GLASS).of(ModBlocks.SKIN_CUBE_GLASS_GLOWING).of(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-sr");
 
-    private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> create(IBlockEntityType.Serializer<T> supplier) {
+    private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> normal(IBlockEntityType.Serializer<T> supplier) {
         return BuilderManager.getInstance().createBlockEntityTypeBuilder(supplier);
     }
 
-    private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> createLegacy(IRegistryHolder<IBlockEntityType<T>> entityType) {
-        return create((entityType1, blockPos, blockState) -> entityType.get().create(null, blockPos, blockState));
+    private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> legacy(IRegistryHolder<IBlockEntityType<T>> entityType) {
+        return normal((entityType1, blockPos, blockState) -> entityType.get().create(null, blockPos, blockState));
     }
 
     public static void init() {

@@ -91,7 +91,7 @@ public class LayoutEngineImpl {
 //        public Constraint(Expression expr, NSLayoutRelation op, double strength) {
 //            this.expression = reduce(expr);
 //            this.op = op;
-//            this.strength = Strength.clip(strength);
+//            this.strength = Strength.clipLayer(strength);
 //        }
 //
 //        public Constraint(Constraint other, double strength) {
@@ -322,7 +322,7 @@ public class LayoutEngineImpl {
 //            return create(a, b, c, 1.0);
 //        }
 //
-//        public static double clip(double value) {
+//        public static double clipLayer(double value) {
 //            return Math.max(0.0, Math.min(REQUIRED, value));
 //        }
 //    }
@@ -338,13 +338,13 @@ public class LayoutEngineImpl {
 //    }
 //
 //    public static class EditInfo {
-//        Tag tag;
+//        Tag object;
 //        Constraint constraint;
 //        double constant;
 //
-//        public EditInfo(Constraint constraint, Tag tag, double constant) {
+//        public EditInfo(Constraint constraint, Tag object, double constant) {
 //            this.constraint = constraint;
-//            this.tag = tag;
+//            this.object = object;
 //            this.constant = constant;
 //        }
 //    }
@@ -421,15 +421,15 @@ public class LayoutEngineImpl {
 //                throw new ConstraintException(constraint);
 //            }
 //
-//            Tag tag = new Tag();
-//            Row row = createRow(constraint, tag);
-//            Symbol subject = chooseSubject(row, tag);
+//            Tag object = new Tag();
+//            Row row = createRow(constraint, object);
+//            Symbol subject = chooseSubject(row, object);
 //
 //            if (subject.getType() == Symbol.Type.INVALID && allDummies(row)) {
 //                if (!Utils.nearZero(row.getConstant())) {
 //                    throw new ConstraintException(constraint);
 //                } else {
-//                    subject = tag.marker;
+//                    subject = object.marker;
 //                }
 //            }
 //
@@ -443,25 +443,25 @@ public class LayoutEngineImpl {
 //                this.rows.put(subject, row);
 //            }
 //
-//            this.cns.put(constraint, tag);
+//            this.cns.put(constraint, object);
 //
 //            optimize(objective);
 //        }
 //
 //        public void removeConstraint(Constraint constraint) throws ConstraintException, Error {
-//            Tag tag = cns.get(constraint);
-//            if (tag == null) {
+//            Tag object = cns.get(constraint);
+//            if (object == null) {
 //                throw new ConstraintException(constraint);
 //            }
 //
 //            cns.remove(constraint);
-//            removeConstraintEffects(constraint, tag);
+//            removeConstraintEffects(constraint, object);
 //
-//            Row row = rows.get(tag.marker);
+//            Row row = rows.get(object.marker);
 //            if (row != null) {
-//                rows.remove(tag.marker);
+//                rows.remove(object.marker);
 //            } else {
-//                row = getMarkerLeavingRow(tag.marker);
+//                row = getMarkerLeavingRow(object.marker);
 //                if (row == null) {
 //                    throw new Error("internal solver error");
 //                }
@@ -477,17 +477,17 @@ public class LayoutEngineImpl {
 //                }
 //
 //                rows.remove(leaving);
-//                row.solve(leaving, tag.marker);
-//                substitute(tag.marker, row);
+//                row.solve(leaving, object.marker);
+//                substitute(object.marker, row);
 //            }
 //            optimize(objective);
 //        }
 //
-//        void removeConstraintEffects(Constraint constraint, Tag tag) {
-//            if (tag.marker.getType() == Symbol.Type.ERROR) {
-//                removeMarkerEffects(tag.marker, constraint.getStrength());
-//            } else if (tag.other.getType() == Symbol.Type.ERROR) {
-//                removeMarkerEffects(tag.other, constraint.getStrength());
+//        void removeConstraintEffects(Constraint constraint, Tag object) {
+//            if (object.marker.getType() == Symbol.Type.ERROR) {
+//                removeMarkerEffects(object.marker, constraint.getStrength());
+//            } else if (object.other.getType() == Symbol.Type.ERROR) {
+//                removeMarkerEffects(object.other, constraint.getStrength());
 //            }
 //        }
 //
@@ -550,7 +550,7 @@ public class LayoutEngineImpl {
 //                throw new Exception("Duplicate edit variable");
 //            }
 //
-//            strength = Strength.clip(strength);
+//            strength = Strength.clipLayer(strength);
 //
 //            if (strength == Strength.REQUIRED) {
 //                throw new Exception("An edit variable cannot be required");
@@ -599,26 +599,26 @@ public class LayoutEngineImpl {
 //            double delta = value - info.constant;
 //            info.constant = value;
 //
-//            Row row = rows.get(info.tag.marker);
+//            Row row = rows.get(info.object.marker);
 //            if (row != null) {
 //                if (row.add(-delta) < 0.0) {
-//                    infeasibleRows.add(info.tag.marker);
+//                    infeasibleRows.add(info.object.marker);
 //                }
 //                dualOptimize();
 //                return;
 //            }
 //
-//            row = rows.get(info.tag.other);
+//            row = rows.get(info.object.other);
 //            if (row != null) {
 //                if (row.add(delta) < 0.0) {
-//                    infeasibleRows.add(info.tag.other);
+//                    infeasibleRows.add(info.object.other);
 //                }
 //                dualOptimize();
 //                return;
 //            }
 //
 //            rows.forEach((k, v) -> {
-//                double coeff = v.getCoefficient(info.tag.marker);
+//                double coeff = v.getCoefficient(info.object.marker);
 //                if (coeff != 0.0 && v.add(delta * coeff) < 0.0 && k.getType() != Symbol.Type.EXTERNAL)
 //                    infeasibleRows.add(k);
 //            });
@@ -633,7 +633,7 @@ public class LayoutEngineImpl {
 //            });
 //        }
 //
-//        Row createRow(Constraint constraint, Tag tag) {
+//        Row createRow(Constraint constraint, Tag object) {
 //            Expression expression = constraint.getExpression();
 //            Row row = new Row(expression.getConstant());
 //
@@ -656,11 +656,11 @@ public class LayoutEngineImpl {
 //                case GREATER_THAN_OR_EQUAL: {
 //                    double coeff = constraint.getOp() == NSLayoutRelation.LESS_THAN_OR_EQUAL ? 1.0 : -1.0;
 //                    Symbol slack = new Symbol(Symbol.Type.SLACK);
-//                    tag.marker = slack;
+//                    object.marker = slack;
 //                    row.insert(slack, coeff);
 //                    if (constraint.getStrength() < Strength.REQUIRED) {
 //                        Symbol error = new Symbol(Symbol.Type.ERROR);
-//                        tag.other = error;
+//                        object.other = error;
 //                        row.insert(error, -coeff);
 //                        this.objective.insert(error, constraint.getStrength());
 //                    }
@@ -670,15 +670,15 @@ public class LayoutEngineImpl {
 //                    if (constraint.getStrength() < Strength.REQUIRED) {
 //                        Symbol errplus = new Symbol(Symbol.Type.ERROR);
 //                        Symbol errminus = new Symbol(Symbol.Type.ERROR);
-//                        tag.marker = errplus;
-//                        tag.other = errminus;
+//                        object.marker = errplus;
+//                        object.other = errminus;
 //                        row.insert(errplus, -1.0); // v = eplus - eminus
 //                        row.insert(errminus, 1.0); // v - eplus + eminus = 0
 //                        this.objective.insert(errplus, constraint.getStrength());
 //                        this.objective.insert(errminus, constraint.getStrength());
 //                    } else {
 //                        Symbol dummy = new Symbol(Symbol.Type.DUMMY);
-//                        tag.marker = dummy;
+//                        object.marker = dummy;
 //                        row.insert(dummy);
 //                    }
 //                    break;
@@ -690,13 +690,13 @@ public class LayoutEngineImpl {
 //            return row;
 //        }
 //
-//        private static Symbol chooseSubject(Row row, Tag tag) {
+//        private static Symbol chooseSubject(Row row, Tag object) {
 //            return row.getCells().keySet().stream().filter(k -> k.getType() == Symbol.Type.EXTERNAL).findFirst().orElse(((Supplier<Symbol>) () -> {
-//                if (tag.marker.getType() == Symbol.Type.SLACK || tag.marker.getType() == Symbol.Type.ERROR) {
-//                    if (row.getCoefficient(tag.marker) < 0.0) return tag.marker;
+//                if (object.marker.getType() == Symbol.Type.SLACK || object.marker.getType() == Symbol.Type.ERROR) {
+//                    if (row.getCoefficient(object.marker) < 0.0) return object.marker;
 //                }
-//                if (tag.other != null && (tag.other.getType() == Symbol.Type.SLACK || tag.other.getType() == Symbol.Type.ERROR)) {
-//                    if (row.getCoefficient(tag.other) < 0.0) return tag.other;
+//                if (object.other != null && (object.other.getType() == Symbol.Type.SLACK || object.other.getType() == Symbol.Type.ERROR)) {
+//                    if (row.getCoefficient(object.other) < 0.0) return object.other;
 //                }
 //                return new Symbol();
 //            }).get());

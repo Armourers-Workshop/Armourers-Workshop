@@ -36,14 +36,14 @@ import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentType;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModMenuOptions;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -51,7 +51,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> implements SkinDocumentListener {
 
     private static final int CARD_WIDTH = 100;
@@ -208,9 +207,10 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         alert.setMessage(NSString.localizedString("advanced-skin-builder.dialog.exporter.message"));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                var origin = EnvironmentManager.getClient().getUser().getGameProfile();
-                var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-                AdvancedExportPacket packet = new AdvancedExportPacket(editor.blockEntity(), nbt);
+                var origin = Minecraft.getInstance().getUser().getGameProfile();
+                var serializer = new TagSerializer();
+                serializer.encode(ExtraCodecs.GAME_PROFILE, origin);
+                AdvancedExportPacket packet = new AdvancedExportPacket(editor.blockEntity(), serializer.tag());
                 NetworkManager.sendToServer(packet);
             }
         });

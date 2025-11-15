@@ -1,0 +1,97 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
+import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
+import moe.plushie.armourers_workshop.core.client.shader.Shader;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
+import moe.plushie.armourers_workshop.core.utils.TickUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import org.lwjgl.opengl.GL15;
+
+@Available("[1.16, 1.18)")
+public class AbstractShader extends Shader {
+
+    private int maxVertexCount;
+
+    @Override
+    public void begin() {
+        super.begin();
+        RenderSystem.enableRescaleNormal();
+    }
+
+    @Override
+    public void end() {
+        RenderSystem.disableRescaleNormal();
+        super.end();
+    }
+
+    @Override
+    protected void prepare(ShaderVertexGroup group) {
+        // apply changes of texture animation.
+        context.setTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
+        context.enablePolygonOffset();
+
+        group.renderType().get().setupRenderState();
+        maxVertexCount = group.maxVertexCount;
+    }
+
+    @Override
+    protected void clean(ShaderVertexGroup group) {
+        VertexIndexObject.unbind();
+        VertexBufferObject.unbind();
+        group.renderType().get().clearRenderState();
+
+        context.disablePolygonOffset();
+    }
+
+    @Override
+    public void render(ShaderVertexObject object) {
+        var count = object.vertexCount();
+        var modelViewStack = AbstractModelViewStack.getInstance();
+
+        modelViewStack.pushMatrix();
+
+        modelViewStack.last().multiply(object.pose().pose());
+
+        // https://sites.google.com/site/threejstuts/home/polygon_offset
+        // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
+        // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
+        // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
+        RenderSystem.polygonOffset(0, object.polygonOffset() * -1);
+
+        object.bufferObject().bind();
+        object.format().setupBufferState(object.vertexOffset());
+
+        // when the outline color required, we need to modify the color attribute by `glColorPointer`.
+        if (object.isOutline()) {
+            var colorBuffer = AbstractColorBufferObject.getColorBuffer(object.outlineColor() | 0xff000000);
+            colorBuffer.ensureCapacity(maxVertexCount);
+            colorBuffer.bind();
+            colorBuffer.format().setupBufferState(0L);
+            object.bufferObject().bind();
+        }
+
+        // when the outline color required, we need to modify the lightmap texture attribute by `glVertexAttribPointer`.
+        if (!object.isEmissive()) {
+            var lightBuffer = AbstractLightBufferObject.getLightBuffer(object.lightmap());
+            lightBuffer.ensureCapacity(maxVertexCount);
+            lightBuffer.bind();
+            lightBuffer.format().setupBufferState(0L);
+            object.bufferObject().bind();
+        }
+
+        var indexObject = object.indexObject();
+        if (indexObject != null) {
+            indexObject.bind();
+            GL15.glDrawElements(GL15.GL_TRIANGLES, indexObject.stride(count), indexObject.type(), 0);
+        } else {
+            GL15.glDrawArrays(GL15.GL_TRIANGLES, 0, count);
+        }
+
+        object.format().clearBufferState();
+
+        modelViewStack.popMatrix();
+    }
+}

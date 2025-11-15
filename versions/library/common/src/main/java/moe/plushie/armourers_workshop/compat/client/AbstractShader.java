@@ -1,0 +1,32 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import com.mojang.blaze3d.vertex.BufferUploader;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.client.shader.Shader;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+
+@Available("[1.18, 1.22)")
+public class AbstractShader extends Shader {
+
+    @Override
+    public void begin() {
+        super.begin();
+        // yep we reset it.
+        RenderSystem.resetTextureMatrix();
+        // ..
+        BufferUploader.reset();
+    }
+
+    @Override
+    public void end() {
+        super.end();
+    }
+
+    @Override
+    public void apply(ShaderVertexGroup group, Runnable action) {
+        // we let the vanilla's rendering system normal call rendering once,
+        // and then insert our the rendering content in end stage.
+        AbstractRenderListener.drawElements(group.renderType(), AbstractBufferSource.tesselator(), () -> super.apply(group, action));
+    }
+}

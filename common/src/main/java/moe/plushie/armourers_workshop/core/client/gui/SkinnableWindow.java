@@ -7,11 +7,8 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotGridView;
 import moe.plushie.armourers_workshop.core.menu.SkinnableMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class SkinnableWindow extends MenuWindow<SkinnableMenu> {
 
     public SkinnableWindow(SkinnableMenu container, Inventory inventory, NSString title) {

@@ -202,7 +202,7 @@ public class SkinLoader {
             addSkin(identifier, skin);
             return identifier;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            ModLog.error("can't save {} into database", identifier, exception);
             return "";
         }
     }
@@ -320,7 +320,7 @@ public class SkinLoader {
         }
 
         public void abort(Exception exception) {
-            ModLog.debug("'{}' => abort skin loading, exception: {}", identifier, exception);
+            ModLog.error("'{}' => abort skin loading", identifier, exception);
             this.skin = null;
             this.exception = exception;
             this.status = Status.ABORTED;
@@ -514,13 +514,12 @@ public class SkinLoader {
                 syncRequest(request);
                 return;
             }
-            ModLog.debug("'{}' => start load skin", request.identifier);
+            ModLog.debug("'{}' => start skin loading", request.identifier);
             request.isRunning = true;
             try {
                 var skin = load(request);
                 request.accept(skin);
             } catch (Exception exception) {
-                exception.printStackTrace();
                 request.abort(exception);
             }
             request.isRunning = false;
@@ -543,8 +542,7 @@ public class SkinLoader {
                 semaphore.acquire();
                 ModLog.debug("'{}' => await load skin completed", request.identifier);
             } catch (Exception exception) {
-                exception.printStackTrace();
-                ModLog.debug("'{}' => await load skin failed", request.identifier);
+                ModLog.debug("'{}' => await load skin failed", request.identifier, exception);
             }
         }
 
@@ -639,7 +637,7 @@ public class SkinLoader {
                 throw new FileNotFoundException(identifier);
             }
             var file = OpenResourceLocation.parse(path);
-            var resourceManager = EnvironmentManager.getResourceManager();
+            var resourceManager = EnvironmentManager.getClientResourceManager();
             if (resourceManager.hasResource(file)) {
                 return resourceManager.readResource(file).inputStream();
             }
@@ -812,7 +810,7 @@ public class SkinLoader {
                             SkinSerializer.writeToStream(skin, null, outputStream);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        ModLog.error("'{}' => add global skin cache fail", identifier, e);
                     }
                 });
                 return;
@@ -841,7 +839,7 @@ public class SkinLoader {
                         SkinSerializer.writeToStream(skin, null, cipherOutputStream);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ModLog.error("'{}' => add skin cache fail", identifier, e);
                 }
                 StreamUtils.closeQuietly(cipherOutputStream, fileOutputStream);
             });

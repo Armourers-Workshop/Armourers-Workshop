@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
-@SuppressWarnings({"unused", "SameParameterValue"})
+@SuppressWarnings("unused")
 public class ModItemMatchers {
 
     public static final ItemMatcher SWORDS = MatcherBuilder.of()

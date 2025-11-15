@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractBundleResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -23,19 +24,19 @@ public class DataPackManager {
         return INSTANCES.get(packType);
     }
 
-    public static void register(DataPackType packType, String path, Function<IResourceLocation, DataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
+    public static void register(DataPackType packType, String path, Function<OpenResourceLocation, DataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
         var loader = byType(packType);
         if (loader != null) {
-            loader.add(new DataPackLoader.Entry(path, provider, willLoadHandler, didLoadHandler, order));
+            loader.addTask(path, provider, willLoadHandler, didLoadHandler, order);
         }
     }
 
     protected static class Bundle extends DataPackLoader {
 
         @Override
-        public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
-            super.build(taskQueue, resourceManager);
-            entries.clear();
+        public void load(IResourceManager resourceManager, TaskQueue taskQueue) {
+            super.load(resourceManager, taskQueue);
+            removeAllTasks();
             EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.BUNDLED_DATA);
         }
     }
@@ -43,12 +44,12 @@ public class DataPackManager {
     protected static class Data extends DataPackLoader {
 
         @Override
-        public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
+        public void load(IResourceManager resourceManager, TaskQueue taskQueue) {
             var loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
-                loader.build(taskQueue, resourceManager.asBundleManager());
+                loader.load(new AbstractBundleResourceManager(resourceManager), taskQueue);
             }
-            super.build(taskQueue, resourceManager);
+            super.load(resourceManager, taskQueue);
             EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.SERVER_DATA);
         }
     }
@@ -56,12 +57,12 @@ public class DataPackManager {
     protected static class Resources extends DataPackLoader {
 
         @Override
-        public void build(TaskQueue taskQueue, ResourceManager resourceManager) {
+        public void load(IResourceManager resourceManager, TaskQueue taskQueue) {
             var loader = byType(DataPackType.BUNDLED_DATA);
             if (loader != null && !loader.isEmpty()) {
-                loader.build(taskQueue, resourceManager.asBundleManager());
+                loader.load(new AbstractBundleResourceManager(resourceManager), taskQueue);
             }
-            super.build(taskQueue, resourceManager);
+            super.load(resourceManager, taskQueue);
             EventManager.post(DataPackEvent.Reloading.class, () -> DataPackType.CLIENT_RESOURCES);
         }
     }

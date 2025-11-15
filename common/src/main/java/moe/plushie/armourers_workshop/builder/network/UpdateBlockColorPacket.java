@@ -50,7 +50,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
         // we don't support modify blocks in multiple dimensions at the same time.
-        var level = player.server.getLevel(clickedPos.dimension());
+        var level = player.server().getLevel(clickedPos.dimension());
         if (level == null) {
             return;
         }

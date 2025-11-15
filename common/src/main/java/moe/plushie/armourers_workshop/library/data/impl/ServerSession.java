@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+import moe.plushie.armourers_workshop.init.ModLog;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -56,7 +57,7 @@ public abstract class ServerSession {
             }
             return deserializer.apply(responseData);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            ModLog.error("An error occurred by the request '{}'", path, exception);
             throw exception;
         }
     }

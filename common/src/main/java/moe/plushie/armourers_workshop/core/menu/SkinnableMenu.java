@@ -1,26 +1,25 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.util.Strings;
 
-public class SkinnableMenu extends AbstractBlockEntityMenu<SkinnableBlockEntity> {
+public class SkinnableMenu extends BlockEntityContainerMenu<SkinnableBlockEntity> {
 
     private final String title;
     private int row;
     private int column;
     private Container inventory;
 
-    public SkinnableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos worldPos) {
+    public SkinnableMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos worldPos) {
         super(menuType, block, containerId, worldPos);
         this.title = blockEntity.getInventoryName();
 
@@ -47,13 +46,8 @@ public class SkinnableMenu extends AbstractBlockEntityMenu<SkinnableBlockEntity>
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size());
-    }
-
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
+    protected void abi$removed(Player player) {
+        super.abi$removed(player);
         if (inventory != null) {
             inventory.stopOpen(player);
         }
@@ -65,7 +59,7 @@ public class SkinnableMenu extends AbstractBlockEntityMenu<SkinnableBlockEntity>
         }
         for (int j = 0; j < row; j++) {
             for (int i = 0; i < column; i++) {
-                addSlot(new Slot(inventory, i + j * column, x + 18 * i + 1, y + j * 18 + 1));
+                addSlot(new AbstractContainerSlot(inventory, i + j * column, x + 18 * i + 1, y + j * 18 + 1));
             }
         }
     }

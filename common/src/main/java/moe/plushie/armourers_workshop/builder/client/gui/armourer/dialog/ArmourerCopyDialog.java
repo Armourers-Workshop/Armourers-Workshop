@@ -10,12 +10,9 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerCopyDialog extends ConfirmDialog {
 
     final ArrayList<SkinPartType> partTypes;

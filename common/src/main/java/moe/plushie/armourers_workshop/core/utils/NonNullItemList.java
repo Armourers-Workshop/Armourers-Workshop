@@ -52,6 +52,6 @@ public class NonNullItemList extends NonNullList<ItemStack> implements IDataSeri
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<List<Pair<Byte, ItemStack>>> SERIALIZER = IDataSerializerKey.create("Items", IDataCodec.pair(IDataCodec.BYTE.fieldOf("Slot").codec(), IDataCodec.ITEM_STACK).listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<Pair<Byte, ItemStack>>> SERIALIZER = IDataSerializerKey.create("Items", IDataCodec.pair(IDataCodec.BYTE.fieldOf("Slot").codec(), ExtraCodecs.ITEM_STACK).listOf(), Collections.emptyList());
     }
 }

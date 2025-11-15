@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
-import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
+import moe.plushie.armourers_workshop.compat.client.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;

@@ -52,6 +52,7 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
         return aabb;
     }
 
+    @Override
     public OpenRectangle3f bounds() {
         if (box != null) {
             return box;

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 
@@ -23,7 +23,7 @@ public class GenericProperties<S> {
         return new GenericProperties<>(factory);
     }
 
-    public <T> Builder<S, T> create(IEntitySerializer<T> serializer) {
+    public <T> Builder<S, T> create(IEntityDataSerializer<T> serializer) {
         return new Builder<>(this, serializer);
     }
 
@@ -46,12 +46,12 @@ public class GenericProperties<S> {
 
         private final GenericProperties<S> owner;
 
-        private final IEntitySerializer<T> serializer;
+        private final IEntityDataSerializer<T> serializer;
 
         private Function<S, T> getter;
         private BiConsumer<S, T> setter;
 
-        private Builder(GenericProperties<S> owner, IEntitySerializer<T> serializer) {
+        private Builder(GenericProperties<S> owner, IEntityDataSerializer<T> serializer) {
             this.owner = owner;
             this.serializer = serializer;
         }
@@ -79,7 +79,7 @@ public class GenericProperties<S> {
 
     }
 
-    protected static class Holder<S, T> extends GenericValue<S, T> {
+    private static class Holder<S, T> extends GenericValue<S, T> {
 
         private final GenericProperty<S, T> property;
         private final T value;

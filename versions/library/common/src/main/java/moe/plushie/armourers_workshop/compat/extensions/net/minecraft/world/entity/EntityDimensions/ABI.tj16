@@ -1,0 +1,26 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.EntityDimensions;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractEntityDimensions;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.world.entity.EntityDimensions;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.16, 1.21)")
+@Extension
+public class ABI {
+
+    public static EntityDimensions withEyeHeight(@This EntityDimensions dimensions, float eyeHeight) {
+        return new AbstractEntityDimensions(dimensions.width, dimensions.height, eyeHeight, dimensions.fixed);
+    }
+
+    public static float getEyeHeight(@This EntityDimensions dimensions) {
+        var dimensions1 = Objects.safeCast(dimensions, AbstractEntityDimensions.class);
+        if (dimensions1 != null) {
+            return dimensions1.eyeHeight;
+        }
+        return 0;
+    }
+}

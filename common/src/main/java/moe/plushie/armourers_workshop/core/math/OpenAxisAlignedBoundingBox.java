@@ -28,6 +28,10 @@ public class OpenAxisAlignedBoundingBox {
         this.maxZ = maxZ;
     }
 
+    public OpenAxisAlignedBoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        this((float) minX, (float) minY, (float) minZ, (float) maxX, (float) maxY, (float) maxZ);
+    }
+
     public OpenAxisAlignedBoundingBox(OpenVector3f min, OpenVector3f max) {
         this(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
     }
@@ -103,6 +107,18 @@ public class OpenAxisAlignedBoundingBox {
 
     public float maxZ() {
         return maxZ;
+    }
+
+    public float width() {
+        return maxX - minX;
+    }
+
+    public float height() {
+        return maxY - minY;
+    }
+
+    public float depth() {
+        return maxZ - minZ;
     }
 
     public OpenAxisAlignedBoundingBox copy() {

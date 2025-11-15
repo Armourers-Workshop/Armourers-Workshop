@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.network;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
@@ -40,7 +40,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        var entity = player.getLevel().getBlockEntity(pos);
+        var entity = player.level().getBlockEntity(pos);
         if (entity instanceof HologramProjectorBlockEntity blockEntity) {
             fieldValue.apply(blockEntity);
         }
@@ -62,7 +62,7 @@ public class UpdateHologramProjectorPacket extends CustomPacket {
         public static final auto ROTATION_OFFSET = create(HologramProjectorBlockEntity::getRotationOffset, HologramProjectorBlockEntity::setRotationOffset, DataSerializers.VECTOR_3F);
         public static final auto ROTATION_SPEED = create(HologramProjectorBlockEntity::getRotationSpeed, HologramProjectorBlockEntity::setRotationSpeed, DataSerializers.VECTOR_3F);
 
-        private static <T> Field<T> create(Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+        private static <T> Field<T> create(Function<HologramProjectorBlockEntity, T> supplier, BiConsumer<HologramProjectorBlockEntity, T> applier, IEntityDataSerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).setter(applier).getter(supplier).build(Field::new);
         }
     }

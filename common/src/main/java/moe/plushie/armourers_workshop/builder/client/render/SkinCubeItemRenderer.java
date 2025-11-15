@@ -1,35 +1,31 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
-import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
-public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
+@OnlyIn(Dist.CLIENT)
+public class SkinCubeItemRenderer extends AbstractSpecialModelRenderer<ItemStack> {
 
-    private static SkinCubeItemRenderer INSTANCE;
+    public static final IDataMapCodec<SkinCubeItemRenderer> MAP_CODEC = IDataMapCodec.unit(SkinCubeItemRenderer::new);
 
-    public static SkinCubeItemRenderer getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SkinCubeItemRenderer();
-        }
-        return INSTANCE;
-    }
+    private final OpenRectangle3f outer = new OpenRectangle3f(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+    private final OpenRectangle3f inner = new OpenRectangle3f(0.0625f, 0.0625f, 0.0625f, 0.875f, 0.875f, 0.875f);
 
     @Override
-    public void renderByItem(ItemStack itemStack, OpenItemDisplayContext itemDisplayContext, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
+    protected void abi$render(ItemStack itemStack, OpenItemDisplayContext itemDisplayContext, int lightmap, int overlay, IGraphicsContext context) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -43,29 +39,33 @@ public class SkinCubeItemRenderer extends AbstractItemStackRenderer {
         var isGlowing = block.equals(ModBlocks.SKIN_CUBE_GLOWING.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
         var isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
 
-        var renderType = SkinRenderType.BLOCK_CUBE;
+
+        var outerRenderType = SkinRenderType.BLOCK_CUBE;
+        var innerRenderType = SkinRenderType.BLOCK_CUBE;
+
         if (isGlass) {
-            renderType = SkinRenderType.BLOCK_CUBE_GLASS;
+            outerRenderType = SkinRenderType.BLOCK_CUBE_GLASS;
+            innerRenderType = SkinRenderType.BLOCK_CUBE_GLASS;
         }
         if (isGlowing) {
-            var f1 = 1 / 16.0f;
-            var f = 14 / 16.0f;
-            var builder2 = bufferSource.getBuffer(renderType);
-            poseStack.pushPose();
-            poseStack.translate(f1, f1, f1);
-            poseStack.scale(f, f, f);
-            renderCube(blockPaintColor, light, overlay, poseStack, builder2);
-            poseStack.popPose();
-            renderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
+            outerRenderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
         }
-        var builder1 = bufferSource.getBuffer(renderType);
-        renderCube(blockPaintColor, light, overlay, poseStack, builder1);
+
+        if (innerRenderType != outerRenderType) {
+            context.draw(ShapeElement.fill(inner, lightmap, overlay, blockPaintColor, innerRenderType));
+        }
+        context.draw(ShapeElement.fill(outer, lightmap, overlay, blockPaintColor, outerRenderType));
+
+        if (ModDebugger.cubeItem) {
+            context.draw(ShapeElement.stroke(outer, Colors.ORANGE));
+            if (innerRenderType != outerRenderType) {
+                context.draw(ShapeElement.stroke(inner, Colors.ORANGE));
+            }
+        }
     }
 
-    public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, IPoseStack poseStack, IVertexConsumer builder) {
-        for (var dir : OpenDirection.values()) {
-            var paintColor = blockPaintColor.getOrDefault(dir, SkinPaintColor.WHITE);
-            ExtendedFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, poseStack, builder);
-        }
+    @Override
+    protected ItemStack abi$extractArgument(ItemStack itemStack) {
+        return itemStack;
     }
 }

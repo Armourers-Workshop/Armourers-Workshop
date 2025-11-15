@@ -17,12 +17,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-    modImplementation 'me.lucko:fabric-permissions-api:0.3.1'
-
     modShadow "com.electronwill.night-config:core:${project.night_config}"
     modShadow "com.electronwill.night-config:toml:${project.night_config}"
 
     modOptionalCompileOnly project.trinkets_api_version
+    modOptionalCompileOnly project.permissions_api_version
 
     modOptionalCompileOnly project.mrcrayfishbackpack_api_version
     modOptionalCompileOnly project.travelersbackpack_api_version

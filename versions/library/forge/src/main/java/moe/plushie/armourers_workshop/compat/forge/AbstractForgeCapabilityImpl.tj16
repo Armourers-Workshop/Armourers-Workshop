@@ -1,0 +1,80 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeCapabilityImpl<T> {
+
+    @CapabilityInject(SkinWardrobe.class)
+    public static Capability<SkinWardrobe> WARDROBE_KEY;
+
+    protected void registerCapability(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
+        // setup event bus.
+        var handler = new Handler(registryName, type, provider);
+        AbstractForgeInitializer.getEventBus().addGenericListener(Entity.class, handler::attachEntityCapability);
+        AbstractForgeInitializer.getModEventBus().addListener(handler::registerCapability);
+    }
+
+    protected Supplier<Capability<T>> createCapability(Class<T> type) {
+        return Objects.unsafeCast(createCapability0(type));
+    }
+
+    private Supplier<Capability<?>> createCapability0(Class<?> type) {
+        // it inject the implement by the runtime, so we can't use generic class.
+        if (type == SkinWardrobe.class) {
+            return () -> WARDROBE_KEY;
+        }
+        throw new AssertionError("not supported capability type: " + type);
+    }
+
+    private class Handler implements Capability.IStorage<T> {
+
+        private final Class<T> type;
+        private final OpenResourceLocation registryName;
+        private final Function<Entity, Optional<ICapabilityProvider>> provider;
+
+        public Handler(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
+            this.type = type;
+            this.registryName = registryName;
+            this.provider = provider;
+        }
+
+        public void registerCapability(FMLLoadCompleteEvent event) {
+            CapabilityManager.INSTANCE.register(type, this, () -> null);
+        }
+
+        public void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
+            provider.apply(event.getObject()).ifPresent(it -> {
+                event.addCapability(registryName.toLocation(), it);
+            });
+        }
+
+        @Nullable
+        @Override
+        public Tag writeNBT(Capability<T> capability, T object, Direction arg) {
+            return null;
+        }
+
+        @Override
+        public void readNBT(Capability<T> capability, T object, Direction arg, Tag arg2) {
+
+        }
+    }
+}

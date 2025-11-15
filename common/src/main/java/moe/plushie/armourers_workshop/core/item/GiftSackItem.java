@@ -1,22 +1,22 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.api.common.IItemGroup;
-import moe.plushie.armourers_workshop.api.common.IItemGroupProvider;
-import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, IItemTintColorProvider {
+public class GiftSackItem extends FlavouredItem {
 
     public GiftSackItem(Properties properties) {
         super(properties);
@@ -41,11 +41,11 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    protected OpenInteractionResult abi$use(Level level, Player player, OpenInteractionHand hand) {
         var itemStack = player.getItemInHand(hand);
         var giftStack = getGift(itemStack, player);
         if (giftStack.isEmpty()) {
-            return InteractionResultHolder.pass(itemStack);
+            return OpenInteractionResult.PASS;
         }
         if (!level.isClientSide()) {
             if (player.getInventory().add(giftStack)) {
@@ -54,22 +54,23 @@ public class GiftSackItem extends FlavouredItem implements IItemGroupProvider, I
                 player.sendSystemMessage(Component.translatable("chat.armourers_workshop.inventoryFull"));
             }
         }
-        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+        return OpenInteractionResult.sidedSuccess(level.isClientSide()).heldItemTransformedTo(itemStack);
     }
 
     @Override
-    public void fillItemGroup(List<ItemStack> results, IItemGroup group) {
+    protected void abi$fill(List<ItemStack> displayItems, CreativeModeTab tab) {
+        super.abi$fill(displayItems, tab);
         // add all the gifts into creative inventory
         for (var holiday : ModHolidays.holidays()) {
             if (holiday.handler() != null) {
-                results.add(of(holiday));
+                displayItems.add(of(holiday));
             }
         }
     }
 
     @Override
-    public int getTintColor(ItemStack itemStack, int index) {
-        if (index == 1) {
+    protected int abi$getModelTintColor(ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity, int layerIndex) {
+        if (layerIndex == 1) {
             return itemStack.getOrDefault(ModDataComponents.GIFT_COLOR_FG.get(), 0x333333) | 0xff000000;
         }
         return itemStack.getOrDefault(ModDataComponents.GIFT_COLOR_BG.get(), 0xffffff) | 0xff000000;

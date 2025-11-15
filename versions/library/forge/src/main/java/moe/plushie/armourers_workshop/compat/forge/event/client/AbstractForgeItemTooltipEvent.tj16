@@ -1,0 +1,78 @@
+package moe.plushie.armourers_workshop.compat.forge.event.client;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGRect;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractTooltipContext;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
+import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+@Available("[1.16, 1.18)")
+public class AbstractForgeItemTooltipEvent {
+
+    private static CGRect screenLayout = CGRect.ZERO;
+
+    public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
+        return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_GATHER.map(event -> new ItemTooltipEvent.Gather() {
+            @Override
+            public ItemStack itemStack() {
+                return event.getItemStack();
+            }
+
+            @Override
+            public List<Component> tooltips() {
+                return event.getToolTip();
+            }
+
+            @Override
+            public ITooltipContext context() {
+                return AbstractTooltipContext.wrap(null, null, event.getFlags());
+            }
+        });
+    }
+
+    public static IEventHandler<ItemTooltipEvent.Render> renderFactory() {
+        // we need to collect position information before rendering.
+        AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER_PRE.listen(event -> {
+            screenLayout = new CGRect(event.getX(), event.getY(), event.getScreenWidth(), event.getScreenHeight());
+        });
+        //
+        return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER_POST.map(event -> new ItemTooltipEvent.Render() {
+
+            @Override
+            public void draw(Consumer<CGGraphicsContext> action) {
+                float mouseX = screenLayout.x;
+                float mouseY = screenLayout.y;
+                AbstractGuiGraphicsRenderer.wrap(null, event.getMatrixStack(), screenWidth(), screenHeight(), mouseX, mouseY, 0, action);
+            }
+
+            @Override
+            public ItemStack itemStack() {
+                return event.getStack();
+            }
+
+            @Override
+            public CGRect frame() {
+                return new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
+            }
+
+            @Override
+            public float screenWidth() {
+                return screenLayout.width();
+            }
+
+            @Override
+            public float screenHeight() {
+                return screenLayout.height();
+            }
+        });
+    }
+}

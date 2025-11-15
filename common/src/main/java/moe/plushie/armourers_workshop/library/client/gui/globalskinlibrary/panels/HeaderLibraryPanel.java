@@ -11,17 +11,14 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     private final ArrayList<UIButton> rightButtons = new ArrayList<>();
@@ -66,7 +63,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        this.renderPlayerProfile(context, EnvironmentManager.getClient().getUser().getGameProfile());
+        this.renderPlayerProfile(context, Minecraft.getInstance().getUser().getGameProfile());
     }
 
     public void reloadData() {
@@ -101,8 +98,8 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         var tx = 5.0f;
         var ty = 5.0f;
         var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
-        context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64, 0);
-        context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
+        context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64);
+        context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64);
 
 
         // White - not a member.
@@ -111,7 +108,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         // Red - Missing profile info.
         var rect = bounds();
         var profile = new NSMutableString(" - ");
-        profile.append(gameProfile.getName());
+        profile.append(gameProfile.name());
         int textColor = 0xFFAAAA;
         var user = library.user();
         if (user.isMember()) {

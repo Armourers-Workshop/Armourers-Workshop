@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ITagKey;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockTag;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractItemTag;
+import moe.plushie.armourers_workshop.core.utils.TypedProvider;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class TagKeyExt {
+
+    public static TypedProvider<ITagKey<?>> createItemTagRegistryFO(@ThisClass Class<?> clazz) {
+        return TypedProvider.factory(registryName -> {
+            var tag = ItemTags.createOptional(registryName.toLocation());
+            return (AbstractItemTag) itemStack -> itemStack.getItem().is(tag);
+        });
+    }
+
+    public static TypedProvider<ITagKey<?>> createBlockTagRegistryFO(@ThisClass Class<?> clazz) {
+        return TypedProvider.factory(registryName -> {
+            var tag = BlockTags.createOptional(registryName.toLocation());
+            return (AbstractBlockTag) blockState -> blockState.getBlock().is(tag);
+        });
+    }
+}

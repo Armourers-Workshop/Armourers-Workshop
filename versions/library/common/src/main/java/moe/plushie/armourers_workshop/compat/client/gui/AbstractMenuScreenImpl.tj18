@@ -1,0 +1,107 @@
+package moe.plushie.armourers_workshop.compat.client.gui;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.uikit.UIView;
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.AbstractModelViewStack;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+
+@Available("[1.18, 1.20)")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
+
+    public AbstractMenuScreenImpl(T menu, Inventory inventory, Component component) {
+        super(menu, inventory, component);
+    }
+
+    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "overlay", (screen, poseStack) -> {
+            var modelViewStack = AbstractModelViewStack.getInstance();
+            modelViewStack.pushMatrix();
+            modelViewStack.last().translate(0, 0, zLevel);
+            modelViewStack.apply();
+            super.render(poseStack, mouseX, mouseY, partialTicks);
+            modelViewStack.popMatrix();
+            modelViewStack.apply();
+            super.renderTooltip(poseStack, mouseX, mouseY);
+        });
+    }
+
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "container", (screen, poseStack) -> {
+            super.render(poseStack, mouseX, mouseY, partialTicks);
+        });
+    }
+
+    public void renderLabels(CGGraphicsContext context, int mouseX, int mouseY) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "content", (screen, poseStack) -> {
+            super.renderLabels(poseStack, mouseX, mouseY);
+        });
+    }
+
+    public void renderTooltip(CGGraphicsContext context, int mouseX, int mouseY) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "tooltip", (screen, poseStack) -> {
+            super.renderTooltip(poseStack, mouseX, mouseY);
+        });
+    }
+
+    public void renderBackground(CGGraphicsContext context) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "background", (screen, poseStack) -> {
+            super.renderBackground(poseStack);
+        });
+    }
+
+    @Override
+    public final void render(PoseStack poseStack, int i, int j, float f) {
+        AbstractGuiGraphicsRenderer.wrap(this, poseStack, width, height, i, j, f, context -> {
+            this.render(context, i, j, f);
+        });
+    }
+
+    @Override
+    protected final void renderLabels(PoseStack poseStack, int i, int j) {
+        AbstractGuiGraphicsRenderer.wrap(this, poseStack, width, height, i, j, 0, context -> {
+            this.renderLabels(context, i, j);
+        });
+    }
+
+    @Override
+    protected final void renderTooltip(PoseStack poseStack, int i, int j) {
+        AbstractGuiGraphicsRenderer.wrap(this, poseStack, width, height, i, j, 0, context -> {
+            this.renderTooltip(context, i, j);
+        });
+    }
+
+    @Override
+    protected final void renderBg(PoseStack poseStack, float f, int i, int j) {
+        // ignored
+    }
+
+    public void _renderTooltip(PoseStack poseStack, ItemStack itemStack, int mouseX, int mouseY) {
+        this.renderTooltip(poseStack, itemStack, mouseX, mouseY);
+    }
+
+    public void _renderTooltip(PoseStack poseStack, List<? extends FormattedCharSequence> texts, int mouseX, int mouseY) {
+        this.renderTooltip(poseStack, texts, mouseX, mouseY);
+    }
+
+    @Override
+    public final boolean mouseScrolled(double d, double e, double f) {
+        return mouseScrolled(d, e, f, f);
+    }
+
+    public boolean mouseScrolled(double d, double e, double f, double g) {
+        return super.mouseScrolled(d, e, f);
+    }
+}

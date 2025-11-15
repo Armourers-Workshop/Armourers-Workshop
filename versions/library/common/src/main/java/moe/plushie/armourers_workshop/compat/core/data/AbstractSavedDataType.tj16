@@ -1,0 +1,34 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+
+import java.util.function.Supplier;
+
+@Available("[1.16, 1.18)")
+public class AbstractSavedDataType<T extends AbstractSavedData> {
+
+    private final String id;
+    private final Supplier<T> factory;
+
+    public AbstractSavedDataType(String id, Supplier<T> factory) {
+        this.id = id;
+        this.factory = () -> {
+            var value = factory.get();
+            value.setId(id);
+            return value;
+        };
+    }
+
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
+        return new AbstractSavedDataType<>(id, factory);
+    }
+
+    public T computeIfAbsent(DimensionDataStorage storage) {
+        return storage.computeIfAbsent(factory, id);
+    }
+
+    public T get(DimensionDataStorage storage) {
+        return storage.get(factory, id);
+    }
+}

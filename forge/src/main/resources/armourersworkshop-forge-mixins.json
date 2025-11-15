@@ -3,7 +3,6 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.forge",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ForgeLivingRendererMixin",
     "ForgeReplayMixin"
   ],
   "mixins": [

@@ -1,19 +1,13 @@
 package moe.plushie.armourers_workshop.core.armature.core;
 
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.armature.ArmaturePlugin;
-import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
 
-    protected int overlay = OverlayTexture.NO_OVERLAY;
+    protected int overlay = 0x0a0000;
     protected int lightmap = 0xf000f0;
     protected float partialTicks;
     protected double animationTicks;
-    protected IPoseStack poseStack;
-
-    protected EntityRenderData renderData;
 
     public void setOverlay(int overlay) {
         this.overlay = overlay;
@@ -49,23 +43,5 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
     @Override
     public float partialTicks() {
         return partialTicks;
-    }
-
-    public void setPoseStack(IPoseStack poseStack) {
-        this.poseStack = poseStack;
-    }
-
-    @Override
-    public IPoseStack poseStack() {
-        return poseStack;
-    }
-
-
-    public void setRenderData(EntityRenderData renderData) {
-        this.renderData = renderData;
-    }
-
-    public EntityRenderData renderData() {
-        return renderData;
     }
 }

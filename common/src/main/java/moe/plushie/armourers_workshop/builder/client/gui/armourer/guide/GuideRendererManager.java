@@ -2,13 +2,10 @@ package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 
-@Environment(EnvType.CLIENT)
 public class GuideRendererManager {
 
     private final HashMap<SkinPartType, GuideRenderer> renderers = new HashMap<>();

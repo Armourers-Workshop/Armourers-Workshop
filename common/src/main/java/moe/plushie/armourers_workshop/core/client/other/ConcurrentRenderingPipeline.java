@@ -2,100 +2,117 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.compat.client.AbstractShader;
+import moe.plushie.armourers_workshop.core.client.shader.Shader;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
-import moe.plushie.armourers_workshop.core.data.cache.ObjectPool;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
-
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class ConcurrentRenderingPipeline {
 
-    private final ArrayList<Group> passGroups = new ArrayList<>();
+    private final Pipeline solidPipeline = new Pipeline();
+    private final Pipeline outlinePipeline = new Pipeline();
+    private final Pipeline translucentPipeline = new Pipeline();
 
-    public void add(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
-        var pass = Group.POOL.get();
-        var ms = context.modelViewStack();
-        var src = context.poseStack().last();
-        var dest = pass.poseStack.last();
-        // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-        dest.setProperties(src.properties());
-        dest.pose().set(ms.last());
-        dest.pose().multiply(src.pose());
-        dest.normal().set(src.normal());
-        passGroups.add(pass.fill(group, context));
+    public void clear() {
+        solidPipeline.clear();
+        outlinePipeline.clear();
+        translucentPipeline.clear();
     }
 
-    public void commit(Consumer<ShaderVertexObject> consumer) {
-        for (var pass : passGroups) {
-            pass.forEach(consumer);
+    public void submit(ConcurrentBufferCompiler.Pass compiledTask, int lightmap, int overlay, int outlineColor, float renderPriority, OpenPoseStack.Pose pose) {
+        var pass = Pass.newInstance(compiledTask, lightmap, overlay, outlineColor, renderPriority, pose);
+        if (pass.isOutline()) {
+            outlinePipeline.add(pass);
+        } else if (pass.isTranslucent()) {
+            translucentPipeline.add(pass);
+        } else {
+            solidPipeline.add(pass);
         }
-        passGroups.clear();
     }
 
+    public void endSolidBatch() {
+        solidPipeline.end();
+    }
 
-    private static class Group extends ReferenceCounted {
+    public void endOutlineBatch() {
+        outlinePipeline.end();
+    }
 
-        private static final ObjectPool<Group> POOL = ObjectPool.create(Group::new);
+    public void endTranslucentBatch() {
+        translucentPipeline.end();
+    }
 
-        private final OpenPoseStack poseStack = new OpenPoseStack();
+    public boolean hasSolidTasks() {
+        return !solidPipeline.isEmpty();
+    }
 
-        private final ArrayList<Pass> pendingQueue = new ArrayList<>();
+    public boolean hasOutlineTasks() {
+        return !outlinePipeline.isEmpty();
+    }
 
-        private int usedCount = 0;
-        private int totalCount = 0;
+    public boolean hasTranslucentTasks() {
+        return !translucentPipeline.isEmpty();
+    }
 
-        private ConcurrentBufferCompiler.Group compiledGroup;
+    @Override
+    public String toString() {
+        var size = solidPipeline.size() + outlinePipeline.size() + translucentPipeline.size();
+        var vertexCount = solidPipeline.vertexCount() + outlinePipeline.vertexCount() + translucentPipeline.vertexCount();
+        return Objects.toString(this, "passes", size, "vertices", vertexCount);
+    }
 
-        public void forEach(Consumer<ShaderVertexObject> consumer) {
-            for (int i = 0; i < usedCount; ++i) {
-                var pass = pendingQueue.get(i);
-                consumer.accept(pass);
-            }
+    private static class Pipeline {
+
+        private final Shader shader = new AbstractShader();
+        private final ShaderVertexMerger merger = new ShaderVertexMerger();
+
+        public void add(ShaderVertexObject pass) {
+            merger.add(pass);
         }
 
-        public Group fill(ConcurrentBufferCompiler.Group group, ConcurrentRenderingContext context) {
-            usedCount = 0;
-            compiledGroup = group;
-            for (var mergedTask : group.passes()) {
-                // skip outline task, when not enable.
-                if (!context.shouldRenderOutline() && mergedTask.isOutline) {
-                    continue;
-                }
-                poll().fill(mergedTask, poseStack, context);
+        public void end() {
+            if (merger.isEmpty()) {
+                return;
             }
-            return this;
+            merger.prepare();
+
+            shader.begin();
+            merger.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
+            shader.end();
+
+            merger.reset();
+        }
+
+        public void clear() {
+            merger.reset();
+            merger.clear();
+        }
+
+        public int size() {
+            return merger.size();
+        }
+
+        public int vertexCount() {
+            return merger.vertexCount();
+        }
+
+        public boolean isEmpty() {
+            return merger.isEmpty();
         }
 
         @Override
-        protected void init() {
-            if (compiledGroup != null) {
-                compiledGroup.retain();
-            }
-        }
-
-        @Override
-        protected void dispose() {
-            if (compiledGroup != null) {
-                compiledGroup.release();
-                compiledGroup = null;
-            }
-        }
-
-        private Pass poll() {
-            if (usedCount < totalCount) {
-                return pendingQueue.get(usedCount++);
-            }
-            var pass = new Pass(this);
-            pendingQueue.add(pass);
-            totalCount += 1;
-            usedCount += 1;
-            return pass;
+        public String toString() {
+            return Objects.toString(this, "passes", size(), "vertices", vertexCount());
         }
     }
 
-    private static class Pass implements ShaderVertexObject {
+    private static class Pass extends ReferenceCounted implements ShaderVertexObject {
+
+        private static final ObjectPool<Pass> POOL = ObjectPool.create(Pass::new);
 
         private int overlay;
         private int lightmap;
@@ -103,23 +120,18 @@ public class ConcurrentRenderingPipeline {
 
         private float polygonOffset;
 
-        private OpenPoseStack poseStack;
+        private OpenPoseStack.Pose pose;
         private ConcurrentBufferCompiler.Pass compiledTask;
 
-        private final Group group;
-
-        public Pass(Group group) {
-            this.group = group;
-        }
-
-        public void fill(ConcurrentBufferCompiler.Pass compiledTask, OpenPoseStack poseStack, ConcurrentRenderingContext context) {
-            this.compiledTask = compiledTask;
-            this.poseStack = poseStack;
-            this.overlay = context.overlay();
-            this.lightmap = context.lightmap();
-            this.outlineColor = context.outlineColor();
-            this.polygonOffset = compiledTask.polygonOffset + context.renderPriority();
-            this.retain();
+        public static Pass newInstance(ConcurrentBufferCompiler.Pass compiledTask, int lightmap, int overlay, int outlineColor, float renderPriority, OpenPoseStack.Pose pose) {
+            var that = POOL.alloc();
+            that.compiledTask = compiledTask;
+            that.pose = pose;
+            that.overlay = overlay;
+            that.lightmap = lightmap;
+            that.outlineColor = outlineColor;
+            that.polygonOffset = compiledTask.polygonOffset + renderPriority;
+            return that;
         }
 
         @Override
@@ -128,12 +140,12 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public int offset() {
+        public int vertexOffset() {
             return compiledTask.vertexOffset;
         }
 
         @Override
-        public int total() {
+        public int vertexCount() {
             return compiledTask.vertexCount;
         }
 
@@ -158,8 +170,8 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public OpenPoseStack poseStack() {
-            return poseStack;
+        public OpenPoseStack.Pose pose() {
+            return pose;
         }
 
         @Override
@@ -200,13 +212,19 @@ public class ConcurrentRenderingPipeline {
             return compiledTask.isOutline;
         }
 
-        public void retain() {
-            group.retain();
+        @Override
+        protected void init() {
+            if (compiledTask != null) {
+                compiledTask.retain();
+            }
         }
 
         @Override
-        public void release() {
-            group.release();
+        protected void dispose() {
+            if (compiledTask != null) {
+                compiledTask.release();
+                compiledTask = null;
+            }
         }
     }
 }

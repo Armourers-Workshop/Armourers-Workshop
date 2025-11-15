@@ -8,17 +8,7 @@ public interface IModelBabyPose {
 
     IVector3f headOffset();
 
-    static IModelBabyPose of(float headScale, IVector3f headOffset) {
-        return new IModelBabyPose() {
-            @Override
-            public float headScale() {
-                return headScale;
-            }
+    float bodyScale();
 
-            @Override
-            public IVector3f headOffset() {
-                return headOffset;
-            }
-        };
-    }
+    IVector3f bodyOffset();
 }

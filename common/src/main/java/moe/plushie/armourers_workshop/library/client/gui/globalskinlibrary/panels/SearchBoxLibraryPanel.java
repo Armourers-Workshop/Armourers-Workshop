@@ -17,12 +17,9 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.impl.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class SearchBoxLibraryPanel extends AbstractLibraryPanel implements UITextFieldDelegate {
 
     private final SearchOrderType[] orderTypes = {SearchOrderType.DESC, SearchOrderType.ASC};

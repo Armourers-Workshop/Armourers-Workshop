@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
-import moe.plushie.armourers_workshop.compatibility.fabric.AbstractFabricPermissionManager;
+import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricPermissionManager;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -45,9 +44,9 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
     public static class NodeImpl implements IPermissionNode {
 
         private final String key;
-        private final IResourceLocation registryName;
+        private final OpenResourceLocation registryName;
 
-        public NodeImpl(IResourceLocation registryName) {
+        public NodeImpl(OpenResourceLocation registryName) {
             this.registryName = registryName;
             this.key = registryName.toLanguageKey();
         }
@@ -72,7 +71,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         }
 
         @Override
-        public IResourceLocation registryName() {
+        public OpenResourceLocation registryName() {
             return registryName;
         }
     }

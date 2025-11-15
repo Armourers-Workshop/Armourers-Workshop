@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
 import moe.plushie.armourers_workshop.core.utils.Constants;
-import net.minecraft.world.InteractionResult;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 
 public class BlockMarkerItem extends FlavouredItem {
@@ -14,7 +14,7 @@ public class BlockMarkerItem extends FlavouredItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    protected OpenInteractionResult abi$useOn(UseOnContext context) {
         var level = context.getLevel();
         var blockPos = context.getClickedPos();
         var blockState = level.getBlockState(blockPos);
@@ -24,8 +24,8 @@ public class BlockMarkerItem extends FlavouredItem {
                 direction = OptionalDirection.NONE;
             }
             level.setBlock(blockPos, SkinCubeBlock.setMarker(blockState, direction), Constants.BlockFlags.BLOCK_UPDATE);
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return OpenInteractionResult.sidedSuccess(level.isClientSide());
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 }

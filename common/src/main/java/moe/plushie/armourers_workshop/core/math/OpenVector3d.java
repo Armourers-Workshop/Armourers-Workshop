@@ -104,18 +104,18 @@ public class OpenVector3d {
     }
 
     public OpenVector3d scale(double v) {
-        return multiply(v, v, v);
+        return transform(v, v, v);
     }
 
     public OpenVector3d reverse() {
         return scale(-1.0D);
     }
 
-    public OpenVector3d multiply(OpenVector3d pos) {
-        return multiply(pos.x, pos.y, pos.z);
+    public OpenVector3d transform(OpenVector3d pos) {
+        return transform(pos.x, pos.y, pos.z);
     }
 
-    public OpenVector3d multiply(double dx, double dy, double dz) {
+    public OpenVector3d transform(double dx, double dy, double dz) {
         return new OpenVector3d(x * dx, y * dy, z * dz);
     }
 

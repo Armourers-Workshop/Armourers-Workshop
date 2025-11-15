@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
+
+import java.util.function.Consumer;
+
+@Available("[1.16, 1.22)")
+@OnlyIn(Dist.CLIENT)
+public class AbstractVehicleUpdaterImpl {
+
+    protected void findEntity(EntityRenderState renderState, Consumer<Entity> handler) {
+        AbstractRenderState.unwrap(renderState, (entity, f, g) -> handler.accept(entity));
+    }
+}

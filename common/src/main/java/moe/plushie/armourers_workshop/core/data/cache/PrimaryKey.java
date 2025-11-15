@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.data.cache;
 
 
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
 public abstract class PrimaryKey {
@@ -16,20 +17,20 @@ public abstract class PrimaryKey {
 
     public static PrimaryKey of(Object p1) {
         int hash = (p1 == null ? 0 : p1.hashCode());
-        return P1.POOL.get().set(hash, p1);
+        return P1.newInstance(hash, p1);
     }
 
     public static PrimaryKey of(Object p1, Object p2) {
         int hash = (p1 == null ? 0 : p1.hashCode());
         hash = 31 * hash + (p2 == null ? 0 : p2.hashCode());
-        return P2.POOL.get().set(hash, p1, p2);
+        return P2.newInstance(hash, p1, p2);
     }
 
     public static PrimaryKey of(Object p1, Object p2, Object p3) {
         int hash = (p1 == null ? 0 : p1.hashCode());
         hash = 31 * hash + (p2 == null ? 0 : p2.hashCode());
         hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
-        return P3.POOL.get().set(hash, p1, p2, p3);
+        return P3.newInstance(hash, p1, p2, p3);
     }
 
     public static PrimaryKey of(Object p1, Object p2, Object p3, Object p4) {
@@ -37,18 +38,20 @@ public abstract class PrimaryKey {
         hash = 31 * hash + (p2 == null ? 0 : p2.hashCode());
         hash = 31 * hash + (p3 == null ? 0 : p3.hashCode());
         hash = 31 * hash + (p4 == null ? 0 : p4.hashCode());
-        return P4.POOL.get().set(hash, p1, p2, p3, p4);
+        return P4.newInstance(hash, p1, p2, p3, p4);
     }
 
     public static class P1 extends PrimaryKey {
 
-        protected static final ObjectPool<P1> POOL = ObjectPool.create(P1::new);
+        private static final ObjectPool<P1> POOL = ObjectPool.create(P1::new);
+
         protected Object p1;
 
-        public P1 set(int hash, Object p1) {
-            this.hash = hash;
-            this.p1 = p1;
-            return this;
+        public static P1 newInstance(int hash, Object p1) {
+            var that = POOL.alloc();
+            that.hash = hash;
+            that.p1 = p1;
+            return that;
         }
 
         @Override
@@ -60,20 +63,25 @@ public abstract class PrimaryKey {
 
         @Override
         public PrimaryKey copy() {
-            return new P1().set(hash, p1);
+            var that = new P1();
+            that.hash = hash;
+            that.p1 = p1;
+            return that;
         }
     }
 
     public static class P2 extends P1 {
 
-        protected static final ObjectPool<P2> POOL = ObjectPool.create(P2::new);
+        private static final ObjectPool<P2> POOL = ObjectPool.create(P2::new);
+
         protected Object p2;
 
-        public P2 set(int hash, Object p1, Object p2) {
-            this.hash = hash;
-            this.p1 = p1;
-            this.p2 = p2;
-            return this;
+        public static P2 newInstance(int hash, Object p1, Object p2) {
+            var that = POOL.alloc();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            return that;
         }
 
         @Override
@@ -85,21 +93,27 @@ public abstract class PrimaryKey {
 
         @Override
         public PrimaryKey copy() {
-            return new P2().set(hash, p1, p2);
+            var that = new P2();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            return that;
         }
     }
 
     public static class P3 extends P2 {
 
-        protected static final ObjectPool<P3> POOL = ObjectPool.create(P3::new);
+        private static final ObjectPool<P3> POOL = ObjectPool.create(P3::new);
+
         protected Object p3;
 
-        public P3 set(int hash, Object p1, Object p2, Object p3) {
-            this.hash = hash;
-            this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
-            return this;
+        public static P3 newInstance(int hash, Object p1, Object p2, Object p3) {
+            var that = POOL.alloc();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            return that;
         }
 
         @Override
@@ -111,22 +125,29 @@ public abstract class PrimaryKey {
 
         @Override
         public PrimaryKey copy() {
-            return new P3().set(hash, p1, p2, p3);
+            var that = new P3();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            return that;
         }
     }
 
     public static class P4 extends P3 {
 
-        protected static final ObjectPool<P4> POOL = ObjectPool.create(P4::new);
+        private static final ObjectPool<P4> POOL = ObjectPool.create(P4::new);
+
         protected Object p4;
 
-        public P4 set(int hash, Object p1, Object p2, Object p3, Object p4) {
-            this.hash = hash;
-            this.p1 = p1;
-            this.p2 = p2;
-            this.p3 = p3;
-            this.p4 = p4;
-            return this;
+        public static P4 newInstance(int hash, Object p1, Object p2, Object p3, Object p4) {
+            var that = POOL.alloc();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            that.p4 = p4;
+            return that;
         }
 
         @Override
@@ -138,7 +159,13 @@ public abstract class PrimaryKey {
 
         @Override
         public PrimaryKey copy() {
-            return new P4().set(hash, p1, p2, p3, p4);
+            var that = new P4();
+            that.hash = hash;
+            that.p1 = p1;
+            that.p2 = p2;
+            that.p3 = p3;
+            that.p4 = p4;
+            return that;
         }
     }
 }

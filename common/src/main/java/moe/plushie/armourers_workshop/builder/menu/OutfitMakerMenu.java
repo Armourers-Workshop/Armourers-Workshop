@@ -3,10 +3,12 @@ package moe.plushie.armourers_workshop.builder.menu;
 import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.api.skin.part.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
+import moe.plushie.armourers_workshop.core.menu.BlockEntityContainerMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinSlot;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -23,28 +25,22 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 
-public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEntity> {
+public class OutfitMakerMenu extends BlockEntityContainerMenu<OutfitMakerBlockEntity> {
 
     private final Container inventory;
 
-    public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
+    public OutfitMakerMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.inventory = blockEntity.getInventory();
         this.addPlayerSlots(playerInventory, 8, 158);
         this.addInputSlots(inventory, 0, inventory.getContainerSize() - 1, 36, 58);
         this.addOutputSlot(inventory, inventory.getContainerSize() - 1, 148, 88);
-    }
-
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     public boolean shouldCrafting() {
@@ -136,10 +132,10 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         }
         if (!skinParts.isEmpty()) {
             properties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
-            properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+            properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.name());
             // in the offline server the `player.getStringUUID()` is not real player uuid.
-            if (profile.getId() != null) {
-                properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
+            if (profile.id() != null) {
+                properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.id().toString());
             }
             properties.put(SkinProperty.ALL_CUSTOM_NAME, blockEntity.itemName());
             properties.put(SkinProperty.ALL_FLAVOUR_TEXT, blockEntity.itemFlavour());
@@ -171,8 +167,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
     }
 
     protected void addOutputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
-        });
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y));
     }
 
 
@@ -190,7 +185,7 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
         return Iterables.transform(Iterables.skip(Iterables.limit(slots, slots.size() - 1), 36), Slot::getItem);
     }
 
-    private void mergePaintPart(SkinPaintData srcData, SkinPaintData destData, ISkinPartTypeTextured texType) {
+    protected void mergePaintPart(SkinPaintData srcData, SkinPaintData destData, ISkinPartTypeTextured texType) {
         var pos = texType.textureSkinPos();
 
         var width = (texType.textureModelSize().x() * 2) + (texType.textureModelSize().z() * 2);
@@ -206,5 +201,10 @@ public class OutfitMakerMenu extends AbstractBlockEntityMenu<OutfitMakerBlockEnt
                 }
             }
         }
+    }
+
+    @Override
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
+        return abi$quickMoveStack(player, index, slots.size() - 1);
     }
 }

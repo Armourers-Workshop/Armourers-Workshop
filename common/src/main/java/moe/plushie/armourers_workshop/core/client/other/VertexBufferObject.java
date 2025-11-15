@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Environment(EnvType.CLIENT)
 public class VertexBufferObject {
 
     protected int id;

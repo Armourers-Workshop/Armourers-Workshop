@@ -25,6 +25,7 @@ public class UIMenuController {
 
     private Collection<UIMenuItem> menuItems;
     protected final DelegateImpl<UIMenuControllerDelegate> delegate = DelegateImpl.of(new UIMenuControllerDelegate() {
+        // auto stub
     });
 
     public static UIMenuController getInstance() {

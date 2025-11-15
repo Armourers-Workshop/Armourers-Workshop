@@ -9,14 +9,11 @@ import com.apple.library.uikit.UISliderBox;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerBaseSkinPanel extends UIView {
 
     protected final SkinProperties skinProperties;

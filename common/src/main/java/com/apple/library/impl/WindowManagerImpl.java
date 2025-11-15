@@ -1,8 +1,9 @@
 package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
+import com.apple.library.impl.event.InputKeyEvent;
+import com.apple.library.impl.event.InputMouseEvent;
 import com.apple.library.uikit.UIView;
 import com.apple.library.uikit.UIWindow;
 
@@ -17,33 +18,31 @@ public class WindowManagerImpl {
     private boolean isCalledInit = false;
 
     private CGSize lastLayoutSize;
-    private double lastMouseX;
-    private double lastMouseY;
-    private int lastMouseButton;
+    private InputMouseEvent lastMouseMove;
     private int lastFocusVersion = 0;
     private int lastFocusVersionOld = 0;
 
-    protected final Queue<WindowDispatcherImpl> dispatchers = new Queue<>();
+    protected final Queue<WindowDispatcherImpl> windows = new Queue<>();
 
     public WindowManagerImpl() {
-        this.dispatchers.add(WindowDispatcherImpl.BACKGROUND);
-        this.dispatchers.add(WindowDispatcherImpl.FOREGROUND);
-        this.dispatchers.add(WindowDispatcherImpl.OVERLAY);
+        this.windows.add(WindowDispatcherImpl.BACKGROUND);
+        this.windows.add(WindowDispatcherImpl.FOREGROUND);
+        this.windows.add(WindowDispatcherImpl.OVERLAY);
     }
 
     public void init() {
-        dispatchers.forEach(WindowDispatcherImpl::init);
+        windows.forEach(WindowDispatcherImpl::init);
         isCalledInit = true;
     }
 
     public void deinit() {
-        dispatchers.forEach(WindowDispatcherImpl::deinit);
-        dispatchers.removeAll();
+        windows.forEach(WindowDispatcherImpl::deinit);
+        windows.removeAll();
     }
 
     public void addWindow(UIWindow window) {
         var dispatcher = new UIWindow.Dispatcher(window);
-        dispatchers.add(dispatcher);
+        windows.add(dispatcher);
         if (isCalledInit) {
             dispatcher.init();
         }
@@ -54,7 +53,7 @@ public class WindowManagerImpl {
     }
 
     public void removeWindow(UIWindow window) {
-        dispatchers.removeIf(dispatcher -> {
+        windows.removeIf(dispatcher -> {
             if (dispatcher instanceof UIWindow.Dispatcher windowDispatcher && windowDispatcher.window == window) {
                 windowDispatcher.deinit();
                 return true;
@@ -71,19 +70,18 @@ public class WindowManagerImpl {
 
     public void tick() {
         updateLastFocusIfNeeded();
-        dispatchers.forEach(WindowDispatcherImpl::tick);
+        windows.forEach(WindowDispatcherImpl::tick);
     }
 
-    public void layout(float width, float height) {
-        var size = new CGSize(width, height);
-        dispatchers.forEach(dispatcher -> dispatcher.layout(size));
+    public void layout(CGSize size) {
+        windows.forEach(dispatcher -> dispatcher.layout(size));
         lastLayoutSize = size;
     }
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
-        var partialTicks = context.state().partialTicks();
-        var mouseX = (int) context.state().mousePos().x();
-        var mouseY = (int) context.state().mousePos().y();
+        var partialTicks = context.param().partialTicks();
+        var mouseX = (int) context.param().mouseX();
+        var mouseY = (int) context.param().mouseY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
         // we need reset mouse to impossible position to fool the original tooltip render.
         var tooltipResponder = firstTooltipResponder();
@@ -91,17 +89,17 @@ public class WindowManagerImpl {
             mouseX = Integer.MIN_VALUE;
             mouseY = Integer.MIN_VALUE;
         }
-        for (var dispatcher : dispatchers) {
-            dispatcher.render(context);
-            if (dispatcher == WindowDispatcherImpl.BACKGROUND) {
+        for (var window : windows) {
+            window.render(context);
+            if (window == WindowDispatcherImpl.BACKGROUND) {
                 background.invoke(mouseX, mouseY, partialTicks, context);
             }
-            if (dispatcher == WindowDispatcherImpl.FOREGROUND) {
+            if (window == WindowDispatcherImpl.FOREGROUND) {
                 foreground.invoke(mouseX, mouseY, partialTicks, context);
             }
-            if (dispatcher == WindowDispatcherImpl.OVERLAY) {
-                overlay.invoke(mouseX, mouseY, partialTicks, context);
+            if (window == WindowDispatcherImpl.OVERLAY) {
                 renderTooltip(tooltipResponder, context);
+                overlay.invoke(mouseX, mouseY, partialTicks, context);
             }
         }
     }
@@ -119,63 +117,61 @@ public class WindowManagerImpl {
         }
     }
 
-    private void updateLastFocus(double mouseX, double mouseY, int button) {
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-        lastMouseButton = button;
+    private void updateLastFocus(InputMouseEvent event) {
+        lastMouseMove = event;
         lastFocusVersionOld = lastFocusVersion;
     }
 
     private void updateLastFocusIfNeeded() {
         // send the move event again.
-        if (lastFocusVersion != lastFocusVersionOld) {
-            mouseMoved(lastMouseX, lastMouseY, lastMouseButton, (mouseX, mouseY, button) -> true);
+        if (lastMouseMove != null && lastFocusVersion != lastFocusVersionOld) {
+            mouseMoved(lastMouseMove, event -> true);
         }
     }
 
-    public boolean keyUp(int key, int i, int j, Invoker<Integer, Integer, Integer, Boolean> invoker) {
-        return dispatchers.invoke(key, i, j, invoker, WindowDispatcherImpl::keyUp);
+    public <E extends InputKeyEvent> boolean keyUp(E event, Invoker<E, Boolean> invoker) {
+        return windows.invoke(event, invoker, WindowDispatcherImpl::keyUp);
     }
 
-    public boolean keyDown(int key, int i, int j, Invoker<Integer, Integer, Integer, Boolean> invoker) {
-        return dispatchers.invoke(key, i, j, invoker, WindowDispatcherImpl::keyDown);
+    public <E extends InputKeyEvent> boolean keyDown(E event, Invoker<E, Boolean> invoker) {
+        return windows.invoke(event, invoker, WindowDispatcherImpl::keyDown);
     }
 
-    public boolean charTyped(int key, int i, int j, Invoker<Integer, Integer, Integer, Boolean> invoker) {
-        return dispatchers.invoke(key, i, j, invoker, WindowDispatcherImpl::charTyped);
+    public <E extends InputKeyEvent> boolean charTyped(E event, Invoker<E, Boolean> invoker) {
+        return windows.invoke(event, invoker, WindowDispatcherImpl::charTyped);
     }
 
-    public boolean mouseDown(double mouseX, double mouseY, int button, Invoker<Double, Double, Integer, Boolean> invoker) {
-        return dispatchers.invoke(mouseX, mouseY, button, invoker, WindowDispatcherImpl::mouseDown);
+    public <E extends InputMouseEvent> boolean mouseDown(E event, boolean bl, Invoker2<E, Boolean, Boolean> invoker) {
+        return windows.invoke(event, bl, invoker, WindowDispatcherImpl::mouseDown);
     }
 
-    public boolean mouseUp(double mouseX, double mouseY, int button, Invoker<Double, Double, Integer, Boolean> invoker) {
-        return dispatchers.invoke(mouseX, mouseY, button, invoker, WindowDispatcherImpl::mouseUp);
+    public <E extends InputMouseEvent> boolean mouseUp(E event, Invoker<E, Boolean> invoker) {
+        return windows.invoke(event, invoker, WindowDispatcherImpl::mouseUp);
     }
 
-    public boolean mouseMoved(double mouseX, double mouseY, int button, Invoker<Double, Double, Integer, Boolean> invoker) {
-        updateLastFocus(mouseX, mouseY, button);
-        return dispatchers.invoke(mouseX, mouseY, button, invoker, WindowDispatcherImpl::mouseMoved);
+    public <E extends InputMouseEvent> boolean mouseMoved(E event, Invoker<E, Boolean> invoker) {
+        updateLastFocus(event);
+        return windows.invoke(event, invoker, WindowDispatcherImpl::mouseMoved);
     }
 
-    public boolean mouseWheel(double mouseX, double mouseY, CGPoint delta, Invoker<Double, Double, CGPoint, Boolean> invoker) {
-        return dispatchers.invoke(mouseX, mouseY, delta, invoker, WindowDispatcherImpl::mouseWheel);
+    public <E extends InputMouseEvent> boolean mouseWheel(E event, Invoker<E, Boolean> invoker) {
+        return windows.invoke(event, invoker, WindowDispatcherImpl::mouseWheel);
     }
 
-    public boolean mouseIsInside(double mouseX, double mouseY, int button) {
-        return dispatchers.test(dispatcher -> dispatcher.mouseIsInside(mouseX, mouseY, button));
+    public <E extends InputMouseEvent> boolean mouseIsInside(E event) {
+        return windows.test(dispatcher -> dispatcher.mouseIsInside(event));
     }
 
     public boolean changeKeyView(boolean bl) {
-        return dispatchers.test(dispatcher -> dispatcher.changeKeyView(bl));
+        return windows.test(dispatcher -> dispatcher.changeKeyView(bl));
     }
 
     public UIView firstTooltipResponder() {
-        return dispatchers.flatMap(WindowDispatcherImpl::firstTooltipResponder);
+        return windows.flatMap(WindowDispatcherImpl::firstTooltipResponder);
     }
 
     public UIView firstInputResponder() {
-        return dispatchers.flatMap(WindowDispatcherImpl::firstInputResponder);
+        return windows.flatMap(WindowDispatcherImpl::firstInputResponder);
     }
 
     public boolean isTextEditing() {
@@ -183,13 +179,18 @@ public class WindowManagerImpl {
     }
 
     @FunctionalInterface
-    public interface Invoker<A, B, C, U> {
-        U invoke(A a, B b, C c);
+    public interface Invoker<A, U> {
+        U invoke(A a);
     }
 
     @FunctionalInterface
-    public interface Invoker4<A, B, C, D, U> {
-        U invoke(A a, B b, C c, D d);
+    public interface Invoker2<A, B, U> {
+        U invoke(A a, B b);
+    }
+
+    @FunctionalInterface
+    public interface Invoker3<A, B, C, U> {
+        U invoke(A a, B b, C c);
     }
 
     @FunctionalInterface
@@ -243,14 +244,24 @@ public class WindowManagerImpl {
             return null;
         }
 
-        public <A, B, C> boolean invoke(A a, B b, C c, Invoker<A, B, C, Boolean> invoker, Invoker4<T, A, B, C, InvokerResult> provider) {
+        public <A> boolean invoke(A a, Invoker<A, Boolean> invoker, Invoker2<T, A, InvokerResult> provider) {
             for (T value : descendingEnum()) {
-                var ret = provider.invoke(value, a, b, c);
+                var ret = provider.invoke(value, a);
                 if (ret.isDecided()) {
                     return ret.conclusion();
                 }
             }
-            return invoker.invoke(a, b, c);
+            return invoker.invoke(a);
+        }
+
+        public <A, B> boolean invoke(A a, B b, Invoker2<A, B, Boolean> invoker, Invoker3<T, A, B, InvokerResult> provider) {
+            for (T value : descendingEnum()) {
+                var ret = provider.invoke(value, a, b);
+                if (ret.isDecided()) {
+                    return ret.conclusion();
+                }
+            }
+            return invoker.invoke(a, b);
         }
 
         @Override

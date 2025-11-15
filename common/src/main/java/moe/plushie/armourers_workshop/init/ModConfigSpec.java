@@ -27,7 +27,7 @@ public class ModConfigSpec {
             defineCategory("misc", "Miscellaneous settings.", () -> {
                 defineInRange("skinLoadAnimationTime", 200, 0, 10000, "How long skins will display their loading animation for in milliseconds", "Settings this to 0 will disable loading animations.").bind(v -> skinLoadAnimationTime = v, () -> skinLoadAnimationTime);
                 define("enableSkinLimitLimbs", true, "Whether allows skin to limit limbs of entities.").bind(v -> enableSkinLimitLimbs = v, () -> enableSkinLimitLimbs);
-                define("enableClipInInventory", true, "Whether clip the excess skin in the inventory gui.").bind(v -> enableEntityInInventoryClip = v, () -> enableEntityInInventoryClip);
+                define("enableClipInInventory", true, "Whether clipLayer the excess skin in the inventory gui.").bind(v -> enableEntityClipInInventory = v, () -> enableEntityClipInInventory);
             });
             defineCategory("performance", "Change (visual quality/performance) ratio by changing setting in this category.", () -> {
                 defineInRange("renderDistanceSkin", 128, 16, 512, "The max distance in blocks that skins will render.").bind(v -> renderDistanceSkin = v, () -> renderDistanceSkin);
@@ -156,7 +156,7 @@ public class ModConfigSpec {
             defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
                 defineList("itemOverrides", String.class, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
 
-                define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and tag.").bind(v -> enableMatchingByItemId = v, () -> enableMatchingByItemId);
+                define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and object.").bind(v -> enableMatchingByItemId = v, () -> enableMatchingByItemId);
                 defineList("matchingBlacklistByItemId", String.class, "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
             });
         }

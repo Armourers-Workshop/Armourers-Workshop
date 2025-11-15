@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractPackResources;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractPackResources;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;

@@ -1,0 +1,17 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
+@Available("[1.16, 1.18)")
+public class AbstractMath {
+
+    public static final boolean HAS_FAST_MATH = false;
+
+    public static float fma(float a, float b, float c) {
+        return a * b + c;
+    }
+
+    public static double fma(double a, double b, double c) {
+        return a * b + c;
+    }
+}

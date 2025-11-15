@@ -1,0 +1,60 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.resources.SkinManager;
+
+import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.client.texture.EntityTextureDownloader;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.SkinManager;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.22, )")
+@Extension
+public class ProfileDownloadExt {
+
+    public static void downloadAndRegisterSkin(@This SkinManager manager, GameProfile profile, EntityTextureDownloader.Callback callback) {
+        // TODO: NO IMPL - 1.22
+//        Minecraft.getInstance().getSkinManager().getOrLoad(profile).thenAcceptAsync(profile1 -> {
+//            if (profile1.isPresent()) {
+//                var skin = profile1.get();
+//                var url = skin.textureUrl();
+//                var location = OpenResourceLocation.of(skin.texture());
+//                var modelType = skin.model().id();
+//                callback.apply(location, url, modelType);
+//            } else {
+//                callback.apply(null, null, null);
+//            }
+//        });
+    }
+
+//    private static void load(GameProfile profile, long endTime, ResultHandler handler) {
+//        // when this is a unknown user, it only call back a placeholder result.
+//        if (profile.getProperties().isEmpty()) {
+//            var location = OpenResourceLocation.of(DefaultPlayerSkin.getDefaultSkin(profile.getId()));
+//            var modelType = DefaultPlayerSkin.getSkinModelName(profile.getId());
+//            handler.accept(location, null, modelType);
+//            return;
+//        }
+//        Minecraft.getInstance().getSkinManager().registerSkins(profile, (type, texture, profile1) -> {
+//            // the callback maybe call three times: skin/cape/elytra.
+//            if (type != MinecraftProfileTexture.Type.SKIN) {
+//                return; // ignore all except file of the skin
+//            }
+//            var location = OpenResourceLocation.of(texture);
+//            var url = profile1.getUrl();
+//            var modelType = profile1.getMetadata("model");
+//            // in some cases will get a placeholder result (url is null),
+//            // this means the game profile still loading phase,
+//            // we need to try again in the request valid time.
+//            if (url == null && System.currentTimeMillis() < endTime) {
+//                Executors.sleep(500); // 500ms
+//                load(profile, endTime, handler);
+//                return;
+//            }
+//            handler.accept(location, url, modelType);
+//        }, false);
+//    }
+
+}

@@ -10,13 +10,10 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
 public class EntityPartView extends UIControl {
 
     private final StateValueImpl<UIColor> partColor = new StateValueImpl<>();

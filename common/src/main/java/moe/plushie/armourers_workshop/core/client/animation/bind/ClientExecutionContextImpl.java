@@ -5,19 +5,15 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.VariableStorage;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.LocalVariableStorage;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.LevelSelector;
 import moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind.ExecutionContextImpl;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
 public class ClientExecutionContextImpl extends ExecutionContextImpl {
 
-    private final Minecraft minecraft = EnvironmentManager.getClient();
+    private final Minecraft minecraft = Minecraft.getInstance();
     private final ClientLevelSelectorImpl<ClientLevel> levelSelector = new ClientLevelSelectorImpl<>();
 
     public ClientExecutionContextImpl(Object entity) {

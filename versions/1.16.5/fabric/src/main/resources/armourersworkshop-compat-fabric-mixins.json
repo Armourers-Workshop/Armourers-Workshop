@@ -1,0 +1,36 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.fabric.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "FabricBlockEntityUpdatePacketMixin",
+    "FabricPlayerRendererMixin",
+    "FabricMinecraftMixin",
+    "FabricLivingRendererMixin",
+    "FabricClientFrameRenderMixin",
+    "FabricClientPlayerLifecycleMixin",
+    "FabricClientScreenRenderMixin",
+    "FabricScreenMixin",
+    "FabricTrinketsAddonMixin",
+    "dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",
+    "dynamiclight/FabricRyoamicLightsMixin$EntityLightHandler",
+    "dynamiclight/FabricRyoamicLightsMixin$BlockEntityLightHandler",
+    "dynamiclight/FabricLambDynamicLightsMixin$ItemLightHandler",
+    "dynamiclight/FabricLambDynamicLightsMixin$EntityLightHandler",
+    "dynamiclight/FabricLambDynamicLightsMixin$BlockEntityLightHandler",
+    "backpack/FabricTravelersBackpackRendererMixin"
+  ],
+  "mixins": [
+    "FabricBlockItemMixin",
+    "FabricEntityMixin",
+    "FabricLivingEntityMixin",
+    "FabricEntityTrackerMixin",
+    "FabricHopperBlockEntityMixin",
+    "FabricEntitySizeMixin",
+    "FabricEntityTypeBuilderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.MathHelper;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.EffectSelector;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.ItemSelector;
@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,7 +77,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
     @Override
     public boolean isEating() {
-        return entity.getUseItem().getUseAnimation() == UseAnim.EAT;
+        return entity.isEating();
     }
 
     @Override
@@ -174,7 +173,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
     @Override
     public int lastClimbableFacing() {
-        var level = entity.getLevel();
+        var level = entity.level();
         if (level == null) {
             return 0;
         }

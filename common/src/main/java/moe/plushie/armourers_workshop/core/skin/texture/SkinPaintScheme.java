@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -21,13 +22,13 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
 
     public final static SkinPaintScheme EMPTY = new SkinPaintScheme();
 
-    public static final IDataCodec<SkinPaintScheme> CODEC = IDataCodec.COMPOUND_TAG.serializer(SkinPaintScheme::new);
+    public static final IDataCodec<SkinPaintScheme> CODEC = ExtraCodecs.serializable(SkinPaintScheme::new);
 
     private final HashMap<SkinPaintType, SkinPaintColor> colors = new HashMap<>();
     private HashMap<SkinPaintType, SkinPaintColor> resolvedColors;
 
     private SkinPaintScheme reference;
-    private OpenResourceLocation texture;
+    private OpenResourceLocation entityTexture;
 
     private int hashCode;
 
@@ -57,7 +58,7 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         var scheme = new SkinPaintScheme();
         scheme.colors.putAll(colors);
         scheme.reference = reference;
-        scheme.texture = texture;
+        scheme.entityTexture = entityTexture;
         return scheme;
     }
 
@@ -68,10 +69,16 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         if (reference != null && !reference.isEmpty()) {
             return false;
         }
-        if (texture != null) {
+        if (entityTexture != null) {
             return false;
         }
         return colors.isEmpty();
+    }
+
+    public void setColor(SkinPaintType paintType, SkinPaintColor color) {
+        colors.put(paintType, color);
+        resolvedColors = null;
+        hashCode = 0;
     }
 
     @Nullable
@@ -86,12 +93,6 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         return null;
     }
 
-    public void setColor(SkinPaintType paintType, SkinPaintColor color) {
-        colors.put(paintType, color);
-        resolvedColors = null;
-        hashCode = 0;
-    }
-
     public SkinPaintColor getResolvedColor(SkinPaintType paintType) {
         if (resolvedColors == null) {
             resolvedColors = resolvedColors();
@@ -99,19 +100,12 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         return resolvedColors.get(paintType);
     }
 
-    public OpenResourceLocation texture() {
-        return texture;
+    public void setEntityTexture(OpenResourceLocation entityTexture) {
+        this.entityTexture = entityTexture;
     }
 
-    public void setTexture(OpenResourceLocation texture) {
-        this.texture = texture;
-    }
-
-    public SkinPaintScheme reference() {
-        if (reference != null) {
-            return reference;
-        }
-        return SkinPaintScheme.EMPTY;
+    public OpenResourceLocation entityTexture() {
+        return entityTexture;
     }
 
     public void setReference(SkinPaintScheme reference) {
@@ -124,6 +118,13 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
             this.resolvedColors = null;
             this.hashCode = 0;
         }
+    }
+
+    public SkinPaintScheme reference() {
+        if (reference != null) {
+            return reference;
+        }
+        return SkinPaintScheme.EMPTY;
     }
 
     private HashMap<SkinPaintType, SkinPaintColor> resolvedColors() {
@@ -170,13 +171,13 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SkinPaintScheme that)) return false;
-        return colors.equals(that.colors) && Objects.equals(texture, that.texture) && Objects.equals(reference, that.reference);
+        return colors.equals(that.colors) && Objects.equals(entityTexture, that.entityTexture) && Objects.equals(reference, that.reference);
     }
 
     @Override
     public int hashCode() {
         if (hashCode == 0) {
-            hashCode = Objects.hash(colors, texture, reference);
+            hashCode = Objects.hash(colors, entityTexture, reference);
             if (hashCode == 0) {
                 hashCode = ~hashCode;
             }

@@ -8,12 +8,14 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIWindow;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -104,9 +106,10 @@ public class ToastWindow extends UIWindow {
         tag.getOptionalString("Image").ifPresent(imageId -> {
             this.icon = new CustomTexture(imageId, tag);
         });
-        var level = EnvironmentManager.getClient().level;
+        var level = Minecraft.getInstance().level;
         if (tag.contains("id") && level != null) {
-            this.icon = ItemStack.parse(level.registryAccess(), tag).orElse(ItemStack.EMPTY);
+            var serializer = new TagSerializer(tag, SerializationContext.from(level));
+            this.icon = serializer.decode(ExtraCodecs.ITEM_STACK);
         }
         this.updateIconRect();
     }
@@ -123,7 +126,7 @@ public class ToastWindow extends UIWindow {
         return duration;
     }
 
-    private IResourceLocation defaultTexture() {
+    private OpenResourceLocation defaultTexture() {
         return ModTextures.TOASTS;
     }
 

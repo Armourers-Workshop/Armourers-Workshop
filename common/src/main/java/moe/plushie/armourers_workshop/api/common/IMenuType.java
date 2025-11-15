@@ -1,14 +1,9 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import moe.plushie.armourers_workshop.api.core.IRegistryEntry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 
-public interface IMenuType<C extends AbstractContainerMenu> extends IRegistryEntry {
+import java.util.function.Supplier;
 
-    <T> InteractionResult openMenu(Player player, T value);
-
-    Component title();
+public interface IMenuType<C extends AbstractContainerMenu> extends Supplier<MenuType<C>> {
 }

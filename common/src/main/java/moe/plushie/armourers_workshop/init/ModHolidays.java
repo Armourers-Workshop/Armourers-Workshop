@@ -63,7 +63,7 @@ public final class ModHolidays {
     }
 
     public static void welcome(Player player) {
-        var server = player.getServer();
+        var server = player.server();
         if (server == null || ModConfig.Common.disableAllHolidayEvents) {
             return;
         }
@@ -71,7 +71,7 @@ public final class ModHolidays {
             if (holiday1.handler() == null) {
                 continue;
             }
-            var storage = HolidayTracker.of(server);
+            var storage = server.overworld().getDataStorage().computeIfAbsent(HolidayTracker.TYPE);
             if (storage.has(player, holiday1)) {
                 continue; // the gift is already give to player in this year.
             }

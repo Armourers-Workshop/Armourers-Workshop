@@ -162,10 +162,10 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
 
     public void transform(OpenQuaternionf value) {
         var quaternion = new OpenQuaternionf(value);
-        quaternion.mul(new OpenQuaternionf(x, y, z, 0.0F));
+        quaternion.multiply(new OpenQuaternionf(x, y, z, 0.0F));
         var quaternion1 = new OpenQuaternionf(value);
         quaternion1.conjugate();
-        quaternion.mul(quaternion1);
+        quaternion.multiply(quaternion1);
         set(quaternion.x(), quaternion.y(), quaternion.z());
     }
 

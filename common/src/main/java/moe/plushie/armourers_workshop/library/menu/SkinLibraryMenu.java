@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.library.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
+import moe.plushie.armourers_workshop.core.menu.BlockEntityContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -11,12 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEntity> {
+public class SkinLibraryMenu extends BlockEntityContainerMenu<SkinLibraryBlockEntity> {
 
     protected final Container inventory;
     protected final Inventory playerInventory;
@@ -26,7 +26,7 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
 
     private int libraryVersion = 0;
 
-    public SkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
+    public SkinLibraryMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.inventory = blockEntity.getInventory();
         this.playerInventory = playerInventory;
@@ -42,9 +42,27 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
         this.addOutputSlot(inventory, 1, inventoryX + inventoryWidth - 22, inventoryY - 27);
     }
 
+    protected void addInputSlot(Container inventory, int slot, int x, int y) {
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
+            @Override
+            protected boolean abi$mayPlace(ItemStack itemStack) {
+                return itemStack.is(ModItems.SKIN_TEMPLATE.get()) || !SkinDescriptor.of(itemStack).isEmpty();
+            }
+        });
+    }
+
+    protected void addOutputSlot(Container inventory, int slot, int x, int y) {
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
+            @Override
+            protected boolean abi$mayPlace(ItemStack itemStack) {
+                return false;
+            }
+        });
+    }
+
     @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
+    protected void abi$broadcastChanges() {
+        super.abi$broadcastChanges();
         if (playerInventory.player instanceof ServerPlayer) {
             var server = SkinLibraryManager.getServer();
             if (libraryVersion != server.version()) {
@@ -55,26 +73,8 @@ public class SkinLibraryMenu extends AbstractBlockEntityMenu<SkinLibraryBlockEnt
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size() - 1);
-    }
-
-    protected void addInputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
-            @Override
-            public boolean mayPlace(ItemStack itemStack) {
-                return itemStack.is(ModItems.SKIN_TEMPLATE.get()) || !SkinDescriptor.of(itemStack).isEmpty();
-            }
-        });
-    }
-
-    protected void addOutputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
-            @Override
-            public boolean mayPlace(ItemStack itemStack) {
-                return false;
-            }
-        });
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
+        return abi$quickMoveStack(player, index, slots.size() - 1);
     }
 
     public ItemStack inputStack() {

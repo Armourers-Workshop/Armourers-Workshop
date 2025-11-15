@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/skinnable",
+    "render_type": "cutout"
+  }
+}

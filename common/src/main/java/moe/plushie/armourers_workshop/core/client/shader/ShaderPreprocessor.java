@@ -3,94 +3,60 @@ package moe.plushie.armourers_workshop.core.client.shader;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
-@Environment(EnvType.CLIENT)
 public class ShaderPreprocessor {
 
-    public static final List<String> PATCHED_VANILLA_SHADERS = Collections.immutableList(builder -> {
-        builder.add("rendertype_entity_solid");
-        builder.add("rendertype_entity_shadow");
-        builder.add("rendertype_entity_cutout");
-        builder.add("rendertype_energy_swirl");
-        builder.add("rendertype_outline");
+    private static final Map<String, SourceBuilder> BUILDERS = Collections.immutableMap(it -> {
+        it.put("optifine", builder -> {
+            builder.attribute("aw_UV0", "vec2", "vaUV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV1", "ivec2", "vaUV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV2", "ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_Color", "vec4", "vaColor", "vec4", "aw_ColorModulator", "($2 * $1)");
+            builder.attribute("aw_Normal", "vec3", "vaNormal", "mat3", "aw_NormalMatrix", "($2 * $1)");
+            builder.attribute("aw_Position", "vec3", "vaPosition", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
+        });
+        it.put("iris", builder -> {
+            builder.attribute("aw_UV0", "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV1", "ivec2", "iris_UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
+            builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
+            builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
+        });
+        it.put("canvas", builder -> {
+            //builder.attribute("aw_UV0", "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
+            //builder.attribute("aw_UV1", "ivec2", "iris_UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            //builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            //builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
+            //builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
+            //builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
+        });
+        it.put("vanilla", builder -> {
+            builder.attribute("aw_UV0", "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV1", "ivec2", "UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_UV2", "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
+            builder.attribute("aw_Color", "vec4", "Color", "vec4", "aw_ColorModulator", "($2 * $1)");
+            builder.attribute("aw_Normal", "vec3", "Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
+            builder.attribute("aw_Position", "vec3", "Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
+        });
     });
 
-    private final String prefix;
+    private final String name;
+    private final int version;
 
-    public ShaderPreprocessor(String prefix) {
-        this.prefix = prefix;
+    public ShaderPreprocessor(String name, int version) {
+        this.name = name;
+        this.version = version;
     }
 
     public String process(String source) {
-        return switch (prefix) {
-            case "va" -> processOptifineShader(new Builder(source));
-            case "iris_" -> processIrisShader(new Builder(source));
-            case "frx_" -> processCanvasShader(new Builder(source));
-            case "" -> processVanillaShader(new Builder(source));
-            default -> source;
-        };
-    }
-
-    private String processIrisShader(Builder builder) {
-        builder.attribute("aw_UV0", "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV1", "ivec2", "iris_UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
-        builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
-        return build("iris", builder);
-    }
-
-    private String processOptifineShader(Builder builder) {
-        builder.attribute("aw_UV0", "vec2", "vaUV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV1", "ivec2", "vaUV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV2", "ivec2", "vaUV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_Color", "vec4", "vaColor", "vec4", "aw_ColorModulator", "($2 * $1)");
-        builder.attribute("aw_Normal", "vec3", "vaNormal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "vaPosition", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
-        return build("optifine", builder);
-    }
-
-    private String processCanvasShader(Builder builder) {
-//        builder.attribute("aw_UV0", "vec2", "iris_UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
-//        builder.attribute("aw_UV1", "ivec2", "iris_UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-//        builder.attribute("aw_UV2", "ivec2", "iris_UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-//        builder.attribute("aw_Color", "vec4", "iris_Color", "vec4", "aw_ColorModulator", "($2 * $1)");
-//        builder.attribute("aw_Normal", "vec3", "iris_Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-//        builder.attribute("aw_Position", "vec3", "iris_Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
-        return build("canvas", builder);
-    }
-
-    private String processVanillaShader(Builder builder) {
-        builder.attribute("aw_UV0", "vec2", "UV0", "mat4", "aw_TextureMatrix", "vec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV1", "ivec2", "UV1", "mat4", "aw_OverlayTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_UV2", "ivec2", "UV2", "mat4", "aw_LightmapTextureMatrix", "ivec2($2 * vec4($1, 1, 1))");
-        builder.attribute("aw_Color", "vec4", "Color", "vec4", "aw_ColorModulator", "($2 * $1)");
-        builder.attribute("aw_Normal", "vec3", "Normal", "mat3", "aw_NormalMatrix", "($2 * $1)");
-        builder.attribute("aw_Position", "vec3", "Position", "mat4", "aw_ModelViewMatrix", "vec3($2 * vec4($1, 1))");
-        return build("vanilla", builder);
-    }
-
-    private void processCommonShader(Builder builder) {
-        // if normal exists, we need normalize it when flags is 0x2(non-uniform scaled) enabled.
-        if (builder.variables.contains("aw_Normal")) {
-            builder.scripts.add("if ((aw_MatrixFlags & 0x02) != 0) {");
-            builder.scripts.add("  aw_Normal = normalize(aw_Normal);");
-            builder.scripts.add("}");
-        }
-    }
-
-    private String build(String type, Builder builder) {
-        processCommonShader(builder);
-        var source = builder.build();
-        if (ModConfig.Client.enableShaderDebug) {
-            ModLog.info("process {} shader: \n{}", type, source);
+        var sourceBuilder = BUILDERS.get(name);
+        if (sourceBuilder != null) {
+            return sourceBuilder.build(new Builder(name, source));
         }
         return source;
     }
@@ -98,6 +64,7 @@ public class ShaderPreprocessor {
     public static class Builder {
 
         private String source;
+        private final String name;
 
         private final ArrayList<String> variables = new ArrayList<>();
         private final ArrayList<String> scripts = new ArrayList<>();
@@ -105,7 +72,8 @@ public class ShaderPreprocessor {
         private final ArrayList<String> initializer1 = new ArrayList<>();
         private final ArrayList<String> initializer2 = new ArrayList<>();
 
-        public Builder(String source) {
+        public Builder(String name, String source) {
+            this.name = name;
             this.source = source;
         }
 
@@ -128,7 +96,7 @@ public class ShaderPreprocessor {
             };
             String[] regexes = new String[texts.length];
             for (int i = 0; i < texts.length; ++i) {
-                String tmp = texts[i];
+                var tmp = texts[i];
                 tmp = tmp.replace("${category}", category);
                 tmp = tmp.replace("${name}", name);
                 tmp = tmp.replace("${varType}", varType);
@@ -139,7 +107,7 @@ public class ShaderPreprocessor {
             }
             // we need to replace all the content correctly.
             for (int i = 0; i < regexes.length / 2; ++i) {
-                String newValue = source.replaceAll(regexes[i * 2], regexes[i * 2 + 1]);
+                var newValue = source.replaceAll(regexes[i * 2], regexes[i * 2 + 1]);
                 if (i == 0 && newValue.equals(source)) {
                     // sorry, we not found the input var.
                     return source;
@@ -160,7 +128,7 @@ public class ShaderPreprocessor {
                 return source;
             }
             // NOTE: we can't support "type x = y;" in the global;
-            var builder = new SourceBuilder();
+            var builder = new SourceBuffer();
             builder.append("#ifdef GL_ES\n");
             builder.append("uniform int aw_MatrixFlags;\n");
             builder.append("#else\n");
@@ -183,7 +151,7 @@ public class ShaderPreprocessor {
         }
     }
 
-    public static class SourceBuilder {
+    public static class SourceBuffer {
 
         private final StringBuffer buffer = new StringBuffer();
 
@@ -201,6 +169,26 @@ public class ShaderPreprocessor {
 
         public String build() {
             return buffer.toString();
+        }
+    }
+
+    public interface SourceBuilder {
+
+        void setup(Builder builder);
+
+        default String build(Builder builder) {
+            setup(builder);
+            // if normal exists, we need normalize it when flags is 0x2(non-uniform scaled) enabled.
+            if (builder.variables.contains("aw_Normal")) {
+                builder.scripts.add("if ((aw_MatrixFlags & 0x02) != 0) {");
+                builder.scripts.add("  aw_Normal = normalize(aw_Normal);");
+                builder.scripts.add("}");
+            }
+            var source = builder.build();
+            if (ModConfig.Client.enableShaderDebug) {
+                ModLog.info("process {} shader:\n{}", builder.name, source);
+            }
+            return source;
         }
     }
 }

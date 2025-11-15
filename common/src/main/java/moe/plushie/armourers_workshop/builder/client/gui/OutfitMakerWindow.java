@@ -11,19 +11,16 @@ import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateOutfitMakerPacket;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
 
     private final UIButton saveButton = new UIButton(new CGRect(146, 120, 20, 20));
@@ -62,9 +59,10 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
         if (!menu.shouldCrafting()) {
             return;
         }
-        var origin = EnvironmentManager.getClient().getUser().getGameProfile();
-        var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-        NetworkManager.sendToServer(UpdateOutfitMakerPacket.Field.ITEM_CRAFTING.buildPacket(blockEntity, nbt));
+        var origin = Minecraft.getInstance().getUser().getGameProfile();
+        var serializer = new TagSerializer();
+        serializer.encode(ExtraCodecs.GAME_PROFILE, origin);
+        NetworkManager.sendToServer(UpdateOutfitMakerPacket.Field.ITEM_CRAFTING.buildPacket(blockEntity, serializer.tag()));
     }
 
     private void saveSkinInfo(UIControl textField) {

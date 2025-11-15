@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.Entity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.data.EntityCollisionShape;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import net.minecraft.world.entity.Entity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.16, 1.18)")
+@Extension
+public class CustomCollisionExt {
+
+    private static final DataContainer.Key<EntityCollisionShape> KEY = DataContainer.key("Collisions");
+
+    public static EntityCollisionShape getCustomCollision(@This Entity entity) {
+        return DataContainer.get(entity, KEY);
+    }
+
+    public static void setCustomCollision(@This Entity entity, EntityCollisionShape collisionShape) {
+        DataContainer.set(entity, KEY, collisionShape);
+        entity.refreshDimensions();
+        // the vanilla will set a wrong bounding box after refresh dimensions,
+        // so we need to call set pos to regenerate the bounding box.
+        if (entity.level().isClientSide()) {
+            var pos = entity.position();
+            entity.setPos(pos.x, pos.y, pos.z);
+        }
+    }
+}

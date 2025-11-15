@@ -1,53 +1,56 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderHelper;
-import net.minecraft.world.entity.Entity;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 @SuppressWarnings("unused")
+@OnlyIn(Dist.CLIENT)
 public class BakedSkinAnimationHandler {
 
     private final ArrayList<Callback> tasks = new ArrayList<>();
     private final ArrayList<Pair<Integer, Callback>> pending = new ArrayList<>();
 
     public BakedSkinAnimationHandler() {
-        normal((skin, entity, armature, context) -> AnimationEngine.apply(entity, skin, context));
-        normal((skin, entity, armature, context) -> SkinRenderHelper.apply(entity, skin, armature, context.itemSource()));
+        normal((renderState, skin, armature, context) -> AnimationEngine.apply(renderState, skin, context));
+        normal((renderState, skin, armature, context) -> SkinRenderHelper.apply(renderState, skin, armature, context.itemSource()));
     }
 
-    public void lowest(Callback handler) {
-        pending.add(Pair.of(-100, handler));
+    public void lowest(Callback callback) {
+        pending.add(Pair.of(-100, callback));
         rebuild();
     }
 
-    public void low(Callback handler) {
-        pending.add(Pair.of(-10, handler));
+    public void low(Callback callback) {
+        pending.add(Pair.of(-10, callback));
         rebuild();
     }
 
-    public void normal(Callback handler) {
-        pending.add(Pair.of(0, handler));
+    public void normal(Callback callback) {
+        pending.add(Pair.of(0, callback));
         rebuild();
     }
 
-    public void high(Callback handler) {
-        pending.add(Pair.of(10, handler));
+    public void high(Callback callback) {
+        pending.add(Pair.of(10, callback));
         rebuild();
     }
 
-    public void highest(Callback handler) {
-        pending.add(Pair.of(100, handler));
+    public void highest(Callback callback) {
+        pending.add(Pair.of(100, callback));
         rebuild();
     }
 
-    public void apply(BakedSkin skin, Entity entity, BakedArmature armature, SkinRenderContext context) {
+    public void apply(EntityRenderState renderState, BakedSkin skin, BakedArmature armature, ConcurrentRenderingContext context) {
         for (var task : tasks) {
-            task.apply(skin, entity, armature, context);
+            task.apply(renderState, skin, armature, context);
         }
     }
 
@@ -56,8 +59,9 @@ public class BakedSkinAnimationHandler {
         pending.stream().sorted(Comparator.comparingInt(Pair::getLeft)).forEachOrdered(it -> tasks.add(it.getRight()));
     }
 
+    @FunctionalInterface
     public interface Callback {
 
-        void apply(BakedSkin skin, Entity entity, BakedArmature bakedArmature, SkinRenderContext context);
+        void apply(EntityRenderState renderState, BakedSkin skin, BakedArmature armature, ConcurrentRenderingContext context);
     }
 }

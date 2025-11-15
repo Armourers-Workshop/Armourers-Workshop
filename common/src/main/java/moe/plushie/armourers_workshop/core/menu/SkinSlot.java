@@ -1,33 +1,23 @@
 package moe.plushie.armourers_workshop.core.menu;
 
-import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class SkinSlot extends Slot {
+public class SkinSlot extends AbstractContainerSlot {
 
-    protected final Collection<SkinSlotType> slotTypes;
-    private ArrayList<Pair<ResourceLocation, ResourceLocation>> backgroundPairs;
+    protected final List<SkinSlotType> slotTypes;
+    protected final List<OpenResourceLocation> slotTypeIcons;
 
     public SkinSlot(Container inventory, int index, int x, int y, SkinSlotType... slotTypes) {
         super(inventory, index, x, y);
         this.slotTypes = Collections.newList(slotTypes);
-    }
-
-    @Override
-    public boolean mayPlace(ItemStack itemStack) {
-        // when slot type is not provide, we consider it is an unrestricted slot.
-        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.byItem(itemStack))) {
-            return false;
-        }
-        return container.canPlaceItem(index, itemStack);
+        this.slotTypeIcons = Collections.compactMap(slotTypes, SkinSlotType::icon);
     }
 
     public Collection<SkinSlotType> slotTypes() {
@@ -35,16 +25,19 @@ public class SkinSlot extends Slot {
     }
 
     @Override
-    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-        if (backgroundPairs == null) {
-            backgroundPairs = new ArrayList<>();
-            for (var slotType : slotTypes) {
-                backgroundPairs.add(Pair.of(InventoryMenu.BLOCK_ATLAS, slotType.icon().toLocation()));
-            }
+    protected boolean abi$mayPlace(ItemStack itemStack) {
+        // when slot type is not provide, we consider it is an unrestricted slot.
+        if (!slotTypes.isEmpty() && !slotTypes.contains(SkinSlotType.byItem(itemStack))) {
+            return false;
         }
-        int size = backgroundPairs.size();
+        return container.canPlaceItem(index, itemStack);
+    }
+
+    @Override
+    protected OpenResourceLocation abi$noItemIcon() {
+        int size = slotTypeIcons.size();
         if (size > 0) {
-            return backgroundPairs.get((int) ((System.currentTimeMillis() / 1000L) % size));
+            return slotTypeIcons.get((int) ((System.currentTimeMillis() / 1000L) % size));
         }
         return null;
     }

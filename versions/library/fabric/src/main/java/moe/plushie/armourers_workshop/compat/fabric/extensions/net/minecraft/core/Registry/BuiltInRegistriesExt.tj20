@@ -1,0 +1,25 @@
+package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+
+import manifold.ext.rt.api.auto;
+
+@Available("[1.20, 1.21)")
+public class BuiltInRegistriesExt {
+
+    public static final auto ITEM = BuiltInRegistries.ITEM;
+    public static final auto ITEM_TAG = Registries.ITEM;
+    public static final auto CREATIVE_MODE_TAB = BuiltInRegistries.CREATIVE_MODE_TAB;
+    public static final auto LOOT_FUNCTION_TYPE = BuiltInRegistries.LOOT_FUNCTION_TYPE;
+
+    public static final auto BLOCK = BuiltInRegistries.BLOCK;
+    public static final auto BLOCK_TAG = Registries.BLOCK;
+    public static final auto BLOCK_ENTITY_TYPE = BuiltInRegistries.BLOCK_ENTITY_TYPE;
+
+    public static final auto ENTITY_TYPE = BuiltInRegistries.ENTITY_TYPE;
+
+    public static final auto MENU = BuiltInRegistries.MENU;
+    public static final auto SOUND_EVENT = BuiltInRegistries.SOUND_EVENT;
+}

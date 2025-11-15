@@ -7,12 +7,9 @@ import com.apple.library.uikit.UIComboBox;
 import com.apple.library.uikit.UIComboItem;
 import com.apple.library.uikit.UITextView;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.Collection;
 
-@Environment(EnvType.CLIENT)
 public class ReportDialog extends ConfirmDialog {
 
     protected String content;

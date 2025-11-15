@@ -1,0 +1,22 @@
+package moe.plushie.armourers_workshop.compat.client.block.tintsource;
+
+import moe.plushie.armourers_workshop.api.client.IBlockTintSource;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
+import moe.plushie.armourers_workshop.core.utils.LateBoundIdMapper;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.init.registry.ClientRegistries;
+
+public class AbstractBlockTintSources {
+
+    private static final LateBoundIdMapper<OpenResourceLocation, IDataMapCodec<? extends IBlockTintSource>> ID_MAPPER = new LateBoundIdMapper<>();
+    public static final IDataCodec<IBlockTintSource> CODEC = ID_MAPPER.codec(OpenResourceLocation.CODEC).dispatch(IBlockTintSource::type, e -> e);
+
+    public static void init() {
+        // add all custom item.
+        ClientRegistries.BLOCK_TINT_SOURCE_TYPES.forEach(it -> {
+            // note that we evaluated it immediately.
+            ID_MAPPER.put(it.registryName(), it.get().codec());
+        });
+    }
+}

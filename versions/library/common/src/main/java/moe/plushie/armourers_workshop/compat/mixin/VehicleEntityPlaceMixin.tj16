@@ -1,0 +1,75 @@
+package moe.plushie.armourers_workshop.compat.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractVehicleEntityDataUpdater;
+import net.minecraft.core.BlockSource;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoatItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MinecartItem;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Available("[1.16, 1.21)")
+public class VehicleEntityPlaceMixin {
+
+    @Mixin(BoatItem.class)
+    public static class BoatPatch {
+
+        @Inject(method = "use", at = @At(value = "HEAD"))
+        private void aw2$usePre(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
+            AbstractVehicleEntityDataUpdater.push(player.getItemInHand(interactionHand));
+        }
+
+        @Inject(method = "use", at = @At(value = "RETURN"))
+        private void aw2$usePost(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
+            AbstractVehicleEntityDataUpdater.pop();
+        }
+    }
+
+    @Mixin(MinecartItem.class)
+    public static class MinecartPatch {
+
+        @Inject(method = "useOn", at = @At(value = "HEAD"))
+        private void aw2$useOnPre(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+            AbstractVehicleEntityDataUpdater.push(context.getItemInHand());
+        }
+
+        @Inject(method = "useOn", at = @At(value = "RETURN"))
+        private void aw2$useOnPost(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+            AbstractVehicleEntityDataUpdater.pop();
+        }
+    }
+
+    @Mixin(targets = "net.minecraft.world.item.MinecartItem$1")
+    public static class MinecartDispensePatch {
+
+        @Inject(method = "execute", at = @At(value = "HEAD"))
+        private void aw2$executePre(BlockSource blockSource, ItemStack itemStack, CallbackInfoReturnable<ItemStack> cir) {
+            AbstractVehicleEntityDataUpdater.push(itemStack);
+        }
+
+        @Inject(method = "execute", at = @At(value = "RETURN"))
+        private void aw2$executePost(BlockSource blockSource, ItemStack itemStack, CallbackInfoReturnable<ItemStack> cir) {
+            AbstractVehicleEntityDataUpdater.pop();
+        }
+    }
+
+    @Mixin(ServerLevel.class)
+    public static class ServerLevelPatch {
+
+        @Inject(method = "addFreshEntity", at = @At("HEAD"))
+        private void aw2$updateCustomEntityTag(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+            AbstractVehicleEntityDataUpdater.apply(ServerLevel.class.cast(this), entity);
+        }
+    }
+}

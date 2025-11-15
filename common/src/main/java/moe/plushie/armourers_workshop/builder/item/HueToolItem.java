@@ -6,8 +6,8 @@ import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.core.utils.Colors;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -43,13 +43,13 @@ public class HueToolItem extends PaintbrushItem {
     }
 
     @Override
-    public void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
+    protected void appendColorHoverText(ItemStack itemStack, List<Component> tooltips) {
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
-        tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
+        tooltips.addAll(Colors.getColorTooltips(paintColor, true));
     }
 
     @Override
     public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.PAINT;
+        return ModSoundEvents.PAINT;
     }
 }

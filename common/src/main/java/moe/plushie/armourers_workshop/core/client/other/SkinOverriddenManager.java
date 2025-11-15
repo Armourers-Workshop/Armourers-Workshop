@@ -1,26 +1,20 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
-import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-@Environment(EnvType.CLIENT)
-public class SkinOverriddenManager<T> {
+@OnlyIn(Dist.CLIENT)
+public class SkinOverriddenManager {
 
     private static final List<OpenEquipmentSlot> ARMOUR_EQUIPMENT_SLOTS = Collections.immutableList(it -> {
         it.add(OpenEquipmentSlot.HEAD);
@@ -29,7 +23,7 @@ public class SkinOverriddenManager<T> {
         it.add(OpenEquipmentSlot.FEET);
     });
 
-    private static final List<ISkinProperty<Boolean>> OVERRIDDEN_PROPERTIES = Collections.immutableList(it -> {
+    private static final List<SkinProperty<Boolean>> OVERRIDDEN_PROPERTIES = Collections.immutableList(it -> {
         it.add(SkinProperty.OVERRIDE_MODEL_HEAD);
         it.add(SkinProperty.OVERRIDE_MODEL_CHEST);
         it.add(SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
@@ -54,14 +48,16 @@ public class SkinOverriddenManager<T> {
         it.add(SkinProperty.OVERRIDE_EQUIPMENT_BOOTS);
     });
 
-    private static final Map<ISkinProperty<Boolean>, OpenEquipmentSlot> OVERRIDDEN_EQUIPMENT_TO_SLOT = Collections.immutableMap(it -> {
+    private static final Map<SkinProperty<Boolean>, OpenEquipmentSlot> OVERRIDDEN_EQUIPMENT_TO_SLOT = Collections.immutableMap(it -> {
+        it.put(SkinProperty.OVERRIDE_MODEL_LEFT_ARM, OpenEquipmentSlot.OFFHAND);
+        it.put(SkinProperty.OVERRIDE_MODEL_RIGHT_ARM, OpenEquipmentSlot.MAINHAND);
         it.put(SkinProperty.OVERRIDE_EQUIPMENT_HELMET, OpenEquipmentSlot.HEAD);
         it.put(SkinProperty.OVERRIDE_EQUIPMENT_CHESTPLATE, OpenEquipmentSlot.CHEST);
         it.put(SkinProperty.OVERRIDE_EQUIPMENT_LEGGINGS, OpenEquipmentSlot.LEGS);
         it.put(SkinProperty.OVERRIDE_EQUIPMENT_BOOTS, OpenEquipmentSlot.FEET);
     });
 
-    private static final Map<ISkinProperty<Boolean>, Collection<ISkinProperty<Boolean>>> OVERRIDDEN_MODEL_TO_OVERLAY = Collections.immutableMap(it -> {
+    private static final Map<SkinProperty<Boolean>, Collection<SkinProperty<Boolean>>> OVERRIDDEN_MODEL_TO_OVERLAY = Collections.immutableMap(it -> {
         it.put(SkinProperty.OVERRIDE_MODEL_HEAD, Collections.newList(SkinProperty.OVERRIDE_OVERLAY_HAT));
         it.put(SkinProperty.OVERRIDE_MODEL_CHEST, Collections.newList(SkinProperty.OVERRIDE_OVERLAY_JACKET, SkinProperty.OVERRIDE_OVERLAY_CLOAK));
         it.put(SkinProperty.OVERRIDE_MODEL_LEFT_ARM, Collections.newList(SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE));
@@ -70,13 +66,11 @@ public class SkinOverriddenManager<T> {
         it.put(SkinProperty.OVERRIDE_MODEL_RIGHT_LEG, Collections.newList(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS));
     });
 
-    private final HashSet<ISkinProperty<Boolean>> disabledProperties = new HashSet<>();
-    private final HashSet<ISkinProperty<Boolean>> disabledModelByProperties = new HashSet<>();
+    private final HashSet<SkinProperty<Boolean>> disabledProperties = new HashSet<>();
+    private final HashSet<SkinProperty<Boolean>> disabledModelByProperties = new HashSet<>();
 
     private final HashSet<OpenEquipmentSlot> disabledEquipmentSlots = new HashSet<>();
     private final HashSet<OpenEquipmentSlot> disabledEquipmentSlotsByProperties = new HashSet<>();
-
-    private final HashMap<OpenEquipmentSlot, ItemStack> disabledEquipmentItems = new HashMap<>();
 
     public void addEquipment(OpenEquipmentSlot slotType) {
         disabledEquipmentSlots.add(slotType);
@@ -86,7 +80,7 @@ public class SkinOverriddenManager<T> {
         disabledEquipmentSlots.remove(slotType);
     }
 
-    public void addProperty(ISkinProperty<Boolean> property) {
+    public void addProperty(SkinProperty<Boolean> property) {
         disabledProperties.add(property);
         // when equipment required hide, we need synchronize it to slot.
         var equipmentSlot = OVERRIDDEN_EQUIPMENT_TO_SLOT.get(property);
@@ -101,7 +95,7 @@ public class SkinOverriddenManager<T> {
         }
     }
 
-    public void merge(ISkinProperties properties) {
+    public void merge(SkinProperties properties) {
         for (var property : OVERRIDDEN_PROPERTIES) {
             if (properties.get(property)) {
                 addProperty(property);
@@ -109,27 +103,17 @@ public class SkinOverriddenManager<T> {
         }
     }
 
-    public boolean contains(ISkinProperty<Boolean> property) {
+    public boolean contains(SkinProperty<Boolean> property) {
         return disabledProperties.contains(property);
     }
 
     // if it returns true, it means equipment is overwritten.
-    public boolean overrideEquipment(OpenEquipmentSlot slotType) {
+    public boolean shouldOverrideEquipment(OpenEquipmentSlot slotType) {
         return disabledEquipmentSlots.contains(slotType) || disabledEquipmentSlotsByProperties.contains(slotType);
     }
 
-    public boolean overrideAnyModel() {
+    public boolean shouldOverrideAnyModel() {
         return !disabledModelByProperties.isEmpty();
-    }
-
-    public boolean overrideHandModel(OpenItemDisplayContext transformType) {
-        if (transformType.isLeftHand()) {
-            return contains(SkinProperty.OVERRIDE_MODEL_LEFT_ARM);
-        }
-        if (transformType.isRightHand()) {
-            return contains(SkinProperty.OVERRIDE_MODEL_RIGHT_ARM);
-        }
-        return false;
     }
 
     public void clear() {
@@ -137,40 +121,5 @@ public class SkinOverriddenManager<T> {
         disabledModelByProperties.clear();
         disabledEquipmentSlots.clear();
         disabledEquipmentSlotsByProperties.clear();
-    }
-
-    public void willRender(T source) {
-        for (var equipmentSlot : ARMOUR_EQUIPMENT_SLOTS) {
-            if (!overrideEquipment(equipmentSlot) || disabledEquipmentItems.containsKey(equipmentSlot)) {
-                continue;
-            }
-            var itemStack = setItem(source, equipmentSlot, ItemStack.EMPTY);
-            disabledEquipmentItems.put(equipmentSlot, itemStack);
-        }
-    }
-
-    public void didRender(T source) {
-        for (var slotType : ARMOUR_EQUIPMENT_SLOTS) {
-            if (!disabledEquipmentItems.containsKey(slotType)) {
-                continue;
-            }
-            var itemStack = disabledEquipmentItems.remove(slotType);
-            setItem(source, slotType, itemStack);
-        }
-    }
-
-    private ItemStack setItem(T source, OpenEquipmentSlot slotType, ItemStack itemStack) {
-        // for the player, using `setItemSlot` will cause play sound.
-        if (source instanceof Player player) {
-            var oldItemStack = player.getItemBySlot(slotType);
-            player.setItemSlotDirect(slotType, itemStack);
-            return oldItemStack;
-        }
-        if (source instanceof LivingEntity livingEntity) {
-            var oldItemStack = livingEntity.getItemBySlot(slotType);
-            livingEntity.setItemSlot(slotType, itemStack);
-            return oldItemStack;
-        }
-        return itemStack;
     }
 }

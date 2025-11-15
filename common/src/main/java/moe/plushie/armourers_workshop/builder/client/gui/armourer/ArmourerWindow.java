@@ -9,11 +9,8 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.TabView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerWindow extends MenuWindow<ArmourerMenu> {
 
     private final ArmourerBlockEntity blockEntity;

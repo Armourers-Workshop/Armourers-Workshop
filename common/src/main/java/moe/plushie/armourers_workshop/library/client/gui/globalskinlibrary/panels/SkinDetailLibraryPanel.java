@@ -12,11 +12,10 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
 import com.apple.library.uikit.UIScreen;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
@@ -32,15 +31,11 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     private UIButton buttonBack;
@@ -166,7 +161,6 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         }
         if (Strings.isNotBlank(playerTexture.name())) {
             context.drawText(getDisplayText("uploader", playerTexture.name()), rect.x + 32, rect.y + 12, 0xffeeeeee);
-            RenderSystem.enableAlphaTest();
         }
     }
 
@@ -175,22 +169,20 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (message == null) {
             return;
         }
-        context.addClip(UIScreen.convertRectFromView(rect, this));
+        context.addClipPath(UIScreen.convertRectFromView(rect, this));
         context.drawMultilineText(message, rect.x + 2, rect.y + 2, rect.width - 4, 0xffeeeeee, UIFont.systemFont());
-        context.removeClip();
+        context.removeClipPath();
     }
 
     public void drawPreviewBox(CGGraphicsContext context, CGRect rect) {
         context.fillRect(gradient, rect);
         var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(entry.descriptor()));
         if (bakedSkin != null) {
-            float tx = rect.x;
-            float ty = rect.y;
-            float tw = rect.width;
-            float th = rect.height;
-            var buffers = AbstractBufferSource.buffer();
-            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0, context.state().ctm(), buffers);
-            buffers.endBatch();
+            var tx = rect.x;
+            var ty = rect.y;
+            var tw = rect.width;
+            var th = rect.height;
+            context.draw(SkinGuiElement.blit(bakedSkin, tx, ty, 100, tw, th, 20, 45, 0));
         }
     }
 
@@ -327,7 +319,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 //                    return;
 //                }
 //                entry = new SkinFileList.Entry(result);
-//                EnvironmentManager.getClient().execute(() -> reloadUI(entry));
+//                Minecraft.getInstance().execute(() -> reloadUI(entry));
 //            }
 //
 //            @Override
@@ -401,8 +393,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
             var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
-            context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64, 0);
-            context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64, 0);
+            context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64);
+            context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64);
         }
     }
 }

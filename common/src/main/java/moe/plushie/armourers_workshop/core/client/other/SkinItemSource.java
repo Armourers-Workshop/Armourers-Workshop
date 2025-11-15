@@ -1,64 +1,43 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
+import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
+@OnlyIn(Dist.CLIENT)
 public class SkinItemSource {
 
-    public static final SkinItemSource EMPTY = new SkinItemSource();
+    public static final SkinItemSource EMPTY = new SkinItemSource(ItemStack.EMPTY);
 
-    private float renderPriority;
+    private float renderPriority = 0;
+
     private ItemStack itemStack;
-    private SkinItemProperties itemProperties;
+    private SkinItemProperties itemProperties = SkinItemProperties.EMPTY;
 
     private OpenVector3f itemScale;
     private OpenVector3f itemRotation;
-    private OpenItemDisplayContext itemDisplayContext;
+    private OpenItemDisplayContext itemDisplayContext = OpenItemDisplayContext.NONE;
 
-    public SkinItemSource() {
-        this(0, ItemStack.EMPTY, OpenItemDisplayContext.NONE);
-    }
+    private OpenRectangle3f displayBox;
+    private SkinItemModelResolver itemModelResolver;
 
-    public SkinItemSource(float renderPriority, ItemStack itemStack, OpenItemDisplayContext itemDisplayContext) {
-        this.renderPriority = renderPriority;
+    public SkinItemSource(ItemStack itemStack) {
         this.itemStack = itemStack;
-        this.itemDisplayContext = itemDisplayContext;
     }
 
     public static SkinItemSource create(ItemStack itemStack) {
-        return create(0, itemStack, OpenItemDisplayContext.NONE, null);
+        return new SkinItemSource(itemStack);
     }
 
-    public static SkinItemSource create(ItemStack itemStack, OpenItemDisplayContext transformType) {
-        return create(0, itemStack, transformType, null);
-    }
-
-    public static SkinItemSource create(float renderPriority, ItemStack itemStack) {
-        return create(renderPriority, itemStack, OpenItemDisplayContext.NONE, null);
-    }
-
-    public static SkinItemSource create(float renderPriority, ItemStack itemStack, OpenItemDisplayContext transformType) {
-        return create(renderPriority, itemStack, transformType, null);
-    }
-
-    public static SkinItemSource create(float renderPriority, ItemStack itemStack, OpenItemDisplayContext transformType, @Nullable SkinItemProperties itemProperties) {
-        var itemSource = new SkinItemSource();
-        itemSource.setItem(itemStack);
-        itemSource.setRenderPriority(renderPriority);
-        itemSource.setDisplayContext(transformType);
-        itemSource.setScale(null);
-        itemSource.setRotation(null);
-        itemSource.setProperties(itemProperties);
-        return itemSource;
-    }
-
-    public void setItem(ItemStack itemStack) {
+    public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public ItemStack item() {
+    public ItemStack itemStack() {
         return this.itemStack;
     }
 
@@ -100,5 +79,33 @@ public class SkinItemSource {
 
     public SkinItemProperties properties() {
         return itemProperties;
+    }
+
+    public void setDisplayBox(OpenRectangle3f displayBox) {
+        this.displayBox = displayBox;
+    }
+
+    public OpenRectangle3f displayBox() {
+        return displayBox;
+    }
+
+    public void setItemModelResolver(SkinItemModelResolver itemModelResolver) {
+        this.itemModelResolver = itemModelResolver;
+    }
+
+    public SkinItemModelResolver itemModelResolver() {
+        return itemModelResolver;
+    }
+
+    public SkinItemSource copy() {
+        var newItemSource = new SkinItemSource(itemStack);
+        newItemSource.renderPriority = renderPriority;
+        newItemSource.itemProperties = itemProperties;
+        newItemSource.itemScale = itemScale;
+        newItemSource.itemRotation = itemRotation;
+        newItemSource.itemDisplayContext = itemDisplayContext;
+        newItemSource.displayBox = displayBox;
+        newItemSource.itemModelResolver = itemModelResolver;
+        return newItemSource;
     }
 }

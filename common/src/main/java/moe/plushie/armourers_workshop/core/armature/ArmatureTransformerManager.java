@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.client.model.IModel;
-import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.world.entity.EntityType;
 
@@ -15,28 +15,28 @@ import java.util.function.Function;
 
 public abstract class ArmatureTransformerManager {
 
-    private final HashMap<IResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
+    private final HashMap<OpenResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
 
-    private final HashMap<IResourceLocation, ArmatureTransformerBuilder> namedBuilders = new HashMap<>();
-    private final HashMap<IEntityTypeProvider<?>, ArrayList<ArmatureTransformerBuilder>> entityBuilders = new HashMap<>();
+    private final HashMap<OpenResourceLocation, ArmatureTransformerBuilder> namedBuilders = new HashMap<>();
+    private final HashMap<IRegistryHolder<?>, ArrayList<ArmatureTransformerBuilder>> entityBuilders = new HashMap<>();
     private final HashMap<Class<?>, ArrayList<ArmatureTransformerBuilder>> modelBuilders = new HashMap<>();
 
     private int version = 0;
 
-    protected abstract ArmatureTransformerBuilder createBuilder(IResourceLocation name);
+    protected abstract ArmatureTransformerBuilder createBuilder(OpenResourceLocation name);
 
     public void clear() {
         pendingBuilders.clear();
     }
 
-    public void append(IResourceLocation registryName, IODataObject object) {
+    public void append(OpenResourceLocation registryName, IODataObject object) {
         var builder = createBuilder(registryName);
         pendingBuilders.put(registryName, builder);
         builder.load(object);
     }
 
     public void freeze() {
-        var builders1 = new HashMap<IResourceLocation, ArmatureTransformerBuilder>();
+        var builders1 = new HashMap<OpenResourceLocation, ArmatureTransformerBuilder>();
         pendingBuilders.forEach((name, builder) -> {
             var chain = new ArrayList<ArmatureTransformerBuilder>();
             var nextBuilder = builder;
@@ -78,12 +78,12 @@ public abstract class ArmatureTransformerManager {
         version += 1;
     }
 
-    public ArmatureTransformer getTransformer(EntityType<?> entityType, EntityProfile entityProfile, IModel entityModel) {
+    public ArmatureTransformer getTransformer(EntityType<?> entityType, EntityProfile entityProfile, IEntityModel<?> entityModel) {
         var classes = new ArrayList<Class<?>>();
         var finalBuilders = new ArrayList<ArmatureTransformerBuilder>();
         if (entityModel != null) {
             modelBuilders.forEach((clazz, builders) -> {
-                if (clazz.isAssignableFrom(entityModel.type())) {
+                if (clazz.isAssignableFrom(entityModel.getClass())) {
                     for (var parent : classes) {
                         if (clazz.isAssignableFrom(parent)) {
                             return;
@@ -95,7 +95,7 @@ public abstract class ArmatureTransformerManager {
             });
         }
         if (entityType != null) {
-            var resultBuilders = find(entityBuilders, entityType, IEntityTypeProvider::get);
+            var resultBuilders = find(entityBuilders, entityType, IRegistryHolder::get);
             if (resultBuilders != null) {
                 finalBuilders.addAll(resultBuilders);
             }
@@ -119,7 +119,7 @@ public abstract class ArmatureTransformerManager {
         return version;
     }
 
-    public static <K, V, R> V find(Map<K, V> map, R req, Function<K, R> resolver) {
+    private static <K, V, R> V find(Map<K, V> map, R req, Function<K, R> resolver) {
         for (var entry : map.entrySet()) {
             if (req.equals(resolver.apply(entry.getKey()))) {
                 return entry.getValue();

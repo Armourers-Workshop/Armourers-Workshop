@@ -1,0 +1,26 @@
+package moe.plushie.armourers_workshop.compat.mixin;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractComposeGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Available("[1.22, )")
+@Mixin(PictureInPictureRenderer.class)
+public class PictureInPictureRendererMixin {
+
+    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Ljava/lang/String;FFZ)Lnet/minecraft/client/renderer/CachedOrthoProjectionMatrixBuffer;"))
+    private CachedOrthoProjectionMatrixBuffer aw2$init(String name, float near, float far, boolean bl, Operation<CachedOrthoProjectionMatrixBuffer> original) {
+        var pipelineRenderer = Objects.safeCast(this, AbstractComposeGuiGraphicsRenderer.class);
+        if (pipelineRenderer != null) {
+            near = pipelineRenderer.getNear();
+            far = pipelineRenderer.getFar();
+        }
+        return original.call(name, near, far, bl);
+    }
+}

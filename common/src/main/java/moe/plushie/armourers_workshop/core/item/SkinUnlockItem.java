@@ -2,12 +2,11 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class SkinUnlockItem extends FlavouredItem {
@@ -20,20 +19,20 @@ public class SkinUnlockItem extends FlavouredItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    protected OpenInteractionResult abi$use(Level level, Player player, OpenInteractionHand hand) {
         var itemStack = player.getItemInHand(hand);
         if (level.isClientSide()) {
-            return InteractionResultHolder.success(itemStack);
+            return OpenInteractionResult.SUCCESS.heldItemTransformedTo(itemStack);
         }
         var skinType = slotType.skinType();
         var wardrobe = SkinWardrobe.of(player);
         if (wardrobe == null || skinType == null) {
-            return InteractionResultHolder.fail(itemStack);
+            return OpenInteractionResult.FAIL;
         }
         var skinName = TranslateUtils.Name.of(skinType);
         if (wardrobe.getUnlockedSize(slotType) >= slotType.maxSize()) {
             player.sendSystemMessage(Component.translatable("chat.armourers_workshop.slotUnlockedFailed", skinName));
-            return InteractionResultHolder.fail(itemStack);
+            return OpenInteractionResult.FAIL;
         }
         var count = wardrobe.getUnlockedSize(slotType) + 1;
         wardrobe.setUnlockedSize(slotType, count);
@@ -43,6 +42,6 @@ public class SkinUnlockItem extends FlavouredItem {
         var resultStack = itemStack.copy();
         resultStack.shrink(1);
         player.setItemInHand(hand, resultStack);
-        return InteractionResultHolder.consume(itemStack);
+        return OpenInteractionResult.CONSUME.heldItemTransformedTo(itemStack);
     }
 }

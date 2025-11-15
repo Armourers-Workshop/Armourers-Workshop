@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
@@ -20,6 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -47,7 +47,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
     }
 
     public SkinBlockPlaceContext(Player player, InteractionHand hand, ItemStack itemStack, BlockHitResult traceResult) {
-        super(player.getLevel(), player, hand, itemStack, traceResult);
+        super(player.level(), player, hand, itemStack, traceResult);
         this.loadElements(SkinLoader.getInstance()::getSkin);
     }
 
@@ -117,8 +117,8 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
         if (skin.type() != SkinTypes.BLOCK) {
             return false;
         }
-        BlockPos pos = super.getClickedPos().offset(part.offset());
-        return this.getLevel().getBlockState(pos).canBeReplaced(this);
+        var pos = super.getClickedPos().offset(part.offset());
+        return getLevel().getBlockState(pos).canBeReplaced(this);
     }
 
     @Override
@@ -143,12 +143,12 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
     // same the SkinnableBlockEntity.CodingKeys
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<BlockPos> REFERENCE = IDataSerializerKey.create("Refer", IDataCodec.BLOCK_POS, BlockPos.ZERO);
+        public static final IDataSerializerKey<BlockPos> REFERENCE = IDataSerializerKey.create("Refer", ExtraCodecs.BLOCK_POS, BlockPos.ZERO);
         public static final IDataSerializerKey<OpenRectangle3i> SHAPE = IDataSerializerKey.create("Shape", OpenRectangle3i.CODEC, OpenRectangle3i.ZERO);
-        public static final IDataSerializerKey<BlockPos> LINKED_POS = IDataSerializerKey.create("LinkedPos", IDataCodec.BLOCK_POS, null);
+        public static final IDataSerializerKey<BlockPos> LINKED_POS = IDataSerializerKey.create("LinkedPos", ExtraCodecs.BLOCK_POS, null);
         public static final IDataSerializerKey<SkinDescriptor> SKIN = IDataSerializerKey.create("Skin", SkinDescriptor.CODEC, SkinDescriptor.EMPTY);
         public static final IDataSerializerKey<SkinProperties> SKIN_PROPERTIES = IDataSerializerKey.create("SkinProperties", SkinProperties.CODEC, SkinProperties.EMPTY, SkinProperties.EMPTY::copy);
-        public static final IDataSerializerKey<List<BlockPos>> REFERENCES = IDataSerializerKey.create("Refers", IDataCodec.BLOCK_POS.listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<BlockPos>> REFERENCES = IDataSerializerKey.create("Refers", ExtraCodecs.BLOCK_POS.listOf(), Collections.emptyList());
         public static final IDataSerializerKey<List<SkinMarker>> MARKERS = IDataSerializerKey.create("Markers", SkinMarker.CODEC.listOf(), Collections.emptyList());
     }
 
@@ -180,7 +180,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             offset = new BlockPos(Math.round(f.x()), Math.round(f.y()), Math.round(f.z()));
 
             var fixedShape = new OpenRectangle3f(shape);
-            fixedShape.mul(q);
+            fixedShape.transform(q);
             shape = new OpenRectangle3i(Math.round(fixedShape.x()), Math.round(fixedShape.y()), Math.round(fixedShape.z()), Math.round(fixedShape.width()), Math.round(fixedShape.height()), Math.round(fixedShape.depth()));
         }
 

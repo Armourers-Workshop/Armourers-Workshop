@@ -1,63 +1,54 @@
 package moe.plushie.armourers_workshop.core.client.texture;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.core.data.color.TexturedPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenNativeImage;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class BakedEntityTexture {
 
     private final HashMap<Integer, SkinPaintColor> allColors = new HashMap<>();
     private final HashMap<SkinPartType, HashMap<Integer, SkinPaintColor>> allParts = new HashMap<>();
     private final HashMap<SkinPartType, OpenRectangle3i> allBounds = new HashMap<>();
 
-    private String modelType;
-    private OpenResourceLocation resourceLocation;
+    private final EntityTextureDescriptor.Model model;
+    private final OpenResourceLocation location;
 
-    private boolean isSlimModel = false;
-    private boolean isLoaded = false;
-
-    public BakedEntityTexture() {
+    public BakedEntityTexture(OpenResourceLocation location, EntityTextureDescriptor.Model model) {
+        this.model = model;
+        this.location = location;
     }
 
-    public BakedEntityTexture(OpenResourceLocation resourceLocation, boolean slim) {
-        this.isSlimModel = slim;
-        this.resourceLocation = resourceLocation;
-        BufferedImage bufferedImage;
-        try {
-            var resourceManager = EnvironmentManager.getResourceManager();
-            bufferedImage = ImageIO.read(resourceManager.readResource(resourceLocation).inputStream());
-            if (bufferedImage != null) {
+    public void loadImage(OpenNativeImage image) {
+        loadColors(image.width(), image.height(), image::getPixel);
+    }
+
+    public void loadImage(IResource resource) throws IOException {
+        var bufferedImage = ImageIO.read(resource.inputStream());
+        if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
-                this.loadColors(bufferedImage.getWidth(), bufferedImage.getHeight(), slim, bufferedImage::getRGB);
-            }
-        } catch (IOException ignored) {
+            loadColors(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage::getRGB);
         }
     }
 
-    public void loadImage(OpenNativeImage image, boolean slim) {
-        this.loadColors(image.width(), image.height(), slim, image::getPixel);
-    }
-
-    private void loadColors(int width, int height, boolean slim, IColorAccessor accessor) {
-        for (var entry : EntityTextureModel.of(width, height, slim).entrySet()) {
+    private void loadColors(int width, int height, IColorAccessor accessor) {
+        for (var entry : EntityTextureModel.of(width, height, isSlimModel()).entrySet()) {
             var box = entry.getValue();
             var part = allParts.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
             allBounds.put(entry.getKey(), box.bounds());
@@ -70,7 +61,6 @@ public class BakedEntityTexture {
                 }
             });
         }
-        this.isLoaded = true;
     }
 
     public SkinPaintColor getColor(OpenVector2i texturePos) {
@@ -102,28 +92,15 @@ public class BakedEntityTexture {
     }
 
     public OpenResourceLocation location() {
-        return resourceLocation;
+        return location;
     }
 
-    public void setResourceLocation(OpenResourceLocation location) {
-        this.resourceLocation = location;
-    }
-
-    public String modelType() {
-        return modelType;
-    }
-
-    public void setModelType(String modelType) {
-        this.modelType = modelType;
-        this.isSlimModel = Objects.equals(modelType, "slim");
+    public EntityTextureDescriptor.Model model() {
+        return model;
     }
 
     public boolean isSlimModel() {
-        return isSlimModel;
-    }
-
-    public boolean isLoaded() {
-        return isLoaded;
+        return model == EntityTextureDescriptor.Model.SLIM;
     }
 
     interface IColorAccessor {

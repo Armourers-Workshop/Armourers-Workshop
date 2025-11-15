@@ -35,6 +35,11 @@ public class OpenVector2f implements IVector2f {
         return new OpenVector2f(p1, p2);
     }
 
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void setX(float x) {
         this.x = x;
     }

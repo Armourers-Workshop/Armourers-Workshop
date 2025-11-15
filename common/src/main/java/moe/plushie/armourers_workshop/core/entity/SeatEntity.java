@@ -1,26 +1,19 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractLivingEntity;
+import moe.plushie.armourers_workshop.compat.core.entity.AbstractLivingEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
-import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Collections;
+import org.jetbrains.annotations.Nullable;
 
 public class SeatEntity extends AbstractLivingEntity implements IDataSerializable.Mutable {
 
@@ -37,18 +30,6 @@ public class SeatEntity extends AbstractLivingEntity implements IDataSerializabl
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.deserialize(new TagSerializer(tag));
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        this.serialize(new TagSerializer(tag));
-    }
-
-    @Override
     public void serialize(IDataSerializer serializer) {
         serializer.write(CodingKeys.REFER, blockPos);
     }
@@ -59,112 +40,98 @@ public class SeatEntity extends AbstractLivingEntity implements IDataSerializabl
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if (!this.getLevel().isClientSide()) {
-            this.autoKill();
+    protected void abi$readAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$readAdditionalSaveData(serializer);
+        this.deserialize(serializer);
+    }
+
+    @Override
+    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$addAdditionalSaveData(serializer);
+        this.serialize(serializer);
+    }
+
+    @Override
+    protected void abi$tick() {
+        super.abi$tick();
+        // auto kill the seat entity in the server side.
+        if (level() instanceof ServerLevel level) {
+            if (holdingTick > 0) {
+                holdingTick--;
+            }
+            if (holdingTick <= 0 && abi$isAlive() && !isWorking()) {
+                abi$kill(level);
+            }
         }
     }
 
     @Override
-    public void travel(Vec3 local) {
+    protected void abi$travel(Vec3 local) {
         if (isAlive() && !getPassengers().isEmpty()) {
             var passenger = getPassengers().get(0);
-            this.setYBodyRot(passenger.getYRot());
+            abi$setYBodyRot(passenger.getYRot());
         }
     }
 
     @Override
-    public void kill() {
-        this.remove(RemovalReason.KILLED);
-    }
-
-    public void autoKill() {
-        if (this.holdingTick > 0) {
-            this.holdingTick--;
-        }
-        if (this.holdingTick <= 0 && this.isAlive() && !this.isWorking()) {
-            kill();
-        }
+    protected void abi$addPassenger(Entity entity) {
+        super.abi$addPassenger(entity);
     }
 
     @Override
-    protected void removePassenger(Entity entity) {
-        super.removePassenger(entity);
-        this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
+    protected void abi$removePassenger(Entity entity) {
+        super.abi$removePassenger(entity);
+        holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
 
-    public boolean isWorking() {
-        if (getPassengers().isEmpty()) {
-            return false;
-        }
-        return getLevel() != null && blockPos != null && getLevel().getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
+    @Override
+    protected void abi$kill(ServerLevel level) {
+        remove();
+    }
+
+    @Override
+    protected void abi$setYBodyRot(float f) {
+        super.abi$setYBodyRot(f);
+        this.abi$setYRot(f);
+        yRotO = f;
+        yHeadRot = f;
     }
 
 
     @Override
-    public void setYBodyRot(float f) {
-        super.setYBodyRot(f);
-        this.setYRot(f);
-        this.yRotO = f;
-        this.yHeadRot = f;
-    }
-
-    @Override
-    public boolean isNoGravity() {
+    protected boolean abi$isNoGravity() {
         return true;
     }
 
     @Override
-    public boolean isPushable() {
+    protected boolean abi$isPushable() {
         return false;
     }
 
     @Override
-    public boolean isAttackable() {
+    protected boolean abi$isAttackable() {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    protected boolean abi$canBeCollidedWith(@Nullable Entity entity) {
         return false;
     }
 
     // REMOVE FROM 1.21
 //    @Override
-//    public double getPassengersRidingOffset() {
+//    protected double getPassengersRidingOffset() {
 //        return -0.15f;
 //    }
 
     @Override
-    public HumanoidArm getMainArm() {
-        return null;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public boolean shouldRender(double p_145770_1_, double p_145770_3_, double p_145770_5_) {
+    protected boolean abi$shouldRender(double x, double y, double z) {
         return false;
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public boolean shouldRenderAtSqrDistance(double p_70112_1_) {
+    protected boolean abi$shouldRenderAtSqrDistance(double distance) {
         return false;
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot p_184582_1_) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot slotType, ItemStack itemStack) {
     }
 
     public BlockPos getBlockPos() {
@@ -175,9 +142,15 @@ public class SeatEntity extends AbstractLivingEntity implements IDataSerializabl
         this.blockPos = blockPos;
     }
 
+    public boolean isWorking() {
+        if (getPassengers().isEmpty()) {
+            return false;
+        }
+        return blockPos != null && level().getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
+    }
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<BlockPos> REFER = IDataSerializerKey.create("Refer", IDataCodec.BLOCK_POS, BlockPos.ZERO);
+        public static final IDataSerializerKey<BlockPos> REFER = IDataSerializerKey.create("Refer", ExtraCodecs.BLOCK_POS, BlockPos.ZERO);
     }
 }

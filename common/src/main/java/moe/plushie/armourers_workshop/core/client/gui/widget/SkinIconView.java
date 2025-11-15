@@ -4,17 +4,12 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class SkinIconView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
@@ -34,25 +29,20 @@ public class SkinIconView extends UIControl {
             return;
         }
         var rect = bounds();
-        float tx = rect.x;
-        float ty = rect.y;
-        float tw = rect.width;
-        float th = rect.height;
-        float si = Math.min(tw, th);
-        var poseStack = context.state().ctm();
+        var tx = rect.x;
+        var ty = rect.y;
+        var tw = rect.width;
+        var th = rect.height;
+        var si = Math.min(tw, th);
         var colorScheme = descriptor.paintScheme();
-        var itemSource = SkinItemSource.EMPTY;
-        var buffers = AbstractBufferSource.buffer();
-        poseStack.pushPose();
-        poseStack.translate(tx + tw / 2f, ty + th / 2f, 200);
-        poseStack.scale(1, -1, 1);
-        poseStack.rotate(OpenVector3f.XP.rotationDegrees(30));
-        poseStack.rotate(OpenVector3f.YP.rotationDegrees(135));
-        poseStack.scale(0.625f, 0.625f, 0.625f);
-        poseStack.scale(si, si, si);
-        ExtendedItemRenderer.renderSkinInBox(bakedSkin, colorScheme, 0, 0xf000f0, itemSource, poseStack, buffers);
-        poseStack.popPose();
-        buffers.endBatch();
+        context.saveGraphicsState();
+        context.translateCTM(tx + tw / 2f, ty + th / 2f, 200);
+        context.scaleCTM(1, -1, 1);
+        context.rotateCTM(30, 135, 0);
+        context.scaleCTM(0.625f, 0.625f, 0.625f);
+        context.scaleCTM(si, si, si);
+        context.draw(SkinGuiElement.blit(bakedSkin, colorScheme, SkinItemSource.EMPTY));
+        context.restoreGraphicsState();
     }
 
     public SkinDescriptor skin() {

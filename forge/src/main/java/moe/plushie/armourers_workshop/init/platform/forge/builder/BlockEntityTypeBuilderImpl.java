@@ -1,44 +1,37 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
+import moe.plushie.armourers_workshop.api.client.IBlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IBlockEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeBlockEntity;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeRegistries;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
+import moe.plushie.armourers_workshop.compat.forge.builder.AbstractForgeBlockEntityTypeBuilder;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.LinkedList;
 import java.util.function.Supplier;
 
 public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlockEntityTypeBuilder<T> {
 
-    private IRegistryBinder<BlockEntityType<T>> binder;
-    private final LinkedList<Supplier<Block>> blocks = new LinkedList<>();
-    private final IBlockEntityType.Serializer<T> supplier;
+    private IRegistryBinder<IBlockEntityType<T>> binder;
+    private final AbstractForgeBlockEntityTypeBuilder<T> builder;
 
-    public BlockEntityTypeBuilderImpl(IBlockEntityType.Serializer<T> supplier) {
-        this.supplier = supplier;
+    public BlockEntityTypeBuilderImpl(IBlockEntityType.Serializer<T> serializer) {
+        this.builder = new AbstractForgeBlockEntityTypeBuilder<>(serializer);
     }
 
     @Override
     public IBlockEntityTypeBuilder<T> of(Supplier<Block> block) {
-        this.blocks.add(block);
+        this.builder.add(block);
         return this;
     }
 
     @Override
-    public IBlockEntityTypeBuilder<T> bind(Supplier<AbstractBlockEntityRendererProvider<T>> provider) {
+    public IBlockEntityTypeBuilder<T> bind(Supplier<IBlockEntityRenderer.Provider<T>> provider) {
         this.binder = () -> blockEntityType -> {
             // here is safe call client registry.
             GameRenderer.registerBlockEntityRendererFO(blockEntityType, provider.get());
@@ -48,31 +41,8 @@ public class BlockEntityTypeBuilderImpl<T extends BlockEntity> implements IBlock
 
     @Override
     public IRegistryHolder<IBlockEntityType<T>> build(String name) {
-        IRegistryHolder<BlockEntityType<T>> object = AbstractForgeRegistries.BLOCK_ENTITY_TYPES.register(name, () -> {
-            Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
-            return AbstractForgeBlockEntity.createType(supplier, blocks1);
-        });
-        Proxy<T> proxy = new Proxy<>(object);
-        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, object));
-        return TypedRegistry.Entry.of(object.registryName(), () -> proxy);
-    }
-
-    public static class Proxy<T extends BlockEntity> implements IBlockEntityType<T> {
-
-        private final IRegistryHolder<BlockEntityType<T>> object;
-
-        public Proxy(IRegistryHolder<BlockEntityType<T>> object) {
-            this.object = object;
-        }
-
-        @Override
-        public T create(BlockGetter level, BlockPos blockPos, BlockState blockState) {
-            return AbstractForgeBlockEntity.create(object.get(), level, blockPos, blockState);
-        }
-
-        @Override
-        public BlockEntityType<T> get() {
-            return object.get();
-        }
+        var entry = Registries.BLOCK_ENTITY_TYPES.register(name, builder::build);
+        EnvironmentExecutor.willInit(EnvironmentType.CLIENT, IRegistryBinder.perform(binder, entry));
+        return entry;
     }
 }

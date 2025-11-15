@@ -92,11 +92,11 @@ public class UpdateAnimationPacket extends CustomPacket {
     private AnimationManager getTargetRenderData(Player player) {
         if (value.contains("entity")) {
             var entityId = value.getOptionalInt("entity").orElse(0);
-            return AnimationManager.of(player.getLevel().getEntity(entityId));
+            return AnimationManager.of(player.level().getEntity(entityId));
         }
         if (value.contains("block")) {
             var blockPos = BlockPos.of(value.getOptionalLong("block").orElse(0L));
-            return AnimationManager.of(player.getLevel().getBlockEntity(blockPos));
+            return AnimationManager.of(player.level().getBlockEntity(blockPos));
         }
         return null;
     }

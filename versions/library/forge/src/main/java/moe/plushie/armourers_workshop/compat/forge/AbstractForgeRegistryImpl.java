@@ -1,0 +1,25 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.TypedProvider;
+import moe.plushie.armourers_workshop.init.ModConstants;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+@Available("[1.21, 1.22)")
+public abstract class AbstractForgeRegistryImpl {
+
+    public static <T> TypedProvider<T> from(ResourceKey<Registry<T>> registryKey) {
+        return new AbstractForgeRegistry<>(null, null, deferred(DeferredRegister.create(registryKey, ModConstants.MOD_ID)));
+    }
+
+    public static <T> TypedProvider<T> from(Registry<T> registry) {
+        return new AbstractForgeRegistry<>(registry::getKey, registry::get, deferred(DeferredRegister.create(registry, ModConstants.MOD_ID)));
+    }
+
+    private static <T> TypedProvider<T> deferred(DeferredRegister<T> register) {
+        register.register(AbstractForgeInitializer.getModEventBus());
+        return TypedProvider.factory((registryName, supplier) -> register.register(registryName.path(), supplier));
+    }
+}

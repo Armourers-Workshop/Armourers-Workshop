@@ -3,18 +3,17 @@ package moe.plushie.armourers_workshop.core.client.shader;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
-@Environment(EnvType.CLIENT)
 public abstract class Shader {
 
     protected final Int2ObjectOpenHashMap<OpenMatrix4f> overlayMatrices = new Int2ObjectOpenHashMap<>();
@@ -67,16 +66,16 @@ public abstract class Shader {
     }
 
     public void render(ShaderVertexObject object) {
-        var entry = object.poseStack().last();
+        var pose = object.pose();
 
         // we need fast update the uniforms,
         // so we're never using from vanilla uniforms.
-        context.setObjectViewMatrix(entry.pose());
-        context.setObjectNormalMatrix(entry.normal());
+        context.setObjectViewMatrix(pose.pose());
+        context.setObjectNormalMatrix(pose.normal());
         context.setOverlayTextureMatrix(getOverlayTextureMatrix(object));
         context.setLightmapTextureMatrix(getLightmapTextureMatrix(object));
         context.setColorModulator(getColorColorModulator(object));
-        context.setMatrixFlags(entry.properties() | 0x01);
+        context.setMatrixFlags(pose.properties() | 0x01);
 
         // https://web.archive.org/web/20201010072314/https://sites.google.com/site/threejstuts/home/polygon_offset
         // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
@@ -89,10 +88,10 @@ public abstract class Shader {
         ShaderUniforms.getInstance().apply(getLastProgramId());
 
         // ..
-        drawElements(object, object.arrayObject(), object.indexObject(), object.total());
+        drawElements(object, object.arrayObject(), object.indexObject(), object.vertexCount());
     }
 
-    protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, VertexIndexObject indexObject, int count) {
+    protected void drawElements(ShaderVertexObject vertexObject, VertexArrayObject arrayObject, @Nullable VertexIndexObject indexObject, int count) {
         arrayObject.bind();
         if (indexObject != null) {
             GL15.glDrawElements(GL15.GL_TRIANGLES, indexObject.stride(count), indexObject.type(), 0);
@@ -113,8 +112,8 @@ public abstract class Shader {
         }
         // a special matrix, function is reset location of the texture.
         return overlayMatrices.computeIfAbsent(object.overlay(), overlay -> {
-            var u = overlay & 0xffff;
-            var v = (overlay >> 16) & 0xffff;
+            var u = OverlayTexture.getU(overlay);
+            var v = OverlayTexture.getV(overlay);
             var newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
             newValue.setTranslation(u, v, 0);
             return newValue;
@@ -129,8 +128,8 @@ public abstract class Shader {
         }
         // a special matrix, function is reset location of the texture.
         return lightmapMatrices.computeIfAbsent(object.lightmap(), lightmap -> {
-            var u = lightmap & 0xffff;
-            var v = (lightmap >> 16) & 0xffff;
+            var u = LightmapTexture.getU(lightmap);
+            var v = LightmapTexture.getV(lightmap);
             var newValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
             newValue.setTranslation(u, v, 0);
             return newValue;
@@ -146,9 +145,9 @@ public abstract class Shader {
 
     protected OpenVector4f getOutlineColor(ShaderVertexObject object) {
         return outlineColors.computeIfAbsent(object.outlineColor() | 0xff000000, color -> {
-            float red = ColorUtils.getRed(color) / 255f;
-            float green = ColorUtils.getGreen(color) / 255f;
-            float blue = ColorUtils.getBlue(color) / 255f;
+            float red = Colors.getRed(color) / 255f;
+            float green = Colors.getGreen(color) / 255f;
+            float blue = Colors.getBlue(color) / 255f;
             return new OpenVector4f(red, green, blue, 1f);
         });
     }

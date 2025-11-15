@@ -1,24 +1,23 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.InputManagerImpl;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.Screen;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-@Environment(EnvType.CLIENT)
 public class ItemTooltipManager {
 
     public static List<Component> createSkinInfo(BakedSkin bakedSkin) {
@@ -90,11 +88,11 @@ public class ItemTooltipManager {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.flavourText().trim()));
         }
 
-        if (ModDebugger.tooltip && !Screen.hasShiftDown()) {
+        if (ModDebugger.tooltip && !InputManagerImpl.hasShiftDown()) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
 
-        if (ModDebugger.tooltip && Screen.hasShiftDown()) {
+        if (ModDebugger.tooltip && InputManagerImpl.hasShiftDown()) {
             var totals = String.format("%d/%d/%d/%d",
                     counter.getGeometryTotal(SkinGeometryTypes.BLOCK_SOLID),
                     counter.getGeometryTotal(SkinGeometryTypes.BLOCK_GLOWING),
@@ -164,7 +162,7 @@ public class ItemTooltipManager {
         }
         var tooltips = event.tooltips();
         if (event.context().flags().isAdvanced()) {
-            var registryName = TypedRegistry.findKey(itemStack.getItem()).toString();
+            var registryName = Registries.ITEMS.getKey(itemStack.getItem()).toString();
             for (int index = tooltips.size(); index > 0; --index) {
                 var text = tooltips.get(index - 1);
                 if (registryName.equals(text.getString())) {
@@ -177,10 +175,19 @@ public class ItemTooltipManager {
     }
 
     public static void renderSkinTooltip(ItemTooltipEvent.Render event) {
+        event.draw(context -> {
+            var itemStack = event.itemStack();
+            var frame = event.frame();
+            var screenHeight = event.screenHeight();
+            var screenWidth = event.screenWidth();
+            renderSkinTooltip(itemStack, frame, screenWidth, screenHeight, context);
+        });
+    }
+
+    private static void renderSkinTooltip(ItemStack itemStack, CGRect frame, float screenWidth, float screenHeight, CGGraphicsContext context) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
-        var itemStack = event.itemStack();
         var descriptor = SkinDescriptor.of(itemStack);
         var options = descriptor.options();
         if (!options.contains(SkinDescriptor.TooltipFlags.PREVIEW)) {
@@ -190,16 +197,12 @@ public class ItemTooltipManager {
         if (bakedSkin == null) {
             return;
         }
-        var frame = event.frame();
-        var context = event.context();
-        float screenHeight = event.screenHeight();
-        float screenWidth = event.screenWidth();
         float dx, dy;
         float size = ModConfig.Client.skinPreSize;
         if (ModConfig.Client.skinPreLocFollowMouse) {
             dx = frame.x - 28 - size;
             dy = frame.y - 4;
-            if (frame.x < context.state().mousePos().x()) {
+            if (frame.x < context.param().mouseX()) {
                 dx = frame.x + frame.width + 28;
             }
             dy = OpenMath.clamp(dy, 0, screenHeight - size);
@@ -207,12 +210,19 @@ public class ItemTooltipManager {
             dx = OpenMath.ceili((screenWidth - size) * ModConfig.Client.skinPreLocHorizontal);
             dy = OpenMath.ceili((screenHeight - size) * ModConfig.Client.skinPreLocVertical);
         }
-        if (ModConfig.Client.skinPreDrawBackground) {
-            context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4, 400);
-        }
+        var tx = dx;
+        var ty = dy;
         var colorScheme = descriptor.paintScheme();
-        var buffers = AbstractBufferSource.buffer();
-        ExtendedItemRenderer.renderSkinInTooltip(bakedSkin, colorScheme, itemStack, dx, dy, 500, size, size, 30, 45, 0, 0, 0xf000f0, context.state().ctm(), buffers);
-        buffers.endBatch();
+
+        context.saveGraphicsState();
+        context.translateCTM(0, 0, 400);
+
+        if (ModConfig.Client.skinPreDrawBackground) {
+            context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
+        }
+
+        context.translateCTM(0, 0, 100);
+        context.draw(SkinGuiElement.blit(bakedSkin, colorScheme, itemStack, tx, ty, 0, size, size, 30, 45, 0));
+        context.restoreGraphicsState();
     }
 }

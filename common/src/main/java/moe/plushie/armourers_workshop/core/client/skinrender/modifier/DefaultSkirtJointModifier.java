@@ -1,30 +1,30 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.modifier;
 
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.core.armature.Joint;
+import moe.plushie.armourers_workshop.core.armature.JointContext;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 
 public class DefaultSkirtJointModifier extends JointModifier {
 
     @Override
-    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
+    public IJointTransform apply(IJointTransform transform, Joint joint, JointContext context) {
         // ...
-        var body = model.partByName("body");
-        var leg1 = model.partByName("left_leg");
-        var leg2 = model.partByName("right_leg");
+        var body = context.poses().byPartName("body");
+        var leg1 = context.poses().byPartName("left_leg");
+        var leg2 = context.poses().byPartName("right_leg");
         // sorry, but we can't complete this convert.
         if (body == null || leg1 == null || leg2 == null) {
             return transform;
         }
         return poseStack -> {
-            var z = (leg1.pose().z() + leg2.pose().z()) / 2;
-            poseStack.translate(body.pose().x(), leg1.pose().y(), z);
-            if (body.pose().yRot() != 0) {
-                poseStack.rotate(OpenVector3f.YP.rotation(body.pose().yRot()));
+            var z = (leg1.z() + leg2.z()) / 2;
+            poseStack.translate(body.x(), leg1.y(), z);
+            if (body.yRot() != 0) {
+                poseStack.rotate(OpenVector3f.YP.rotation(body.yRot()));
             }
-            var xRot = (ort(leg1.pose().xRot()) + ort(leg2.pose().xRot())) / 2;
+            var xRot = (ort(leg1.xRot()) + ort(leg2.xRot())) / 2;
             if (Float.compare(xRot, 0) != 0) {
                 poseStack.rotate(OpenVector3f.XP.rotation(xRot));
             }

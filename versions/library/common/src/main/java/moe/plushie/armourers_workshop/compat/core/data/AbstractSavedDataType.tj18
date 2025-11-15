@@ -1,0 +1,39 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@Available("[1.18, 1.21)")
+public class AbstractSavedDataType<T extends AbstractSavedData> {
+
+    private final String id;
+    private final Supplier<T> factory;
+    private final Function<CompoundTag, T> deserializer;
+
+    public AbstractSavedDataType(String id, Supplier<T> factory, Function<CompoundTag, T> deserializer) {
+        this.id = id;
+        this.factory = factory;
+        this.deserializer = deserializer;
+    }
+
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
+        return new AbstractSavedDataType<>(id, factory, (tag) -> {
+            T value = factory.get();
+            value.deserialize(new TagSerializer(tag));
+            return value;
+        });
+    }
+
+    public T computeIfAbsent(DimensionDataStorage storage) {
+        return storage.computeIfAbsent(deserializer, factory, id);
+    }
+
+    public T get(DimensionDataStorage storage) {
+        return storage.get(deserializer, id);
+    }
+}

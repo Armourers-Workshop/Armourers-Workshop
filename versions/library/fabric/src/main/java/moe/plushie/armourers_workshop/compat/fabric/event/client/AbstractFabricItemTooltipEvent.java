@@ -1,0 +1,69 @@
+package moe.plushie.armourers_workshop.compat.fabric.event.client;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGRect;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractTooltipContext;
+import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipEvents;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+@Available("[1.21, )")
+public class AbstractFabricItemTooltipEvent {
+
+    public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {
+        return (priority, receiveCancelled, subscriber) -> ItemTooltipCallback.EVENT.register((stack, context, flags, lines) -> subscriber.accept(new ItemTooltipEvent.Gather() {
+            @Override
+            public ItemStack itemStack() {
+                return stack;
+            }
+
+            @Override
+            public List<Component> tooltips() {
+                return lines;
+            }
+
+            @Override
+            public ITooltipContext context() {
+                return AbstractTooltipContext.wrap(context, null, flags);
+            }
+        }));
+    }
+
+    public static IEventHandler<ItemTooltipEvent.Render> renderFactory() {
+        return (priority, receiveCancelled, subscriber) -> RenderTooltipEvents.BEFORE.register((itemStack, x, y, width, height, screenWidth, screenHeight, contextQueue) -> subscriber.accept(new ItemTooltipEvent.Render() {
+
+            @Override
+            public void draw(Consumer<CGGraphicsContext> action) {
+                contextQueue.accept(action);
+            }
+
+            @Override
+            public ItemStack itemStack() {
+                return itemStack;
+            }
+
+            @Override
+            public CGRect frame() {
+                return new CGRect(x, y, width, height);
+            }
+
+            @Override
+            public float screenWidth() {
+                return screenWidth;
+            }
+
+            @Override
+            public float screenHeight() {
+                return screenHeight;
+            }
+        }));
+    }
+}

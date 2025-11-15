@@ -19,13 +19,13 @@ public class SkinningTableBlockEntity extends UpdatableBlockEntity {
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         container.deserialize(serializer);
         options = serializer.read(CodingKeys.OPTIONS);
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         container.serialize(serializer);
         serializer.write(CodingKeys.OPTIONS, options);
     }

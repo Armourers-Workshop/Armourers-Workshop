@@ -8,10 +8,4 @@ import static moe.plushie.armourers_workshop.gametest.utils.AssertLog.assertPrin
 
 @Asynchronous
 public class TestRegistryCase {
-
-    @Test
-    @EnabledInVersion("[1.21, )")
-    public void testDataAttachmentTypeRegisters() {
-        assertPrintLog("Registering Data Attachment Type 'armourers_workshop:entity-skin-provider'");
-    }
 }

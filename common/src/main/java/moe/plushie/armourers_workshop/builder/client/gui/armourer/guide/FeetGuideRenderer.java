@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class FeetGuideRenderer extends AbstractGuideRenderer {
 
     protected final OpenModelPart legLeft;
@@ -34,27 +31,27 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPPED_RIGHT_FOOT, this::renderRightLeg);
     }
 
-    public void render(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
+    public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
         float f = 1 / 16f;
-        poseStack.pushPose();
-        poseStack.translate(2 * f, 0, 0);
-        renderLeftLeg(poseStack, provider, light, overlay, bufferSource);
-        poseStack.translate(-4 * f, 0, 0);
-        renderRightLeg(poseStack, provider, light, overlay, bufferSource);
-        poseStack.popPose();
+        context.saveGraphicsState();
+        context.translateCTM(2 * f, 0, 0);
+        renderLeftLeg(provider, lightmap, overlay, context);
+        context.translateCTM(-4 * f, 0, 0);
+        renderRightLeg(provider, lightmap, overlay, context);
+        context.restoreGraphicsState();
     }
 
-    public void renderLeftLeg(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
-        legLeft.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderLeftLeg(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
+        context.draw(ModelPartElement.newInstance(legLeft, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS)) {
-            leftPants.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            context.draw(ModelPartElement.newInstance(leftPants, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
-    public void renderRightLeg(IPoseStack poseStack, GuideDataProvider provider, int light, int overlay, IBufferSource bufferSource) {
-        legRight.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), light, overlay);
+    public void renderRightLeg(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
+        context.draw(ModelPartElement.newInstance(legRight, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS)) {
-            rightPants.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT_NO_CULL), light, overlay);
+            context.draw(ModelPartElement.newInstance(rightPants, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
         }
     }
 }

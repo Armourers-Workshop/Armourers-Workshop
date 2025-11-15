@@ -13,7 +13,7 @@ import com.apple.library.uikit.UIScrollView;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -186,7 +186,7 @@ public class PartPickerView extends UIControl {
 
     private ArrayList<PartItem> inventorySkins() {
         var allSkins = new ArrayList<PartItem>();
-        var player = EnvironmentManager.getPlayer();
+        var player = Minecraft.getInstance().player;
         if (player == null) {
             return allSkins;
         }

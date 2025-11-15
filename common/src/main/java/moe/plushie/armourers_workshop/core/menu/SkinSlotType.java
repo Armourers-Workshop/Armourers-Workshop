@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
-import com.mojang.serialization.Codec;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -48,7 +48,7 @@ public enum SkinSlotType {
     private final int index;
     private final int size;
     private final SkinType skinType;
-    public static final Codec<SkinSlotType> CODEC = Codec.STRING.xmap(Helper::decode, Helper::encode);
+    public static final IDataCodec<SkinSlotType> CODEC = IDataCodec.STRING.xmap(Helper::decode, Helper::encode);
 
     SkinSlotType(int id, int index, int size, String serializedName, SkinType skinType) {
         this.id = id;

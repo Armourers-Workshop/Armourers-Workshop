@@ -21,7 +21,7 @@ public class NSLayoutConstraint {
      * Creates a constraint that defines the relationship between the specified attributes of the given views.
      * <p>
      * Constraints represent linear equations of the form view1.attr1 <relation> multiplier x view2.attr2 + constant.
-     * If the constraint you wish to express does not have a second view and attribute, use null and NSLayoutAttribute.NONE.
+     * If the constraint you wish to express does not have a second view and attribute, use null and NSLayoutAttribute.UNKNOWN.
      *
      * @param view1      The view for the left side of the constraint.
      * @param attr1      The attribute of the view for the left side of the constraint.

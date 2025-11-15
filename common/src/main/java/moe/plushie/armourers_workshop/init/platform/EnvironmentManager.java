@@ -1,42 +1,34 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientResourceManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
 public class EnvironmentManager {
 
-    @ExpectPlatform
-    public static String getModVersion(String modId) {
-        throw new AssertionError();
-    }
+    private static final PlatformManager PLATFORM = PlatformLoader.load(PlatformManager.class);
 
-    @ExpectPlatform
     public static EnvironmentPlatformType getPlatformType() {
-        throw new AssertionError();
+        return PLATFORM.getPlatformType();
     }
 
-    @ExpectPlatform
     public static EnvironmentType getEnvironmentType() {
-        throw new AssertionError();
+        return PLATFORM.getEnvironmentType();
     }
 
-    @ExpectPlatform
     public static File getRootDirectory() {
-        throw new AssertionError();
+        return new File(PLATFORM.getGameDir().toFile(), "armourers_workshop");
     }
 
     public static File getSkinLibraryDirectory() {
@@ -51,9 +43,8 @@ public class EnvironmentManager {
         return getServer().getWorldPath(new LevelResource(Constants.Folder.LOCAL_DB)).toFile();
     }
 
-    @ExpectPlatform
     public static MinecraftServer getServer() {
-        throw new AssertionError();
+        return PLATFORM.getServer();
     }
 
     public static OpenDistributionType getDistributionType(MinecraftServer server) {
@@ -66,48 +57,33 @@ public class EnvironmentManager {
         return OpenDistributionType.INTEGRATED_SERVER;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static Minecraft getClient() {
-        return Minecraft.getInstance();
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static Player getPlayer() {
-        return getClient().player;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static IResourceManager getResourceManager() {
-        return getClient().getResourceManager().asResourceManager();
-    }
-
     public static boolean isDedicatedServer() {
         return getEnvironmentType() == EnvironmentType.SERVER;
     }
 
-    @ExpectPlatform
+    @Nullable
+    public static String getModVersion(String modId) {
+        return PLATFORM.getVersion(modId);
+    }
+
     public static boolean isDevelopment() {
-        throw new AssertionError();
+        return PLATFORM.isDevelopment();
     }
 
-    @ExpectPlatform
-    public static boolean isInstalled(String modId) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static IConfigSpec getClientConfigSpec() {
-        throw new AssertionError();
+        return PLATFORM.getClientConfig();
     }
 
-    @ExpectPlatform
     public static IConfigSpec getCommonConfigSpec() {
-        throw new AssertionError();
+        return PLATFORM.getCommonConfig();
     }
 
-    @ExpectPlatform
     public static AbstractRegistryManager getRegistryManager() {
-        throw new AssertionError();
+        return PLATFORM.getRegistryManager();
+    }
+
+    public static AbstractResourceManager getClientResourceManager() {
+        return EnvironmentExecutor.callOnClient(() -> AbstractClientResourceManager::getInstance).orElse(null);
     }
 }
 

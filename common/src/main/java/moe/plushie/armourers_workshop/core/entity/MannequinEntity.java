@@ -1,18 +1,23 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
-import moe.plushie.armourers_workshop.api.common.IEntityHandler;
+import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractLivingEntity;
+import moe.plushie.armourers_workshop.compat.core.entity.AbstractArmorStand;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.TypedEntityData;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntitySerializers;
@@ -21,18 +26,15 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -45,9 +47,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements IEntityHandler, IDataSerializable.Mutable {
+public class MannequinEntity extends AbstractArmorStand implements IDataSerializable.Mutable {
 
     public static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0f, 0.0f, 0.0f);
     public static final Rotations DEFAULT_BODY_POSE = new Rotations(0.0f, 0.0f, 0.0f);
@@ -67,40 +70,16 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     public static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DATA_EXTRA_RENDERER = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> DATA_NO_GRAVITY = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
-    public static final EntityDataAccessor<EntityTextureDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE);
-    public static final EntityDataAccessor<EntityTextureDescriptor.Model> DATA_TEXTURE_MODEL = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE_MODEL);
+    public static final EntityDataAccessor<EntityTextureDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE.get());
+    public static final EntityDataAccessor<EntityTextureDescriptor.Model> DATA_TEXTURE_MODEL = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE_MODEL.get());
 
     private boolean isDropEquipment = false;
+
+    private AABB boundingBox;
     private AABB boundingBoxForCulling;
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, Level level) {
         super(entityType, level);
-    }
-
-    @Override
-    protected void defineSynchedData(IEntityDataBuilder builder) {
-        super.defineSynchedData(builder);
-        builder.define(DATA_IS_CHILD, false);
-        builder.define(DATA_IS_FLYING, false);
-        builder.define(DATA_IS_GHOST, false);
-        builder.define(DATA_IS_VISIBLE, true);
-        builder.define(DATA_EXTRA_RENDERER, true);
-        builder.define(DATA_NO_GRAVITY, true); // default is no gravity
-        builder.define(DATA_SCALE, 1.0f);
-        builder.define(DATA_TEXTURE, EntityTextureDescriptor.EMPTY);
-        builder.define(DATA_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.deserialize(new TagSerializer(tag));
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        this.serialize(new TagSerializer(tag));
     }
 
     @Override
@@ -139,7 +118,33 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> dataParameter) {
+    protected void abi$readAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$readAdditionalSaveData(serializer);
+        this.deserialize(serializer);
+    }
+
+    @Override
+    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$addAdditionalSaveData(serializer);
+        this.serialize(serializer);
+    }
+
+    @Override
+    protected void abi$defineSynchedData(IEntityDataBuilder builder) {
+        super.abi$defineSynchedData(builder);
+        builder.define(DATA_IS_CHILD, false);
+        builder.define(DATA_IS_FLYING, false);
+        builder.define(DATA_IS_GHOST, false);
+        builder.define(DATA_IS_VISIBLE, true);
+        builder.define(DATA_EXTRA_RENDERER, true);
+        builder.define(DATA_NO_GRAVITY, true); // default is no gravity
+        builder.define(DATA_SCALE, 1.0f);
+        builder.define(DATA_TEXTURE, EntityTextureDescriptor.EMPTY);
+        builder.define(DATA_TEXTURE_MODEL, EntityTextureDescriptor.Model.WIDE);
+    }
+
+    @Override
+    protected void abi$onSyncedDataUpdated(EntityDataAccessor<?> dataParameter) {
         if (DATA_IS_CHILD.equals(dataParameter)) {
             refreshDimensions();
         }
@@ -149,149 +154,146 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         if (DATA_NO_GRAVITY.equals(dataParameter)) {
             refreshPhysics();
         }
-        super.onSyncedDataUpdated(dataParameter);
-    }
-
-    public boolean isModelVisible() {
-        return entityData.get(DATA_IS_VISIBLE);
-    }
-
-    public void setModelVisible(boolean value) {
-        entityData.set(DATA_IS_VISIBLE, value);
+        super.abi$onSyncedDataUpdated(dataParameter);
     }
 
     @Override
-    public float getScale() {
+    protected OpenInteractionResult abi$interactAt(Player player, Vec3 pos, OpenInteractionHand hand) {
+        if (isMarker()) {
+            return OpenInteractionResult.PASS;
+        }
+        var itemStack = player.getItemInHand(hand);
+        if (itemStack.is(ModItems.MANNEQUIN_TOOL.get())) {
+            return OpenInteractionResult.PASS;
+        }
+        if (itemStack.is(Items.NAME_TAG)) {
+            // forward to vanilla `NameTagItem` implementations.
+            return itemStack.interactLivingEntity(player, this, hand, null);
+        }
+        if (player.isSecondaryUseActive()) {
+            // forward to vanilla armour stand interact implementations.
+            if (EnvironmentExecutorIO.hasControlDown()) {
+                return super.abi$interactAt(player, pos, hand);
+            }
+            var ry = OpenMath.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
+            var rotations = getBodyPose();
+            var yRot = abi$getYRot();
+            setBodyPose(new Rotations(rotations.x(), (float) ry - yRot, rotations.z()));
+            return OpenInteractionResult.sidedSuccess(level().isClientSide());
+        }
+        var wardrobe = SkinWardrobe.of(this);
+        if (wardrobe != null && wardrobe.isEditable(player)) {
+            player.openMenu(ModMenuTypes.WARDROBE, wardrobe);
+            return OpenInteractionResult.sidedSuccess(level().isClientSide());
+        }
+        return OpenInteractionResult.PASS;
+    }
+
+    @Override
+    public boolean abi$hurt(ServerLevel level, DamageSource source, float amount) {
+        isDropEquipment = false;
+        var oldAlive = abi$isAlive();
+        var result = super.abi$hurt(level, source, amount);
+        if (!isDropEquipment && oldAlive != abi$isAlive()) {
+            abi$brokenByAnything(level, source);
+        }
+        return result;
+    }
+
+    @Override
+    protected void abi$brokenByPlayer(ServerLevel serverLevel, DamageSource source) {
+        // drop a mannequin item stack?
+        if (source.getEntity() instanceof Player player && !player.getAbilities().instabuild) {
+            var entityData = new EntityData();
+            entityData.setScale(getScale());
+            entityData.setTexture(getTextureDescriptor());
+            Block.popResource(level(), blockPosition(), entityData.itemStack());
+        }
+        abi$brokenByAnything(serverLevel, source);
+    }
+
+    @Override
+    protected void abi$dropEquipment(ServerLevel level) {
+        super.abi$dropEquipment(level);
+        this.isDropEquipment = true;
+        // drop all wardrobe items.
+        var wardrobe = SkinWardrobe.of(this);
+        if (wardrobe != null) {
+            wardrobe.dropAll(it -> spawnAtLocation(level, it));
+        }
+    }
+
+    @Override
+    protected ItemStack abi$getPickedResult(HitResult target) {
+        var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
+        // yep, we need copy the fully model info when ctrl down.
+        if (EnvironmentExecutorIO.hasControlDown()) {
+            var serializer = new TagSerializer(SerializationContext.from(this));
+            abi$readAdditionalSaveData(serializer);
+            itemStack.set(ModDataComponents.ENTITY_DATA.get(), TypedEntityData.of(ModEntityTypes.MANNEQUIN.get(), serializer.tag()));
+        }
+        return itemStack;
+    }
+
+    @Override
+    protected float abi$sanitizeScale(float f) {
         return entityData.get(DATA_SCALE);
     }
 
     @Override
-    public boolean isSmall() {
-        return entityData.get(DATA_IS_CHILD);
+    protected void abi$setYBodyRot(float f) {
+        super.abi$setYBodyRot(f);
+        abi$setYRot(f);
+        yBodyRot = f;
     }
 
     @Override
-    public boolean isNoGravity() {
+    protected void abi$setNoGravity(boolean bl) {
+        entityData.set(DATA_NO_GRAVITY, bl);
+    }
+
+    @Override
+    protected boolean abi$isNoGravity() {
         return entityData.get(DATA_NO_GRAVITY);
     }
 
     @Override
-    public void setNoGravity(boolean bl) {
-        entityData.set(DATA_NO_GRAVITY, bl);
-    }
-
-    public boolean isFakeFlying() {
-        return entityData.get(DATA_IS_FLYING);
+    protected boolean abi$isMarker() {
+        return super.abi$isMarker();
     }
 
     @Override
-    public boolean canBeCollidedWith() {
-        return this.isAlive() && !entityData.get(DATA_IS_GHOST);
+    protected boolean abi$isSmall() {
+        return entityData.get(DATA_IS_CHILD);
     }
 
     @Override
-    public EntityDimensions getDefaultDimensions(Pose pose) {
-        if (isMarker()) {
+    protected boolean abi$canBeCollidedWith(@Nullable Entity entity) {
+        return abi$isAlive() && !entityData.get(DATA_IS_GHOST);
+    }
+
+    @Override
+    protected EntityDimensions abi$getDefaultDimensions(Pose pose) {
+        if (abi$isMarker()) {
             return MARKER_DIMENSIONS;
         }
         var entitySize = STANDING_DIMENSIONS;
-        if (isBaby()) {
+        if (abi$isSmall()) {
             entitySize = BABY_DIMENSIONS;
         }
         return entitySize;
     }
 
     @Override
-    public ItemStack getCustomPickResult(HitResult target) {
-        var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-        // yep, we need copy the fully model info when ctrl down.
-        if (EnvironmentExecutorIO.hasControlDown()) {
-            var entityTag = new CompoundTag();
-            entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.registryName().toString());
-            addAdditionalSaveData(entityTag);
-            itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
+    protected AABB abi$getBoundingBoxForCulling() {
+        // reuse object when the cache is valid.
+        if (boundingBoxForCulling != null && boundingBox == getBoundingBox()) {
+            return boundingBoxForCulling;
         }
-        return itemStack;
-    }
-
-    @Override
-    public void setYBodyRot(float f) {
-        super.setYBodyRot(f);
-        this.setYRot(f);
-        this.yBodyRot = f;
-    }
-
-    @Override
-    public void setPos(double d, double e, double f) {
-        super.setPos(d, e, f);
-        this.boundingBoxForCulling = null;
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        isDropEquipment = false;
-        boolean flag = this.isAlive();
-        boolean flag1 = super.hurt(source, amount);
-        var level = getLevel();
-        if (!isDropEquipment && flag != this.isAlive() && level instanceof ServerLevel) {
-            this.brokenByAnything((ServerLevel) level, source);
-        }
-        return flag1;
-    }
-
-    @Override
-    public InteractionResult interactAt(Player player, Vec3 pos, InteractionHand hand) {
-        if (isMarker()) {
-            return InteractionResult.PASS;
-        }
-        var itemStack = player.getItemInHand(hand);
-        if (itemStack.is(ModItems.MANNEQUIN_TOOL.get())) {
-            return InteractionResult.PASS;
-        }
-        if (itemStack.is(Items.NAME_TAG)) {
-            // forward to vanilla `NameTagItem` implementations.
-            return itemStack.interactLivingEntity(player, this, hand);
-        }
-        if (player.isSecondaryUseActive()) {
-            // forward to vanilla armour stand interact implementations.
-            if (EnvironmentExecutorIO.hasControlDown()) {
-                return super.interactAt(player, pos, hand);
-            }
-            var ry = OpenMath.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
-            var rotations = getBodyPose();
-            var yRot = this.getYRot();
-            setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
-            return InteractionResult.sidedSuccess(getLevel().isClientSide());
-        }
-        var wardrobe = SkinWardrobe.of(this);
-        if (wardrobe != null && wardrobe.isEditable(player)) {
-            ModMenuTypes.WARDROBE.get().openMenu(player, wardrobe);
-            return InteractionResult.sidedSuccess(getLevel().isClientSide());
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
-    public void brokenByPlayer(ServerLevel serverLevel, DamageSource source) {
-        // drop a mannequin item stack?
-        if (source.getEntity() instanceof Player player && !player.getAbilities().instabuild) {
-            var entityData = new EntityData();
-            entityData.setScale(getScale());
-            entityData.setTexture(getTextureDescriptor());
-            Block.popResource(getLevel(), blockPosition(), entityData.itemStack());
-        }
-        this.brokenByAnything(serverLevel, source);
-    }
-
-    @Override
-    protected void dropEquipment() {
-        super.dropEquipment();
-        this.isDropEquipment = true;
-        // drop all wardrobe items.
-        var wardrobe = SkinWardrobe.of(this);
-        if (wardrobe != null) {
-            wardrobe.dropAll(this::spawnAtLocation);
-        }
+        var f = getScale();
+        boundingBox = getBoundingBox();
+        boundingBoxForCulling = boundingBox.inflate(f * 3f, f * 2f, f * 2.5f);
+        return boundingBoxForCulling;
     }
 
     protected void refreshPhysics() {
@@ -302,15 +304,16 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         return !isMarker() && !isNoGravity();
     }
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    public AABB getBoundingBoxForCulling() {
-        if (boundingBoxForCulling != null) {
-            return boundingBoxForCulling;
-        }
-        float f = getScale();
-        boundingBoxForCulling = this.getBoundingBox().inflate(f * 3f, f * 2f, f * 2.5f);
-        return boundingBoxForCulling;
+    public boolean isFakeFlying() {
+        return entityData.get(DATA_IS_FLYING);
+    }
+
+    public boolean isModelVisible() {
+        return entityData.get(DATA_IS_VISIBLE);
+    }
+
+    public void setModelVisible(boolean value) {
+        entityData.set(DATA_IS_VISIBLE, value);
     }
 
     public EntityTextureDescriptor getTextureDescriptor() {
@@ -337,6 +340,19 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         this.entityData.set(DATA_EXTRA_RENDERER, value);
     }
 
+    public void setPosition(OpenVector3f position) {
+        snapTo(position.x(), position.y(), position.z());
+    }
+
+    public void setPositionAndRot(OpenVector3f position, float yRot, float xRot) {
+        snapTo(position.x(), position.y(), position.z(), yRot, xRot);
+    }
+
+    public OpenVector3f getPosition() {
+        var position = position();
+        return new OpenVector3f(position.x(), position.y(), position.z());
+    }
+
     public Container getInventory() {
         return new SimpleContainer(getMainHandItem(), getOffhandItem()) {
             @Override
@@ -348,7 +364,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     }
 
     public CompoundTag saveCustomPose() {
-        var serializer = new TagSerializer();
+        var serializer = new TagSerializer(SerializationContext.from(this));
         serializer.write(CodingKeys.POSE_HEAD, entityData.get(DATA_HEAD_POSE));
         serializer.write(CodingKeys.POSE_BODY, entityData.get(DATA_BODY_POSE));
         serializer.write(CodingKeys.POSE_LEFT_ARM, entityData.get(DATA_LEFT_ARM_POSE));
@@ -359,7 +375,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     }
 
     public void readCustomPose(CompoundTag tag) {
-        var serializer = new TagSerializer(tag);
+        var serializer = new TagSerializer(tag, SerializationContext.from(this));
         setHeadPose(serializer.read(CodingKeys.POSE_HEAD));
         setBodyPose(serializer.read(CodingKeys.POSE_BODY));
         setLeftArmPose(serializer.read(CodingKeys.POSE_LEFT_ARM));
@@ -369,11 +385,11 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
     }
 
     public void saveMannequinToolData(CompoundTag entityTag) {
-        serialize(new TagSerializer(entityTag));
+        serialize(new TagSerializer(entityTag, SerializationContext.from(this)));
     }
 
     public void readMannequinToolData(CompoundTag entityTag, ItemStack itemStack) {
-        CompoundTag newEntityTag = new CompoundTag();
+        var newEntityTag = new CompoundTag();
         if (itemStack.get(MannequinToolOptions.CHANGE_OPTION)) {
             newEntityTag.merge(entityTag);
             newEntityTag.remove(CodingKeys.SCALE.name());
@@ -407,10 +423,12 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             }
         }
         // load into entity
-        deserialize(new TagSerializer(newEntityTag));
+        deserialize(new TagSerializer(newEntityTag, SerializationContext.from(this)));
     }
 
     private static class CodingKeys {
+
+        public static final IDataSerializerKey<String> ID = IDataSerializerKey.create("id", IDataCodec.STRING);
 
         public static final IDataSerializerKey<Boolean> IS_SMALL = IDataSerializerKey.create("Small", IDataCodec.BOOL, false);
         public static final IDataSerializerKey<Boolean> IS_FLYING = IDataSerializerKey.create("Flying", IDataCodec.BOOL, false);
@@ -420,8 +438,8 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         public static final IDataSerializerKey<Boolean> NO_GRAVITY = IDataSerializerKey.create("NoGravity", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Float> SCALE = IDataSerializerKey.create("Scale", IDataCodec.FLOAT, 1.0f);
         public static final IDataSerializerKey<EntityTextureDescriptor> TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
-        public static final IDataSerializerKey<EntityTextureDescriptor.Model> TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
-        public static final IDataSerializerKey<CompoundTag> POSE = IDataSerializerKey.create("Pose", IDataCodec.COMPOUND_TAG, new CompoundTag());
+        public static final IDataSerializerKey<EntityTextureDescriptor.Model> TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.WIDE);
+        public static final IDataSerializerKey<CompoundTag> POSE = IDataSerializerKey.create("Pose", ExtraCodecs.COMPOUND_TAG, new CompoundTag());
 
         public static final IDataSerializerKey<Rotations> POSE_HEAD = IDataSerializerKey.create("Head", EntityData.ROTATIONS_CODEC, DEFAULT_HEAD_POSE);
         public static final IDataSerializerKey<Rotations> POSE_BODY = IDataSerializerKey.create("Body", EntityData.ROTATIONS_CODEC, DEFAULT_BODY_POSE);
@@ -433,7 +451,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
 
     public static class EntityData {
 
-        private static final IDataCodec<Rotations> ROTATIONS_CODEC = IDataCodec.FLOAT.listOf().xmap(it -> new Rotations(it.get(0), it.get(1), it.get(2)), it -> Collections.newList(it.getX(), it.getY(), it.getZ()));
+        private static final IDataCodec<Rotations> ROTATIONS_CODEC = IDataCodec.FLOAT.listOf().xmap(it -> new Rotations(it.get(0), it.get(1), it.get(2)), it -> Collections.newList(it.x(), it.y(), it.z()));
 
         private final TagSerializer serializer;
 
@@ -446,7 +464,7 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
         }
 
         private static Rotations mirror(Rotations rot) {
-            return new Rotations(rot.getX(), -rot.getY(), -rot.getZ());
+            return new Rotations(rot.x(), -rot.y(), -rot.z());
         }
 
         public void setScale(float scale) {
@@ -469,20 +487,19 @@ public class MannequinEntity extends AbstractLivingEntity.ArmorStand implements 
             return serializer.read(CodingKeys.IS_SMALL);
         }
 
-        public CompoundTag entityTag() {
+        public TypedEntityData<IEntityType<?>> entityData() {
             var entityTag = serializer.tag().copy();
-            if (!entityTag.isEmpty()) {
-                entityTag.putString(Constants.Key.ID, ModEntityTypes.MANNEQUIN.registryName().toString());
-                //itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
+            if (entityTag.isEmpty()) {
+                return null;
             }
-            return entityTag;
+            return TypedEntityData.of(ModEntityTypes.MANNEQUIN.get(), entityTag);
         }
 
         public ItemStack itemStack() {
             var itemStack = new ItemStack(ModItems.MANNEQUIN.get());
-            var entityTag = entityTag();
-            if (!entityTag.isEmpty()) {
-                itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityTag);
+            var entityData = entityData();
+            if (entityData != null) {
+                itemStack.set(ModDataComponents.ENTITY_DATA.get(), entityData);
             }
             return itemStack;
         }

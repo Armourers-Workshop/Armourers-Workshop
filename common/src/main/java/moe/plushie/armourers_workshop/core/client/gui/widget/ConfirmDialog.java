@@ -7,12 +7,9 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class ConfirmDialog extends BaseDialog {
 
     protected final UILabel messageLabel = new UILabel(new CGRect(0, 8, 240, 20));

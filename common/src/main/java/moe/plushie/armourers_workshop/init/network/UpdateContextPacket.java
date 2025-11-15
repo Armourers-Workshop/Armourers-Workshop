@@ -1,17 +1,19 @@
 package moe.plushie.armourers_workshop.init.network;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
@@ -141,7 +143,7 @@ public class UpdateContextPacket extends CustomPacket {
     private static class CodingKeys {
 
         public static final IDataSerializerKey<List<String>> ENTITIES = IDataSerializerKey.create("Entities", IDataCodec.STRING.listOf(), Collections.emptyList());
-        public static final IDataSerializerKey<List<CompoundTag>> PROFILES = IDataSerializerKey.create("Profiles", IDataCodec.COMPOUND_TAG.listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<CompoundTag>> PROFILES = IDataSerializerKey.create("Profiles", ExtraCodecs.COMPOUND_TAG.listOf(), Collections.emptyList());
     }
 
     private static class DataPack implements IDataSerializable.Immutable {
@@ -151,13 +153,13 @@ public class UpdateContextPacket extends CustomPacket {
 
         public DataPack(IDataSerializer serializer) {
             // customized entity profile.
-            var profiles = new LinkedHashMap<IEntityTypeProvider<?>, EntityProfile>();
+            var profiles = new LinkedHashMap<IRegistryHolder<?>, EntityProfile>();
             var profileTags = serializer.read(CodingKeys.PROFILES);
             profileTags.forEach(tag -> {
                 var serializer1 = new TagSerializer(tag);
                 var profile = new EntityProfile(serializer1);
                 var entities = serializer1.read(CodingKeys.ENTITIES);
-                entities.forEach(it -> profiles.put(IEntityTypeProvider.of(it), profile));
+                entities.forEach(it -> profiles.put(AbstractEntityTypeBuilder.lazy(it), profile));
             });
             ModEntityProfiles.setCustomProfiles(profiles);
             // ...
@@ -169,7 +171,7 @@ public class UpdateContextPacket extends CustomPacket {
             var profileTags = new ArrayList<CompoundTag>();
             var profiles = new LinkedHashMap<EntityProfile, ArrayList<String>>();
             ModEntityProfiles.getCustomProfiles().forEach((entityType, profile) -> {
-                profiles.computeIfAbsent(profile, e -> new ArrayList<>()).add(entityType.registryName());
+                profiles.computeIfAbsent(profile, e -> new ArrayList<>()).add(entityType.registryName().toString());
             });
             profiles.forEach((profile, entities) -> {
                 var serializer1 = new TagSerializer();

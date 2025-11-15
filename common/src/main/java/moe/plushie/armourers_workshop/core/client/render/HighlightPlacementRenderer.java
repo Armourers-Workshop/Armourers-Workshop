@@ -1,84 +1,82 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
+import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.core.utils.Colors;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class HighlightPlacementRenderer {
 
-    public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static void renderBlock(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, IGraphicsContext context) {
         var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.type() != SkinTypes.BLOCK) {
             return;
         }
+        context.saveGraphicsState();
 
-        poseStack.pushPose();
-
-        var f = 1 / 16.f;
         var origin = renderInfo.getPosition();
-        var context = new SkinBlockPlaceContext(player, InteractionHand.MAIN_HAND, itemStack, traceResult);
-        var location = context.getClickedPos();
+        var placeContext = new SkinBlockPlaceContext(player, InteractionHand.MAIN_HAND, itemStack, traceResult);
+        var location = placeContext.getClickedPos();
 
-        poseStack.translate(location.getX() - (float) origin.x(), location.getY() - (float) origin.y(), location.getZ() - (float) origin.z());
-        poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.scale(f, f, f);
+        context.translateCTM(location.getX() - (float) origin.x(), location.getY() - (float) origin.y(), location.getZ() - (float) origin.z());
+        context.translateCTM(0.5f, 0.5f, 0.5f);
+        context.scaleCTM(0.0625f, 0.0625f, 0.0625f);
 
-        for (var part : context.parts()) {
+        for (var part : placeContext.parts()) {
             var pos = part.offset();
-            var color = UIColor.RED;
-            if (context.canPlace(part)) {
-                color = UIColor.WHITE;
+            var color = Colors.RED;
+            if (placeContext.canPlace(part)) {
+                color = Colors.WHITE;
             }
-            poseStack.pushPose();
-            poseStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-            ShapeTesselator.stroke(part.shape(), color, poseStack, bufferSource);
-            poseStack.popPose();
+            context.saveGraphicsState();
+            context.translateCTM(pos.getX() * 16, pos.getY() * 16, pos.getZ() * 16);
+            context.draw(ShapeElement.stroke(part.shape(), color));
+            context.restoreGraphicsState();
         }
 
-        poseStack.popPose();
+        context.restoreGraphicsState();
     }
 
-    public static void renderEntity(Player player, BlockHitResult traceResult, Camera renderInfo, IPoseStack poseStack, IBufferSource bufferSource) {
+    public static void renderEntity(Player player, BlockHitResult traceResult, Camera renderInfo, IGraphicsContext context) {
         var origin = renderInfo.getPosition();
         var target = MannequinHitResult.test(player, origin, traceResult.getLocation(), traceResult.getBlockPos());
-        poseStack.pushPose();
+        context.saveGraphicsState();
 
         var location = target.getLocation();
 
-        poseStack.translate((float) (location.x() - origin.x()), (float) (location.y() - origin.y()), (float) (location.z() - origin.z()));
-        poseStack.rotate(OpenVector3f.YP.rotationDegrees(-target.rotation()));
+        context.translateCTM((float) (location.x() - origin.x()), (float) (location.y() - origin.y()), (float) (location.z() - origin.z()));
+        context.rotateCTM(OpenVector3f.YP.rotationDegrees(-target.rotation()));
 
-        var model = SkinItemRenderer.getInstance().mannequinModel();
-        if (model != null) {
+        var model = SkinItemRenderer.getMannequinModel();
+        if (model instanceof IEntityModel<?> entityModel) {
             var f = target.scale() * 0.9375f; // base scale from player model
-            var buffers1 = AbstractBufferSource.unwrap(bufferSource);
-            var builder = buffers1.getBuffer(SkinRenderType.HIGHLIGHTED_ENTITY_LINES.get());
-            poseStack.pushPose();
-            poseStack.scale(f, f, f);
-            poseStack.scale(-1, -1, 1);
-            poseStack.translate(0.0f, -1.501f, 0.0f);
-            model.renderToBuffer(AbstractPoseStack.unwrap(poseStack), builder, 0xf000f0, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);  // m,vb,l,p,color
-            poseStack.popPose();
+            context.saveGraphicsState();
+            context.scaleCTM(f, f, f);
+            context.scaleCTM(-1, -1, 1);
+            context.translateCTM(0.0f, -1.501f, 0.0f);
+            context.draw(SpecialRenderElement.entityModel(entityModel, MannequinRenderState.getPlaceholder(), LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, Colors.WHITE, SkinRenderType.HIGHLIGHTED_ENTITY_LINES));
+            context.restoreGraphicsState();
         }
 
-        poseStack.popPose();
+        context.restoreGraphicsState();
     }
 }

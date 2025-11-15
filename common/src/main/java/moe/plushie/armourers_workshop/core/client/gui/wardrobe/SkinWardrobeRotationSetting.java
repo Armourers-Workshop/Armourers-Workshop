@@ -16,8 +16,6 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Rotations;
 import net.minecraft.world.entity.Entity;
 
@@ -26,9 +24,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
-
 
     private final SkinWardrobe wardrobe;
     private final Entity entity;
@@ -94,9 +90,9 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     public void setSelectedPart(EntityPartView.Part part) {
         partView.setSelectedPart(part);
         var rotations = part.getValue(entity);
-        sliderX.setValue(getAngle(rotations.getX()));
-        sliderY.setValue(getAngle(rotations.getY()));
-        sliderZ.setValue(getAngle(rotations.getZ()));
+        sliderX.setValue(getAngle(rotations.x()));
+        sliderY.setValue(getAngle(rotations.y()));
+        sliderZ.setValue(getAngle(rotations.z()));
     }
 
     private void updateSelectedPart(UIControl control) {
@@ -145,13 +141,13 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
 
     private HashMap<EntityPartView.Part, Rotations> randomParts() {
         var random = new Random();
-        // we get rotations from pre-defined json.
+        // we get renderRotations from pre-defined json.
         if (InputManagerImpl.hasControlDown() && !RANDOMLY_ROTATIONS.isEmpty()) {
             int index = RANDOMLY_INDEX;
             RANDOMLY_INDEX = (RANDOMLY_INDEX + 1) % RANDOMLY_ROTATIONS.size();
             return RANDOMLY_ROTATIONS.get(index);
         }
-        // we get rotations from generator.
+        // we get renderRotations from generator.
         var parts = new HashMap<EntityPartView.Part, Rotations>();
         for (var part : EntityPartView.Part.values()) {
             if (part == EntityPartView.Part.BODY) {
@@ -178,7 +174,7 @@ public class SkinWardrobeRotationSetting extends SkinWardrobeBaseSetting {
     }
 
     private void loadRandomlyRotations() {
-        var resourceManager = EnvironmentManager.getResourceManager();
+        var resourceManager = EnvironmentManager.getClientResourceManager();
         resourceManager.readResources(ModConstants.key("models/entity/mannequin"), s -> s.endsWith(".json"), (location, resource) -> {
             var object = JsonSerializer.readFromResource(resource);
             if (object == null) {

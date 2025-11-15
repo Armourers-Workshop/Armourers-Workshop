@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -9,11 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class EventManager {
+public abstract class EventManager {
 
     private static final HashMap<Class<?>, IEventHandler<?>> SOURCES = new HashMap<>();
     private static final HashMap<Class<?>, ArrayList<Consumer<?>>> HANDLERS = new HashMap<>();
-
 
     public static <E> void listen(Class<E> eventType, Consumer<E> subscriber) {
         listen(eventType, IEventHandler.Priority.NORMAL, false, subscriber);
@@ -39,13 +37,10 @@ public class EventManager {
         SOURCES.put(eventType, handler);
     }
 
-    @ExpectPlatform
-    private static void init() {
-        // ignore
-    }
+    protected abstract void init();
 
     static {
-        init();
+        PlatformLoader.load(EventManager.class).init();
         EventBus.init();
     }
 }

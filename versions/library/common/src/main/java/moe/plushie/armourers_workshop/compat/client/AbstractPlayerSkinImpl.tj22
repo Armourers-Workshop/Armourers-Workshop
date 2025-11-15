@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
+
+import java.util.IdentityHashMap;
+
+@Available("[1.22, )")
+public class AbstractPlayerSkinImpl {
+
+    private static final IdentityHashMap<PlayerSkin, AbstractPlayerSkin> CACHES = new IdentityHashMap<>();
+
+    public static AbstractPlayerSkin of(PlayerSkin skin) {
+        return CACHES.computeIfAbsent(skin, it -> {
+            var body = Objects.flatMap(it.body(), asset -> OpenResourceLocation.of(asset.texturePath()));
+            var cape = Objects.flatMap(it.cape(), asset -> OpenResourceLocation.of(asset.texturePath()));
+            var elytra = Objects.flatMap(it.elytra(), asset -> OpenResourceLocation.of(asset.texturePath()));
+            var model = EntityTextureDescriptor.Model.SLIM;
+            if (it.model() == PlayerModelType.WIDE) {
+                model = EntityTextureDescriptor.Model.WIDE;
+            }
+            return new AbstractPlayerSkin(body, cape, elytra, model);
+        });
+    }
+}

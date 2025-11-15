@@ -1,119 +1,57 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
-import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.math.OpenModelViewStack;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
-import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
-import moe.plushie.armourers_workshop.core.utils.TickUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import org.jetbrains.annotations.NotNull;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 
-import java.util.Iterator;
-import java.util.function.Function;
-
-@Environment(EnvType.CLIENT)
 public class SkinRenderContext implements ConcurrentRenderingContext {
 
-    public static final SkinRenderContext EMPTY = new SkinRenderContext();
-    private static final Iterator<SkinRenderContext> POOL = Collections.cycle(Collections.newList(100, i -> new SkinRenderContext()));
+    private static final ObjectPool<SkinRenderContext> POOL = ObjectPool.create(SkinRenderContext::new);
 
-    protected int lightmap = 0xf000f0;
-    protected int overlay = OverlayTexture.NO_OVERLAY;
-    protected int outlineColor = 0;
-    protected float partialTicks = 0;
-    protected double animationTicks = 0;
+    private int overlay;
+    private int lightmap;
 
-    protected IBufferSource bufferSource;
+    private float partialTicks = 1.0f;
+    private double animationTicks = 0.0;
+    private AnimationManager animationManager;
+    private SkinItemSource itemSource;
 
-    protected EntityRenderData renderData;
-    protected Function<BakedSkin, ConcurrentBufferBuilder> bufferProvider;
+    private int outlineColor = 0;
 
-    protected SkinItemSource itemSource;
-    protected boolean useItemTransforms = false;
-    protected OpenVector3f displayBox;
+    private IGraphicsContext context;
 
-
-    protected SkinPaintScheme colorScheme = SkinPaintScheme.EMPTY;
-    protected AnimationManager animationManager;
-    protected OpenItemDisplayContext displayContext = OpenItemDisplayContext.NONE;
-
-    protected final IModelViewStack modelViewStack = new OpenModelViewStack();
-    protected final IPoseStack defaultPoseStack;
-    protected IPoseStack poseStack;
-
-    public SkinRenderContext() {
-        this(new AbstractPoseStack());
-    }
-
-    public SkinRenderContext(IPoseStack poseStack) {
-        this.defaultPoseStack = poseStack;
-        this.poseStack = defaultPoseStack;
-    }
-
-    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick, OpenItemDisplayContext itemDisplayContext) {
-        var context = POOL.next();
-        context.setRenderData(renderData);
-        context.setLightmap(light);
-        context.setPartialTicks(partialTick);
-        context.setAnimationTicks(TickUtils.animationTicks());
-        context.setDisplayBox(null);
-        context.setDisplayContext(itemDisplayContext);
-        context.setUseItemTransforms(false);
-        return context;
-    }
-
-    public static SkinRenderContext alloc(EntityRenderData renderData, int light, float partialTick) {
-        return alloc(renderData, light, partialTick, OpenItemDisplayContext.NONE);
-    }
-
-    public void release() {
-        this.overlay = OverlayTexture.NO_OVERLAY;
-        this.lightmap = 0xf000f0;
-        this.outlineColor = 0;
-        this.partialTicks = 0;
-
-        this.colorScheme = SkinPaintScheme.EMPTY;
-        this.displayContext = OpenItemDisplayContext.NONE;
-        this.itemSource = SkinItemSource.EMPTY;
-        this.displayBox = null;
-        this.useItemTransforms = false;
-
-        this.poseStack = defaultPoseStack;
-
-        this.bufferProvider = null;
-        this.renderData = null;
-        this.bufferSource = null;
-        this.animationManager = null;
-    }
-
-    public void pushPose() {
-        poseStack.pushPose();
-    }
-
-    public void popPose() {
-        poseStack.popPose();
-    }
-
-    public IPoseStack pose() {
-        return poseStack;
-    }
-
-    public void setLightmap(int lightmap) {
-        this.lightmap = lightmap;
+    public static SkinRenderContext newInstance(IGraphicsContext context) {
+        var that = POOL.alloc();
+        that.context = context;
+        that.lightmap = LightmapTexture.DEFAULT;
+        that.overlay = OverlayTexture.NO_OVERLAY;
+        that.animationManager = AnimationManager.NONE;
+        that.itemSource = SkinItemSource.EMPTY;
+        that.outlineColor = 0;
+        return that;
     }
 
     @Override
-    public int lightmap() {
-        return lightmap;
+    public void draw(IGraphicsElement element) {
+        context.draw(element);
+    }
+
+    @Override
+    public IPoseStack ctm() {
+        return context.ctm();
+    }
+
+    public void setOutlineColor(int outlineColor) {
+        this.outlineColor = outlineColor;
+    }
+
+    @Override
+    public int outlineColor() {
+        return outlineColor;
     }
 
     public void setOverlay(int overlay) {
@@ -123,6 +61,15 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     @Override
     public int overlay() {
         return overlay;
+    }
+
+    public void setLightmap(int lightmap) {
+        this.lightmap = lightmap;
+    }
+
+    @Override
+    public int lightmap() {
+        return lightmap;
     }
 
     public void setPartialTicks(float partialTicks) {
@@ -143,86 +90,13 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return animationTicks;
     }
 
-    public void setColorScheme(SkinPaintScheme colorScheme) {
-        this.colorScheme = colorScheme;
-    }
-
-    public SkinPaintScheme colorScheme() {
-        return colorScheme;
-    }
-
-    public void setDisplayContext(OpenItemDisplayContext displayContext) {
-        this.displayContext = displayContext;
-    }
-
-    public OpenItemDisplayContext displayContext() {
-        return displayContext;
-    }
-
-    public void setDisplayBox(OpenVector3f displayBox) {
-        this.displayBox = displayBox;
-    }
-
-    public OpenVector3f displayBox() {
-        return displayBox;
-    }
-
-    public void setRenderData(EntityRenderData renderData) {
-        this.renderData = renderData;
-    }
-
-    public EntityRenderData renderData() {
-        return renderData;
-    }
-
     public void setAnimationManager(AnimationManager animationManager) {
         this.animationManager = animationManager;
     }
 
+    @Override
     public AnimationManager animationManager() {
-        if (renderData != null) {
-            return renderData.animationManager();
-        }
-        if (animationManager != null) {
-            return animationManager;
-        }
-        return AnimationManager.NONE;
-    }
-
-    @Override
-    public ConcurrentBufferBuilder getBuffer(@NotNull BakedSkin skin) {
-        if (bufferProvider != null) {
-            return bufferProvider.apply(skin);
-        }
-        var isOutline = shouldRenderOutline();
-        var skinBufferSource = SkinVertexBufferSource.of(bufferSource, isOutline, skin.renderInfo());
-        return skinBufferSource.getBuffer(skin);
-    }
-
-    public void setBufferProvider(Function<BakedSkin, ConcurrentBufferBuilder> bufferProvider) {
-        this.bufferProvider = bufferProvider;
-    }
-
-    public void setOutlineColor(int outlineColor) {
-        this.outlineColor = outlineColor;
-    }
-
-    @Override
-    public int outlineColor() {
-        return outlineColor;
-    }
-
-    @Override
-    public boolean shouldRenderOutline() {
-        return outlineColor != 0;
-    }
-
-    @Override
-    public float renderPriority() {
-        if (itemSource != null) {
-            return itemSource.renderPriority();
-        }
-        return 0;
+        return animationManager;
     }
 
     public void setItemSource(SkinItemSource itemSource) {
@@ -231,45 +105,6 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
 
     @Override
     public SkinItemSource itemSource() {
-        if (this.itemSource != null) {
-            return this.itemSource;
-        }
-        return SkinItemSource.EMPTY;
-    }
-
-    public void setUseItemTransforms(boolean useItemTransforms) {
-        this.useItemTransforms = useItemTransforms;
-    }
-
-    public boolean isUseItemTransforms() {
-        return useItemTransforms;
-    }
-
-    public void setPoseStack(IPoseStack pose) {
-        this.poseStack = pose;
-    }
-
-    @Override
-    public IPoseStack poseStack() {
-        return poseStack;
-    }
-
-    public void setModelViewStack(IModelViewStack modelViewStack) {
-        // froze the model view stack.
-        this.modelViewStack.last().set(modelViewStack.last());
-    }
-
-    @Override
-    public IModelViewStack modelViewStack() {
-        return modelViewStack;
-    }
-
-    public void setBufferSource(IBufferSource bufferSource) {
-        this.bufferSource = bufferSource;
-    }
-
-    @Override
-    public IBufferSource bufferSource() {
-        return bufferSource;
+        return itemSource;
     }
 }

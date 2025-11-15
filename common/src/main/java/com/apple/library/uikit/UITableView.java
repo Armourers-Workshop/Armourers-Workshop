@@ -19,6 +19,7 @@ public class UITableView extends UIScrollView {
     private boolean allowsMultipleSection = false;
 
     protected final DelegateImpl<UITableViewDelegate> delegate = DelegateImpl.of(new UITableViewDelegate() {
+        // auto stub
     });
     protected final DelegateImpl<UITableViewDataSource> dataSource = DelegateImpl.of(new UITableViewDataSource() {
 

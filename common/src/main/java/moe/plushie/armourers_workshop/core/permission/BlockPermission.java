@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.permission;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
+import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +25,7 @@ public class BlockPermission extends Permission {
 
     public boolean accept(BlockEntity blockEntity, Player player) {
         var state = blockEntity.getBlockState();
-        var node = get(TypedRegistry.findKey(state.getBlock()));
+        var node = get(Registries.BLOCKS.getKey(state.getBlock()));
         return eval(node, player, new BlockPermissionContext(player, blockEntity.getBlockPos(), state, null));
     }
 }

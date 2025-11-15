@@ -4,5 +4,6 @@ public interface IBufferSource {
 
     IVertexConsumer getBuffer(IRenderType renderType);
 
-    void endBatch();
+    default void endBatch() {
+    }
 }

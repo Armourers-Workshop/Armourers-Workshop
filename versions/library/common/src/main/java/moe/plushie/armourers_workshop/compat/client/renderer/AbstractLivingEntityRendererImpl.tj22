@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compat.client.renderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<S>> extends LivingEntityRenderer<T, S, M> {
+
+    public AbstractLivingEntityRendererImpl(IEntityRenderer.Context context, M entityModel, float f) {
+        super(AbstractEntityRenderer.unwrap(context), entityModel, f);
+    }
+
+    // TODO: NO IMPL - 1.22
+//    @Override
+//    protected final void setupRotations(S state, PoseStack poseStack, float f, float g) {
+//        poseStack.scale(1 / i, 1 / i, 1 / i);
+//        super.setupRotations(state, poseStack, f, g, h, 1);
+//    }
+}
+

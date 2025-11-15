@@ -1,8 +1,7 @@
 {
   "server": {
     "/host": [
-      "http://plushie.moe/armourers_workshop/",
-      "https://plushie.moe/armourers_workshop/"
+      "https://mc.sagesse.me/armourers_workshop/"
     ],
     "/connect": {
       "path": "beta-check.php",

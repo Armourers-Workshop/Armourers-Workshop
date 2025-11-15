@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
@@ -41,7 +41,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        var entity = player.getLevel().getBlockEntity(pos);
+        var entity = player.level().getBlockEntity(pos);
         if (entity instanceof ColorMixerBlockEntity blockEntity) {
             fieldValue.apply(blockEntity);
         }
@@ -53,7 +53,7 @@ public class UpdateColorMixerPacket extends CustomPacket {
 
         public static final auto COLOR = create(ColorMixerBlockEntity::color, ColorMixerBlockEntity::setColor, DataSerializers.PAINT_COLOR);
 
-        private static <T> Field<T> create(Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer) {
+        private static <T> Field<T> create(Function<ColorMixerBlockEntity, T> supplier, BiConsumer<ColorMixerBlockEntity, T> applier, IEntityDataSerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);
         }
     }

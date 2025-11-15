@@ -6,10 +6,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public abstract class HologramProjectorBaseSetting extends UIView {
 
     private final String baseKey;

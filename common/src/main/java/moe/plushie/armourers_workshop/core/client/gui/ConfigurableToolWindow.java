@@ -12,32 +12,29 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.ClientMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.item.option.BooleanToolProperty;
 import moe.plushie.armourers_workshop.core.item.option.IntegerToolProperty;
-import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
+import moe.plushie.armourers_workshop.core.menu.ContainerMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateConfigurableToolPacket;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
-public class ConfigurableToolWindow extends MenuWindow<AbstractContainerMenu> {
+public class ConfigurableToolWindow extends MenuWindow<ContainerMenu> {
 
     private final ArrayList<Pair<IConfigurableToolProperty<?>, UIView>> properties = new ArrayList<>();
 
-    private final InteractionHand hand;
+    private final OpenInteractionHand hand;
     private final ItemStack itemStack;
 
     private int contentWidth = 176;
     private int contentHeight = 24; // 24 + n + 8
 
-    public ConfigurableToolWindow(Component title, ArrayList<IConfigurableToolProperty<?>> properties, ItemStack itemStack, InteractionHand hand) {
+    public ConfigurableToolWindow(Component title, ArrayList<IConfigurableToolProperty<?>> properties, ItemStack itemStack, OpenInteractionHand hand) {
         super(ClientMenuScreen.createEmptyMenu(), ClientMenuScreen.createEmptyInventory(), new NSString(title));
         this.inventoryView.removeFromSuperview();
         this.setBackgroundView(ModTextures.defaultWindowImage());

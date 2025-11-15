@@ -1,28 +1,29 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 public class OpenResourceLocation implements IResourceLocation, Comparable<OpenResourceLocation> {
 
+    public static final IDataCodec<OpenResourceLocation> CODEC = IDataCodec.STRING.xmap(OpenResourceLocation::parse, OpenResourceLocation::toString);
+
     private final String namespace;
     private final String path;
 
-    private ResourceLocation resourceLocation;
+    private ResourceLocation location;
 
     private OpenResourceLocation(String namespace, String path) {
         this.namespace = namespace;
         this.path = path;
     }
 
-    public static OpenResourceLocation create(ResourceLocation location) {
-        var newValue = new OpenResourceLocation(location.getNamespace(), location.getPath());
-        newValue.resourceLocation = location;
-        return newValue;
-    }
-
     public static OpenResourceLocation create(String namespace, String path) {
         return new OpenResourceLocation(namespace, path);
+    }
+
+    public static OpenResourceLocation withDefaultNamespace(String path) {
+        return create("minecraft", path);
     }
 
     public static OpenResourceLocation parse(String id) {
@@ -40,6 +41,18 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
         return create(namespace, path);
     }
 
+    public static OpenResourceLocation of(IResourceLocation location) {
+        if (location instanceof OpenResourceLocation location1) {
+            return location1;
+        }
+        return new OpenResourceLocation(location.namespace(), location.path());
+    }
+
+    public static OpenResourceLocation of(ResourceLocation location) {
+        var newValue = new OpenResourceLocation(location.getNamespace(), location.getPath());
+        newValue.location = location;
+        return newValue;
+    }
 
     @Override
     public String path() {
@@ -89,9 +102,9 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
 
     @Override
     public ResourceLocation toLocation() {
-        if (resourceLocation == null) {
-            resourceLocation = IResourceLocation.super.toLocation();
+        if (location == null) {
+            location = IResourceLocation.super.toLocation();
         }
-        return resourceLocation;
+        return location;
     }
 }

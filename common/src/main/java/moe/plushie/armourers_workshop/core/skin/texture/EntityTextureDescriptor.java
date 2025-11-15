@@ -8,10 +8,10 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
             .expireAfterAccess(15, TimeUnit.SECONDS)
             .build();
 
-    public static final IDataCodec<EntityTextureDescriptor> CODEC = IDataCodec.COMPOUND_TAG.serializer(EntityTextureDescriptor::new);
+    public static final IDataCodec<EntityTextureDescriptor> CODEC = ExtraCodecs.serializable(EntityTextureDescriptor::new);
 
     private Source source;
     private String value;
@@ -60,15 +60,15 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
         if (!itemStack.is(ModItems.MANNEQUIN.get())) {
             return EMPTY;
         }
-        var entityTag = itemStack.get(ModDataComponents.ENTITY_DATA.get());
-        if (entityTag == null || !entityTag.contains(Constants.Key.ENTITY_TEXTURE, Constants.TagFlags.COMPOUND)) {
+        var entityData = itemStack.get(ModDataComponents.ENTITY_DATA.get());
+        if (entityData == null || !entityData.contains(Constants.Key.ENTITY_TEXTURE)) {
             return EMPTY;
         }
         var descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new EntityTextureDescriptor(entityTag.getOptionalCompound(Constants.Key.ENTITY_TEXTURE).map(TagSerializer::new).orElseGet(TagSerializer::new));
+        descriptor = new EntityTextureDescriptor(entityData.tag().getOptionalCompound(Constants.Key.ENTITY_TEXTURE).map(TagSerializer::new).orElseGet(TagSerializer::new));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }
@@ -82,7 +82,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     public static EntityTextureDescriptor fromProfile(GameProfile profile) {
-        return new EntityTextureDescriptor(Source.USER, profile.getName(), profile);
+        return new EntityTextureDescriptor(Source.USER, profile.name(), profile);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
 
     private static class UserInfo implements IDataSerializable.Immutable {
 
-        public static final IDataCodec<UserInfo> CODEC = IDataCodec.COMPOUND_TAG.serializer(UserInfo::new);
+        public static final IDataCodec<UserInfo> CODEC = ExtraCodecs.serializable(UserInfo::new);
 
         private final String name;
 
@@ -183,7 +183,7 @@ public class EntityTextureDescriptor implements IDataSerializable.Immutable {
     }
 
     public enum Model {
-        STEVE,
-        ALEX
+        WIDE,
+        SLIM
     }
 }

@@ -2,16 +2,12 @@ package moe.plushie.armourers_workshop.builder.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SkinPreviewList;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
 public class PartItemList extends SkinPreviewList<PartItem> {
 
     private SkinDescriptor selectedItem;
@@ -21,8 +17,8 @@ public class PartItemList extends SkinPreviewList<PartItem> {
     }
 
     @Override
-    public void renderItemContent(float x, float y, float width, float height, boolean isHovered, PartItem entry, IBufferSource bufferSource, CGGraphicsContext context) {
-        setTooltip(getItemTooltip(entry, isHovered));
+    public void renderItemContent(float x, float y, float width, float height, float contentScale, PartItem entry, CGGraphicsContext context) {
+        setTooltip(getItemTooltip(entry, contentScale > 1.0f));
         if (entry == PartItem.CLEAR) {
             context.drawResizableImage(ModTextures.SKIN_PANEL, x, y, width, height, 224, 0, 32, 32, 256, 256);
             return;
@@ -31,7 +27,7 @@ public class PartItemList extends SkinPreviewList<PartItem> {
             context.drawResizableImage(ModTextures.SKIN_PANEL, x, y, width, height, 224, 32, 32, 32, 256, 256);
             return;
         }
-        super.renderItemContent(x, y, width, height, isHovered, entry, bufferSource, context);
+        super.renderItemContent(x, y, width, height, contentScale, entry, context);
     }
 
     public SkinDescriptor selectedItem() {

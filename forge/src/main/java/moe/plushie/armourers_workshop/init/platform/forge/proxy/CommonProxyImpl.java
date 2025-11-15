@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.event.common.LauncherCommonSetupEvent
 import moe.plushie.armourers_workshop.init.event.common.LauncherLoadCompleteEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
-import moe.plushie.armourers_workshop.init.platform.forge.EnvironmentManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.PlatformManagerImpl;
 
 public class CommonProxyImpl {
 
@@ -16,8 +16,8 @@ public class CommonProxyImpl {
         ArmourersWorkshop.init();
 
         // prioritize handle.
-        EventBus.register(ServerStartingEvent.class, event -> EnvironmentManagerImpl.attach(event.getServer()));
-        EventBus.register(ServerStoppedEvent.class, event -> EnvironmentManagerImpl.detach(event.getServer()));
+        EventBus.register(ServerStartingEvent.class, event -> PlatformManagerImpl.attach(event.getServer()));
+        EventBus.register(ServerStoppedEvent.class, event -> PlatformManagerImpl.detach(event.getServer()));
 
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);

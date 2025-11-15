@@ -5,17 +5,13 @@ import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
-import moe.plushie.armourers_workshop.core.math.OpenModelViewStack;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public interface ShaderVertexObject {
 
-    int offset();
+    int vertexOffset();
 
-    int total();
+    int vertexCount();
 
     VertexArrayObject arrayObject();
 
@@ -31,7 +27,7 @@ public interface ShaderVertexObject {
 
     float polygonOffset();
 
-    OpenPoseStack poseStack();
+    OpenPoseStack.Pose pose();
 
     IVertexFormat format();
 
@@ -42,6 +38,8 @@ public interface ShaderVertexObject {
     boolean isTranslucent();
 
     boolean isOutline();
+
+    void retain();
 
     void release();
 }

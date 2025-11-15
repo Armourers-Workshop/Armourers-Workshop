@@ -1,0 +1,113 @@
+package moe.plushie.armourers_workshop.compat.client.gui;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuScreen;
+import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractWrappedScreen extends AbstractWrappedScreenImpl {
+
+    public AbstractWrappedScreen(Screen screen) {
+        super(screen);
+    }
+
+    public static boolean shouldRenderExtendScreen(Screen screen) {
+        // The delegate screen should never render extend.
+        if (screen instanceof SlotListView.DelegateScreen) {
+            return false;
+        }
+        // we respect users settings.
+        if (screen instanceof ContainerMenuScreen<?, ?> screen1) {
+            return screen1.shouldRenderExtendScreen();
+        }
+        return true;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        screen.init(Minecraft.getInstance(), width, height);
+        _updateContentSize();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        screen.tick();
+    }
+
+    @Override
+    public void removed() {
+        super.removed();
+        screen.removed();
+    }
+
+    @Override
+    public void resize(Minecraft minecraft, int i, int j) {
+        screen.resize(minecraft, i, j);
+        _updateContentSize();
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        return screen.keyPressed(event);
+    }
+
+    @Override
+    public boolean keyReleased(KeyEvent event) {
+        return screen.keyReleased(event);
+    }
+
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        return screen.charTyped(event);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean bl) {
+        return screen.mouseClicked(event, bl);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        return screen.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double f, double g) {
+        return screen.mouseDragged(event, f, g);
+    }
+
+    @Override
+    public void mouseMoved(double mouseX, double mouseY) {
+        screen.mouseMoved(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean isMouseOver(double d, double e) {
+        return screen.isMouseOver(d, e);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return screen.isPauseScreen();
+    }
+
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return screen.shouldCloseOnEsc();
+    }
+
+    protected void _updateContentSize() {
+        width = this.screen.width;
+        height = this.screen.height;
+    }
+}

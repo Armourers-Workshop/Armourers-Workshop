@@ -18,15 +18,12 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenProperties;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     public static final Map<SkinType, Function<SkinProperties, ArmourerBaseSkinPanel>> REGISTERED = Collections.immutableMap(it -> {

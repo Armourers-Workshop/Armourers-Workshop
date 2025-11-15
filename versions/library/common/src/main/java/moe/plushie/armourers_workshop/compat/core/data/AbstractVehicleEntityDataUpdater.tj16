@@ -1,0 +1,29 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+
+@Available("[1.16, 1.21)")
+public class AbstractVehicleEntityDataUpdater {
+
+    private static ItemStack LAST_ITEM_STACK;
+
+    public static void push(ItemStack itemStack) {
+        LAST_ITEM_STACK = itemStack;
+    }
+
+    public static void apply(ServerLevel level, Entity entity) {
+        if (LAST_ITEM_STACK != null) {
+            var result = SkinUtils.appendSkinIntoEntity(Objects::hash, level, LAST_ITEM_STACK, null);
+            result.accept(entity);
+        }
+    }
+
+    public static void pop() {
+        LAST_ITEM_STACK = null;
+    }
+}

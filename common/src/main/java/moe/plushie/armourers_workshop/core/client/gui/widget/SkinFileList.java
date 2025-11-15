@@ -19,9 +19,8 @@ import com.apple.library.uikit.UITableViewDelegate;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.skin.serializer.ISkinFileHeader;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -31,16 +30,12 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Environment(EnvType.CLIENT)
 public class SkinFileList<T extends SkinFile> extends UIControl implements UITableViewDataSource, UITableViewDelegate {
 
     private final EntryList tableView = new EntryList(CGRect.ZERO);
@@ -189,7 +184,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
         return null;
     }
 
-    public class Entry extends UITableViewCell {
+    private class Entry extends UITableViewCell {
 
         private final NSString title;
         private final T entry;
@@ -264,8 +259,7 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
             if (bakedSkin == null) {
                 return;
             }
-            var buffers = AbstractBufferSource.buffer();
-            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0, context.state().ctm(), buffers);
+            context.draw(SkinGuiElement.blit(bakedSkin, x, y, 100, width, height - 1, 20, 45, 0));
         }
 
         public void renderTooltip(CGRect rect, CGGraphicsContext context) {
@@ -283,18 +277,16 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
             }
             var bounds = window.bounds();
             var point = convertPointToView(CGPoint.ZERO, null);
-            float size = 144;
-            float dx = point.x - size - 5;
-            float dy = OpenMath.clamp(context.state().mousePos().y() - size / 2f, 0, bounds.height - size);
+
+            var size = 144;
+            var dx = point.x - size - 5;
+            var dy = OpenMath.clamp(context.param().mouseY() - size / 2f, 0, bounds.height - size);
             context.drawTilableImage(ModTextures.GUI_PREVIEW, dx, dy, size, size, 0, 0, 62, 62, 4, 4, 4, 4);
 
             var tooltips = Collections.compactMap(ItemTooltipManager.createSkinInfo(bakedSkin), NSString::new);
-            context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font, 0);
+            context.drawMultilineText(tooltips, dx + 4, dy + 4, size - 8, 0xffffffff, true, font);
 
-            var poseStack = context.state().ctm();
-            var buffers = AbstractBufferSource.buffer();
-            ExtendedItemRenderer.renderSkinInGUI(bakedSkin, dx, dy, 100, size, size, 30, 45, 0, poseStack, buffers);
-            buffers.endBatch();
+            context.draw(SkinGuiElement.blit(bakedSkin, dx, dy, 100, size, size, 30, 45, 0));
         }
 
         @Override
@@ -330,21 +322,14 @@ public class SkinFileList<T extends SkinFile> extends UIControl implements UITab
         }
     }
 
-    public static class EntryList extends UITableView {
+    private static class EntryList extends UITableView {
 
         public EntryList(CGRect frame) {
             super(frame);
         }
-
-        @Override
-        public void layerDidDraw(CGGraphicsContext context) {
-            super.layerDidDraw(context);
-            // the table view will enable clip, so we need to submit all the data immediately.
-            EnvironmentManager.getClient().renderBuffers().bufferSource().endBatch();
-        }
     }
 
-    public static class EntryListIndicator extends ScrollIndicator {
+    private static class EntryListIndicator extends ScrollIndicator {
 
         public UIView forwardingResponder;
 

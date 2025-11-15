@@ -22,8 +22,6 @@ import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
 import moe.plushie.armourers_workshop.library.data.impl.SearchResult;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +32,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-@Environment(EnvType.CLIENT)
 public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
     private final HashSet<Integer> downloadingPages = new HashSet<>();
@@ -217,7 +214,6 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         ModLog.debug("request skin list {} of {}, page size: {}", pageIndex, totalPages, lastRequestSize);
         doSearch(pageIndex, lastRequestSize, skinType, (result, exception) -> {
             if (exception != null) {
-                exception.printStackTrace();
                 downloadingPages.remove(pageIndex);
             } else {
                 downloadingPages.remove(pageIndex);

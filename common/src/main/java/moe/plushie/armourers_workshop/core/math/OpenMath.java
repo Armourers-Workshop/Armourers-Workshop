@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.math;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractMath;
+import moe.plushie.armourers_workshop.compat.core.AbstractMath;
 
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;

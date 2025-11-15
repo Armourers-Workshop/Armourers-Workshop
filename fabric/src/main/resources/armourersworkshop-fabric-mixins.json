@@ -3,17 +3,9 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.fabric",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "FabricBlockEntityUpdatePacketMixin",
-    "FabricLivingRendererMixin",
-    "FabricPlayerRendererMixin",
-    "FabricReplayMixin",
-    "FabricMinecraftMixin"
+    "FabricReplayMixin"
   ],
   "mixins": [
-    "FabricBlockItemMixin",
-    "FabricEntityMixin",
-    "FabricLivingEntityMixin",
-    "FabricEntityTrackerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

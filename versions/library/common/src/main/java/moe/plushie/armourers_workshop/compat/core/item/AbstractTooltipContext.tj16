@@ -1,0 +1,32 @@
+package moe.plushie.armourers_workshop.compat.core.item;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+@Available("[1.16, 1.21)")
+public class AbstractTooltipContext implements ITooltipContext {
+
+    public final Level level;
+    public final TooltipFlag flag;
+
+    public AbstractTooltipContext(Level level, TooltipFlag flag) {
+        this.level = level;
+        this.flag = flag;
+    }
+
+    public static ITooltipContext wrap(Level level, Object display, TooltipFlag flag) {
+        return new AbstractTooltipContext(level, flag);
+    }
+
+    public static AbstractTooltipContext unwrap(ITooltipContext context) {
+        return ((AbstractTooltipContext) context);
+    }
+
+    @Override
+    public TooltipFlag flags() {
+        return flag;
+    }
+}

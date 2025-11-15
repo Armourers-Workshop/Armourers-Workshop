@@ -1,0 +1,34 @@
+package moe.plushie.armourers_workshop.compat.client.renderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.world.entity.Entity;
+
+import java.util.function.Function;
+
+@Available("[1.16, 1.18)")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractEntityRendererImpl<T extends Entity, S extends IEntityRenderState> extends EntityRenderer<T> implements IEntityRenderer<T, S> {
+
+    public AbstractEntityRendererImpl(Context context) {
+        super(unwrap(context));
+    }
+
+    public static IEntityRenderer.Context wrap(EntityRenderDispatcher context) {
+        return () -> context;
+    }
+
+    public static EntityRenderDispatcher unwrap(IEntityRenderer.Context context) {
+        return Objects.unsafeCast(context.get());
+    }
+
+    public static <T extends Entity> Function<EntityRenderDispatcher, EntityRenderer<T>> builder(IEntityRenderer.Provider<T> provider) {
+        return context -> AbstractEntityRenderer.unwrap(provider.create(wrap(context)));
+    }
+}

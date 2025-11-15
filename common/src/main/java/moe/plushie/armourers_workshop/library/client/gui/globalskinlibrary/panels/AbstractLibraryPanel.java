@@ -7,17 +7,14 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.compat.core.AbstractOpenURLEvent;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
 import java.util.function.Predicate;
 
-@Environment(EnvType.CLIENT)
 public abstract class AbstractLibraryPanel extends UIView {
 
     public final Predicate<GlobalSkinLibraryWindow.Page> predicate;
@@ -52,7 +49,7 @@ public abstract class AbstractLibraryPanel extends UIView {
     }
 
     protected NSString getURLText(String url) {
-        var style = Style.EMPTY.withColor(ChatFormatting.BLUE).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        var style = Style.EMPTY.withColor(ChatFormatting.BLUE).withClickEvent(new AbstractOpenURLEvent(url));
         return new NSString(Component.literal(url).withStyle(style));
     }
 

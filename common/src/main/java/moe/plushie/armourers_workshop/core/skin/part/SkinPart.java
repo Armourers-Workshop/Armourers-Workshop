@@ -32,7 +32,7 @@ public class SkinPart implements ISkinPart {
 
     protected final Object blobs;
 
-    protected SkinProperties properties = SkinProperties.EMPTY;
+    protected SkinProperties properties;
 
     private HashMap<OpenVector3i, OpenRectangle3f> blockBounds;
 

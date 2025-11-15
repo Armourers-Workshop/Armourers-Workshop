@@ -1,22 +1,20 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProjectorBlockEntity> {
+public class HologramProjectorMenu extends BlockEntityContainerMenu<HologramProjectorBlockEntity> {
 
     private final Inventory playerInventory;
     private final Container inventory;
     private int group;
 
-    public HologramProjectorMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos worldPos) {
+    public HologramProjectorMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos worldPos) {
         super(menuType, block, containerId, worldPos);
         this.playerInventory = playerInventory;
         this.inventory = blockEntity.getInventory();
@@ -39,11 +37,6 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
         this.group = group;
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size());
-    }
-
     public boolean shouldRenderInventory() {
         return group() == 1;
     }
@@ -58,7 +51,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
         }
     }
 
-    public final class GroupSlot extends Slot {
+    public final class GroupSlot extends AbstractContainerSlot {
 
         private final int group;
 
@@ -68,7 +61,7 @@ public class HologramProjectorMenu extends AbstractBlockEntityMenu<HologramProje
         }
 
         @Override
-        public boolean isActive() {
+        protected boolean abi$isActive() {
             return group() == group;
         }
     }

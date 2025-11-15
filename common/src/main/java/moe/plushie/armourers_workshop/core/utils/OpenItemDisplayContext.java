@@ -46,7 +46,6 @@ public enum OpenItemDisplayContext {
         return serializedName;
     }
 
-
     public boolean isLeftHand() {
         return this == THIRD_PERSON_LEFT_HAND || this == FIRST_PERSON_LEFT_HAND;
     }

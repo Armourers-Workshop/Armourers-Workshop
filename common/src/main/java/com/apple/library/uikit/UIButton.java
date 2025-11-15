@@ -6,10 +6,11 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
-import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.impl.SimpleContentLayoutImpl;
 import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.impl.StateValueImpl;
+import com.apple.library.impl.event.InputKeyEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
@@ -61,7 +62,7 @@ public class UIButton extends UIControl {
     public void keyDown(UIEvent event) {
         super.keyDown(event);
         // simulate a mouse press.
-        if (isFocused() && isDownKey(event.key)) {
+        if (isFocused() && isDownKey(event.key())) {
             sendEvent(Event.MOUSE_LEFT_DOWN);
             SoundManagerImpl.click();
         }
@@ -287,8 +288,8 @@ public class UIButton extends UIControl {
         return null;
     }
 
-    private boolean isDownKey(int key) {
-        return InputManagerImpl.isEnter(key) || InputManagerImpl.isSpace(key);
+    private boolean isDownKey(InputKeyEvent key) {
+        return key.is(GLFW.GLFW_KEY_SPACE) || key.is(GLFW.GLFW_KEY_ENTER) || key.is(GLFW.GLFW_KEY_KP_ENTER);
     }
 
     private void applyImageToAnother(StateValueImpl<UIImage> container, UIImage image, int state) {

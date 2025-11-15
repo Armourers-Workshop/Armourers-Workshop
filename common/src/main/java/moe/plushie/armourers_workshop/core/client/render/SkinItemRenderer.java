@@ -1,54 +1,47 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractItemStackRenderer;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
+import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.client.render.model.MannequinModel;
+import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
-public class SkinItemRenderer extends AbstractItemStackRenderer {
+@OnlyIn(Dist.CLIENT)
+public class SkinItemRenderer extends AbstractSpecialModelRenderer<ItemStack> {
 
-    private static SkinItemRenderer INSTANCE;
+    public static final IDataMapCodec<SkinItemRenderer> MAP_CODEC = IDataMapCodec.unit(SkinItemRenderer::new);
 
-    private ItemStack playerMannequinItem;
-    private MannequinModel<MannequinEntity> model;
-
-    public static SkinItemRenderer getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SkinItemRenderer();
-        }
-        return INSTANCE;
-    }
+    private static ItemStack playerMannequinItem;
+    private static MannequinModel model;
 
     @Override
-    public void renderByItem(ItemStack itemStack, OpenItemDisplayContext itemDisplayContext, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
+    protected void abi$render(ItemStack data, OpenItemDisplayContext itemDisplayContext, int lightmap, int overlay, IGraphicsContext context) {
         // nop
     }
 
-    public MannequinModel<?> mannequinModel() {
-        var entity = PlaceholderManager.MANNEQUIN.get();
-        if (model == null && entity != null) {
+    @Override
+    protected ItemStack abi$extractArgument(ItemStack itemStack) {
+        return itemStack;
+    }
+
+    public static MannequinModel getMannequinModel() {
+        if (model == null) {
             model = MannequinModel.placeholder();
-            model.young = false;
-            model.crouching = false;
-            model.riding = false;
-            model.prepareMobModel(entity, 0, 0, 0);
-            model.setupAnim(entity, 0, 0, 0, 0, 0);
+            model.setupDefault(MannequinRenderState.getPlaceholder());
         }
         return model;
     }
 
-    public ItemStack playerMannequinItem() {
+    public static ItemStack getPlayerMannequinItem() {
         if (playerMannequinItem == null) {
-            var player = EnvironmentManager.getPlayer();
+            var player = Minecraft.getInstance().player;
             if (player == null) {
                 return ItemStack.EMPTY;
             }

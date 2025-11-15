@@ -1,0 +1,92 @@
+package moe.plushie.armourers_workshop.compat.client.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractLivingEntityRenderState;
+import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<AbstractLivingEntityRenderState>> extends AbstractLivingEntityRendererImpl<T, AbstractLivingEntityRenderState, M> implements IEntityRenderer<T, S> {
+
+    public AbstractLivingEntityRenderer(Context context, M entityModel, float f) {
+        super(context, entityModel, f);
+    }
+
+    public static <T extends LivingEntity, S extends LivingEntityRenderState, M extends IEntityModel<S>> ILivingEntityRenderer<T, S, M> wrap(LivingEntityRenderer<?, ?, ?> renderer) {
+        return Objects.unsafeCast(renderer);
+    }
+
+    protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        context.draw(AbstractGraphicsRenderer.invoke(super::submit));
+    }
+
+    protected abstract OpenResourceLocation abi$getTextureLocation(S state);
+
+    protected float abi$getEntityScale(S state) {
+        return 1;
+    }
+
+    protected boolean abi$shouldShowName(T entity, double d) {
+        return super.shouldShowName(entity, d);
+    }
+
+    @Override
+    public final void submit(AbstractLivingEntityRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        var context = AbstractGraphicsRenderer.wrap(renderState, poseStack, submitNodeCollector, cameraRenderState);
+        abi$render(AbstractRenderState.wrap(renderState), LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, context);
+    }
+
+    @NotNull
+    @Override
+    public AbstractLivingEntityRenderState createRenderState() {
+        return new AbstractLivingEntityRenderState();
+    }
+
+    @Override
+    public final boolean shouldRender(T entity, Frustum frustum, double d, double e, double f) {
+        return super.shouldRender(entity, frustum, d, e, f);
+    }
+
+    @Override
+    protected final boolean shouldShowName(T livingEntity, double d) {
+        return abi$shouldShowName(livingEntity, d);
+    }
+
+    @Override
+    public final ResourceLocation getTextureLocation(AbstractLivingEntityRenderState renderState) {
+        var location = abi$getTextureLocation(AbstractRenderState.wrap(renderState));
+        if (location != null) {
+            return location.toLocation();
+        }
+        return null;
+    }
+
+    @Override
+    protected final void scale(AbstractLivingEntityRenderState renderState, PoseStack poseStack) {
+        // in the 1.21.4 the renderer will auto apply the entity scale, but maybe we need change it.
+        var newScale = abi$getEntityScale(AbstractRenderState.wrap(renderState));
+        poseStack.scale(newScale / renderState.scale, newScale / renderState.scale, newScale / renderState.scale);
+        super.scale(renderState, poseStack);
+    }
+}
+

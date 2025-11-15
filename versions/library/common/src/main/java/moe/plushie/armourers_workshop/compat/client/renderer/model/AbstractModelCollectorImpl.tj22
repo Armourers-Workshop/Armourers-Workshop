@@ -1,0 +1,12 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
+import java.util.Map;
+
+@Available("[1.22, )")
+public class AbstractModelCollectorImpl {
+
+    public static void apply(Map<String, Map<String, String>> builder) {
+    }
+}

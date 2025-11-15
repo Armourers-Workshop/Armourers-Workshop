@@ -4,16 +4,11 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
+import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
 public class SkinPreviewView extends UIControl {
 
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
@@ -32,17 +27,9 @@ public class SkinPreviewView extends UIControl {
         if (bakedSkin == null) {
             return;
         }
-        CGRect rect = bounds();
-        float tx = rect.x;
-        float ty = rect.y;
-        float tw = rect.width;
-        float th = rect.height;
-        var poseStack = context.state().ctm();
+        var rect = bounds();
         var colorScheme = descriptor.paintScheme();
-        var itemStack = ItemStack.EMPTY;
-        var buffers = AbstractBufferSource.buffer();
-        ExtendedItemRenderer.renderSkinInGUI(bakedSkin, colorScheme, itemStack, tx, ty, 200, tw, th, 20, 45, 0, 0, 0xf000f0, poseStack, buffers);
-        buffers.endBatch();
+        context.draw(SkinGuiElement.blit(bakedSkin, colorScheme, rect.x, rect.y, 200, rect.width, rect.height, 20, 45, 0));
     }
 
     public SkinDescriptor skin() {

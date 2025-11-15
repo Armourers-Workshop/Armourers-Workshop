@@ -70,6 +70,10 @@ public class EnvironmentExecutor {
         return Optional.empty();
     }
 
+    public static <T> Optional<T> callOnClient(Supplier<Supplier<T>> supplier) {
+        return callOn(EnvironmentType.CLIENT, supplier);
+    }
+
     public static void run(Supplier<Runnable> clientSupplier, Supplier<Runnable> serverSupplier) {
         if (EnvironmentManager.getEnvironmentType() == EnvironmentType.CLIENT) {
             clientSupplier.get().run();
@@ -82,6 +86,10 @@ public class EnvironmentExecutor {
         if (EnvironmentManager.getEnvironmentType() == envType) {
             supplier.get().run();
         }
+    }
+
+    public static void runOnClient(Supplier<Runnable> supplier) {
+        runOn(EnvironmentType.CLIENT, supplier);
     }
 
     public static void runOnBackground(Supplier<Runnable> handler) {

@@ -1,36 +1,43 @@
 package moe.plushie.armourers_workshop.builder.client.render;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideDataProvider;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
+import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
-import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.core.client.other.PaintableTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.init.ModConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.core.BlockPos;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
-public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends AbstractBlockEntityRenderer<T> {
+@OnlyIn(Dist.CLIENT)
+public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends ArmourerRenderState> extends AbstractBlockEntityRenderer<T, S> {
 
-    private final PlayerTextureOverride override = new PlayerTextureOverride();
+    private final TextureResolvedContext textureResolvedContext = new TextureResolvedContext();
     private final OpenRectangle3f originBox = new OpenRectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
     private final GuideRendererManager rendererManager = new GuideRendererManager();
 
@@ -39,36 +46,48 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        var textureProvider = CustomTextureProvider.of(entity);
+    protected int abi$getViewDistance() {
+        return 272;
+    }
+
+    @Override
+    protected boolean abi$shouldRenderOffScreen() {
+        return true;
+    }
+
+    @Override
+    protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        var textureProvider = CustomTextureProvider.of(renderState);
         if (textureProvider == null) {
             return;
         }
-        var skinType = entity.skinType();
-        var skinProperties = entity.skinProperties();
-        var textureModel = entity.textureModel();
+        var skinType = renderState.skinType();
+        var skinProperties = renderState.skinProperties();
+        var textureModel = renderState.textureModel();
 
-        // when the player has some special texture, we must override to renderer.
+        // when the player has some special texture, we must textureResolvedContext to renderer.
         var playerTexture = textureProvider.displayTextureLocation;
         if (playerTexture != null) {
-            override.setTexture(playerTexture);
-            override.setBuffers(bufferSource);
-            bufferSource = override;
+            textureResolvedContext.setTexture(playerTexture);
+            textureResolvedContext.setContext(context);
+            context = textureResolvedContext;
         }
 
         var isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
-        var isShowGuides = entity.isShowGuides();
-        var isShowModelGuides = entity.isShowModelGuides();
-        var isShowHelper = entity.isShowHelper();
-        var isUseHelper = entity.isUseHelper();
+        var isShowGuides = renderState.isShowGuides();
+        var isShowModelGuides = renderState.isShowModelGuides();
+        var isShowHelper = renderState.isShowHelper();
+        var isUseHelper = renderState.isUseHelper();
 
         // don't display overlay layers when helpers are actived.
         textureProvider.shouldRenderOverlay = !isUseHelper;
         textureProvider.skinProperties = skinProperties;
 
-        poseStack.pushPose();
-        transform(poseStack, entity);
-        poseStack.scale(-1, -1, 1);
+        context.saveGraphicsState();
+
+        context.translateCTM(0, 1, 0); // apply height offset
+        context.rotateCTM(CubeTransform.getRotationDegrees(renderState.facing())); // apply facing rotation
+        context.scaleCTM(-1, -1, 1);
 
         var polygonOffset = 0f;
         for (var partType : skinType.parts()) {
@@ -76,155 +95,133 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
             var rect = partType.buildingSpace();
             var rect2 = partType.guideSpace(textureModel);
 
-            var r = 0.5f;
-            var g = 0.5f;
-            var b = 0.5f;
-            var a = 0.25f;
-
             if (partType == SkinPartTypes.BLOCK_MULTI && !isMultiBlocks) {
                 continue;
             }
 
+            var color = 0x3f7f7f7f;
             if (partType == SkinPartTypes.BLOCK && isMultiBlocks) {
-                r = 1;
-                g = 1;
-                b = 0;
-                a = 0.2f;
+                color = 0x33ffff00;
             }
 
-            var isModelOverridden = entity.isModelOverridden(partType);
+            var isModelOverridden = renderState.isModelOverridden(partType);
             if (isUseHelper) {
                 isModelOverridden = !isShowHelper;
             }
 
-            poseStack.pushPose();
-            poseStack.translate(origin.x(), origin.y() + rect.minY(), origin.z());
-            poseStack.translate(polygonOffset, polygonOffset, polygonOffset);
+            context.saveGraphicsState();
+            context.translateCTM(origin.x(), origin.y() + rect.minY(), origin.z());
+            context.translateCTM(polygonOffset, polygonOffset, polygonOffset);
 
             // render guide model
             if (!isModelOverridden) {
                 var guideRenderer = rendererManager.getRenderer(textureModel, partType);
                 if (guideRenderer != null) {
-                    poseStack.pushPose();
-                    poseStack.translate(0, -rect2.minY(), 0);
-                    poseStack.scale(16, 16, 16);
-                    guideRenderer.render(poseStack, textureProvider, 0xf000f0, OverlayTexture.NO_OVERLAY, bufferSource);
-                    poseStack.popPose();
+                    context.saveGraphicsState();
+                    context.translateCTM(0, -rect2.minY(), 0);
+                    context.scaleCTM(16, 16, 16);
+                    guideRenderer.render(textureProvider, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, context);
+                    context.restoreGraphicsState();
                 }
             }
 
-            poseStack.scale(-1, -1, 1);
+            context.scaleCTM(-1, -1, 1);
 
             // render building grid
             if (isShowGuides) {
-                ShapeTesselator.cube(rect, r, g, b, a, poseStack, bufferSource);
-                ShapeTesselator.cube(originBox, 0, 1, 0, 0.5f, poseStack, bufferSource);
+                context.draw(ShapeElement.guide(rect, color));
+                context.draw(ShapeElement.guide(originBox, 0x7f00ff00));
             }
             // render guide grid
             if (isShowModelGuides && isModelOverridden) {
-                ShapeTesselator.cube(rect2, 0, 0, 1, 0.25f, poseStack, bufferSource);
+                context.draw(ShapeElement.guide(rect2, 0x3f0000ff));
             }
 
-            poseStack.popPose();
+            context.restoreGraphicsState();
             polygonOffset += 0.001f;
         }
-        poseStack.popPose();
-        override.setBuffers(null);
+        context.restoreGraphicsState();
+        textureResolvedContext.setContext(null);
     }
 
-    public void transform(IPoseStack poseStack, T entity) {
-        poseStack.translate(0, 1, 0); // apply height offset
-        poseStack.rotate(CubeTransform.getRotationDegrees(entity.facing())); // apply facing rotation
-    }
-
-    @Override
-    public int getViewDistance() {
-        return 272;
-    }
-
-    @Override
-    public boolean shouldRenderOffScreen(T entity) {
-        return true;
-    }
-
-    public static class PlayerTextureOverride implements IBufferSource {
+    private static class TextureResolvedContext implements IGraphicsContext {
 
         protected final HashMap<IRenderType, Supplier<IRenderType>> overrides = new HashMap<>();
-        protected IResourceLocation texture;
-        protected IBufferSource bufferSource;
 
-        public void setBuffers(IBufferSource bufferSource) {
-            this.bufferSource = bufferSource;
+        protected IResourceLocation texture;
+        protected IGraphicsContext context;
+
+        @Override
+        public void draw(IGraphicsElement element) {
+            context.draw(resolve(element));
+        }
+
+        @Override
+        public IPoseStack ctm() {
+            return context.ctm();
         }
 
         public void setTexture(IResourceLocation texture) {
             if (Objects.equals(this.texture, texture)) {
                 return;
             }
+            this.texture = texture;
             this.overrides.clear();
             this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, () -> SkinRenderType.entityCutoutNoCull(texture));
             this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> SkinRenderType.entityCutoutNoCull(texture));
             this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, () -> SkinRenderType.entityTranslucentCull(texture));
         }
 
-        @Override
-        public IVertexConsumer getBuffer(IRenderType renderType) {
-            var overrideRenderType = overrides.get(renderType);
-            if (overrideRenderType != null) {
-                renderType = overrideRenderType.get();
-            }
-            return bufferSource.getBuffer(renderType);
+        public void setContext(IGraphicsContext context) {
+            this.context = context;
         }
 
-        @Override
-        public void endBatch() {
-            bufferSource.endBatch();
+        protected IGraphicsElement resolve(IGraphicsElement element) {
+            var modelPart = Objects.safeCast(element, ModelPartElement.class);
+            if (modelPart != null) {
+                var renderType = overrides.get(modelPart.renderType());
+                if (renderType != null) {
+                    modelPart.setRenderType(renderType.get());
+                }
+            }
+            return element;
         }
     }
 
-    public static class CustomTextureProvider implements GuideDataProvider {
+    private static class CustomTextureProvider implements GuideDataProvider {
 
-        protected final SkinDynamicTexture displayTexture;
+        protected final PaintableTexture displayTexture;
         protected final IResourceLocation displayTextureLocation;
         protected int lastVersion;
         protected boolean shouldRenderOverlay = false;
         protected ISkinProperties skinProperties;
 
-        public CustomTextureProvider(ArmourerBlockEntity blockEntity) {
-            this.displayTexture = new SkinDynamicTexture();
-            this.displayTextureLocation = TextureUtils.registerTexture(identifier(blockEntity), displayTexture);
+        public CustomTextureProvider(BlockPos pos) {
+            this.displayTexture = new PaintableTexture("paintable-texture");
+            this.displayTextureLocation = registerTexture(pos, displayTexture);
         }
 
-        public static CustomTextureProvider of(ArmourerBlockEntity blockEntity) {
-            var renderData = BlockEntityRenderData.of(blockEntity);
-            if (renderData == null) {
-                return null;
-            }
-            if (renderData.customTextureProvider() instanceof CustomTextureProvider textureProvider) {
-                textureProvider.tick(blockEntity);
+        public static CustomTextureProvider of(ArmourerRenderState renderState) {
+            if (renderState.customTextureProvider() instanceof CustomTextureProvider textureProvider) {
+                textureProvider.tick(renderState);
                 return textureProvider;
             }
-            var textureProvider = new CustomTextureProvider(blockEntity);
-            renderData.setCustomTextureProvider(textureProvider);
-            textureProvider.tick(blockEntity);
+            var textureProvider = new CustomTextureProvider(renderState.blockPos());
+            renderState.setCustomTextureProvider(textureProvider);
+            textureProvider.tick(renderState);
             return textureProvider;
-        }
-
-        public static String identifier(ArmourerBlockEntity blockEntity) {
-            var pos = blockEntity.getBlockPos();
-            return String.format("aw-armourer-%d-%d-%d", pos.getX(), pos.getY(), pos.getZ());
         }
 
         // TODO: @SAGESSE replace to new impl.
 //        @Override
 //        protected void finalize() throws Throwable {
-//            EnvironmentManager.getClient().getTextureManager().release(displayTextureLocation);
+//            Minecraft.getInstance().getTextureManager().release(displayTextureLocation);
 //            super.finalize();
 //        }
 
-        public void tick(ArmourerBlockEntity blockEntity) {
-            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(blockEntity.textureDescriptor()));
-            this.displayTexture.setPaintData(blockEntity.paintData());
+        public void tick(ArmourerRenderState renderState) {
+            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(renderState.textureDescriptor()));
+            this.displayTexture.setPaintData(renderState.paintData());
         }
 
         @Override
@@ -234,6 +231,12 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity> extends Abstra
                 return !skinProperties.get(property);
             }
             return false;
+        }
+
+        private OpenResourceLocation registerTexture(BlockPos pos, DynamicTexture texture) {
+            var location = ModConstants.key(String.format("dynamic/armourer-%08x", pos.asLong()));
+            Minecraft.getInstance().getTextureManager().register(location.toLocation(), texture);
+            return location;
         }
     }
 }

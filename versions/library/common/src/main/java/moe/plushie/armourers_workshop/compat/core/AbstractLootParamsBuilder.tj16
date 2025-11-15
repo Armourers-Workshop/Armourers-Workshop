@@ -1,0 +1,54 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IContextKey;
+import moe.plushie.armourers_workshop.api.common.ILootBuilder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.loot.LootContext;
+import org.jetbrains.annotations.Nullable;
+
+@Available("[1.16, 1.20)")
+public class AbstractLootParamsBuilder implements ILootBuilder {
+
+    private final LootContext.Builder impl;
+
+    public AbstractLootParamsBuilder(LootContext.Builder builder) {
+        this.impl = builder;
+    }
+
+    public static AbstractLootParamsBuilder wrap(LootContext.Builder builder) {
+        return new AbstractLootParamsBuilder(builder);
+    }
+
+    public static LootContext.Builder unwrap(ILootBuilder builder) {
+        return ((AbstractLootParamsBuilder) builder).impl;
+    }
+
+    @Override
+    public <T> T getParameter(IContextKey<T> key) {
+        return impl.getParameter(AbstractLootContextParams.unwrap(key));
+    }
+
+    @Nullable
+    @Override
+    public <T> T getOptionalParameter(IContextKey<T> key) {
+        return impl.getOptionalParameter(AbstractLootContextParams.unwrap(key));
+    }
+
+    @Override
+    public <T> ILootBuilder withParameter(IContextKey<T> key, T value) {
+        impl.withParameter(AbstractLootContextParams.unwrap(key), value);
+        return this;
+    }
+
+    @Override
+    public <T> ILootBuilder withOptionalParameter(IContextKey<T> key, @Nullable T value) {
+        impl.withOptionalParameter(AbstractLootContextParams.unwrap(key), value);
+        return this;
+    }
+
+    @Override
+    public ServerLevel level() {
+        return impl.getLevel();
+    }
+}

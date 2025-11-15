@@ -6,13 +6,12 @@ import moe.plushie.armourers_workshop.api.core.math.ITransform;
 import moe.plushie.armourers_workshop.core.client.animation.AnimatedOutputMode;
 import moe.plushie.armourers_workshop.core.client.animation.AnimatedOutputPoint;
 import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
-import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
+import moe.plushie.armourers_workshop.core.client.render.plugin.EpicFightEntityRenderPlugin;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.skin.part.other.PartitionPartType;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public class BakedAdapterJointTransform implements ITransform, IJointTransform {
@@ -34,22 +33,21 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
         }
     }
 
-    public void setup(@Nullable Entity entity, BakedArmature armature, SkinRenderContext context) {
+    public void setup(@Nullable EntityRenderState renderState, BakedArmature armature, IPoseStack poseStack) {
         // find the joint transform without joint modifier.
         var transform = armature.transformByJoint(armature.jointByPart(part));
         if (transform == null) {
             output.clear();
             return;
         }
-        var renderData = context.renderData();
-        if (renderData != null && renderData.renderPatch() instanceof EpicFightEntityRendererPatch) {
-            setupEpicFight(transform, context);
+        if (renderState != null && renderState.renderPlugin() instanceof EpicFightEntityRenderPlugin) {
+            setupEpicFight(transform, poseStack);
         } else {
-            setupVanilla(transform, context);
+            setupVanilla(transform, poseStack);
         }
     }
 
-    private void setupVanilla(IJointTransform transform, SkinRenderContext context) {
+    private void setupVanilla(IJointTransform transform, IPoseStack poseStack) {
         if (isPartitionPart) {
             output.clear();
             return;
@@ -65,7 +63,7 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
         output.setRotation(xRot, yRot, zRot);
     }
 
-    private void setupEpicFight(IJointTransform transform, SkinRenderContext context) {
+    private void setupEpicFight(IJointTransform transform, IPoseStack poseStack) {
         tester.setIdentity();
         transform.apply(tester);
         tester.scale(-1, -1, 1);
@@ -82,13 +80,5 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
     @Override
     public void apply(IPoseStack poseStack) {
         // we don't need apply the transform in the adapt mode.
-    }
-
-    private boolean inEpicFight(SkinRenderContext context) {
-        var renderData = context.renderData();
-        if (renderData != null) {
-            return renderData.renderPatch() instanceof EpicFightEntityRendererPatch;
-        }
-        return false;
     }
 }

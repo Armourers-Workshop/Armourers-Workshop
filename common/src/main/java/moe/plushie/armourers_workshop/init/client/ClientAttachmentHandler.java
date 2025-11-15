@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentType;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ClientAttachmentHandler {
 
     private static final OpenVector3f GUN_LEFT_WAIST_ORIGIN = new OpenVector3f(-4, 12, 0);
@@ -115,7 +115,7 @@ public class ClientAttachmentHandler {
             return;
         }
         var poseStack = AbstractPoseStack.wrap(poseStackIn);
-        var attachmentPoses = renderData.getAttachmentPoses(attachmentType);
+        var attachmentPoses = renderData.attachmentManager().get(attachmentType);
         if (attachmentPoses != null) {
             attachmentPoses.forEach((index, attachmentPose) -> {
                 poseStack.pushPose();

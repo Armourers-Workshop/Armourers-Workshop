@@ -22,6 +22,7 @@ public class UILabel extends UIView {
     private NSTextAlignment.Vertical textVerticalAlignment = NSTextAlignment.Vertical.CENTER;
 
     protected final DelegateImpl<UILabelDelegate> delegate = DelegateImpl.of(new UILabelDelegate() {
+        // auto stub
     });
 
     private int numberOfLines = 1;

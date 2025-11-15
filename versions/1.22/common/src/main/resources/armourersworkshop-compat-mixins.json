@@ -1,0 +1,48 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "PoseStackMixin",
+    "EntityRenderDispatcherMixin",
+    "BlockEntityRenderDispatcherMixin",
+    "PictureInPictureRendererMixin",
+    "ShaderVanillaMixin",
+    "ShaderOptifineMixin",
+    "ShaderIrisMixin",
+    "RenderStateShardMixin",
+    "GlStateManagerMixin",
+    "ItemRendererMixin",
+    "InventoryScreenMixin",
+    "GuiGraphicsMixin",
+    "SkinTextureDownloaderMixin",
+    "FallbackResourceManagerMixin",
+    "ModelBakeryMixin$ModelPatch",
+    "ModelBakeryMixin$BakeryPatch",
+    "CameraMixin",
+    "SoundManagerMixin",
+    "DynamicLightsOptifineMixin",
+    "ClientEntityTickMixin",
+    "patch/BlockEntityRendererMixin",
+    "patch/BlockEntityRenderStateMixin",
+    "patch/EntityRendererMixin",
+    "patch/EntityRenderStateMixin",
+    "patch/LivingEntityRendererMixin",
+    "patch/model/ModelMixin",
+    "patch/model/HierarchicalModelMixin",
+    "patch/model/EntityModelMixin",
+    "patch/model/ModelPartMixin"
+  ],
+  "mixins": [
+    "EntityJSMixin",
+    "EntityActionTrackerMixin",
+    "EntitySelectorOptionsMixin",
+    "ComponentizationFixMixin$ItemFixer",
+    "ComponentizationFixMixin$EntityFixer",
+    "TickableBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

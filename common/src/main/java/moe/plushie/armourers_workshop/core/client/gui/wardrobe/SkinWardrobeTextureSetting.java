@@ -20,14 +20,11 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implements UITextFieldDelegate {
 
     private final SkinWardrobe wardrobe;
@@ -40,7 +37,7 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     private UIComboBox modelComboView;
 
     private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
-    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.STEVE;
+    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.WIDE;
     private EntityTextureDescriptor.Source lastTextureSource = EntityTextureDescriptor.Source.USER;
 
     public SkinWardrobeTextureSetting(SkinWardrobe wardrobe) {

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubeSelector;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -36,7 +36,7 @@ public class PaintRollerItem extends PaintbrushItem {
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
+    protected void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
         var radius = itemStack.get(PaintingToolOptions.RADIUS);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.area", radius * 2 - 1, radius * 2 - 1, 1));
         super.appendSettingHoverText(itemStack, tooltips);
@@ -48,6 +48,6 @@ public class PaintRollerItem extends PaintbrushItem {
 
     @Override
     public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.PAINT;
+        return ModSoundEvents.PAINT;
     }
 }

@@ -1,0 +1,39 @@
+package moe.plushie.armourers_workshop.compat.fabric.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
+
+@Available("[1.22, )")
+public class AbstractFabricRenderHighlightEvent {
+
+    public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
+        // TODO: NO IMPL - 1.22
+        return null;
+//        return (priority, receiveCancelled, subscriber) -> WorldRenderEvents.BLOCK_OUTLINE.register(((context, outlineContext) -> {
+//            subscriber.accept(new RenderHighlightEvent.Block() {
+//                @Override
+//                public float partialTicks() {
+//                    return context.tickCounter().getGameTimeDeltaTicks();
+//                }
+//
+//                @Override
+//                public Camera camera() {
+//                    return context.camera();
+//                }
+//
+//                @Override
+//                public BlockHitResult target() {
+//                    var minecraft = Minecraft.getInstance();
+//                    return Objects.safeCast(minecraft.hitResult, BlockHitResult.class);
+//                }
+//
+//                @Override
+//                public IGraphicsContext context() {
+//                    return AbstractGraphicsRenderer.wrap(context.matrixStack(), context.consumers());
+//                }
+//            });
+//            return true;
+//        }));
+    }
+}

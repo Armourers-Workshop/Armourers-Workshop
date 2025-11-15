@@ -11,24 +11,22 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
-import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
 import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
+import moe.plushie.armourers_workshop.core.menu.ContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerReplaceDialog extends ConfirmDialog {
 
     private final Inventory playerInventory;
@@ -43,7 +41,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
     public ArmourerReplaceDialog() {
         super();
         this.setFrame(new CGRect(0, 0, 240, 130));
-        var player = EnvironmentManager.getPlayer();
+        var player = Minecraft.getInstance().player;
         this.playerInventory = player.getInventory();
         this.inventory = createBackup(playerInventory);
         this.listView = new SlotListView<>(new PickerContainer(inventory), playerInventory, bounds());
@@ -180,29 +178,13 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         addSubview(button);
     }
 
-    static class PickerContainer extends AbstractContainerMenu {
+    static class PickerContainer extends ContainerMenu {
 
-        Container inventory;
+        private final Container inventory;
 
         protected PickerContainer(Container inventory) {
             super(null, 0);
             this.inventory = inventory;
-        }
-
-        @Override
-        public void removed(Player player) {
-            super.removed(player);
-            player.getInventory().setCarried(ItemStack.EMPTY);
-        }
-
-        @Override
-        public boolean stillValid(Player p_75145_1_) {
-            return true;
-        }
-
-        @Override
-        public ItemStack quickMoveStack(Player player, int index) {
-            return quickMoveStack(player, index, slots.size());
         }
 
         protected void reloadSlots(CGRect inventoryRect, CGRect placeholderRect) {
@@ -213,13 +195,24 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
 
         protected void addPlaceholderSlots(Container inventory, int offset, int placeholderX, int placeholderY) {
             for (int i = 0; i < 2; ++i) {
-                addSlot(new Slot(inventory, offset + i, placeholderX + i * 110, placeholderY) {
+                addSlot(new AbstractContainerSlot(inventory, offset + i, placeholderX + i * 110, placeholderY) {
                     @Override
-                    public boolean mayPlace(ItemStack itemStack) {
+                    protected boolean abi$mayPlace(ItemStack itemStack) {
                         return itemStack.getItem() instanceof IItemPaintable;
                     }
                 });
             }
+        }
+
+        @Override
+        protected void abi$removed(Player player) {
+            super.abi$removed(player);
+            player.getInventory().setCarried(ItemStack.EMPTY);
+        }
+
+        @Override
+        protected boolean abi$stillValid(Player player) {
+            return true;
         }
     }
 }

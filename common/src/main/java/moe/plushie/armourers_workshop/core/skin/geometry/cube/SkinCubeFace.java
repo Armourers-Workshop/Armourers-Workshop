@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class SkinCubeFace extends SkinGeometryFace {
 
-    public final int alpha;
+    private final int alpha;
 
     private final SkinGeometryType type;
     private final SkinGeometryOptions options;

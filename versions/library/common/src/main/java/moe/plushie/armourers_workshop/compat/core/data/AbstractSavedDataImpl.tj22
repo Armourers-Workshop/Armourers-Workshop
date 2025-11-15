@@ -1,0 +1,9 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataSerializable;
+import net.minecraft.world.level.saveddata.SavedData;
+
+@Available("[1.22, )")
+public abstract class AbstractSavedDataImpl extends SavedData {
+}

@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
@@ -10,13 +8,11 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.PacketSplitter;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -24,15 +20,15 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-
-public class NetworkManager {
+public abstract class NetworkManager {
 
     private static Dispatcher dispatcher;
     private static Distributors distributors;
 
     public static void init(String name, String version) {
-        dispatcher = createDispatcher(ModConstants.key(name), version);
-        distributors = createDistributors();
+        var instance = PlatformLoader.load(NetworkManager.class);
+        dispatcher = instance.createDispatcher(ModConstants.key(name), version);
+        distributors = instance.createDistributors();
         dispatcher.register();
     }
 
@@ -78,24 +74,18 @@ public class NetworkManager {
         sendToServer(message);
     }
 
-    @ExpectPlatform
-    public static Dispatcher createDispatcher(IResourceLocation registryName, String version) {
-        throw new AssertionError();
-    }
+    public abstract Dispatcher createDispatcher(OpenResourceLocation registryName, String version);
 
-    @ExpectPlatform
-    public static Distributors createDistributors() {
-        throw new AssertionError();
-    }
+    public abstract Distributors createDistributors();
 
     public static abstract class Dispatcher {
 
         protected final UUID clientUUID = UUID.randomUUID();
         protected final String channelVersion;
-        protected final IResourceLocation channelName;
+        protected final OpenResourceLocation channelName;
         protected final PacketSplitter splitter;
 
-        public Dispatcher(IResourceLocation channelName, String channelVersion) {
+        public Dispatcher(OpenResourceLocation channelName, String channelVersion) {
             this.channelName = channelName;
             this.channelVersion = channelVersion;
             this.splitter = new PacketSplitter();
@@ -104,16 +94,15 @@ public class NetworkManager {
 
         public abstract void register();
 
-        public void didReceivePacket(IServerPacketHandler packetHandler, IFriendlyByteBuf payload, ServerPlayer player) {
-            merge(player.getUUID(), payload, packet -> packetHandler.enqueueWork(() -> {
-                packet.accept(packetHandler, player);
+        public void didReceivePacket(IServerPacketHandler packetHandler, IFriendlyByteBuf payload) {
+            merge(packetHandler.player().getUUID(), payload, packet -> packetHandler.enqueueWork(() -> {
+                packet.accept(packetHandler, packetHandler.player());
             }));
         }
 
-        @Environment(EnvType.CLIENT)
-        public void didReceivePacket(IClientPacketHandler packetHandler, IFriendlyByteBuf payload, Player player) {
+        public void didReceivePacket(IClientPacketHandler packetHandler, IFriendlyByteBuf payload) {
             merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> {
-                packet.accept(packetHandler, EnvironmentManager.getPlayer());
+                packet.accept(packetHandler, packetHandler.player());
             }));
         }
 

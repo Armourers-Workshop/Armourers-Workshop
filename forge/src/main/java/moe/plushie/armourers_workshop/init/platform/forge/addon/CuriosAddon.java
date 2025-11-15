@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.forge.addon;
 
-import moe.plushie.armourers_workshop.api.common.IItemStackProvider;
-import moe.plushie.armourers_workshop.core.data.ItemStackProvider;
+import moe.plushie.armourers_workshop.core.data.EntityEquipmentManager;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,7 +15,7 @@ import java.util.function.Predicate;
 public class CuriosAddon {
 
     public static <T> void register(BiFunction<LivingEntity, Predicate<ItemStack>, Collection<T>> provider, Function<T, ItemStack> transform) {
-        ItemStackProvider.getInstance().register(new IItemStackProvider() {
+        EntityEquipmentManager.register(new EntityEquipmentManager.Provider() {
             @Override
             public Iterable<ItemStack> getArmorSlots(Entity entity) {
                 if (entity instanceof LivingEntity livingEntity) {
@@ -25,11 +24,6 @@ public class CuriosAddon {
                         return Collections.compactMap(collection, transform);
                     }
                 }
-                return null;
-            }
-
-            @Override
-            public Iterable<ItemStack> getHandSlots(Entity entity) {
                 return null;
             }
         });

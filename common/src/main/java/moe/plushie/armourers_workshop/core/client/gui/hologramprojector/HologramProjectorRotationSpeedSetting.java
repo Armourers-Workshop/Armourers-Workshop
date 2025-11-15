@@ -8,10 +8,7 @@ import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEnt
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class HologramProjectorRotationSpeedSetting extends HologramProjectorBaseSetting {
 
     private UISliderBox sliderX;

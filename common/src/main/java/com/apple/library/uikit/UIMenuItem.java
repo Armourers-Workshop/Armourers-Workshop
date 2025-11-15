@@ -5,7 +5,6 @@ import com.apple.library.impl.InputKeyImpl;
 import com.apple.library.impl.InputManagerImpl;
 import com.apple.library.impl.StringImpl;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ public class UIMenuItem {
         it.put("key.keyboard.alt", () -> "ALT");
         it.put("key.keyboard.shift", () -> "SHIFT");
         it.put("key.keyboard.control", () -> {
-            if (Minecraft.ON_OSX) {
+            if (InputManagerImpl.ON_OSX) {
                 return "CMD";
             }
             return "CTRL";
@@ -135,7 +134,7 @@ public class UIMenuItem {
                     }
                 } else {
                     var key = InputKeyImpl.get(keyName);
-                    conditions.add(event -> key.test(event.key(), event.keyModifier()));
+                    conditions.add(event -> key.test(event.key().code(), event.key().modifiers()));
                     names.add(new NSString(key.name()));
                 }
             }

@@ -9,10 +9,7 @@ import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.core.client.gui.widget.InventoryBox;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
 
     protected UICheckBox blockBed;

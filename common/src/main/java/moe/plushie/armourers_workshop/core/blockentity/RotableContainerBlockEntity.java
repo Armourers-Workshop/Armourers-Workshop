@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import java.util.Optional;
 
 public abstract class RotableContainerBlockEntity extends UpdatableContainerBlockEntity {
 
@@ -23,14 +23,12 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
         renderBoundingBox = null;
     }
 
-    @Environment(EnvType.CLIENT)
-    public OpenQuaternionf getRenderRotations(BlockState blockState) {
-        return null;
+    public Optional<OpenQuaternionf> getRenderRotations(BlockState blockState) {
+        return Optional.empty();
     }
 
-    @Environment(EnvType.CLIENT)
-    public OpenRectangle3f getRenderShape(BlockState blockState) {
-        return null;
+    public Optional<OpenRectangle3f> getRenderShape(BlockState blockState) {
+        return Optional.empty();
     }
 
     @Override
@@ -38,13 +36,13 @@ public abstract class RotableContainerBlockEntity extends UpdatableContainerBloc
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }
-        var rect = getRenderShape(blockState);
+        var rect = getRenderShape(blockState).orElse(null);
         if (rect == null) {
             return ZERO_BOX;
         }
-        var quaternion = getRenderRotations(blockState);
+        var quaternion = getRenderRotations(blockState).orElse(null);
         if (quaternion != null) {
-            rect.mul(quaternion);
+            rect.transform(quaternion);
         }
         var blockPos = getBlockPos();
         var box = rect.offset(blockPos.getX() + 0.5f, blockPos.getY() + 0.5f, blockPos.getZ() + 0.5f);

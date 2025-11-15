@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
-import moe.plushie.armourers_workshop.init.ModSounds;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -36,7 +36,7 @@ public class DodgeToolItem extends AbstractColoredToolItem implements IBlockPain
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
+    protected void appendSettingHoverText(ItemStack itemStack, List<Component> tooltips) {
         var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
         super.appendSettingHoverText(itemStack, tooltips);
@@ -44,6 +44,6 @@ public class DodgeToolItem extends AbstractColoredToolItem implements IBlockPain
 
     @Override
     public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
-        return ModSounds.DODGE;
+        return ModSoundEvents.DODGE;
     }
 }

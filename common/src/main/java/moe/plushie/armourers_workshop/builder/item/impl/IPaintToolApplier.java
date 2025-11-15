@@ -4,21 +4,21 @@ import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public interface IPaintToolApplier {
 
-    default InteractionResult usePaintTool(UseOnContext context) {
+    default OpenInteractionResult usePaintTool(UseOnContext context) {
         if (!shouldUseTool(context)) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
         if (blockEntity == null) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var selector = createPaintToolSelector(blockEntity, context);
         IPaintToolAction action = null;
@@ -26,7 +26,7 @@ public interface IPaintToolApplier {
             action = createPaintToolAction(context);
         }
         if (selector == null || action == null) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var collector = new CubeChangesCollector(context.getLevel());
         var event = new CubePaintingEvent(selector, action);
@@ -34,9 +34,9 @@ public interface IPaintToolApplier {
             event.apply(collector, context);
             var packet = new UpdateBlockColorPacket(context, event);
             NetworkManager.sendToServer(packet);
-            return InteractionResult.SUCCESS;
+            return OpenInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 
     @Nullable

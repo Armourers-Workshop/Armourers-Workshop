@@ -7,11 +7,11 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
+import moe.plushie.armourers_workshop.compat.core.AbstractOpenURLEvent;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.panels.AbstractLibraryPanel;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.panels.HeaderLibraryPanel;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.panels.HomeLibraryPanel;
@@ -30,20 +30,15 @@ import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
-import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     private final Router router = new Router();
@@ -74,8 +69,8 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
     private void setupLibrary() {
         // welcome to global library :p
-        GlobalSkinLibrary.getInstance().executor(EnvironmentManager.getClient());
-        GlobalSkinLibrary.getInstance().connect(EnvironmentManager.getClient().getUser().getGameProfile(), null);
+        GlobalSkinLibrary.getInstance().executor(Minecraft.getInstance());
+        GlobalSkinLibrary.getInstance().connect(Minecraft.getInstance().getUser().getGameProfile(), null);
     }
 
     private void setupUI() {
@@ -221,19 +216,9 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
 
         @Override
         public void labelWillClickAttributes(UILabel label, Map<String, ?> attributes) {
-            if (!(attributes.get("ClickEvent") instanceof ClickEvent clickEvent) || clickEvent.getAction() != ClickEvent.Action.OPEN_URL) {
-                return;
-            }
-            var value = clickEvent.getValue();
-            try {
-                var uri = new URI(value);
-                var s = uri.getScheme();
-                if (s == null) {
-                    throw new URISyntaxException(value, "Missing protocol");
-                }
-                Util.getPlatform().openUri(uri);
-            } catch (URISyntaxException urisyntaxexception) {
-                ModLog.error("Can't open url for {}", value, urisyntaxexception);
+            // process open url event.
+            if (attributes.get("ClickEvent") instanceof AbstractOpenURLEvent event) {
+                Util.getPlatform().openUri(event.uri());
             }
         }
 

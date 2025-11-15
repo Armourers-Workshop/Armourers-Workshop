@@ -17,19 +17,19 @@ import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.GL11;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
 
     private final SkinWardrobe wardrobe;
@@ -69,6 +69,8 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
     }
 
     private class ColorPicker extends UIView {
+
+        private static final FloatBuffer BUFFER = MatrixUtils.createFloatBuffer(3);
 
         private final UILabel titleView = new UILabel(CGRect.ZERO);
         private final UIView colorView = new UIView(new CGRect(1, 12, 12, 12));
@@ -134,7 +136,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             }
             var point = event.locationInWindow();
             var frame = window.frame();
-            int rgb = RenderSystem.getPixelColor(point.x + frame.x, point.y + frame.y);
+            int rgb = getColorFromScreen(point.x + frame.x, point.y + frame.y);
             updateColor(SkinPaintColor.of(rgb, SkinPaintTypes.NORMAL));
         }
 
@@ -153,7 +155,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void autoPick(UIControl control) {
-            var location = TextureUtils.getTexture(wardrobe.entity());
+            var location = wardrobe.entity().skin().body();
             if (location == null) {
                 return;
             }
@@ -167,7 +169,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
 
         private SkinPaintColor getColorFromTexture(BakedEntityTexture texture) {
             if (texture == null) {
-                return null;
+                return SkinPaintColor.CLEAR;
             }
             var colors = new ArrayList<SkinPaintColor>();
             if (paintType == SkinPaintTypes.SKIN) {
@@ -192,7 +194,7 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
                 }
             }
             if (c == 0) {
-                return null; // :p a wrong texture
+                return SkinPaintColor.CLEAR; // :p a wrong texture
             }
             return SkinPaintColor.of(r / c, g / c, b / c, SkinPaintTypes.NORMAL);
         }
@@ -221,6 +223,20 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             } else {
                 colorView.setBackgroundColor(null);
             }
+        }
+
+        private static int getColorFromScreen(float x, float y) {
+            var window = Minecraft.getInstance().getWindow();
+            var guiScale = window.getGuiScale();
+            var sx = (int) (x * guiScale);
+            var sy = (int) ((window.getGuiScaledHeight() - y) * guiScale);
+            BUFFER.rewind();
+            GL11.glReadPixels(sx, sy, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, BUFFER);
+            GL11.glFinish();
+            var r = Math.round(BUFFER.get() * 255);
+            var g = Math.round(BUFFER.get() * 255);
+            var b = Math.round(BUFFER.get() * 255);
+            return 0xff000000 | r << 16 | g << 8 | b;
         }
     }
 }

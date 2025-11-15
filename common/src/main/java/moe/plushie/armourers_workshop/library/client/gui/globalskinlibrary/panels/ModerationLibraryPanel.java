@@ -9,14 +9,11 @@ import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.Report;
 import moe.plushie.armourers_workshop.library.data.impl.ReportFilter;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.language.I18n;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class ModerationLibraryPanel extends AbstractLibraryPanel implements ReportList.IEventListener {
 
     private final ReportList listReports = buildReportList();

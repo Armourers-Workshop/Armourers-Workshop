@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
-import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
@@ -12,17 +11,18 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenRotation;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlockPaintable {
 
@@ -39,7 +39,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         parent = serializer.read(CodingKeys.REFER);
         guide = serializer.read(CodingKeys.OFFSET);
         partType = serializer.read(CodingKeys.PART_TYPE);
@@ -48,7 +48,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         serializer.write(CodingKeys.REFER, parent);
         serializer.write(CodingKeys.OFFSET, guide);
         serializer.write(CodingKeys.PART_TYPE, partType);
@@ -118,7 +118,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         // when work in the client side, we try to get the texture color from the loaded texture.
         var level = getLevel();
         if (level != null && level.isClientSide()) {
-            return getTextureColor(blockEntity, texturePos);
+            return getTextureColor(blockEntity, texturePos).orElse(SkinPaintColor.CLEAR);
         }
         return SkinPaintColor.CLEAR;
     }
@@ -167,15 +167,13 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    private SkinPaintColor getTextureColor(ArmourerBlockEntity blockEntity, OpenVector2i texturePos) {
-        if (texturePos != null && blockEntity != null) {
-            var color = TextureUtils.getPlayerTextureModelColor(blockEntity.textureDescriptor(), texturePos);
-            if (color != null) {
-                return color;
+    private Optional<SkinPaintColor> getTextureColor(ArmourerBlockEntity blockEntity, OpenVector2i texturePos) {
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            if (texturePos != null && blockEntity != null) {
+                return TextureUtils.getPlayerTextureModelColor(blockEntity.textureDescriptor(), texturePos);
             }
-        }
-        return SkinPaintColor.CLEAR;
+            return null;
+        });
     }
 
     private OpenVector2i getTexturePos(ArmourerBlockEntity blockEntity, OpenDirection direction) {
@@ -227,7 +225,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<BlockPos> REFER = IDataSerializerKey.create("Refer", IDataCodec.BLOCK_POS, null);
+        public static final IDataSerializerKey<BlockPos> REFER = IDataSerializerKey.create("Refer", ExtraCodecs.BLOCK_POS, null);
         public static final IDataSerializerKey<OpenVector3i> OFFSET = IDataSerializerKey.create("Offset", OpenVector3i.CODEC, OpenVector3i.ZERO);
         public static final IDataSerializerKey<SkinPartType> PART_TYPE = IDataSerializerKey.create("PartType", SkinPartTypes.CODEC, SkinPartTypes.UNKNOWN);
     }

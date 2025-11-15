@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class will load before the MOD initialized,
- * So NEVER don't refer any external class.
+ * So NEVER don't refer other external class.
  */
 public class ModConstants {
 

@@ -1,0 +1,17 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientRegistry;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractComposeGuiGraphicsState;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractComposeGuiGraphicsRenderer;
+import net.minecraft.client.renderer.GameRenderer;
+
+@Available("[1.22, )")
+public abstract class AbstractForgeClientRegistryImpl extends AbstractClientRegistry {
+
+    @Override
+    protected void init() {
+        super.init();
+        GameRenderer.registerPictureInPictureRendererFO(AbstractComposeGuiGraphicsState.class, AbstractComposeGuiGraphicsRenderer::new);
+    }
+}

@@ -1,0 +1,37 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/skin-cube",
+    "render_type": "cutout",
+    "tints": [
+      {
+        "type": "armourers_workshop:dye",
+        "index": 0
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 1
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 2
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 3
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 4
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 5
+      },
+      {
+        "type": "armourers_workshop:dye",
+        "index": 6
+      }
+    ]
+  }
+}

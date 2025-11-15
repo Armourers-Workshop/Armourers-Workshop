@@ -20,7 +20,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibrarySettingWindow;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
@@ -28,15 +27,13 @@ import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private UILabel warningLabel;
@@ -198,7 +195,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         }
         this.isUploading = true;
         // we need to check this user the global skin upload permission in the server first.
-        NetworkManager.sendToServer(new UploadSkinPrePacket(), (result, exception) -> EnvironmentManager.getClient().execute(() -> {
+        NetworkManager.sendToServer(new UploadSkinPrePacket(), (result, exception) -> Minecraft.getInstance().execute(() -> {
             if (exception != null || result == null || !result) {
                 onUploadFailed(getDisplayText("error.notPermission"));
                 return;

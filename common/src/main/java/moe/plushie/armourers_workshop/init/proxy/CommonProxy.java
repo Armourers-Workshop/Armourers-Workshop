@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init.proxy;
 
-import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
@@ -23,8 +23,8 @@ import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.EntityEvent;
 import moe.plushie.armourers_workshop.init.event.common.PlayerEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterCommandsEvent;
-import moe.plushie.armourers_workshop.init.event.common.RegisterDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelAddEntityEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelTickEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStartedEvent;
@@ -39,6 +39,7 @@ import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 public class CommonProxy {
@@ -58,7 +59,7 @@ public class CommonProxy {
     private static void register() {
 
         EventBus.register(RegisterCommandsEvent.class, ModCommands::init);
-        EventBus.register(RegisterDataPackEvent.class, event -> {
+        EventBus.register(RegisterServerDataPackEvent.class, event -> {
             event.register(DataPackManager.byType(DataPackType.SERVER_DATA));
         });
 
@@ -98,7 +99,7 @@ public class CommonProxy {
         EventBus.register(DataPackEvent.Sync.class, event -> {
             // when the data pack sync event, we will initialize context.
             if (event.player() instanceof ServerPlayer player) {
-                ReplayManager.startRecording(event.player().getServer(), event.player());
+                ReplayManager.startRecording(player.server(), player);
                 NetworkManager.sendTo(UpdateContextPacket.sync(player), player);
             }
         });
@@ -115,11 +116,11 @@ public class CommonProxy {
         EventBus.register(PlayerEvent.LoggingOut.class, event -> {
             ModLog.debug("good bye {}", event.getPlayer().getScoreboardName());
             SkinLibraryManager.getServer().remove(event.getPlayer());
-            ReplayManager.stopRecording(event.getPlayer().getServer(), event.getPlayer());
+            ReplayManager.stopRecording(event.getPlayer().server(), event.getPlayer());
         });
         EventBus.register(PlayerEvent.Death.class, event -> {
             ModLog.debug("keep careful {}", event.getPlayer().getScoreboardName());
-            SkinUtils.dropAllIfNeeded(event.getPlayer());
+            SkinUtils.dropAllIfNeeded((ServerLevel) event.getPlayer().level(), event.getPlayer());
         });
         EventBus.register(PlayerEvent.Clone.class, event -> {
             ModLog.debug("woa {}", event.getPlayer().getScoreboardName());
@@ -132,7 +133,7 @@ public class CommonProxy {
                 return;
             }
             var itemStack = player.getMainHandItem();
-            if (itemStack.getItem() instanceof IItemHandler handler) {
+            if (itemStack.getItem() instanceof AbstractItemHandler handler) {
                 var result = handler.attackLivingEntity(itemStack, player, event.getTarget());
                 if (result.consumesAction()) {
                     event.setCancelled(true);

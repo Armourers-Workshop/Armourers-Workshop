@@ -1,0 +1,67 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import com.google.gson.JsonObject;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
+import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.network.FriendlyByteBuf;
+
+@Available("[1.19, )")
+public class AbstractArgumentTypeInfo<A extends IArgumentType<?>> implements ArgumentTypeInfo<A, AbstractArgumentTypeInfo.Template<A>> {
+
+    private final Class<A> type;
+    private final IArgumentSerializer<A> serializer;
+
+    public AbstractArgumentTypeInfo(Class<A> type, IArgumentSerializer<A> serializer) {
+        this.type = type;
+        this.serializer = serializer;
+    }
+
+    @Override
+    public void serializeToNetwork(Template<A> template, FriendlyByteBuf byteBuf) {
+        serializer.serializeToNetwork(template.instance, IFriendlyByteBuf.wrap(byteBuf));
+    }
+
+    @Override
+    public Template<A> deserializeFromNetwork(FriendlyByteBuf byteBuf) {
+        return unpack(serializer.deserializeFromNetwork(IFriendlyByteBuf.wrap(byteBuf)));
+    }
+
+    @Override
+    public void serializeToJson(Template<A> template, JsonObject jsonObject) {
+        serializer.serializeToJson(template.instance, jsonObject);
+    }
+
+    @Override
+    public Template<A> unpack(A argumentType) {
+        return new Template<>(argumentType, this);
+    }
+
+    public Class<A> type() {
+        return type;
+    }
+
+    public static class Template<A extends IArgumentType<?>> implements ArgumentTypeInfo.Template<A> {
+
+        private final A instance;
+        private final AbstractArgumentTypeInfo<A> argumentType;
+
+        public Template(A instance, AbstractArgumentTypeInfo<A> argumentType) {
+            this.instance = instance;
+            this.argumentType = argumentType;
+        }
+
+        @Override
+        public A instantiate(CommandBuildContext commandBuildContext) {
+            return instance;
+        }
+
+        @Override
+        public ArgumentTypeInfo<A, ?> type() {
+            return argumentType;
+        }
+    }
+}

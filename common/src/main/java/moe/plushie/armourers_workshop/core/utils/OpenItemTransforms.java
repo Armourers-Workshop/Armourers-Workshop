@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 
 public class OpenItemTransforms extends LinkedHashMap<String, OpenTransform3f> {
 
-    public static IDataCodec<OpenItemTransforms> CODEC = IDataCodec.COMPOUND_TAG.xmap(OpenItemTransforms::new, OpenItemTransforms::serializeNBT);
+    public static IDataCodec<OpenItemTransforms> CODEC = ExtraCodecs.COMPOUND_TAG.xmap(OpenItemTransforms::new, OpenItemTransforms::serializeNBT);
 
     public OpenItemTransforms() {
     }

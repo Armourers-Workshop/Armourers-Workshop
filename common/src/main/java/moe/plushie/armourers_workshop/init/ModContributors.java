@@ -4,11 +4,12 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -52,9 +53,10 @@ public class ModContributors {
             .add("31873a23-125e-4752-8607-0f1c3cb22c84", "Garoam", 0x601995, ContributionFlags.NONE)
             .build();
 
+    @Nullable
     public static Contributor of(GameProfile gameProfile) {
         if (gameProfile != null) {
-            UUID uuid = gameProfile.getId();
+            var uuid = gameProfile.id();
             if (uuid != null) {
                 return values.get(uuid);
             }
@@ -62,27 +64,28 @@ public class ModContributors {
         return null;
     }
 
-    @Environment(EnvType.CLIENT)
+    @Nullable
     public static Contributor by(Entity entity) {
         if (entity instanceof MannequinEntity mannequin) {
             if (mannequin.isExtraRenderer()) {
-                var descriptor = mannequin.getTextureDescriptor();
-                return of(EntityTextureLoader.getInstance().getGameProfile(descriptor));
+                var profile = EnvironmentExecutor.callOnClient(() -> () -> EntityTextureLoader.getInstance().getGameProfile(mannequin.getTextureDescriptor()));
+                return of(profile.orElse(null));
             }
             return null;
         }
-        if (entity instanceof LocalPlayer) {
+        if (entity instanceof Player) {
             return getCurrentContributor();
         }
         return null;
     }
 
-    @Environment(EnvType.CLIENT)
+    @Nullable
     public static Contributor getCurrentContributor() {
         if (EnvironmentManager.isDevelopment()) {
             return dev;
         }
-        return of(EnvironmentManager.getClient().getUser().getGameProfile());
+        var profile = EnvironmentExecutor.callOnClient(() -> () -> Minecraft.getInstance().getUser().getGameProfile());
+        return of(profile.orElse(null));
     }
 
     public enum ContributionFlags {
@@ -112,14 +115,15 @@ public class ModContributors {
         }
     }
 
-    public static class Builder {
-        HashMap<UUID, Contributor> contributors = new HashMap<>();
+    private static class Builder {
 
-        static Builder builder() {
+        private final HashMap<UUID, Contributor> contributors = new HashMap<>();
+
+        public static Builder builder() {
             return new Builder();
         }
 
-        Builder add(String uuid, String username, int color, ContributionFlags... flags) {
+        public Builder add(String uuid, String username, int color, ContributionFlags... flags) {
             var set = EnumSet.copyOf(Collections.newList(flags));
             var contributor = new Contributor(uuid, username, set, color);
             contributors.put(contributor.uuid, contributor);
@@ -129,7 +133,7 @@ public class ModContributors {
             return this;
         }
 
-        HashMap<UUID, Contributor> build() {
+        public HashMap<UUID, Contributor> build() {
             return contributors;
         }
     }

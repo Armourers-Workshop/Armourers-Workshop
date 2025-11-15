@@ -39,8 +39,7 @@ public class SkinLibraryLoader implements Runnable {
                 return fileList; // Armour file list load failed, not found.
             }
         } catch (Exception e) {
-            ModLog.error("armour file list load failed.");
-            e.printStackTrace();
+            ModLog.error("armour file list load failed.", e);
             return fileList;
         }
 

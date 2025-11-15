@@ -3,8 +3,9 @@ package moe.plushie.armourers_workshop.init;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractSavedData;
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedData;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataType;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenClock;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ModContext extends AbstractSavedData {
+
+    public static final AbstractSavedDataType<ModContext> TYPE = AbstractSavedDataType.create(ModContext::new, "ArmourersWorkshop");
 
     private static final OpenClock CLOCK = new OpenClock();
     private static ModContext CURRENT;
@@ -30,7 +33,7 @@ public class ModContext extends AbstractSavedData {
     }
 
     public static void init(MinecraftServer server) {
-        CURRENT = server.overworld().getDataStorage().computeIfAbsent(ModContext::new, 0, Constants.Key.SKIN);
+        CURRENT = server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
     public static void init(UUID t0, UUID t1) {
@@ -166,8 +169,8 @@ public class ModContext extends AbstractSavedData {
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<UUID> T0 = IDataSerializerKey.create("t0", IDataCodec.UUID, null);
-        public static final IDataSerializerKey<UUID> T1 = IDataSerializerKey.create("t1", IDataCodec.UUID, null);
+        public static final IDataSerializerKey<UUID> T0 = IDataSerializerKey.create("t0", ExtraCodecs.UUID, null);
+        public static final IDataSerializerKey<UUID> T1 = IDataSerializerKey.create("t1", ExtraCodecs.UUID, null);
 
         public static final IDataSerializerKey<Long> CLOCK = IDataSerializerKey.create("clock", IDataCodec.LONG, 0L);
     }

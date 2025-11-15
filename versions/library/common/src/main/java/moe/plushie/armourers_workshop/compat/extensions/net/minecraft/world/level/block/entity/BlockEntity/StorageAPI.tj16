@@ -1,0 +1,21 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.level.block.entity.BlockEntity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class StorageAPI {
+
+    public static void saveFullData(@This BlockEntity blockEntity, TagSerializer serializer) {
+        blockEntity.save(serializer.tag());
+    }
+
+    public static void loadFullData(@This BlockEntity blockEntity, TagSerializer serializer) {
+        blockEntity.load(blockEntity.getBlockState(), serializer.tag());
+    }
+}

@@ -16,6 +16,8 @@ public class OpenRectangle3f implements IRectangle3f {
 
     public final static OpenRectangle3f ZERO = new OpenRectangle3f(0, 0, 0, 0, 0, 0);
 
+    public final static OpenRectangle3f ONE = new OpenRectangle3f(0, 0, 0, 1, 1, 1);
+
     public static final IDataCodec<OpenRectangle3f> CODEC = IDataCodec.FLOAT.listOf().xmap(OpenRectangle3f::new, OpenRectangle3f::toList);
 
     public float x;
@@ -213,11 +215,11 @@ public class OpenRectangle3f implements IRectangle3f {
 //        return this.intersects(Math.min(vec3.x, vec32.x), Math.min(vec3.y, vec32.y), Math.min(vec3.z, vec32.z), Math.max(vec3.x, vec32.x), Math.max(vec3.y, vec32.y), Math.max(vec3.z, vec32.z));
 //    }
 
-    public void mul(OpenQuaternionf quaternion) {
-        mul(new OpenMatrix4f(quaternion));
+    public void transform(OpenQuaternionf quaternion) {
+        transform(new OpenMatrix4f(quaternion));
     }
 
-    public void mul(OpenMatrix4f matrix) {
+    public void transform(OpenMatrix4f matrix) {
         var start = new OpenVector4f(x, y, z, 1.0f);
         var end = new OpenVector4f(x + width, y + height, z + depth, 1.0f);
         start.transform(matrix);

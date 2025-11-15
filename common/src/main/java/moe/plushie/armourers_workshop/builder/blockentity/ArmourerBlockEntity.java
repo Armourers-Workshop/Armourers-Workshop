@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldBlockUpdateTask;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractDirection;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
@@ -69,7 +69,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     protected SkinType skinType = SkinTypes.ARMOR_HEAD;
     protected SkinProperties skinProperties = SkinProperties.EMPTY;
     protected EntityTextureDescriptor textureDescriptor = EntityTextureDescriptor.EMPTY;
-    protected EntityTextureDescriptor.Model textureModel = EntityTextureDescriptor.Model.STEVE;
+    protected EntityTextureDescriptor.Model textureModel = EntityTextureDescriptor.Model.WIDE;
 
     protected SkinPaintData paintData;
 
@@ -80,7 +80,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     @Override
-    public void readAdditionalData(IDataSerializer serializer) {
+    protected void abi$readAdditionalData(IDataSerializer serializer) {
         this.skinType = serializer.read(CodingKeys.SKIN_TYPE);
         this.skinProperties = serializer.read(CodingKeys.SKIN_PROPERTIES);
         this.textureDescriptor = serializer.read(CodingKeys.PLAYER_TEXTURE);
@@ -95,7 +95,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     @Override
-    public void writeAdditionalData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalData(IDataSerializer serializer) {
         serializer.write(CodingKeys.SKIN_TYPE, skinType);
         serializer.write(CodingKeys.SKIN_PROPERTIES, skinProperties);
         serializer.write(CodingKeys.PLAYER_TEXTURE, textureDescriptor);
@@ -482,14 +482,14 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
     }
 
     private EntityTextureModel boundingModel() {
-        if (textureModel == EntityTextureDescriptor.Model.ALEX) {
+        if (textureModel == EntityTextureDescriptor.Model.SLIM) {
             return BoundingBox.SLIM_MODEL;
         }
         return BoundingBox.MODEL;
     }
 
     private SkinPaintData createPaintData(EntityTextureDescriptor.Model model) {
-        var slim = (model == EntityTextureDescriptor.Model.ALEX);
+        var slim = (model == EntityTextureDescriptor.Model.SLIM);
         return SkinPaintData.v2(slim);
     }
 
@@ -507,7 +507,7 @@ public class ArmourerBlockEntity extends UpdatableBlockEntity implements IPaintT
         public static final IDataSerializerKey<SkinType> SKIN_TYPE = IDataSerializerKey.create("SkinType", SkinTypes.CODEC, SkinTypes.UNKNOWN);
         public static final IDataSerializerKey<SkinProperties> SKIN_PROPERTIES = IDataSerializerKey.create("SkinProperties", SkinProperties.CODEC, SkinProperties.EMPTY, SkinProperties.EMPTY::copy);
         public static final IDataSerializerKey<EntityTextureDescriptor> PLAYER_TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
-        public static final IDataSerializerKey<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.STEVE);
+        public static final IDataSerializerKey<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.WIDE);
         public static final IDataSerializerKey<SkinPaintData> PAINT_DATA = IDataSerializerKey.create("PaintData", DataSerializers.COMPRESSED_PAINT_DATA, null);
         public static final IDataSerializerKey<Integer> FLAGS = IDataSerializerKey.create("Flags", IDataCodec.INT, 0);
         public static final IDataSerializerKey<Integer> VERSION = IDataSerializerKey.create("DataVersion", IDataCodec.INT, 0);

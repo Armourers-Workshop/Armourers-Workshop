@@ -1,14 +1,18 @@
 package moe.plushie.armourers_workshop.core.client.gui.widget;
 
 import com.apple.library.coregraphics.CGGraphicsContext;
-import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIWindow;
 import com.apple.library.uikit.UIWindowManager;
-import moe.plushie.armourers_workshop.compatibility.client.gui.AbstractMenuScreen;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuScreen;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractCharacterEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseButtonEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseWheelEvent;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,7 +20,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWindow> extends AbstractMenuScreen<M> {
 
     private final W window;
@@ -36,8 +40,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
 
     @Override
     public void init() {
-        var screenSize = screenSize();
-        manager.layout(screenSize.width, screenSize.height);
+        manager.layout(screenSize());
         var rect = window.bounds();
         setContentSize(new CGSize(rect.width, rect.height));
         super.init();
@@ -67,43 +70,43 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return manager.mouseDown(mouseX, mouseY, button, this::_mouseClicked);
+    public boolean keyPressed(AbstractKeyEvent event) {
+        return manager.keyDown(event, this::_keyPressed);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return manager.mouseUp(mouseX, mouseY, button, this::_mouseReleased);
+    public boolean keyReleased(AbstractKeyEvent event) {
+        return manager.keyUp(event, this::_keyReleased);
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        return manager.mouseWheel(mouseX, mouseY, new CGPoint(deltaX, deltaY), this::_mouseScrolled);
+    public boolean charTyped(AbstractCharacterEvent event) {
+        return manager.charTyped(event, this::_charTyped);
     }
 
     @Override
-    public void mouseMoved(double mouseX, double mouseY) {
-        manager.mouseMoved(mouseX, mouseY, 0, this::_mouseMoved);
+    public boolean mouseClicked(AbstractMouseButtonEvent event, boolean bl) {
+        return manager.mouseDown(event, bl, this::_mouseClicked);
     }
 
     @Override
-    public boolean keyPressed(int key, int i, int j) {
-        return manager.keyDown(key, i, j, this::_keyPressed);
+    public boolean mouseReleased(AbstractMouseButtonEvent event) {
+        return manager.mouseUp(event, this::_mouseReleased);
     }
 
     @Override
-    public boolean keyReleased(int key, int i, int j) {
-        return manager.keyUp(key, i, j, this::_keyReleased);
+    public void mouseMoved(AbstractMouseEvent event) {
+        manager.mouseMoved(event, this::_mouseMoved);
     }
 
     @Override
-    public boolean charTyped(char ch, int i) {
-        return manager.charTyped(ch, i, 0, this::_charTyped);
+    public boolean mouseScrolled(AbstractMouseWheelEvent event) {
+        return manager.mouseWheel(event, this::_mouseScrolled);
     }
 
     @Override
-    public boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-        return !manager.mouseIsInside(mouseX, mouseY, button);
+    public boolean hasClickedOutside(int x, int y, AbstractMouseButtonEvent event) {
+        return !manager.mouseIsInside(event);
     }
 
     @Override
@@ -142,42 +145,42 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
         }
     }
 
-    protected boolean _charTyped(int key, int i, int j) {
-        super.charTyped((char) key, i);
+    protected boolean _charTyped(AbstractCharacterEvent event) {
+        super.charTyped(event);
         return true;
     }
 
-    protected boolean _keyPressed(int key, int i, int j) {
+    protected boolean _keyPressed(AbstractKeyEvent event) {
         // when input first responder is actived, the shortcut key events not allowed.
-        if (manager.isTextEditing() && !_editingPassKey((char) key)) {
+        if (manager.isTextEditing() && !_editingPassKey(event)) {
             return false;
         }
-        return super.keyPressed(key, i, j);
+        return super.keyPressed(event);
     }
 
-    protected boolean _keyReleased(int key, int i, int j) {
-        return super.keyReleased(key, i, j);
+    protected boolean _keyReleased(AbstractKeyEvent event) {
+        return super.keyReleased(event);
     }
 
-    protected boolean _mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button);
+    protected boolean _mouseClicked(AbstractMouseButtonEvent event, boolean bl) {
+        return super.mouseClicked(event, bl);
     }
 
-    protected boolean _mouseMoved(double mouseX, double mouseY, int button) {
-        super.mouseMoved(mouseX, mouseY);
+    protected boolean _mouseReleased(AbstractMouseButtonEvent event) {
+        return super.mouseReleased(event);
+    }
+
+    protected boolean _mouseMoved(AbstractMouseEvent event) {
+        super.mouseMoved(event);
         return true;
     }
 
-    protected boolean _mouseScrolled(double mouseX, double mouseY, CGPoint delta) {
-        return super.mouseScrolled(mouseX, mouseY, delta.x(), delta.y());
+    protected boolean _mouseScrolled(AbstractMouseWheelEvent event) {
+        return super.mouseScrolled(event);
     }
 
-    protected boolean _mouseReleased(double mouseX, double mouseY, int button) {
-        return super.mouseReleased(mouseX, mouseY, button);
-    }
-
-    protected boolean _editingPassKey(int key) {
-        return switch (key) {
+    protected boolean _editingPassKey(AbstractKeyEvent event) {
+        return switch (event.code()) {
             case GLFW.GLFW_KEY_ESCAPE -> true;
             case GLFW.GLFW_KEY_TAB -> true;
             default -> false;

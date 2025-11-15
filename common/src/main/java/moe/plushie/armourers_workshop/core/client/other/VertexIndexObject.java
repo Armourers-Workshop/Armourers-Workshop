@@ -2,14 +2,11 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
 import java.util.function.IntConsumer;
 
-@Environment(EnvType.CLIENT)
 public class VertexIndexObject {
 
     private final int id;

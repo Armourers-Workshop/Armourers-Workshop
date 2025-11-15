@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
@@ -27,11 +28,11 @@ public final class EntityLifecycleEvents {
     public static final Event<AllowClimbing> ALLOW_CLIMBING = EventFactory.createArrayBacked(AllowClimbing.class, callbacks -> (entity, blockPos, blockState) -> {
         for (var callback : callbacks) {
             var result = callback.allowClimbing(entity, blockPos, blockState);
-            if (result != InteractionResult.PASS) {
+            if (result != OpenInteractionResult.PASS) {
                 return result;
             }
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     });
 
     public static final Event<Size> SIZE = EventFactory.createArrayBacked(Size.class, callbacks -> (entity, pose, oldSize, newSize) -> {
@@ -51,7 +52,7 @@ public final class EntityLifecycleEvents {
          * @param blockPos the sleeping position
          * @return true if allowed, false otherwise
          */
-        InteractionResult allowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState);
+        OpenInteractionResult allowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState);
     }
 
 

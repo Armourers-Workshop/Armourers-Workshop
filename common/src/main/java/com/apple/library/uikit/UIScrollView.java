@@ -17,6 +17,7 @@ public class UIScrollView extends UIView {
     protected UIEdgeInsets scrollIndicatorInsets = new UIEdgeInsets(2, 2, 2, 2);
 
     protected final DelegateImpl<UIScrollViewDelegate> delegate = DelegateImpl.of(new UIScrollViewDelegate() {
+        // auto stub
     });
 
     private final boolean isInit;

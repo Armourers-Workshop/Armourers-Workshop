@@ -5,24 +5,24 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Consumer;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 public class ContainerPermission extends Permission {
 
-    public ContainerPermission(String name, Consumer<Consumer<IRegistryHolder<?>>> each) {
+    public ContainerPermission(String name, Supplier<Collection<? extends IRegistryHolder<? extends IMenuType<?>>>> entities) {
         super(name);
-        each.accept(this::add);
+        entities.get().forEach(this::add);
     }
 
-    public <T extends AbstractContainerMenu> boolean accept(IMenuType<T> type, Entity target, Player player) {
+    public boolean accept(IRegistryHolder<? extends IMenuType<?>> type, Entity target, Player player) {
         var node = get(type.registryName());
         return eval(node, player, new TargetPermissionContext(player, target));
     }
 
-    public <T extends AbstractContainerMenu> boolean accept(IMenuType<T> type, Level level, BlockPos pos, Player player) {
+    public boolean accept(IRegistryHolder<? extends IMenuType<?>> type, Level level, BlockPos pos, Player player) {
         var node = get(type.registryName());
         return eval(node, player, new BlockPermissionContext(player, pos, level.getBlockState(pos), null));
     }

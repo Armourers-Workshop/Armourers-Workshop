@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.core.Registry;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import manifold.ext.rt.api.auto;
+
+@Available("[1.16, 1.18)")
+public class BuiltInRegistriesExt {
+
+    public static final auto ITEM = ForgeRegistries.ITEMS;
+    public static final auto LOOT_FUNCTION_TYPE = Registry.LOOT_FUNCTION_TYPE;
+
+    public static final auto BLOCK = ForgeRegistries.BLOCKS;
+    public static final auto BLOCK_ENTITY_TYPE = ForgeRegistries.TILE_ENTITIES;
+
+    public static final auto ENTITY_TYPE = ForgeRegistries.ENTITIES;
+    public static final auto ENTITY_DATA_SERIALIZER = ForgeRegistries.DATA_SERIALIZERS;
+
+    public static final auto MENU = ForgeRegistries.CONTAINERS;
+    public static final auto SOUND_EVENT = ForgeRegistries.SOUND_EVENTS;
+}

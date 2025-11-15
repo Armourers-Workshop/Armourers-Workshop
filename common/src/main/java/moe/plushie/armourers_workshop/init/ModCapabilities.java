@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.Optional;
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameParameterValue"})
 public class ModCapabilities {
 
     public static final IRegistryHolder<IEntityCapability<SkinWardrobe>> ENTITY_WARDROBE = entity(SkinWardrobe.class, SkinWardrobe::create).build("entity-skin-provider");

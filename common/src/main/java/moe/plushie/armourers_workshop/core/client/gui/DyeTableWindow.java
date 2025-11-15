@@ -14,14 +14,11 @@ import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.menu.DyeTableMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unused"})
-@Environment(EnvType.CLIENT)
 public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
 
     private final SkinPreviewView previewView = new SkinPreviewView(new CGRect(174, 23, 148, 159));
@@ -61,10 +58,13 @@ public class DyeTableWindow extends MenuWindow<DyeTableMenu> {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
+        context.saveGraphicsState();
+        context.translateCTM(0, 0, 200);
         menu.slots.stream().filter(slot -> !slot.isActive()).forEach(slot -> {
             // gray out unused dye slots.
-            context.drawImage(ModTextures.COMMON, slot.x - 1, slot.y - 1, 18, 18, 202, 0, 256, 256, 200);
+            context.drawImage(ModTextures.COMMON, slot.x - 1, slot.y - 1, 18, 18, 202, 0, 256, 256);
         });
+        context.restoreGraphicsState();
     }
 
     private void loadDyeSlots(SkinDescriptor descriptor, Consumer<BakedSkin> handler) {

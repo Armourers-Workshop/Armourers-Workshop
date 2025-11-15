@@ -29,7 +29,7 @@ static def parseVersion(version, undefined) {
     return "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int + value
 }
 
-static def parseVersionFromFile(file) {
+static def parseVersionFromSource(file) {
     // only process the source file.
     if (file.name.matches(/.+\.(java|tj|jmc\d+|tj\d+)$/)) {
         // read version range in the file.
@@ -46,9 +46,17 @@ static def parseVersionFromFile(file) {
     return null
 }
 
+static def parseVersionFromConfig(file) {
+	def properties = new Properties()
+	properties.load(file.newDataInputStream())
+	return properties.get("minecraft_version")
+}
+
+
 // we needs convert the version to number, for example: 1.16.5 => 11605.
 def minecraft_version = project.rootDir.getName()
-var minecraft_version_number = parseVersion(minecraft_version, 0)
+def minecraft_version_number = parseVersion(minecraft_version, 0)
+def minecraft_old_version = parseVersionFromConfig(file("../../gradle.properties"))
 
 def targets = ["common", "forge", "fabric"]
 
@@ -167,53 +175,55 @@ macroPreprocessorSettings {
 }
 
 tasks.register("switchCoreSource") {
-    sourceSets.forEach {
-        def sourceSet = it
-        def allFiles = [:]
-        sourceSet.allSource.forEach {
-            def range = parseVersionFromFile(it)
-            if (range != null) {
-                def path = it.path.replaceAll(/^(.+)\.(.+?)$/, /$1/)
-                allFiles.computeIfAbsent(path, k -> []).add([range, it])
-            }
-        }
-        allFiles.each {
-            def path = it.key
-            def apply = new HashMap<File, File>()
-            def pending = new HashMap<File, File>()
-            def versions = []
-            it.value.sort().each {
-                def range = it[0]
-                if (minecraft_version_number < range[0] || minecraft_version_number > range[1]) {
-                    // disable the file
-                    def ver = "${range[0]}"
-                    def suffix = ver.replaceAll(/(\d)(\d{2})(\d+)/, /$2/) // jmc18
-                    if (!versions.add(suffix)) {
-                        suffix = ver.replaceAll(/(\d)(\d{2})0*(\d*)/, /$2$3/) // jmc18x
-                    }
-                    pending.put(it[1] as File, new File("${path}.tj${suffix}"))
-                } else {
-                    // enable the file
-                    pending.put(it[1] as File, new File("${path}.java"))
-                }
-            }
-            // change to tmp
-            pending.each {
-                def tmp = new File(it.value.path + ".tmp")
-                if (it.key != it.value && !tmp.exists()) {
-                    it.key.renameTo(tmp)
-                    apply.put(tmp, it.value)
-                }
-            }
-            // change to final
-            apply.each {
-                if (it.key != it.value && !it.value.exists()) {
-                    it.key.renameTo(it.value)
-                    println "Apply ${it.value.toString().replaceAll("(/.+/main/java/)", "")}"
-                }
-            }
-        }
-    }
+	doLast {
+		sourceSets.forEach {
+			def sourceSet = it
+			def allFiles = [:]
+			sourceSet.allSource.forEach {
+				def range = parseVersionFromSource(it)
+				if (range != null) {
+					def path = it.path.replaceAll(/^(.+)\.(.+?)$/, /$1/)
+					allFiles.computeIfAbsent(path, k -> []).add([range, it])
+				}
+			}
+			allFiles.each {
+				def path = it.key
+				def apply = new HashMap<File, File>()
+				def pending = new HashMap<File, File>()
+				def versions = []
+				it.value.sort().each {
+					def range = it[0]
+					if (minecraft_version_number < range[0] || minecraft_version_number > range[1]) {
+						// disable the file
+						def ver = "${range[0]}"
+						def suffix = ver.replaceAll(/(\d)(\d{2})(\d+)/, /$2/) // jmc18
+						if (!versions.add(suffix)) {
+							suffix = ver.replaceAll(/(\d)(\d{2})0*(\d*)/, /$2$3/) // jmc18x
+						}
+						pending.put(it[1] as File, new File("${path}.tj${suffix}"))
+					} else {
+						// enable the file
+						pending.put(it[1] as File, new File("${path}.java"))
+					}
+				}
+				// change to tmp
+				pending.each {
+					def tmp = new File(it.value.path + ".tmp")
+					if (it.key != it.value && !tmp.exists()) {
+						it.key.renameTo(tmp)
+						apply.put(tmp, it.value)
+					}
+				}
+				// change to final
+				apply.each {
+					if (it.key != it.value && !it.value.exists()) {
+						it.key.renameTo(it.value)
+						println "Apply ${it.value.toString().replaceAll("(/.+/main/java/)", "")}"
+					}
+				}
+			}
+		}
+	}
 }
 
 tasks.register("applyCoreSources") {
@@ -228,41 +238,46 @@ tasks.register("applyCoreSources") {
 tasks.register("applyCoreResources") {
     dependsOn "applyCoreSources"
 
-    renameDataPack(12100, "tags/items", "tags/item")
-    renameDataPack(12100, "tags/blocks", "tags/block")
-    renameDataPack(12100, "loot_tables", "loot_table")
-    renameDataPack(12100, "recipes", "recipe") {
-        def oldValue = it.getText("UTF-8")
-        def newValue = transformRecipeData(oldValue, minecraft_version_number)
-        if (newValue != oldValue) {
-            it.setText(newValue, "UTF-8")
-        }
+	doLast {
+		renameDataPack(12100, "tags/items", "tags/item")
+		renameDataPack(12100, "tags/blocks", "tags/block")
+		renameDataPack(12100, "loot_tables", "loot_table")
+		renameDataPack(12100, "recipes", "recipe") {
+			def oldValue = it.getText("UTF-8")
+			def newValue = transformRecipeData(oldValue, minecraft_version_number)
+			if (newValue != oldValue) {
+				it.setText(newValue, "UTF-8")
+			}
+		}
     }
 }
 
 tasks.register("applyCoreProperties") {
-    def rootPath = rootDir.absolutePath
-    fileTree(rootPath).matching { include "**/*.properties" }.forEach {
-        def target = new File(rootDir, "../../${it.absolutePath.replace(rootPath, "")}")
-        def contents = target.getText("UTF-8")
-        def properties = new Properties()
-        properties.load(it.newDataInputStream())
-        properties.forEach { key, value ->
-            contents = contents.replaceAll("\\b${key}\\b=[^#\\n]*", "${key}=${value}")
-        }
-        target.write(contents, "UTF-8")
-    }
+	doLast {
+		def rootPath = rootDir.absolutePath
+		fileTree(rootPath).matching { include "**/*.properties" }.forEach {
+			def target = new File(rootDir, "../../${it.absolutePath.replace(rootPath, "")}")
+			def contents = target.getText("UTF-8")
+			def properties = new Properties()
+			properties.load(it.newDataInputStream())
+			properties.forEach { key, value ->
+				contents = contents.replaceAll("\\b${key}\\b=[^#\\n]*", "${key}=${value}")
+			}
+			target.write(contents, "UTF-8")
+		}
+	}
 }
 
 tasks.register("applyCoreConfigurations") {
     doLast {
+        def old_version = minecraft_old_version
         def target = "../../.idea/runConfigurations"
-        def version_file = file("../../.idea/versions.txt");
+        def version_file = file("../../.idea/versions.txt")
         if (version_file.exists()) {
-            def old_version = version_file.getText("UTF-8")
-            ant.move(file: file(target), tofile: file(target + "-${old_version}"), failonerror: false, quiet: true)
+            old_version = version_file.getText("UTF-8")
         }
-        ant.move(file: file(target + "-${minecraft_version}"), tofile: file(target), failonerror: false, quiet: true)
+        ant.move(file: file(target), tofile: file(target + "-${old_version}"), failonerror: false, quiet: true)
+		ant.move(file: file(target + "-${minecraft_version}"), tofile: file(target), failonerror: false, quiet: true)
         // save the version info.
         version_file.parentFile.mkdirs()
         version_file.setText("${minecraft_version}", "UTF-8")

@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferSource;
+import moe.plushie.armourers_workshop.core.client.other.SkinGraphicsContext;
 import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
@@ -19,8 +21,6 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BiFunction;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class SkinBakery implements ISkinLibraryListener {
 
     private static final SkinBakery EMPTY = new SkinBakery();
@@ -67,7 +67,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             BAKERY.stopListenLibraryChanges();
             BAKERY.manager.shutdown();
             BAKERY = null;
-            SkinVertexBufferSource.clearAllCache();
+            SkinGraphicsContext.getInstance().clear();
             ModLog.debug("stop bakery");
         }
     }
@@ -75,7 +75,7 @@ public final class SkinBakery implements ISkinLibraryListener {
     public static void clear() {
         if (BAKERY != null) {
             BAKERY.manager.clear();
-            SkinVertexBufferSource.clearAllCache();
+            SkinGraphicsContext.getInstance().clear();
         }
     }
 
@@ -146,13 +146,13 @@ public final class SkinBakery implements ISkinLibraryListener {
         try {
             bakeSkin(identifier, skin, complete);
         } catch (Exception exception) {
-            ModLog.error("can't bake skin '{}'", identifier, exception);
+            ModLog.error("'{}' => abort skin baking", identifier, exception);
             complete.abort(exception);
         }
     }
 
     private void bakeSkin(String identifier, Skin skin, IResultHandler<BakedSkin> complete) {
-        ModLog.debug("'{}' => start baking skin", identifier);
+        ModLog.debug("'{}' => start skin baking", identifier);
         var startTime = System.currentTimeMillis();
 
         var usedCounter = new SkinUsedCounter();
@@ -259,7 +259,6 @@ public final class SkinBakery implements ISkinLibraryListener {
         }
     }
 
-    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface IBakeListener {
         void didBake(String identifier, BakedSkin bakedSkin);

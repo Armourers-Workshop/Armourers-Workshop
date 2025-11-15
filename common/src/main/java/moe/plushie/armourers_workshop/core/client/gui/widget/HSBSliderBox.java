@@ -10,13 +10,9 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIScreen;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class HSBSliderBox extends UIControl {
 
     private final Type type;
@@ -62,13 +58,11 @@ public class HSBSliderBox extends UIControl {
         var fixedBounds = bounds.insetBy(1, 1, 1, 1);
         context.drawImage(backgroundImage, bounds);
         // TODO: Refactoring
-        float cx = fixedBounds.x;
-        float cy = fixedBounds.y;
-        float cw = fixedBounds.width;
-        float ch = fixedBounds.height;
-        float value = values[type.ordinal()];
-
-        RenderSystem.setShaderTexture(0, ModTextures.HUE.toLocation());
+        var cx = fixedBounds.x;
+        var cy = fixedBounds.y;
+        var cw = fixedBounds.width;
+        var ch = fixedBounds.height;
+        var value = values[type.ordinal()];
 
         if (type == Type.SATURATION) {
             context.setBlendColor(hueColor);
@@ -80,17 +74,17 @@ public class HSBSliderBox extends UIControl {
             context.drawResizableImage(ModTextures.HUE, cx, cy, cw, ch, type.u, type.v, type.texWidth, type.texHeight, 256, 256);
         }
 
-        context.addClip(UIScreen.convertRectFromView(fixedBounds, this));
+        context.addClipPath(UIScreen.convertRectFromView(fixedBounds, this));
         context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, 0, 7, 4, 0, 0, 256, 256);
         context.drawImage(ModTextures.HUE, ((bounds.width - 3) * value) - 2, bounds.height - 4, 7, 4, 7, 0, 256, 256);
-        context.removeClip();
+        context.removeClipPath();
     }
 
     public void setValueWithComponents(float[] values) {
         System.arraycopy(values, 0, this.values, 0, this.values.length);
         if (type == Type.SATURATION) {
-            this.hueColor = UIColor.of(ColorUtils.HSBtoRGB(values[0], 1.0f, 1.0f));
-            this.brightnessColor = UIColor.of(ColorUtils.HSBtoRGB(0.0f, 0.0f, values[2]));
+            this.hueColor = UIColor.of(Colors.HSBtoRGB(values[0], 1.0f, 1.0f));
+            this.brightnessColor = UIColor.of(Colors.HSBtoRGB(0.0f, 0.0f, values[2]));
         }
     }
 

@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/skin-library-creative",
+    "render_type": "cutout"
+  }
+}

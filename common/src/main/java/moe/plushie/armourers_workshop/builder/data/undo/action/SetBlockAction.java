@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.builder.data.undo.action;
 
 import moe.plushie.armourers_workshop.api.action.IUserAction;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -29,14 +31,17 @@ public class SetBlockAction extends BlockUserAction {
         CompoundTag oldNBT = null;
         var oldBlockEntity = level.getBlockEntity(blockPos);
         if (oldBlockEntity != null) {
-            oldNBT = oldBlockEntity.saveFullData(level.registryAccess());
+            var serializer = new TagSerializer(SerializationContext.from(oldBlockEntity));
+            oldBlockEntity.saveFullData(serializer);
+            oldNBT = serializer.tag();
         }
         var oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
         level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
             var blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity != null) {
-                blockEntity.loadFullData(newValueNBT, level.registryAccess());
+                var serializer = new TagSerializer(newValueNBT, SerializationContext.from(blockEntity));
+                blockEntity.loadFullData(serializer);
             }
         }
         return oldChanges;

@@ -74,10 +74,10 @@ public class SkinDocumentExporter {
             }
         }
 
-        properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
+        properties.put(SkinProperty.ALL_AUTHOR_NAME, profile.name());
         // in the offline server the `player.getStringUUID()` is not real player uuid.
-        if (profile.getId() != null) {
-            properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
+        if (profile.id() != null) {
+            properties.put(SkinProperty.ALL_AUTHOR_UUID, profile.id().toString());
         }
 
         var builder = new Skin.Builder(skinType);

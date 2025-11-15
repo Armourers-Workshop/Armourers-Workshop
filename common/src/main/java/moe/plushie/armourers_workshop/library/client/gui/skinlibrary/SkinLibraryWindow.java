@@ -43,8 +43,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +51,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements ISkinLibraryListener, UITextFieldDelegate {
 
     private final UICheckBox fileOptionsBox = new UICheckBox(CGRect.ZERO);

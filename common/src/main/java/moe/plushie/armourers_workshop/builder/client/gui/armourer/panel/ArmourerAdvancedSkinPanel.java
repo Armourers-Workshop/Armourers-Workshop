@@ -6,12 +6,9 @@ import com.apple.library.uikit.UISliderBox;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerAdvancedSkinPanel extends ArmourerBaseSkinPanel {
 
     public ArmourerAdvancedSkinPanel(SkinProperties skinProperties) {

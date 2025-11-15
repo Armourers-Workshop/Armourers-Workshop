@@ -1,26 +1,26 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import moe.plushie.armourers_workshop.core.client.other.FindableSkinManager;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class SkinPreloadManager {
 
     private static Object lastInventoryVersion = null;
 
     public static void start() {
         lastInventoryVersion = null;
-        FindableSkinManager.getInstance().start();
+        EmbeddedItemModelDiscovery.start();
     }
 
     public static void stop() {
-        FindableSkinManager.getInstance().stop();
+        EmbeddedItemModelDiscovery.stop();
     }
 
     public static void tick(boolean isPaused) {
@@ -29,7 +29,7 @@ public class SkinPreloadManager {
         }
         // we need to preload all skin in the current player's inventory.
         if (lastInventoryVersion == null) {
-            var player = EnvironmentManager.getPlayer();
+            var player = Minecraft.getInstance().player;
             if (player != null) {
                 var inventory = player.getInventory();
                 var inventoryVersion = inventory.getTimesChanged();

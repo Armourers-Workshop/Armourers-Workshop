@@ -1,19 +1,33 @@
 package moe.plushie.armourers_workshop.api.client;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
+import java.util.List;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public interface IVertexFormat extends Supplier<VertexFormat> {
 
-    void setupBufferState(long offset);
+    default void setupBufferState(long address) {
+        var strict = byteSize();
+        var elements = elements();
+        for (int i = 0; i < elements.size(); ++i) {
+            var element = elements.get(i);
+            element.setupBufferState(i, strict, address);
+            address += element.byteSize();
+        }
+    }
 
-    void clearBufferState();
+    default void clearBufferState() {
+        var elements = elements();
+        for (int i = 0; i < elements.size(); ++i) {
+            var element = elements.get(i);
+            element.clearBufferState(i);
+        }
+    }
 
-    int vertexSize();
+    int byteSize();
+
+    List<? extends IVertexElement> elements();
 
     enum Mode {
         LINES,

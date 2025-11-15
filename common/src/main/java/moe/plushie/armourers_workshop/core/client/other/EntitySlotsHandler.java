@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import moe.plushie.armourers_workshop.api.data.IAssociatedContainerKey;
-import moe.plushie.armourers_workshop.api.data.IAssociatedContainerProvider;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -17,7 +15,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentContainer;
+import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentManager;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
@@ -27,7 +25,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
-import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -44,7 +41,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, SkinBakery.IBakeListener {
+public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.IBakeListener {
 
     private final SlotProvider<T> entityProvider;
     private final WardrobeProvider wardrobeProvider;
@@ -63,12 +60,13 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     private final HashMap<SkinDescriptor, BakedSkin> animatedSkins = new HashMap<>();
 
     private final AnimationManager animationManager;
-    private final SkinOverriddenManager<T> overriddenManager;
+    private final SkinOverriddenManager overriddenManager;
 
     private final TicketHolder tickets = new TicketHolder("EntitySlotsHandler");
-    private final DataContainer dataStorage = new DataContainer();
-    private final SkinAttachmentContainer attachmentStorage = new SkinAttachmentContainer();
     private final SkinLightSource lightSource = new SkinLightSource();
+
+    private final DataContainer dataStorage = new DataContainer();
+    private final SkinAttachmentManager attachmentManager = new SkinAttachmentManager();
 
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
@@ -82,7 +80,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         this.wardrobeProvider = wardrobeProvider;
         // initialize the animation manager and overridden manager.
         this.animationManager = new AnimationManager(entity);
-        this.overriddenManager = new SkinOverriddenManager<>();
+        this.overriddenManager = new SkinOverriddenManager();
     }
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
@@ -128,7 +126,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         lastSkinTypes.clear();
         lastSkinPartTypes.clear();
 
-        attachmentStorage.clear();
+        attachmentManager.clear();
         missingSkins.clear();
         armorSkins.clear();
         itemSkins.clear();
@@ -151,7 +149,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
             missingSkins.add(descriptor.identifier());
             return;
         }
-        var slot = new EntitySlot(itemStack, descriptor, bakedSkin, wardrobeProvider.colorScheme, renderPriority, slotType);
+        var slot = new EntitySlot(bakedSkin, wardrobeProvider.colorScheme, itemStack, descriptor, renderPriority, slotType);
         switch (slotType) {
             case IN_HELD -> {
                 // If held a skin of armor type, nothing happen
@@ -313,14 +311,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
     }
 
     public boolean isLimitLimbs() {
-        // use disable is the options.
-        if (!ModConfig.Client.enableSkinLimitLimbs) {
-            return false;
-        }
         return isLimitLimbs;
     }
 
-    public SkinOverriddenManager<T> overriddenManager() {
+    public SkinOverriddenManager overriddenManager() {
         return overriddenManager;
     }
 
@@ -344,12 +338,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return lastSkinPartTypes;
     }
 
-    public void setAttachmentPose(SkinAttachmentType attachmentType, int index, SkinAttachmentPose pose) {
-        attachmentStorage.put(attachmentType, index, pose);
-    }
-
     public SkinAttachmentPose getAttachmentPose(SkinAttachmentType attachmentType, int index) {
-        var attachmentPose = attachmentStorage.get(attachmentType, index);
+        var attachmentPose = attachmentManager.get(attachmentType, index);
         if (attachmentPose != null) {
             return attachmentPose;
         }
@@ -359,17 +349,17 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         return null;
     }
 
-    public Int2ObjectMap<SkinAttachmentPose> getAttachmentPoses(SkinAttachmentType attachmentType) {
-        return attachmentStorage.get(attachmentType);
+    public SkinAttachmentManager attachmentManager() {
+        return attachmentManager;
     }
 
     @Override
-    public <V> V getAssociatedObject(IAssociatedContainerKey<V> key) {
+    public <V> V getAssociatedObject(IAssociatedContainer.Key<V> key) {
         return dataStorage.getAssociatedObject(key);
     }
 
     @Override
-    public <V> void setAssociatedObject(IAssociatedContainerKey<V> key, V value) {
+    public <V> void setAssociatedObject(IAssociatedContainer.Key<V> key, V value) {
         dataStorage.setAssociatedObject(key, value);
     }
 
@@ -531,12 +521,12 @@ public class EntitySlotsHandler<T> implements IAssociatedContainerProvider, Skin
         @Override
         protected void collect(Entity entity, List<ItemStack> collector) {
             handSlots.clear();
-            entity.getExtendedHandSlots().forEach(itemStack -> {
+            entity.getHandSlots(itemStack -> {
                 handSlots.add(itemStack);
                 collector.add(itemStack);
             });
             armourSlots.clear();
-            entity.getExtendedArmorSlots().forEach(itemStack -> {
+            entity.getArmorSlots(itemStack -> {
                 armourSlots.add(itemStack);
                 collector.add(itemStack);
             });

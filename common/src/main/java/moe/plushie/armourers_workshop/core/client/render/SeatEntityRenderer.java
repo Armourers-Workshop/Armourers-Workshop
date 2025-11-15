@@ -1,39 +1,33 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractEntityRenderer;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEntityRenderer;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 
-@Environment(EnvType.CLIENT)
-public class SeatEntityRenderer<T extends SeatEntity> extends AbstractEntityRenderer<T> {
+@OnlyIn(Dist.CLIENT)
+public class SeatEntityRenderer extends AbstractEntityRenderer<SeatEntity, EntityRenderState> {
 
     public SeatEntityRenderer(Context context) {
         super(context);
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int packedLightIn) {
+    protected void abi$render(EntityRenderState renderState, int lightmap, int overlay, IGraphicsContext context) {
         if (ModDebugger.skinnable) {
-            ShapeTesselator.stroke(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, UIColor.ORANGE, poseStack, bufferSource);
-            ShapeTesselator.vector(OpenVector3f.ZERO, poseStack, bufferSource);
+            context.draw(ShapeElement.arrow());
+            context.draw(ShapeElement.stroke(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, Colors.ORANGE));
         }
     }
 
     @Override
-    public boolean shouldShowName(T entity) {
-        return false;
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(T entity) {
-        return null;
+    protected boolean abi$shouldShowName(SeatEntity entity, double d) {
+        return false; // never show name.
     }
 }

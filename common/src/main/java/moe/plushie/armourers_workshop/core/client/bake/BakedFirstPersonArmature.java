@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -12,9 +12,9 @@ import java.util.Map;
 public class BakedFirstPersonArmature extends BakedArmature {
 
     private static final BakedFirstPersonArmature DEFAULT = new BakedFirstPersonArmature();
-    private static final Map<OpenItemDisplayContext, BakedFirstPersonArmature> VARIANTS = Collections.immutableMap(it -> {
-        it.put(OpenItemDisplayContext.FIRST_PERSON_LEFT_HAND, new BakedFirstPersonArmature("Arm_L", "Hand_L"));
-        it.put(OpenItemDisplayContext.FIRST_PERSON_RIGHT_HAND, new BakedFirstPersonArmature("Arm_R", "Hand_R"));
+    private static final Map<OpenEquipmentSlot, BakedFirstPersonArmature> VARIANTS = Collections.immutableMap(it -> {
+        it.put(OpenEquipmentSlot.OFFHAND, new BakedFirstPersonArmature("Arm_L", "Hand_L"));
+        it.put(OpenEquipmentSlot.MAINHAND, new BakedFirstPersonArmature("Arm_R", "Hand_R"));
     });
 
     private final HashSet<String> jointNames;
@@ -24,8 +24,8 @@ public class BakedFirstPersonArmature extends BakedArmature {
         this.jointNames = Collections.newSet(names);
     }
 
-    public static BakedFirstPersonArmature defaultBy(OpenItemDisplayContext transformType) {
-        return VARIANTS.getOrDefault(transformType, DEFAULT);
+    public static BakedFirstPersonArmature defaultBy(OpenEquipmentSlot equipmentSlot) {
+        return VARIANTS.getOrDefault(equipmentSlot, DEFAULT);
     }
 
     @Override

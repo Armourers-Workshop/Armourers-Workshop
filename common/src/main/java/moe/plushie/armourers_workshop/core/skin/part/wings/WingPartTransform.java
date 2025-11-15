@@ -9,14 +9,12 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class WingPartTransform implements ITransform {
 
     private double animationTime = 0.0;
+
+    private boolean isFlying = false;
     private boolean isFallFlying = false;
 
     private final boolean isMirror;
@@ -30,17 +28,10 @@ public class WingPartTransform implements ITransform {
         this.isMirror = partType instanceof ICanRotation rotatableType && rotatableType.isMirror();
     }
 
-    public static boolean isFlying(LivingEntity entity) {
-        // the player maybe is in creative flying.
-        if (entity instanceof Player player && player.getAbilities().flying) {
-            return true;
-        }
-        return entity.isFallFlying();
-    }
-
-    public void setup(@Nullable Entity entity, double animationTime) {
+    public void setup(boolean isFlying, boolean isFallFlying, double animationTime) {
         this.animationTime = animationTime;
-        this.isFallFlying = entity instanceof LivingEntity livingEntity && isFlying(livingEntity);
+        this.isFlying = isFlying;
+        this.isFallFlying = isFallFlying;
     }
 
     @Override
@@ -73,7 +64,7 @@ public class WingPartTransform implements ITransform {
         var movementType = SkinProperty.MovementType.valueOf(movementTypeName);
 
         var flapTime = properties.get(SkinProperty.WINGS_IDLE_SPEED);
-        if (isFallFlying) {
+        if (isFlying || isFallFlying) {
             flapTime = properties.get(SkinProperty.WINGS_FLYING_SPEED);
         }
 

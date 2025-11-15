@@ -100,11 +100,11 @@ public class OpenModelPart {
         this.zRot = h;
     }
 
-    public void render(IPoseStack poseStack, IVertexConsumer builder, int light, int overlay) {
-        this.render(poseStack, builder, light, overlay, -1);
+    public void render(IPoseStack poseStack, IVertexConsumer builder, int lightmap, int overlay) {
+        this.render(poseStack, builder, lightmap, overlay, -1);
     }
 
-    public void render(IPoseStack poseStack, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
+    public void render(IPoseStack poseStack, IVertexConsumer builder, int lightmap, int overlay, int color) {
         if (!visible) {
             return;
         }
@@ -112,10 +112,10 @@ public class OpenModelPart {
             poseStack.pushPose();
             translateAndRotate(poseStack);
             if (!skipDraw) {
-                compile(poseStack.last(), vertexConsumer, light, overlay, color);
+                compile(poseStack.last(), builder, lightmap, overlay, color);
             }
             for (var modelPart : children.values()) {
-                modelPart.render(poseStack, vertexConsumer, light, overlay, color);
+                modelPart.render(poseStack, builder, lightmap, overlay, color);
             }
             poseStack.popPose();
         }
@@ -131,9 +131,9 @@ public class OpenModelPart {
         }
     }
 
-    private void compile(IPoseStack.Pose pose, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
+    private void compile(IPoseStack.Pose pose, IVertexConsumer vertexConsumer, int lightmap, int overlay, int color) {
         for (var cube : cubes) {
-            cube.compile(pose, vertexConsumer, light, overlay, color);
+            cube.compile(pose, vertexConsumer, lightmap, overlay, color);
         }
     }
 
@@ -177,41 +177,41 @@ public class OpenModelPart {
         public final float maxY;
         public final float maxZ;
 
-        public Cube(int i, int j, float f, float g, float h, float width, float height, float depth, float growX, float growY, float growZ, boolean mirror, float texWidth, float texHeight, Set<OpenDirection> visibleFaces) {
-            this.minX = f;
-            this.minY = g;
-            this.minZ = h;
-            this.maxX = f + width;
-            this.maxY = g + height;
-            this.maxZ = h + depth;
+        public Cube(int i, int j, float x, float y, float z, float width, float height, float depth, float growX, float growY, float growZ, boolean mirror, float texWidth, float texHeight, Set<OpenDirection> visibleFaces) {
+            this.minX = x;
+            this.minY = y;
+            this.minZ = z;
+            this.maxX = x + width;
+            this.maxY = y + height;
+            this.maxZ = z + depth;
             this.polygons = new Polygon[visibleFaces.size()];
-            float s = f + width;
-            float t = g + height;
-            float u = h + depth;
-            f -= growX;
-            g -= growY;
-            h -= growZ;
-            s += growX;
-            t += growY;
-            u += growZ;
+            float x1 = x + width;
+            float y1 = y + height;
+            float z1 = z + depth;
+            x -= growX;
+            y -= growY;
+            z -= growZ;
+            x1 += growX;
+            y1 += growY;
+            z1 += growZ;
             if (mirror) {
-                float tmp = s;
-                s = f;
-                f = tmp;
+                float tmp = x1;
+                x1 = x;
+                x = tmp;
             }
 
-            Vertex vertex = new Vertex(f, g, h, 0.0f, 0.0f);
-            Vertex vertex2 = new Vertex(s, g, h, 0.0f, 8.0f);
-            Vertex vertex3 = new Vertex(s, t, h, 8.0f, 8.0f);
-            Vertex vertex4 = new Vertex(f, t, h, 8.0f, 0.0f);
-            Vertex vertex5 = new Vertex(f, g, u, 0.0f, 0.0f);
-            Vertex vertex6 = new Vertex(s, g, u, 0.0f, 8.0f);
-            Vertex vertex7 = new Vertex(s, t, u, 8.0f, 8.0f);
-            Vertex vertex8 = new Vertex(f, t, u, 8.0f, 0.0f);
-            float w = (float) i;
-            float x = (float) i + depth;
-            float y = (float) i + depth + width;
-            float z = (float) i + depth + width + width;
+            Vertex vertex = new Vertex(x, y, z, 0.0f, 0.0f);
+            Vertex vertex2 = new Vertex(x1, y, z, 0.0f, 8.0f);
+            Vertex vertex3 = new Vertex(x1, y1, z, 8.0f, 8.0f);
+            Vertex vertex4 = new Vertex(x, y1, z, 8.0f, 0.0f);
+            Vertex vertex5 = new Vertex(x, y, z1, 0.0f, 0.0f);
+            Vertex vertex6 = new Vertex(x1, y, z1, 0.0f, 8.0f);
+            Vertex vertex7 = new Vertex(x1, y1, z1, 8.0f, 8.0f);
+            Vertex vertex8 = new Vertex(x, y1, z1, 8.0f, 0.0f);
+            float w1 = (float) i;
+            float t1 = (float) i + depth;
+            float t2 = (float) i + depth + width;
+            float t3 = (float) i + depth + width + width;
             float aa = (float) i + depth + width + depth;
             float ab = (float) i + depth + width + depth + width;
             float ac = (float) j;
@@ -219,23 +219,23 @@ public class OpenModelPart {
             float ae = (float) j + depth + height;
             int faceIndex = 0;
             if (visibleFaces.contains(OpenDirection.DOWN)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex5, vertex, vertex2}, x, ac, y, ad, texWidth, texHeight, mirror, OpenDirection.DOWN);
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex5, vertex, vertex2}, t1, ac, t2, ad, texWidth, texHeight, mirror, OpenDirection.DOWN);
             }
 
             if (visibleFaces.contains(OpenDirection.UP)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex3, vertex4, vertex8, vertex7}, y, ad, z, ac, texWidth, texHeight, mirror, OpenDirection.UP);
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex3, vertex4, vertex8, vertex7}, t2, ad, t3, ac, texWidth, texHeight, mirror, OpenDirection.UP);
             }
 
             if (visibleFaces.contains(OpenDirection.WEST)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex, vertex5, vertex8, vertex4}, w, ad, x, ae, texWidth, texHeight, mirror, OpenDirection.WEST);
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex, vertex5, vertex8, vertex4}, w1, ad, t1, ae, texWidth, texHeight, mirror, OpenDirection.WEST);
             }
 
             if (visibleFaces.contains(OpenDirection.NORTH)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex2, vertex, vertex4, vertex3}, x, ad, y, ae, texWidth, texHeight, mirror, OpenDirection.NORTH);
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex2, vertex, vertex4, vertex3}, t1, ad, t2, ae, texWidth, texHeight, mirror, OpenDirection.NORTH);
             }
 
             if (visibleFaces.contains(OpenDirection.EAST)) {
-                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex2, vertex3, vertex7}, y, ad, aa, ae, texWidth, texHeight, mirror, OpenDirection.EAST);
+                this.polygons[faceIndex++] = new Polygon(new Vertex[]{vertex6, vertex2, vertex3, vertex7}, t2, ad, aa, ae, texWidth, texHeight, mirror, OpenDirection.EAST);
             }
 
             if (visibleFaces.contains(OpenDirection.SOUTH)) {
@@ -244,7 +244,7 @@ public class OpenModelPart {
 
         }
 
-        public void compile(IPoseStack.Pose entry, IVertexConsumer vertexConsumer, int light, int overlay, int color) {
+        public void compile(IPoseStack.Pose entry, IVertexConsumer vertexConsumer, int lightmap, int overlay, int color) {
             for (Polygon polygon : polygons) {
                 float[] normal = {
                         polygon.normal.x(),
@@ -260,7 +260,7 @@ public class OpenModelPart {
                             1.0f
                     };
                     entry.transformPose(pose);
-                    vertexConsumer.vertex(pose[0], pose[1], pose[2], color, vertex.u, vertex.v, overlay, light, normal[0], normal[1], normal[2]);
+                    vertexConsumer.vertex(pose[0], pose[1], pose[2], color, vertex.u, vertex.v, overlay, lightmap, normal[0], normal[1], normal[2]);
                 }
             }
         }

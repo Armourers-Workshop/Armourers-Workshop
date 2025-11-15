@@ -4,13 +4,14 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import net.minecraft.world.entity.player.Player;
 
 public class SkinLibrarySetting implements IDataSerializable.Immutable {
 
     public static final SkinLibrarySetting DEFAULT = new SkinLibrarySetting();
 
-    public static final IDataCodec<SkinLibrarySetting> CODEC = IDataCodec.COMPOUND_TAG.serializer(SkinLibrarySetting::new);
+    public static final IDataCodec<SkinLibrarySetting> CODEC = ExtraCodecs.serializable(SkinLibrarySetting::new);
 
     private final int flags;
     private final String publicKey;

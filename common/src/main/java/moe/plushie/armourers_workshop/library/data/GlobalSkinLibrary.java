@@ -62,19 +62,19 @@ public class GlobalSkinLibrary extends ServerSession {
         if (state.connecting || state.connected) {
             return;
         }
-        state.currentUser = new ServerUser(profile.getId(), profile.getName());
+        state.currentUser = new ServerUser(profile.id(), profile.name());
         if (!isValidJavaVersion()) {
             state.connected = true;
             // consumer.accept(new RuntimeException("invalid java version"));
             return;
         }
         state.connecting = true;
-        request("/connect", a2m("uuid", profile.getId()), ServerUser::fromJSON, (result, exception) -> {
+        request("/connect", a2m("uuid", profile.id()), ServerUser::fromJSON, (result, exception) -> {
             state.connecting = false;
             state.connected = true;
             updateUser(result);
             if (result != null) {
-                result.setName(profile.getName());
+                result.setName(profile.name());
             }
         });
     }
@@ -346,8 +346,7 @@ public class GlobalSkinLibrary extends ServerSession {
         var serverId = String.valueOf(defaultBaseURL().hashCode());
         if (!MinecraftAuth.checkAndRefeshAuth(serverId)) {
             var error = MinecraftAuth.getLastError();
-            ModLog.info("MC Auth Failed");
-            error.printStackTrace();
+            ModLog.info("MC Auth Failed", error);
             throw new RuntimeException(error.getMessage());
         }
         ModLog.info("MC Auth Done");

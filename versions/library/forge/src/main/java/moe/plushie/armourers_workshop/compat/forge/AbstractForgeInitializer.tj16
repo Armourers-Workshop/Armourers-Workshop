@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.forge.proxy.ClientProxyImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.proxy.CommonProxyImpl;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+@Available("[1.16, 1.21)")
+@Mod(ModConstants.MOD_ID)
+public class AbstractForgeInitializer {
+
+    public AbstractForgeInitializer() {
+        CommonProxyImpl.init();
+        EnvironmentExecutor.runOnClient(() -> ClientProxyImpl::init);
+    }
+
+    public static IEventBus getEventBus() {
+        return MinecraftForge.EVENT_BUS;
+    }
+
+    public static IEventBus getModEventBus() {
+        return FMLJavaModLoadingContext.get().getModEventBus();
+    }
+}

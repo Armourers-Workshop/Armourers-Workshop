@@ -10,12 +10,9 @@ import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEnt
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting {
 
     private final HologramProjectorBlockEntity entity;

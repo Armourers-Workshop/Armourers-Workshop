@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.armature;
 
-import moe.plushie.armourers_workshop.api.common.IEntityTypeProvider;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
+import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector2f;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class ArmatureSerializers {
 
-    private static final HashMap<IResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
+    private static final HashMap<OpenResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
     private static final HashMap<String, Supplier<? extends JointModifier>> NAMED_MODIFIERS = new HashMap<>();
     private static final HashMap<String, Function<ArmatureTransformerContext, ? extends ArmaturePlugin>> NAMED_PLUGINS = new HashMap<>();
 
@@ -128,11 +128,11 @@ public class ArmatureSerializers {
         return null;
     }
 
-    public static IEntityTypeProvider<?> readEntityType(IODataObject object) {
-        return IEntityTypeProvider.of(object.stringValue());
+    public static IRegistryHolder<?> readEntityType(IODataObject object) {
+        return AbstractEntityTypeBuilder.lazy(object.stringValue());
     }
 
-    public static IResourceLocation readResourceLocation(IODataObject object) {
+    public static OpenResourceLocation readResourceLocation(IODataObject object) {
         return OpenResourceLocation.parse(object.stringValue());
     }
 
@@ -141,7 +141,7 @@ public class ArmatureSerializers {
         NAMED_CLASSES.put(OpenResourceLocation.parse(registryName), clazz);
     }
 
-    public static <T> Class<?> getClass(IResourceLocation registryName) {
+    public static <T> Class<?> getClass(OpenResourceLocation registryName) {
         return NAMED_CLASSES.get(registryName);
     }
 

@@ -14,76 +14,27 @@ public final class Constants {
     public final static class Key {
 
         public static final String SKIN = "ArmourersWorkshop";
-        public static final String SKIN_TYPE = "SkinType";
-        public static final String SKIN_PART_TYPE = "PartType";
-        public static final String SKIN_IDENTIFIER = "Identifier";
-        public static final String SKIN_DYE = "SkinDyes";
-        public static final String SKIN_OPTIONS = "SkinOptions";
-        public static final String SKIN_PROPERTIES = "SkinProperties";
-
-        public static final String SKIN_CUBES = "Cubes";
-        public static final String SKIN_PAINTS = "Paints";
-        public static final String SKIN_MARKERS = "Markers";
-
-        public static final String TEXTURE_URL = "URL";
-        public static final String TEXTURE_PROFILE = "User";
-
-        public static final String OPTIONS_TOOLTIP_FLAGS = "TooltipFlags";
-        public static final String OPTIONS_EMBEDDED_ITEM_RENDERER = "EmbeddedItemRenderer";
-
-        public static final String PAINT_DATA = "PaintData";
-
-        public static final String MIRROR = "Mirror";
-
-        public static final String KEEP_COLOR = "KeepColor";
-        public static final String KEEP_PAINT_TYPE = "KeepPaintType";
-
-        public static final String SOURCE = "Source";
-        public static final String DESTINATION = "Destination";
 
         public static final String BLOCK = "Block";
         public static final String COLOR = "Color";
-        public static final String DATA_VERSION = "DataVersion";
 
         public static final String FACING = "Facing";
 
-        public static final String COLOR_1 = "Color1";
-        public static final String COLOR_2 = "Color2";
-
-        public static final String GIFT = "Gift";
-        public static final String HOLIDAY = "Holiday";
         public static final String HOLIDAY_TRACKER = "HolidayTracker";
-        public static final String HOLIDAY_LOGS = "Logs";
-
-        public static final String TICK_TRACKER = "TickTracker";
-
-        public static final String TOOL_FLAGS = "Flags";
-        public static final String TOOL_OPTIONS = "Options";
-
-        public static final String ENTITY = "EntityTag";
-        public static final String BLOCK_ENTITY = "BlockEntityTag";
 
         public static final String ID = "id";
 
         public static final String OLD_CAPABILITY = "ForgeCaps";
         public static final String NEW_CAPABILITY = "neoforge:attachments";
 
-        public static final String ENTITY_SCALE = "Scale";
-
-        public static final String ENTITY_IS_SMALL = "Small";
-        public static final String ENTITY_IS_FLYING = "Flying";
-        public static final String ENTITY_IS_GHOST = "Ghost";
-        public static final String ENTITY_IS_VISIBLE = "ModelVisible";
-        public static final String ENTITY_EXTRA_RENDER = "ExtraRender";
         public static final String ENTITY_TEXTURE = "Texture";
-        public static final String ENTITY_POSE = "Pose";
     }
 
     /**
      * NBT Tag type IDS, used when storing the nbt to disc, Should align with {@link net.minecraft.nbt.Tag}
      * and {@link net.minecraft.nbt.Tag#getType()}
      * <p>
-     * Main use is checking tag type in {@link net.minecraft.nbt.CompoundTag#contains(String, int)}
+     * Main use is checking object type in {@link net.minecraft.nbt.CompoundTag#contains(String, int)}
      */
     public static class TagFlags {
         public static final int END = 0;

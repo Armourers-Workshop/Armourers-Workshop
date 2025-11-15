@@ -1,19 +1,19 @@
 package moe.plushie.armourers_workshop.library.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockEntityMenu;
+import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
+import moe.plushie.armourers_workshop.core.menu.BlockEntityContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLibraryBlockEntity> {
+public class GlobalSkinLibraryMenu extends BlockEntityContainerMenu<GlobalSkinLibraryBlockEntity> {
 
     private final Container inventory = new SimpleContainer(2);
     private final Inventory playerInventory;
@@ -23,7 +23,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLib
 
     private boolean isVisible = false;
 
-    public GlobalSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
+    public GlobalSkinLibraryMenu(IMenuType<?> menuType, Block block, int containerId, Inventory playerInventory, IGlobalPos access) {
         super(menuType, block, containerId, access);
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
@@ -50,46 +50,46 @@ public class GlobalSkinLibraryMenu extends AbstractBlockEntityMenu<GlobalSkinLib
         this.addOutputSlot(inventory, 1, inventoryX + 129, inventoryY - 27);
     }
 
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
-        this.clearContainer(player, inventory);
-    }
-
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        return quickMoveStack(player, index, slots.size() - 1);
-    }
-
     public void crafting() {
-        clearContainer(playerInventory.player, inventory);
+        abi$clearContainer(playerInventory.player, inventory);
     }
 
     protected void addInputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            protected boolean abi$mayPlace(ItemStack itemStack) {
                 return !SkinDescriptor.of(itemStack).isEmpty();
             }
 
             @Override
-            public boolean isActive() {
+            protected boolean abi$isActive() {
                 return isVisible;
             }
         });
     }
 
     protected void addOutputSlot(Container inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y) {
+        addSlot(new AbstractContainerSlot(inventory, slot, x, y) {
             @Override
-            public boolean mayPlace(ItemStack itemStack) {
+            protected boolean abi$mayPlace(ItemStack itemStack) {
                 return false;
             }
 
             @Override
-            public boolean isActive() {
+            protected boolean abi$isActive() {
                 return isVisible;
             }
         });
+    }
+
+    @Override
+    protected void abi$removed(Player player) {
+        super.abi$removed(player);
+        abi$clearContainer(player, inventory);
+    }
+
+    @Override
+    protected ItemStack abi$quickMoveStack(Player player, int index) {
+        return abi$quickMoveStack(player, index, slots.size() - 1);
     }
 }

@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "armourers_workshop:block/advanced-skin-builder",
+    "render_type": "cutout"
+  }
+}

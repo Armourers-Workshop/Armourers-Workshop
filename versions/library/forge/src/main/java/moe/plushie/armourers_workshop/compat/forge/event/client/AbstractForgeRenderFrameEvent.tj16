@@ -1,0 +1,34 @@
+package moe.plushie.armourers_workshop.compat.forge.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
+import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.event.TickEvent;
+
+@Available("[1.16, 1.21)")
+public class AbstractForgeRenderFrameEvent {
+
+    public static IEventHandler<RenderFrameEvent.Pre> preFactory() {
+        return AbstractForgeClientEventsImpl.RENDER_FRAME_PRE.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.START) {
+                var delta = new AbstractDeltaTracker(event.renderTickTime, Minecraft.getInstance().isPaused(), false);
+                return () -> delta;
+            }
+            return null;
+        });
+    }
+
+    public static IEventHandler<RenderFrameEvent.Post> postFactory() {
+        return AbstractForgeClientEventsImpl.RENDER_FRAME_POST.flatMap(event -> {
+            if (event.phase == TickEvent.Phase.END) {
+                var delta = new AbstractDeltaTracker(event.renderTickTime, Minecraft.getInstance().isPaused(), false);
+                return () -> delta;
+            }
+            return null;
+        });
+    }
+}

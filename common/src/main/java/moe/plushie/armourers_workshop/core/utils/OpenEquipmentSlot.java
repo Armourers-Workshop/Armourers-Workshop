@@ -41,6 +41,14 @@ public enum OpenEquipmentSlot {
         return filterFlag;
     }
 
+    public boolean isHand() {
+        return type == Type.HAND;
+    }
+
+    public boolean isArmor() {
+        return type != Type.HAND;
+    }
+
     public enum Type {
         HAND,
         HUMANOID_ARMOR,

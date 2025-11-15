@@ -1,15 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-@Environment(EnvType.CLIENT)
 public class ShaderVertexMerger {
 
     private int maxVertexCount = 0;
@@ -24,7 +21,7 @@ public class ShaderVertexMerger {
             pending.put(pass.type(), group);
         }
         group.add(pass);
-        maxVertexCount = Math.max(maxVertexCount, pass.total());
+        maxVertexCount = Math.max(maxVertexCount, pass.vertexCount());
     }
 
     public void forEach(Consumer<ShaderVertexGroup> consumer) {
@@ -56,6 +53,14 @@ public class ShaderVertexMerger {
             total += group.size();
         }
         return total;
+    }
+
+    public int vertexCount() {
+        int vertexTotal = 0;
+        for (var group : pending.values()) {
+            vertexTotal += group.vertexCount();
+        }
+        return vertexTotal;
     }
 
     public boolean isEmpty() {

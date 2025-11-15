@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.armature;
 
 //public class JointTransformModifier {
 //
-//    public static final DataStorageKey<JointTransformModifier> DEFAULT = DataStorageKey.of("default", JointTransformModifier.class, () -> new JointTransformModifier(SkinModifierManager.DEFAULT));
+//    public static final DataStorageKey<JointTransformModifier> UNKNOWN = DataStorageKey.of("default", JointTransformModifier.class, () -> new JointTransformModifier(SkinModifierManager.UNKNOWN));
 //    public static final DataStorageKey<JointTransformModifier> EPICFIGHT = DataStorageKey.of("epicfight", JointTransformModifier.class, () -> new JointTransformModifier(SkinModifierManager.EPICFIGHT));
 //
 //    private final ArmatureManager armatureManager;

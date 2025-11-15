@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.network;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.compatibility.core.data.AbstractEntityDataSerializer;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.GenericProperties;
 import moe.plushie.armourers_workshop.core.data.GenericProperty;
@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -63,7 +64,7 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
-        var serializer = new TagSerializer(new CompoundTag(), wardrobe.entity());
+        var serializer = new TagSerializer(SerializationContext.from(wardrobe.entity()));
         wardrobe.serialize(serializer);
         return new UpdateWardrobePacket(wardrobe, Type.SYNC, serializer.tag(), null);
     }
@@ -116,13 +117,13 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     @Nullable
     private SkinWardrobe apply(Player player) {
-        var wardrobe = SkinWardrobe.of(player.getLevel().getEntity(entityId));
+        var wardrobe = SkinWardrobe.of(player.level().getEntity(entityId));
         if (wardrobe == null) {
             return null;
         }
         return switch (type) {
             case SYNC -> {
-                var serializer = new TagSerializer(compoundTag, player);
+                var serializer = new TagSerializer(compoundTag, SerializationContext.from(player));
                 wardrobe.deserialize(serializer);
                 yield wardrobe;
             }
@@ -201,7 +202,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         public static final auto MANNEQUIN_NO_GRAVITY = entity(MannequinEntity.DATA_NO_GRAVITY);
 
         public static final auto MANNEQUIN_POSE = entity(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG);
-        public static final auto MANNEQUIN_POSITION = entity(MannequinEntity::position, MannequinEntity::moveTo, DataSerializers.VECTOR_3D);
+        public static final auto MANNEQUIN_POSITION = entity(MannequinEntity::getPosition, MannequinEntity::setPosition, DataSerializers.VECTOR_3F);
 
         public static final auto MANNEQUIN_TEXTURE = entity(MannequinEntity.DATA_TEXTURE);
         public static final auto MANNEQUIN_TEXTURE_MODEL = entity(MannequinEntity.DATA_TEXTURE_MODEL);
@@ -215,7 +216,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             return wardrobe(supplier, applier, DataSerializers.BOOLEAN);
         }
 
-        private static <T> Field<T> wardrobe(Function<SkinWardrobe, T> supplier, BiConsumer<SkinWardrobe, T> applier, IEntitySerializer<T> dataSerializer) {
+        private static <T> Field<T> wardrobe(Function<SkinWardrobe, T> supplier, BiConsumer<SkinWardrobe, T> applier, IEntityDataSerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);
         }
 
@@ -224,7 +225,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             return entity((entity) -> entity.getEntityData().get(dataParameter), (entity, value) -> entity.getEntityData().set(dataParameter, value), AbstractEntityDataSerializer.wrap(dataParameter));
         }
 
-        private static <S extends Entity, T> Field<T> entity(Function<S, T> supplier, BiConsumer<S, T> applier, IEntitySerializer<T> dataSerializer) {
+        private static <S extends Entity, T> Field<T> entity(Function<S, T> supplier, BiConsumer<S, T> applier, IEntityDataSerializer<T> dataSerializer) {
             return TYPE.create(dataSerializer).getter((source) -> {
                 var entity = source.entity();
                 if (entity != null) {

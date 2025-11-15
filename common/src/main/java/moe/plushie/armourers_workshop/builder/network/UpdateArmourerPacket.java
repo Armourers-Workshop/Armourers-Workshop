@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.builder.network;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
+import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -13,9 +15,12 @@ import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.core.data.GenericValue;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -55,7 +60,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        var blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.level().getBlockEntity(pos);
         if (!(blockEntity instanceof ArmourerBlockEntity blockEntity1) || !(player.containerMenu instanceof ArmourerMenu menu1) || !(fieldValue.property() instanceof Field<?> field)) {
             return;
         }
@@ -72,18 +77,20 @@ public class UpdateArmourerPacket extends CustomPacket {
         container.loadArmourItem(player);
     }
 
-    private void saveItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) {
-        ModLog.info("accept save action of the {}, nbt: {}", player.getScoreboardName(), nbt);
-        var profile = DataSerializers.readGameProfile(nbt);
+    private void saveItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag tag) {
+        ModLog.info("accept save action of the {}, object: {}", player.getScoreboardName(), tag);
+        var serializer = new TagSerializer(tag);
+        var profile = serializer.decode(ExtraCodecs.GAME_PROFILE);
         container.saveArmourItem(player, profile, null, null);
     }
 
-    private void copyItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
-        ModLog.info("accept copy action of the {}, nbt: {}", player.getScoreboardName(), nbt);
-        var isMirror = nbt.getOptionalBoolean(Constants.Key.MIRROR).orElse(false);
-        var isCopyPaintData = nbt.getOptionalBoolean(Constants.Key.SKIN_PAINTS).orElse(false);
-        var sourcePartType = SkinPartTypes.byName(nbt.getOptionalString(Constants.Key.SOURCE).orElse(""));
-        var destinationPartType = SkinPartTypes.byName(nbt.getOptionalString(Constants.Key.DESTINATION).orElse(""));
+    private void copyItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag tag) throws Exception {
+        ModLog.info("accept copy action of the {}, object: {}", player.getScoreboardName(), tag);
+        var serializer = new TagSerializer(tag, SerializationContext.from(player));
+        var isMirror = serializer.read(CodingKeys.COPY_MIRROR);
+        var isCopyPaintData = serializer.read(CodingKeys.COPY_PAINT_DATA);
+        var sourcePartType = serializer.read(CodingKeys.SOURCE_PART_TYPE);
+        var destinationPartType = serializer.read(CodingKeys.DESTINATION_PART_TYPE);
         var collector = new CubeChangesCollector(blockEntity.getLevel());
         blockEntity.copyCubes(collector, sourcePartType, destinationPartType, isMirror);
         if (isCopyPaintData) {
@@ -92,14 +99,14 @@ public class UpdateArmourerPacket extends CustomPacket {
         collector.submit(Component.translatable("action.armourers_workshop.block.copy"), player);
     }
 
-    private void replaceItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) throws Exception {
-        ModLog.info("accept replace action of the {}, nbt: {}", player.getScoreboardName(), nbt);
-        var level = player.getLevel();
-        var source = nbt.getOptionalCompound(Constants.Key.SOURCE).flatMap(tag -> ItemStack.parse(level.registryAccess(), tag)).orElse(ItemStack.EMPTY);
-        var destination = nbt.getOptionalCompound(Constants.Key.DESTINATION).flatMap(tag -> ItemStack.parse(level.registryAccess(), tag)).orElse(ItemStack.EMPTY);
+    private void replaceItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag tag) throws Exception {
+        ModLog.info("accept replace action of the {}, object: {}", player.getScoreboardName(), tag);
+        var serializer = new TagSerializer(tag, SerializationContext.from(player));
+        var source = serializer.read(CodingKeys.SOURCE_ITEM);
+        var destination = serializer.read(CodingKeys.DESTINATION_ITEM);
         var event = new CubeReplacingEvent(source, destination);
-        event.keepColor = nbt.getOptionalBoolean(Constants.Key.KEEP_COLOR).orElse(false);
-        event.keepPaintType = nbt.getOptionalBoolean(Constants.Key.KEEP_PAINT_TYPE).orElse(false);
+        event.keepColor = serializer.read(CodingKeys.KEEP_COLOR);
+        event.keepPaintType = serializer.read(CodingKeys.KEEP_PAINT_TYPE);
         if (event.isEmptySource && event.isEmptyDestination) {
             return;
         }
@@ -109,17 +116,18 @@ public class UpdateArmourerPacket extends CustomPacket {
         player.sendSystemMessage(Component.translatable("inventory.armourers_workshop.armourer.dialog.replace.success", collector.total()));
     }
 
-    private void clearItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag nbt) {
-        ModLog.info("accept clear action of the {}, nbt: {}", player.getScoreboardName(), nbt);
+    private void clearItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag tag) {
+        ModLog.info("accept clear action of the {}, object: {}", player.getScoreboardName(), tag);
+        var serializer = new TagSerializer(tag, SerializationContext.from(player));
         var collector = new CubeChangesCollector(blockEntity.getLevel());
-        var partType = nbt.getOptionalString(Constants.Key.SKIN_PART_TYPE).map(SkinPartTypes::byName).orElse(SkinPartTypes.UNKNOWN);
-        if (nbt.getOptionalBoolean(Constants.Key.SKIN_CUBES).orElse(false)) {
+        var partType = serializer.read(CodingKeys.PART_TYPE);
+        if (serializer.read(CodingKeys.CLEAR_CUBES)) {
             blockEntity.clearCubes(collector, partType);
         }
-        if (nbt.getOptionalBoolean(Constants.Key.SKIN_PAINTS).orElse(false)) {
+        if (serializer.read(CodingKeys.CLEAR_PAINTS)) {
             blockEntity.clearPaintData(collector, partType);
         }
-        if (nbt.getOptionalBoolean(Constants.Key.SKIN_MARKERS).orElse(false) && !nbt.getOptionalBoolean(Constants.Key.SKIN_CUBES).orElse(false)) {
+        if (serializer.read(CodingKeys.CLEAR_MARKERS) && !serializer.read(CodingKeys.CLEAR_CUBES)) {
             blockEntity.clearMarkers(collector, partType);
         }
         collector.submit(Component.translatable("action.armourers_workshop.block.clear"), player);
@@ -147,14 +155,14 @@ public class UpdateArmourerPacket extends CustomPacket {
         private FieldAction<T> action;
         private BlockPermission permission;
 
-        private static <T> Field<T> create(FieldAction<T> action, IEntitySerializer<T> dataSerializer, BlockPermission permission) {
+        private static <T> Field<T> create(FieldAction<T> action, IEntityDataSerializer<T> dataSerializer, BlockPermission permission) {
             Field<T> field = TYPE.create(dataSerializer).build(Field::new);
             field.action = action;
             field.permission = permission;
             return field;
         }
 
-        private static <T> Field<T> create(Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, IEntitySerializer<T> dataSerializer, BlockPermission permission) {
+        private static <T> Field<T> create(Function<ArmourerBlockEntity, T> supplier, BiConsumer<ArmourerBlockEntity, T> applier, IEntityDataSerializer<T> dataSerializer, BlockPermission permission) {
             Field<T> field = TYPE.create(dataSerializer).getter(supplier).setter(applier).build(Field::new);
             field.permission = permission;
             return field;
@@ -176,5 +184,26 @@ public class UpdateArmourerPacket extends CustomPacket {
 
     public interface FieldAction<T> {
         void accept(UpdateArmourerPacket packet, Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, T value) throws Exception;
+    }
+
+    public static class CodingKeys {
+
+        public static final IDataSerializerKey<SkinPartType> PART_TYPE = IDataSerializerKey.create("PartType", SkinPartTypes.CODEC, SkinPartTypes.UNKNOWN);
+
+        public static final IDataSerializerKey<ItemStack> SOURCE_ITEM = IDataSerializerKey.create("Source", ExtraCodecs.ITEM_STACK, ItemStack.EMPTY);
+        public static final IDataSerializerKey<ItemStack> DESTINATION_ITEM = IDataSerializerKey.create("Destination", ExtraCodecs.ITEM_STACK, ItemStack.EMPTY);
+
+        public static final IDataSerializerKey<SkinPartType> SOURCE_PART_TYPE = IDataSerializerKey.create("Source", SkinPartTypes.CODEC, SkinPartTypes.UNKNOWN);
+        public static final IDataSerializerKey<SkinPartType> DESTINATION_PART_TYPE = IDataSerializerKey.create("Destination", SkinPartTypes.CODEC, SkinPartTypes.UNKNOWN);
+
+        public static final IDataSerializerKey<Boolean> COPY_MIRROR = IDataSerializerKey.create("Mirror", IDataCodec.BOOL, false);
+        public static final IDataSerializerKey<Boolean> COPY_PAINT_DATA = IDataSerializerKey.create("Paints", IDataCodec.BOOL, false);
+
+        public static final IDataSerializerKey<Boolean> KEEP_COLOR = IDataSerializerKey.create("KeepColor", IDataCodec.BOOL, false);
+        public static final IDataSerializerKey<Boolean> KEEP_PAINT_TYPE = IDataSerializerKey.create("KeepPaintType", IDataCodec.BOOL, false);
+
+        public static final IDataSerializerKey<Boolean> CLEAR_CUBES = IDataSerializerKey.create("Cubes", IDataCodec.BOOL, false);
+        public static final IDataSerializerKey<Boolean> CLEAR_PAINTS = IDataSerializerKey.create("Paints", IDataCodec.BOOL, false);
+        public static final IDataSerializerKey<Boolean> CLEAR_MARKERS = IDataSerializerKey.create("Markers", IDataCodec.BOOL, false);
     }
 }

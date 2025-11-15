@@ -17,15 +17,12 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.InputDialog;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.client.gui.widget.PaintColorView;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> extends MenuWindow<M> implements UITextFieldDelegate {
 
     protected final HSBSliderBox[] sliders = {null, null, null};
@@ -158,7 +155,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     protected void setColorComponents(float[] values) {
-        var newValue = UIColor.of(ColorUtils.HSBtoRGB(values[0], values[1], values[2]));
+        var newValue = UIColor.of(Colors.HSBtoRGB(values[0], values[1], values[2]));
         paintColorView.setColor(newValue);
         for (var slider : sliders) {
             slider.setValueWithComponents(values);
@@ -170,7 +167,7 @@ public abstract class PaletteEditingWindow<M extends AbstractContainerMenu> exte
     }
 
     public void setSelectedColor(UIColor selectedColor) {
-        var values = ColorUtils.RGBtoHSB(selectedColor.red(), selectedColor.green(), selectedColor.blue(), null);
+        var values = Colors.RGBtoHSB(selectedColor.red(), selectedColor.green(), selectedColor.blue(), null);
         setColorComponents(values);
     }
 

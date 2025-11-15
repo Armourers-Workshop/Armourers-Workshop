@@ -1,22 +1,21 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.modifier;
 
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.core.armature.Joint;
+import moe.plushie.armourers_workshop.core.armature.JointContext;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 
 public class HorseBodyJointModifier extends JointModifier {
 
     @Override
-    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
+    public IJointTransform apply(IJointTransform transform, Joint joint, JointContext context) {
         // ...
-        var modelPart = model.partByName("body");
-        if (modelPart == null) {
+        var body = context.poses().byPartName("body");
+        if (body == null) {
             return transform;
         }
-        var pose = modelPart.pose();
         return poseStack -> {
-            pose.transform(poseStack);
+            body.transform(poseStack);
             transform.apply(poseStack);
         };
     }

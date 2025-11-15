@@ -1,24 +1,22 @@
 package moe.plushie.armourers_workshop.core.client.skinrender.modifier;
 
-import moe.plushie.armourers_workshop.api.armature.IJoint;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
-import moe.plushie.armourers_workshop.api.client.model.IModel;
+import moe.plushie.armourers_workshop.core.armature.Joint;
+import moe.plushie.armourers_workshop.core.armature.JointContext;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 
 public class AllayBodyJointModifier extends JointModifier {
 
     @Override
-    public IJointTransform apply(IJoint joint, IModel model, IJointTransform transform) {
-        var rootModelPart = model.partByName("root");
-        var bodyModelPart = model.partByName("body");
-        if (rootModelPart == null || bodyModelPart == null) {
+    public IJointTransform apply(IJointTransform transform, Joint joint, JointContext context) {
+        var root = context.poses().byPartName("root");
+        var body = context.poses().byPartName("body");
+        if (root == null || body == null) {
             return transform;
         }
-        var rootPose = rootModelPart.pose();
-        var bodyPose = bodyModelPart.pose();
         return poseStack -> {
-            rootPose.transform(poseStack);
-            bodyPose.transform(poseStack);
+            root.transform(poseStack);
+            body.transform(poseStack);
             transform.apply(poseStack);
             poseStack.scale(0.5f, 0.5f, 0.5f);
         };

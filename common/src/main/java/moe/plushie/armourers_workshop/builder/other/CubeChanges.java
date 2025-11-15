@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -96,9 +98,10 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         }
         if (isChangedNBT) {
             Objects.flatMap(level.getBlockEntity(blockPos), blockEntity -> {
-                var newTag = blockEntity.saveFullData(level.registryAccess());
-                changes.setCompoundTag(newTag);
-                return newTag;
+                var serializer = new TagSerializer(SerializationContext.from(blockEntity));
+                blockEntity.saveFullData(serializer);
+                changes.setCompoundTag(serializer.tag());
+                return serializer.tag();
             });
         } else if (colors != null) {
             var blockEntity = level.getBlockEntity(blockPos);
@@ -139,7 +142,8 @@ public class CubeChanges implements IUserAction, IWorldUpdateTask {
         }
         if (nbt != null) {
             if (blockEntity != null) {
-                blockEntity.loadFullData(nbt, level.registryAccess());
+                var serializer = new TagSerializer(nbt, SerializationContext.from(blockEntity));
+                blockEntity.loadFullData(serializer);
                 changes += 1;
             }
         }

@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // @p[skin={type=outfit,slot=1,id="<domain>:<skin-id>"}]
-public class HasSkinArgumentType implements ArgumentType<EntitySelectorPredicate> {
+public class HasSkinArgumentType implements IArgumentType<EntitySelectorPredicate> {
 
     private static final DynamicCommandExceptionType ERROR_MISSING_KEY = new DynamicCommandExceptionType(ob -> Component.translatable("commands.armourers_workshop.armourers.error.unknownHasSkinKey", ob));
 

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Objects {
 
@@ -55,6 +56,13 @@ public class Objects {
 
     public static boolean equals(Object a, Object b) {
         return java.util.Objects.equals(a, b);
+    }
+
+    public static <T> T requireNonNullElseGet(T obj, Supplier<? extends T> supplier) {
+        if (obj != null) {
+            return obj;
+        }
+        return supplier.get();
     }
 
     // "<%s: 0x%x; arg1 = arg2; ...; argN-1 = argN>"

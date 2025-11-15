@@ -1,0 +1,50 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
+import moe.plushie.armourers_workshop.api.core.utils.IDirection;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+
+import java.util.IdentityHashMap;
+
+@Available("[1.16, 1.21)")
+public class AbstractForgeBlockEntityCapability<T> implements IBlockEntityCapability<T> {
+
+    private static final IdentityHashMap<Capability<?>, IBlockEntityCapability<?>> REGISTERED_CAPABILITIES = new IdentityHashMap<>();
+
+    private final Capability<T> capability;
+
+    protected AbstractForgeBlockEntityCapability(Capability<T> capability) {
+        this.capability = capability;
+    }
+
+    public static <T> IBlockEntityCapability<T> wrap(Capability<T> capability) {
+        var result = REGISTERED_CAPABILITIES.computeIfAbsent(capability, AbstractForgeBlockEntityCapability::new);
+        return Objects.unsafeCast(result);
+    }
+
+    public static <T> Capability<T> unwrap(IBlockEntityCapability<T> capability) {
+        if (capability instanceof AbstractForgeBlockEntityCapability<T> impl) {
+            return impl.capability;
+        }
+        return null;
+    }
+
+    @Override
+    public T get(Level level, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity, IDirection dir) {
+        if (blockEntity != null) {
+            return blockEntity.getCapability(capability, AbstractDirection.unwrap(dir)).resolve().orElse(null);
+        }
+        blockEntity = level.getBlockEntity(blockPos);
+        if (blockEntity != null) {
+            return blockEntity.getCapability(capability, AbstractDirection.unwrap(dir)).resolve().orElse(null);
+        }
+        return null;
+    }
+}

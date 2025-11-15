@@ -13,12 +13,9 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView
 import moe.plushie.armourers_workshop.core.client.gui.widget.TabView;
 import moe.plushie.armourers_workshop.core.menu.HologramProjectorMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
 
     private final TabView tabView = new TabView(CGRect.ZERO);

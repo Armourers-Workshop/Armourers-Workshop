@@ -8,7 +8,7 @@ public class SkinGeometryOptions implements ISkinGeometryOptions {
     public static final SkinGeometryOptions EMPTY = new SkinGeometryOptions();
 
     private long value = 0;
-    private int renderOrder = 0; // 0X11: 0 default, 1 behind, 2 in_front
+    private int renderOrder = 0; // 0000 0XXX: 0 default, 1 behind, 2 in_front
 
     public SkinGeometryOptions() {
     }

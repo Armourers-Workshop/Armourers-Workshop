@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import moe.plushie.armourers_workshop.api.common.IEntitySerializer;
+import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 
 import java.util.function.BiConsumer;
@@ -10,7 +10,7 @@ public class GenericProperty<S, T> {
 
     protected int ordinal;
     protected GenericProperties<S> owner;
-    protected IEntitySerializer<T> serializer;
+    protected IEntityDataSerializer<T> serializer;
 
     protected Function<S, T> getter;
     protected BiConsumer<S, T> setter;

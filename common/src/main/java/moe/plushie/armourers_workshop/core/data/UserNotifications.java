@@ -21,10 +21,10 @@ public class UserNotifications {
         sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0, null), player);
     }
 
-//    public static void sendImportantToast(Component message, CompoundTag tag, Player player) {
+//    public static void sendImportantToast(Component message, CompoundTag object, Player player) {
 //        Component title = Component.translatable("commands.armourers_workshop.notify.title");
 //        Component confirm = Component.translatable("commands.armourers_workshop.notify.confirm");
-//        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0x80000001, tag), player);
+//        sendToPlayer(new ExecuteAlertPacket(title, message, confirm, 0x80000001, object), player);
 //    }
 
     public static void sendSystemToast(Component message, CompoundTag tag, Player player) {

@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compat.client.gui.element;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+
+@Available("[1.16, 1.20)")
+@OnlyIn(Dist.CLIENT)
+public interface AbstractItemGuiElementImpl {
+
+    default void renderItem(ItemStack itemStack, float tx, float ty, CGGraphicsContext context) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "content", (screen1, poseStack1) -> {
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateFakeItem(itemStack, (int) tx, (int) ty);
+        });
+    }
+
+    default void renderItemTooltip(ItemStack itemStack, float mouseX, float mouseY, Font font, CGGraphicsContext context) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "tooltip", (screen1, poseStack1) -> {
+            screen1._renderTooltip(poseStack1, itemStack, (int) mouseX, (int) mouseY);
+        });
+    }
+}

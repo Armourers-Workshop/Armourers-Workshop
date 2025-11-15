@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <pre>
  * file header:           0x534b494e (SKIN)
  * file format:           | header(4B) | version(4B) | reserved data(8B) | skin type |{ chunk }| crc32 |
  * chunk format:          |< length(4B) | name(4B) | flag(2B) >[ chunk data ]|
@@ -56,8 +57,9 @@ import java.util.List;
  * palette entry (v2):    | id(VB)/parent id(VB)/x(4B)/y(4B)/w(4B)/h(4B)/ani(4B)/opt(VB) | data count(4B)/raw data(nB) |
  * chunk flag:            1 encrypt, 2 gzip, 3 encrypt+gzip
  * symbol:                {n} = (length(4B) + byte[length]) * n + 0(4B)
- * #                      [data] = count(VB) + data[count]
- * #                      <header>[data] = (count(VB) + header + data[count]) * n + 0(VB)
+ *                        [data] = count(VB) + data[count]
+ *                        < header >[data] = (count(VB) + header + data[count]) * n + 0(VB)
+ * </pre>
  */
 @SuppressWarnings("unused")
 public class ChunkSerializers {

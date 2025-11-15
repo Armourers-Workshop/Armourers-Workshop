@@ -1,0 +1,53 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.api.client.model.IModelPart;
+import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenFieldTransformer;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+@Available("[1.22, )")
+public class AbstractTransformModel<T extends LivingEntity, S extends EntityRenderState> extends AbstractHumanoidModelImpl<T, HumanoidRenderState> {
+
+    private static final OpenFieldTransformer FIELD_TRANSFORMER = new OpenFieldTransformer() {
+        @Override
+        protected boolean shouldApply(Field field) {
+            int mod = field.getModifiers();
+            return Modifier.isPublic(mod) && !Modifier.isFinal(mod);
+        }
+
+        @Override
+        protected void apply(Object src, Object dest, Field field) throws Exception {
+            field.set(dest, field.get(src));
+        }
+    };
+
+    public AbstractTransformModel() {
+        super(getEmptyContext());
+    }
+
+    public void setup(S renderState) {
+        // we need to copy the same fields
+        var transformedRenderState = new HumanoidRenderState();
+        var sourceRenderState = AbstractRenderState.unwrap(renderState);
+        FIELD_TRANSFORMER.apply(sourceRenderState, transformedRenderState);
+        setupAnim(transformedRenderState);
+    }
+
+
+    public IModelPart getPartByName(String name) {
+        return self().abi$getPartByName(name);
+    }
+
+    private IEntityModel<S> self() {
+        return Objects.unsafeCast(this);
+    }
+}

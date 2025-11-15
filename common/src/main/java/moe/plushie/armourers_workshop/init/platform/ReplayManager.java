@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 public class ReplayManager {
 
     private static boolean IS_REPLAYING = false;
-    private static ArrayList<Runnable> REPLAY_CLEANER = new ArrayList<>();
+    private static final ArrayList<Runnable> REPLAY_CLEANER = new ArrayList<>();
 
     public static void init() {
     }
@@ -73,7 +73,7 @@ public class ReplayManager {
         sendTo(player, ServerReplayPacket.Event.START_RECORDING, buf -> {
             // when this an integrated server owner,
             // we need to save path of the skin-database,
-            if (server.isSingleplayer() && server.isSingleplayerOwner(player.getGameProfile())) {
+            if (server.isSingleplayer() && server.isSingleplayerOwner(player.nameAndId())) {
                 // we need restore the skin-database when replaying.
                 buf.writeEnum(OpenDistributionType.INTEGRATED_SERVER);
                 buf.writeUtf(EnvironmentManager.getSkinDatabaseDirectory().getPath());

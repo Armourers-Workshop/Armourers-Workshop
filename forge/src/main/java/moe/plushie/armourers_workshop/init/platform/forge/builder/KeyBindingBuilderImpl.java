@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeKeyMapping;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeKeyMapping;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.utils.OpenKeyModifier;

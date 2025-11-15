@@ -1,0 +1,25 @@
+package moe.plushie.armourers_workshop.compat.client.gui.event;
+
+import com.apple.library.impl.event.InputKeyEvent;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.input.CharacterEvent;
+
+@Available("[1.22, )")
+public class AbstractCharacterEvent implements InputKeyEvent {
+
+    public final CharacterEvent event;
+
+    public AbstractCharacterEvent(CharacterEvent event) {
+        this.event = event;
+    }
+
+    @Override
+    public int code() {
+        return event.codepoint();
+    }
+
+    @Override
+    public int modifiers() {
+        return event.modifiers();
+    }
+}

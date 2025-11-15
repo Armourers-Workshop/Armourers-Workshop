@@ -1,0 +1,294 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.core.math.IMatrix3f;
+import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
+import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
+import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+
+import java.nio.FloatBuffer;
+
+@Available("[1.16, 1.20)")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractPoseStackImpl {
+
+    protected static final ObjectPool<OpenPoseStack> REUSABLE_QUEUE = ObjectPool.create(OpenPoseStack::new);
+
+    private static final Matrix3fWrapper CONVERTER_MAT3 = new Matrix3fWrapper(new Matrix3f());
+    private static final Matrix4fWrapper CONVERTER_MAT4 = new Matrix4fWrapper(new Matrix4f());
+
+    private static final Quaternion CONVERTER_QUAT = new Quaternion(0, 0, 0, 1);
+
+    private static final FloatBuffer BUFFER3x3 = MatrixUtils.createFloatBuffer(9);
+    private static final FloatBuffer BUFFER4x4 = MatrixUtils.createFloatBuffer(16);
+
+    public static IMatrix3f convertMatrix(Matrix3f mat) {
+        return new Matrix3fWrapper(mat);
+    }
+
+    public static IMatrix4f convertMatrix(Matrix4f mat) {
+        return new Matrix4fWrapper(mat);
+    }
+
+    public static Matrix3f convertMatrix(IMatrix3f mat) {
+        var newValue = Objects.safeCast(mat, Matrix3fWrapper.class);
+        if (newValue != null) {
+            return newValue.mat;
+        }
+        mat.store(BUFFER3x3);
+        CONVERTER_MAT3.load(BUFFER3x3);
+        return CONVERTER_MAT3.mat;
+    }
+
+    public static Matrix4f convertMatrix(IMatrix4f mat) {
+        var newValue = Objects.safeCast(mat, Matrix4fWrapper.class);
+        if (newValue != null) {
+            return newValue.mat;
+        }
+        mat.store(BUFFER4x4);
+        CONVERTER_MAT4.load(BUFFER4x4);
+        return CONVERTER_MAT4.mat;
+    }
+
+    public static Quaternion convertQuaternion(IQuaternionf q) {
+        CONVERTER_QUAT.set(q.x(), q.y(), q.z(), q.w());
+        return CONVERTER_QUAT;
+    }
+
+    public static Quaternion copyQuaternion(IQuaternionf q) {
+        return new Quaternion(q.x(), q.y(), q.z(), q.w());
+    }
+
+    private static class Matrix3fWrapper implements IMatrix3f {
+
+        private final Matrix3f mat;
+
+        public Matrix3fWrapper(Matrix3f mat) {
+            this.mat = mat;
+        }
+
+        @Override
+        public void load(FloatBuffer buffer) {
+            mat.m00 = buffer.get(bufferIndex(0, 0));
+            mat.m01 = buffer.get(bufferIndex(0, 1));
+            mat.m02 = buffer.get(bufferIndex(0, 2));
+            mat.m10 = buffer.get(bufferIndex(1, 0));
+            mat.m11 = buffer.get(bufferIndex(1, 1));
+            mat.m12 = buffer.get(bufferIndex(1, 2));
+            mat.m20 = buffer.get(bufferIndex(2, 0));
+            mat.m21 = buffer.get(bufferIndex(2, 1));
+            mat.m22 = buffer.get(bufferIndex(2, 2));
+        }
+
+        @Override
+        public void store(FloatBuffer buffer) {
+            buffer.put(bufferIndex(0, 0), mat.m00);
+            buffer.put(bufferIndex(0, 1), mat.m01);
+            buffer.put(bufferIndex(0, 2), mat.m02);
+            buffer.put(bufferIndex(1, 0), mat.m10);
+            buffer.put(bufferIndex(1, 1), mat.m11);
+            buffer.put(bufferIndex(1, 2), mat.m12);
+            buffer.put(bufferIndex(2, 0), mat.m20);
+            buffer.put(bufferIndex(2, 1), mat.m21);
+            buffer.put(bufferIndex(2, 2), mat.m22);
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            mat.mul(Matrix3f.createScaleMatrix(x, y, z));
+        }
+
+        @Override
+        public void rotate(IQuaternionf q) {
+            mat.mul(convertQuaternion(q));
+        }
+
+        @Override
+        public void set(IMatrix3f matrix) {
+            matrix.store(BUFFER3x3);
+            load(BUFFER3x3);
+        }
+
+        public void set(IMatrix4f matrix) {
+            var buffer = BUFFER4x4;
+            matrix.store(buffer);
+            mat.m00 = buffer.get(bufferIndex4(0, 0));
+            mat.m01 = buffer.get(bufferIndex4(0, 1));
+            mat.m02 = buffer.get(bufferIndex4(0, 2));
+            mat.m10 = buffer.get(bufferIndex4(1, 0));
+            mat.m11 = buffer.get(bufferIndex4(1, 1));
+            mat.m12 = buffer.get(bufferIndex4(1, 2));
+            mat.m20 = buffer.get(bufferIndex4(2, 0));
+            mat.m21 = buffer.get(bufferIndex4(2, 1));
+            mat.m22 = buffer.get(bufferIndex4(2, 2));
+        }
+
+        @Override
+        public void multiply(IMatrix3f matrix) {
+            mat.mul(convertMatrix(matrix));
+        }
+
+        @Override
+        public void multiply(float[] values) {
+            var vec = new Vector3f(values[0], values[1], values[2]);
+            vec.transform(mat);
+            values[0] = vec.x();
+            values[1] = vec.y();
+            values[2] = vec.z();
+        }
+
+        @Override
+        public void invert() {
+            mat.invert();
+        }
+
+        @Override
+        public void transpose() {
+            mat.transpose();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Matrix3fWrapper that)) return false;
+            return mat.equals(that.mat);
+        }
+
+        @Override
+        public int hashCode() {
+            return mat.hashCode();
+        }
+
+        // row-major <=> column-major
+        private int bufferIndex(int i, int j) {
+            return j * 3 + i;
+        }
+
+        // row-major <=> column-major
+        private int bufferIndex4(int i, int j) {
+            return j * 4 + i;
+        }
+    }
+
+    private static class Matrix4fWrapper implements IMatrix4f {
+
+        private final Matrix4f mat;
+
+        public Matrix4fWrapper(Matrix4f mat) {
+            this.mat = mat;
+        }
+
+        @Override
+        public void load(FloatBuffer buffer) {
+            mat.m00 = buffer.get(bufferIndex(0, 0));
+            mat.m01 = buffer.get(bufferIndex(0, 1));
+            mat.m02 = buffer.get(bufferIndex(0, 2));
+            mat.m03 = buffer.get(bufferIndex(0, 3));
+            mat.m10 = buffer.get(bufferIndex(1, 0));
+            mat.m11 = buffer.get(bufferIndex(1, 1));
+            mat.m12 = buffer.get(bufferIndex(1, 2));
+            mat.m13 = buffer.get(bufferIndex(1, 3));
+            mat.m20 = buffer.get(bufferIndex(2, 0));
+            mat.m21 = buffer.get(bufferIndex(2, 1));
+            mat.m22 = buffer.get(bufferIndex(2, 2));
+            mat.m23 = buffer.get(bufferIndex(2, 3));
+            mat.m30 = buffer.get(bufferIndex(3, 0));
+            mat.m31 = buffer.get(bufferIndex(3, 1));
+            mat.m32 = buffer.get(bufferIndex(3, 2));
+            mat.m33 = buffer.get(bufferIndex(3, 3));
+        }
+
+        @Override
+        public void store(FloatBuffer buffer) {
+            buffer.put(bufferIndex(0, 0), mat.m00);
+            buffer.put(bufferIndex(0, 1), mat.m01);
+            buffer.put(bufferIndex(0, 2), mat.m02);
+            buffer.put(bufferIndex(0, 3), mat.m03);
+            buffer.put(bufferIndex(1, 0), mat.m10);
+            buffer.put(bufferIndex(1, 1), mat.m11);
+            buffer.put(bufferIndex(1, 2), mat.m12);
+            buffer.put(bufferIndex(1, 3), mat.m13);
+            buffer.put(bufferIndex(2, 0), mat.m20);
+            buffer.put(bufferIndex(2, 1), mat.m21);
+            buffer.put(bufferIndex(2, 2), mat.m22);
+            buffer.put(bufferIndex(2, 3), mat.m23);
+            buffer.put(bufferIndex(3, 0), mat.m30);
+            buffer.put(bufferIndex(3, 1), mat.m31);
+            buffer.put(bufferIndex(3, 2), mat.m32);
+            buffer.put(bufferIndex(3, 3), mat.m33);
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            mat.multiply(Matrix4f.createScaleMatrix(x, y, z));
+        }
+
+        @Override
+        public void translate(float x, float y, float z) {
+            mat.translate(new Vector3f(x, y, z));
+        }
+
+        @Override
+        public void rotate(IQuaternionf q) {
+            mat.multiply(convertQuaternion(q));
+        }
+
+        @Override
+        public void set(IMatrix4f matrix) {
+            matrix.store(BUFFER4x4);
+            load(BUFFER4x4);
+        }
+
+        @Override
+        public void multiply(IMatrix4f matrix) {
+            mat.multiply(convertMatrix(matrix));
+        }
+
+        @Override
+        public void multiply(float[] values) {
+            var vec = new Vector4f(values[0], values[1], values[2], values[3]);
+            vec.transform(mat);
+            values[0] = vec.x();
+            values[1] = vec.y();
+            values[2] = vec.z();
+            values[3] = vec.w();
+        }
+
+        @Override
+        public void invert() {
+            mat.invert();
+        }
+
+        @Override
+        public void transpose() {
+            mat.transpose();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Matrix4fWrapper that)) return false;
+            return mat.equals(that.mat);
+        }
+
+        @Override
+        public int hashCode() {
+            return mat.hashCode();
+        }
+
+        // row-major <=> column-major
+        private int bufferIndex(int i, int j) {
+            return j * 4 + i;
+        }
+    }
+}

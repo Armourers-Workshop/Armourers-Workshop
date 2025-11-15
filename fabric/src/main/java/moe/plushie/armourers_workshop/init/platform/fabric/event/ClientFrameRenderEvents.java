@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.event;
 
-import moe.plushie.armourers_workshop.compatibility.core.AbstractDeltaTracker;
+import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 

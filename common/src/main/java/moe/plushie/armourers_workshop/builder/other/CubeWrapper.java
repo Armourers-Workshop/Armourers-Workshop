@@ -4,6 +4,8 @@ import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -94,7 +96,9 @@ public class CubeWrapper implements IBlockPaintable {
     public CompoundTag blockTag() {
         var blockEntity = blockEntity();
         if (blockEntity != null) {
-            return blockEntity.saveFullData(level.registryAccess());
+            var serializer = new TagSerializer(SerializationContext.from(blockEntity));
+            blockEntity.saveFullData(serializer);
+            return serializer.tag();
         }
         return null;
     }

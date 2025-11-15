@@ -2,20 +2,19 @@ package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform;
-import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentTypes;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public class BakedBackpackPartTransform implements ITransform {
 
-    SkinAttachmentPose attachmentPose;
+    private SkinAttachmentPose attachmentPose;
 
-    public void setup(@Nullable Entity entity, EntityRenderData renderData) {
-        if (renderData != null && !PlaceholderManager.isPlaceholder(entity)) {
-            attachmentPose = renderData.getAttachmentPose(SkinAttachmentTypes.BACKPACK, 0);
+    public void setup(@Nullable EntityRenderState renderState) {
+        if (renderState != null && renderState != MannequinRenderState.getPlaceholder()) {
+            attachmentPose = renderState.getAttachmentPose(SkinAttachmentTypes.BACKPACK, 0);
         } else {
             attachmentPose = null;
         }

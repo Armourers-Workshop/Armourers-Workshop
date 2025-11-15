@@ -1,19 +1,15 @@
 package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide;
 
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanHeld;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferSource;
+import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
 public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
 
     private final OpenModelPart armSolid;
@@ -25,27 +21,25 @@ public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
     }
 
     @Override
-    public void render(SkinDocument document, IPoseStack poseStack, int light, int overlay, IBufferSource bufferSource) {
-        SkinDocumentNode node = findItemNode(document.root());
+    public void render(SkinDocument document, int lightmap, int overlay, IGraphicsContext context) {
+        var node = findItemNode(document.root());
         if (node == null) {
             return;
         }
-        poseStack.pushPose();
+        context.saveGraphicsState();
 
-        applyOffset(poseStack);
+        applyOffset(context);
 
-        var skinBufferSource = SkinVertexBufferSource.of(bufferSource);
-        armSolid.render(poseStack, bufferSource.getBuffer(SkinRenderType.PLAYER_CUTOUT), 0xf000f0, overlay);
-        //poseStack.translate(0, -0.001f * f, 0);
-        armTransparent.render(poseStack, skinBufferSource.getBuffer(SkinRenderType.PLAYER_TRANSLUCENT), 0xf000f0, overlay, 0xbfffffff);
+        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, 0xffffffff, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderType.PLAYER_TRANSLUCENT));
 
-        poseStack.popPose();
+        context.restoreGraphicsState();
     }
 
-    protected void applyOffset(IPoseStack poseStack) {
-        poseStack.translate(0, 2, 0);
-        poseStack.rotate(OpenVector3f.XP.rotationDegrees(-90));
-        poseStack.scale(16, 16, 16);
+    protected void applyOffset(IGraphicsContext context) {
+        context.translateCTM(0, 2, 0);
+        context.rotateCTM(OpenVector3f.XP.rotationDegrees(-90));
+        context.scaleCTM(16, 16, 16);
     }
 
     protected SkinDocumentNode findItemNode(SkinDocumentNode node) {

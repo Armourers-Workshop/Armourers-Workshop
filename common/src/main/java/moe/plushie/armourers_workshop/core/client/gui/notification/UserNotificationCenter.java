@@ -16,14 +16,10 @@ import moe.plushie.armourers_workshop.core.network.ExecuteAlertPacket;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
 public class UserNotificationCenter {
 
     // show the message in to current screen.
@@ -57,7 +53,7 @@ public class UserNotificationCenter {
         window.setMessage(message);
         window.setMessageColor(messageColor);
         window.setIcon(icon);
-        Minecraft.getInstance().getToasts().addToast(new ContainerMenuToast<>(window));
+        ContainerMenuToast.showToast(new ContainerMenuToast<>(window));
     }
 
     public static void showToast(NSString message, NSString title, Object icon) {

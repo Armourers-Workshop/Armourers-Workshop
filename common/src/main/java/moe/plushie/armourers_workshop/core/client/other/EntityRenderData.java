@@ -1,51 +1,26 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.skinrender.patch.EntityRenderPatch;
-import moe.plushie.armourers_workshop.core.client.skinrender.patch.EpicFightEntityRendererPatch;
-import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class EntityRenderData extends EntitySlotsHandler<Entity> {
 
-    private EntityRenderPatch<? super Entity> renderPatch;
+    private static final DataContainer.Key<EntityRenderData> KEY = DataContainer.key("RenderData", EntityRenderData::new);
 
     public EntityRenderData(Entity entity) {
         super(entity, new EntityProvider(), new WardrobeProvider());
     }
 
-    @Nullable
-    public static EntityRenderData of(@Nullable Entity entity) {
+    public static EntityRenderData of(Entity entity) {
         if (entity != null) {
-            return EntityDataStorage.of(entity).renderData().orElse(null);
+            return DataContainer.of(entity, KEY);
         }
         return null;
     }
 
     public void tick(Entity entity) {
         tick(entity, SkinWardrobe.of(entity));
-    }
-
-    @Override
-    public boolean isLimitLimbs() {
-        // in EF doesn't need to limit limbs.
-        if (renderPatch instanceof EpicFightEntityRendererPatch) {
-            return false;
-        }
-        return super.isLimitLimbs();
-    }
-
-
-    public void setRenderPatch(EntityRenderPatch<? super Entity> renderPatch) {
-        this.renderPatch = renderPatch;
-    }
-
-    public EntityRenderPatch<? super Entity> renderPatch() {
-        return renderPatch;
     }
 }
 

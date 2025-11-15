@@ -12,6 +12,6 @@ public class SkinningHorseArmorRecipe extends SkinningRecipe {
 
     @Override
     protected boolean isValidTarget(ItemStack itemStack) {
-        return ModItemTags.HORSE_ARMORS.get().contains(itemStack);
+        return itemStack.is(ModItemTags.HORSE_ARMORS.get());
     }
 }

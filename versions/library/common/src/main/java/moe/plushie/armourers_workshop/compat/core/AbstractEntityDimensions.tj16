@@ -1,0 +1,15 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.entity.EntityDimensions;
+
+@Available("[1.16, 1.21)")
+public class AbstractEntityDimensions extends EntityDimensions {
+
+    public final float eyeHeight;
+
+    public AbstractEntityDimensions(float f, float g, float eyeHeight, boolean bl) {
+        super(f, g, bl);
+        this.eyeHeight = eyeHeight;
+    }
+}

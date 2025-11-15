@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IVertexElement;
+
+@Available("[1.18, 1.21)")
+public abstract class AbstractVertexElementImpl implements IVertexElement {
+
+    @Override
+    public void setupBufferState(int index, int stride, long pointer) {
+        get().setupBufferState(index, pointer, stride);
+    }
+
+    @Override
+    public void clearBufferState(int index) {
+        get().clearBufferState(index);
+    }
+
+    @Override
+    public int byteSize() {
+        return get().getByteSize();
+    }
+}

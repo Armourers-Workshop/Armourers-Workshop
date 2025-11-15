@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractGuideRenderer {
 
     public abstract void init(GuideRendererManager rendererManager);

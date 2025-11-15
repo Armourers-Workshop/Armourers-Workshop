@@ -5,13 +5,10 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class SlotGridView extends UIView {
 
     private int startIndex = 0;

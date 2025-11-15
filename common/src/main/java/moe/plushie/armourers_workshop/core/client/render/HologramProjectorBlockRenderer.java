@@ -1,162 +1,118 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.apple.library.uikit.UIColor;
-import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractModelViewStack;
-import moe.plushie.armourers_workshop.compatibility.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.other.BlockEntityRenderData;
-import moe.plushie.armourers_workshop.core.client.other.PlaceholderManager;
-import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.render.state.HologramProjectorRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.SkinRenderState;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.ShapeTesselator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
-@Environment(EnvType.CLIENT)
-public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
+@OnlyIn(Dist.CLIENT)
+public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEntity, S extends HologramProjectorRenderState> extends AbstractBlockEntityRenderer<T, S> {
 
     public HologramProjectorBlockRenderer(Context context) {
         super(context);
     }
 
     @Override
-    public void render(T entity, float partialTicks, IPoseStack poseStack, IBufferSource bufferSource, int light, int overlay) {
-        if (!entity.isPowered()) {
-            return;
-        }
-        var renderData = BlockEntityRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        renderData.tick(entity);
-        var renderingTasks = renderData.allSkins();
-        if (renderingTasks.isEmpty()) {
-            return;
-        }
-//        var itemStack = entity.getItem(0);
-//        var descriptor = SkinDescriptor.of(itemStack);
-//        var context = SkinRenderTesselator.create(descriptor, Tickets.RENDERER);
-//        if (context == null) {
-//            return;
-//        }
-        var f = 1 / 16f;
-        var overLight = light;
-        if (entity.isOverrideLight()) {
-            overLight = 0xf000f0;
-        }
-
-        var blockState = entity.getBlockState();
-        var renderPatch = renderData.renderPatch();
-        var mannequinEntity = PlaceholderManager.MANNEQUIN.get();
-
-        poseStack.pushPose();
-        poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.rotate(entity.getRenderRotations(blockState));
-        poseStack.translate(0.0f, 0.5f, 0.0f);
-
-        poseStack.scale(f, f, f);
-        poseStack.scale(-1, -1, 1);
-
-        renderPatch.activate(entity, partialTicks, overLight, overlay, poseStack);
-
-        var pluginContext = renderPatch.pluginContext();
-        var renderingContext = renderPatch.renderingContext();
-
-        renderingContext.setOverlay(pluginContext.overlay());
-        renderingContext.setLightmap(pluginContext.lightmap());
-        renderingContext.setPartialTicks(pluginContext.partialTicks());
-        renderingContext.setAnimationTicks(pluginContext.animationTicks());
-
-        renderingContext.setPoseStack(poseStack);
-        renderingContext.setBufferSource(bufferSource);
-        renderingContext.setModelViewStack(AbstractModelViewStack.getInstance());
-
-        for (var entry : renderingTasks) {
-            var itemSource = SkinItemSource.create(entry.itemStack());
-            var bakedSkin = entry.skin();
-            var bakedArmature = BakedArmature.defaultBy(bakedSkin.type());
-            var rect = bakedSkin.renderBounds();
-
-            renderingContext.setItemSource(itemSource);
-            renderingContext.setColorScheme(entry.paintScheme());
-            //renderPatch.setOverlay(entry.getOverrideOverlay(entity));
-
-            apply(entity, rect, renderingContext.animationTicks(), poseStack, bufferSource);
-
-            bakedSkin.setupAnim(mannequinEntity, bakedArmature, renderingContext);
-            var paintScheme = bakedSkin.resolve(mannequinEntity, entry.paintScheme());
-            SkinRenderer.render(mannequinEntity, bakedArmature, bakedSkin, paintScheme, renderingContext);
-        }
-
-        poseStack.popPose();
-
-        if (ModDebugger.hologramProjector) {
-            var pos = entity.getBlockPos();
-            poseStack.pushPose();
-            poseStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            ShapeTesselator.stroke(entity.getRenderShape(blockState), UIColor.ORANGE, poseStack, bufferSource);
-            poseStack.popPose();
-        }
-
-        renderPatch.deactivate(entity);
+    protected int abi$getViewDistance() {
+        return 272;
     }
 
-    private void apply(T entity, OpenRectangle3f rect, double animationTime, IPoseStack poseStack, IBufferSource bufferSource) {
-        var angle = entity.getModelAngle();
-        var offset = entity.getModelOffset();
-        var rotationOffset = entity.getRotationOffset();
-        var rotationSpeed = entity.getRotationSpeed();
+    @Override
+    protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        if (!renderState.isPowered()) {
+            return;
+        }
+        var model = renderState.slots();
+        if (model.isEmpty()) {
+            return; // nothing to rendering!
+        }
+        // ..
+        if (renderState.isOverrideLight()) {
+            lightmap = LightmapTexture.DEFAULT;
+        }
+
+        context.saveGraphicsState();
+
+        context.translateCTM(0.5f, 0.5f, 0.5f);
+        context.rotateCTM(renderState.renderRotations());
+        context.translateCTM(0.0f, 0.5f, 0.0f);
+        context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
+
+        apply(renderState, model, context);
+
+        model.setPartialTicks(renderState.partialTicks());
+        model.setAnimationTicks(renderState.animationTicks());
+        model.setAnimationManager(renderState.animationManager());
+        model.setOutlineColor(0); // never show outline in the hologram projector block.
+
+        model.render(null, null, lightmap, overlay, context);
+
+        context.restoreGraphicsState();
+
+        var renderShape = renderState.renderShape();
+        if (renderShape != null) {
+            context.draw(ShapeElement.stroke(renderShape, Colors.ORANGE));
+        }
+    }
+
+    private void apply(S renderState, SkinRenderState skin, IGraphicsContext context) {
+        var animationTicks = renderState.animationTicks();
+        var angle = renderState.modelAngle();
+        var offset = renderState.modelOffset();
+        var rotationOffset = renderState.rotationOffset();
+        var rotationSpeed = renderState.rotationSpeed();
 
         var rotX = angle.x();
         var speedX = rotationSpeed.x() / 1000f;
         if (speedX != 0) {
-            rotX += (float) (((animationTime % speedX) / speedX) * 360.0);
+            rotX += (float) (((animationTicks % speedX) / speedX) * 360.0);
         }
 
         var rotY = angle.y();
         var speedY = rotationSpeed.y() / 1000f;
         if (speedY != 0) {
-            rotY += (float) (((animationTime % speedY) / speedY) * 360.0);
+            rotY += (float) (((animationTicks % speedY) / speedY) * 360.0);
         }
 
         var rotZ = angle.z();
         var speedZ = rotationSpeed.z() / 1000f;
         if (speedZ != 0) {
-            rotZ += (float) (((animationTime % speedZ) / speedZ) * 360.0);
+            rotZ += (float) (((animationTicks % speedZ) / speedZ) * 360.0);
         }
 
-        var scale = entity.getModelScale();
-        poseStack.scale(scale, scale, scale);
-        if (entity.isOverrideOrigin()) {
-            poseStack.translate(0, -rect.maxY(), 0); // to model center
+        var scale = renderState.modelScale();
+        context.scaleCTM(scale, scale, scale);
+        if (renderState.isOverrideOrigin()) {
+            var rect = OpenRectangle3f.ZERO;
+            for (var slot : skin.slots()) {
+                rect = slot.skin().renderBounds();
+            }
+            context.translateCTM(0, -rect.maxY(), 0); // to model center
         }
-        poseStack.translate(-offset.x(), -offset.y(), offset.z());
+        context.translateCTM(-offset.x(), -offset.y(), offset.z());
 
-        if (entity.shouldShowRotationPoint()) {
-            ShapeTesselator.stroke(-1, -1, -1, 1, 1, 1, UIColor.MAGENTA, poseStack, bufferSource);
+        if (renderState.shouldShowRotationPoint()) {
+            context.draw(ShapeElement.stroke(-1, -1, -1, 2, 2, 2, Colors.MAGENTA));
         }
 
         if (ModDebugger.hologramProjector) {
-            ShapeTesselator.vector(OpenVector3f.ZERO, 128, poseStack, bufferSource);
+            context.draw(ShapeElement.arrow(0, 0, 0, 128, 128, 128));
         }
 
-        poseStack.rotate(new OpenQuaternionf(rotX, -rotY, rotZ, true));
-        poseStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
+        context.rotateCTM(new OpenQuaternionf(rotX, -rotY, rotZ, true));
+        context.translateCTM(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
         if (ModDebugger.hologramProjector) {
-            ShapeTesselator.vector(OpenVector3f.ZERO, 128, poseStack, bufferSource);
+            context.draw(ShapeElement.arrow(0, 0, 0, 128, 128, 128));
         }
-    }
-
-    @Override
-    public int getViewDistance() {
-        return 272;
     }
 }

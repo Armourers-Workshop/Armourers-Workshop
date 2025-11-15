@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compat.mixin.patch;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.state.IBlockEntityRenderState;
+import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
+import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.22, )")
+@Mixin(BlockEntityRenderer.class)
+public interface BlockEntityRendererMixin<T extends BlockEntity, S extends IBlockEntityRenderState> extends IBlockEntityRenderer<T, S> {
+
+    @Inject(method = "extractRenderState", at = @At("HEAD"))
+    private void aw2$extractRenderState(T entity, BlockEntityRenderState entityRenderState, float f, Vec3 vec3, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, CallbackInfo ci) {
+        AbstractRenderState.createAndExtract(entityRenderState, entity, f);
+    }
+}

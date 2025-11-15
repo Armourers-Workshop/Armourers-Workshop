@@ -1,14 +1,17 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.common.IBlockHandler;
-import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.event.EventBus;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
-import moe.plushie.armourers_workshop.init.platform.fabric.EnvironmentManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.PlatformManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
@@ -35,8 +38,8 @@ public class CommonProxyImpl implements ModInitializer {
         ArmourersWorkshop.init();
 
         // prioritize handle.
-        EventBus.register(ServerStartingEvent.class, event -> EnvironmentManagerImpl.attach(event.getServer()));
-        EventBus.register(ServerStoppedEvent.class, event -> EnvironmentManagerImpl.detach(event.getServer()));
+        EventBus.register(ServerStartingEvent.class, event -> PlatformManagerImpl.attach(event.getServer()));
+        EventBus.register(ServerStoppedEvent.class, event -> PlatformManagerImpl.detach(event.getServer()));
 
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);
@@ -64,36 +67,33 @@ public class CommonProxyImpl implements ModInitializer {
             return InteractionResult.PASS;
         }
         var itemStack = player.getItemInHand(hand);
-        if (itemStack.getItem() instanceof IItemHandler handler) {
-            return handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult));
+        if (itemStack.getItem() instanceof AbstractItemHandler handler) {
+            return AbstractInteractionResult.unwrap(handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult)));
         }
         return InteractionResult.PASS;
     }
 
-    public InteractionResult onAllowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState) {
+    public OpenInteractionResult onAllowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState) {
         if (entity.isSpectator()) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
-        var block = blockState.getBlock();
-        if (block instanceof IBlockHandler handler && handler.isCustomLadder(entity.getLevel(), blockPos, blockState, entity)) {
-            return InteractionResult.SUCCESS;
+        if (blockState.getBlock() instanceof AbstractBlock block && block.isLadder(blockState, entity.level(), blockPos, entity)) {
+            return OpenInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 
     public InteractionResult onAllowBed(LivingEntity entity, BlockPos sleepingPos, BlockState blockState, boolean vanillaResult) {
-        var block = blockState.getBlock();
-        if (block instanceof IBlockHandler handler && handler.isCustomBed(entity.getLevel(), sleepingPos, blockState, entity)) {
+        if (blockState.getBlock() instanceof AbstractBlock block && block.isBed(blockState, entity.level(), sleepingPos, entity)) {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
 
     public void onStopSleep(LivingEntity entity, BlockPos sleepingPos) {
-        var level = entity.getLevel();
+        var level = entity.level();
         var blockState = level.getBlockState(sleepingPos);
-        var block = blockState.getBlock();
-        if (block instanceof IBlockHandler handler && handler.isCustomBed(level, sleepingPos, blockState, entity)) {
+        if (blockState.getBlock() instanceof AbstractBlock block && block.isBed(blockState, level, sleepingPos, entity)) {
             entity.stopSleeping(sleepingPos);
         }
     }
@@ -103,17 +103,16 @@ public class CommonProxyImpl implements ModInitializer {
             return InteractionResult.PASS;
         }
         var blockState = level.getBlockState(pos);
-        var block = blockState.getBlock();
-        if (block instanceof IBlockHandler handler) {
-            InteractionResult result = handler.attackBlock(level, pos, blockState, direction, player, hand);
-            if (result == InteractionResult.CONSUME) {
-                return InteractionResult.FAIL;
-            }
-            if (result == InteractionResult.SUCCESS) {
-                return InteractionResult.PASS;
-            }
-            return result;
+        if (!(blockState.getBlock() instanceof AbstractBlock block)) {
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        var result = block.attackBlock(level, pos, blockState, direction, player, AbstractInteractionHand.wrap(hand));
+        if (result == OpenInteractionResult.CONSUME) {
+            return InteractionResult.FAIL;
+        }
+        if (result == OpenInteractionResult.SUCCESS) {
+            return InteractionResult.PASS;
+        }
+        return AbstractInteractionResult.unwrap(result);
     }
 }

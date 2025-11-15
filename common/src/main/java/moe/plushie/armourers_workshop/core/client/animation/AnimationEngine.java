@@ -1,20 +1,17 @@
 package moe.plushie.armourers_workshop.core.client.animation;
 
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
+import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
 import moe.plushie.armourers_workshop.core.skin.molang.MolangVirtualMachine;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.SyntaxException;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public class AnimationEngine {
 
     private static final MolangVirtualMachine VM = new MolangVirtualMachine();
 
-    public static void apply(@Nullable Object source, BakedSkin skin, SkinRenderContext context) {
+    public static void apply(@Nullable Object source, BakedSkin skin, ConcurrentRenderingContext context) {
         // If not found it means it is not any animation active.
         var animationContext = context.animationManager().getAnimationContext(skin);
         if (animationContext == null) {

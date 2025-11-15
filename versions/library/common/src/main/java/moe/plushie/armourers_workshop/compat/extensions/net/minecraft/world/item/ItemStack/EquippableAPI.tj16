@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.item.ItemStack;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractEquipmentSlot;
+import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.16, 1.21)")
+@Extension
+public class EquippableAPI {
+
+    public static OpenEquipmentSlot getEquipmentSlot(@This ItemStack itemStack) {
+        return AbstractEquipmentSlot.wrap(Mob.getEquipmentSlotForItem(itemStack));
+    }
+}

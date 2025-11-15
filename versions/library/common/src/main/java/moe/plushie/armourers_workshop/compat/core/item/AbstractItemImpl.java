@@ -1,0 +1,58 @@
+package moe.plushie.armourers_workshop.compat.core.item;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResultHolder;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+
+import java.util.List;
+
+@Available("[1.21, 1.22)")
+public class AbstractItemImpl extends Item {
+
+    public AbstractItemImpl(Properties properties) {
+        super(properties);
+    }
+
+    public OpenInteractionResult use(Level level, Player player, OpenInteractionHand hand, Object service) {
+        return AbstractInteractionResultHolder.wrap(super.use(level, player, AbstractInteractionHand.unwrap(hand)));
+    }
+
+    @Override
+    public final InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        var result = use(level, player, AbstractInteractionHand.wrap(hand), null);
+        return AbstractInteractionResultHolder.unwrap(result, () -> player.getItemInHand(hand));
+    }
+
+    public OpenInteractionResult useOn(UseOnContext context, Object service) {
+        return AbstractInteractionResult.wrap(super.useOn(context));
+    }
+
+    @Override
+    public final InteractionResult useOn(UseOnContext context) {
+        return AbstractInteractionResult.unwrap(useOn(context, null));
+    }
+
+    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
+        var context1 = AbstractTooltipContext.unwrap(context);
+        super.appendHoverText(itemStack, context1.context, tooltips, context1.flag);
+    }
+
+    @Override
+    public final void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> tooltips, TooltipFlag tooltipFlag) {
+        appendHoverText(itemStack, tooltips, AbstractTooltipContext.wrap(tooltipContext, null, tooltipFlag));
+    }
+}

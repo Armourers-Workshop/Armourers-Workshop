@@ -4,24 +4,24 @@ import moe.plushie.armourers_workshop.api.common.IConfigurableTool;
 import moe.plushie.armourers_workshop.api.core.IDataComponentType;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class UpdateConfigurableToolPacket extends CustomPacket {
 
-    private final InteractionHand hand;
+    private final OpenInteractionHand hand;
     private final ItemStack itemStack;
 
     public UpdateConfigurableToolPacket(IFriendlyByteBuf buffer) {
-        this.hand = buffer.readEnum(InteractionHand.class);
+        this.hand = buffer.readEnum(OpenInteractionHand.class);
         this.itemStack = buffer.readItem();
     }
 
-    public UpdateConfigurableToolPacket(InteractionHand hand, ItemStack itemStack) {
+    public UpdateConfigurableToolPacket(OpenInteractionHand hand, ItemStack itemStack) {
         this.hand = hand;
         this.itemStack = itemStack;
     }

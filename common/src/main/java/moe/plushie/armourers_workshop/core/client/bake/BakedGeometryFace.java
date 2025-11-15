@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
@@ -23,14 +25,12 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTexturePos;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class BakedGeometryFace {
 
     private static final SkinPaintColor RAINBOW_TARGET = SkinPaintColor.of(0xff7f7f7f, SkinPaintTypes.RAINBOW);
@@ -75,7 +75,7 @@ public class BakedGeometryFace {
             transform.apply(poseStack);
         }
 
-        var entry = poseStack.last();
+        var pose = poseStack.last();
 
         // for dye color, we need to relocation to final color by the offset(x, 0).
         var u = resolveTextureOffset(vertexColor.paintType(), resolvedColor.paintType());
@@ -93,12 +93,12 @@ public class BakedGeometryFace {
             var position = vertex.position();
             var normal = vertex.normal();
             var textureCoords = vertex.textureCoords();
-            builder.vertex(entry, position.x(), position.y(), position.z())
+            builder.vertex(pose, position.x(), position.y(), position.z())
                     .color(r, g, b, a)
                     .uv((u + textureCoords.x()) / n, (v + textureCoords.y()) / m)
                     .overlayCoords(overlay)
                     .uv2(lightmap)
-                    .normal(entry, normal.x(), normal.y(), normal.z())
+                    .normal(pose, normal.x(), normal.y(), normal.z())
                     .endVertex();
         }
 
@@ -125,14 +125,14 @@ public class BakedGeometryFace {
 
 
     private SkinPaintColor resolveTextureColor(OpenResourceLocation texture, SkinPartType partType) {
-        var bakedTexture = EntityTextureLoader.getInstance().getTextureModel(texture);
-        if (bakedTexture != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
+        var textureModel = EntityTextureLoader.getInstance().getTextureModel(texture);
+        if (textureModel != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
             var shape = cubeVertex.boundingBox();
             var direction = cubeVertex.direction();
             int x = (int) shape.x();
             int y = (int) shape.y();
             int z = (int) shape.z();
-            return bakedTexture.getColor(x, y, z, direction, partType);
+            return textureModel.getColor(x, y, z, direction, partType);
         }
         return null;
     }
@@ -158,7 +158,7 @@ public class BakedGeometryFace {
             return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
-            var paintColor1 = resolveTextureColor(scheme.texture(), partType);
+            var paintColor1 = resolveTextureColor(scheme.entityTexture(), partType);
             if (paintColor1 != null) {
                 return paintColor1;
             }

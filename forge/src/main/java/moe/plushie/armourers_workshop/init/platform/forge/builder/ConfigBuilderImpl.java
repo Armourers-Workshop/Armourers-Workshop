@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
-import moe.plushie.armourers_workshop.compatibility.core.AbstractConfigSpec;
-import moe.plushie.armourers_workshop.compatibility.forge.AbstractForgeConfigSpec;
+import moe.plushie.armourers_workshop.compat.core.AbstractConfigSpec;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeConfigSpec;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 
 public class ConfigBuilderImpl {

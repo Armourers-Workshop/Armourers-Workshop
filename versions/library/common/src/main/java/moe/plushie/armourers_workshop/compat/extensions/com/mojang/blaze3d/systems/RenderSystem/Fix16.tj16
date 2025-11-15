@@ -1,0 +1,68 @@
+package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.systems.RenderSystem;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[1.16, 1.18)")
+public class Fix16 {
+
+    public static void assertOnRenderThread(@ThisClass Class<?> clazz) {
+        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+    }
+
+    public static int getShaderTexture(@ThisClass Class<?> clazz, int i) {
+        return GlStateManager.getActiveTextureName();
+    }
+
+    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, int textureId) {
+        RenderSystem.bindTexture(textureId);
+    }
+
+    public static void setShaderColor(@ThisClass Class<?> clazz, float r, float g, float b, float a) {
+        RenderSystem.color4f(r, g, b, a);
+    }
+
+    public static void setShaderFogStart(@ThisClass Class<?> clazz, float val) {
+    }
+
+    public static float getShaderFogStart(@ThisClass Class<?> clazz) {
+        return 0;
+    }
+
+    public static void setShaderFogEnd(@ThisClass Class<?> clazz, float val) {
+    }
+
+    public static float getShaderFogEnd(@ThisClass Class<?> clazz) {
+        return 0;
+    }
+
+//    public static void disableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void enableAlphaTest(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL11.GL_ALPHA_TEST);
+//    }
+//
+//    public static void disableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glDisable(GL15.GL_RESCALE_NORMAL);
+//    }
+//
+//    public static void enableRescaleNormal(@ThisClass Class<?> clazz) {
+//        RenderSystem.assertThread(RenderSystem::isOnGameThread);
+//        GL11.glEnable(GL15.GL_RESCALE_NORMAL);
+//    }
+}

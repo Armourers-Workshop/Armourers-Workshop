@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.init.function;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import moe.plushie.armourers_workshop.api.common.ILootFunction;
+import moe.plushie.armourers_workshop.api.common.IContextKey;
+import moe.plushie.armourers_workshop.api.common.ILootContext;
+import moe.plushie.armourers_workshop.api.common.ILootItemFunction;
+import moe.plushie.armourers_workshop.api.core.IDataCodec;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
+import moe.plushie.armourers_workshop.compat.core.AbstractLootContextParams;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -18,9 +17,6 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,51 +29,49 @@ import java.util.function.Function;
 /**
  * <code>
  * {
- * "pools": [{
- * "conditions": [{
- * "condition": "killed_by_player"
- * }],
- * "rolls": 1,
- * "entries": [{
- * "type": "item",
- * "name": "armourers_workshop:skin",
- * "weight": 1,
- * "functions": [{
- * "function": "armourers_workshop:skin_randomly",
- * "skins": [
- * "ks:10830", // direct access global skin library
- * "ws:/path/to/file.armour", // direct access server skin-library
- * {"type": "any"}, // any type, any slot
- * {"type": "outfit"}, // in outfit, any slot
- * {"type": "sword", "slot": 1} // in sword, first slot
- * ]
- * }]
- * }]
- * }]
+ *   "pools": [{
+ *     "conditions": [{
+ *       "condition": "killed_by_player"
+ *     }],
+ *     "rolls": 1,
+ *     "entries": [{
+ *       "type": "item",
+ *       "name": "armourers_workshop:skin",
+ *       "weight": 1,
+ *       "functions": [{
+ *         "function": "armourers_workshop:skin_randomly",
+ *         "skins": [
+ *           "ks:10830", // direct access global skin library
+ *           "ws:/path/to/file.armour", // direct access server skin-library
+ *           {"type": "any"}, // any type, any slot
+ *           {"type": "outfit"}, // in outfit, any slot
+ *           {"type": "sword", "slot": 1} // in sword, first slot
+ *         ]
+ *       }]
+ *     }]
+ *   }]
  * }
  * </code>
  */
-public class SkinRandomlyFunction implements ILootFunction {
+public class SkinRandomlyFunction implements ILootItemFunction {
 
-    public static final MapCodec<SkinRandomlyFunction> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            SkinSource.MAP_CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::sources)
-    ).apply(instance, SkinRandomlyFunction::new));
+    public static final IDataMapCodec<SkinRandomlyFunction> MAP_CODEC = IDataMapCodec.create(instance -> instance.group(SkinSource.COMPLEX_CODEC.listOf().fieldOf("skins").forGetter(SkinRandomlyFunction::sources)).apply(instance, SkinRandomlyFunction::new));
 
-    public final List<SkinSource> sources;
+    private final List<SkinSource> sources;
 
     public SkinRandomlyFunction(Collection<SkinSource> sources) {
         this.sources = Collections.newList(sources);
     }
 
     @Override
-    public ItemStack apply(ItemStack itemStack, LootContext lootContext) {
-        SkinDescriptor descriptor = SkinDescriptor.EMPTY;
+    public ItemStack apply(ItemStack itemStack, ILootContext context) {
+        var descriptor = SkinDescriptor.EMPTY;
 
         // random find all provider.
-        ArrayList<SkinSource> pending = new ArrayList<>(sources);
+        var pending = new ArrayList<>(sources);
         while (descriptor.isEmpty() && !pending.isEmpty()) {
-            int index = lootContext.getRandom().nextInt(pending.size());
-            descriptor = pending.remove(index).apply(lootContext);
+            int index = context.randomSource().nextInt(pending.size());
+            descriptor = pending.remove(index).apply(context);
         }
 
         // we can't found valid skin, abort the loot function.
@@ -95,38 +89,19 @@ public class SkinRandomlyFunction implements ILootFunction {
     }
 
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<? extends IContextKey<?>> getReferencedContextParams() {
         return new HashSet<>(Collections.compactMap(sources, SkinSource::param));
     }
 
     public static class SkinSource implements IResultHandler<SkinDescriptor> {
 
-        public static final Codec<SkinSource> MAP_CODEC = new Codec<SkinSource>() {
-
-            final Codec<SkinSource> simple = Codec.STRING.xmap(SkinSource::new, it -> null);
-            final Codec<SkinSource> complex = RecordCodecBuilder.create(instance -> instance.group(
-                    SkinSlotType.CODEC.fieldOf("type").forGetter(it -> null),
-                    Codec.INT.optionalFieldOf("slot", 0).forGetter(it -> 0)
-            ).apply(instance, SkinSource::new));
-
-            @Override
-            public <T> DataResult<Pair<SkinSource, T>> decode(DynamicOps<T> ops, T input) {
-                DataResult<Pair<SkinSource, T>> result = simple.decode(ops, input);
-                if (result.result().isPresent()) {
-                    return result;
-                }
-                return complex.decode(ops, input);
-            }
-
-            @Override
-            public <T> DataResult<T> encode(SkinSource input, DynamicOps<T> ops, T prefix) {
-                throw new RuntimeException("why you needs serializer?");
-            }
-        };
+        public static final IDataCodec<SkinSource> PARSE_CODEC = IDataCodec.STRING.xmap(SkinSource::new, it -> null);
+        public static final IDataCodec<SkinSource> SIMPLE_CODEC = IDataCodec.create(instance -> instance.group(SkinSlotType.CODEC.fieldOf("type").forGetter(SkinSource::slotType), IDataCodec.INT.optionalFieldOf("slot", 0).forGetter(SkinSource::slot)).apply(instance, SkinSource::new));
+        public static final IDataCodec<SkinSource> COMPLEX_CODEC = IDataCodec.either(PARSE_CODEC, SIMPLE_CODEC).xmap(it -> it.map(it1 -> it1, it1 -> it1), it -> null);
 
         private SkinDescriptor provider;
-        private Function<LootContext, SkinDescriptor> searcher;
-        private LootContextParam<?> param;
+        private Function<ILootContext, SkinDescriptor> searcher;
+        private IContextKey<?> param;
 
         public SkinSource(String identifier) {
             // "ks:10830"
@@ -143,15 +118,15 @@ public class SkinRandomlyFunction implements ILootFunction {
             // {"type": "outfit"}           // in outfit, any slot
             // {"type": "sword", "slot": 1} // in sword, first slot
             searcher = context -> search(context, slotType, slot);
-            param = LootContextParams.THIS_ENTITY;
+            param = AbstractLootContextParams.THIS_ENTITY;
         }
 
-        public SkinDescriptor apply(LootContext lootContext) {
+        public SkinDescriptor apply(ILootContext context) {
             if (provider != null) {
                 return provider;
             }
             if (searcher != null) {
-                return searcher.apply(lootContext);
+                return searcher.apply(context);
             }
             return SkinDescriptor.EMPTY;
         }
@@ -161,17 +136,17 @@ public class SkinRandomlyFunction implements ILootFunction {
             provider = value;
         }
 
-        public SkinDescriptor search(LootContext lootContext, @Nullable SkinSlotType slotType, int index) {
-            Object value = lootContext.getParamOrNull(param);
-            SkinWardrobe wardrobe = SkinWardrobe.of(Objects.safeCast(value, Entity.class));
+        public SkinDescriptor search(ILootContext context, @Nullable SkinSlotType slotType, int index) {
+            var value = context.getOptionalParameter(param);
+            var wardrobe = SkinWardrobe.of(Objects.safeCast(value, Entity.class));
             if (wardrobe == null) {
                 return SkinDescriptor.EMPTY;
             }
             // collect all available skin items.
-            SkinDescriptor descriptor = SkinDescriptor.EMPTY;
-            ArrayList<ItemStack> pending = collect(wardrobe, slotType, index);
+            var descriptor = SkinDescriptor.EMPTY;
+            var pending = collect(wardrobe, slotType, index);
             while (descriptor.isEmpty() && !pending.isEmpty()) {
-                index = lootContext.getRandom().nextInt(pending.size());
+                index = context.randomSource().nextInt(pending.size());
                 descriptor = SkinDescriptor.of(pending.remove(index));
             }
             return descriptor;
@@ -179,9 +154,9 @@ public class SkinRandomlyFunction implements ILootFunction {
 
         public ArrayList<ItemStack> collect(SkinWardrobe wardrobe, @Nullable SkinSlotType slotType, int index) {
             // when slot type not specified by user, we will search all slot.
-            ArrayList<ItemStack> results = new ArrayList<>();
+            var results = new ArrayList<ItemStack>();
             if (slotType == null) {
-                for (SkinSlotType slotType1 : SkinSlotType.values()) {
+                for (var slotType1 : SkinSlotType.values()) {
                     if (slotType1.skinType() != null) {
                         results.addAll(collect(wardrobe, slotType1, index));
                     }
@@ -194,15 +169,23 @@ public class SkinRandomlyFunction implements ILootFunction {
                 return results;
             }
             // add all skins to the pending list.
-            int count = wardrobe.getUnlockedSize(slotType);
+            var count = wardrobe.getUnlockedSize(slotType);
             for (int i = 0; i < count; ++i) {
                 results.add(wardrobe.getItem(slotType, i));
             }
             return results;
         }
 
-        public LootContextParam<?> param() {
+        public IContextKey<?> param() {
             return param;
+        }
+
+        public int slot() {
+            return 0;
+        }
+
+        public SkinSlotType slotType() {
+            return null;
         }
     }
 }

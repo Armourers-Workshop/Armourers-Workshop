@@ -11,12 +11,9 @@ import moe.plushie.armourers_workshop.core.skin.molang.runtime.function.Function
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 
-@Environment(EnvType.CLIENT)
 public class CompilerTest {
 
     private ClientExecutionContextImpl context;

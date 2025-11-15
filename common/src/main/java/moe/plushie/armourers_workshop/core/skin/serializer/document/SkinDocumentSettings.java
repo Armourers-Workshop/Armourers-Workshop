@@ -4,13 +4,14 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.nbt.CompoundTag;
 
 public class SkinDocumentSettings implements IDataSerializable.Immutable {
 
-    public static IDataCodec<SkinDocumentSettings> CODEC = IDataCodec.COMPOUND_TAG.serializer(SkinDocumentSettings::new);
+    public static IDataCodec<SkinDocumentSettings> CODEC = ExtraCodecs.serializable(SkinDocumentSettings::new);
 
     private float scale = 1;
     private boolean showsOrigin = true;

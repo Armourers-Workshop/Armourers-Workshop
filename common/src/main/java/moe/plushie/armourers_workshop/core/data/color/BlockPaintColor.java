@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 
@@ -17,10 +18,12 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
 
     public static final BlockPaintColor WHITE = new BlockPaintColor();
 
-    public static final IDataCodec<BlockPaintColor> CODEC = IDataCodec.COMPOUND_TAG.serializer(BlockPaintColor::new);
+    public static final IDataCodec<BlockPaintColor> CODEC = ExtraCodecs.serializable(BlockPaintColor::new);
 
     protected SkinPaintColor paintColor;
-    protected EnumMap<Side, SkinPaintColor> paintColors;
+    protected EnumMap<OpenDirection, SkinPaintColor> paintColors;
+
+    protected boolean isDirty = true;
 
     public BlockPaintColor() {
         this(SkinPaintColor.WHITE);
@@ -37,9 +40,9 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
             var paintColor = serializer.read(entry.getValue());
             if (paintColor != null) {
                 if (paintColors == null) {
-                    paintColors = new EnumMap<>(Side.class);
+                    paintColors = new EnumMap<>(OpenDirection.class);
                 }
-                paintColors.put(entry.getKey(), paintColor);
+                paintColors.put(entry.getKey().direction(), paintColor);
             }
         }
         this.mergePaintColorIfNeeded();
@@ -48,12 +51,13 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
 
     @Override
     public void serialize(IDataSerializer serializer) {
+        this.mergePaintColorIfNeeded();
         serializer.write(CodingKeys.ALL, paintColor);
         if (paintColors == null) {
             return;
         }
         for (var entry : CodingKeys.SIDES.entrySet()) {
-            var paintColor = paintColors.get(entry.getKey());
+            var paintColor = paintColors.get(entry.getKey().direction());
             if (paintColor != null) {
                 serializer.write(entry.getValue(), paintColor);
             }
@@ -63,9 +67,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
     public void putAll(SkinPaintColor paintColor) {
         this.paintColor = paintColor;
         this.paintColors = null;
+        this.isDirty = true;
     }
 
     public void put(OpenDirection dir, SkinPaintColor paintColor) {
+        // split the color when have a diff color.
         if (this.paintColors == null) {
             if (Objects.equals(this.paintColor, paintColor)) {
                 return; // not any changes.
@@ -73,15 +79,13 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
             this.paintColors = getPaintColors(this.paintColor);
             this.paintColor = null;
         }
-        var side = Side.of(dir);
         if (paintColor != null) {
-            this.paintColors.put(side, paintColor);
+            this.paintColors.put(dir, paintColor);
         } else {
-            this.paintColors.remove(side);
+            this.paintColors.remove(dir);
         }
-        this.mergePaintColorIfNeeded();
+        this.isDirty = true;
     }
-
 
     public SkinPaintColor get(OpenDirection dir) {
         return getOrDefault(dir, null);
@@ -92,7 +96,7 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
             return paintColor;
         }
         if (paintColors != null) {
-            return paintColors.getOrDefault(Side.of(dir), defaultValue);
+            return paintColors.getOrDefault(dir, defaultValue);
         }
         return defaultValue;
     }
@@ -139,6 +143,10 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
     }
 
     private void mergePaintColorIfNeeded() {
+        if (!this.isDirty) {
+            return;
+        }
+        this.isDirty = false;
         if (this.paintColors == null) {
             return;
         }
@@ -157,11 +165,11 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
         }
     }
 
-    private EnumMap<Side, SkinPaintColor> getPaintColors(SkinPaintColor paintColor) {
-        var paintColors = new EnumMap<Side, SkinPaintColor>(Side.class);
+    private EnumMap<OpenDirection, SkinPaintColor> getPaintColors(SkinPaintColor paintColor) {
+        var paintColors = new EnumMap<OpenDirection, SkinPaintColor>(OpenDirection.class);
         if (paintColor != null) {
-            for (var side : Side.values()) {
-                paintColors.put(side, paintColor);
+            for (var dir : OpenDirection.values()) {
+                paintColors.put(dir, paintColor);
             }
         }
         return paintColors;
@@ -181,7 +189,7 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
     }
 
     // Assume the mapping for facing to the north.
-    public enum Side {
+    private enum Side {
         DOWN("Down", OpenDirection.DOWN),
         UP("Up", OpenDirection.UP),
         FRONT("Front", OpenDirection.NORTH),
@@ -195,19 +203,6 @@ public class BlockPaintColor implements IDataSerializable.Immutable {
         Side(String serializedName, OpenDirection direction) {
             this.serializedName = serializedName;
             this.direction = direction;
-        }
-
-        public static Side of(OpenDirection direction) {
-            for (var value : values()) {
-                if (value.direction == direction) {
-                    return value;
-                }
-            }
-            return Side.DOWN;
-        }
-
-        public String serializedName() {
-            return serializedName;
         }
 
         public OpenDirection direction() {

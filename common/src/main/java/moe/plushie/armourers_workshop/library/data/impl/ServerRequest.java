@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.library.data.impl;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
-import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ServerRequest {
         var builder = new StringBuilder();
         builder.append(baseURL);
         builder.append(path);
-        // concat all query parameters.
+        // concat all query param.
         var delimiter = "?";
         for (var it : query) {
             builder.append(delimiter);
@@ -126,7 +126,7 @@ public class ServerRequest {
 
     }
 
-    public static class SinglePart {
+    private static class SinglePart {
 
         private final URL url;
 
@@ -135,7 +135,7 @@ public class ServerRequest {
         }
 
         public InputStream upload() throws IOException {
-            var connection = url.openConnection();
+            var connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
             return connection.getInputStream();
@@ -159,23 +159,18 @@ public class ServerRequest {
         }
 
         public InputStream upload() throws IOException {
-            //ModLogger.log("Accessing: " + uploadUrl);
-
             var boundary = Long.toHexString(System.currentTimeMillis());
 
             var uploadUrl = new URL(this.uploadUrl);
-            var connection = uploadUrl.openConnection();
+            var connection = (HttpURLConnection) uploadUrl.openConnection();
 
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            OutputStream output = null;
-            PrintWriter writer = null;
 
-            try {
-                output = connection.getOutputStream();
-                writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
+            try (var output = connection.getOutputStream();
+                 var writer = new PrintWriter(new OutputStreamWriter(output, charset), true)) {
 
                 for (var value : values) {
                     value.write(output, writer, boundary);
@@ -185,22 +180,14 @@ public class ServerRequest {
                 writer.append("--" + boundary + "--").append(CRLF).flush();
 
                 return connection.getInputStream();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                StreamUtils.closeQuietly(writer);
-                StreamUtils.closeQuietly(output);
             }
-
-            return null;
         }
 
-        private interface Value {
+        public interface Value {
             void write(OutputStream output, PrintWriter writer, String boundary) throws IOException;
         }
 
-        private static class Text implements Value {
+        public static class Text implements Value {
 
             private final String name;
             private final String value;
@@ -220,7 +207,7 @@ public class ServerRequest {
             }
         }
 
-        private static class File implements Value {
+        public static class File implements Value {
 
             private final String name;
             private final String filename;

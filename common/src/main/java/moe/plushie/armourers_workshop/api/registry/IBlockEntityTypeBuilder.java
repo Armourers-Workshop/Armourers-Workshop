@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.api.registry;
 
+import moe.plushie.armourers_workshop.api.client.IBlockEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
-import moe.plushie.armourers_workshop.compatibility.client.AbstractBlockEntityRendererProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -12,7 +12,7 @@ public interface IBlockEntityTypeBuilder<T extends BlockEntity> extends IRegistr
 
     IBlockEntityTypeBuilder<T> of(Supplier<Block> block);
 
-    IBlockEntityTypeBuilder<T> bind(Supplier<AbstractBlockEntityRendererProvider<T>> provider);
+    IBlockEntityTypeBuilder<T> bind(Supplier<IBlockEntityRenderer.Provider<T>> provider);
 }
 
 

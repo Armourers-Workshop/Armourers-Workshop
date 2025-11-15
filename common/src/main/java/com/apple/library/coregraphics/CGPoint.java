@@ -35,6 +35,10 @@ public class CGPoint implements InterpolableImpl<CGPoint> {
         return pos;
     }
 
+    public CGPoint offset(float tx, float ty) {
+        return new CGPoint(x + tx, y + ty);
+    }
+
     public CGPoint copy() {
         return new CGPoint(x, y);
     }

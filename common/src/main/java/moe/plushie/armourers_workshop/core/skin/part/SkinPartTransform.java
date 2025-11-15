@@ -25,7 +25,7 @@ public class SkinPartTransform implements ITransform {
         if (quadsTransform != null) {
             this.children.add(quadsTransform);
         }
-        var wingsTransform = wingsTransform(part);
+        var wingsTransform = createWingsTransform(part);
         if (wingsTransform != null) {
             this.children.add(wingsTransform);
         }
@@ -35,7 +35,7 @@ public class SkinPartTransform implements ITransform {
         }
     }
 
-    private ITransform wingsTransform(SkinPart part) {
+    private ITransform createWingsTransform(SkinPart part) {
         var partType = part.type();
         if (!(partType instanceof ICanRotation)) {
             return null;

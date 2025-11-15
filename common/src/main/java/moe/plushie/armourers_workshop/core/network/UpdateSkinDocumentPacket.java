@@ -53,7 +53,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
     @Override
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
-        var blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.level().getBlockEntity(pos);
         if (blockEntity instanceof SkinDocumentProvider provider) {
             ModLog.debug("the document {} accepted for '{}'", action, player.getScoreboardName());
             var document = provider.document();
@@ -73,7 +73,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
         if (operator.equals(player.getStringUUID())) {
             return;
         }
-        var blockEntity = player.getLevel().getBlockEntity(pos);
+        var blockEntity = player.level().getBlockEntity(pos);
         if (blockEntity instanceof SkinDocumentProvider provider) {
             ModLog.debug("the document {} accepted for server", action);
             var document = provider.document();
@@ -181,7 +181,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public String toString() {
-            return makeDescription("updateSettings", "tag", tag);
+            return makeDescription("updateSettings", "object", tag);
         }
     }
 
@@ -209,7 +209,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public String toString() {
-            return makeDescription("updateProperties", "tag", tag);
+            return makeDescription("updateProperties", "object", tag);
         }
     }
 
@@ -249,7 +249,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public String toString() {
-            return makeDescription("insertNode", "id", id, "ti", targetIndex, "tag", tag);
+            return makeDescription("insertNode", "id", id, "ti", targetIndex, "object", tag);
         }
     }
 
@@ -284,7 +284,7 @@ public class UpdateSkinDocumentPacket extends CustomPacket {
 
         @Override
         public String toString() {
-            return makeDescription("updateNode", "id", id, "tag", tag);
+            return makeDescription("updateNode", "id", id, "object", tag);
         }
     }
 

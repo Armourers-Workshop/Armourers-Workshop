@@ -2,6 +2,7 @@ package com.apple.library.impl;
 
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.event.InputKeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Predicate;
@@ -29,7 +30,7 @@ public class TextInputImpl {
         return false;
     }
 
-    public boolean keyDown(int key) {
+    public boolean keyDown(InputKeyEvent key) {
         // some methods may rely on this info.
         var hasShiftDown = InputManagerImpl.hasShiftDown();
         var hasControlDown = InputManagerImpl.hasControlDown();
@@ -61,10 +62,11 @@ public class TextInputImpl {
             }
             return true;
         }
-        if (InputManagerImpl.hasShortcutDown()) {
-            key = InputManagerImpl.getShortcutKey(key);
+        var keyCode = key.code();
+        if (InputManagerImpl.hasShortcutDown(key)) {
+            keyCode = InputManagerImpl.getShortcutKey(key);
         }
-        switch (key) {
+        switch (keyCode) {
             case GLFW.GLFW_KEY_BACKSPACE: {
                 if (isEditable) {
                     if (hasControlDown) {
@@ -140,7 +142,8 @@ public class TextInputImpl {
         return false;
     }
 
-    public boolean charTyped(char ch) {
+    public boolean charTyped(InputKeyEvent key) {
+        var ch = (char) key.code();
         if (storage.isAllowedChatCharacter(ch)) {
             storage.insertText(Character.toString(ch));
             return true;

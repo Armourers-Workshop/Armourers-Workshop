@@ -19,19 +19,18 @@ import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.List;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFieldDelegate {
 
     private static final List<SkinType> SUPPORTED_SKIN_TYPES = Collections.immutableList(builder -> {
@@ -190,7 +189,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void loadSkin(UIControl sender) {
-        var player = EnvironmentManager.getPlayer();
+        var player = Minecraft.getInstance().player;
         if (player == null || !container.shouldLoadArmourItem(player)) {
             return;
         }
@@ -198,13 +197,14 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
     }
 
     private void saveSkin(UIControl sender) {
-        var player = EnvironmentManager.getPlayer();
+        var player = Minecraft.getInstance().player;
         if (player == null || !container.shouldSaveArmourItem(player)) {
             return;
         }
-        var origin = EnvironmentManager.getClient().getUser().getGameProfile();
-        var nbt = DataSerializers.writeGameProfile(new CompoundTag(), origin);
-        NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_SAVE.buildPacket(blockEntity, nbt));
+        var origin = Minecraft.getInstance().getUser().getGameProfile();
+        var serializer = new TagSerializer();
+        serializer.encode(ExtraCodecs.GAME_PROFILE, origin);
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_SAVE.buildPacket(blockEntity, serializer.tag()));
     }
 
     private void updateSkinPropertiesReturn() {
