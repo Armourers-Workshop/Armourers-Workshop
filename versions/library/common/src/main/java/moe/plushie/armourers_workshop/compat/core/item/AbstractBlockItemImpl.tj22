@@ -31,6 +31,10 @@ public class AbstractBlockItemImpl extends BlockItem {
         super(block, properties);
     }
 
+    public final String getDescriptionId(ItemStack itemStack) {
+        return getDescriptionId();
+    }
+
     public OpenInteractionResult place(BlockPlaceContext context, Object service) {
         return AbstractInteractionResult.wrap(super.place(context));
     }

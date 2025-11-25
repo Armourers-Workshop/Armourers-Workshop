@@ -165,7 +165,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
         }
 
         var armature = BakedArmature.defaultBy(document.type().skinType());
-        renderNode(document.root(), armature, lightmap, overlay, document, context);
+        renderNode(document.root(), armature, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, document, context);
 
         context.restoreGraphicsState();
 
@@ -183,7 +183,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
             context.restoreGraphicsState();
         }
 
-        renderOutput(renderState, lightmap, overlay, context);
+        renderOutput(renderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, context);
     }
 
 

@@ -43,18 +43,13 @@ public class ModelMixin {
 
     @Inject(method = "renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V", at = @At("HEAD"))
     private void aw2$renderToBufferPre(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k, CallbackInfo ci) {
-        // apply the extra translate and rotate.
-        var humanoidModel = Objects.safeCast(this, AbstractHumanoidModelImpl.class);
-        if (humanoidModel != null) {
-            humanoidModel.translateAndRotate(poseStack);
-        }
         // apply the model visibility state.
         if (aw2$visibilityState != null) {
             aw2$visibilityState.setVisible(false);
         }
     }
 
-    @Inject(method = "renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V", at = @At("RETURN"))
+    @Inject(method = "renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V", at = @At("TAIL"))
     private void aw2$renderToBufferPost(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k, CallbackInfo ci) {
         // restore the model visibility state.
         if (aw2$visibilityState != null) {

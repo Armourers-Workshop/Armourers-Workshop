@@ -13,27 +13,4 @@ public class Constructor {
     public static ResourceLocation create(@ThisClass Class<?> clazz, String namespace, String path) {
         return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
-
-    // TODO: NO IMPL - 1.22
-//    public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceLocation location, String variant) {
-//        var namespace = location.namespace();
-//        var path = location.path();
-//        switch (EnvironmentManager.getPlatformType()) {
-//            case FABRIC -> {
-//                // in 1.21 fabric only allows adding fabric_resources models.
-//                if (variant.equals("inventory")) {
-//                    path = "item/" + path;
-//                    variant = "fabric_resource";
-//                }
-//            }
-//            case FORGE -> {
-//                // in 1.21 neoforge only allows adding standalone models.
-//                if (variant.equals("inventory")) {
-//                    path = "item/" + path;
-//                    variant = "standalone";
-//                }
-//            }
-//        }
-//        return new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(namespace, path), variant);
-//    }
 }

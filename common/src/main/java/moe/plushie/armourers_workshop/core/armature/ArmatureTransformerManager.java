@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.armature;
 
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
+import moe.plushie.armourers_workshop.core.client.render.model.LinkedModel;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -82,8 +83,9 @@ public abstract class ArmatureTransformerManager {
         var classes = new ArrayList<Class<?>>();
         var finalBuilders = new ArrayList<ArmatureTransformerBuilder>();
         if (entityModel != null) {
+            var type = getType(entityModel);
             modelBuilders.forEach((clazz, builders) -> {
-                if (clazz.isAssignableFrom(entityModel.getClass())) {
+                if (clazz.isAssignableFrom(type)) {
                     for (var parent : classes) {
                         if (clazz.isAssignableFrom(parent)) {
                             return;
@@ -126,5 +128,12 @@ public abstract class ArmatureTransformerManager {
             }
         }
         return null;
+    }
+
+    private static Class<?> getType(IEntityModel<?> entityModel) {
+        if (entityModel instanceof LinkedModel<?> linkedModel) {
+            return getType(linkedModel.parent());
+        }
+        return entityModel.getClass();
     }
 }

@@ -8,11 +8,11 @@ import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpe
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -33,7 +33,7 @@ public class MannequinItemRenderer extends AbstractSpecialModelRenderer<ItemStac
         }
         var itemModel = Minecraft.getInstance().getItemModel(itemStack, null, null, 0);
         var itemTransform = itemModel.getTransform(displayContext);
-        var descriptor = EntityTextureDescriptor.of(itemStack);
+        var descriptor = PlayerSkinDescriptor.of(itemStack);
 
         var entity = MannequinRenderState.Placeholder.getEntity();
         var boundingBox = entity.getBoundingBox();
@@ -59,7 +59,7 @@ public class MannequinItemRenderer extends AbstractSpecialModelRenderer<ItemStac
 
         entity.setTextureDescriptor(descriptor);
         context.draw(SpecialRenderElement.entity(entity, 0.0f, 1.0f, lightmap, overlay));
-        entity.setTextureDescriptor(EntityTextureDescriptor.EMPTY);
+        entity.setTextureDescriptor(PlayerSkinDescriptor.DEFAULT);
 
         context.restoreGraphicsState();
     }

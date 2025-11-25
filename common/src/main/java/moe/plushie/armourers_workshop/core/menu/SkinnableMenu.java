@@ -4,13 +4,13 @@ import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
-import org.apache.logging.log4j.util.Strings;
 
 public class SkinnableMenu extends BlockEntityContainerMenu<SkinnableBlockEntity> {
 

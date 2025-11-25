@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.item.ConfigurableToolItem;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.context.UseOnContext;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractPaintToolItem extends ConfigurableToolItem implements IItemSoundProvider, IItemParticleProvider {
@@ -18,7 +18,7 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
     }
 
     @Override
-    public void playSound(UseOnContext context) {
+    public void playSound(IUseOnContext context) {
         var soundEvent = getItemSoundEvent(context);
         if (soundEvent == null) {
             return;
@@ -27,25 +27,25 @@ public abstract class AbstractPaintToolItem extends ConfigurableToolItem impleme
             soundEvent = ModSoundEvents.BOI;
         }
         var pitch = getItemSoundPitch(context);
-        var level = context.getLevel();
-        var clickedPos = context.getClickedPos();
+        var level = context.level();
+        var clickedPos = context.clickedPos();
         if (level.isClientSide()) {
-            level.playSound(context.getPlayer(), clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
+            level.playSound(context.player(), clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
         } else {
             level.playSound(null, clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
         }
     }
 
     @Override
-    public void playParticle(UseOnContext context) {
+    public void playParticle(IUseOnContext context) {
     }
 
-    public float getItemSoundPitch(UseOnContext context) {
-        return context.getLevel().getRandom().nextFloat() * 0.1F + 0.9F;
+    public float getItemSoundPitch(IUseOnContext context) {
+        return context.level().getRandom().nextFloat() * 0.1F + 0.9F;
     }
 
     @Nullable
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(IUseOnContext context) {
         return null;
     }
 }

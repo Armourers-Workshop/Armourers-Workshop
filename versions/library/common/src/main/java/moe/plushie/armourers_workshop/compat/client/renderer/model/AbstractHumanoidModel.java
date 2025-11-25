@@ -39,19 +39,18 @@ public class AbstractHumanoidModel<T extends LivingEntity, S extends LivingEntit
         });
     }
 
-    protected void abi$translateAndRotate(IPoseStack poseStack) {
-    }
-
     @Override
     public final void setupAnim(T entity, float f, float g, float h, float i, float j) {
         S renderState = AbstractRenderState.wrap(entity);
         DataContainer.of(renderState, KEY).set(f, g, h, i, j);
         abi$setupAnim(renderState);
-    }
-
-    @Override
-    public final void translateAndRotate(PoseStack poseStack) {
-        abi$translateAndRotate(AbstractPoseStack.wrap(poseStack));
+        // copy the parent part pose, because the 1.16.5-1.21.1 no child/parent dependency.
+        this.hat.copyFrom(this.head);
+        this.leftPants.copyFrom(this.leftLeg);
+        this.rightPants.copyFrom(this.rightLeg);
+        this.leftSleeve.copyFrom(this.leftArm);
+        this.rightSleeve.copyFrom(this.rightArm);
+        this.jacket.copyFrom(this.body);
     }
 
     protected static class ColorHolder {

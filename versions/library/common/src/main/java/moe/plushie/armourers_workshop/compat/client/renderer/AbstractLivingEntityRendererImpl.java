@@ -5,7 +5,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,9 +20,24 @@ public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, S
         super(AbstractEntityRenderer.unwrap(context), entityModel, f);
     }
 
+    protected abstract float getEntityScale(T entity);
+
+    protected abstract OpenQuaternionf getEntityRotations(T entity);
+
     @Override
-    protected void setupRotations(T livingEntity, PoseStack poseStack, float f, float g, float h, float i) {
+    protected final void scale(T entity, PoseStack poseStack, float f) {
+        var newScale = getEntityScale(entity);
+        poseStack.scale(newScale, newScale, newScale);
+        super.scale(entity, poseStack, f);
+    }
+
+    @Override
+    protected void setupRotations(T entity, PoseStack poseStack, float f, float g, float h, float i) {
         poseStack.scale(1 / i, 1 / i, 1 / i);
-        super.setupRotations(livingEntity, poseStack, f, g, h, 1);
+        super.setupRotations(entity, poseStack, f, g, h, 1);
+        var rotation = getEntityRotations(entity);
+        if (rotation != null) {
+            poseStack.mulPose(AbstractPoseStack.convertQuaternion(rotation));
+        }
     }
 }

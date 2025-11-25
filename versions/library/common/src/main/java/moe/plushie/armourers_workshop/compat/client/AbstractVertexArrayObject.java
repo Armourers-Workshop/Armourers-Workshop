@@ -2,18 +2,18 @@ package moe.plushie.armourers_workshop.compat.client;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.compat.client.shader.state.AbstractShaderObjectState;
 import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
 import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderRenderState;
 
 @Available("[1.18, )")
 public class AbstractVertexArrayObject extends VertexArrayObject {
 
     public static VertexArrayObject create(IVertexFormat format, long offset, VertexBufferObject bufferObject, VertexIndexObject indexObject) {
         var arrayObject = new VertexArrayObject();
-        var state = new ShaderRenderState();
-        state.save();
+        var state = new AbstractShaderObjectState();
+        state.push();
 
         // in the newer version rendering system, we will use a shader.
         // and shader requires we to split the quad into two triangles,
@@ -36,7 +36,7 @@ public class AbstractVertexArrayObject extends VertexArrayObject {
         // so we need to clear state first.
         format.clearBufferState();
 
-        state.load();
+        state.pop();
         return arrayObject;
     }
 

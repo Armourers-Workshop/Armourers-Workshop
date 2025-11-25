@@ -9,6 +9,7 @@ public interface AbstractForgeItemStackRenderer extends IClientItemExtensions {
 
     BlockEntityWithoutLevelRenderer getItemStackRenderer();
 
+    @Override
     default BlockEntityWithoutLevelRenderer getCustomRenderer() {
         return getItemStackRenderer();
     }

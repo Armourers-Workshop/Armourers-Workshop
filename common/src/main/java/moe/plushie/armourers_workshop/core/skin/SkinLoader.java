@@ -172,13 +172,13 @@ public class SkinLoader {
 //            try {
 //                ModLog.debug("'{}' => preload into database", identifier);
 //                handler.accept(loadSkinFromDB(identifier, scheme, needCopy));
-////                caches.add(handler);
+
+    /// /                caches.add(handler);
 //            } catch (Exception exception) {
 //                handler.reject(exception);
 //            }
 //        });
 //    }
-
     public InputStream loadSkinData(String identifier) throws Exception {
         var session = taskManager.get(DataDomain.byName(identifier));
         if (session instanceof LoadingSession loadingSession) {
@@ -213,7 +213,7 @@ public class SkinLoader {
         entry.accept(skin);
     }
 
-    public void addSkin(String identifier, Skin skin, Exception exception) {
+    public void addSkin(String identifier, Skin skin, Throwable exception) {
         ModLog.debug("'{}' => receive server skin, exception: {}", identifier, exception);
         var resultHandler = waiting.remove(identifier);
         if (resultHandler != null) {
@@ -302,7 +302,7 @@ public class SkinLoader {
         public final String identifier;
 
         public SoftReference<Skin> skin;
-        public Exception exception;
+        public Throwable exception;
         public Status status = Status.PENDING;
 
         public ArrayList<IResultHandler<Skin>> handlers = new ArrayList<>();
@@ -319,7 +319,7 @@ public class SkinLoader {
             this.invoke();
         }
 
-        public void abort(Exception exception) {
+        public void abort(Throwable exception) {
             ModLog.error("'{}' => abort skin loading", identifier, exception);
             this.skin = null;
             this.exception = exception;
@@ -377,7 +377,7 @@ public class SkinLoader {
         private boolean isRequested = false;
 
         private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
-        private Exception exception;
+        private Throwable exception;
 
         private final String identifier;
         private final ArrayList<IResultHandler<SkinDescriptor>> pending = new ArrayList<>();
@@ -387,7 +387,7 @@ public class SkinLoader {
         }
 
         @Override
-        public void apply(Skin skin, Exception exception) {
+        public void apply(Skin skin, Throwable exception) {
             this.isFinished = true;
             this.exception = exception;
             if (skin == null) {
@@ -443,7 +443,7 @@ public class SkinLoader {
             }
         }
 
-        public void abort(Exception exception) {
+        public void abort(Throwable exception) {
             if (this.delegate != null) {
                 this.delegate.abort(exception);
                 this.delegate = null;
@@ -470,7 +470,7 @@ public class SkinLoader {
             this.executor = buildThreadPool(name, 1);
         }
 
-        public abstract Skin load(Request request) throws Exception;
+        public abstract Skin load(Request request) throws Throwable;
 
         public Request request(Method method, String identifier) {
             var task = getRequest(identifier);
@@ -519,7 +519,7 @@ public class SkinLoader {
             try {
                 var skin = load(request);
                 request.accept(skin);
-            } catch (Exception exception) {
+            } catch (Throwable exception) {
                 request.abort(exception);
             }
             request.isRunning = false;
@@ -673,7 +673,7 @@ public class SkinLoader {
         }
 
         @Override
-        public Skin load(Request request) throws Exception {
+        public Skin load(Request request) throws Throwable {
             try {
                 return caching.load(request);
             } catch (Exception ignored) {
@@ -684,7 +684,7 @@ public class SkinLoader {
             return await(request);
         }
 
-        public Skin await(Request request) throws Exception {
+        public Skin await(Request request) throws Throwable {
             var state = new LockState(available);
             LOADER.waiting.put(request.identifier, (skin, exception) -> receive(request, state, skin, exception));
             ModLog.debug("'{}' => await server response", request.identifier);
@@ -700,7 +700,7 @@ public class SkinLoader {
             throw state.exception;
         }
 
-        public void receive(Request request, LockState state, Skin skin, Exception exception) {
+        public void receive(Request request, LockState state, Skin skin, Throwable exception) {
             state.skin = skin;
             state.exception = exception;
             // still waiting to response
@@ -717,7 +717,7 @@ public class SkinLoader {
         static class LockState {
             Semaphore available;
             Skin skin;
-            Exception exception;
+            Throwable exception;
 
             LockState(Semaphore semaphore) {
                 this.available = semaphore;
@@ -728,7 +728,7 @@ public class SkinLoader {
             }
 
             synchronized void release() {
-                Semaphore available = this.available;
+                var available = this.available;
                 this.available = null;
                 if (available != null) {
                     available.release();

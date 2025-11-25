@@ -10,7 +10,7 @@ public class AbstractFabricRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
         return EventManagerImpl.factory(() -> ((registryName, item, property) -> {
-            // TODO: TODO: NO IMPL - 1.22
+            // TODO: NO IMPL - 1.22
             //FabricModelPredicateProviderRegistry.register(item, registryName.toLocation(), property::getValue))
         }));
     }

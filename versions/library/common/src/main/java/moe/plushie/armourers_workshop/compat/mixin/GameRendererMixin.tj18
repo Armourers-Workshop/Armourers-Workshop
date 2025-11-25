@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.client.other.SkinGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderUniforms;
+import moe.plushie.armourers_workshop.core.client.render.element.SkinPartElement;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.GameRenderer;
@@ -20,8 +19,8 @@ public class GameRendererMixin {
     public void aw2$reloadShaders(ResourceManager resourceManager, CallbackInfo ci) {
         // all cached vertices buffer must reset.
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> () -> {
-            ShaderUniforms.clear();
-            SkinGraphicsContext.getInstance().clear();
+            //ShaderUniforms.clear();
+            SkinPartElement.clearCache();
         });
     }
 }

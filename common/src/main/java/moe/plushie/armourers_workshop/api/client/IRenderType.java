@@ -18,6 +18,10 @@ public interface IRenderType extends Supplier<RenderType> {
 
     int ordinal();
 
+    String name();
+
+    Group group();
+
     IVertexFormat.Mode mode();
 
     IVertexFormat format();
@@ -28,16 +32,30 @@ public interface IRenderType extends Supplier<RenderType> {
         MAIN, OUTLINE, TRANSLUCENT, CLOUDS, WEATHER, PARTICLES, ITEM_ENTITY
     }
 
+    enum Group {
+        MAIN,
+
+        SOLID_BLOCKS,
+        CUTOUT_BLOCKS,
+        TRANSLUCENT_BLOCKS,
+        OUTLINE_BLOCKS,
+
+        SOLID_ENTITIES,
+        CUTOUT_ENTITIES,
+        TRANSLUCENT_ENTITIES,
+        OUTLINE_ENTITIES,
+
+        CLOUDS,
+        WEATHER,
+        PARTICLES,
+    }
+
     enum DepthTestMode {
         NO_DEPTH_TEST,
         EQUAL_DEPTH_TEST,
         LEQUAL_DEPTH_TEST,
         LESS_DEPTH_TEST,
         GREATER_DEPTH_TEST;
-    }
-
-    enum LogicOp {
-        NONE, OR_REVERSE
     }
 
     enum BlendMode {
@@ -49,7 +67,7 @@ public interface IRenderType extends Supplier<RenderType> {
         TRANSLUCENT,
         TRANSLUCENT_PREMULTIPLIED_ALPHA,
         ADDITIVE,
-        ENTITY_OUTLINE_BLIT
+        INVERT,
     }
 
     enum PolygonMode {
@@ -65,6 +83,8 @@ public interface IRenderType extends Supplier<RenderType> {
 
         Builder texture(IResourceLocation texture, boolean blur, boolean mipmap);
 
+
+        Builder group(Group group);
 
         Builder target(Target target);
 
@@ -82,9 +102,6 @@ public interface IRenderType extends Supplier<RenderType> {
         Builder cull();
 
         Builder blend(BlendMode blendFunction);
-
-
-        Builder colorLogic(LogicOp op);
 
 
         default Builder colorWrite(boolean bl) {

@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
     private HashMap<SkinPaintType, SkinPaintColor> resolvedColors;
 
     private SkinPaintScheme reference;
-    private OpenResourceLocation entityTexture;
+    private PlayerSkin entityTexture = PlayerSkin.DEFAULT;
 
     private int hashCode;
 
@@ -69,7 +68,7 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         if (reference != null && !reference.isEmpty()) {
             return false;
         }
-        if (entityTexture != null) {
+        if (entityTexture != PlayerSkin.DEFAULT) {
             return false;
         }
         return colors.isEmpty();
@@ -100,11 +99,11 @@ public class SkinPaintScheme implements IDataSerializable.Immutable {
         return resolvedColors.get(paintType);
     }
 
-    public void setEntityTexture(OpenResourceLocation entityTexture) {
+    public void setEntityTexture(PlayerSkin entityTexture) {
         this.entityTexture = entityTexture;
     }
 
-    public OpenResourceLocation entityTexture() {
+    public PlayerSkin entityTexture() {
         return entityTexture;
     }
 

@@ -12,28 +12,29 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.component.TypedEntityData;
 
 @Available("[1.22, )")
-public class AbstractTypedEntityData<T> {
+public class AbstractTypedEntityData<T> extends moe.plushie.armourers_workshop.core.data.TypedEntityData<T> {
 
-    protected final TypedEntityData<T> impl;
+    protected final TypedEntityData<?> impl;
 
-    protected AbstractTypedEntityData(TypedEntityData<T> impl) {
+    public AbstractTypedEntityData(Object type, CompoundTag tag) {
+        this.impl = TypedEntityData.of(type, tag);
+    }
+
+    public AbstractTypedEntityData(TypedEntityData<?> impl) {
         this.impl = impl;
     }
 
-    public static <T> IDataCodec<AbstractTypedEntityData<?>> codec(TypedRegistry<T> registry) {
+    public static <T> IDataCodec<AbstractTypedEntityData<?>> createRegistryCodec(TypedRegistry<T> registry) {
         IDataCodec<TypedEntityData<?>> codec = Objects.unsafeCast(findRegistryCodec(registry));
-        return codec.xmap(AbstractTypedEntityData::new, AbstractTypedEntityData::impl);
+        return codec.xmap(AbstractTypedEntityData::new, AbstractTypedEntityData::get);
     }
 
-    public static <T> AbstractTypedEntityData<T> of(T type, CompoundTag tag) {
-        return new AbstractTypedEntityData<>(TypedEntityData.of(type, tag));
-    }
-
-    public CompoundTag getUnsafe() {
+    @Override
+    public CompoundTag tag() {
         return impl.getUnsafe();
     }
 
-    protected TypedEntityData<T> impl() {
+    public TypedEntityData<?> get() {
         return impl;
     }
 
@@ -47,79 +48,22 @@ public class AbstractTypedEntityData<T> {
         throw new RuntimeException("not supported registry!!!");
     }
 
-    public interface Serializer<S, D> {
+    public interface Serializer<S, R> {
 
-        DataComponentType<D> key();
+        DataComponentType<R> key();
 
-        default D encode(S value) {
-
-
-
+        default R encode(S value) {
+            if (value instanceof AbstractTypedEntityData<?> data) {
+                return Objects.unsafeCast(data.get());
+            }
             return null;
         }
 
-        default S decode(D data) {
+        default S decode(R value) {
+            if (value instanceof TypedEntityData<?> impl) {
+                return Objects.unsafeCast(new AbstractTypedEntityData<>(impl));
+            }
             return null;
         }
     }
-
-
-//    private CompoundTag encode(T value) {
-//        return Objects.unsafeCast(value);
-//    }
-//
-//    private T decode(CompoundTag tag) {
-//        return Objects.unsafeCast(tag);
-//    }
-
-
-//    public static class Proxy<T> extends AbstractDataComponentType<T> {
-//
-//
-//        @Override
-//        public boolean has(ItemStack itemStack) {
-//            return itemStack.has(target);
-//        }
-//
-//        @Override
-//        public void set(ItemStack itemStack, @Nullable T value) {
-//            if (value != null) {
-//                itemStack.set(target, CustomData.of(encode(value)));
-//            } else {
-//                itemStack.set(target, null);
-//            }
-//        }
-//
-//        @Nullable
-//        @Override
-//        public T get(ItemStack itemStack) {
-//            var entityData = itemStack.get(target);
-//            if (entityData != null) {
-//                return decode(entityData.getUnsafe());
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public T getOrDefault(ItemStack itemStack, T defaultValue) {
-//            var entityData = itemStack.get(target);
-//            if (entityData != null) {
-//                return decode(entityData.getUnsafe());
-//            }
-//            return defaultValue;
-//        }
-//
-//        @Override
-//        public void remove(ItemStack itemStack) {
-//            itemStack.remove(target);
-//        }
-//
-//        private CompoundTag encode(T value) {
-//            return Objects.unsafeCast(value);
-//        }
-//
-//        private T decode(CompoundTag tag) {
-//            return Objects.unsafeCast(tag);
-//        }
-//    }
 }

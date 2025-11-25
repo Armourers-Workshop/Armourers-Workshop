@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
@@ -22,7 +23,8 @@ import moe.plushie.armourers_workshop.api.registry.IEntityCapabilityBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
-import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.api.registry.IKeyCategoryBuilder;
+import moe.plushie.armourers_workshop.api.registry.IKeyMappingBuilder;
 import moe.plushie.armourers_workshop.api.registry.ILootFunctionTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
@@ -73,7 +75,9 @@ public abstract class BuilderManager {
 
     public abstract <T> IBlockEntityCapabilityBuilder<T> createBlockEntityCapabilityBuilder(Class<T> type, Function<Entity, Optional<T>> factory);
 
-    public abstract <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key);
+    public abstract <T extends IKeyCategory> IKeyCategoryBuilder<T> createKeyCategoryBuilder();
+
+    public abstract <T extends IKeyMapping> IKeyMappingBuilder<T> createKeyMappingBuilder(String key, IKeyCategory category);
 
     public abstract <T extends ILootItemFunction> ILootFunctionTypeBuilder<T> createLootFunctionTypeBuilder(IDataMapCodec<T> codec);
 

@@ -48,7 +48,7 @@ public class AbstractArmorStand extends AbstractArmorStandImpl implements Abstra
         super.readAdditionalSaveData(serializer);
     }
 
-    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalSaveData(IDataSerializer serializer) {
         super.addAdditionalSaveData(serializer);
     }
 
@@ -209,7 +209,7 @@ public class AbstractArmorStand extends AbstractArmorStandImpl implements Abstra
 
     @Override
     public final void addAdditionalSaveData(IDataSerializer serializer) {
-        abi$addAdditionalSaveData(serializer);
+        abi$writeAdditionalSaveData(serializer);
     }
 
     @Override

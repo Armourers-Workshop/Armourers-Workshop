@@ -88,11 +88,11 @@ public class CustomReplyPacket<R> extends CustomPacket {
 
         private final int id;
         private final R result;
-        private final Exception exception;
+        private final Throwable exception;
 
         private final Request<R> request;
 
-        public Receiver(int id, R result, Exception exception, CustomReplyPacket<R> packet) {
+        public Receiver(int id, R result, Throwable exception, CustomReplyPacket<R> packet) {
             this.id = id;
             this.result = result;
             this.exception = exception;

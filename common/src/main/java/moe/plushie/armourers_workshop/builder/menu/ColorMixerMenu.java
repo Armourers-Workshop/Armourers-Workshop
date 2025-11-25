@@ -2,24 +2,22 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractUseOnContext;
 import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.menu.BlockEntityContainerMenu;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 
 public class ColorMixerMenu extends BlockEntityContainerMenu<ColorMixerBlockEntity> {
 
@@ -55,9 +53,8 @@ public class ColorMixerMenu extends BlockEntityContainerMenu<ColorMixerBlockEnti
         });
     }
 
-    protected UseOnContext buildContext(Level level, BlockPos pos, ItemStack itemStack) {
-        var traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
-        return new UseOnContext(level, null, InteractionHand.OFF_HAND, itemStack, traceResult);
+    protected IUseOnContext buildContext(Level level, BlockPos pos, ItemStack itemStack) {
+        return AbstractUseOnContext.create(level, null, OpenInteractionHand.OFF_HAND, itemStack, pos);
     }
 
     @Override

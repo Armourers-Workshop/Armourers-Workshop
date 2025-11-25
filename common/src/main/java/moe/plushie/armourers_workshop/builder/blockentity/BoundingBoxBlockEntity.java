@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
@@ -14,7 +15,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenRotation;
-import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -109,18 +109,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
 
     @Override
     public SkinPaintColor getColor(OpenDirection direction) {
-        var blockEntity = parentBlockEntity();
-        var texturePos = getTexturePos(blockEntity, direction);
-        var color = getArmourerTextureColor(blockEntity, texturePos);
-        if (color != null && color.paintType() != SkinPaintTypes.NONE) {
-            return color;
-        }
-        // when work in the client side, we try to get the texture color from the loaded texture.
-        var level = getLevel();
-        if (level != null && level.isClientSide()) {
-            return getTextureColor(blockEntity, texturePos).orElse(SkinPaintColor.CLEAR);
-        }
-        return SkinPaintColor.CLEAR;
+        return getColor(direction, true);
     }
 
     @Override
@@ -137,7 +126,7 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
     @Override
     public boolean hasColor(OpenDirection direction) {
         // bounding box can't support none paint type.
-        return getColor(direction) != SkinPaintColor.CLEAR;
+        return getColor(direction, false) != SkinPaintColor.CLEAR;
     }
 
     public void clearArmourerTextureColors() {
@@ -167,10 +156,30 @@ public class BoundingBoxBlockEntity extends UpdatableBlockEntity implements IBlo
         }
     }
 
+    private SkinPaintColor getColor(OpenDirection direction, boolean loadFromTexture) {
+        var blockEntity = parentBlockEntity();
+        var texturePos = getTexturePos(blockEntity, direction);
+        var color = getArmourerTextureColor(blockEntity, texturePos);
+        if (color != null && color.paintType() != SkinPaintTypes.NONE) {
+            return color;
+        }
+        // when work in the client side, we try to get the texture color from the loaded texture.
+        if (loadFromTexture) {
+            var level = getLevel();
+            if (level != null && level.isClientSide()) {
+                return getTextureColor(blockEntity, texturePos).orElse(SkinPaintColor.CLEAR);
+            }
+        }
+        return SkinPaintColor.CLEAR;
+    }
+
     private Optional<SkinPaintColor> getTextureColor(ArmourerBlockEntity blockEntity, OpenVector2i texturePos) {
         return EnvironmentExecutor.callOnClient(() -> () -> {
             if (texturePos != null && blockEntity != null) {
-                return TextureUtils.getPlayerTextureModelColor(blockEntity.textureDescriptor(), texturePos);
+                var skin = PlayerSkinBakery.getInstance().loadSkin(blockEntity.textureDescriptor());
+                if (skin != null) {
+                    return skin.body().getColor(texturePos);
+                }
             }
             return null;
         });

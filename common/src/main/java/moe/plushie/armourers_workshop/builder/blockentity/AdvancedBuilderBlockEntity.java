@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
@@ -18,6 +17,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentProvider;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentSynchronizer;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
@@ -101,7 +101,7 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         });
     }
 
-    public void exportFromDocument(ServerPlayer player, GameProfile profile) {
+    public void exportFromDocument(ServerPlayer player, OpenGameProfile profile) {
         var exporter = new SkinDocumentExporter(document);
         exporter.setItemTransforms(document.itemTransforms());
         EnvironmentExecutor.runOnBackground(() -> () -> {

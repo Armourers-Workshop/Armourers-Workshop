@@ -1,0 +1,47 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.utils.OpenKeyModifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.settings.KeyModifier;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+
+@Available("[1.16, 1.21)")
+public abstract class AbstractForgeKeyMappingImpl extends KeyMapping {
+
+    private static final HashMap<InputConstants.Key, ArrayList<KeyMapping>> MAPPINGS = new HashMap<>();
+
+    public AbstractForgeKeyMappingImpl(OpenResourceLocation name, InputConstants.Key key, KeyModifier modifier, AbstractForgeKeyCategory category) {
+        super(name.toLanguageKey("key"), category.context(), modifier, key, category.category());
+    }
+
+    public static Collection<IKeyModifier> wrap(KeyModifier modifier) {
+        var modifiers = new ArrayList<IKeyModifier>();
+        switch (modifier) {
+            case ALT -> modifiers.add(OpenKeyModifier.ALT);
+            case SHIFT -> modifiers.add(OpenKeyModifier.SHIFT);
+            case CONTROL -> modifiers.add(OpenKeyModifier.CONTROL);
+        }
+        return modifiers;
+    }
+
+    public static KeyModifier unwrap(Collection<IKeyModifier> modifiers) {
+        var value = KeyModifier.NONE;
+        for (var modifier : modifiers) {
+            if (modifier == OpenKeyModifier.CONTROL) {
+                value = KeyModifier.CONTROL;
+            } else if (modifier == OpenKeyModifier.SHIFT) {
+                value = KeyModifier.SHIFT;
+            } else if (modifier == OpenKeyModifier.ALT) {
+                value = KeyModifier.ALT;
+            }
+        }
+        return value;
+    }
+}

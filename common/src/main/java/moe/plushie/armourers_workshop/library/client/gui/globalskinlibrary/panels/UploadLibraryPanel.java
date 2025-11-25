@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibrarySettingWindow;
@@ -29,7 +30,6 @@ import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPrePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;

@@ -41,7 +41,7 @@ public abstract class AbstractTextGuiElement extends TextGuiElement implements A
             var impl = font.impl();
             var texts = Collections.compactMap(lines, NSString::characters);
 
-            renderText(texts, x, y, textColor, shadow, impl, poseStack, bufferSource);
+            renderText(texts, 0, 0, textColor, shadow, impl, poseStack, bufferSource);
 
             poseStack.popPose();
         }

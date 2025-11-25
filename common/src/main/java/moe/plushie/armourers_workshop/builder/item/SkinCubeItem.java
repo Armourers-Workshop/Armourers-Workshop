@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.core.data.TypedEntityData;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
@@ -23,7 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,8 +39,8 @@ public class SkinCubeItem extends FlavouredBlockItem implements IItemPaintable, 
     }
 
     @Override
-    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, IUseOnContext context) {
+        var itemStack = context.itemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
             setItemColor(itemStack, provider.color());
             return OpenInteractionResult.sidedSuccess(level.isClientSide());

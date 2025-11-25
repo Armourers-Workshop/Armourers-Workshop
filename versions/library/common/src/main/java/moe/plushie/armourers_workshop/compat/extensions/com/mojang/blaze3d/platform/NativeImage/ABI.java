@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.plat
 
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import org.lwjgl.opengl.GL11;
+import moe.plushie.armourers_workshop.core.utils.Colors;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
@@ -12,9 +11,11 @@ import manifold.ext.rt.api.This;
 @Extension
 public class ABI {
 
-    public static void downloadFromTexture(@This NativeImage image, AbstractTexture texture) {
-        var textureId = texture.getId();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-        image.downloadTexture(0, false);
+    public static void setPixel(@This NativeImage image, int x, int y, int color) {
+        image.setPixelRGBA(x, y, Colors.ARGBtoABGR(color));
+    }
+
+    public static int getPixel(@This NativeImage image, int x, int y) {
+        return Colors.ABGRtoARGB(image.getPixelRGBA(x, y));
     }
 }

@@ -23,7 +23,7 @@ public class ClientMenuHandler {
 
     public static void sendUndoPacket() {
         var isRedo = InputManagerImpl.hasShiftDown();
-        if (ModKeyBindings.UNDO_KEY.keyModifier() == OpenKeyModifier.SHIFT) {
+        if (ModKeyBindings.UNDO.get().modifiers().contains(OpenKeyModifier.SHIFT)) {
             // If the player set shift key to undo key binding,
             // we will change the control key to redo key modifier.
             isRedo = InputManagerImpl.hasControlDown();

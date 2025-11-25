@@ -25,7 +25,7 @@ public class AbstractModelHolder {
 
     private static final HashMap<Class<?>, Entry> ENTITIES = new HashMap<>();
 
-    public static <S extends IEntityRenderState> IEntityModel<S> create(IEntityModel<S> entityModel) {
+    public static <S> IEntityModel<S> create(IEntityModel<S> entityModel) {
         return new LazyModel<>(model -> {
             var exists = new HashSet<>();
             var builders = new ArrayList<Map<String, String>>();
@@ -113,7 +113,7 @@ public class AbstractModelHolder {
         }
     }
 
-    private static class LazyModel<S extends IEntityRenderState> extends CachedModel<S> {
+    private static class LazyModel<S> extends CachedModel<S> {
 
         private Consumer<LazyModel<S>> provider;
 

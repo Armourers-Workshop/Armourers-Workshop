@@ -9,11 +9,11 @@ import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UITextField;
 import com.apple.library.uikit.UITextView;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.function.BiConsumer;
 

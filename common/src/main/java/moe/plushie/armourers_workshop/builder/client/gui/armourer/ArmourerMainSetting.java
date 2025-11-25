@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -201,9 +201,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         if (player == null || !container.shouldSaveArmourItem(player)) {
             return;
         }
-        var origin = Minecraft.getInstance().getUser().getGameProfile();
         var serializer = new TagSerializer();
-        serializer.encode(ExtraCodecs.GAME_PROFILE, origin);
+        serializer.encode(OpenGameProfile.CODEC, EnvironmentManager.getClientUser());
         NetworkManager.sendToServer(UpdateArmourerPacket.Field.ITEM_SAVE.buildPacket(blockEntity, serializer.tag()));
     }
 

@@ -10,10 +10,10 @@ import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.Map;

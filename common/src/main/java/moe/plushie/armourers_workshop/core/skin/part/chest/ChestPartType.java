@@ -15,10 +15,11 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
         this.offset = new OpenVector3i(0, -1, 0);
         this.renderOffset = OpenVector3i.ZERO;
         this.renderPolygonOffset = 1;
+        this.guideOrigin = new OpenVector3i(-4, 0, -2);
     }
 
     @Override
-    public OpenVector2i textureSkinPos() {
+    public OpenVector2i texturePos() {
         return new OpenVector2i(16, 16);
     }
 

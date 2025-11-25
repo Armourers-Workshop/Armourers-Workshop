@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class RenderSystem extends AbstractRenderSystem {
 
+    private static Runnable drawElementsCallback;
     private static final AtomicInteger extendedScissorFlags = new AtomicInteger();
 
     public static void safeCall(Runnable task) {
@@ -23,5 +24,14 @@ public final class RenderSystem extends AbstractRenderSystem {
 
     public static int getExtendedScissorFlags() {
         return extendedScissorFlags.get();
+    }
+
+
+    public static void setDrawElementsCallback(Runnable runnable) {
+        drawElementsCallback = runnable;
+    }
+
+    public static Runnable getDrawElementsCallback() {
+        return drawElementsCallback;
     }
 }

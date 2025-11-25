@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compat.mixin.patch;
 
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.state.ILivingEntityRenderState;
 import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
 
+@Available("[1.16, )")
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extends ILivingEntityRenderState, M extends IEntityModel<S>> implements ILivingEntityRenderer<T, S, M> {
 

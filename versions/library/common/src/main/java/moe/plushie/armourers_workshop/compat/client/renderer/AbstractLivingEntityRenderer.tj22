@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRende
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.client.model.EntityModel;
@@ -44,6 +45,10 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S ext
 
     protected float abi$getEntityScale(S state) {
         return 1;
+    }
+
+    protected OpenQuaternionf abi$getEntityRotations(S renderState) {
+        return null;
     }
 
     protected boolean abi$shouldShowName(T entity, double d) {
@@ -82,11 +87,13 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S ext
     }
 
     @Override
-    protected final void scale(AbstractLivingEntityRenderState renderState, PoseStack poseStack) {
-        // in the 1.21.4 the renderer will auto apply the entity scale, but maybe we need change it.
-        var newScale = abi$getEntityScale(AbstractRenderState.wrap(renderState));
-        poseStack.scale(newScale / renderState.scale, newScale / renderState.scale, newScale / renderState.scale);
-        super.scale(renderState, poseStack);
+    protected final float getEntityScale(AbstractLivingEntityRenderState renderState) {
+        return abi$getEntityScale(AbstractRenderState.wrap(renderState));
+    }
+
+    @Override
+    protected final OpenQuaternionf getEntityRotations(AbstractLivingEntityRenderState renderState) {
+        return abi$getEntityRotations(AbstractRenderState.wrap(renderState));
     }
 }
 

@@ -151,7 +151,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     protected boolean _keyPressed(AbstractKeyEvent event) {
-        // when input first responder is actived, the shortcut key events not allowed.
+        // when active input first responder, only the shortcut key events is allowed.
         if (manager.isTextEditing() && !_editingPassKey(event)) {
             return false;
         }
@@ -159,6 +159,10 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     protected boolean _keyReleased(AbstractKeyEvent event) {
+        // when active input first responder, only the shortcut key events is allowed.
+        if (manager.isTextEditing() && !_editingPassKey(event)) {
+            return false;
+        }
         return super.keyReleased(event);
     }
 

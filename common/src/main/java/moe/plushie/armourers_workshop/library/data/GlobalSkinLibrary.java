@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.data;
 
-import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -10,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -57,7 +57,7 @@ public class GlobalSkinLibrary extends ServerSession {
         this.notifier = executor;
     }
 
-    public void connect(GameProfile profile, Consumer<Exception> consumer) {
+    public void connect(OpenGameProfile profile, Consumer<Exception> consumer) {
         resolveState();
         if (state.connecting || state.connected) {
             return;

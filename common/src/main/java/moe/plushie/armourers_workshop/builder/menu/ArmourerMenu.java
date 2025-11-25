@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -14,6 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.SkinLoadException;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -65,7 +65,7 @@ public class ArmourerMenu extends BlockEntityContainerMenu<ArmourerBlockEntity> 
      * @param player     The player that pressed the save button.
      * @param customName Custom name for the item.
      */
-    public void saveArmourItem(Player player, GameProfile profile, String customName, String tags) {
+    public void saveArmourItem(Player player, OpenGameProfile profile, String customName, String tags) {
         if (!shouldSaveArmourItem(player)) {
             return;
         }

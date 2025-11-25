@@ -7,10 +7,10 @@ import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.render.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
-import net.minecraft.client.Minecraft;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.world.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
@@ -41,12 +41,8 @@ public class SkinItemRenderer extends AbstractSpecialModelRenderer<ItemStack> {
 
     public static ItemStack getPlayerMannequinItem() {
         if (playerMannequinItem == null) {
-            var player = Minecraft.getInstance().player;
-            if (player == null) {
-                return ItemStack.EMPTY;
-            }
             var entityData = new MannequinEntity.EntityData();
-            entityData.setTexture(EntityTextureDescriptor.fromProfile(player.getGameProfile()));
+            entityData.setTexture(PlayerSkinDescriptor.fromProfile(EnvironmentManager.getClientUser()));
             playerMannequinItem = entityData.itemStack();
         }
         return playerMannequinItem;

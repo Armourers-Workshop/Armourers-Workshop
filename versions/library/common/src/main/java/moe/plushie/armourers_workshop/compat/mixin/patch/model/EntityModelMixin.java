@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.model;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractModelHolder;
 import net.minecraft.client.model.EntityModel;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +12,7 @@ import java.util.Collection;
 
 @Available("[1.16, 1.22)")
 @Mixin(EntityModel.class)
-public abstract class EntityModelMixin<S extends IEntityRenderState> implements IEntityModel<S> {
+public abstract class EntityModelMixin<S> implements IEntityModel<S> {
 
     @Unique
     private final IEntityModel<S> aw2$cachedModel = AbstractModelHolder.create(this);

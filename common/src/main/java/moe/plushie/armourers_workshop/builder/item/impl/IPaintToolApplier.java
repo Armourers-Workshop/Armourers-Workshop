@@ -1,22 +1,22 @@
 package moe.plushie.armourers_workshop.builder.item.impl;
 
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public interface IPaintToolApplier {
 
-    default OpenInteractionResult usePaintTool(UseOnContext context) {
+    default OpenInteractionResult usePaintTool(IUseOnContext context) {
         if (!shouldUseTool(context)) {
             return OpenInteractionResult.PASS;
         }
-        var blockEntity = context.getLevel().getBlockEntity(context.getClickedPos());
+        var blockEntity = context.level().getBlockEntity(context.clickedPos());
         if (blockEntity == null) {
             return OpenInteractionResult.PASS;
         }
@@ -28,7 +28,7 @@ public interface IPaintToolApplier {
         if (selector == null || action == null) {
             return OpenInteractionResult.PASS;
         }
-        var collector = new CubeChangesCollector(context.getLevel());
+        var collector = new CubeChangesCollector(context.level());
         var event = new CubePaintingEvent(selector, action);
         if (event.prepare(collector, context)) {
             event.apply(collector, context);
@@ -40,13 +40,13 @@ public interface IPaintToolApplier {
     }
 
     @Nullable
-    IPaintToolAction createPaintToolAction(UseOnContext context);
+    IPaintToolAction createPaintToolAction(IUseOnContext context);
 
     @Nullable
-    IPaintToolSelector createPaintToolSelector(UseOnContext context);
+    IPaintToolSelector createPaintToolSelector(IUseOnContext context);
 
     @Nullable
-    default IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, UseOnContext context) {
+    default IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, IUseOnContext context) {
         if (blockEntity instanceof IPaintToolSelector.Provider provider) {
             return provider.createPaintToolSelector(context);
         }
@@ -56,5 +56,5 @@ public interface IPaintToolApplier {
         return null;
     }
 
-    boolean shouldUseTool(UseOnContext context);
+    boolean shouldUseTool(IUseOnContext context);
 }

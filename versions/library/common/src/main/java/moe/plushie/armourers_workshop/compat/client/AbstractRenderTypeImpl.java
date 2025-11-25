@@ -100,6 +100,8 @@ public class AbstractRenderTypeImpl extends RenderType {
             it.put(IRenderType.BlendMode.NONE, new TransparencyStateShard("none_transparency", Objects::hash, Objects::hash));
             it.put(IRenderType.BlendMode.NORMAL, NO_TRANSPARENCY);
             it.put(IRenderType.BlendMode.TRANSLUCENT, TRANSLUCENT_TRANSPARENCY);
+            it.put(IRenderType.BlendMode.ADDITIVE, ADDITIVE_TRANSPARENCY);
+            it.put(IRenderType.BlendMode.INVERT, ADDITIVE_TRANSPARENCY);
         });
 
         private static final Map<IRenderType.DepthTestMode, DepthTestStateShard> TABLE_DEPTH_TEST = Collections.immutableMap(it -> {
@@ -136,13 +138,13 @@ public class AbstractRenderTypeImpl extends RenderType {
         @Override
         public Builder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
             stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), blur, mipmap));
+            super.texture(texture, blur, mipmap);
             return this;
         }
 
         @Override
         public Builder target(IRenderType.Target target) {
             stateBuilder.setOutputState(TABLE_OUTPUT.getOrDefault(target, MAIN_TARGET));
-            super.target(target);
             return this;
         }
 
@@ -169,12 +171,6 @@ public class AbstractRenderTypeImpl extends RenderType {
         @Override
         public Builder depthTest(IRenderType.DepthTestMode mode) {
             stateBuilder.setDepthTestState(TABLE_DEPTH_TEST.getOrDefault(mode, NO_DEPTH_TEST));
-            return this;
-        }
-
-        @Override
-        public Builder colorLogic(IRenderType.LogicOp op) {
-            stateBuilder.setColorLogicState(op);
             return this;
         }
 

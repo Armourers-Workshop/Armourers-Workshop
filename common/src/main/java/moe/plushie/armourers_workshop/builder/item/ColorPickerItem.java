@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.item;
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
 import moe.plushie.armourers_workshop.builder.network.UpdateColorPickerPacket;
@@ -26,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -42,22 +42,22 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemPaint
     }
 
     @Override
-    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, IUseOnContext context) {
+        var itemStack = context.itemInHand();
         if (blockEntity instanceof IBlockPaintable paintable) {
             if (!level.isClientSide()) {
                 return OpenInteractionResult.CONSUME;
             }
             var color = paintable.getColor(dir);
             itemStack.set(ModDataComponents.TOOL_COLOR.get(), color);
-            var packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
+            var packet = new UpdateColorPickerPacket(context.hand(), itemStack);
             NetworkManager.sendToServer(packet);
             // we only play local sound, color pick not need send to other players.
             playSound(context);
             return OpenInteractionResult.SUCCESS;
         }
         if (blockEntity instanceof IPaintProvider provider) {
-            var player = context.getPlayer();
+            var player = context.player();
             if (player != null && !player.isSecondaryUseActive()) {
                 return OpenInteractionResult.PASS;
             }
@@ -107,12 +107,12 @@ public class ColorPickerItem extends AbstractPaintToolItem implements IItemPaint
     }
 
     @Override
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(IUseOnContext context) {
         return ModSoundEvents.PICKER;
     }
 
     @Override
-    protected OpenInteractionResult abi$useOn(UseOnContext context) {
+    protected OpenInteractionResult abi$useOn(IUseOnContext context) {
         return usePickTool(context);
     }
 

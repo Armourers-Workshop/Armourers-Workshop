@@ -79,7 +79,7 @@ public class DocumentImporter {
                 var message = new NSString(e.getComponent());
                 var title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");
                 UserNotificationCenter.showToast(message, UIColor.RED, title, null);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 var message = NSString.localizedString("advanced-skin-builder.dialog.importer.unknownException");
                 var title = NSString.localizedString("advanced-skin-builder.dialog.importer.title");

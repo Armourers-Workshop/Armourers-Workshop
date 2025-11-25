@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -80,7 +81,7 @@ public class UpdateArmourerPacket extends CustomPacket {
     private void saveItem(Player player, ArmourerBlockEntity blockEntity, ArmourerMenu container, CompoundTag tag) {
         ModLog.info("accept save action of the {}, object: {}", player.getScoreboardName(), tag);
         var serializer = new TagSerializer(tag);
-        var profile = serializer.decode(ExtraCodecs.GAME_PROFILE);
+        var profile = serializer.decode(OpenGameProfile.CODEC);
         container.saveArmourItem(player, profile, null, null);
     }
 
@@ -143,7 +144,6 @@ public class UpdateArmourerPacket extends CustomPacket {
         public static final auto SKIN_PROPERTIES = create(ArmourerBlockEntity::skinProperties, ArmourerBlockEntity::setSkinProperties, DataSerializers.SKIN_PROPERTIES, ModPermissions.ARMOURER_SETTING);
 
         public static final auto TEXTURE_DESCRIPTOR = create(ArmourerBlockEntity::textureDescriptor, ArmourerBlockEntity::setTextureDescriptor, DataSerializers.PLAYER_TEXTURE, ModPermissions.ARMOURER_SETTING);
-        public static final auto TEXTURE_MODEL = create(ArmourerBlockEntity::textureModel, ArmourerBlockEntity::setTextureModel, DataSerializers.PLAYER_TEXTURE_MODEL, ModPermissions.ARMOURER_SETTING);
 
         public static final auto ITEM_CLEAR = create(UpdateArmourerPacket::clearItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_CLEAR);
         public static final auto ITEM_COPY = create(UpdateArmourerPacket::copyItem, DataSerializers.COMPOUND_TAG, ModPermissions.ARMOURER_COPY);

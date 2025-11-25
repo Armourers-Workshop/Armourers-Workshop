@@ -47,10 +47,12 @@ public class SkinWardrobeLayer<T extends Entity, S extends EntityRenderState, M 
             applyBabyScale(renderState, context);
         }
 
-        // TODO: NO IMPL - 1.22 (test it in efm!!)
+        // efm apply a special transform for each layer,
+        // but we read is the armature based on model pose stack,
+        // so we need to reset to the original pose stack.
         var efm = Objects.safeCast(renderState.renderPlugin(), EpicFightEntityRenderPlugin.class);
         if (efm != null) {
-            context.ctm().last().set(efm.overridePose().last());
+            context.ctm().last().set(efm.overridePose());
         }
 
         context.scaleCTM(0.0625f, 0.0625f, 0.0625f);

@@ -9,10 +9,12 @@
     "FabricClientFrameRenderMixin",
     "FabricClientPlayerLifecycleMixin",
     "FabricClientScreenRenderMixin",
+    "FabricScreenMixin",
     "FabricGuiGraphicsMixin",
     "FabricTrinketsAddonMixin"
   ],
   "mixins": [
+    "FabricEntityHandlerMixin",
     "FabricBlockItemMixin",
     "FabricEntityMixin",
     "FabricLivingEntityMixin",

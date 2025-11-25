@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.data.paint.IPaintProvider;
 import moe.plushie.armourers_workshop.core.data.paint.IPaintToolPicker;
@@ -18,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +33,8 @@ public class BottleItem extends FlavouredItem implements IItemPaintable, IPaintT
     }
 
     @Override
-    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, IUseOnContext context) {
+        var itemStack = context.itemInHand();
         if (blockEntity instanceof IPaintProvider provider) {
             setItemColor(itemStack, provider.color());
             return OpenInteractionResult.sidedSuccess(level.isClientSide());
@@ -62,7 +62,7 @@ public class BottleItem extends FlavouredItem implements IItemPaintable, IPaintT
     }
 
     @Override
-    protected OpenInteractionResult abi$useOn(UseOnContext context) {
+    protected OpenInteractionResult abi$useOn(IUseOnContext context) {
         return usePickTool(context);
     }
 

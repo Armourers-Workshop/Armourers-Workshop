@@ -15,21 +15,22 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+@SuppressWarnings({"SameParameterValue"})
 public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITextFieldDelegate {
 
     protected final ArmourerBlockEntity blockEntity;
-    private final HashMap<EntityTextureDescriptor.Source, String> defaultValues = new HashMap<>();
+    private final HashMap<PlayerSkinDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private final UILabel inputType = new UILabel(new CGRect(10, 85, 160, 10));
     private final UITextField textField = new UITextField(new CGRect(10, 95, 120, 16));
@@ -42,9 +43,9 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private UIComboBox sourceComboView;
     private UIComboBox modelComboView;
 
-    private EntityTextureDescriptor lastDescriptor = EntityTextureDescriptor.EMPTY;
-    private EntityTextureDescriptor.Model lastTextureModel = EntityTextureDescriptor.Model.WIDE;
-    private EntityTextureDescriptor.Source lastTextureSource = EntityTextureDescriptor.Source.USER;
+    private PlayerSkinDescriptor lastDescriptor = PlayerSkinDescriptor.DEFAULT;
+    private PlayerSkinModel lastTextureModel = PlayerSkinModel.WIDE;
+    private PlayerSkinDescriptor.Source lastTextureSource = PlayerSkinDescriptor.Source.USER;
 
     public ArmourerDisplaySetting(ArmourerMenu container) {
         super("armourer.displaySettings");
@@ -106,7 +107,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         checkShowHelper.setSelected(blockEntity.isShowHelper());
         checkShowHelper.setHidden(!blockEntity.isUseHelper());
         // update input type
-        if (lastTextureSource == EntityTextureDescriptor.Source.URL) {
+        if (lastTextureSource == PlayerSkinDescriptor.Source.URL) {
             inputType.setText(getDisplayText("label.url"));
         } else {
             inputType.setText(getDisplayText("label.username"));
@@ -116,9 +117,9 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
     private void prepareDefaultValue() {
         if (blockEntity != null) {
             lastDescriptor = blockEntity.textureDescriptor();
-            lastTextureModel = blockEntity.textureModel();
+            lastTextureModel = blockEntity.textureDescriptor().model();
         }
-        lastTextureSource = lastDescriptor.source().orElse(EntityTextureDescriptor.Source.USER);
+        lastTextureSource = lastDescriptor.source().orElse(PlayerSkinDescriptor.Source.USER);
         // reset the default value.
         defaultValues.clear();
         defaultValues.put(lastTextureSource, lastDescriptor.value().orElse(""));
@@ -128,13 +129,14 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         textField.resignFirstResponder();
         confirmView.setEnabled(false);
         // load texture info and then update to entity.
-        EntityTextureLoader.getInstance().loadTexture(textureDescriptor(), (texture, exception) -> {
+        var newDescriptor = createTextureDescriptor().withModel(lastTextureModel);
+        PlayerSkinLoader.getInstance().loadSkin(newDescriptor, (skin, exception) -> {
             confirmView.setEnabled(true);
-            if (texture == null) {
+            if (skin == null) {
                 UserNotificationCenter.showToast(exception, NSString.localizedString("common.text.error"), null);
                 return;
             }
-            var newValue = texture.descriptor();
+            var newValue = skin.descriptor();
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
@@ -143,13 +145,13 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
             blockEntity.setTextureDescriptor(newValue);
             NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR.buildPacket(blockEntity, newValue));
             // update to use
-            var newSource = newValue.source().orElse(EntityTextureDescriptor.Source.USER);
+            var newSource = newValue.source().orElse(PlayerSkinDescriptor.Source.USER);
             defaultValues.put(newSource, newValue.value().orElse(""));
             applyTextureSource(newSource);
         });
     }
 
-    private void applyTextureSource(EntityTextureDescriptor.Source newValue) {
+    private void applyTextureSource(PlayerSkinDescriptor.Source newValue) {
         if (lastTextureSource == newValue) {
             return;
         }
@@ -162,12 +164,14 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         reloadStatus();
     }
 
-    private void applyTextureModel(EntityTextureDescriptor.Model newValue) {
+    private void applyTextureModel(PlayerSkinModel newValue) {
         if (lastTextureModel == newValue) {
             return;
         }
+        var newDescriptor = lastDescriptor.withModel(newValue);
         modelComboView.setSelectedIndex(newValue.ordinal());
-        NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_MODEL.buildPacket(blockEntity, newValue));
+        NetworkManager.sendToServer(UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR.buildPacket(blockEntity, newDescriptor));
+        lastDescriptor = newDescriptor;
         lastTextureModel = newValue;
     }
 
@@ -190,6 +194,9 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         comboView.setSelectedIndex(values.indexOf(defaultValue));
         comboView.reloadData(Collections.compactMap(values, value -> {
             var name = value.name().toLowerCase();
+            if (name.contains("_")) {
+                return null;
+            }
             return new UIComboItem(getDisplayText(key + "." + name));
         }));
         comboView.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {
@@ -217,17 +224,15 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         return label;
     }
 
-    private EntityTextureDescriptor textureDescriptor() {
-        var value = textField.text();
-        if (Strings.isNotEmpty(value)) {
-            var userType = EntityTextureDescriptor.Source.values()[sourceComboView.selectedIndex()];
-            if (userType == EntityTextureDescriptor.Source.URL) {
-                return EntityTextureDescriptor.fromURL(value);
-            }
-            if (userType == EntityTextureDescriptor.Source.USER) {
-                return EntityTextureDescriptor.fromName(value);
-            }
+    private PlayerSkinDescriptor createTextureDescriptor() {
+        var value = Objects.compactMap(textField.text(), "");
+        var userType = PlayerSkinDescriptor.Source.values()[sourceComboView.selectedIndex()];
+        if (userType == PlayerSkinDescriptor.Source.URL) {
+            return PlayerSkinDescriptor.fromURL(value);
         }
-        return EntityTextureDescriptor.EMPTY;
+        if (userType == PlayerSkinDescriptor.Source.USER) {
+            return PlayerSkinDescriptor.fromName(value);
+        }
+        return PlayerSkinDescriptor.DEFAULT;
     }
 }

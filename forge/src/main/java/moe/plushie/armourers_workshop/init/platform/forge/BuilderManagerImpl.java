@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
@@ -22,7 +23,8 @@ import moe.plushie.armourers_workshop.api.registry.IEntityCapabilityBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
 import moe.plushie.armourers_workshop.api.registry.IEntityTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
-import moe.plushie.armourers_workshop.api.registry.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.api.registry.IKeyCategoryBuilder;
+import moe.plushie.armourers_workshop.api.registry.IKeyMappingBuilder;
 import moe.plushie.armourers_workshop.api.registry.ILootFunctionTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
@@ -42,7 +44,8 @@ import moe.plushie.armourers_workshop.init.platform.forge.builder.EntitySerializ
 import moe.plushie.armourers_workshop.init.platform.forge.builder.EntityTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ItemBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ItemTagBuilderImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyBindingBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyCategoryBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyMappingBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.LootFunctionTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.MenuTypeBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.PermissionNodeBuilderImpl;
@@ -119,8 +122,13 @@ public class BuilderManagerImpl extends BuilderManager {
     }
 
     @Override
-    public <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key) {
-        return new KeyBindingBuilderImpl<>(key);
+    public <T extends IKeyCategory> IKeyCategoryBuilder<T> createKeyCategoryBuilder() {
+        return new KeyCategoryBuilderImpl<>();
+    }
+
+    @Override
+    public <T extends IKeyMapping> IKeyMappingBuilder<T> createKeyMappingBuilder(String key, IKeyCategory category) {
+        return new KeyMappingBuilderImpl<>(key, category);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.api.client;
 
+import java.util.function.Supplier;
+
 public interface IRenderAttachable {
 
-    void attachRenderTask(IVertexConsumer builder, Runnable runnable);
+    void attachRenderTask(Supplier<Runnable> provider);
 }

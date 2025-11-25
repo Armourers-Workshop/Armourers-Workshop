@@ -14,7 +14,11 @@ import manifold.ext.rt.api.This;
 public class TextureGetter {
 
     @Nullable
-    public static AbstractTexture getTexture(@This TextureManager textureManager, ResourceLocation resourceLocation, Object arg2) {
-        return textureManager.getTexture(resourceLocation);
+    public static AbstractTexture getTexture(@This TextureManager textureManager, ResourceLocation location, AbstractTexture defaultTexture) {
+        var texture = textureManager.getTexture(location);
+        if (texture != null) {
+            return texture;
+        }
+        return defaultTexture;
     }
 }

@@ -9,10 +9,10 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.compat.core.entity.AbstractArmorStand;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.TypedEntityData;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.item.option.MannequinToolOptions;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
@@ -25,7 +25,6 @@ import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutorIO;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.Rotations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -70,8 +69,7 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
     public static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> DATA_EXTRA_RENDERER = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> DATA_NO_GRAVITY = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.BOOLEAN);
-    public static final EntityDataAccessor<EntityTextureDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE.get());
-    public static final EntityDataAccessor<EntityTextureDescriptor.Model> DATA_TEXTURE_MODEL = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE_MODEL.get());
+    public static final EntityDataAccessor<PlayerSkinDescriptor> DATA_TEXTURE = SynchedEntityData.defineId(MannequinEntity.class, ModEntitySerializers.PLAYER_TEXTURE.get());
 
     private boolean isDropEquipment = false;
 
@@ -93,7 +91,6 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
 
         serializer.write(CodingKeys.SCALE, entityData.get(DATA_SCALE));
         serializer.write(CodingKeys.TEXTURE, entityData.get(DATA_TEXTURE));
-        serializer.write(CodingKeys.TEXTURE_MODEL, entityData.get(DATA_TEXTURE_MODEL));
 
         serializer.write(CodingKeys.POSE, saveCustomPose());
     }
@@ -109,7 +106,6 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
 
         entityData.set(DATA_SCALE, serializer.read(CodingKeys.SCALE));
         entityData.set(DATA_TEXTURE, serializer.read(CodingKeys.TEXTURE));
-        entityData.set(DATA_TEXTURE_MODEL, serializer.read(CodingKeys.TEXTURE_MODEL));
 
         readCustomPose(serializer.read(CodingKeys.POSE));
 
@@ -124,8 +120,8 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
     }
 
     @Override
-    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
-        super.abi$addAdditionalSaveData(serializer);
+    protected void abi$writeAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$writeAdditionalSaveData(serializer);
         this.serialize(serializer);
     }
 
@@ -139,8 +135,7 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
         builder.define(DATA_EXTRA_RENDERER, true);
         builder.define(DATA_NO_GRAVITY, true); // default is no gravity
         builder.define(DATA_SCALE, 1.0f);
-        builder.define(DATA_TEXTURE, EntityTextureDescriptor.EMPTY);
-        builder.define(DATA_TEXTURE_MODEL, EntityTextureDescriptor.Model.WIDE);
+        builder.define(DATA_TEXTURE, PlayerSkinDescriptor.DEFAULT);
     }
 
     @Override
@@ -229,7 +224,7 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
         // yep, we need copy the fully model info when ctrl down.
         if (EnvironmentExecutorIO.hasControlDown()) {
             var serializer = new TagSerializer(SerializationContext.from(this));
-            abi$readAdditionalSaveData(serializer);
+            abi$writeAdditionalSaveData(serializer);
             itemStack.set(ModDataComponents.ENTITY_DATA.get(), TypedEntityData.of(ModEntityTypes.MANNEQUIN.get(), serializer.tag()));
         }
         return itemStack;
@@ -316,20 +311,12 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
         entityData.set(DATA_IS_VISIBLE, value);
     }
 
-    public EntityTextureDescriptor getTextureDescriptor() {
+    public PlayerSkinDescriptor getTextureDescriptor() {
         return entityData.get(DATA_TEXTURE);
     }
 
-    public void setTextureDescriptor(EntityTextureDescriptor newValue) {
+    public void setTextureDescriptor(PlayerSkinDescriptor newValue) {
         entityData.set(DATA_TEXTURE, newValue);
-    }
-
-    public EntityTextureDescriptor.Model getTextureModel() {
-        return entityData.get(DATA_TEXTURE_MODEL);
-    }
-
-    public void setTextureModel(EntityTextureDescriptor.Model newValue) {
-        entityData.set(DATA_TEXTURE_MODEL, newValue);
     }
 
     public boolean isExtraRenderer() {
@@ -437,8 +424,7 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
         public static final IDataSerializerKey<Boolean> EXTRA_RENDER = IDataSerializerKey.create("ExtraRender", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Boolean> NO_GRAVITY = IDataSerializerKey.create("NoGravity", IDataCodec.BOOL, true);
         public static final IDataSerializerKey<Float> SCALE = IDataSerializerKey.create("Scale", IDataCodec.FLOAT, 1.0f);
-        public static final IDataSerializerKey<EntityTextureDescriptor> TEXTURE = IDataSerializerKey.create("Texture", EntityTextureDescriptor.CODEC, EntityTextureDescriptor.EMPTY);
-        public static final IDataSerializerKey<EntityTextureDescriptor.Model> TEXTURE_MODEL = IDataSerializerKey.create("TextureModel", DataSerializers.ENTITY_TEXTURE_MODEL, EntityTextureDescriptor.Model.WIDE);
+        public static final IDataSerializerKey<PlayerSkinDescriptor> TEXTURE = IDataSerializerKey.create("Texture", PlayerSkinDescriptor.CODEC, PlayerSkinDescriptor.DEFAULT);
         public static final IDataSerializerKey<CompoundTag> POSE = IDataSerializerKey.create("Pose", ExtraCodecs.COMPOUND_TAG, new CompoundTag());
 
         public static final IDataSerializerKey<Rotations> POSE_HEAD = IDataSerializerKey.create("Head", EntityData.ROTATIONS_CODEC, DEFAULT_HEAD_POSE);
@@ -475,11 +461,11 @@ public class MannequinEntity extends AbstractArmorStand implements IDataSerializ
             return serializer.read(CodingKeys.SCALE);
         }
 
-        public void setTexture(EntityTextureDescriptor texture) {
+        public void setTexture(PlayerSkinDescriptor texture) {
             serializer.write(CodingKeys.TEXTURE, texture);
         }
 
-        public EntityTextureDescriptor texture() {
+        public PlayerSkinDescriptor texture() {
             return serializer.read(CodingKeys.TEXTURE);
         }
 

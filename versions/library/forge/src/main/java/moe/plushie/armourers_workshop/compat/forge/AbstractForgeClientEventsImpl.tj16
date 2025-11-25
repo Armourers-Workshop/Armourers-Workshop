@@ -1,14 +1,12 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.forge.event.client.AbstractForgeRenderLivingEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderArmEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.TickEvent;
@@ -38,10 +36,6 @@ public class AbstractForgeClientEventsImpl {
     public static final auto RENDER_HIGHLIGHT_BLOCK = AbstractForgeEventBus.create(DrawHighlightEvent.HighlightBlock.class);
 
     public static final auto RENDER_SPECIFIC_HAND = AbstractForgeEventBus.create(RenderArmEvent.class);
-
-    public static final auto RENDER_LIVING_ENTITY_PRE = AbstractForgeEventBus.create(RenderLivingEvent.Pre.class);
-    public static final auto RENDER_LIVING_ENTITY_APPLY = AbstractForgeEventBus.create(AbstractForgeRenderLivingEvent.Apply.class);
-    public static final auto RENDER_LIVING_ENTITY_POST = AbstractForgeEventBus.create(RenderLivingEvent.Post.class);
 
     public static final auto RENDER_FRAME_PRE = AbstractForgeEventBus.create(TickEvent.RenderTickEvent.class);
     public static final auto RENDER_FRAME_POST = AbstractForgeEventBus.create(TickEvent.RenderTickEvent.class);

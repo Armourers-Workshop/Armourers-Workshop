@@ -69,7 +69,7 @@ public abstract class AbstractClientRegistry extends AbstractClientRegistryImpl 
 
     protected abstract void registerBlockSpecialRenderer(TypedHolder<? extends Block> block, AbstractBlockSpecialRenderer renderer);
 
-    /// load asset model by the registry
+    /// load an asset model by the registry
     private <T, M> void loadAssetModel(String type, TypedRegistry<T> registry, IDataCodec<M> codec, BiConsumer<TypedHolder<? extends T>, M> consumer) {
         var modelKey = IDataSerializerKey.create("model", codec);
         var classLoader = getClass().getClassLoader();

@@ -2,77 +2,64 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
-import moe.plushie.armourers_workshop.api.event.EventBus;
-import moe.plushie.armourers_workshop.core.utils.FastMapper;
-import moe.plushie.armourers_workshop.init.event.client.RegisterKeyMappingsEvent;
-import moe.plushie.armourers_workshop.utils.OpenKeyModifier;
-import net.minecraft.client.KeyMapping;
-import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import net.neoforged.neoforge.client.settings.KeyModifier;
-import org.jetbrains.annotations.Nullable;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 
-@Available("[1.21, 1.22)")
-public abstract class AbstractForgeKeyMapping extends KeyMapping {
+@Available("[1.16, )")
+public class AbstractForgeKeyMapping extends AbstractForgeKeyMappingImpl implements IKeyMapping {
 
-    private static final HashMap<InputConstants.Key, ArrayList<KeyMapping>> MAPPINGS = new HashMap<>();
+    private boolean canConsumeClick = false;
 
-    private static final FastMapper<OpenKeyModifier, KeyModifier> MODIFIER_MAPPER = FastMapper.builder(OpenKeyModifier.NONE, KeyModifier.NONE, it -> {
-        it.put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL);
-        it.put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT);
-        it.put(OpenKeyModifier.ALT, KeyModifier.ALT);
-        it.put(OpenKeyModifier.NONE, KeyModifier.NONE);
-    });
+    private final IKeyCategory category;
 
-    public AbstractForgeKeyMapping(String description, IKeyModifier keyModifier, InputConstants.Key keyCode, String category) {
-        super(description, KeyConflictContext.IN_GAME, MODIFIER_MAPPER.getValue((OpenKeyModifier) keyModifier), keyCode, category);
-        bind(keyCode, this);
+    public AbstractForgeKeyMapping(OpenResourceLocation name, String key, Collection<IKeyModifier> modifiers, IKeyCategory category) {
+        super(name, unwrap(key), unwrap(modifiers), AbstractForgeKeyCategory.unwrap(category));
+        this.category = category;
     }
 
-    public static void register(String key, KeyMapping keyMapping) {
-        EventBus.register(RegisterKeyMappingsEvent.class, event -> event.register(keyMapping));
+    public static InputConstants.Key unwrap(String key) {
+        return InputConstants.getKey(key);
     }
 
-    private static void bind(InputConstants.Key keyCode, KeyMapping keyMapping) {
-        MAPPINGS.computeIfAbsent(keyCode, k -> new ArrayList<>()).add(keyMapping);
-    }
-
-    private static void unbind(InputConstants.Key keyCode, KeyMapping keyMapping) {
-        var mappings = MAPPINGS.get(keyCode);
-        if (mappings != null) {
-            mappings.remove(keyMapping);
-        }
-    }
-
-    @Nullable
-    public static List<KeyMapping> findKeysByCode(InputConstants.Key keyCode) {
-        // fix the neo forge wrong active modifier by `ctrl-shift-<key>`
-        var mappings = MAPPINGS.get(keyCode);
-        if (mappings != null) {
-            return mappings.stream()
-                    .filter(binding -> binding.isActiveAndMatches(keyCode))
-                    .toList();
-        }
-        return null;
+    public static AbstractForgeKeyMapping unwrap(IKeyMapping keyMapping){
+        return Objects.unsafeCast(keyMapping);
     }
 
     @Override
     public boolean consumeClick() {
-        return super.consumeClick();
-    }
-
-    public OpenKeyModifier getOpenKeyModifier() {
-        return MODIFIER_MAPPER.getKey(getKeyModifier());
+        if (canConsumeClick && isDown()) {
+            canConsumeClick = false;
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public void setKeyModifierAndCode(KeyModifier keyModifier, InputConstants.Key keyCode) {
-        unbind(getKey(), this);
-        super.setKeyModifierAndCode(keyModifier, keyCode);
-        bind(getKey(), this);
+    public void setDown(boolean isDown) {
+        super.setDown(isDown);
+        if (!isDown) {
+            canConsumeClick = true;
+        }
+    }
+
+    @Override
+    public Component name() {
+        return getTranslatedKeyMessage();
+    }
+
+    @Override
+    public IKeyCategory category() {
+        return category;
+    }
+
+    @Override
+    public Collection<? extends IKeyModifier> modifiers() {
+        return wrap(getKeyModifier());
     }
 }

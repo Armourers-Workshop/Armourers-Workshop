@@ -4,32 +4,28 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractTypedEntityData;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import net.minecraft.nbt.CompoundTag;
 
-public class TypedEntityData<T> {
-
-    protected final AbstractTypedEntityData<?> impl;
-
-    public TypedEntityData(AbstractTypedEntityData<?> impl) {
-        this.impl = impl;
-    }
+@SuppressWarnings("unused")
+public abstract class TypedEntityData<T> {
 
     public static <T> IDataCodec<TypedEntityData<T>> codec(TypedRegistry<T> registry) {
-        var codec = AbstractTypedEntityData.codec(registry);
-        return codec.xmap(TypedEntityData::new, TypedEntityData::impl);
+        var codec = AbstractTypedEntityData.createRegistryCodec(registry);
+        return codec.xmap(Objects::unsafeCast, Objects::unsafeCast);
     }
 
     public static <T extends IEntityType<?>> TypedEntityData<T> of(T type, CompoundTag tag) {
         if (!tag.isEmpty()) {
-            return new TypedEntityData<>(AbstractTypedEntityData.of(type.get(), tag));
+            return new AbstractTypedEntityData<>(type.get(), tag);
         }
         return null;
     }
 
     public static <T extends IBlockEntityType<?>> TypedEntityData<T> of(T type, CompoundTag tag) {
         if (!tag.isEmpty()) {
-            return new TypedEntityData<>(AbstractTypedEntityData.of(type.get(), tag));
+            return new AbstractTypedEntityData<>(type.get(), tag);
         }
         return null;
     }
@@ -42,11 +38,5 @@ public class TypedEntityData<T> {
         return tag().isEmpty();
     }
 
-    public CompoundTag tag() {
-        return impl.getUnsafe();
-    }
-
-    public AbstractTypedEntityData<?> impl() {
-        return impl;
-    }
+    public abstract CompoundTag tag();
 }

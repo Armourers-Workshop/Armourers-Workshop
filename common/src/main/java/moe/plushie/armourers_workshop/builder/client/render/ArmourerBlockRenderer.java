@@ -5,16 +5,12 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
-import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideDataProvider;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
-import moe.plushie.armourers_workshop.core.client.other.PaintableTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
@@ -25,11 +21,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import moe.plushie.armourers_workshop.core.utils.TextureUtils;
-import moe.plushie.armourers_workshop.init.ModConstants;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.core.BlockPos;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -57,31 +48,30 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
 
     @Override
     protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
-        var textureProvider = CustomTextureProvider.of(renderState);
-        if (textureProvider == null) {
+        var textureRenderState = renderState.textureRenderState();
+        if (textureRenderState == null) {
             return;
         }
-        var skinType = renderState.skinType();
-        var skinProperties = renderState.skinProperties();
-        var textureModel = renderState.textureModel();
+        var type = renderState.skinType();
+        var properties = renderState.skinProperties();
+        var textureModel = renderState.textureDescriptor().model();
 
         // when the player has some special texture, we must textureResolvedContext to renderer.
-        var playerTexture = textureProvider.displayTextureLocation;
+        var playerTexture = textureRenderState.location();
         if (playerTexture != null) {
             textureResolvedContext.setTexture(playerTexture);
             textureResolvedContext.setContext(context);
             context = textureResolvedContext;
         }
 
-        var isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
+        var isMultiBlocks = properties.get(SkinProperty.BLOCK_MULTIBLOCK);
         var isShowGuides = renderState.isShowGuides();
         var isShowModelGuides = renderState.isShowModelGuides();
         var isShowHelper = renderState.isShowHelper();
         var isUseHelper = renderState.isUseHelper();
 
         // don't display overlay layers when helpers are actived.
-        textureProvider.shouldRenderOverlay = !isUseHelper;
-        textureProvider.skinProperties = skinProperties;
+        textureRenderState.setRenderOverlay(!isUseHelper);
 
         context.saveGraphicsState();
 
@@ -90,10 +80,10 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
         context.scaleCTM(-1, -1, 1);
 
         var polygonOffset = 0f;
-        for (var partType : skinType.parts()) {
+        for (var partType : type.parts()) {
             var origin = partType.offset();
             var rect = partType.buildingSpace();
-            var rect2 = partType.guideSpace(textureModel);
+            var rect2 = partType.guideSpaceByModel(textureModel);
 
             if (partType == SkinPartTypes.BLOCK_MULTI && !isMultiBlocks) {
                 continue;
@@ -120,7 +110,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
                     context.saveGraphicsState();
                     context.translateCTM(0, -rect2.minY(), 0);
                     context.scaleCTM(16, 16, 16);
-                    guideRenderer.render(textureProvider, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, context);
+                    guideRenderer.render(textureRenderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, context);
                     context.restoreGraphicsState();
                 }
             }
@@ -146,9 +136,11 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
 
     private static class TextureResolvedContext implements IGraphicsContext {
 
+        private static final HashMap<String, IRenderType> REUSABLE_TYPES = new HashMap<>();
+
         protected final HashMap<IRenderType, Supplier<IRenderType>> overrides = new HashMap<>();
 
-        protected IResourceLocation texture;
+        protected OpenResourceLocation texture;
         protected IGraphicsContext context;
 
         @Override
@@ -161,15 +153,15 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
             return context.ctm();
         }
 
-        public void setTexture(IResourceLocation texture) {
+        public void setTexture(OpenResourceLocation texture) {
             if (Objects.equals(this.texture, texture)) {
                 return;
             }
             this.texture = texture;
             this.overrides.clear();
-            this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, () -> SkinRenderType.entityCutoutNoCull(texture));
-            this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> SkinRenderType.entityCutoutNoCull(texture));
-            this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, () -> SkinRenderType.entityTranslucentCull(texture));
+            this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, () -> entityCutoutNoCull(texture));
+            this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> entityCutoutNoCull(texture));
+            this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, () -> entityTranslucentCull(texture));
         }
 
         public void setContext(IGraphicsContext context) {
@@ -186,57 +178,13 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
             }
             return element;
         }
-    }
 
-    private static class CustomTextureProvider implements GuideDataProvider {
-
-        protected final PaintableTexture displayTexture;
-        protected final IResourceLocation displayTextureLocation;
-        protected int lastVersion;
-        protected boolean shouldRenderOverlay = false;
-        protected ISkinProperties skinProperties;
-
-        public CustomTextureProvider(BlockPos pos) {
-            this.displayTexture = new PaintableTexture("paintable-texture");
-            this.displayTextureLocation = registerTexture(pos, displayTexture);
+        protected IRenderType entityCutoutNoCull(OpenResourceLocation texture) {
+            return REUSABLE_TYPES.computeIfAbsent("entity-cutout-no-cull-" + texture, it -> SkinRenderType.entityCutoutNoCull(texture));
         }
 
-        public static CustomTextureProvider of(ArmourerRenderState renderState) {
-            if (renderState.customTextureProvider() instanceof CustomTextureProvider textureProvider) {
-                textureProvider.tick(renderState);
-                return textureProvider;
-            }
-            var textureProvider = new CustomTextureProvider(renderState.blockPos());
-            renderState.setCustomTextureProvider(textureProvider);
-            textureProvider.tick(renderState);
-            return textureProvider;
-        }
-
-        // TODO: @SAGESSE replace to new impl.
-//        @Override
-//        protected void finalize() throws Throwable {
-//            Minecraft.getInstance().getTextureManager().release(displayTextureLocation);
-//            super.finalize();
-//        }
-
-        public void tick(ArmourerRenderState renderState) {
-            this.displayTexture.setRefer(TextureUtils.getPlayerTextureLocation(renderState.textureDescriptor()));
-            this.displayTexture.setPaintData(renderState.paintData());
-        }
-
-        @Override
-        public boolean shouldRenderOverlay(SkinProperty<Boolean> property) {
-            //  must check after the enable rendering.
-            if (shouldRenderOverlay) {
-                return !skinProperties.get(property);
-            }
-            return false;
-        }
-
-        private OpenResourceLocation registerTexture(BlockPos pos, DynamicTexture texture) {
-            var location = ModConstants.key(String.format("dynamic/armourer-%08x", pos.asLong()));
-            Minecraft.getInstance().getTextureManager().register(location.toLocation(), texture);
-            return location;
+        protected IRenderType entityTranslucentCull(OpenResourceLocation texture) {
+            return REUSABLE_TYPES.computeIfAbsent("entity-translucent-cull-" + texture, it -> SkinRenderType.entityTranslucentCull(texture));
         }
     }
 }

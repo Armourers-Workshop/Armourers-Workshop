@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
 import com.google.common.collect.Iterables;
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.common.IGlobalPos;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.api.skin.part.ISkinPartTypeTextured;
@@ -22,6 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.exception.SkinLoadExc
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -57,7 +57,7 @@ public class OutfitMakerMenu extends BlockEntityContainerMenu<OutfitMakerBlockEn
         return false;
     }
 
-    public void saveArmourItem(Player player, GameProfile profile) {
+    public void saveArmourItem(Player player, OpenGameProfile profile) {
         // check again before crafting to avoid fake request.
         if (!shouldCrafting()) {
             return;
@@ -73,7 +73,7 @@ public class OutfitMakerMenu extends BlockEntityContainerMenu<OutfitMakerBlockEn
         }
     }
 
-    private void saveArmourItemWithProfile(GameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
+    private void saveArmourItemWithProfile(OpenGameProfile profile, OutfitMakerBlockEntity blockEntity) throws Exception {
         var skinParts = new ArrayList<SkinPart>();
         var properties = new SkinProperties();
         var partIndexs = "";
@@ -186,7 +186,7 @@ public class OutfitMakerMenu extends BlockEntityContainerMenu<OutfitMakerBlockEn
     }
 
     protected void mergePaintPart(SkinPaintData srcData, SkinPaintData destData, ISkinPartTypeTextured texType) {
-        var pos = texType.textureSkinPos();
+        var pos = texType.texturePos();
 
         var width = (texType.textureModelSize().x() * 2) + (texType.textureModelSize().z() * 2);
         var height = texType.textureModelSize().y() + texType.textureModelSize().z();

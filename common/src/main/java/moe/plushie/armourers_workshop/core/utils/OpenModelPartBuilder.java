@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -31,7 +29,7 @@ public class OpenModelPartBuilder {
     }
 
     public static OpenModelPartBuilder player() {
-        return of(EntityTextureModel.TEXTURE_WIDTH, EntityTextureModel.TEXTURE_HEIGHT);
+        return of(64, 64);
     }
 
     public OpenModelPartBuilder uv(int u, int v) {

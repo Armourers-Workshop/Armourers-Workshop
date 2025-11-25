@@ -7,27 +7,32 @@ import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
-public class EpicFlightModel extends LinkedModel<EntityRenderState> {
+public class EpicFlightModel<S extends EntityRenderState> extends LinkedModel<S> {
 
-    private static final DataContainer.Key<EpicFlightModel> KEY = DataContainer.key("EpicFlightModel", EpicFlightModel::new);
+    private static final DataContainer.Key<EpicFlightModel<?>> KEY = DataContainer.key("EpicFlightModel");
 
     private Object childRef;
 
     private boolean isValid = false;
     private BakedArmatureTransformer transformer;
 
-    public EpicFlightModel(IEntityModel<?> parent) {
-        super(Objects.unsafeCast(parent));
+    protected EpicFlightModel(IEntityModel<S> parent) {
+        super(parent);
     }
 
-    public static EpicFlightModel of(IEntityModel<?> entityModel) {
-        return DataContainer.of(entityModel, KEY);
+    public static <S extends EntityRenderState> EpicFlightModel<S> of(IEntityModel<S> entityModel) {
+        var model = DataContainer.get(entityModel, KEY);
+        if (model == null) {
+            model = new EpicFlightModel<>(entityModel);
+            DataContainer.set(entityModel, KEY, model);
+        }
+        return Objects.unsafeCast(model);
     }
 
     public void linkTo(Object mesh) {
         if (childRef != mesh) {
             childRef = mesh;
-            linkTo(EpicFlightModelHolder.create(mesh));
+            super.linkTo(EpicFlightModelHolder.create(mesh));
         }
     }
 

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
@@ -13,12 +14,11 @@ import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.Colors;
-import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
@@ -43,15 +43,15 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
         builder.accept(PaintingToolOptions.FULL_BLOCK_MODE);
     }
 
-    protected CubeSelector createColorApplierSelector(int radius, UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    protected CubeSelector createColorApplierSelector(int radius, IUseOnContext context) {
+        var itemStack = context.itemInHand();
         var restrictPlane = itemStack.get(PaintingToolOptions.PLANE_RESTRICT);
         var isFullMode = shouldUseFullMode(context);
-        return CubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
+        return CubeSelector.touching(context.clickedPos(), radius, isFullMode, restrictPlane);
     }
 
     @Override
-    public IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, UseOnContext context) {
+    public IPaintToolSelector createPaintToolSelector(BlockEntity blockEntity, IUseOnContext context) {
         if (blockEntity instanceof ArmourerBlockEntity) {
             return null;
         }
@@ -59,20 +59,20 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
     }
 
     @Override
-    public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public IPaintToolSelector createPaintToolSelector(IUseOnContext context) {
+        var itemStack = context.itemInHand();
         var radiusEffect = itemStack.get(PaintingToolOptions.RADIUS_EFFECT);
         return createColorApplierSelector(radiusEffect, context);
     }
 
     @Override
-    public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public IPaintToolAction createPaintToolAction(IUseOnContext context) {
+        var itemStack = context.itemInHand();
         var intensity = itemStack.get(PaintingToolOptions.INTENSITY);
         var radiusSample = itemStack.get(PaintingToolOptions.RADIUS_SAMPLE);
         // we need to complete sampling before we can use blending tool.
         var colors = new ArrayList<Integer>();
-        var collector = new CubeChangesCollector(context.getLevel());
+        var collector = new CubeChangesCollector(context.level());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
             var cube = collector.cubeAtPos(targetPos);
             if (cube.shouldChangeColor(dir)) {
@@ -98,7 +98,7 @@ public class BlendingToolItem extends AbstractColoredToolItem implements IBlockP
     }
 
     @Override
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(IUseOnContext context) {
         return ModSoundEvents.PAINT;
     }
 }

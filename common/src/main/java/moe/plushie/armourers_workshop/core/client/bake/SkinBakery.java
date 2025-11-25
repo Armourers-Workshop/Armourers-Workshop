@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.core.client.other.SkinGraphicsContext;
+import moe.plushie.armourers_workshop.core.client.render.element.SkinPartElement;
 import moe.plushie.armourers_workshop.core.data.DataTransformer;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.ticket.Ticket;
@@ -67,7 +67,7 @@ public final class SkinBakery implements ISkinLibraryListener {
             BAKERY.stopListenLibraryChanges();
             BAKERY.manager.shutdown();
             BAKERY = null;
-            SkinGraphicsContext.getInstance().clear();
+            SkinPartElement.clearCache();
             ModLog.debug("stop bakery");
         }
     }
@@ -75,7 +75,7 @@ public final class SkinBakery implements ISkinLibraryListener {
     public static void clear() {
         if (BAKERY != null) {
             BAKERY.manager.clear();
-            SkinGraphicsContext.getInstance().clear();
+            SkinPartElement.clearCache();
         }
     }
 

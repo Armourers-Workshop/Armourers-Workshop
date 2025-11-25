@@ -39,7 +39,7 @@ public class AbstractResourceManager implements IResourceManager {
 
     @Override
     public IResource readResource(IResourceLocation location) throws IOException {
-        Optional<Resource> resource = resourceManager.getResource(location.toLocation());
+        var resource = resourceManager.getResource(location.toLocation());
         if (resource.isPresent()) {
             return wrap(location, resource.get());
         }

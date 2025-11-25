@@ -9,24 +9,21 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.compat.client.AbstractColorPicker;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.texture.BakedEntityTexture;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.client.Minecraft;
-import org.lwjgl.opengl.GL11;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
@@ -69,8 +66,6 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
     }
 
     private class ColorPicker extends UIView {
-
-        private static final FloatBuffer BUFFER = MatrixUtils.createFloatBuffer(3);
 
         private final UILabel titleView = new UILabel(CGRect.ZERO);
         private final UIView colorView = new UIView(new CGRect(1, 12, 12, 12));
@@ -136,8 +131,9 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             }
             var point = event.locationInWindow();
             var frame = window.frame();
-            int rgb = getColorFromScreen(point.x + frame.x, point.y + frame.y);
-            updateColor(SkinPaintColor.of(rgb, SkinPaintTypes.NORMAL));
+            AbstractColorPicker.pick(point.x + frame.x, point.y + frame.y, color -> {
+                updateColor(SkinPaintColor.of(color, SkinPaintTypes.NORMAL));
+            });
         }
 
         public void end(UIEvent event) {
@@ -155,34 +151,29 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private void autoPick(UIControl control) {
-            var location = wardrobe.entity().skin().body();
-            if (location == null) {
-                return;
-            }
-            var texture = EntityTextureLoader.getInstance().getTextureModel(location);
+            var texture = PlayerSkinLoader.getInstance().loadSkin(wardrobe.entity());
             if (texture != null) {
                 setColor(getColorFromTexture(texture));
-            } else {
-                setColor(SkinPaintColor.WHITE);
             }
         }
 
-        private SkinPaintColor getColorFromTexture(BakedEntityTexture texture) {
-            if (texture == null) {
-                return SkinPaintColor.CLEAR;
+        private SkinPaintColor getColorFromTexture(PlayerSkin texture) {
+            var skin = PlayerSkinBakery.getInstance().loadSkin(texture).body();
+            if (skin == null) {
+                return SkinPaintColor.WHITE;
             }
             var colors = new ArrayList<SkinPaintColor>();
             if (paintType == SkinPaintTypes.SKIN) {
-                colors.add(texture.getColor(11, 13));
-                colors.add(texture.getColor(12, 13));
+                colors.add(skin.getColor(11, 13));
+                colors.add(skin.getColor(12, 13));
             }
             if (paintType == SkinPaintTypes.HAIR) {
-                colors.add(texture.getColor(11, 3));
-                colors.add(texture.getColor(12, 3));
+                colors.add(skin.getColor(11, 3));
+                colors.add(skin.getColor(12, 3));
             }
             if (paintType == SkinPaintTypes.EYES) {
-                colors.add(texture.getColor(10, 12));
-                colors.add(texture.getColor(13, 12));
+                colors.add(skin.getColor(10, 12));
+                colors.add(skin.getColor(13, 12));
             }
             int r = 0, g = 0, b = 0, c = 0;
             for (var paintColor : colors) {
@@ -223,20 +214,6 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
             } else {
                 colorView.setBackgroundColor(null);
             }
-        }
-
-        private static int getColorFromScreen(float x, float y) {
-            var window = Minecraft.getInstance().getWindow();
-            var guiScale = window.getGuiScale();
-            var sx = (int) (x * guiScale);
-            var sy = (int) ((window.getGuiScaledHeight() - y) * guiScale);
-            BUFFER.rewind();
-            GL11.glReadPixels(sx, sy, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, BUFFER);
-            GL11.glFinish();
-            var r = Math.round(BUFFER.get() * 255);
-            var g = Math.round(BUFFER.get() * 255);
-            var b = Math.round(BUFFER.get() * 255);
-            return 0xff000000 | r << 16 | g << 8 | b;
         }
     }
 }

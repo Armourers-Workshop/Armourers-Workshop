@@ -13,6 +13,7 @@ public class HatPartType extends SkinPartType {
         this.offset = new OpenVector3i(0, 0, 0);
         this.renderOffset = OpenVector3i.ZERO;
         this.renderPolygonOffset = 8;
+        this.guideOrigin = new OpenVector3i(-4, -8, -4);
     }
 
     //    @Override

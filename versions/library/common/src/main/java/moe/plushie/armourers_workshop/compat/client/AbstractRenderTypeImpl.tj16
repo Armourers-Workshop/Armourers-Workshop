@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.compat.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexFormat;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderContext;
+import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -25,25 +24,18 @@ import java.util.function.Supplier;
 @Available("[1.16, 1.18)")
 public class AbstractRenderTypeImpl extends RenderType {
 
+    public static final OpenMatrix4f TEXTURE_MATRIX = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+
     private static final TexturingStateShard COLORS_OFFSET = new TexturingStateShard("aw_offset_ov", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(ShaderContext.getInstance().textureMatrix()));
+        RenderSystem.multMatrix(AbstractPoseStack.convertMatrix(TEXTURE_MATRIX));
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.popMatrix();
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-    });
-
-    private static final TexturingStateShard OR_REVERSE = new TexturingStateShard("aw_or_reverse", () -> {
-        RenderSystem.disableTexture();
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-    }, () -> {
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
     });
 
     // unlike vanilla, we do not modify any opengl options.
@@ -136,6 +128,8 @@ public class AbstractRenderTypeImpl extends RenderType {
             it.put(IRenderType.BlendMode.NONE, new TransparencyStateShard("none_transparency", Objects::hash, Objects::hash));
             it.put(IRenderType.BlendMode.NORMAL, NO_TRANSPARENCY);
             it.put(IRenderType.BlendMode.TRANSLUCENT, TRANSLUCENT_TRANSPARENCY);
+            it.put(IRenderType.BlendMode.ADDITIVE, ADDITIVE_TRANSPARENCY);
+            it.put(IRenderType.BlendMode.INVERT, ADDITIVE_TRANSPARENCY);
         });
 
         private static final Map<IRenderType.DepthTestMode, DepthTestStateShard> TABLE_DEPTH_TEST = Collections.immutableMap(it -> {
@@ -171,13 +165,13 @@ public class AbstractRenderTypeImpl extends RenderType {
         @Override
         public Builder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
             stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), blur, mipmap));
+            super.texture(texture, blur, mipmap);
             return this;
         }
 
         @Override
         public Builder target(IRenderType.Target target) {
             stateBuilder.setOutputState(TABLE_OUTPUT.getOrDefault(target, MAIN_TARGET));
-            super.target(target);
             return this;
         }
 
@@ -204,16 +198,6 @@ public class AbstractRenderTypeImpl extends RenderType {
         @Override
         public Builder depthTest(IRenderType.DepthTestMode mode) {
             stateBuilder.setDepthTestState(TABLE_DEPTH_TEST.getOrDefault(mode, NO_DEPTH_TEST));
-            return this;
-        }
-
-        @Override
-        public Builder colorLogic(IRenderType.LogicOp op) {
-            if (op == IRenderType.LogicOp.OR_REVERSE) {
-                customStates.add(OR_REVERSE);
-            } else {
-                customStates.remove(OR_REVERSE);
-            }
             return this;
         }
 

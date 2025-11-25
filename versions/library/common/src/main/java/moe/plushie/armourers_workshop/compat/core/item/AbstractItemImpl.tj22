@@ -28,6 +28,10 @@ public class AbstractItemImpl extends Item {
         super(properties);
     }
 
+    public final String getDescriptionId(ItemStack itemStack) {
+        return getDescriptionId();
+    }
+
     public OpenInteractionResult use(Level level, Player player, OpenInteractionHand hand, Object service) {
         return AbstractInteractionResult.wrap(super.use(level, player, AbstractInteractionHand.unwrap(hand)));
     }

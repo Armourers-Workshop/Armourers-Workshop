@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.SkinSaveException;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -264,11 +264,11 @@ public final class WorldUtils {
         targetCube.setBlockStateAndColors(targetState, colors);
     }
 
-    public static void copyPaintData(SkinPaintData srcData, EntityTextureModel.Box srcBox, SkinPaintData destData, EntityTextureModel.Box destBox, boolean isMirrorX) {
+    public static void copyPaintData(SkinPaintData srcData, PlayerSkinModel.Box srcBox, SkinPaintData destData, PlayerSkinModel.Box destBox, boolean isMirrorX) {
         srcData.copyTo(srcBox, destData, destBox, isMirrorX);
     }
 
-    public static void clearPaintData(SkinPaintData srcData, EntityTextureModel.Box srcBox) {
+    public static void clearPaintData(SkinPaintData srcData, PlayerSkinModel.Box srcBox) {
         srcBox.forEach((texturePos, x, y, z, dir) -> srcData.setColor(texturePos, 0));
     }
 

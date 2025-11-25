@@ -3,15 +3,13 @@ package moe.plushie.armourers_workshop.core.client.render.model;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
-import moe.plushie.armourers_workshop.api.client.model.IModelBabyPose;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
-import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 
 import java.util.HashSet;
 
 @OnlyIn(Dist.CLIENT)
-public class LinkedModel<S extends EntityRenderState> extends PlaceholderModel<S, LinkedModelPart> {
+public class LinkedModel<S> extends PlaceholderModel<S, LinkedModelPart> {
 
     private final IEntityModel<S> parent;
     private IEntityModel<S> target;

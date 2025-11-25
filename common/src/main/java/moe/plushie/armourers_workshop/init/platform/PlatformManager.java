@@ -2,11 +2,13 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.server.MinecraftServer;
 
 import java.nio.file.Path;
+import java.util.concurrent.Executor;
 
 public abstract class PlatformManager {
 

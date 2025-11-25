@@ -2,13 +2,11 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
+import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -21,6 +19,10 @@ public class MannequinHitResult extends BlockHitResult {
         super(location, Direction.UP, pos, false);
         this.scale = scale;
         this.rotation = rotation;
+    }
+
+    public static MannequinHitResult test(Player player, OpenVector3d origin, OpenVector3d target, BlockPos pos) {
+        return test(player, new Vec3(origin.x, origin.y, origin.z), new Vec3(target.x, target.y, target.z), pos);
     }
 
     public static MannequinHitResult test(Player player, Vec3 origin, Vec3 target, BlockPos pos) {

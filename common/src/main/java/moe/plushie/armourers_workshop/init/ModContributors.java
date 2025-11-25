@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +52,7 @@ public class ModContributors {
             .build();
 
     @Nullable
-    public static Contributor of(GameProfile gameProfile) {
+    public static Contributor of(OpenGameProfile gameProfile) {
         if (gameProfile != null) {
             var uuid = gameProfile.id();
             if (uuid != null) {
@@ -68,8 +66,8 @@ public class ModContributors {
     public static Contributor by(Entity entity) {
         if (entity instanceof MannequinEntity mannequin) {
             if (mannequin.isExtraRenderer()) {
-                var profile = EnvironmentExecutor.callOnClient(() -> () -> EntityTextureLoader.getInstance().getGameProfile(mannequin.getTextureDescriptor()));
-                return of(profile.orElse(null));
+                var profile = PlayerSkinLoader.getInstance().getGameProfile(mannequin.getTextureDescriptor());
+                return of(profile);
             }
             return null;
         }
@@ -84,8 +82,7 @@ public class ModContributors {
         if (EnvironmentManager.isDevelopment()) {
             return dev;
         }
-        var profile = EnvironmentExecutor.callOnClient(() -> () -> Minecraft.getInstance().getUser().getGameProfile());
-        return of(profile.orElse(null));
+        return of(EnvironmentManager.getClientUser());
     }
 
     public enum ContributionFlags {

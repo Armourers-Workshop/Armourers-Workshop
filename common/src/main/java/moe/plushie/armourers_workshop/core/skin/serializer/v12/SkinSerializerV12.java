@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.serializer.exception.InvalidCube
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.init.ModLog;
 
@@ -77,7 +76,7 @@ public final class SkinSerializerV12 implements IOSerializer {
             stream.writeBoolean(true);
             // TODO: Support v2 skin
             int[] colors = skin.paintData().bytes();
-            for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
+            for (int i = 0; i < SkinPaintData.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(colors[i]);
             }
         } else {
@@ -202,7 +201,7 @@ public final class SkinSerializerV12 implements IOSerializer {
             if (hasPaintData) {
                 paintData = SkinPaintData.v1();
                 int[] colors = paintData.bytes();
-                for (int i = 0; i < EntityTextureModel.TEXTURE_OLD_SIZE; i++) {
+                for (int i = 0; i < SkinPaintData.TEXTURE_OLD_SIZE; i++) {
                     colors[i] = stream.readInt();
                 }
             }

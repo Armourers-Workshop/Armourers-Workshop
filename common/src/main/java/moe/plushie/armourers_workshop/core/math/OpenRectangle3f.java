@@ -27,6 +27,10 @@ public class OpenRectangle3f implements IRectangle3f {
     public float height;
     public float depth;
 
+    public OpenRectangle3f() {
+        this(0, 0, 0, 0, 0, 0);
+    }
+
     public OpenRectangle3f(IRectangle3i rect) {
         this(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth());
     }

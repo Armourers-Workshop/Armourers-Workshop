@@ -32,10 +32,10 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
     }
 
     public static void onRenderEntity(LivingEntity entityIn, Armature armature, int lightmap, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
-        EpicFightEntityRenderPlugin.activate(AbstractRenderLivingEntityEvent.pre(entityIn, partialTicks, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, null), patch -> {
+        EpicFightEntityRenderPlugin.activate(AbstractRenderLivingEntityEvent.pre(entityIn, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, null), patch -> {
             var poses = cir.getReturnValue();
             var overridePoses = Arrays.copyOf(poses, poses.length);
-            patch.setOverridePose(AbstractPoseStack.newInstance(poseStackIn));
+            patch.setOverridePose(AbstractPoseStack.newInstance(poseStackIn).last());
             patch.setTransformProvider((name, pose) -> {
                 var joint = armature.searchJointByName(name);
                 if (joint != null) {
@@ -47,21 +47,20 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
                     pose.normal().setIdentity();
                 }
             });
-            patch.setMesh((EpicFlightModelPartProvider) name -> {
+            patch.setMesh(new EpicFlightModelPartProvider(name -> {
                 var joint = armature.searchJointByName(name);
                 if (joint != null) {
                     return visible -> overridePoses[joint.getId()] = OpenMatrix4f.createScale(0, 0, 0);
                 }
                 return null;
-            });
+            }));
             cir.setReturnValue(overridePoses);
         });
     }
 
     public static void onRenderPost(LivingEntity entityIn, int lightmap, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
-        EpicFightEntityRenderPlugin.deactivate(AbstractRenderLivingEntityEvent.post(entityIn, partialTicks, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, renderer), patch -> {
+        EpicFightEntityRenderPlugin.deactivate(AbstractRenderLivingEntityEvent.post(entityIn, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, renderer), patch -> {
             patch.setFirstPerson(false);
-            patch.setOverridePose(null);
             patch.setTransformProvider(null);
         });
     }

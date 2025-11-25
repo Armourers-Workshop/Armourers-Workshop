@@ -30,6 +30,8 @@ public class AbstractHumanoidArmourModel<T extends LivingEntity, S extends Livin
         S renderState = AbstractRenderState.wrap(entity);
         DataContainer.of(renderState, KEY).set(f, g, h, i, j);
         abi$setupAnim(renderState);
+        // copy the parent part pose, because the 1.16.5-1.21.1 no child/parent dependency.
+        this.hat.copyFrom(this.head);
     }
 
     protected static class ColorHolder {

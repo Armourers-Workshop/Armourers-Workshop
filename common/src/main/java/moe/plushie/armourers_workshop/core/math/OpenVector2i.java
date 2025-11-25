@@ -11,6 +11,10 @@ public class OpenVector2i implements IVector2i {
     public int x;
     public int y;
 
+    public OpenVector2i() {
+        this(0, 0);
+    }
+
     public OpenVector2i(int x, int y) {
         this.x = x;
         this.y = y;
@@ -18,6 +22,31 @@ public class OpenVector2i implements IVector2i {
 
     public OpenVector2i(double x, double y) {
         this(OpenMath.floori(x), OpenMath.floori(y));
+    }
+
+    public void add(int tx, int ty) {
+        x += tx;
+        y += ty;
+    }
+
+    public void add(OpenVector2i pos) {
+        x += pos.x;
+        y += pos.y;
+    }
+
+    public void subtract(int tx, int ty) {
+        x -= tx;
+        y -= ty;
+    }
+
+    public void subtract(OpenVector2i pos) {
+        x -= pos.x;
+        y -= pos.y;
+    }
+
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void setX(int x) {

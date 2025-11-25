@@ -1,43 +1,34 @@
 package moe.plushie.armourers_workshop.compat.client;
 
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import moe.plushie.armourers_workshop.init.ModTextures;
+import net.minecraft.client.player.AbstractClientPlayer;
 
-@SuppressWarnings("unused")
-public class AbstractPlayerSkin extends AbstractPlayerSkinImpl {
+import java.util.IdentityHashMap;
 
-    private static final AbstractPlayerSkin DEFAULT_SKIN = new AbstractPlayerSkin(ModTextures.MANNEQUIN_DEFAULT, null, null, EntityTextureDescriptor.Model.WIDE);
+@Available("[1.21, 1.22)")
+public class AbstractPlayerSkin {
 
-    private final OpenResourceLocation body;
-    private final OpenResourceLocation cape;
-    private final OpenResourceLocation elytra;
-    private final EntityTextureDescriptor.Model model;
+    private static final IdentityHashMap<Object, PlayerSkin> CACHES = new IdentityHashMap<>();
 
-    public AbstractPlayerSkin(OpenResourceLocation body, OpenResourceLocation cape, OpenResourceLocation elytra, EntityTextureDescriptor.Model model) {
-        this.body = body;
-        this.cape = cape;
-        this.elytra = elytra;
-        this.model = model;
-    }
-
-    public static AbstractPlayerSkin getDefaultSkin() {
-        return DEFAULT_SKIN;
-    }
-
-    public OpenResourceLocation body() {
-        return body;
-    }
-
-    public OpenResourceLocation cape() {
-        return cape;
-    }
-
-    public OpenResourceLocation elytra() {
-        return elytra;
-    }
-
-    public EntityTextureDescriptor.Model model() {
-        return model;
+    public static PlayerSkin by(AbstractClientPlayer player) {
+        var skin = player.getSkin();
+        var result = CACHES.get(skin);
+        if (result != null) {
+            return result;
+        }
+        var body = Objects.flatMap(skin.texture(), OpenResourceLocation::of);
+        var cape = Objects.flatMap(skin.capeTexture(), OpenResourceLocation::of);
+        var elytra = Objects.flatMap(skin.elytraTexture(), OpenResourceLocation::of);
+        var model = switch (skin.model()) {
+            case SLIM -> PlayerSkinModel.SLIM;
+            case WIDE -> PlayerSkinModel.WIDE;
+        };
+        result = new PlayerSkin(body, cape, elytra, model);
+        CACHES.put(skin, result);
+        return result;
     }
 }

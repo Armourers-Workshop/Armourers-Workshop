@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.math;
 
 import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.core.BlockPos;
 
 @SuppressWarnings("unused")
 public class OpenVector3d {
@@ -25,20 +26,20 @@ public class OpenVector3d {
         return new OpenVector3d(d0, d1, d2);
     }
 
-    public static OpenVector3d atCenterOf(IVector3i pos) {
-        return new OpenVector3d((double) pos.x() + 0.5D, (double) pos.y() + 0.5D, (double) pos.z() + 0.5D);
+    public static OpenVector3d atCenterOf(BlockPos pos) {
+        return new OpenVector3d((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D);
     }
 
-    public static OpenVector3d atLowerCornerOf(IVector3i pos) {
-        return new OpenVector3d(pos.x(), pos.y(), pos.z());
+    public static OpenVector3d atLowerCornerOf(BlockPos pos) {
+        return new OpenVector3d(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public static OpenVector3d atBottomCenterOf(IVector3i pos) {
-        return new OpenVector3d((double) pos.x() + 0.5D, pos.y(), (double) pos.z() + 0.5D);
+    public static OpenVector3d atBottomCenterOf(BlockPos pos) {
+        return new OpenVector3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D);
     }
 
-    public static OpenVector3d upFromBottomCenterOf(IVector3i pos, double offset) {
-        return new OpenVector3d((double) pos.x() + 0.5D, (double) pos.y() + offset, (double) pos.z() + 0.5D);
+    public static OpenVector3d upFromBottomCenterOf(BlockPos pos, double offset) {
+        return new OpenVector3d((double) pos.getX() + 0.5D, (double) pos.getY() + offset, (double) pos.getZ() + 0.5D);
     }
 
     public static OpenVector3d directionFromRotation(float a, float b) {

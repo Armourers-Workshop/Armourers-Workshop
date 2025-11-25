@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.builder.other;
 
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
-import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -109,9 +108,9 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     @Override
-    public void forEach(UseOnContext context, BiConsumer<BlockPos, OpenDirection> consumer) {
-        var level = context.getLevel();
-        var clickedFace = AbstractDirection.wrap(context.getClickedFace());
+    public void forEach(IUseOnContext context, BiConsumer<BlockPos, OpenDirection> consumer) {
+        var level = context.level();
+        var clickedFace = (OpenDirection) context.clickedFace();
         var dirs = resolvedDirections(clickedFace);
         forEach(level, clickedFace, targetPos -> {
             for (var dir : dirs) {

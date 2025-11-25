@@ -15,10 +15,11 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
         this.offset = new OpenVector3i(0, 0, 0);
         this.renderOffset = OpenVector3i.ZERO;
         this.renderPolygonOffset = 6;
+        this.guideOrigin = new OpenVector3i(-4, -8, -4);
     }
 
     @Override
-    public OpenVector2i textureSkinPos() {
+    public OpenVector2i texturePos() {
         return OpenVector2i.ZERO;
     }
 

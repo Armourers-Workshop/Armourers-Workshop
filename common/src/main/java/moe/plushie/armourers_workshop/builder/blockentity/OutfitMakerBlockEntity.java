@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableContainerBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SimpleContainer;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.logging.log4j.util.Strings;
 
 public class OutfitMakerBlockEntity extends UpdatableContainerBlockEntity {
 

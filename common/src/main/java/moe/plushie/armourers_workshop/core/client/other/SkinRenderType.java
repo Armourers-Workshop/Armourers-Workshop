@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.compat.client.AbstractRenderTypeImpl;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModTextures;
 
 import java.util.List;
@@ -19,9 +19,9 @@ public abstract class SkinRenderType implements IRenderType {
     public static final IRenderType BLIT_TEXTURED = _builder(SkinVertexFormat.BLIT_TEXTURED).build("blit_image");
 
     public static final IRenderType GUI_COLOR = _builder(SkinVertexFormat.GUI_COLOR).blend(BlendMode.TRANSLUCENT).build("gui_color");
-    public static final IRenderType GUI_REVERSED_COLOR = _builder(SkinVertexFormat.GUI_COLOR).blend(BlendMode.TRANSLUCENT).colorLogic(LogicOp.OR_REVERSE).depthTest(DepthTestMode.NO_DEPTH_TEST).build("gui_reversed_color");
+    public static final IRenderType GUI_REVERSED_COLOR = _builder(SkinVertexFormat.GUI_COLOR).blend(BlendMode.ADDITIVE).depthTest(DepthTestMode.NO_DEPTH_TEST).build("gui_reversed_color");
 
-    public static final IRenderType IMAGE_GUIDE = _blockCutout(ModTextures.GUIDES).polygonOffset(-1, -10).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).build("image_guide");
+    public static final IRenderType IMAGE_GUIDE = _blockCutout(ModTextures.GUIDES).polygonOffset(-1, -10).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.CLOUDS).build("image_guide");
     public static final IRenderType IMAGE_MARKER = _blockCutout(ModTextures.MARKERS).polygonOffset(-1, -10).cull().build("image_marker");
 
     public static final IRenderType HIGHLIGHTED_LINES = _line(1).depthTest(DepthTestMode.NO_DEPTH_TEST).build("lines_ndt");
@@ -31,16 +31,16 @@ public abstract class SkinRenderType implements IRenderType {
     public static final IRenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(ModTextures.MANNEQUIN_DEFAULT);
     public static final IRenderType PLAYER_TRANSLUCENT = entityTranslucentCull(ModTextures.MANNEQUIN_DEFAULT);
 
-    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).cull().build("block_earth");
+    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).cull().build("block_earth");
 
-    public static final IRenderType BLOCK_CUBE = _block(ModTextures.BLOCK_CUBE).build("block_cube");
-    public static final IRenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).sortOnUpload().build("block_cube_glass");
-    public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).build("block_cube_glass_unsorted");
+    public static final IRenderType BLOCK_CUBE = _block(ModTextures.BLOCK_CUBE).group(Group.SOLID_BLOCKS).build("block_cube");
+    public static final IRenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).sortOnUpload().build("block_cube_glass");
+    public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).build("block_cube_glass_unsorted");
 
-    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).ordinal(200).build("block_face_sold");
-    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).ordinal(200).build("block_face_lighting");
-    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("block_face_translucent");
-    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).ordinal(400).build("block_face_translucent_lighting");
+    public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).group(Group.SOLID_BLOCKS).ordinal(200).build("block_face_sold");
+    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).group(Group.SOLID_BLOCKS).ordinal(200).build("block_face_lighting");
+    public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).ordinal(400).build("block_face_translucent");
+    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).ordinal(400).build("block_face_translucent_lighting");
 
     private static final IRenderType LINES = _line(1).build("lines");
     private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("line_strip");
@@ -61,12 +61,12 @@ public abstract class SkinRenderType implements IRenderType {
         return BLOCK_FACE_SOLID;
     }
 
-    public static IRenderType customFace(String name, SkinVertexFormat format, IResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
+    public static IRenderType customFace(String name, SkinVertexFormat format, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
         var key = String.format("%s/%s", name, texture.path());
         return CUSTOM_FACE_VARIANTS.computeIfAbsent(key, it -> {
-            var builder = _customFace(format).texture(texture);
+            var builder = _customFace(format).texture(texture).group(Group.SOLID_BLOCKS);
             if (isTranslucent) {
-                builder = builder.blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT);
+                builder = builder.blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS);
             }
             if (isCull) {
                 builder = builder.cull();
@@ -80,7 +80,7 @@ public abstract class SkinRenderType implements IRenderType {
         });
     }
 
-    public static IRenderType geometryFace(SkinGeometryType type, IResourceLocation texture, boolean isTranslucent, boolean isEmissive) {
+    public static IRenderType geometryFace(SkinGeometryType type, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive) {
         var builder = GeometryFaceBuilder.search(type, isTranslucent, isEmissive);
         if (builder != null) {
             return builder.build(texture);
@@ -96,28 +96,28 @@ public abstract class SkinRenderType implements IRenderType {
         return LINE_STRIP;
     }
 
-    public static IRenderType customImage(IResourceLocation texture) {
+    public static IRenderType customImage(OpenResourceLocation texture) {
         var key = String.format("gui_image/%s", texture.path());
         return CUSTOM_GUI_IMAGES.computeIfAbsent(key, it -> _builder(SkinVertexFormat.GUI_TEXTURED).texture(texture).blend(BlendMode.TRANSLUCENT).build(it));
     }
 
-    public static IRenderType entityCutout(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).cull().build("player_solid");
+    public static IRenderType entityCutout(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).group(Group.SOLID_ENTITIES).cull().build("player_solid");
     }
 
-    public static IRenderType entityCutoutNoCull(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).build("player_cutout");
+    public static IRenderType entityCutoutNoCull(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).group(Group.CUTOUT_ENTITIES).build("player_cutout");
     }
 
-    public static IRenderType entityTranslucentCull(IResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().blend(BlendMode.TRANSLUCENT).build("player_translucent");
+    public static IRenderType entityTranslucentCull(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().blend(BlendMode.TRANSLUCENT).group(Group.TRANSLUCENT_ENTITIES).build("player_translucent");
     }
 
-    private static Builder _entity(SkinVertexFormat format, IResourceLocation texture) {
+    private static Builder _entity(SkinVertexFormat format, OpenResourceLocation texture) {
         return _builder(format).texture(texture).polygonOffset(0, 30).overlay().lightmap().sortOnUpload().crumbling().outline();
     }
 
-    private static Builder _entityHighlight(IResourceLocation texture) {
+    private static Builder _entityHighlight(OpenResourceLocation texture) {
         return _builder(SkinVertexFormat.ENTITY_ALPHA).texture(texture).overlay().lightmap();
     }
 
@@ -129,11 +129,11 @@ public abstract class SkinRenderType implements IRenderType {
         return _builder(format).outline();
     }
 
-    private static Builder _blockCutout(IResourceLocation texture) {
+    private static Builder _blockCutout(OpenResourceLocation texture) {
         return _builder(SkinVertexFormat.BLOCK_CUTOUT).texture(texture).overlay().lightmap();
     }
 
-    private static Builder _block(IResourceLocation texture) {
+    private static Builder _block(OpenResourceLocation texture) {
         return _builder(SkinVertexFormat.BLOCK).texture(texture).overlay().lightmap();
     }
 
@@ -195,7 +195,7 @@ public abstract class SkinRenderType implements IRenderType {
             return null;
         }
 
-        public IRenderType build(IResourceLocation texture) {
+        public IRenderType build(OpenResourceLocation texture) {
             return customFace(name, format, texture, isTranslucent, isEmissive, isCull);
         }
     }

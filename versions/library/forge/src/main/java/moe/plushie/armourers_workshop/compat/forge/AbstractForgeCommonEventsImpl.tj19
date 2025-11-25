@@ -43,10 +43,11 @@ public class AbstractForgeCommonEventsImpl {
     public static final auto SERVER_LEVEL_TICK_PRE = AbstractForgeEventBus.create(TickEvent.LevelTickEvent.class);
     public static final auto SERVER_LEVEL_TICK_POST = AbstractForgeEventBus.create(TickEvent.LevelTickEvent.class);
 
+    public static final auto SERVER_LEVEL_ADD_ENTITY = AbstractForgeEventBus.create(EntityJoinLevelEvent.class);
+
     public static final auto BLOCK_BREAK = AbstractForgeEventBus.create(BlockEvent.BreakEvent.class);
     public static final auto BLOCK_PLACE = AbstractForgeEventBus.create(BlockEvent.EntityPlaceEvent.class);
 
-    public static final auto SERVER_LEVEL_ADD_ENTITY = AbstractForgeEventBus.create(EntityJoinLevelEvent.class);
     public static final auto PLAYER_DEATH = AbstractForgeEventBus.create(LivingDropsEvent.class);
     public static final auto PLAYER_ATTACK = AbstractForgeEventBus.create(AttackEntityEvent.class);
 

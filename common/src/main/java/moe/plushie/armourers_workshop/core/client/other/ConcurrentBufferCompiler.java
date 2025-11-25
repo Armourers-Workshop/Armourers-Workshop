@@ -296,6 +296,14 @@ public class ConcurrentBufferCompiler {
         public void release() {
             group.release();
         }
+
+        public boolean isOutline() {
+            return isOutline;
+        }
+
+        public IRenderType renderType() {
+            return renderType;
+        }
     }
 
     private static class Key {

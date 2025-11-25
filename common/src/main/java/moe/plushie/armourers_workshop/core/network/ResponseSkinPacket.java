@@ -23,10 +23,10 @@ public class ResponseSkinPacket extends CustomPacket {
     private final String identifier;
     private final Mode mode;
     private final boolean compress;
-    private final Exception exp;
+    private final Throwable exp;
     private final Skin skin;
 
-    public ResponseSkinPacket(String identifier, Skin skin, Exception exp) {
+    public ResponseSkinPacket(String identifier, Skin skin, Throwable exp) {
         this.identifier = identifier;
         this.exp = exp;
         this.skin = skin;
@@ -73,7 +73,7 @@ public class ResponseSkinPacket extends CustomPacket {
         }
     }
 
-    private void writeException(IFriendlyByteBuf buffer, Exception exception) {
+    private void writeException(IFriendlyByteBuf buffer, Throwable exception) {
         if (mode != Mode.EXCEPTION) {
             return;
         }

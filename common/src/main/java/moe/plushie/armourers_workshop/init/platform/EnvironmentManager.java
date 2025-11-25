@@ -2,18 +2,22 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientResourceManager;
+import moe.plushie.armourers_workshop.compat.client.AbstractGameProfile;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.concurrent.Executor;
 
 public class EnvironmentManager {
 
@@ -80,6 +84,14 @@ public class EnvironmentManager {
 
     public static AbstractRegistryManager getRegistryManager() {
         return PLATFORM.getRegistryManager();
+    }
+
+    public static OpenGameProfile getClientUser() {
+        return EnvironmentExecutor.callOnClient(() -> () -> AbstractGameProfile.wrap(Minecraft.getInstance().getUser().getGameProfile())).orElse(null);
+    }
+
+    public static Executor getClientExecutor() {
+        return EnvironmentExecutor.callOnClient(() -> () -> Minecraft.getInstance()).orElse(null);
     }
 
     public static AbstractResourceManager getClientResourceManager() {

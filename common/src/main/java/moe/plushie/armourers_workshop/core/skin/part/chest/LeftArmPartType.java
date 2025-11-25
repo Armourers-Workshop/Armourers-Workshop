@@ -5,10 +5,11 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector2i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 
 public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextured {
 
+    protected OpenVector3i guideOriginSlim;
     protected OpenRectangle3i guideSpaceSlim;
 
     public LeftArmPartType() {
@@ -19,23 +20,33 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
         this.offset = new OpenVector3i(30, -1, 0);
         this.renderOffset = new OpenVector3i(5, 2, 0);
         this.renderPolygonOffset = 4;
+        this.guideOrigin = new OpenVector3i(-1, -2, -2);
+        this.guideOriginSlim = new OpenVector3i(-1, -2, -2);
     }
 
     @Override
-    public OpenRectangle3i guideSpace(EntityTextureDescriptor.Model model) {
-        if (model == EntityTextureDescriptor.Model.SLIM) {
-            return guideSpaceSlim;
-        }
-        return guideSpace;
-    }
-
-    @Override
-    public OpenVector2i textureSkinPos() {
+    public OpenVector2i texturePos() {
         return new OpenVector2i(40, 16);
     }
 
     @Override
     public OpenVector3i textureModelSize() {
         return new OpenVector3i(4, 12, 4);
+    }
+
+    @Override
+    public OpenVector3i guideOriginByModel(PlayerSkinModel model) {
+        if (model.slim()) {
+            return guideOriginSlim;
+        }
+        return guideOrigin;
+    }
+
+    @Override
+    public OpenRectangle3i guideSpaceByModel(PlayerSkinModel model) {
+        if (model.slim()) {
+            return guideSpaceSlim;
+        }
+        return guideSpace;
     }
 }

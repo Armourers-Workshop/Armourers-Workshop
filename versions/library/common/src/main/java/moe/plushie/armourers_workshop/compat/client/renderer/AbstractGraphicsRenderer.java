@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
 import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -54,8 +55,7 @@ public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
     public void submit(IGraphicsRenderable renderable) {
         var renderType = renderable.renderType();
         var bufferSource = getBufferSource(renderType);
-        var builder = bufferSource.getBuffer(renderType);
-        renderable.render(poseStack.last(), builder);
+        AbstractRenderPipeline.submit(poseStack, bufferSource, renderType, renderable::render);
     }
 
     @Override

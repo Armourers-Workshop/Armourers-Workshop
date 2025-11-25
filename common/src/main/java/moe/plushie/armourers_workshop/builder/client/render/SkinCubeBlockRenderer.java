@@ -45,6 +45,10 @@ public class SkinCubeBlockRenderer<T extends BlockEntity & IBlockPaintable, S ex
 
     @Override
     protected void abi$render(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        // ignore when the not markers.
+        if (renderState.markerTotal() == 0) {
+            return;
+        }
         // update the alpha time.
         updateHoldingAlpha();
         var alpha = HOLDING_TOOL_ALPHA;

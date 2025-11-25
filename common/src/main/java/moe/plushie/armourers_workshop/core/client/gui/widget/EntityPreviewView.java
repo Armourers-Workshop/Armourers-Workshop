@@ -27,8 +27,6 @@ public class EntityPreviewView extends UIControl {
         }
         var bounds = bounds();
         RenderSystem.setExtendedScissorFlags(1);
-        MannequinEntityRenderer.enableLimitScale = true;
-        MannequinEntityRenderer.enableLimitYRot = true;
         context.saveGraphicsState();
 
         context.translateCTM(0, 0, 300);
@@ -40,8 +38,6 @@ public class EntityPreviewView extends UIControl {
         context.drawEntity(entity, CGPoint.ZERO, 45, CGPoint.ZERO);
 
         context.restoreGraphicsState();
-        MannequinEntityRenderer.enableLimitYRot = false;
-        MannequinEntityRenderer.enableLimitScale = false;
         RenderSystem.setExtendedScissorFlags(0);
     }
 

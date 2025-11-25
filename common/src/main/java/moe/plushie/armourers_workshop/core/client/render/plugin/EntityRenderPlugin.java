@@ -47,7 +47,7 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
         var renderState = event.renderState();
         // noinspection unchecked
         var renderPlugin = (P) renderState.renderPlugin();
-        if (renderPlugin != null) {
+        if (clazz.isInstance(renderPlugin)) {
             if (handler != null) {
                 handler.accept(renderPlugin);
             }
@@ -60,7 +60,7 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
         var renderState = event.renderState();
         // noinspection unchecked
         var renderPlugin = (P) renderState.renderPlugin();
-        if (renderPlugin != null) {
+        if (clazz.isInstance(renderPlugin)) {
             AbstractRenderState.deactivate(renderState);
             renderPlugin.deactivate(renderState, event.lightmap(), event.overlay(), event.context());
             if (handler != null) {
@@ -73,12 +73,14 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
     }
 
     protected void prepare(S renderState, T entity, float partialTicks) {
+        updateTransformerIfNeeded();
         if (transformer != null) {
             transformer.prepare(renderState, entity, partialTicks);
         }
     }
 
     protected void activate(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        updateTransformerIfNeeded();
         if (transformer != null) {
             transformer.activate(renderState, lightmap, overlay, context);
         }
@@ -88,6 +90,10 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
         if (transformer != null) {
             transformer.deactivate(renderState, lightmap, overlay, context);
         }
+    }
+
+    protected void updateTransformerIfNeeded() {
+        // nop
     }
 
     public BakedArmature getArmature(BakedArmature armature) {

@@ -56,7 +56,7 @@ public class DataTransformer<K, V, T> {
     }
 
     @Nullable
-    public Pair<V, Exception> get(K key) {
+    public Pair<V, Throwable> get(K key) {
         var entry = getEntry(key);
         if (entry != null) {
             return entry.transformedData;
@@ -65,7 +65,7 @@ public class DataTransformer<K, V, T> {
     }
 
     @Nullable
-    public Pair<V, Exception> getOrLoad(Ticket<K> ticket) {
+    public Pair<V, Throwable> getOrLoad(Ticket<K> ticket) {
         var entry = getEntryAndCreate(ticket.get());
         if (!entry.isCompleted()) {
             load(ticket, null);
@@ -239,8 +239,8 @@ public class DataTransformer<K, V, T> {
 
         private ArrayList<IResultHandler<V>> callbacks;
 
-        private Pair<T, Exception> loadedData;
-        private Pair<V, Exception> transformedData;
+        private Pair<T, Throwable> loadedData;
+        private Pair<V, Throwable> transformedData;
 
         private float priority = 0;
         private long expiredTime = 0;
@@ -283,12 +283,12 @@ public class DataTransformer<K, V, T> {
             callbacks.add(callback);
         }
 
-        public void receiveLoadResult(T value, Exception exception) {
+        public void receiveLoadResult(T value, Throwable exception) {
             this.loadedData = Pair.of(value, exception);
             this.isLoading = false;
         }
 
-        public void receiveTransformResult(V value, Exception exception) {
+        public void receiveTransformResult(V value, Throwable exception) {
             this.transformedData = Pair.of(value, exception);
             this.isTransforming = false;
             this.sendNotify();
@@ -319,7 +319,7 @@ public class DataTransformer<K, V, T> {
         }
 
         @Nullable
-        public Exception getLoadedError() {
+        public Throwable getLoadedError() {
             if (loadedData != null) {
                 return loadedData.getValue();
             }

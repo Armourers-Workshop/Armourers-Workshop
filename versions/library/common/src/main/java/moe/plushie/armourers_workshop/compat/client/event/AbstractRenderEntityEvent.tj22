@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState
 import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 
 @Available("[1.22, )")
@@ -41,13 +42,8 @@ public class AbstractRenderEntityEvent {
         };
     }
 
-    public static <T extends Entity, S extends EntityRenderState, R extends net.minecraft.client.renderer.entity.state.EntityRenderState> RenderEntityEvent.Pre<T, S> pre(R renderState, float partialTicks, int lightmap, int overlay, PoseStack poseStack, SubmitNodeCollector nodeCollector, EntityRenderer<?, ?> renderer) {
+    public static <T extends Entity, S extends EntityRenderState, R extends net.minecraft.client.renderer.entity.state.EntityRenderState> RenderEntityEvent.Pre<T, S> pre(R renderState, int lightmap, int overlay, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, EntityRenderer<?, ?> renderer) {
         return new RenderEntityEvent.Pre<>() {
-
-            @Override
-            public float partialTicks() {
-                return partialTicks;
-            }
 
             @Override
             public int lightmap() {
@@ -66,7 +62,7 @@ public class AbstractRenderEntityEvent {
 
             @Override
             public IGraphicsContext context() {
-                return AbstractGraphicsRenderer.wrap(poseStack, nodeCollector);
+                return AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector, cameraRenderState);
             }
 
             @Override
@@ -76,13 +72,8 @@ public class AbstractRenderEntityEvent {
         };
     }
 
-    public static <T extends Entity, S extends EntityRenderState, R extends net.minecraft.client.renderer.entity.state.EntityRenderState> RenderEntityEvent.Post<T, S> post(R renderState, float partialTicks, int lightmap, int overlay, PoseStack poseStack, SubmitNodeCollector nodeCollector, EntityRenderer<?, ?> renderer) {
+    public static <T extends Entity, S extends EntityRenderState, R extends net.minecraft.client.renderer.entity.state.EntityRenderState> RenderEntityEvent.Post<T, S> post(R renderState, int lightmap, int overlay, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, EntityRenderer<?, ?> renderer) {
         return new RenderEntityEvent.Post<>() {
-
-            @Override
-            public float partialTicks() {
-                return partialTicks;
-            }
 
             @Override
             public int lightmap() {
@@ -101,7 +92,7 @@ public class AbstractRenderEntityEvent {
 
             @Override
             public IGraphicsContext context() {
-                return AbstractGraphicsRenderer.wrap(poseStack, nodeCollector);
+                return AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector, cameraRenderState);
             }
 
             @Override

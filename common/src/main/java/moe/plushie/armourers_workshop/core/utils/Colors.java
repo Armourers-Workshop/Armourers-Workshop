@@ -317,6 +317,18 @@ public class Colors {
         return toARGB((int) (red * 255), (int) (green * 255), (int) (blue * 255), (int) (alpha * 255));
     }
 
+    public static int ARGBtoABGR(int color) {
+        var red = (color >> 16) & 0x0000ff;
+        var blue = (color << 16) & 0xff0000;
+        return  (color & 0xff00ff00) | red | blue;
+    }
+
+    public static int ABGRtoARGB(int color) {
+        var red = (color >> 16) & 0x0000ff;
+        var blue = (color << 16) & 0xff0000;
+        return  (color & 0xff00ff00) | red | blue;
+    }
+
     public static int HSBtoRGB(float[] hsb) {
         return HSBtoRGB(hsb[0], hsb[1], hsb[2]);
     }

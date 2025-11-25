@@ -2,17 +2,65 @@ package moe.plushie.armourers_workshop.compat.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.KeyMapping;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
+import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
+import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.network.chat.Component;
 
-@Available("[1.16, 1.22)")
-public class AbstractFabricKeyMapping extends KeyMapping {
+import java.util.Collection;
 
-    public AbstractFabricKeyMapping(String string, InputConstants.Type type, int i, String string2) {
-        super(string, type, i, string2);
+@Available("[1.16, )")
+public class AbstractFabricKeyMapping extends AbstractFabricKeyMappingImpl implements IKeyMapping {
+
+    private boolean canConsumeClick = false;
+
+    private final IKeyCategory category;
+
+    public AbstractFabricKeyMapping(OpenResourceLocation name, String key, Collection<IKeyModifier> modifiers, IKeyCategory category) {
+        super(name, unwrap(key), null, AbstractFabricKeyCategory.unwrap(category));
+        this.category = category;
     }
 
-    public static void register(String key, KeyMapping keyMapping) {
-        KeyBindingHelper.registerKeyBinding(keyMapping);
+    public static InputConstants.Key unwrap(String key) {
+        return InputConstants.getKey(key);
+    }
+
+    public static AbstractFabricKeyMapping unwrap(IKeyMapping keyMapping) {
+        return Objects.unsafeCast(keyMapping);
+    }
+
+    @Override
+    public boolean consumeClick() {
+        if (canConsumeClick && isDown()) {
+            canConsumeClick = false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void setDown(boolean isDown) {
+        super.setDown(isDown);
+        if (!isDown) {
+            canConsumeClick = true;
+        }
+    }
+
+    @Override
+    public Component name() {
+        return getTranslatedKeyMessage();
+    }
+
+    @Override
+    public IKeyCategory category() {
+        return category;
+    }
+
+    @Override
+    public Collection<? extends IKeyModifier> modifiers() {
+        return Collections.emptyList();
     }
 }

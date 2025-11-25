@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.option.PaintingToolOptions;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,8 +32,8 @@ public class HueToolItem extends PaintbrushItem {
     }
 
     @Override
-    public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public IPaintToolAction createPaintToolAction(IUseOnContext context) {
+        var itemStack = context.itemInHand();
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
         var hue = itemStack.get(PaintingToolOptions.CHANGE_HUE);
         var saturation = itemStack.get(PaintingToolOptions.CHANGE_SATURATION);
@@ -49,7 +49,7 @@ public class HueToolItem extends PaintbrushItem {
     }
 
     @Override
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(IUseOnContext context) {
         return ModSoundEvents.PAINT;
     }
 }

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compat.core.item;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -30,11 +31,11 @@ public class AbstractItem extends AbstractItemImpl implements AbstractItemHandle
         return super.use(level, player, hand, null);
     }
 
-    protected OpenInteractionResult abi$useOn(UseOnContext context) {
-        return super.useOn(context, null);
+    protected OpenInteractionResult abi$useOn(IUseOnContext context) {
+        return super.useOn(AbstractUseOnContext.unwrap(context), null);
     }
 
-    protected OpenInteractionResult abi$useOnFirst(ItemStack itemStack, UseOnContext context) {
+    protected OpenInteractionResult abi$useOnFirst(ItemStack itemStack, IUseOnContext context) {
         return OpenInteractionResult.PASS;
     }
 
@@ -62,11 +63,15 @@ public class AbstractItem extends AbstractItemImpl implements AbstractItemHandle
     }
 
     protected Component abi$getName(ItemStack itemStack) {
-        return super.getName(itemStack);
+        return Component.translatable(abi$getDescriptionId(itemStack));
     }
 
     protected boolean abi$isFoil(ItemStack itemStack) {
         return super.isFoil(itemStack);
+    }
+
+    protected String abi$getDescriptionId(ItemStack itemStack) {
+        return getDescriptionId(itemStack);
     }
 
     ///  API Implements
@@ -78,7 +83,7 @@ public class AbstractItem extends AbstractItemImpl implements AbstractItemHandle
 
     @Override
     public final OpenInteractionResult useOn(UseOnContext context, Object service) {
-        return abi$useOn(context);
+        return abi$useOn(AbstractUseOnContext.wrap(context));
     }
 
     @Override
@@ -110,7 +115,7 @@ public class AbstractItem extends AbstractItemImpl implements AbstractItemHandle
 
     @Override
     public final OpenInteractionResult useOnFirst(ItemStack itemStack, UseOnContext context) {
-        return abi$useOnFirst(itemStack, context);
+        return abi$useOnFirst(itemStack, AbstractUseOnContext.wrap(context));
     }
 
     @Override

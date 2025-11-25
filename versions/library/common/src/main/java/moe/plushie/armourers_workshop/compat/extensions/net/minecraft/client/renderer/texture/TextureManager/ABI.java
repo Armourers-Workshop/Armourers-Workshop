@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.re
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 

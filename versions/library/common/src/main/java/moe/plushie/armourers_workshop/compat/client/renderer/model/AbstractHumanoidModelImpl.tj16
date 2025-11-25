@@ -22,15 +22,6 @@ public class AbstractHumanoidModelImpl<T extends LivingEntity> extends PlayerMod
         return Context.create(0.0f, false);
     }
 
-    protected void translateAndRotate(PoseStack poseStack) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer builder, int light, int overlay, float r, float g, float b, float a) {
-        translateAndRotate(poseStack);
-        super.renderToBuffer(poseStack, builder, light, overlay, r, g, b, a);
-    }
-
     public interface Context {
 
         float inflate();

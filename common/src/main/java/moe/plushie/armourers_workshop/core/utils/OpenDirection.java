@@ -117,6 +117,7 @@ public enum OpenDirection implements IDirection {
         return this.normal.z();
     }
 
+    @Override
     public String serializedName() {
         return this.name;
     }

@@ -36,7 +36,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentListener;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentNode;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentType;
-import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModMenuOptions;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -207,9 +207,8 @@ public class AdvancedBuilderWindow extends MenuWindow<AdvancedBuilderMenu> imple
         alert.setMessage(NSString.localizedString("advanced-skin-builder.dialog.exporter.message"));
         alert.showInView(this, () -> {
             if (!alert.isCancelled()) {
-                var origin = Minecraft.getInstance().getUser().getGameProfile();
                 var serializer = new TagSerializer();
-                serializer.encode(ExtraCodecs.GAME_PROFILE, origin);
+                serializer.encode(OpenGameProfile.CODEC, EnvironmentManager.getClientUser());
                 AdvancedExportPacket packet = new AdvancedExportPacket(editor.blockEntity(), serializer.tag());
                 NetworkManager.sendToServer(packet);
             }

@@ -41,13 +41,8 @@ public class AbstractRenderLivingEntityEvent {
         };
     }
 
-    public static <T extends LivingEntity, S extends LivingEntityRenderState> RenderLivingEntityEvent.Pre<T, S> pre(T entity, float partialTicks, int lightmap, int overlay, PoseStack poseStack, MultiBufferSource bufferSource, LivingEntityRenderer<?, ?> renderer) {
+    public static <T extends LivingEntity, S extends LivingEntityRenderState> RenderLivingEntityEvent.Pre<T, S> pre(T entity, int lightmap, int overlay, PoseStack poseStack, MultiBufferSource bufferSource, LivingEntityRenderer<?, ?> renderer) {
         return new RenderLivingEntityEvent.Pre<>() {
-
-            @Override
-            public float partialTicks() {
-                return partialTicks;
-            }
 
             @Override
             public int lightmap() {
@@ -76,13 +71,8 @@ public class AbstractRenderLivingEntityEvent {
         };
     }
 
-    public static <T extends LivingEntity, S extends LivingEntityRenderState> RenderLivingEntityEvent.Post<T, S> post(T entity, float partialTicks, int lightmap, int overlay, PoseStack poseStack, MultiBufferSource bufferSource, LivingEntityRenderer<?, ?> renderer) {
+    public static <T extends LivingEntity, S extends LivingEntityRenderState> RenderLivingEntityEvent.Post<T, S> post(T entity, int lightmap, int overlay, PoseStack poseStack, MultiBufferSource bufferSource, LivingEntityRenderer<?, ?> renderer) {
         return new RenderLivingEntityEvent.Post<>() {
-
-            @Override
-            public float partialTicks() {
-                return partialTicks;
-            }
 
             @Override
             public int lightmap() {

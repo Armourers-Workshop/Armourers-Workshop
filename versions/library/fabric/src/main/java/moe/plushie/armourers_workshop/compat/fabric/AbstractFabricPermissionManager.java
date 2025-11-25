@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric;
 
 import com.mojang.authlib.GameProfile;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -27,11 +28,11 @@ public class AbstractFabricPermissionManager {
             }
 
             @Override
-            public boolean resolve(GameProfile profile, IPermissionContext context) {
+            public boolean resolve(IGameProfile profile, IPermissionContext context) {
                 // only work in server side.
                 var server = EnvironmentManager.getServer();
                 if (server != null) {
-                    return Permissions.check(profile, node, level, server).join();
+                    return Permissions.check(new GameProfile(profile.id(), profile.name()), node, level, server).join();
                 }
                 return true;
             }

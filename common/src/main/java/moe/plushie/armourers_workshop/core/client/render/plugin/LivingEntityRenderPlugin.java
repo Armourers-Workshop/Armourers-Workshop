@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.render.plugin;
 
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
-import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.EntityRendererContext;
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
@@ -43,18 +42,7 @@ public class LivingEntityRenderPlugin<T extends LivingEntity, S extends LivingEn
     }
 
     @Override
-    protected void prepare(S renderState, T entity, float partialTicks) {
-        updateTransformerIfNeeded();
-        super.prepare(renderState, entity, partialTicks);
-    }
-
-    @Override
-    protected void activate(S renderState, int lightmap, int overlay, IGraphicsContext context) {
-        updateTransformerIfNeeded();
-        super.activate(renderState, lightmap, overlay, context);
-    }
-
-    private void updateTransformerIfNeeded() {
+    protected void updateTransformerIfNeeded() {
         var entityModel = entityRenderer.abi$getModel();
         if (this.entityModel == entityModel) {
             return;

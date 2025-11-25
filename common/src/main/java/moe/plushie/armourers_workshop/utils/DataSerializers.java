@@ -16,7 +16,8 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -59,7 +60,6 @@ public class DataSerializers {
 
     public static final IDataCodec<OpenRectangle3f> BOUNDING_BOX = IDataCodec.FLOAT.listOf().xmap(OpenRectangle3f::new, OpenRectangle3f::toList);
     public static final IDataCodec<SkinPaintData> COMPRESSED_PAINT_DATA = IDataCodec.BYTE_BUFFER.xmap(DataSerializers::decompressPaintData, DataSerializers::compressPaintData);
-    public static final IDataCodec<EntityTextureDescriptor.Model> ENTITY_TEXTURE_MODEL = IDataCodec.INT.xmap(DataSerializers::parseTextureModel, EntityTextureDescriptor.Model::ordinal);
 
     public static final IEntityDataSerializer<Integer> INT = of(EntityDataSerializers.INT);
     public static final IEntityDataSerializer<String> STRING = of(EntityDataSerializers.STRING);
@@ -118,29 +118,29 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntityDataSerializer<EntityTextureDescriptor> PLAYER_TEXTURE = new IEntityDataSerializer<EntityTextureDescriptor>() {
+    public static final IEntityDataSerializer<PlayerSkinDescriptor> PLAYER_TEXTURE = new IEntityDataSerializer<PlayerSkinDescriptor>() {
 
         @Override
-        public void write(IFriendlyByteBuf buffer, EntityTextureDescriptor descriptor) {
-            buffer.writeNbtWithCodec(EntityTextureDescriptor.CODEC, descriptor);
+        public void write(IFriendlyByteBuf buffer, PlayerSkinDescriptor descriptor) {
+            buffer.writeNbtWithCodec(PlayerSkinDescriptor.CODEC, descriptor);
         }
 
         @Override
-        public EntityTextureDescriptor read(IFriendlyByteBuf buffer) {
-            return buffer.readNbtWithCodec(EntityTextureDescriptor.CODEC);
+        public PlayerSkinDescriptor read(IFriendlyByteBuf buffer) {
+            return buffer.readNbtWithCodec(PlayerSkinDescriptor.CODEC);
         }
     };
 
-    public static final IEntityDataSerializer<EntityTextureDescriptor.Model> PLAYER_TEXTURE_MODEL = new IEntityDataSerializer<EntityTextureDescriptor.Model>() {
+    public static final IEntityDataSerializer<PlayerSkinModel> PLAYER_TEXTURE_MODEL = new IEntityDataSerializer<PlayerSkinModel>() {
 
         @Override
-        public void write(IFriendlyByteBuf buffer, EntityTextureDescriptor.Model descriptor) {
+        public void write(IFriendlyByteBuf buffer, PlayerSkinModel descriptor) {
             buffer.writeInt(descriptor.ordinal());
         }
 
         @Override
-        public EntityTextureDescriptor.Model read(IFriendlyByteBuf buffer) {
-            return EntityTextureDescriptor.Model.values()[buffer.readInt()];
+        public PlayerSkinModel read(IFriendlyByteBuf buffer) {
+            return PlayerSkinModel.values()[buffer.readInt()];
         }
     };
 
@@ -172,10 +172,10 @@ public class DataSerializers {
         }
     };
 
-    public static final IEntityDataSerializer<Exception> EXCEPTION = new IEntityDataSerializer<Exception>() {
+    public static final IEntityDataSerializer<Throwable> EXCEPTION = new IEntityDataSerializer<Throwable>() {
 
         @Override
-        public void write(IFriendlyByteBuf buffer, Exception exception) {
+        public void write(IFriendlyByteBuf buffer, Throwable exception) {
             OutputStream outputStream = null;
             ObjectOutputStream objectOutputStream = null;
             try {
@@ -192,14 +192,14 @@ public class DataSerializers {
         }
 
         @Override
-        public Exception read(IFriendlyByteBuf buffer) {
+        public Throwable read(IFriendlyByteBuf buffer) {
             InputStream inputStream = null;
             ObjectInputStream objectInputStream = null;
             try {
                 boolean compress = buffer.readBoolean();
                 inputStream = createInputStream(buffer, compress);
                 objectInputStream = new ObjectInputStream(inputStream);
-                return (Exception) objectInputStream.readObject();
+                return (Throwable) objectInputStream.readObject();
             } catch (Exception exception) {
                 return exception;
             } finally {
@@ -384,11 +384,4 @@ public class DataSerializers {
         }
     }
 
-    public static EntityTextureDescriptor.Model parseTextureModel(int index) {
-        var values = EntityTextureDescriptor.Model.values();
-        if (index < values.length) {
-            return values[index];
-        }
-        return EntityTextureDescriptor.Model.WIDE;
-    }
 }

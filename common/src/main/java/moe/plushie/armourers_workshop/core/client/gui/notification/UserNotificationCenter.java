@@ -60,7 +60,7 @@ public class UserNotificationCenter {
         showToast(message, UIColor.WHITE, title, icon);
     }
 
-    public static void showToast(Exception exception, NSString title, Object icon) {
+    public static void showToast(Throwable exception, NSString title, Object icon) {
         NSString message;
         if (exception instanceof TranslatableException exception1) {
             message = new NSString(exception1.getComponent());

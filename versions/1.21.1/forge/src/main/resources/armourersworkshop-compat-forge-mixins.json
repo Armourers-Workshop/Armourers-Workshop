@@ -3,7 +3,6 @@
   "package": "moe.plushie.armourers_workshop.compat.forge.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ForgeLivingEntityRendererMixin",
     "ForgeBlockEntityRendererMixin",
     "ForgeEpicFightRendererMixin",
     "ForgeEpicFightFirstPersonRendererMixin",
@@ -25,6 +24,7 @@
     "backpack/ForgeSophisticatedBackpackRendererMixin"
   ],
   "mixins": [
+    "ForgeEntityHandlerMixin",
     "ForgeBlockEntityHandlerMixin"
   ],
   "injectors": {

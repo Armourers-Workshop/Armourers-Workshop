@@ -15,10 +15,11 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
         this.offset = new OpenVector3i(9, -1, 0);
         this.renderOffset = new OpenVector3i(2, 12, 0);
         this.renderPolygonOffset = 2;
+        this.guideOrigin = new OpenVector3i(-2, 0, -2);
     }
 
     @Override
-    public OpenVector2i textureSkinPos() {
+    public OpenVector2i texturePos() {
         return new OpenVector2i(0, 16);
     }
 

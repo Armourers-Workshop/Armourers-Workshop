@@ -7,9 +7,10 @@ import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform3f;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryFace;
@@ -24,7 +25,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTexturePos;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,15 +124,18 @@ public class BakedGeometryFace {
     }
 
 
-    private SkinPaintColor resolveTextureColor(OpenResourceLocation texture, SkinPartType partType) {
-        var textureModel = EntityTextureLoader.getInstance().getTextureModel(texture);
-        if (textureModel != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
+    private SkinPaintColor resolveTextureColor(PlayerSkin texture, SkinPartType partType) {
+        var skin = PlayerSkinBakery.getInstance().loadSkin(texture);
+        if (skin != null && defaultVertex instanceof SkinCubeVertex cubeVertex) {
             var shape = cubeVertex.boundingBox();
             var direction = cubeVertex.direction();
-            int x = (int) shape.x();
-            int y = (int) shape.y();
-            int z = (int) shape.z();
-            return textureModel.getColor(x, y, z, direction, partType);
+            var x = (int) shape.x();
+            var y = (int) shape.y();
+            var z = (int) shape.z();
+            var texturePos = texture.model().get(x, y, z, direction, partType);
+            if (texturePos != null) {
+                return skin.body().getColor(texturePos);
+            }
         }
         return null;
     }

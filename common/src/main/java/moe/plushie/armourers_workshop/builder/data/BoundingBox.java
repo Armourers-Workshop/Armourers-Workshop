@@ -2,14 +2,10 @@ package moe.plushie.armourers_workshop.builder.data;
 
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
 
 public class BoundingBox extends OpenRectangle3i {
-
-    public static final EntityTextureModel MODEL = EntityTextureModel.STAVE_V2;
-    public static final EntityTextureModel SLIM_MODEL = EntityTextureModel.ALEX_V2;
 
     private final SkinPartType partType;
 

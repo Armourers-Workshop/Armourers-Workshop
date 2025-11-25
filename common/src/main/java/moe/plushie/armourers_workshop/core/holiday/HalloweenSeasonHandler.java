@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.holiday;
 
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +22,7 @@ public class HalloweenSeasonHandler implements Holiday.IHandler {
         var entityData = new MannequinEntity.EntityData();
         entityData.setScale(2.0f);
         if (player != null) {
-            entityData.setTexture(EntityTextureDescriptor.fromProfile(player.getGameProfile()));
+            entityData.setTexture(PlayerSkinDescriptor.fromPlayer(player));
         }
         return entityData.itemStack();
     }

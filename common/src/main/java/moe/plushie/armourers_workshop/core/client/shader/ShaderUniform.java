@@ -15,14 +15,29 @@ public abstract class ShaderUniform {
 
     protected final String name;
 
-    protected final int program;
-    protected final int location;
+    protected int program = -1;
+    protected int location = -1;
 
-    ShaderUniform(String name, int program, int location) {
+    ShaderUniform(String name) {
         this.name = name;
-        this.program = program;
-        this.location = location;
     }
+
+    public static ShaderUniform integer(String name, Supplier<Integer> value) {
+        return new IntValue(name, value);
+    }
+
+    public static ShaderUniform vector4f(String name, Supplier<OpenVector4f> value) {
+        return new Vec4fValue(name, value);
+    }
+
+    public static ShaderUniform matrix4f(String name, Supplier<OpenMatrix4f> value) {
+        return new Matrix4fValue(name, value);
+    }
+
+    public static ShaderUniform matrix3f(String name, Supplier<OpenMatrix3f> value) {
+        return new Matrix3fValue(name, value);
+    }
+
 
     public abstract void apply();
 
@@ -30,6 +45,11 @@ public abstract class ShaderUniform {
     }
 
     public void pop() {
+    }
+
+    public void link(int program) {
+        this.program = program;
+        this.location = GL20.glGetUniformLocation(program, name);
     }
 
     @Override
@@ -44,14 +64,18 @@ public abstract class ShaderUniform {
         return name.hashCode();
     }
 
-    public static class Int extends ShaderUniform {
+    public boolean isLinked() {
+        return location != -1;
+    }
+
+    private static class IntValue extends ShaderUniform {
 
         private final Supplier<Integer> value;
         private final Stack<Integer> cachedValues = new Stack<>();
         private int cachedValue = 0;
 
-        Int(String name, int program, int location, Supplier<Integer> value) {
-            super(name, program, location);
+        IntValue(String name, Supplier<Integer> value) {
+            super(name);
             this.value = value;
         }
 
@@ -77,13 +101,13 @@ public abstract class ShaderUniform {
         }
     }
 
-    public static class Vec4f extends ShaderUniform {
+    private static class Vec4fValue extends ShaderUniform {
 
         private final Supplier<OpenVector4f> value;
         private OpenVector4f cachedValue = OpenVector4f.ZERO;
 
-        Vec4f(String name, int program, int location, Supplier<OpenVector4f> value) {
-            super(name, program, location);
+        Vec4fValue(String name, Supplier<OpenVector4f> value) {
+            super(name);
             this.value = value;
         }
 
@@ -97,14 +121,14 @@ public abstract class ShaderUniform {
         }
     }
 
-    public static class Matrix4f extends ShaderUniform {
+    private static class Matrix4fValue extends ShaderUniform {
 
         private final FloatBuffer buffer = MatrixUtils.createFloatBuffer(16);
         private final Supplier<OpenMatrix4f> value;
         private final OpenMatrix4f cachedValue = OpenMatrix4f.createScaleMatrix(0, 0, 0);
 
-        Matrix4f(String name, int program, int location, Supplier<OpenMatrix4f> value) {
-            super(name, program, location);
+        Matrix4fValue(String name, Supplier<OpenMatrix4f> value) {
+            super(name);
             this.value = value;
         }
 
@@ -120,14 +144,14 @@ public abstract class ShaderUniform {
         }
     }
 
-    public static class Matrix3f extends ShaderUniform {
+    private static class Matrix3fValue extends ShaderUniform {
 
         private final FloatBuffer buffer = MatrixUtils.createFloatBuffer(9);
         private final Supplier<OpenMatrix3f> value;
         private final OpenMatrix3f cachedValue = OpenMatrix3f.createScaleMatrix(0, 0, 0);
 
-        Matrix3f(String name, int program, int location, Supplier<OpenMatrix3f> value) {
-            super(name, program, location);
+        Matrix3fValue(String name, Supplier<OpenMatrix3f> value) {
+            super(name);
             this.value = value;
         }
 

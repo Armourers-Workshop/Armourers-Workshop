@@ -3,12 +3,18 @@ package moe.plushie.armourers_workshop.init.platform.forge;
 import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;
 import moe.plushie.armourers_workshop.api.client.IItemTintSourceType;
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
+import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import moe.plushie.armourers_workshop.init.platform.ClientRegistryManager;
 import net.minecraft.core.Registry;
 
 @SuppressWarnings("unused")
 public class ClientRegistryManagerImpl extends ClientRegistryManager {
+
+    @Override
+    public TypedProvider<IKeyMapping> keyMappings() {
+        return Registry.createKeyMappingRegistryFO();
+    }
 
     @Override
     public TypedProvider<IItemTintSourceType<?>> itemTintSources() {

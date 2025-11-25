@@ -4,8 +4,10 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
@@ -44,10 +46,10 @@ public interface AbstractDataSerializer extends IDataSerializer {
         if (serializer instanceof AbstractValueDataSerializer valueDataSerializer) {
             return valueDataSerializer.output();
         }
-//        if (serializer instanceof AbstractTagDataSerializer tagDataSerializer) {
-//            var report = new ProblemReporter.Collector();
-//             TagValueOutput.createWithContext(report, tagDataSerializer.provider, tagDataSerializer.tag);
-//        }
+        if (serializer instanceof AbstractTagDataSerializer tagDataSerializer) {
+            var report = new ProblemReporter.Collector();
+            return new TagValueOutput(report, tagDataSerializer.context().create(NbtOps.INSTANCE), tagDataSerializer.tag);
+        }
         throw new RuntimeException("can't supported type " + serializer.getClass().getSimpleName());
     }
 }

@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -20,7 +21,6 @@ import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
 import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +126,7 @@ public class ItemTooltipManager {
 //        }
 
         if (options.contains(SkinDescriptor.TooltipFlags.OPEN_WARDROBE) && isItemOwner && skin.type().isEquipment()) {
-            var keyName = ModKeyBindings.OPEN_WARDROBE_KEY.keyName();
+            var keyName = ModKeyBindings.OPEN_WARDROBE.get().name();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
 

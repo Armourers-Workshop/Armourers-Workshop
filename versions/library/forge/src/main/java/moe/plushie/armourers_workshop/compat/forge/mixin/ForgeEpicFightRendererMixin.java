@@ -49,8 +49,8 @@ public abstract class ForgeEpicFightRendererMixin {
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     public void aw2$init(CallbackInfo callbackInfo) {
         AbstractForgeEpicFightHandler.onInit();
-        var renderer = PatchedLivingEntityRenderer.class.cast(this);
-        renderer.addPatchedLayer(SkinWardrobeLayer.class, new EmptyLayer<>() {
+        var entityRenderer = PatchedLivingEntityRenderer.class.cast(this);
+        entityRenderer.addPatchedLayer(SkinWardrobeLayer.class, new EmptyLayer<>() {
             @Override
             protected void renderLayer(LivingEntityPatch<LivingEntity> entityPatch, LivingEntity entityIn, RenderLayer<LivingEntity, EntityModel<LivingEntity>> originalLayer, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
                 originalLayer.render(poseStack, buffer, packedLightIn, entityIn, partialTicks, 0, partialTicks, packedLightIn, xRot, yRot);

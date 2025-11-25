@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.other;
 
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
@@ -12,7 +13,6 @@ import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -71,9 +71,9 @@ public class CubePaintingEvent {
         buffer.writeByte(0);
     }
 
-    public boolean prepare(CubeChangesCollector collector, UseOnContext context) {
-        var level = context.getLevel();
-        var player = context.getPlayer();
+    public boolean prepare(CubeChangesCollector collector, IUseOnContext context) {
+        var level = context.level();
+        var player = context.player();
         selector.forEach(context, (target, dir) -> {
             var cube = collector.cubeAtPos(target);
             if (cube.is(IBlockPaintable.class)) {
@@ -87,9 +87,9 @@ public class CubePaintingEvent {
         return targetCount != 0;
     }
 
-    public void apply(CubeChangesCollector collector, UseOnContext context) {
-        var level = context.getLevel();
-        var player = context.getPlayer();
+    public void apply(CubeChangesCollector collector, IUseOnContext context) {
+        var level = context.level();
+        var player = context.player();
         selector.forEach(context, (target, dir) -> {
             var action1 = overrides.getOrDefault(Pair.of(target, dir), action);
             action1.apply(level, target, dir, collector.cubeAtPos(target), player);

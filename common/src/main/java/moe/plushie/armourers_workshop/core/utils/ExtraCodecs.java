@@ -53,6 +53,4 @@ public interface ExtraCodecs {
     IDataCodec<CompoundTag> COMPOUND_TAG = IDataCodec.wrap(CompoundTag.CODEC);
 
     IDataCodec<ItemStack> ITEM_STACK = IDataCodec.wrap(ItemStack.CODEC);
-
-    IDataCodec<GameProfile> GAME_PROFILE = IDataCodec.create(instance -> instance.group(UUID.fieldOf("Id").forGetter(it -> it.id()), IDataCodec.STRING.fieldOf("Name").forGetter(it -> it.name())).apply(instance, GameProfile::new));
 }

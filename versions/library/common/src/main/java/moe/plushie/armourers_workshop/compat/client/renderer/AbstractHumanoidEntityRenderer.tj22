@@ -14,9 +14,11 @@ import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRende
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
@@ -45,6 +47,10 @@ public abstract class AbstractHumanoidEntityRenderer<T extends LivingEntity, S e
         return 1;
     }
 
+    protected OpenQuaternionf abi$getEntityRotations(S renderState) {
+        return null;
+    }
+
     protected boolean abi$shouldShowName(T entity, double d) {
         return super.shouldShowName(entity, d);
     }
@@ -59,6 +65,12 @@ public abstract class AbstractHumanoidEntityRenderer<T extends LivingEntity, S e
     @Override
     public AbstractHumanoidRenderState createRenderState() {
         return new AbstractHumanoidRenderState();
+    }
+
+    @Override
+    public void extractRenderState(T entity, AbstractHumanoidRenderState renderState, float f) {
+        super.extractRenderState(entity, renderState, f);
+        HumanoidMobRenderer.extractHumanoidRenderState(entity, renderState, f, this.itemModelResolver);
     }
 
     @Override
@@ -81,11 +93,13 @@ public abstract class AbstractHumanoidEntityRenderer<T extends LivingEntity, S e
     }
 
     @Override
-    protected final void scale(AbstractHumanoidRenderState renderState, PoseStack poseStack) {
-        // in the 1.21.4 the renderer will auto apply the entity scale, but maybe we need change it.
-        var newScale = abi$getEntityScale(AbstractRenderState.wrap(renderState));
-        poseStack.scale(newScale / renderState.scale, newScale / renderState.scale, newScale / renderState.scale);
-        super.scale(renderState, poseStack);
+    protected final float getEntityScale(AbstractHumanoidRenderState renderState) {
+        return abi$getEntityScale(AbstractRenderState.wrap(renderState));
+    }
+
+    @Override
+    protected final OpenQuaternionf getEntityRotations(AbstractHumanoidRenderState renderState) {
+        return abi$getEntityRotations(AbstractRenderState.wrap(renderState));
     }
 
     protected void setModelVisible(boolean newValue) {

@@ -17,6 +17,6 @@ public class FlavouredItem extends AbstractItem {
     @Override
     protected void abi$appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
         super.abi$appendHoverText(itemStack, tooltips, context);
-        tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
+        tooltips.addAll(TranslateUtils.subtitles(abi$getDescriptionId(itemStack) + ".flavour"));
     }
 }

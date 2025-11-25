@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
 import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.core.client.render.model.CachedModel;
+import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,8 @@ public class EpicFlightModelHolder {
 
     private static final HashMap<Class<?>, Entry<?>> ENTITIES = new HashMap<>();
 
-    public static IEntityModel<?> create(Object entityModel) {
-        var model = new CachedModel<>();
+    public static <S extends EntityRenderState> IEntityModel<S> create(Object entityModel) {
+        var model = new CachedModel<S>();
         var exists = new HashSet<>();
         var builders = new ArrayList<Entry<?>>();
         var clazz = (Class<?>) entityModel.getClass();
@@ -32,7 +33,7 @@ public class EpicFlightModelHolder {
         return model;
     }
 
-    public static <M extends EpicFlightModelPartProvider> void register(Class<M> clazz, BiConsumer<M, Map<String, EpicFlightModelPart>> builder) {
+    public static <M> void register(Class<M> clazz, BiConsumer<M, Map<String, EpicFlightModelPart>> builder) {
         ENTITIES.put(clazz, new Entry<>(clazz, builder));
     }
 

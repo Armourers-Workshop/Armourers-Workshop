@@ -7,12 +7,16 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.annotation.Patch;
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractHumanoidEntityRenderer;
+import net.minecraft.Util;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 
 @Available("[1.22, )")
@@ -37,11 +41,6 @@ public class AbstractHumanoidModelImpl<T extends LivingEntity, S extends Humanoi
 
     public static Context getEmptyContext() {
         return Context.create(AbstractHumanoidEntityRenderer.getEmptyContext(), ModelLayers.PLAYER);
-    }
-
-    @Patch("called in mixin - 1.22")
-    public void translateAndRotate(PoseStack poseStack) {
-        // nop.
     }
 
     public interface Context {

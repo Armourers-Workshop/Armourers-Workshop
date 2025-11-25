@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
 
@@ -41,8 +41,8 @@ public class ChestGuideRenderer extends AbstractGuideRenderer {
         rendererManager.register(SkinPartTypes.BIPPED_CHEST, this::render);
         rendererManager.register(SkinPartTypes.BIPPED_LEFT_ARM, this::renderLeftArm);
         rendererManager.register(SkinPartTypes.BIPPED_RIGHT_ARM, this::renderRightArm);
-        rendererManager.register(EntityTextureDescriptor.Model.SLIM, SkinPartTypes.BIPPED_LEFT_ARM, this::renderLeftArmSlim);
-        rendererManager.register(EntityTextureDescriptor.Model.SLIM, SkinPartTypes.BIPPED_RIGHT_ARM, this::renderRightArmSlim);
+        rendererManager.register(PlayerSkinModel.SLIM, SkinPartTypes.BIPPED_LEFT_ARM, this::renderLeftArmSlim);
+        rendererManager.register(PlayerSkinModel.SLIM, SkinPartTypes.BIPPED_RIGHT_ARM, this::renderRightArmSlim);
     }
 
     public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {

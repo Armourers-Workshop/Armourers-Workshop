@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.document;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
@@ -18,6 +17,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class SkinDocumentExporter {
         this.document = document;
     }
 
-    public Skin execute(Player player, GameProfile profile) throws TranslatableException {
+    public Skin execute(Player player, OpenGameProfile profile) throws TranslatableException {
         var skinType = document.type().skinType();
         var settings = new SkinSettings();
         var properties = document.properties().copy();

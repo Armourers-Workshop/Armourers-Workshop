@@ -40,7 +40,7 @@ public abstract class AbstractLivingEntity extends AbstractLivingEntityImpl impl
         super.readAdditionalSaveData(serializer);
     }
 
-    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
+    protected void abi$writeAdditionalSaveData(IDataSerializer serializer) {
         super.addAdditionalSaveData(serializer);
     }
 
@@ -183,7 +183,7 @@ public abstract class AbstractLivingEntity extends AbstractLivingEntityImpl impl
 
     @Override
     public final void addAdditionalSaveData(IDataSerializer serializer) {
-        abi$addAdditionalSaveData(serializer);
+        abi$writeAdditionalSaveData(serializer);
     }
 
     @Override

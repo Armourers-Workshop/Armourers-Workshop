@@ -46,8 +46,8 @@ public class SeatEntity extends AbstractLivingEntity implements IDataSerializabl
     }
 
     @Override
-    protected void abi$addAdditionalSaveData(IDataSerializer serializer) {
-        super.abi$addAdditionalSaveData(serializer);
+    protected void abi$writeAdditionalSaveData(IDataSerializer serializer) {
+        super.abi$writeAdditionalSaveData(serializer);
         this.serialize(serializer);
     }
 

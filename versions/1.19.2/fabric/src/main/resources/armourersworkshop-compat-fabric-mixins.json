@@ -6,7 +6,6 @@
     "FabricBlockEntityUpdatePacketMixin",
     "FabricPlayerRendererMixin",
     "FabricMinecraftMixin",
-    "FabricLivingRendererMixin",
     "FabricClientFrameRenderMixin",
     "FabricClientPlayerLifecycleMixin",
     "FabricClientScreenRenderMixin",
@@ -23,6 +22,7 @@
     "backpack/FabricSophisticatedBackpackRendererMixin"
   ],
   "mixins": [
+    "FabricEntityHandlerMixin",
     "FabricBlockItemMixin",
     "FabricEntityMixin",
     "FabricLivingEntityMixin",

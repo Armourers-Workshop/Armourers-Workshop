@@ -16,10 +16,11 @@ import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.element.SkinGuiElement;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ReportDialog;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketHolder;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -31,7 +32,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.data.impl.ReportType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
-import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
 import java.util.function.BiConsumer;
@@ -58,7 +58,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     private NSString message;
     private ServerSkin entry;
     private GlobalSkinLibraryWindow.Page returnPage;
-    private EntityTextureDescriptor playerTexture = EntityTextureDescriptor.EMPTY;
+    private PlayerSkinDescriptor playerTexture = PlayerSkinDescriptor.DEFAULT;
 
     private final TicketHolder tickets = new TicketHolder("SkinDetailLibraryPanel");
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
@@ -139,7 +139,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         this.tickets.invalidate();
         this.entry = entry;
         this.message = message();
-        this.playerTexture = EntityTextureDescriptor.EMPTY;
+        this.playerTexture = PlayerSkinDescriptor.DEFAULT;
         this.updateLikeButtons();
     }
 
@@ -156,7 +156,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         if (playerTexture.isEmpty()) {
             var user = entry.user();
             if (!user.name().isEmpty()) {
-                playerTexture = EntityTextureDescriptor.fromName(user.name());
+                playerTexture = PlayerSkinDescriptor.fromName(user.name());
             }
         }
         if (Strings.isNotBlank(playerTexture.name())) {
@@ -392,7 +392,8 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         @Override
         public void render(CGPoint point, CGGraphicsContext context) {
             super.render(point, context);
-            var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
+            var skin = PlayerSkinLoader.getInstance().loadSkin(playerTexture);
+            var texture = skin.body().texture();
             context.drawResizableImage(texture, 0, 0, 16, 16, 8, 8, 8, 8, 64, 64);
             context.drawResizableImage(texture, -1, -1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64);
         }

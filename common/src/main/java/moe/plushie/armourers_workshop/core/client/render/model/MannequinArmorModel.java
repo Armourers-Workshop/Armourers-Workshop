@@ -21,6 +21,5 @@ public class MannequinArmorModel extends AbstractHumanoidArmourModel<MannequinEn
         this.rightArm.setRotation(renderState.rightArmPose());
         this.leftLeg.setRotation(renderState.leftLegPose());
         this.rightLeg.setRotation(renderState.rightLegPose());
-        this.hat.copyFrom(this.head);
     }
 }

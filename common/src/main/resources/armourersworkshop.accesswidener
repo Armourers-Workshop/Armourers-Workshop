@@ -8,6 +8,11 @@ accessible method net/minecraft/client/renderer/LevelRenderer shouldShowEntityOu
 ### accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher equipmentAssets Lnet/minecraft/client/resources/model/EquipmentAssetManager;
 ### accessible field net/minecraft/client/renderer/item/BlockModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
 ### accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecraft/client/gui/render/state/GuiRenderState;
+### accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+##endif
+
+##if MC >= 12110
+### accessible method net/minecraft/world/level/storage/TagValueOutput <init> (Lnet/minecraft/util/ProblemReporter;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/nbt/CompoundTag;)V
 ##endif
 
 # fix manifold compile issue, because fabric modify the access permissions.

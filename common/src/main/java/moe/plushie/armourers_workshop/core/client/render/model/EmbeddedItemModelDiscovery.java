@@ -94,7 +94,7 @@ public class EmbeddedItemModelDiscovery {
             bakery.loadSkin(TicketManager.PRELOAD.get(identifier), this::complete);
         }
 
-        public void complete(BakedSkin bakedSkin, Exception exception) {
+        public void complete(BakedSkin bakedSkin, Throwable exception) {
             // ignore all load exception.
             if (exception != null) {
                 return;

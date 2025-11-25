@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinUsedCounter;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureModel;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
@@ -94,9 +94,10 @@ public class BakedGeometryQuads {
         if (paintData == null) {
             return allQuads;
         }
-        for (var entry : EntityTextureModel.of(paintData.width(), paintData.height(), paintData.slim()).entrySet()) {
-            var box = entry.getValue();
+        var model = PlayerSkinModel.from(paintData.width(), paintData.height(), paintData.slim());
+        model.forEach((parType, box) -> {
             var faces = new ArrayList<SkinGeometryFace>();
+            var origin = parType.guideOriginByModel(model);
             box.forEach((texture, x, y, z, dir) -> {
                 var paintColor = SkinPaintColor.of(paintData.getColor(texture));
                 if (paintColor.paintType() == SkinPaintTypes.NONE) {
@@ -104,16 +105,17 @@ public class BakedGeometryQuads {
                 }
                 // in the vanilla's player textures are rendering without diffuse lighting.
                 var id = dir.get3DDataValue();
-                var shape = new OpenRectangle3f(x, y, z, 1, 1, 1);
+                var shape = new OpenRectangle3f(origin.x() + x, origin.y() + y, origin.z() + z, 1, 1, 1);
                 var transform = OpenTransform3f.IDENTITY;
                 faces.add(new SkinCubeFace(id, SkinGeometryTypes.BLOCK_SOLID, SkinGeometryOptions.EMPTY, transform, null, shape, dir, paintColor, 255));
             });
             if (!faces.isEmpty()) {
-                var quads = new BakedGeometryQuads(OpenVoxelShape.box(box.bounds()), new ColorDescriptor(), new SkinUsedCounter());
+                var bounds = new OpenRectangle3f(origin.x(), origin.y(), origin.z(), box.width(), box.height(), box.depth());
+                var quads = new BakedGeometryQuads(OpenVoxelShape.box(bounds), new ColorDescriptor(), new SkinUsedCounter());
                 quads.loadFaces(faces);
-                allQuads.add(entry.getKey(), OpenTransform3f.IDENTITY, quads);
+                allQuads.add(parType, OpenTransform3f.IDENTITY, quads);
             }
-        }
+        });
         return allQuads;
     }
 

@@ -1,0 +1,22 @@
+package moe.plushie.armourers_workshop.compat.mixin;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.16, 1.18)")
+@Mixin(GlStateManager.class)
+public class GlStateManagerMixin {
+
+    @Inject(method = "_drawArrays", at = @At("RETURN"))
+    private static void aw2$drawElements(int i, int j, int k, CallbackInfo ci) {
+        var callback = RenderSystem.getDrawElementsCallback();
+        if (callback != null) {
+            callback.run();
+        }
+    }
+}

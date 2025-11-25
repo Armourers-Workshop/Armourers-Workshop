@@ -53,14 +53,14 @@ public abstract class AbstractRenderTypeImpl extends RenderType {
         it.put(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SHADOW).overlay().lightmap().emissive());
 
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENERGY_SWIRL).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SHADOW).overlay().lightmap().emissive());
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SOLID).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENERGY_SWIRL).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SHADOW).overlay().lightmap().emissive());
 
         it.put(SkinVertexFormat.SKIN_MESH_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENERGY_SWIRL).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_SHADOW).overlay().lightmap().emissive());
         it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_SOLID).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENERGY_SWIRL).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_SHADOW).overlay().lightmap().emissive());
     });
 
 
@@ -129,12 +129,8 @@ public abstract class AbstractRenderTypeImpl extends RenderType {
             it.put(IRenderType.BlendMode.TRANSLUCENT, BlendFunction.TRANSLUCENT);
             it.put(IRenderType.BlendMode.TRANSLUCENT_PREMULTIPLIED_ALPHA, BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA);
             it.put(IRenderType.BlendMode.ADDITIVE, BlendFunction.ADDITIVE);
-            it.put(IRenderType.BlendMode.ENTITY_OUTLINE_BLIT, BlendFunction.ENTITY_OUTLINE_BLIT);
-        });
-
-        private static final Map<IRenderType.LogicOp, LogicOp> LOGIC_OPS = Collections.immutableMap(it -> {
-            it.put(IRenderType.LogicOp.NONE, LogicOp.NONE);
-            it.put(IRenderType.LogicOp.OR_REVERSE, LogicOp.OR_REVERSE);
+            it.put(IRenderType.BlendMode.INVERT, BlendFunction.INVERT);
+            //it.put(IRenderType.BlendMode.ENTITY_OUTLINE_BLIT, BlendFunction.ENTITY_OUTLINE_BLIT);
         });
 
         private static final Map<IRenderType.DepthTestMode, DepthTestFunction> DEPTH_TEST_MODES = Collections.immutableMap(it -> {
@@ -169,13 +165,13 @@ public abstract class AbstractRenderTypeImpl extends RenderType {
         public Builder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
             usedTexture = texture.toLocation();
             stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), mipmap));
+            super.texture(texture, blur, mipmap);
             return this;
         }
 
         @Override
         public Builder target(IRenderType.Target target) {
             stateBuilder.setOutputState(OUTPUTS.getOrDefault(target, MAIN_TARGET));
-            super.target(target);
             return this;
         }
 
@@ -188,13 +184,6 @@ public abstract class AbstractRenderTypeImpl extends RenderType {
         @Override
         public Builder depthWrite(boolean writeDepth) {
             pipelineBuilder.withDepthWrite(writeDepth);
-            return this;
-        }
-
-
-        @Override
-        public Builder colorLogic(IRenderType.LogicOp op) {
-            pipelineBuilder.withColorLogic(LOGIC_OPS.get(op));
             return this;
         }
 

@@ -6,7 +6,6 @@ import com.mojang.blaze3d.preprocessor.GlslPreprocessor;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderTransformer;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderUniforms;
 import net.minecraft.client.renderer.ShaderManager;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ public abstract class ShaderVanillaMixin {
 
     @WrapOperation(method = "loadShader", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/preprocessor/GlslPreprocessor;process(Ljava/lang/String;)Ljava/util/List;"))
     private static List<String> aw2$createVanillaShader(GlslPreprocessor instance, String source, Operation<List<String>> original, ResourceLocation location) {
-        ShaderUniforms.clear();
+        //ShaderUniforms.clear();
         // this is a vanilla shader resource.
         var transformer = new AbstractShaderTransformer(new ShaderPreprocessor("vanilla", 2));
         source = transformer.transform(source, location);

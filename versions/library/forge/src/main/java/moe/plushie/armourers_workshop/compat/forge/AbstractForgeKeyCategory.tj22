@@ -1,0 +1,36 @@
+package moe.plushie.armourers_workshop.compat.forge;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+
+@Available("[1.22, )")
+public class AbstractForgeKeyCategory implements IKeyCategory {
+
+    private final KeyMapping.Category category;
+
+    public AbstractForgeKeyCategory(OpenResourceLocation name) {
+        this.category = KeyMapping.Category.register(name.toLocation());
+    }
+
+    public static AbstractForgeKeyCategory unwrap(IKeyCategory category) {
+        return Objects.unsafeCast(category);
+    }
+
+    public KeyConflictContext context() {
+        return KeyConflictContext.IN_GAME;
+    }
+
+    public KeyMapping.Category category() {
+        return category;
+    }
+
+    @Override
+    public Component name() {
+        return category.label();
+    }
+}

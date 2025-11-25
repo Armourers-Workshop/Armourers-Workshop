@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.data.GenericProperties;
 import moe.plushie.armourers_workshop.core.data.GenericProperty;
 import moe.plushie.armourers_workshop.core.data.GenericValue;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -66,7 +66,7 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
         }
         if (player.containerMenu instanceof OutfitMakerMenu menu) {
             var serializer = new TagSerializer((CompoundTag) fieldValue.value());
-            var profile = serializer.decode(ExtraCodecs.GAME_PROFILE);
+            var profile = serializer.decode(OpenGameProfile.CODEC);
             menu.saveArmourItem(player, profile);
         }
     }

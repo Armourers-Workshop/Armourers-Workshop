@@ -2,111 +2,162 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.compat.client.AbstractShader;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexMerger;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
+import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
+import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.function.Consumer;
+
 public class ConcurrentRenderingPipeline {
 
-    private final Pipeline solidPipeline = new Pipeline();
-    private final Pipeline outlinePipeline = new Pipeline();
-    private final Pipeline translucentPipeline = new Pipeline();
-
-    public void clear() {
-        solidPipeline.clear();
-        outlinePipeline.clear();
-        translucentPipeline.clear();
-    }
+    private final ArrayList<Group> sortedGroups = new ArrayList<>();
+    private final IdentityHashMap<IRenderType, Group> unsortedGroups = new IdentityHashMap<>();
 
     public void submit(ConcurrentBufferCompiler.Pass compiledTask, int lightmap, int overlay, int outlineColor, float renderPriority, OpenPoseStack.Pose pose) {
         var pass = Pass.newInstance(compiledTask, lightmap, overlay, outlineColor, renderPriority, pose);
-        if (pass.isOutline()) {
-            outlinePipeline.add(pass);
-        } else if (pass.isTranslucent()) {
-            translucentPipeline.add(pass);
-        } else {
-            solidPipeline.add(pass);
+        addPass(pass);
+    }
+
+    public ShaderVertexGroup find(IRenderType renderType) {
+        return unsortedGroups.get(renderType);
+    }
+
+    public void render(Shader shader, IRenderType renderType) {
+        var group = unsortedGroups.get(renderType);
+        if (group.isEmpty()) {
+            return;
         }
+        shader.setupRenderState(group);
+        group.forEach(object -> shader.render(object, group));
+        shader.clearRenderState(group);
+
+        // clear after the rendering.
+        group.clear();
     }
 
-    public void endSolidBatch() {
-        solidPipeline.end();
+    public void clear() {
+        sortedGroups.clear();
+        unsortedGroups.clear();
     }
 
-    public void endOutlineBatch() {
-        outlinePipeline.end();
+    public int passCount() {
+        int total = 0;
+        for (var group : sortedGroups) {
+            total += group.passCount();
+        }
+        return total;
     }
 
-    public void endTranslucentBatch() {
-        translucentPipeline.end();
+    public int vertexCount() {
+        int vertexTotal = 0;
+        for (var group : sortedGroups) {
+            vertexTotal += group.vertexCount();
+        }
+        return vertexTotal;
     }
 
-    public boolean hasSolidTasks() {
-        return !solidPipeline.isEmpty();
-    }
-
-    public boolean hasOutlineTasks() {
-        return !outlinePipeline.isEmpty();
-    }
-
-    public boolean hasTranslucentTasks() {
-        return !translucentPipeline.isEmpty();
+    public int maxVertexCount() {
+        int vertexTotal = 0;
+        for (var group : sortedGroups) {
+            vertexTotal = Math.max(vertexTotal, group.vertexCount());
+        }
+        return vertexTotal;
     }
 
     @Override
     public String toString() {
-        var size = solidPipeline.size() + outlinePipeline.size() + translucentPipeline.size();
-        var vertexCount = solidPipeline.vertexCount() + outlinePipeline.vertexCount() + translucentPipeline.vertexCount();
-        return Objects.toString(this, "passes", size, "vertices", vertexCount);
+        return Objects.toString(this, "passes", passCount(), "vertices", vertexCount());
     }
 
-    private static class Pipeline {
+    private void addPass(ShaderVertexObject pass) {
+        var group = unsortedGroups.get(pass.type());
+        if (group == null) {
+            group = addAndSortGroup(pass.type());
+            unsortedGroups.put(pass.type(), group);
+        }
+        group.add(pass);
+    }
 
-        private final Shader shader = new AbstractShader();
-        private final ShaderVertexMerger merger = new ShaderVertexMerger();
+    private Group addAndSortGroup(IRenderType type) {
+        var group = new Group(type);
+        sortedGroups.add(group);
+        sortedGroups.sort(Comparator.comparing(this::getRenderOrder));
+        return group;
+    }
 
-        public void add(ShaderVertexObject pass) {
-            merger.add(pass);
+    private int getRenderOrder(Group group) {
+        int index = group.renderType().ordinal();
+        if (index > 0) {
+            return index;
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private static class Group implements ShaderVertexGroup {
+
+        private final IRenderType renderType;
+        private final TextureAnimationController animationController;
+        private final ArrayList<ShaderVertexObject> objects = new ArrayList<>();
+
+        public Group(IRenderType renderType) {
+            this.renderType = renderType;
+            this.animationController = TextureAnimationController.of(renderType);
         }
 
-        public void end() {
-            if (merger.isEmpty()) {
-                return;
-            }
-            merger.prepare();
+        public void add(ShaderVertexObject object) {
+            object.retain();
+            objects.add(object);
+        }
 
-            shader.begin();
-            merger.forEach(group -> shader.apply(group, () -> group.forEach(shader::render)));
-            shader.end();
-
-            merger.reset();
+        public void forEach(Consumer<ShaderVertexObject> consumer) {
+            objects.forEach(consumer);
         }
 
         public void clear() {
-            merger.reset();
-            merger.clear();
+            objects.forEach(ShaderVertexObject::release);
+            objects.clear();
         }
 
-        public int size() {
-            return merger.size();
+        @Override
+        public OpenMatrix4f getTextureMatrix(double animationTime) {
+            return animationController.getTextureMatrix(animationTime);
         }
 
+        @Override
+        public IRenderType renderType() {
+            return renderType;
+        }
+
+        @Override
+        public int passCount() {
+            return objects.size();
+        }
+
+        @Override
         public int vertexCount() {
-            return merger.vertexCount();
+            var vertexTotal = 0;
+            for (var object : objects) {
+                vertexTotal += object.vertexCount();
+            }
+            return vertexTotal;
         }
 
         public boolean isEmpty() {
-            return merger.isEmpty();
+            return objects.isEmpty();
         }
 
         @Override
         public String toString() {
-            return Objects.toString(this, "passes", size(), "vertices", vertexCount());
+            return Objects.toString(this, "passes", passCount(), "vertices", vertexCount());
         }
     }
 
@@ -194,7 +245,10 @@ public class ConcurrentRenderingPipeline {
 
         @Override
         public int outlineColor() {
-            return outlineColor;
+            if (isOutline()) {
+                return outlineColor;
+            }
+            return -1;
         }
 
         @Override

@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenEntitySpawnReason;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.core.utils.Strings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
@@ -15,10 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -47,18 +48,18 @@ public class MannequinItem extends FlavouredItem {
     }
 
     @Override
-    protected OpenInteractionResult abi$useOn(UseOnContext context) {
-        if (context.getHand() != InteractionHand.MAIN_HAND) {
+    protected OpenInteractionResult abi$useOn(IUseOnContext context) {
+        if (context.hand() != OpenInteractionHand.MAIN_HAND) {
             return OpenInteractionResult.FAIL;
         }
-        var player = context.getPlayer();
+        var player = context.player();
         if (player == null) {
             return OpenInteractionResult.FAIL;
         }
-        var level = context.getLevel();
-        var origin = new Vec3(player.getX(), player.getY(), player.getZ());
-        var rayTraceResult = MannequinHitResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
-        var itemStack = context.getItemInHand();
+        var level = context.level();
+        var origin = new OpenVector3d(player.getX(), player.getY(), player.getZ());
+        var rayTraceResult = MannequinHitResult.test(player, origin, context.clickLocation(), context.clickedPos());
+        var itemStack = context.itemInHand();
         if (level instanceof ServerLevel serverLevel) {
             var entity = ModEntityTypes.MANNEQUIN.get().create(serverLevel, rayTraceResult.getBlockPos(), itemStack, OpenEntitySpawnReason.SPAWN_ITEM_USE);
             if (entity == null) {
@@ -82,25 +83,25 @@ public class MannequinItem extends FlavouredItem {
         super.abi$appendHoverText(itemStack, tooltips, context);
         // only call on the client.
         EnvironmentExecutor.runOnClient(() -> () -> {
-            var descriptor = EntityTextureDescriptor.of(itemStack);
-            if (descriptor.name() != null) {
+            var descriptor = PlayerSkinDescriptor.of(itemStack);
+            if (Strings.isNotEmpty(descriptor.name())) {
                 tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.name()));
             }
-            if (descriptor.url() != null) {
+            if (Strings.isNotEmpty(descriptor.url())) {
                 tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.url", descriptor.url()));
             }
         });
     }
 
     @Override
-    protected Component abi$getName(ItemStack itemStack) {
+    protected String abi$getDescriptionId(ItemStack itemStack) {
         var scale = getScale(itemStack);
         if (scale <= 0.5f) {
-            return TranslateUtils.title(getDescriptionId() + ".small");
+            return super.abi$getDescriptionId(itemStack) + ".small";
         }
         if (scale >= 2.0f) {
-            return TranslateUtils.title(getDescriptionId() + ".big");
+            return super.abi$getDescriptionId(itemStack) + ".big";
         }
-        return super.abi$getName(itemStack);
+        return super.abi$getDescriptionId(itemStack);
     }
 }

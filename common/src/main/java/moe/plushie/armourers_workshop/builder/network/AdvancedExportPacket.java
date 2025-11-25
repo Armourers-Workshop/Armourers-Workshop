@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.AdvancedBuilderMenu;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
@@ -48,7 +48,7 @@ public class AdvancedExportPacket extends CustomPacket {
             return;
         }
         var serializer = new TagSerializer(profileTag);
-        var profile = serializer.decode(ExtraCodecs.GAME_PROFILE);
+        var profile = serializer.decode(OpenGameProfile.CODEC);
         accept(player, "export");
         //        String identifier = SkinLoader.getInstance().saveSkin("fs:", skin);
         blockEntity1.exportFromDocument(player, profile);

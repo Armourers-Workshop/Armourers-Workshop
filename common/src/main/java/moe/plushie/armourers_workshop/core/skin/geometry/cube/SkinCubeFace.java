@@ -115,12 +115,12 @@ public class SkinCubeFace extends SkinGeometryFace {
         var x = boundingBox.x();
         var y = boundingBox.y();
         var z = boundingBox.z();
-        var w = roundUp(boundingBox.width());
-        var h = roundUp(boundingBox.height());
-        var d = roundUp(boundingBox.depth());
+        var w = boundingBox.width();
+        var h = boundingBox.height();
+        var d = boundingBox.depth();
 
-        var u = texturePos.u();
-        var v = texturePos.v();
+        var u = roundUp(texturePos.u());
+        var v = roundUp(texturePos.v());
         var s = roundDown(texturePos.width());
         var t = roundDown(texturePos.height());
 
@@ -150,9 +150,9 @@ public class SkinCubeFace extends SkinGeometryFace {
     // avoid out-of-bounds behavior caused by floating point precision.
     private float roundDown(float edg) {
         if (edg < 0) {
-            return edg + 0.0004f;
+            return edg + 0.01f;
         } else {
-            return edg - 0.0004f;
+            return edg - 0.01f;
         }
     }
 

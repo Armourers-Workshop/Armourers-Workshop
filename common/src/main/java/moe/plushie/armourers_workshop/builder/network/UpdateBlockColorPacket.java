@@ -2,39 +2,40 @@ package moe.plushie.armourers_workshop.builder.network;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
-import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.other.CubeChangesCollector;
 import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
+import moe.plushie.armourers_workshop.compat.core.item.AbstractUseOnContext;
+import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class UpdateBlockColorPacket extends CustomPacket {
 
-    final InteractionHand hand;
+    final OpenInteractionHand hand;
     final GlobalPos clickedPos;
     final BlockHitResult traceResult;
     final CubePaintingEvent paintingEvent;
 
     public UpdateBlockColorPacket(IFriendlyByteBuf buffer) {
-        this.hand = buffer.readEnum(InteractionHand.class);
+        this.hand = buffer.readEnum(OpenInteractionHand.class);
         this.clickedPos = buffer.readGlobalPos();
         this.traceResult = buffer.readBlockHitResult();
         this.paintingEvent = new CubePaintingEvent(buffer);
     }
 
-    public UpdateBlockColorPacket(UseOnContext context, CubePaintingEvent paintingEvent) {
-        this.hand = context.getHand();
-        this.clickedPos = GlobalPos.of(context.getLevel().dimension(), context.getClickedPos());
-        this.traceResult = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
+    public UpdateBlockColorPacket(IUseOnContext context, CubePaintingEvent paintingEvent) {
+        this.hand = context.hand();
+        this.clickedPos = GlobalPos.of(context.level().dimension(), context.clickedPos());
+        this.traceResult = context.hitResult();
         this.paintingEvent = paintingEvent;
     }
 
@@ -56,7 +57,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
         }
         try {
             var itemStack = player.getItemInHand(hand);
-            var context = new UseOnContext(level, player, hand, itemStack, traceResult);
+            var context = AbstractUseOnContext.create(level, player, hand, itemStack, traceResult);
             var collector = new CubeChangesCollector(level);
             paintingEvent.apply(collector, context);
             collector.submit(itemStack.getHoverName(), player);
@@ -74,7 +75,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
         return null;
     }
 
-    private void applyUseEffects(ItemStack itemStack, UseOnContext context) {
+    private void applyUseEffects(ItemStack itemStack, IUseOnContext context) {
         var item = itemStack.getItem();
         if (item instanceof IItemSoundProvider provider) {
             provider.playSound(context);

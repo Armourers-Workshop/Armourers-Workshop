@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.item;
 import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.common.IConfigurableToolProperty;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
+import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.client.gui.PaletteToolWindow;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
@@ -30,7 +31,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -46,9 +46,9 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemPain
     }
 
     @Override
-    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, UseOnContext context) {
+    public OpenInteractionResult usePickTool(Level level, BlockPos pos, OpenDirection dir, BlockEntity blockEntity, IUseOnContext context) {
         if (blockEntity instanceof IPaintProvider provider) {
-            setItemColor(context.getItemInHand(), provider.color());
+            setItemColor(context.itemInHand(), provider.color());
             return OpenInteractionResult.sidedSuccess(level.isClientSide());
         }
         return OpenInteractionResult.PASS;
@@ -62,8 +62,8 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemPain
     }
 
     @Override
-    public IPaintToolAction createPaintToolAction(UseOnContext context) {
-        var itemStack = context.getItemInHand();
+    public IPaintToolAction createPaintToolAction(IUseOnContext context) {
+        var itemStack = context.itemInHand();
         var paintColor = getItemColor(itemStack, SkinPaintColor.WHITE);
         var usePaintColor = itemStack.get(PaintingToolOptions.CHANGE_PAINT_COLOR);
         var usePaintType = itemStack.get(PaintingToolOptions.CHANGE_PAINT_TYPE);
@@ -104,12 +104,12 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemPain
     }
 
     @Override
-    public IRegistryHolder<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryHolder<SoundEvent> getItemSoundEvent(IUseOnContext context) {
         return ModSoundEvents.PAINT;
     }
 
     @Override
-    public OpenInteractionResult abi$useOn(UseOnContext context) {
+    public OpenInteractionResult abi$useOn(IUseOnContext context) {
         var resultType = usePickTool(context);
         if (resultType.consumesAction()) {
             return resultType;

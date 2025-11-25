@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
 import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;
 import moe.plushie.armourers_workshop.init.ModEntityTypes;
 import net.minecraft.client.Minecraft;
@@ -10,6 +10,9 @@ import net.minecraft.core.Rotations;
 import net.minecraft.world.phys.AABB;
 
 public class MannequinRenderState extends LivingEntityRenderState {
+
+    protected boolean isLimitScale = false;
+    protected boolean isLimitYRot = false;
 
     protected boolean isSlimModel = false;
     protected boolean isModelVisible = false;
@@ -33,6 +36,14 @@ public class MannequinRenderState extends LivingEntityRenderState {
 
     public boolean isModelVisible() {
         return isModelVisible;
+    }
+
+    public boolean isLimitScale() {
+        return isLimitScale;
+    }
+
+    public boolean isLimitYRot() {
+        return isLimitYRot;
     }
 
     public AABB boundingBoxForCulling() {
@@ -66,7 +77,7 @@ public class MannequinRenderState extends LivingEntityRenderState {
 
     public static void extract(MannequinEntity entity, MannequinRenderState renderState) {
         // copy base info
-        renderState.isSlimModel = entity.getTextureModel() == EntityTextureDescriptor.Model.SLIM;
+        renderState.isSlimModel = entity.getTextureDescriptor().model().slim();
         renderState.isModelVisible = entity.isModelVisible();
         renderState.boundingBoxForCulling = entity.getBoundingBoxForCulling();
         // copy the mannequin pose.
@@ -76,6 +87,11 @@ public class MannequinRenderState extends LivingEntityRenderState {
         renderState.rightArmPose = entity.getRightArmPose();
         renderState.leftLegPose = entity.getLeftLegPose();
         renderState.rightLegPose = entity.getRightLegPose();
+
+        // when rendering in the GUI, we don't use body rotation
+        // to avoid display entity at weird angles.
+        renderState.isLimitScale = SkinRenderMode.inGUI();
+        renderState.isLimitYRot = SkinRenderMode.inGUI();
     }
 
     public static class Placeholder {

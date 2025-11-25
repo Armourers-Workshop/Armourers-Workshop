@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
@@ -13,7 +11,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.21, 1.22)")
+@Available("[1.18, 1.22)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractHumanoidModelImpl<T extends LivingEntity> extends PlayerModel<T> {
 
@@ -24,15 +22,6 @@ public class AbstractHumanoidModelImpl<T extends LivingEntity> extends PlayerMod
     public static Context getEmptyContext() {
         var context = AbstractHumanoidEntityRenderer.getEmptyContext();
         return Context.create(context, ModelLayers.PLAYER);
-    }
-
-    protected void translateAndRotate(PoseStack poseStack) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer builder, int light, int overlay, int color) {
-        translateAndRotate(poseStack);
-        super.renderToBuffer(poseStack, builder, light, overlay, color);
     }
 
     public interface Context {

@@ -4,8 +4,6 @@ package moe.plushie.armourers_workshop.compat.client.renderer.model;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import net.minecraft.client.renderer.entity.AgeableMobRenderer;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
 
 @Available("[1.22, )")
 public abstract class AbstractBabyModelHolderImpl {

@@ -20,6 +20,10 @@ public class OpenVector3i implements Comparable<OpenVector3i>, IVector3i {
 
     public static final IDataCodec<OpenVector3i> CODEC = IDataCodec.INT.listOf().xmap(OpenVector3i::new, OpenVector3i::toList);
 
+
+    public OpenVector3i() {
+        this(0, 0, 0);
+    }
     public OpenVector3i(int x, int y, int z) {
         this.x = x;
         this.y = y;
@@ -53,6 +57,12 @@ public class OpenVector3i implements Comparable<OpenVector3i>, IVector3i {
             return dz;
         }
         return x() - v.x();
+    }
+
+    public void set(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public void setX(int x) {

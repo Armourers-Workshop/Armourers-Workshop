@@ -1,6 +1,16 @@
 package moe.plushie.armourers_workshop.core.client.other.thirdparty;
 
-public interface EpicFlightModelPartProvider {
+import java.util.function.Function;
 
-    EpicFlightModelPart build(String name);
+public class EpicFlightModelPartProvider {
+
+    private final Function<String, EpicFlightModelPart> factory;
+
+    public EpicFlightModelPartProvider(Function<String, EpicFlightModelPart> factory) {
+        this.factory = factory;
+    }
+
+    public EpicFlightModelPart build(String name) {
+        return factory.apply(name);
+    }
 }

@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.client.render.plugin.FallbackEntityRe
 import moe.plushie.armourers_workshop.core.client.render.plugin.LivingEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.client.sound.SmartSoundManager;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
@@ -74,6 +74,7 @@ public class ClientProxy {
         ClientResourceManager.init();
 
         MinecraftAuth.init(new MinecraftAuth.UserProvider() {
+
             @Override
             public String id() {
                 return Minecraft.getInstance().getUser().getUuid();
@@ -130,17 +131,17 @@ public class ClientProxy {
             SkinPreloadManager.start();
             SmartSoundManager.getInstance().start();
             SmartTextureManager.getInstance().start();
-            EntityTextureLoader.getInstance().start();
+            PlayerSkinBakery.start();
         });
         EventBus.register(ClientPlayerEvent.LoggingOut.class, event -> {
             var player = event.getPlayer();
             if (player == null || !player.equals(Minecraft.getInstance().player)) {
                 return; // other players leave
             }
+            PlayerSkinBakery.stop();
             SkinPreloadManager.stop();
             SkinBakery.stop();
             TicketManager.invalidateAll();
-            EntityTextureLoader.getInstance().stop();
             SmartSoundManager.getInstance().stop();
             SmartTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();
@@ -171,8 +172,9 @@ public class ClientProxy {
 
         // listen the block highlight events.
         EventBus.register(RenderHighlightEvent.Block.class, event -> {
+            var hitResult = event.target();
             var player = Minecraft.getInstance().player;
-            if (player == null) {
+            if (player == null || hitResult == null) {
                 return;
             }
             // hidden hit box at inside
@@ -185,13 +187,13 @@ public class ClientProxy {
             // }
             var itemStack = player.getMainHandItem();
             if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.is(ModItems.MANNEQUIN.get())) {
-                HighlightPlacementRenderer.renderEntity(player, event.target(), event.camera(), event.context());
+                HighlightPlacementRenderer.renderEntity(player, hitResult, event.camera(), event.context());
             }
             if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.is(ModItems.SKIN.get())) {
-                HighlightPlacementRenderer.renderBlock(itemStack, player, event.target(), event.camera(), event.context());
+                HighlightPlacementRenderer.renderBlock(itemStack, player, hitResult, event.camera(), event.context());
             }
             if (ModConfig.Client.enablePaintToolPlacementHighlight && itemStack.is(ModItems.BLENDING_TOOL.get())) {
-                PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, event.target(), event.camera(), event.context());
+                PaintingHighlightPlacementRenderer.renderPaintTool(itemStack, player, hitResult, event.camera(), event.context());
             }
         });
 

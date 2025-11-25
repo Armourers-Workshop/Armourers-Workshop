@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.forge.event.client.AbstractForgeRenderLivingEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
@@ -11,7 +10,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RenderArmEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -41,10 +39,6 @@ public class AbstractForgeClientEventsImpl {
     public static final auto ITEM_TOOLTIP_RENDER = AbstractForgeEventBus.create(RenderTooltipEvent.Pre.class);
 
     public static final auto RENDER_SPECIFIC_HAND = AbstractForgeEventBus.create(RenderArmEvent.class);
-
-    public static final auto RENDER_LIVING_ENTITY_PRE = AbstractForgeEventBus.create(RenderLivingEvent.Pre.class);
-    public static final auto RENDER_LIVING_ENTITY_APPLY = AbstractForgeEventBus.create(AbstractForgeRenderLivingEvent.Apply.class);
-    public static final auto RENDER_LIVING_ENTITY_POST = AbstractForgeEventBus.create(RenderLivingEvent.Post.class);
 
     public static final auto RENDER_FRAME_PRE = AbstractForgeEventBus.create(RenderFrameEvent.Pre.class);
     public static final auto RENDER_FRAME_POST = AbstractForgeEventBus.create(RenderFrameEvent.Post.class);

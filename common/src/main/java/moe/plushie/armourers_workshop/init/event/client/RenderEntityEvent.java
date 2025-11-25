@@ -7,13 +7,13 @@ import net.minecraft.world.entity.Entity;
 
 public interface RenderEntityEvent<T extends Entity, S extends EntityRenderState> {
 
-    float partialTicks();
-
     S renderState();
 
     IEntityRenderer<T, S> entityRenderer();
 
     interface Setup<T extends Entity, S extends EntityRenderState> extends RenderEntityEvent<T, S> {
+
+        float partialTicks();
 
         T entity();
     }

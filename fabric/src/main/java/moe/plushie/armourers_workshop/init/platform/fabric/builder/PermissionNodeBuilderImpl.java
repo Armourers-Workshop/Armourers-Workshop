@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Supplier;
 
@@ -52,7 +53,12 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         }
 
         @Override
-        public boolean resolve(GameProfile profile, IPermissionContext context) {
+        public boolean resolve(Player player, IPermissionContext context) {
+            return true;
+        }
+
+        @Override
+        public boolean resolve(IGameProfile profile, IPermissionContext context) {
             return true;
         }
 

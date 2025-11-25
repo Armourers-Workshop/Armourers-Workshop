@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.core.permission.BlockPermissionContext;
@@ -49,11 +49,11 @@ public abstract class AbstractForgePermissionManager {
                 if (player instanceof ServerPlayer) {
                     return PermissionAPI.getPermission((ServerPlayer) player, node, makeContexts(context));
                 }
-                return super.resolve(player, context);
+                return false;
             }
 
             @Override
-            public boolean resolve(GameProfile profile, IPermissionContext context) {
+            public boolean resolve(IGameProfile profile, IPermissionContext context) {
                 if (!hasPermissionAPI()) {
                     return true;
                 }

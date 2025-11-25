@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.render.plugin;
 
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
-import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFlightTransformProvider;
@@ -23,11 +22,10 @@ public class EpicFightEntityRenderPlugin<T extends LivingEntity, S extends Livin
     private IEntityModel<?> entityModel;
     private ILivingEntityRenderer<T, S, ?> entityRenderer;
 
-    private IPoseStack overridePoseStack;
-    private IPoseStack originPoseStack;
-
-    private EpicFlightModel transformerModel;
+    private EpicFlightModel<S> transformerModel;
     private BiConsumer<String, OpenPoseStack.Pose> transformProvider;
+
+    private final OpenPoseStack.Pose overridePose = new OpenPoseStack.Pose();
 
     public EpicFightEntityRenderPlugin(EntityRendererContext rendererContext) {
         super(rendererContext);
@@ -58,13 +56,7 @@ public class EpicFightEntityRenderPlugin<T extends LivingEntity, S extends Livin
     }
 
     @Override
-    protected void activate(S renderState, int lightmap, int overlay, IGraphicsContext context) {
-        updateTransformerIfNeeded();
-        this.originPoseStack = context.ctm();
-        super.activate(renderState, lightmap, overlay, context);
-    }
-
-    private void updateTransformerIfNeeded() {
+    protected void updateTransformerIfNeeded() {
         var entityModel = entityRenderer.abi$getModel();
         if (this.entityModel == entityModel) {
             return;
@@ -111,14 +103,11 @@ public class EpicFightEntityRenderPlugin<T extends LivingEntity, S extends Livin
         return transformProvider;
     }
 
-    public void setOverridePose(IPoseStack pose) {
-        overridePoseStack = pose;
+    public void setOverridePose(IPoseStack.Pose pose) {
+        overridePose.set(pose);
     }
 
-    public IPoseStack overridePose() {
-        if (overridePoseStack != null) {
-            return overridePoseStack;
-        }
-        return originPoseStack;
+    public IPoseStack.Pose overridePose() {
+        return overridePose;
     }
 }

@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.client.render.model.MannequinArmorMod
 import moe.plushie.armourers_workshop.core.client.render.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModDebugger;
@@ -16,9 +17,6 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class MannequinEntityRenderer extends AbstractHumanoidEntityRenderer<MannequinEntity, MannequinRenderState, MannequinModel, MannequinArmorModel> {
-
-    public static boolean enableLimitScale = false;
-    public static boolean enableLimitYRot = false;
 
     public MannequinEntityRenderer(Context context) {
         super(context, MannequinModel::new, MannequinArmorModel::new, 0.0f);
@@ -46,16 +44,28 @@ public class MannequinEntityRenderer extends AbstractHumanoidEntityRenderer<Mann
     @Override
     protected float abi$getEntityScale(MannequinRenderState renderState) {
         var scale = 0.9375f; // from player renderer (maybe 15/16)
-        if (!enableLimitScale) {
+        if (!renderState.isLimitScale()) {
             scale *= renderState.scale();
         }
         return scale;
     }
 
     @Override
+    protected OpenQuaternionf abi$getEntityRotations(MannequinRenderState renderState) {
+        // pose * (-1, -1, 1)
+        var rx = -renderState.bodyPose().x();
+        var ry = -renderState.bodyPose().y();
+        var rz = renderState.bodyPose().z();
+        if (renderState.isLimitYRot()) {
+            ry = 0;
+        }
+        return OpenQuaternionf.fromEulerAnglesZYX(rz, ry, rx, true);
+    }
+
+    @Override
     protected OpenResourceLocation abi$getTextureLocation(MannequinRenderState renderState) {
         if (renderState.entityTexture() != null) {
-            return renderState.entityTexture();
+            return renderState.entityTexture().body().texture();
         }
         return ModTextures.MANNEQUIN_DEFAULT;
     }

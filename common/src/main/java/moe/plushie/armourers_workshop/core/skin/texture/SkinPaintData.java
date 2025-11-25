@@ -10,9 +10,11 @@ public class SkinPaintData {
 
     public static final int TEXTURE_OLD_WIDTH = 64;
     public static final int TEXTURE_OLD_HEIGHT = 32;
+    public static final int TEXTURE_OLD_SIZE = TEXTURE_OLD_WIDTH * TEXTURE_OLD_HEIGHT;
 
     public static final int TEXTURE_WIDTH = 64;
     public static final int TEXTURE_HEIGHT = 64;
+    public static final int TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
 
     private final int width;
     private final int height;
@@ -57,8 +59,8 @@ public class SkinPaintData {
             return;
         }
         // manual copy all part boxes.
-        var source = EntityTextureModel.of(other.width(), other.height(), other.slim());
-        var destination = EntityTextureModel.of(width(), height(), slim());
+        var source = PlayerSkinModel.from(other.width(), other.height(), other.slim());
+        var destination = PlayerSkinModel.from(width(), height(), slim());
         source.forEach((partType, sourceBox) -> {
             var destinationBox = destination.get(partType);
             if (destinationBox != null) {
@@ -67,25 +69,19 @@ public class SkinPaintData {
         });
     }
 
-    public void copyTo(EntityTextureModel.Box srcBox, SkinPaintData destData, EntityTextureModel.Box destBox, boolean isMirrorX) {
-        var srcX = srcBox.bounds().x();
-        var srcY = srcBox.bounds().y();
-        var srcZ = srcBox.bounds().z();
-        var srcWidth = srcBox.bounds().width() - 1;
-        var srcHeight = srcBox.bounds().height() - 1;
-        var srcDepth = srcBox.bounds().depth() - 1;
-        var destX = destBox.bounds().x();
-        var destY = destBox.bounds().y();
-        var destZ = destBox.bounds().z();
-        var destWidth = destBox.bounds().width() - 1;
-        var destHeight = destBox.bounds().height() - 1;
-        var destDepth = destBox.bounds().depth() - 1;
+    public void copyTo(PlayerSkinModel.Box srcBox, SkinPaintData destData, PlayerSkinModel.Box destBox, boolean isMirrorX) {
+        var srcWidth = srcBox.width() - 1;
+        var srcHeight = srcBox.height() - 1;
+        var srcDepth = srcBox.depth() - 1;
+        var destWidth = destBox.width() - 1;
+        var destHeight = destBox.height() - 1;
+        var destDepth = destBox.depth() - 1;
         var colors = new HashMap<OpenVector2i, Integer>();
         srcBox.forEach((texturePos, x, y, z, dir) -> {
             // src => progress => dest
-            var px = (float) (x - srcX) / srcWidth;
-            var py = (float) (y - srcY) / srcHeight;
-            var pz = (float) (z - srcZ) / srcDepth;
+            var px = (float) x / srcWidth;
+            var py = (float) y / srcHeight;
+            var pz = (float) z / srcDepth;
             // apply mirror
             if (isMirrorX) {
                 px = 1 - px;
@@ -97,15 +93,15 @@ public class SkinPaintData {
             var ix = OpenMath.roundi(px * destWidth);
             var iy = OpenMath.roundi(py * destHeight);
             var iz = OpenMath.roundi(pz * destDepth);
-            var newTexturePose = destBox.get(ix + destX, iy + destY, iz + destZ, dir);
-            if (newTexturePose == null) {
+            var newTexturePos = destBox.get(ix, iy, iz, dir);
+            if (newTexturePos == null) {
                 return;
             }
             var color = getColor(texturePos);
             if (SkinPaintColor.isOpaque(color)) {
                 // a special case is to use the mirror to swap the part texture,
                 // we will copy the color to the map and then applying it when read finish.
-                colors.put(newTexturePose, color);
+                colors.put(newTexturePos, color);
             }
         });
         colors.forEach(destData::setColor);
@@ -174,4 +170,5 @@ public class SkinPaintData {
     private boolean getFlag(int bit) {
         return (bytes[0] & (1 << bit)) != 0;
     }
+
 }

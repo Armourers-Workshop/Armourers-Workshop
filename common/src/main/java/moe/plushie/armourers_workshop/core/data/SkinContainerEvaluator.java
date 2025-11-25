@@ -110,7 +110,7 @@ public class SkinContainerEvaluator {
 
         private Skin skin;
 
-        public void update(Skin skin, Exception exception) {
+        public void update(Skin skin, Throwable exception) {
             this.skin = skin;
         }
     }

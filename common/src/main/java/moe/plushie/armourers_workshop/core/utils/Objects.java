@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
@@ -26,14 +27,14 @@ public class Objects {
         return null;
     }
 
-    public static <S, T> T flatMap(S src, Function<S, T> consumer) {
+    public static <S, T> T flatMap(S src, Function<@NotNull S, T> consumer) {
         if (src != null) {
             return consumer.apply(src);
         }
         return null;
     }
 
-    public static <S, V> V flatMap(S obj, Function<S, V> getter, V defaultValue) {
+    public static <S, V> V flatMap(S obj, Function<@NotNull S, V> getter, V defaultValue) {
         if (obj != null) {
             V value = getter.apply(obj);
             if (value != null) {

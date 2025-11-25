@@ -5,13 +5,13 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
 import moe.plushie.armourers_workshop.core.client.render.plugin.EntityRenderPlugin;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentManager;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentType;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 
@@ -46,7 +46,7 @@ public class EntityRenderState extends RenderState implements IEntityRenderState
     protected SkinAttachmentManager attachmentManager;
 
     protected EntityRenderPlugin<?, ?> renderPlugin;
-    protected OpenResourceLocation entityTexture;
+    protected PlayerSkin entityTexture = PlayerSkin.DEFAULT;
 
     protected final SkinRenderState hands = new SkinRenderState();
     protected final SkinRenderState armors = new SkinRenderState();
@@ -103,7 +103,7 @@ public class EntityRenderState extends RenderState implements IEntityRenderState
         return visibilityState;
     }
 
-    public OpenResourceLocation entityTexture() {
+    public PlayerSkin entityTexture() {
         return entityTexture;
     }
 
@@ -163,7 +163,7 @@ public class EntityRenderState extends RenderState implements IEntityRenderState
         renderState.isFallFlying = false;
         renderState.isBaby = false;
         renderState.isInvisible = entity.isInvisible();
-        renderState.entityTexture = EntityTextureLoader.getInstance().getTextureLocation(entity);
+        renderState.entityTexture = PlayerSkinLoader.getInstance().loadSkin(entity);
         renderState.animationManager = renderData.animationManager();
         renderState.attachmentManager = renderData.attachmentManager();
         //

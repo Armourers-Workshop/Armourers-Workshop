@@ -7,14 +7,14 @@ import com.apple.library.foundation.NSMutableString;
 import com.apple.library.uikit.UIButton;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIFont;
-import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.client.texture.EntityTextureLoader;
-import moe.plushie.armourers_workshop.core.skin.texture.EntityTextureDescriptor;
+import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.GlobalSkinLibrary;
 import moe.plushie.armourers_workshop.library.data.impl.ServerPermission;
-import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -32,7 +32,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     private final GlobalSkinLibrary library = GlobalSkinLibrary.getInstance();
 
-    private EntityTextureDescriptor playerTexture;
+    private PlayerSkinDescriptor playerTexture;
 
     public HeaderLibraryPanel() {
         super("skin-library-global.header", p -> true);
@@ -63,7 +63,7 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void render(CGPoint point, CGGraphicsContext context) {
         super.render(point, context);
-        this.renderPlayerProfile(context, Minecraft.getInstance().getUser().getGameProfile());
+        this.renderPlayerProfile(context, EnvironmentManager.getClientUser());
     }
 
     public void reloadData() {
@@ -91,13 +91,14 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         setNeedsLayout();
     }
 
-    private void renderPlayerProfile(CGGraphicsContext context, GameProfile gameProfile) {
+    private void renderPlayerProfile(CGGraphicsContext context, OpenGameProfile gameProfile) {
         if (playerTexture == null) {
-            playerTexture = EntityTextureDescriptor.fromProfile(gameProfile);
+            playerTexture = PlayerSkinDescriptor.fromProfile(gameProfile);
         }
         var tx = 5.0f;
         var ty = 5.0f;
-        var texture = EntityTextureLoader.getInstance().getTextureLocation(playerTexture);
+        var skin = PlayerSkinLoader.getInstance().loadSkin(playerTexture);
+        var texture = skin.body().texture();
         context.drawResizableImage(texture, tx, ty, 16, 16, 8, 8, 8, 8, 64, 64);
         context.drawResizableImage(texture, tx - 1, ty - 1, 16 + 2, 16 + 2, 40, 8, 8, 8, 64, 64);
 
