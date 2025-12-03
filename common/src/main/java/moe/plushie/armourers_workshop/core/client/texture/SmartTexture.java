@@ -25,6 +25,8 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public class SmartTexture extends ReferenceCounted {
 
+    private static final DataContainer.Key<SmartTexture> KEY = DataContainer.key("SmartTexture");
+
     private final OpenResourceLocation location;
 
     private final SkinTextureProperties properties;
@@ -43,7 +45,7 @@ public class SmartTexture extends ReferenceCounted {
 
     @Nullable
     public static SmartTexture of(IRenderType renderType) {
-        return DataContainer.getOrDefault(renderType, null);
+        return DataContainer.get(renderType, KEY);
     }
 
     @Override
@@ -65,7 +67,7 @@ public class SmartTexture extends ReferenceCounted {
     public IRenderType getRenderType(SkinGeometryType type) {
         return bindingRenderTypes.computeIfAbsent(type, it -> {
             var renderType = SkinRenderType.geometryFace(it, location, properties.isTranslucent(), properties.isEmissive());
-            DataContainer.set(renderType, this);
+            DataContainer.set(renderType, KEY, this);
             return renderType;
         });
     }
@@ -84,7 +86,7 @@ public class SmartTexture extends ReferenceCounted {
     }
 
     protected void unbind() {
-        bindingRenderTypes.forEach((key, value) -> DataContainer.set(value, null));
+        bindingRenderTypes.forEach((key, value) -> DataContainer.set(value, KEY, null));
         // when unbind the object, we must ensure that all resources release.
         while (refCnt() > 0) {
             release();

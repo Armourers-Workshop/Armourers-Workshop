@@ -9,7 +9,7 @@
     "FabricClientFrameRenderMixin",
     "FabricClientPlayerLifecycleMixin",
     "FabricClientScreenRenderMixin",
-    "FabricScreenMixin",
+    "FabricItemTooltipMixin",
     "FabricTrinketsAddonMixin",
     "dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",
     "dynamiclight/FabricRyoamicLightsMixin$EntityLightHandler",

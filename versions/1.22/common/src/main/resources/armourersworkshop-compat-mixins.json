@@ -7,9 +7,6 @@
     "EntityRenderDispatcherMixin",
     "BlockEntityRenderDispatcherMixin",
     "PictureInPictureRendererMixin",
-    "ShaderVanillaMixin",
-    "ShaderOptifineMixin",
-    "ShaderIrisMixin",
     "RenderTypeMixin",
     "GlStateManagerMixin",
     "ItemRendererMixin",
@@ -36,7 +33,11 @@
     "patch/render/BoatRendererMixin",
     "patch/render/FishingHookRendererMixin",
     "patch/render/MinecartRendererMixin",
-    "patch/render/ThrownTridentRendererMixin"
+    "patch/render/ThrownTridentRendererMixin",
+    "patch/render/AgeableMobRendererMixin",
+    "patch/shader/ShaderVanillaMixin",
+    "patch/shader/ShaderOptifineMixin",
+    "patch/shader/ShaderIrisMixin"
   ],
   "mixins": [
     "EntityJSMixin",

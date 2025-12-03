@@ -7,9 +7,6 @@
     "EntityRenderDispatcherMixin",
     "BlockEntityRenderDispatcherMixin",
     "GameRendererMixin",
-    "ShaderVanillaMixin",
-    "ShaderOptifineMixin",
-    "ShaderIrisMixin",
     "RenderTypeMixin",
     "GlStateManagerMixin",
     "ItemRendererREIMixin",
@@ -40,7 +37,10 @@
     "patch/attachment/ParrotOnShoulderLayerMixin$ModelPatch",
     "patch/attachment/ParrotOnShoulderLayerMixin$LayerPatch",
     "patch/attachment/EntityNameLayerMixin",
-    "patch/attachment/EntityRidingLayerMixin"
+    "patch/attachment/EntityRidingLayerMixin",
+    "patch/shader/ShaderVanillaMixin",
+    "patch/shader/ShaderOptifineMixin",
+    "patch/shader/ShaderIrisMixin"
   ],
   "mixins": [
     "EntityJSMixin",

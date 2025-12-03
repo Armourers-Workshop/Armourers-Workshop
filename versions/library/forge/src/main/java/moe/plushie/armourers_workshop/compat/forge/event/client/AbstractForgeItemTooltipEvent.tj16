@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.compat.forge.event.client;
 
-import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderItemTooltipEvent;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractTooltipContext;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
@@ -13,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 @Available("[1.16, 1.18)")
 public class AbstractForgeItemTooltipEvent {
@@ -45,34 +43,6 @@ public class AbstractForgeItemTooltipEvent {
             screenLayout = new CGRect(event.getX(), event.getY(), event.getScreenWidth(), event.getScreenHeight());
         });
         //
-        return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER_POST.map(event -> new ItemTooltipEvent.Render() {
-
-            @Override
-            public void draw(Consumer<CGGraphicsContext> action) {
-                float mouseX = screenLayout.x;
-                float mouseY = screenLayout.y;
-                AbstractGuiGraphicsRenderer.wrap(null, event.getMatrixStack(), screenWidth(), screenHeight(), mouseX, mouseY, 0, action);
-            }
-
-            @Override
-            public ItemStack itemStack() {
-                return event.getStack();
-            }
-
-            @Override
-            public CGRect frame() {
-                return new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
-            }
-
-            @Override
-            public float screenWidth() {
-                return screenLayout.width();
-            }
-
-            @Override
-            public float screenHeight() {
-                return screenLayout.height();
-            }
-        });
+        return AbstractForgeClientEventsImpl.ITEM_TOOLTIP_RENDER_POST.map(event -> AbstractRenderItemTooltipEvent.create(event.getStack(), event.getX(), event.getY(), event.getWidth(), event.getHeight(), screenLayout.width(), screenLayout.height(), screenLayout.x(), screenLayout.y(), 0, event.getMatrixStack(), null));
     }
 }

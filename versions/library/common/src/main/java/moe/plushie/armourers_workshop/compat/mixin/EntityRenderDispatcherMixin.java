@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -17,6 +17,6 @@ public class EntityRenderDispatcherMixin {
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"))
     private void aw2$reloadResources(ResourceManager resourceManager, CallbackInfo ci) {
-        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> SkinRendererManager::reload);
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> AbstractClientHooks::reloadResources);
     }
 }

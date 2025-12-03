@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.other;
 
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
@@ -24,7 +25,7 @@ public class CubeTransform {
         this.direction = direction;
         this.rotation = getRotation(direction, false);
         this.invRotation = getRotation(direction, true);
-        this.rotationDegrees = getRotationDegrees(direction);
+        this.rotationDegrees = getFacingRotation(direction);
     }
 
     public static OpenRotation getRotation(OpenDirection dir, boolean flags) {
@@ -36,7 +37,7 @@ public class CubeTransform {
         };
     }
 
-    public static OpenQuaternionf getRotationDegrees(OpenDirection dir) {
+    public static OpenQuaternionf getFacingRotation(OpenDirection dir) {
         return switch (dir) {
             case SOUTH -> new OpenQuaternionf(0, 180, 0, true);
             case WEST -> new OpenQuaternionf(0, 90, 0, true);
@@ -44,6 +45,16 @@ public class CubeTransform {
             default -> OpenQuaternionf.ONE;
         };
     }
+
+    public static OpenVector3f getFacingRotation2(OpenDirection dir) {
+        return switch (dir) {
+            case SOUTH -> new OpenVector3f(0, 180, 0);
+            case WEST -> new OpenVector3f(0, 90, 0);
+            case EAST -> new OpenVector3f(0, -90, 0);
+            default -> OpenVector3f.ZERO;
+        };
+    }
+
 
     public OpenDirection rotate(OpenDirection dir) {
         return rotation.rotate(dir);

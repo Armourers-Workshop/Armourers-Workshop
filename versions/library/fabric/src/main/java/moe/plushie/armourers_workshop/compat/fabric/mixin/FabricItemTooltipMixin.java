@@ -1,0 +1,47 @@
+package moe.plushie.armourers_workshop.compat.fabric.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderItemTooltipEvent;
+import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricTooltipComponent;
+import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
+
+@Available("[1.20, 1.22)")
+@Mixin(GuiGraphics.class)
+public class FabricItemTooltipMixin {
+
+    @Unique
+    private static ItemStack RENDERING_ITEM_STACK;
+
+    @Inject(method = "renderTooltipInternal", at = @At("HEAD"))
+    private void aw2$renderTooltipPre(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, CallbackInfo ci) {
+        RENDERING_ITEM_STACK = AbstractFabricTooltipComponent.deattach(tooltips);
+    }
+
+    @Inject(method = "renderTooltipInternal", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    public void aw2$renderTooltip(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, CallbackInfo ci, int w, int h) {
+        // ignore when the tooltip without from item stack.
+        var itemStack = RENDERING_ITEM_STACK;
+        if (itemStack == null) {
+            return;
+        }
+        var graphics = GuiGraphics.class.cast(this);
+        var screenWidth = graphics.guiWidth();
+        var screenHeight = graphics.guiHeight();
+        var position = positioner.positionTooltip(screenWidth, screenHeight, mouseX, mouseY, w, h);
+        EventManager.post(ItemTooltipEvent.Render.class, AbstractRenderItemTooltipEvent.create(itemStack, position.x(), position.y(), w, h, screenWidth, screenHeight, mouseX, mouseY, 0, graphics));
+    }
+}

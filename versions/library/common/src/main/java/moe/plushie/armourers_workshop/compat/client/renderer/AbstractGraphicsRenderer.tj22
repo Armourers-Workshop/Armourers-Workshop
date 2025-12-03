@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
 import moe.plushie.armourers_workshop.api.client.IGraphicsRenderable;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.compat.client.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
 import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
@@ -71,7 +72,17 @@ public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
 
     @Override
     public void submit(IGraphicsRenderable renderable) {
-        AbstractRenderPipeline.submit(poseStack, submitNodeCollector, renderable.renderType(), renderable::render);
+        var renderType = renderable.renderType();
+        // submit an renderable element into the pipeline.
+        var pipeline = AbstractRenderPipeline.of(renderType);
+        if (pipeline != null) {
+            pipeline.submit(poseStack, submitNodeCollector, renderable);
+            return;
+        }
+        // submit a renderable element immediately.
+        submitNodeCollector.submitCustomGeometry(poseStack, renderType.get(), (pose, builder) -> {
+            renderable.render(AbstractPoseStack.wrap(pose), AbstractBufferBuilder.wrap(builder));
+        });
     }
 
     @Override

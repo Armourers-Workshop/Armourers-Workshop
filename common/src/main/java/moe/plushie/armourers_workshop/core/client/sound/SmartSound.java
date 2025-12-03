@@ -21,6 +21,8 @@ import java.util.Map;
 @OnlyIn(Dist.CLIENT)
 public class SmartSound extends ReferenceCounted {
 
+    private static final DataContainer.Key<SmartSound> KEY = DataContainer.key("SmartSound");
+
     private final String name;
     private final OpenResourceLocation location;
     private final SkinSoundProperties properties;
@@ -36,7 +38,7 @@ public class SmartSound extends ReferenceCounted {
     }
 
     public static SmartSound of(SoundEvent soundEvent) {
-        return DataContainer.getOrDefault(soundEvent, null);
+        return DataContainer.get(soundEvent, KEY);
     }
 
     @Override
@@ -66,13 +68,13 @@ public class SmartSound extends ReferenceCounted {
     public SoundEvent soundEvent() {
         if (soundEvent == null) {
             soundEvent = SoundEvent.createVariableRangeEvent(location.toLocation());
-            DataContainer.set(soundEvent, this);
+            DataContainer.set(soundEvent, KEY, this);
         }
         return soundEvent;
     }
 
     protected void unbind() {
-        DataContainer.set(soundEvent, null);
+        DataContainer.set(soundEvent, KEY, null);
         // when unbind the object, we must ensure that all resources release.
         while (refCnt() > 0) {
             release();

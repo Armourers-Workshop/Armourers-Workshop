@@ -21,8 +21,6 @@ public class AbstractShaderObjectState {
     }
 
     public void pop() {
-        // VertexArrayObject.unbind();
-
         if (GL30.glIsBuffer(vbo)) {
             GL30.glBindVertexArray(0);
             GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vbo);

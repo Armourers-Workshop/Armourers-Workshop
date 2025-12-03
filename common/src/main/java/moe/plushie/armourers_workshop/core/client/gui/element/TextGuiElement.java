@@ -54,6 +54,8 @@ public abstract class TextGuiElement implements CGGraphicsElement {
 
         @Override
         public void prepare(CGGraphicsContext context) {
+            super.prepare(context);
+
             this.mouseX = context.param().mouseX();
             this.mouseY = context.param().mouseY();
         }

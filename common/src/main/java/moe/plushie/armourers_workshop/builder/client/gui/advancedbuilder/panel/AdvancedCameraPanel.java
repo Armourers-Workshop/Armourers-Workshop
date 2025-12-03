@@ -9,11 +9,11 @@ import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEn
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.document.DocumentEditor;
 import moe.plushie.armourers_workshop.builder.data.ClamppedVector3f;
 import moe.plushie.armourers_workshop.builder.entity.CameraEntity;
+import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.math.OpenAxisAlignedBoundingBox;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 
@@ -32,6 +32,7 @@ public class AdvancedCameraPanel extends UIView {
     private final OpenVector3f lastRotation = new ClamppedVector3f(0, 0, 0, -90, Float.NEGATIVE_INFINITY, 0, 90, Float.POSITIVE_INFINITY, 0);
     private final OpenVector3f lastTranslate = new OpenVector3f(0, 0, 0);
 
+    private final OpenVector3f facingRotation;
 
     private final Options options;
     private final AdvancedBuilderBlockEntity blockEntity;
@@ -46,6 +47,7 @@ public class AdvancedCameraPanel extends UIView {
         super(CGRect.ZERO);
         this.options = Minecraft.getInstance().options;
         this.blockEntity = editor.blockEntity();
+        this.facingRotation = CubeTransform.getFacingRotation2(blockEntity.facing());
     }
 
     public void connect() {
@@ -237,7 +239,7 @@ public class AdvancedCameraPanel extends UIView {
 
         cameraEntity.setZoom(lastZoom.z());
         cameraEntity.setXRot(rx);
-        cameraEntity.setYRot(ry);
+        cameraEntity.setYRot(ry - facingRotation.y());
         cameraEntity.setPos(origin.x() + tx, origin.y() + ty, origin.z() + tz);
         cameraEntity.setOldPosAndRot();
     }

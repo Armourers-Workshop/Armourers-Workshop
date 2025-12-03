@@ -61,6 +61,10 @@ public class ShaderPreprocessor {
         return source;
     }
 
+    public String name() {
+        return name;
+    }
+
     public static class Builder {
 
         private String source;

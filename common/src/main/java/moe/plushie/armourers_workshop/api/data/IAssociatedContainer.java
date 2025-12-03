@@ -6,7 +6,7 @@ public interface IAssociatedContainer {
 
     <T> T getAssociatedObject(Key<T> key);
 
-    <T> void setAssociatedObject(Key<T> key, T value);
+    <T> void setAssociatedObject(Key<T> key, @Nullable T value);
 
     interface Key<T> {
 

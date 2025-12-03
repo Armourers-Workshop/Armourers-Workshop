@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -97,14 +98,19 @@ public class DataContainer implements IAssociatedContainer {
     }
 
     @Override
-    public <T> void setAssociatedObject(IAssociatedContainer.Key<T> key, T value) {
+    public <T> void setAssociatedObject(IAssociatedContainer.Key<T> key, @Nullable T value) {
         setValue(key, value);
     }
 
-    protected void setValue(IAssociatedContainer.Key<?> key, Object value) {
-        values.put(key, value);
+    protected void setValue(IAssociatedContainer.Key<?> key, @Nullable Object value) {
+        if (value != null) {
+            values.put(key, value);
+        } else {
+            values.remove(key);
+        }
     }
 
+    @Nullable
     protected Object getValue(IAssociatedContainer.Key<?> key) {
         return values.get(key);
     }
@@ -161,6 +167,7 @@ public class DataContainer implements IAssociatedContainer {
 
         private Object builtin;
 
+        @Nullable
         @Override
         protected Object getValue(IAssociatedContainer.Key<?> key) {
             if (key == DEFAULT) {
@@ -170,7 +177,7 @@ public class DataContainer implements IAssociatedContainer {
         }
 
         @Override
-        protected void setValue(IAssociatedContainer.Key<?> key, Object value) {
+        protected void setValue(IAssociatedContainer.Key<?> key, @Nullable Object value) {
             if (key == DEFAULT) {
                 builtin = value;
             } else {

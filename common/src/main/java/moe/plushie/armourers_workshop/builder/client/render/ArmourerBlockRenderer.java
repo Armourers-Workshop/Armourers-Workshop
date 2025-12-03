@@ -76,7 +76,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
         context.saveGraphicsState();
 
         context.translateCTM(0, 1, 0); // apply height offset
-        context.rotateCTM(CubeTransform.getRotationDegrees(renderState.facing())); // apply facing rotation
+        context.rotateCTM(CubeTransform.getFacingRotation(renderState.facing())); // apply facing rotation
         context.scaleCTM(-1, -1, 1);
 
         var polygonOffset = 0f;

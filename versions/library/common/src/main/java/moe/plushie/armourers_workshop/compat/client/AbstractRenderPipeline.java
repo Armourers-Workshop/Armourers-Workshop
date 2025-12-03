@@ -4,95 +4,82 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
-import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.core.client.other.SkinBufferBuilder;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 
 import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.function.BiConsumer;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, )")
 @OnlyIn(Dist.CLIENT)
-public class AbstractRenderPipeline {
+public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implements IBufferSource {
 
-    private static final IdentityHashMap<Object, AttachedBufferSource> ATTACHED_BUFFER_SOURCES = new IdentityHashMap<>();
+    private static final DataContainer.Key<AbstractRenderPipeline> KEY = DataContainer.key("RenderAttachment", AbstractRenderPipeline::new);
 
-    public static void submit(IPoseStack poseStack, IBufferSource bufferSource, IRenderType renderType, BiConsumer<IPoseStack.Pose, IVertexConsumer> consumer) {
-        var bufferSource1 = createAttachedBufferSource(renderType, bufferSource);
-        if (bufferSource1 != null) {
-            bufferSource = bufferSource1;
-        }
-        consumer.accept(poseStack.last(), bufferSource.getBuffer(renderType));
+    private final HashMap<IRenderType, SkinBufferBuilder> startedBuilders = new HashMap<>();
+
+    protected AbstractRenderPipeline(IRenderType owner) {
+        this.owner = owner;
     }
 
-    private static IBufferSource createAttachedBufferSource(IRenderType renderType, IBufferSource bufferSource) {
+    /// Get a render pipeline from the render group.
+    public static AbstractRenderPipeline of(IRenderType renderType) {
         var attachmentType = AbstractRenderAttachment.find(renderType.group());
         if (attachmentType == null) {
             return null;
         }
-        var key = attachmentType.get();
-        var bufferSource1 = ATTACHED_BUFFER_SOURCES.get(key);
-        if (bufferSource1 != null) {
-            return bufferSource1;
-        }
-        if (key instanceof IRenderAttachable attachable) {
-            var bufferSource2 = new AttachedBufferSource(attachmentType);
-            attachable.attachRenderTask(() -> {
-                bufferSource2.startBatch(bufferSource);
-                return () -> {
-                    bufferSource2.endBatch();
-                    ATTACHED_BUFFER_SOURCES.remove(key);
-                };
-            });
-            ATTACHED_BUFFER_SOURCES.put(key, bufferSource2);
-            return bufferSource2;
-        }
-        return null;
+        return DataContainer.of(attachmentType, KEY);
     }
 
-    protected static class AttachedBufferSource implements IBufferSource {
+    /// Callback the render pipeline before attached render type will start rendering.
+    public static void setupRenderState(Object value) {
+        // nop.
+    }
 
-        private final IRenderType ownerType;
-        private final HashMap<IRenderType, SkinBufferBuilder> startedBuilders = new HashMap<>();
-
-        public AttachedBufferSource(IRenderType ownerType) {
-            this.ownerType = ownerType;
+    /// Callback the render pipeline after attached render type did end rendering.
+    public static void clearRenderState(Object value) {
+        // only allow render type.
+        if (!(value instanceof IAssociatedContainer container)) {
+            return;
         }
-
-        public void startBatch(IBufferSource bufferSource) {
-            // we still need to add a placeholder block to the vertex builder,
-            // otherwise RenderType.clearRenderState maybe ignore of the empty vertexes.
-            var builder = bufferSource.getBuffer(ownerType);
-            for (var i = 0; i < 4; ++i) {
-                builder.vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            }
+        // only callback once.
+        var pipeline = container.getAssociatedObject(KEY);
+        if (pipeline != null) {
+            container.setAssociatedObject(KEY, null);
+            pipeline.endBatch();
         }
+    }
 
-        @Override
-        public IVertexConsumer getBuffer(IRenderType renderType) {
-            var bufferBuilder = startedBuilders.get(renderType);
-            if (bufferBuilder != null) {
-                return bufferBuilder;
-            }
-            bufferBuilder = new SkinBufferBuilder(renderType.bufferSize());
-            bufferBuilder.begin(renderType);
-            startedBuilders.put(renderType, bufferBuilder);
+    protected void upload(IRenderType renderType, SkinBufferBuilder builder) {
+        builder.setupRenderState();
+        AbstractBufferBuilder.upload(renderType, builder);
+        builder.clearRenderState();
+    }
+
+    @Override
+    public IVertexConsumer getBuffer(IRenderType renderType) {
+        var bufferBuilder = startedBuilders.get(renderType);
+        if (bufferBuilder != null) {
             return bufferBuilder;
         }
+        bufferBuilder = new SkinBufferBuilder(renderType.bufferSize());
+        bufferBuilder.begin(renderType);
+        startedBuilders.put(renderType, bufferBuilder);
+        return bufferBuilder;
+    }
 
-        @Override
-        public void endBatch() {
-            startedBuilders.forEach(this::upload);
-            startedBuilders.clear();
-        }
+    @Override
+    public void endBatch() {
+        super.endBatch();
+        startedBuilders.forEach(this::upload);
+        startedBuilders.clear();
+    }
 
-        protected void upload(IRenderType renderType, SkinBufferBuilder builder) {
-            builder.setupRenderState();
-            AbstractBufferBuilder.upload(renderType, builder);
-            builder.clearRenderState();
-        }
+    @Override
+    public String toString() {
+        return Objects.toString(this, "owner", owner.name());
     }
 }

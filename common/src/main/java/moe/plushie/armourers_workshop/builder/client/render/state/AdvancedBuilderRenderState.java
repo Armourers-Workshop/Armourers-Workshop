@@ -4,10 +4,13 @@ import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEn
 import moe.plushie.armourers_workshop.core.client.render.state.BlockEntityRenderState;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.phys.AABB;
 
 public class AdvancedBuilderRenderState extends BlockEntityRenderState {
+
+    protected OpenDirection facing;
 
     protected OpenVector3f offset;
 
@@ -19,6 +22,10 @@ public class AdvancedBuilderRenderState extends BlockEntityRenderState {
 
     protected AABB visibleBox;
     protected OpenVector3f renderOrigin;
+
+    public OpenDirection facing() {
+        return facing;
+    }
 
     public SkinDocument document() {
         return document;
@@ -49,6 +56,7 @@ public class AdvancedBuilderRenderState extends BlockEntityRenderState {
     }
 
     public static void extract(AdvancedBuilderBlockEntity entity, AdvancedBuilderRenderState renderState) {
+        renderState.facing = entity.facing();
         renderState.document = entity.document();
         renderState.offset = entity.offset;
         renderState.carmeOffset = entity.carmeOffset;

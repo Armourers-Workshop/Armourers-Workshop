@@ -30,7 +30,6 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
 
     private final String name;
     private final RenderType impl;
-    private final DataContainer storage = new DataContainer();
     private final Optional<IRenderType> outline;
 
     private AbstractRenderType(RenderType renderType) {
@@ -58,12 +57,12 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
 
     @Override
     public <T> T getAssociatedObject(IAssociatedContainer.Key<T> key) {
-        return storage.getAssociatedObject(key);
+        return ((IAssociatedContainer) impl).getAssociatedObject(key);
     }
 
     @Override
     public <T> void setAssociatedObject(IAssociatedContainer.Key<T> key, T value) {
-        storage.setAssociatedObject(key, value);
+        ((IAssociatedContainer) impl).setAssociatedObject(key, value);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.other.BlockUtils;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.UserNotifications;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -17,6 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentProvider;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocumentSynchronizer;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransforms;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
@@ -134,5 +137,9 @@ public class AdvancedBuilderBlockEntity extends UpdatableBlockEntity implements 
         var rect = new OpenRectangle3f(origin.x() - s / 2, origin.y() - s / 2, origin.z() - s / 2, s, s, s);
         renderBoundingBox = new AABB(rect.minX(), rect.minY(), rect.minZ(), rect.maxX(), rect.maxY(), rect.maxZ());
         return renderBoundingBox;
+    }
+
+    public OpenDirection facing() {
+        return getBlockState().getOptionalValue(ArmourerBlock.FACING).map(AbstractDirection::wrap).orElse(OpenDirection.NORTH);
     }
 }

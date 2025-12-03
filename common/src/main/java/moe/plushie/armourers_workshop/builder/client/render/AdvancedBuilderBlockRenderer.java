@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.A
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedItemGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedMinecartGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.render.state.AdvancedBuilderRenderState;
+import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -131,6 +132,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
         context.saveGraphicsState();
         context.translateCTM(offset.x(), offset.y(), offset.z());
         context.translateCTM(0.5f, 0.5f, 0.5f);
+        context.rotateCTM(CubeTransform.getFacingRotation(renderState.facing())); // apply facing rotation
         context.scaleCTM(carmeScale.x(), carmeScale.y(), carmeScale.z());
         context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
 

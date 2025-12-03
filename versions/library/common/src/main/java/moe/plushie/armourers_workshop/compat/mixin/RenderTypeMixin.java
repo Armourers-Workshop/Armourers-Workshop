@@ -1,35 +1,24 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.client.IRenderAttachable;
+import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
 import net.minecraft.client.renderer.RenderStateShard;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Supplier;
-
 @Available("[1.16, )")
 @Mixin(RenderStateShard.class)
-public class RenderTypeMixin implements IRenderAttachable {
+public class RenderTypeMixin {
 
-    @Unique
-    private Runnable aw2$attachment;
-
-    @Override
-    public void attachRenderTask(Supplier<Runnable> provider) {
-        if (aw2$attachment == null) {
-            aw2$attachment = provider.get();
-        }
+    @Inject(method = "setupRenderState", at = @At("HEAD"))
+    public void aw2$setupRenderState(CallbackInfo ci) {
+        AbstractRenderPipeline.setupRenderState(this);
     }
 
-    @Inject(method = "clearRenderState", at = @At("RETURN"))
-    public void aw2$loadCallback(CallbackInfo ci) {
-        if (aw2$attachment != null) {
-            aw2$attachment.run();
-            aw2$attachment = null;
-        }
+    @Inject(method = "clearRenderState", at = @At("TAIL"))
+    public void aw2$clearRenderState(CallbackInfo ci) {
+        AbstractRenderPipeline.clearRenderState(this);
     }
 }

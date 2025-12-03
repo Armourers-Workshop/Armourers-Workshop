@@ -1,6 +1,7 @@
-package moe.plushie.armourers_workshop.compat.mixin;
+package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -14,7 +15,7 @@ public class ShaderOptifineMixin {
 
     @ModifyArg(method = "createVertShader", at = @At(value = "INVOKE", target = "Lnet/optifine/shaders/Shaders;shaderSource(ILjava/lang/String;)V"), remap = false)
     private static String aw2$createVertShader(int shader, String value) {
-        //ShaderUniforms.clear();
+        AbstractClientHooks.createShaders();
         return new ShaderPreprocessor("optifine", 1).process(value);
     }
 }

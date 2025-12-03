@@ -55,7 +55,15 @@ public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
     public void submit(IGraphicsRenderable renderable) {
         var renderType = renderable.renderType();
         var bufferSource = getBufferSource(renderType);
-        AbstractRenderPipeline.submit(poseStack, bufferSource, renderType, renderable::render);
+        // submit an renderable element into the pipeline.
+        var pipeline = AbstractRenderPipeline.of(renderType);
+        if (pipeline != null) {
+            pipeline.submit(poseStack, bufferSource, renderable);
+            return;
+        }
+        // submit a renderable element immediately.
+        var builder = bufferSource.getBuffer(renderType);
+        renderable.render(poseStack.last(), builder);
     }
 
     @Override

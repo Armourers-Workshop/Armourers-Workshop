@@ -32,6 +32,8 @@ public abstract class ItemGuiElement implements CGGraphicsElement {
 
         @Override
         public void prepare(CGGraphicsContext context) {
+            super.prepare(context);
+
             // the rendering item will change the model view stack,
             // which may cause the pending draw to be executed in the wrong context,
             // so we need to flush first.
@@ -54,6 +56,8 @@ public abstract class ItemGuiElement implements CGGraphicsElement {
 
         @Override
         public void prepare(CGGraphicsContext context) {
+            super.prepare(context);
+
             this.mouseX = context.param().mouseX();
             this.mouseY = context.param().mouseY();
         }

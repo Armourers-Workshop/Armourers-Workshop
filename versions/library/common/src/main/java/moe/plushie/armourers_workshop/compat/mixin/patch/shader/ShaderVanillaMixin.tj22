@@ -1,10 +1,11 @@
-package moe.plushie.armourers_workshop.compat.mixin;
+package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.preprocessor.GlslPreprocessor;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderTransformer;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
+import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderSelector;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import net.minecraft.client.renderer.ShaderManager;
 import net.minecraft.resources.ResourceLocation;
@@ -19,10 +20,12 @@ public abstract class ShaderVanillaMixin {
 
     @WrapOperation(method = "loadShader", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/preprocessor/GlslPreprocessor;process(Ljava/lang/String;)Ljava/util/List;"))
     private static List<String> aw2$createVanillaShader(GlslPreprocessor instance, String source, Operation<List<String>> original, ResourceLocation location) {
-        //ShaderUniforms.clear();
+        AbstractClientHooks.createShaders();
         // this is a vanilla shader resource.
-        var transformer = new AbstractShaderTransformer(new ShaderPreprocessor("vanilla", 2));
-        source = transformer.transform(source, location);
+        if (AbstractShaderSelector.DEFAULT.contains(location)) {
+            var processor = new ShaderPreprocessor("vanilla", 2);
+            source = processor.process(source);
+        }
         return original.call(instance, source);
     }
 }

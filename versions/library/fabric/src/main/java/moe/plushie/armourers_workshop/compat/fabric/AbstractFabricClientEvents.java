@@ -37,7 +37,6 @@ public class AbstractFabricClientEvents {
         EventManager.post(RenderScreenEvent.Post.class, AbstractFabricRenderScreenEvent.postFactory());
 
         EventManager.post(ItemTooltipEvent.Gather.class, AbstractFabricItemTooltipEvent.gatherFactory());
-        EventManager.post(ItemTooltipEvent.Render.class, AbstractFabricItemTooltipEvent.renderFactory());
 
         EventManager.post(RenderHighlightEvent.Block.class, AbstractFabricRenderHighlightEvent.blockFactory());
 

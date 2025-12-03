@@ -101,6 +101,11 @@ accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ### accessible field com/mojang/math/Matrix4f m33 F
 ##endif
 
+
+##if MC >= 11800
+accessible field net/minecraft/client/gui/screens/inventory/tooltip/ClientTextTooltip text Lnet/minecraft/util/FormattedCharSequence;
+##endif
+
 ##if MC < 12000
 ### accessible field net/minecraft/client/Minecraft fps I
 ##endif

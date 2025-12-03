@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.compat.mixin;
+package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;

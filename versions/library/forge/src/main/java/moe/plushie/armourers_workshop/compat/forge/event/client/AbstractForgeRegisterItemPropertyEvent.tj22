@@ -11,7 +11,7 @@ public class AbstractForgeRegisterItemPropertyEvent {
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
         return AbstractForgeCommonEventsImpl.FML_LOAD_COMPLETE.map(event -> (registryName, item, property) -> {
             // forward
-            // TODO: NO IMPL 1.22
+            // TODO: NO IMPL - 1.22
 //            ItemProperties.register(item, registryName.toLocation(), property::getValue);
         });
     }
