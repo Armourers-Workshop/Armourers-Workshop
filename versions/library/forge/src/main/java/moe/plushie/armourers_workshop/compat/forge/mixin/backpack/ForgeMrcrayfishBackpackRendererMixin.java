@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge.mixin.backpack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mrcrayfish.backpacked.client.renderer.entity.layers.BackpackLayer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[1.16, 1.22)")
+@Conditional("backpacked")
 @Pseudo
 @Mixin(BackpackLayer.class)
 public class ForgeMrcrayfishBackpackRendererMixin {

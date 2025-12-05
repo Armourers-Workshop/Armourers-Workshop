@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge.mixin.dynamiclight;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.init.client.ClientDynamicLightHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,7 @@ import org.thinkingstudio.ryoamiclights.api.item.ItemLightSources;
 @Available("[1.16, 1.22)")
 public class ForgeRyoamicLightsMixin {
 
+    @Conditional("ryoamiclights")
     @Pseudo
     @Mixin(ItemLightSources.class)
     public static class ItemLightHandler {
@@ -32,6 +34,7 @@ public class ForgeRyoamicLightsMixin {
         }
     }
 
+    @Conditional("ryoamiclights")
     @Pseudo
     @Mixin(DynamicLightHandlers.class)
     public static class EntityLightHandler {
@@ -68,6 +71,7 @@ public class ForgeRyoamicLightsMixin {
         }
     }
 
+    @Conditional("ryoamiclights")
     @Pseudo
     @Mixin(DynamicLightHandlers.class)
     public static class BlockEntityLightHandler {

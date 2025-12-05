@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "moe.plushie.armourers_workshop.compat.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
     "PoseStackMixin",
@@ -38,7 +39,7 @@
   ],
   "mixins": [
     "ServerGameMixin",
-    "EntityJSMixin",
+    "KubeJSMixin",
     "EntityActionTrackerMixin",
     "EntitySelectorOptionsMixin",
     "VehicleEntityPlaceMixin$ServerLevelPatch",

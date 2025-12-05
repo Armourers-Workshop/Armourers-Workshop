@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderItemTooltipEvent;
 import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricTooltipComponent;
@@ -32,8 +33,8 @@ public class FabricItemTooltipMixin {
         RENDERING_ITEM_STACK = AbstractFabricTooltipComponent.deattach(tooltips);
     }
 
-    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void aw2$renderTooltip(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation resourceLocation, CallbackInfo ci, int w, int h) {
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;", ordinal = 0))
+    private void aw2$renderTooltip(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation resourceLocation, CallbackInfo ci, @Local(ordinal = 2) int w, @Local(ordinal = 3) int h) {
         // ignore when the tooltip without from item stack.
         var itemStack = RENDERING_ITEM_STACK;
         if (itemStack == null) {

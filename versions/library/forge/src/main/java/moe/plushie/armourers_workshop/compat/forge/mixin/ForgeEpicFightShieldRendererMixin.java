@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEmbeddedItemRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemProperties;
 import net.minecraft.client.renderer.ItemModelShaper;
@@ -15,6 +16,7 @@ import yesman.epicfight.client.renderer.patched.item.RenderShield;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @Available("[1.20, 1.22)")
+@Conditional("epicfight")
 @Pseudo
 @Mixin(RenderShield.class)
 public abstract class ForgeEpicFightShieldRendererMixin {

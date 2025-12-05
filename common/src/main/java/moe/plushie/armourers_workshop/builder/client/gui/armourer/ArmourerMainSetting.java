@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import moe.plushie.armourers_workshop.core.utils.Version;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -59,7 +60,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
 
     protected final ArmourerMenu container;
     protected final ArmourerBlockEntity blockEntity;
-    protected final String modVersion;
+    protected final Version modVersion;
 
     protected SkinType skinType = SkinTypes.ARMOR_HEAD;
 
@@ -104,7 +105,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         setupLabel(14, 80, getDisplayText("label.flavour"));
         if (modVersion != null) {
             var modLabel = new UILabel(new CGRect(8, 131, 160, 9));
-            modLabel.setText(new NSString(modVersion));
+            modLabel.setText(new NSString(modVersion.toString()));
             modLabel.setTextHorizontalAlignment(NSTextAlignment.Horizontal.RIGHT);
             addSubview(modLabel);
         }

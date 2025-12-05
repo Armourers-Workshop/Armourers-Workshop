@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ModLog {
 
-    private static final Logger LOGGER = LogManager.getLogger(ArmourersWorkshop.class);
+    private static final Logger LOGGER = LogManager.getLogger("ArmourersWorkshop");
 
     public static void debug(String message, Object... params) {
         // in the development mode, highlight from our debug log.

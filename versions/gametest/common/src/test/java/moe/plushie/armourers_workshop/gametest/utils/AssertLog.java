@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -91,11 +92,7 @@ public class AssertLog {
                 return; // the message not match.
             }
             passed = true;
-            if (listener == null) {
-                return; // not complete listener
-            }
-            listener.countDown();
-            listener = null;
+            release();
         }
 
         public void check() {
@@ -114,6 +111,13 @@ public class AssertLog {
                 error.setStackTrace(stackTrace);
             }
             throw error;
+        }
+
+        private void release() {
+            if (listener != null) {
+                listener.countDown();
+                listener = null;
+            }
         }
     }
 
@@ -141,11 +145,9 @@ public class AssertLog {
                     }
                 }
             }
+            // wait all entry completed.
             try {
-                // when all tasks are completed, go through
-                if (latch.await(timeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                    return;
-                }
+                latch.await();
             } catch (Throwable ex) {
                 ExceptionUtils.throwAsUncheckedException(ex);
             }
@@ -166,12 +168,21 @@ public class AssertLog {
                 }
             }
         }
+
+        public synchronized void abort(Throwable throwable) {
+            for (var entry : entries) {
+                if (!entry.passed) {
+                    entry.release();
+                }
+            }
+        }
     }
 
     private static class TaskManager implements AsynchronousImpl.Executor {
 
-        private final Duration timeout = Duration.ofSeconds(90);
+        private final Duration timeout = Duration.ofSeconds(30);
         private final ThreadLocal<Task> currentTask = ThreadLocal.withInitial(() -> null);
+        private final LinkedBlockingQueue<Logger.Message> events = new LinkedBlockingQueue<>();
 
         private final List<Task> listeners = Collections.synchronizedList(new ArrayList<>());
         private final ExecutorService executor = Executors.newSingleThreadExecutor(action -> {
@@ -181,19 +192,23 @@ public class AssertLog {
             return thread;
         });
 
+        private boolean started = false;
+
         public TaskManager() {
-            Logger.addChangeListener(this::print);
+            Logger.addChangeListener(events::offer);
+            dispatchIfNeeded();
         }
 
         @Override
-        public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
+        public void beforeTestExecution(ExtensionContext extensionContext) {
             var task = new Task(timeout);
             listeners.add(task);
             currentTask.set(task);
+            dispatchIfNeeded();
         }
 
         @Override
-        public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
+        public void afterTestExecution(ExtensionContext extensionContext) {
             var task = currentTask.get();
             if (task == null) {
                 throw new RuntimeException("can't found a task!"); // not call before test execution?
@@ -215,13 +230,31 @@ public class AssertLog {
             // create a new task and execute it now.
             var task = new Task(timeout);
             listeners.add(task);
+            dispatchIfNeeded();
             task.add(predicate, expected, messageOrSupplier);
             task.execute();
             listeners.remove(task);
         }
 
-        protected void print(Logger.Message event) {
-            executor.execute(() -> listeners.forEach(it -> it.print(event)));
+        private void dispatchIfNeeded() {
+            if (started) {
+                return;
+            }
+            started = true;
+            executor.execute(() -> {
+                try {
+                    while (true) {
+                        var event = events.poll(timeout.toMillis(), TimeUnit.MILLISECONDS);
+                        if (event == null) {
+                            throw new RuntimeException("read timeout of " + timeout);
+                        }
+                        listeners.forEach(it -> it.print(event));
+                    }
+                } catch (Throwable ex) {
+                    listeners.forEach(it -> it.abort(ex));
+                    started = false;
+                }
+            });
         }
     }
 }

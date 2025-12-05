@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.mixin.backpack;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.minecraft.client.model.EntityModel;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[1.18, 1.22)")
+@Conditional("sophisticatedbackpacks")
 @Pseudo
 @Mixin(BackpackLayerRenderer.class)
 public class ForgeSophisticatedBackpackRendererMixin {

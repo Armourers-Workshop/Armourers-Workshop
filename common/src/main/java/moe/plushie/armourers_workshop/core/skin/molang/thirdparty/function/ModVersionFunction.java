@@ -27,7 +27,7 @@ public class ModVersionFunction extends Function {
         var modId = this.modId.evaluate(context);
         var version = EnvironmentManager.getModVersion(modId.getAsString());
         if (version != null) {
-            return Result.valueOf(version);
+            return Result.valueOf(version.toString());
         }
         return Result.NULL;
     }

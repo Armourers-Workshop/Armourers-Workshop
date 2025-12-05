@@ -30,7 +30,6 @@ import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.PlatformLoader;
 import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;

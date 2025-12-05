@@ -14,25 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Java version
-        id: java-version
-        run: |
-          case "${{ matrix.version }}" in
-            '1.16.5' | '1.18.2' | '1.19.2')
-              echo "version=17" >> $GITHUB_OUTPUT
-              ;;
-            *)
-              echo "version=21" >> $GITHUB_OUTPUT
-              ;;
-          esac
-
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ steps.java-version.outputs.version }}
+          java-version: '21'
 
-      - name: Setup gradle from cache
+      - name: Set up gradle from cache
         uses: actions/cache@v4
         with:
           key: build-cache-${{ matrix.version }}

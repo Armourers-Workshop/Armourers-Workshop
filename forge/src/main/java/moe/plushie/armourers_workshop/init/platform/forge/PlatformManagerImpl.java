@@ -26,16 +26,6 @@ public class PlatformManagerImpl extends PlatformManager {
     }
 
     @Override
-    public String getVersion(String modId) {
-        var fileInfo = AbstractForgeEnvironment.getModFileById(modId);
-        if (fileInfo != null && !fileInfo.getMods().isEmpty()) {
-            var version = fileInfo.getMods().get(0).getVersion();
-            return version.toString();
-        }
-        return null;
-    }
-
-    @Override
     public EnvironmentPlatformType getPlatformType() {
         return EnvironmentPlatformType.FORGE;
     }

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeEpicFightHandler;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -20,6 +21,7 @@ import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRender
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @Available("[1.16, 1.18)")
+@Conditional("epicfight")
 @Pseudo
 @Mixin(PatchedLivingEntityRenderer.class)
 public abstract class ForgeEpicFightRendererMixin {

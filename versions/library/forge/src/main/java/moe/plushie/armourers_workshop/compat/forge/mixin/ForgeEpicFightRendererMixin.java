@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeEpicFightHandler;
 import moe.plushie.armourers_workshop.core.client.render.layer.SkinWardrobeLayer;
 import net.minecraft.client.model.EntityModel;
@@ -25,6 +26,7 @@ import yesman.epicfight.client.renderer.patched.layer.EmptyLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @Available("[1.20, 1.22)")
+@Conditional("epicfight")
 @Pseudo
 @Mixin(PatchedLivingEntityRenderer.class)
 public abstract class ForgeEpicFightRendererMixin {

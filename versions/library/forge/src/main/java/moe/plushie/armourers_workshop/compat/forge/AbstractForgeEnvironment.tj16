@@ -5,15 +5,21 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.forgespi.language.IModFileInfo;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 @Available("[1.16, 1.21)")
 public class AbstractForgeEnvironment {
 
     public static IModFileInfo getModFileById(String modId) {
-        return ModList.get().getModFileById(modId);
+        var loadingMod = Optional.ofNullable(LoadingModList.get()).map(ml -> ml.getModFileById(modId));
+        if (loadingMod.isPresent()) {
+            return loadingMod.get();
+        }
+        return Optional.ofNullable(ModList.get()).map(ml -> ml.getModFileById(modId)).orElse(null);
     }
 
     public static Dist getDist() {

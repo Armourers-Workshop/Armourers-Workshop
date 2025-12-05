@@ -27,12 +27,6 @@ public class PlatformManagerImpl extends PlatformManager {
     }
 
     @Override
-    public String getVersion(String modId) {
-        var container = FabricLoader.getInstance().getModContainer(modId);
-        return container.map(modContainer -> modContainer.getMetadata().getVersion().toString()).orElse(null);
-    }
-
-    @Override
     public EnvironmentType getEnvironmentType() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
             return EnvironmentType.SERVER;

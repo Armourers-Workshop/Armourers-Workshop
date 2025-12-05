@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Available("[1.18, )")
+@Conditional("optifine")
 @Pseudo
 @Mixin(targets = "net.optifine.shaders.Shaders")
 public class ShaderOptifineMixin {

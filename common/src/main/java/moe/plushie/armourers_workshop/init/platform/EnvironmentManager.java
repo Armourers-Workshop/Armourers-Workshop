@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
+import moe.plushie.armourers_workshop.core.utils.Version;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -66,8 +67,8 @@ public class EnvironmentManager {
     }
 
     @Nullable
-    public static String getModVersion(String modId) {
-        return PLATFORM.getVersion(modId);
+    public static Version getModVersion(String modId) {
+        return VersionResolver.getVersion(modId).orElse(null);
     }
 
     public static boolean isDevelopment() {

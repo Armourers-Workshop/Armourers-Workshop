@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.shader.AbstractResourceProvider;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Available("[1.18, )")
+@Conditional("iris || oculus")
 @Pseudo
 @Mixin(targets = {"net.coderbot.iris.pipeline.newshader.ExtendedShader", "net.irisshaders.iris.pipeline.programs.ExtendedShader"})
 public class ShaderIrisMixin {

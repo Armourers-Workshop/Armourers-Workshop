@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.mixin;
 
 import dev.emi.trinkets.api.TrinketsApi;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.init.platform.fabric.addon.TrinketsAddon;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @Available("[1.16, 1.18)")
+@Conditional("trinkets")
 @Pseudo
 @Mixin(TrinketsApi.class)
 public class FabricTrinketsAddonMixin {

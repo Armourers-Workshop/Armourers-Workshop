@@ -5,15 +5,21 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforgespi.language.IModFileInfo;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 @Available("[1.21, 1.22)")
 public class AbstractForgeEnvironment {
 
     public static IModFileInfo getModFileById(String modId) {
-        return ModList.get().getModFileById(modId);
+        var loadingMod = Optional.ofNullable(LoadingModList.get()).map(ml -> ml.getModFileById(modId));
+        if (loadingMod.isPresent()) {
+            return loadingMod.get();
+        }
+        return Optional.ofNullable(ModList.get()).map(ml -> ml.getModFileById(modId)).orElse(null);
     }
 
     public static Dist getDist() {

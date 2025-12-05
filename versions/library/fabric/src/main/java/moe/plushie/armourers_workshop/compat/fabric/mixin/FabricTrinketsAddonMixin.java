@@ -4,6 +4,7 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.fabric.addon.TrinketsAddon;
@@ -20,6 +21,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 @Available("[1.18, )")
+@Conditional("trinkets")
 @Pseudo
 @Mixin(TrinketsApi.class)
 public class FabricTrinketsAddonMixin {

@@ -30,8 +30,5 @@ public abstract class PlatformManager {
     public abstract AbstractRegistryManager getRegistryManager();
 
 
-    public abstract String getVersion(String modId);
-
-
     public abstract boolean isDevelopment();
 }

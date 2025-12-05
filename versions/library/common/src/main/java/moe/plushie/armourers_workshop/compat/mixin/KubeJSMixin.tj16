@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeJS;
 import moe.plushie.armourers_workshop.core.data.EntityDataStorage;
 import net.minecraft.world.entity.Entity;
@@ -9,13 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.16, 1.19)")
+@Available("[1.16, 1.18)")
+@Conditional("kubejs")
 @Pseudo
-@Mixin(targets = {
-        "dev.latvian.kubejs.entity.EntityJS",
-        "dev.latvian.mods.kubejs.entity.EntityJS"
-})
-public class EntityJSMixin {
+@Mixin(targets = "dev.latvian.kubejs.entity.EntityJS")
+public class KubeJSMixin {
 
     @Shadow
     @Final

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractItemStackRenderState;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Available("[1.18, 1.22)")
+@Conditional("roughlyenoughitems")
 @Pseudo
 @Mixin(targets = "me.shedaniel.rei.plugin.client.entry.ItemEntryDefinition$ItemEntryRenderer")
 public class ItemRendererREIMixin {

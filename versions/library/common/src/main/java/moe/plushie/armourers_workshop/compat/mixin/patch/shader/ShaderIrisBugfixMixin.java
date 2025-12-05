@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
 import moe.plushie.armourers_workshop.core.utils.FieldAccessor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[1.21, 1.22)")
+@Conditional("iris >= 1.8.12-snapshot")
 @Mixin(AbstractRenderPipeline.class)
 public class ShaderIrisBugfixMixin {
 

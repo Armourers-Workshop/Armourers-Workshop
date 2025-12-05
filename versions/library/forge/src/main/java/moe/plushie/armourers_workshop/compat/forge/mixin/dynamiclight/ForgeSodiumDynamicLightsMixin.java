@@ -4,6 +4,7 @@ import dev.lambdaurora.lambdynlights.api.DynamicLightHandler;
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSources;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.init.client.ClientDynamicLightHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Available("[1.20, 1.22)")
 public class ForgeSodiumDynamicLightsMixin {
 
+    @Conditional("sodiumdynamiclights")
     @Pseudo
     @Mixin(ItemLightSources.class)
     public static class ItemLightHandler {
@@ -32,6 +34,7 @@ public class ForgeSodiumDynamicLightsMixin {
         }
     }
 
+    @Conditional("sodiumdynamiclights")
     @Pseudo
     @Mixin(DynamicLightHandlers.class)
     public static class EntityLightHandler {
@@ -68,6 +71,7 @@ public class ForgeSodiumDynamicLightsMixin {
         }
     }
 
+    @Conditional("sodiumdynamiclights")
     @Pseudo
     @Mixin(DynamicLightHandlers.class)
     public static class BlockEntityLightHandler {

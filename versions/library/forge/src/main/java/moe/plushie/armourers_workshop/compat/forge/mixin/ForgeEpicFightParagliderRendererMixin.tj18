@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[1.18, 1.19)")
+@Conditional("dawncraft")
 @Pseudo
 @Mixin(targets = "com.afunproject.dawncraft.integration.epicfight.client.EpicFightParagliderEvents")
 public class ForgeEpicFightParagliderRendererMixin {

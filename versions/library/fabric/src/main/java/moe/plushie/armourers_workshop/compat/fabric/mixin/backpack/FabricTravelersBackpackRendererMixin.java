@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.travelersbackpack.client.renderer.BackpackLayer;
 import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.platform.fabric.addon.TravelersBackpackAddon;
@@ -22,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.function.Function;
 
 @Available("[1.20, 1.22)")
+@Conditional("travelersbackpack")
 @Pseudo
 @Mixin(BackpackLayer.class)
 public class FabricTravelersBackpackRendererMixin {

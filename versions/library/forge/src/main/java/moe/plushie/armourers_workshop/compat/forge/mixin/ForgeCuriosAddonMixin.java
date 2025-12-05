@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.init.platform.forge.addon.CuriosAddon;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import top.theillusivec4.curios.api.CuriosApi;
 
 @Available("[1.18, )")
+@Conditional("curios")
 @Pseudo
 @Mixin(CuriosApi.class)
 public class ForgeCuriosAddonMixin {
