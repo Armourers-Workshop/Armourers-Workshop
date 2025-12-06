@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.render.model;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractItemProperties;
@@ -36,9 +35,9 @@ public class SkinItemModelManager {
     private SkinItemModel missingModel;
 
     private final Map<SkinType, SkinItemModel> typedItemModels = new ConcurrentHashMap<>();
-    private final Map<IResourceLocation, SkinItemModel> namedItemModels = new ConcurrentHashMap<>();
+    private final Map<OpenResourceLocation, SkinItemModel> namedItemModels = new ConcurrentHashMap<>();
 
-    private final Map<IResourceLocation, SkinItemProperty> namedItemProperties = Collections.immutableMap(it -> {
+    private final Map<OpenResourceLocation, SkinItemProperty> namedItemProperties = Collections.immutableMap(it -> {
         it.put(ModConstants.key("is_skin"), handOnly("armourers_workshop:is_skin"));
         it.put(ModConstants.key("is_crossbow"), vanilla("armourers_workshop:is_crossbow"));
         it.put(ModConstants.key("is_blocking"), vanilla("minecraft:blocking"));
@@ -63,7 +62,7 @@ public class SkinItemModelManager {
     }
 
     @Nullable
-    public SkinItemProperty getProperty(IResourceLocation id) {
+    public SkinItemProperty getProperty(OpenResourceLocation id) {
         return namedItemProperties.get(id);
     }
 
@@ -105,8 +104,8 @@ public class SkinItemModelManager {
 
         private final IResourceManager resourceManager = EnvironmentManager.getClientResourceManager();
 
-        private final Map<IResourceLocation, SimpleBuilder> builders = new LinkedHashMap<>();
-        private final Map<IResourceLocation, SkinItemModel> models = new LinkedHashMap<>();
+        private final Map<OpenResourceLocation, SimpleBuilder> builders = new LinkedHashMap<>();
+        private final Map<OpenResourceLocation, SkinItemModel> models = new LinkedHashMap<>();
 
         public void load(SkinItemModelManager modelManager) {
             resourceManager.readResources(ModConstants.key("models/skin"), s -> s.endsWith(".json"), (location, resource) -> {
@@ -116,7 +115,7 @@ public class SkinItemModelManager {
                 }
                 var path = FileUtils.getRegistryName(location.path(), "models/");
                 var location1 = location.withPath(FileUtils.removeExtension(path));
-                var builder = builders.computeIfAbsent(location1, SimpleBuilder::new);
+                var builder = builders.computeIfAbsent(OpenResourceLocation.of(location1), SimpleBuilder::new);
                 object.get("parent").ifPresent(it -> {
                     var key = OpenResourceLocation.parse(it.stringValue());
                     builder.parent = builders.computeIfAbsent(key, SimpleBuilder::new);
@@ -131,7 +130,7 @@ public class SkinItemModelManager {
                 });
                 object.get("overrides").allValues().forEach(it -> {
                     var model = it.get("model").stringValue();
-                    var predicate = new ArrayList<Pair<IResourceLocation, Number>>();
+                    var predicate = new ArrayList<Pair<OpenResourceLocation, Number>>();
                     it.get("predicate").entrySet().forEach(entry -> {
                         // the value only is double.
                         var key = ModConstants.key(entry.getKey());
@@ -142,7 +141,7 @@ public class SkinItemModelManager {
                 });
             });
             // resolve the parent depends.
-            var references = new IdentityHashMap<SkinItemOverride, IResourceLocation>();
+            var references = new IdentityHashMap<SkinItemOverride, OpenResourceLocation>();
             builders.forEach((name, builder) -> {
                 var itemModel = builder.build(references);
                 models.put(name, itemModel);
@@ -175,16 +174,16 @@ public class SkinItemModelManager {
 
         private SimpleBuilder parent;
 
-        private final IResourceLocation name;
+        private final OpenResourceLocation name;
 
-        private final Map<IResourceLocation, List<Pair<IResourceLocation, Number>>> overrides = new LinkedHashMap<>();
+        private final Map<OpenResourceLocation, List<Pair<OpenResourceLocation, Number>>> overrides = new LinkedHashMap<>();
         private final Map<OpenItemDisplayContext, OpenItemTransform> transforms = new LinkedHashMap<>();
 
-        public SimpleBuilder(IResourceLocation name) {
+        public SimpleBuilder(OpenResourceLocation name) {
             this.name = name;
         }
 
-        public void addOverride(String name, List<Pair<IResourceLocation, Number>> predicate) {
+        public void addOverride(String name, List<Pair<OpenResourceLocation, Number>> predicate) {
             overrides.put(OpenResourceLocation.parse(name), predicate);
         }
 
@@ -192,7 +191,7 @@ public class SkinItemModelManager {
             transforms.put(OpenItemDisplayContext.byName(name), transform);
         }
 
-        public SkinItemModel build(Map<SkinItemOverride, IResourceLocation> references) {
+        public SkinItemModel build(Map<SkinItemOverride, OpenResourceLocation> references) {
             // ..
             var itemOverrides = new ArrayList<SkinItemOverride>();
             for (var override : overrides.entrySet()) {

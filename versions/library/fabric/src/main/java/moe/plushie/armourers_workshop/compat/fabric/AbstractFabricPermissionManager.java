@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.compat.fabric;
 
-import com.mojang.authlib.GameProfile;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
+import moe.plushie.armourers_workshop.compat.client.AbstractGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import moe.plushie.armourers_workshop.init.platform.fabric.PlatformManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.PermissionNodeBuilderImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,7 @@ public class AbstractFabricPermissionManager {
                 // only work in server side.
                 var server = EnvironmentManager.getServer();
                 if (server != null) {
-                    return Permissions.check(new GameProfile(profile.id(), profile.name()), node, level, server).join();
+                    return Permissions.check(AbstractGameProfile.unwrap(profile), node, level, server).join();
                 }
                 return true;
             }

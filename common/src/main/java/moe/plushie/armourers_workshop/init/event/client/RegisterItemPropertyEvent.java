@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.event.client;
 
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.world.item.Item;
 
 public interface RegisterItemPropertyEvent {
 
-    void register(IResourceLocation registryName, Item item, IItemModelProperty property);
+    void register(OpenResourceLocation registryName, Item item, IItemModelProperty property);
 }

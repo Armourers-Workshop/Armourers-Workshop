@@ -603,6 +603,8 @@
   "item.armourers_workshop.shade-noise-tool": "Shade Noise Tool",
   "item.armourers_workshop.shade-noise-tool.flavour": "Applies random shading to a block.",
   "item.armourers_workshop.skin": "Skin",
+  "item.armourers_workshop.skin.name": "Unknown Skin",
+  "item.armourers_workshop.skin.name.loading": "Loading %1 Skin",
   "item.armourers_workshop.skin-template": "Skin Template",
   "item.armourers_workshop.skin-unlock-chest": "Chest Skin Slot Unlock",
   "item.armourers_workshop.skin-unlock-chest.flavour": "Unlocks 1 additional chest skin slot in the wardrobe.",

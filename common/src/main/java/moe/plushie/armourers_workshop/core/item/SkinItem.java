@@ -88,8 +88,8 @@ public class SkinItem extends FlavouredBlockItem {
             return TranslateUtils.formatted(skin.customName());
         }
         if (skin != null) {
-            return TranslateUtils.Name.of(skin.type());
+            return Component.translatable("item.armourers_workshop.skin.name.loading", TranslateUtils.Name.of(skin.type()));
         }
-        return super.abi$getName(itemStack);
+        return Component.translatable("item.armourers_workshop.skin.name");
     }
 }

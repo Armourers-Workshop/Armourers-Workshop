@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.compat.client;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
@@ -12,7 +11,7 @@ public class AbstractGameProfileResolver {
     public void resolve(OpenGameProfile profile, IResultHandler<OpenGameProfile> handler) {
         try {
             // when properties is empty, we will assume the user can't found.
-            var profile1 = SkullBlockEntity.updateGameprofile(new GameProfile(profile.id(), profile.name()));
+            var profile1 = SkullBlockEntity.updateGameprofile(AbstractGameProfile.unwrap(profile));
             if (profile1 != null) {
                 handler.accept(AbstractGameProfile.wrap(profile1));
             } else {

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.event.client;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 public interface RegisterTextureEvent {
 
-    void register(IResourceLocation sprite);
+    void register(OpenResourceLocation sprite);
 }

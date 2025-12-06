@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.init.platform;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
@@ -110,13 +109,13 @@ public abstract class NetworkManager {
             splitter.merge(uuid, buffer, consumer);
         }
 
-        public void split(final CustomPacket message, IPacketDistributor distributor) {
+        public void split(final CustomPacket message, Distributor distributor) {
             // we need to reserve enough capacity add header/footer data.
             var partSize = getMaximumPayloadSize(distributor) - 256;
-            splitter.split(message, buf -> distributor.add(channelName, buf), partSize, IPacketDistributor::execute);
+            splitter.split(message, buf -> distributor.add(channelName, buf), partSize, Distributor::execute);
         }
 
-        public int getMaximumPayloadSize(IPacketDistributor distributor) {
+        public int getMaximumPayloadSize(Distributor distributor) {
             if (distributor.isClientbound()) {
                 return 1048576; // ClientboundCustomPayloadPacket.MAX_PAYLOAD_SIZE
             } else {
@@ -125,17 +124,30 @@ public abstract class NetworkManager {
         }
     }
 
+    public interface Distributor {
+
+        Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf);
+
+        void execute();
+
+        boolean isClientbound();
+
+        default boolean isServerbound() {
+            return !isClientbound();
+        }
+    }
+
     public interface Distributors {
 
-        IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier);
+        Distributor trackingChunk(Supplier<LevelChunk> supplier);
 
-        IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier);
+        Distributor trackingEntityAndSelf(Supplier<Entity> supplier);
 
-        IPacketDistributor player(Supplier<ServerPlayer> supplier);
+        Distributor player(Supplier<ServerPlayer> supplier);
 
-        IPacketDistributor allPlayers();
+        Distributor allPlayers();
 
-        IPacketDistributor server();
+        Distributor server();
     }
 }
 

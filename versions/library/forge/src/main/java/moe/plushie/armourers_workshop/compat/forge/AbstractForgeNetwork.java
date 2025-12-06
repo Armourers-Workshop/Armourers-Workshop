@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
@@ -73,7 +71,7 @@ public class AbstractForgeNetwork {
         }
     }
 
-    public static class Distributor implements IPacketDistributor {
+    public static class Distributor implements NetworkManager.Distributor {
 
         private final LogicalSide sender;
         private final Consumer<CustomPacketPayload> target;
@@ -86,7 +84,7 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
             return new Distributor(sender, target, new Proxy(buf));
         }
 
@@ -107,25 +105,27 @@ public class AbstractForgeNetwork {
     public static class Distributors implements NetworkManager.Distributors {
 
         @Override
-        public IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier) {
+        public Distributor trackingChunk(Supplier<LevelChunk> supplier) {
             return new Distributor(LogicalSide.SERVER, msg -> Connection.sendToPlayersTrackingChunk((ServerLevel) supplier.get().getLevel(), supplier.get().getPos(), msg), null);
         }
 
         @Override
-        public IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier) {
+        public Distributor trackingEntityAndSelf(Supplier<Entity> supplier) {
             return new Distributor(LogicalSide.SERVER, msg -> Connection.sendToPlayersTrackingEntityAndSelf(supplier.get(), msg), null);
         }
 
         @Override
-        public IPacketDistributor player(Supplier<ServerPlayer> supplier) {
+        public Distributor player(Supplier<ServerPlayer> supplier) {
             return new Distributor(LogicalSide.SERVER, msg -> Connection.sendToPlayer(supplier.get(), msg), null);
         }
 
-        public IPacketDistributor allPlayers() {
+        @Override
+        public Distributor allPlayers() {
             return new Distributor(LogicalSide.SERVER, msg -> Connection.sendToAllPlayers(msg), null);
         }
 
-        public IPacketDistributor server() {
+        @Override
+        public Distributor server() {
             return new Distributor(LogicalSide.CLIENT, msg -> Connection.sendToServer(msg), null);
         }
     }

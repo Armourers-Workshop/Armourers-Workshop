@@ -4,10 +4,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -129,7 +127,7 @@ public class AbstractFabricNetwork {
         }
     }
 
-    public static class Distributor implements IPacketDistributor {
+    public static class Distributor implements NetworkManager.Distributor {
 
         private final NetworkDirection direction;
         private final Consumer<Packet<?>> target;
@@ -142,7 +140,7 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
             var packet1 = direction.buildPacket(buf, channel);
             return new Distributor(direction, target, packet1);
         }
@@ -163,7 +161,7 @@ public class AbstractFabricNetwork {
     public static class Distributors implements NetworkManager.Distributors {
 
         @Override
-        public IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier) {
+        public Distributor trackingChunk(Supplier<LevelChunk> supplier) {
             var chunk = supplier.get();
             var serverLevel = (ServerLevel) chunk.getLevel();
             var players = PlayerLookup.tracking(serverLevel, chunk.getPos());
@@ -171,7 +169,7 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier) {
+        public Distributor trackingEntityAndSelf(Supplier<Entity> supplier) {
             var entity = supplier.get();
             var players = PlayerLookup.tracking(entity);
             if (entity instanceof ServerPlayer player) {
@@ -183,16 +181,18 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public IPacketDistributor player(Supplier<ServerPlayer> supplier) {
+        public Distributor player(Supplier<ServerPlayer> supplier) {
             var player = supplier.get();
             return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(Collections.singleton(player)), null);
         }
 
-        public IPacketDistributor allPlayers() {
+        @Override
+        public Distributor allPlayers() {
             return new Distributor(NetworkDirection.PLAY_TO_CLIENT, dispatch(PlayerLookup.all(EnvironmentManager.getServer())), null);
         }
 
-        public IPacketDistributor server() {
+        @Override
+        public Distributor server() {
             return new Distributor(NetworkDirection.PLAY_TO_SERVER, ClientPlayNetworking.getSender()::sendPacket, null);
         }
 
@@ -211,7 +211,7 @@ public class AbstractFabricNetwork {
             this.builder = builder;
         }
 
-        public Packet<?> buildPacket(IFriendlyByteBuf buf, IResourceLocation channelName) {
+        public Packet<?> buildPacket(IFriendlyByteBuf buf, OpenResourceLocation channelName) {
             return builder.get().apply(channelName.toLocation(), (FriendlyByteBuf) buf.asByteBuf());
         }
     }

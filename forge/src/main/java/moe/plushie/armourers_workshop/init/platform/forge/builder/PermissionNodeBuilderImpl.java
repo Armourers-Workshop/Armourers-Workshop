@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgePermissionManager;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.network.chat.Component;
@@ -29,9 +29,9 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
     public static abstract class NodeImpl implements IPermissionNode {
 
         private final String key;
-        private final IResourceLocation registryName;
+        private final OpenResourceLocation registryName;
 
-        public NodeImpl(IResourceLocation registryName) {
+        public NodeImpl(OpenResourceLocation registryName) {
             this.registryName = registryName;
             this.key = registryName.toLanguageKey();
         }
@@ -51,7 +51,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         }
 
         @Override
-        public IResourceLocation registryName() {
+        public OpenResourceLocation registryName() {
             return registryName;
         }
     }

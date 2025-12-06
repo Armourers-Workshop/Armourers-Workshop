@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
-import moe.plushie.armourers_workshop.api.network.IPacketDistributor;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
@@ -85,7 +83,6 @@ public class AbstractForgeNetwork {
             var context = event.getSource().get();
             var payload = AbstractFriendlyByteBuf.wrap(event.getPayload());
             var packetHandler = new IClientPacketHandler() {
-
                 @Override
                 public Player player() {
                     return Minecraft.getInstance().player;
@@ -101,7 +98,7 @@ public class AbstractForgeNetwork {
         }
     }
 
-    public static class Distributor implements IPacketDistributor {
+    public static class Distributor implements NetworkManager.Distributor {
 
         private final PacketDistributor.PacketTarget target;
         private final Packet<?> packet;
@@ -112,7 +109,7 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public IPacketDistributor add(IResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
             var direction = target.getDirection();
             var packet1 = direction.buildPacket(Pair.of((FriendlyByteBuf) buf.asByteBuf(), 0), channel.toLocation()).getThis();
             return new Distributor(target, packet1);
@@ -134,25 +131,27 @@ public class AbstractForgeNetwork {
     public static class Distributors implements NetworkManager.Distributors {
 
         @Override
-        public IPacketDistributor trackingChunk(Supplier<LevelChunk> supplier) {
+        public Distributor trackingChunk(Supplier<LevelChunk> supplier) {
             return new Distributor(PacketDistributor.TRACKING_CHUNK.with(supplier), null);
         }
 
         @Override
-        public IPacketDistributor trackingEntityAndSelf(Supplier<Entity> supplier) {
+        public Distributor trackingEntityAndSelf(Supplier<Entity> supplier) {
             return new Distributor(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(supplier), null);
         }
 
         @Override
-        public IPacketDistributor player(Supplier<ServerPlayer> supplier) {
+        public Distributor player(Supplier<ServerPlayer> supplier) {
             return new Distributor(PacketDistributor.PLAYER.with(supplier), null);
         }
 
-        public IPacketDistributor allPlayers() {
+        @Override
+        public Distributor allPlayers() {
             return new Distributor(PacketDistributor.ALL.noArg(), null);
         }
 
-        public IPacketDistributor server() {
+        @Override
+        public Distributor server() {
             return new Distributor(PacketDistributor.SERVER.noArg(), null);
         }
     }
