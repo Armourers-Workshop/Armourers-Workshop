@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
-import moe.plushie.armourers_workshop.core.client.other.SkinBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SceneBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
@@ -19,7 +19,7 @@ public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implement
 
     private static final DataContainer.Key<AbstractRenderPipeline> KEY = DataContainer.key("RenderAttachment", AbstractRenderPipeline::new);
 
-    private final HashMap<IRenderType, SkinBufferBuilder> startedBuilders = new HashMap<>();
+    private final HashMap<IRenderType, SceneBufferBuilder> startedBuilders = new HashMap<>();
 
     protected AbstractRenderPipeline(IRenderType owner) {
         this.owner = owner;
@@ -53,7 +53,7 @@ public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implement
         }
     }
 
-    protected void upload(IRenderType renderType, SkinBufferBuilder builder) {
+    protected void upload(IRenderType renderType, SceneBufferBuilder builder) {
         builder.setupRenderState();
         AbstractBufferBuilder.upload(renderType, builder);
         builder.clearRenderState();
@@ -65,7 +65,7 @@ public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implement
         if (bufferBuilder != null) {
             return bufferBuilder;
         }
-        bufferBuilder = new SkinBufferBuilder(renderType.bufferSize());
+        bufferBuilder = new SceneBufferBuilder(renderType.bufferSize());
         bufferBuilder.begin(renderType);
         startedBuilders.put(renderType, bufferBuilder);
         return bufferBuilder;

@@ -1,16 +1,19 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachment;
 import moe.plushie.armourers_workshop.compat.client.AbstractBufferBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkinBufferBuilder extends AbstractBufferBuilder {
+@OnlyIn(Dist.CLIENT)
+public class SceneBufferBuilder extends AbstractBufferBuilder {
 
     private final ArrayList<IRenderAttachment> attachments = new ArrayList<>();
 
-    public SkinBufferBuilder(int size) {
+    public SceneBufferBuilder(int size) {
         super(size);
     }
 

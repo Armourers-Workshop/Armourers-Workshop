@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractVehicleUpdater;
-import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
@@ -68,7 +68,7 @@ public class BakedAttachmentPartTransform {
         apply(renderState, armature, partialTicks, poseStack);
 
         if (ModDebugger.attachmentOverride && renderState != MannequinRenderState.getPlaceholder()) {
-            var tesselator = OpenGraphicsContext.tesselator();
+            var tesselator = SceneGraphicsContext.tesselator();
             tesselator.ctm().last().set(poseStack.last());
             tesselator.draw(ShapeElement.arrow());
         }
@@ -112,7 +112,7 @@ public class BakedAttachmentPartTransform {
             AbstractVehicleUpdater.getInstance().submit(renderState);
 
             if (ModDebugger.attachmentOverride && renderState != MannequinRenderState.getPlaceholder()) {
-                var tesselator = OpenGraphicsContext.tesselator();
+                var tesselator = SceneGraphicsContext.tesselator();
                 tesselator.ctm().last().set(poseStack.last());
                 tesselator.ctm().multiply(poseStack1.last().pose());
                 tesselator.ctm().multiply(poseStack1.last().normal());

@@ -47,7 +47,17 @@ public interface IRenderType extends Supplier<RenderType> {
 
         CLOUDS,
         WEATHER,
-        PARTICLES,
+        PARTICLES;
+
+        /// Returns the group outline version, if the group not support outline will return main.
+        public Group outline() {
+            return switch (this) {
+                case OUTLINE_BLOCKS, OUTLINE_ENTITIES -> this;
+                case SOLID_BLOCKS, CUTOUT_BLOCKS, TRANSLUCENT_BLOCKS -> OUTLINE_BLOCKS;
+                case SOLID_ENTITIES, CUTOUT_ENTITIES, TRANSLUCENT_ENTITIES -> OUTLINE_ENTITIES;
+                default -> MAIN;
+            };
+        }
     }
 
     enum DepthTestMode {

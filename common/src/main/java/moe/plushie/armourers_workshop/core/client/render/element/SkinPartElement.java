@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentBufferCompiler;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingPipeline;
-import moe.plushie.armourers_workshop.core.client.other.SkinBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SceneBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTexture;
@@ -248,7 +248,7 @@ public class SkinPartElement implements IGraphicsElement {
         @Override
         public void render(IPoseStack.Pose pose, IVertexConsumer builder) {
             // try attach the render pipeline into builder buffer.
-            if (builder instanceof SkinBufferBuilder builder1 && !builder1.attachments().contains(this)) {
+            if (builder instanceof SceneBufferBuilder builder1 && !builder1.attachments().contains(this)) {
                 // we'll use vanilla's rendering system to immediately draw a transparent point,
                 // and then we will get this call in `GlStateManager._drawElements`.
                 for (var i = 0; i < 4; ++i) {

@@ -13,8 +13,8 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
-import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 @Available("[1.16, 1.22)")
 @OnlyIn(Dist.CLIENT)
-public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
+public class AbstractGraphicsRenderer implements SceneGraphicsRenderer {
 
     public static final AbstractGraphicsRenderer OUTLINE = new AbstractGraphicsRenderer(new AbstractPoseStack(), AbstractBufferSource.outline());
     public static final AbstractGraphicsRenderer TESSELATOR = new AbstractGraphicsRenderer(new AbstractPoseStack(), AbstractBufferSource.tesselator());
@@ -37,14 +37,14 @@ public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
         this.bufferSource = bufferSource;
     }
 
-    public static OpenGraphicsContext wrap(PoseStack poseStack, MultiBufferSource bufferSource) {
-        return new OpenGraphicsContext(new AbstractGraphicsRenderer(AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(bufferSource)));
+    public static SceneGraphicsContext wrap(PoseStack poseStack, MultiBufferSource bufferSource) {
+        return new SceneGraphicsContext(new AbstractGraphicsRenderer(AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(bufferSource)));
     }
 
-    public static OpenGraphicsContext wrap(Entity entity, float f, float g, PoseStack poseStack, MultiBufferSource bufferSource, int i) {
+    public static SceneGraphicsContext wrap(Entity entity, float f, float g, PoseStack poseStack, MultiBufferSource bufferSource, int i) {
         var renderer = new AbstractGraphicsRenderer(AbstractPoseStack.wrap(poseStack), AbstractBufferSource.wrap(bufferSource));
         renderer.call = (impl) -> impl.accept(entity, f, g, poseStack, bufferSource, i);
-        return new OpenGraphicsContext(renderer);
+        return new SceneGraphicsContext(renderer);
     }
 
     public static <T extends Entity> Invoker<T> invoke(Invoker<T> call) {
@@ -97,7 +97,7 @@ public class AbstractGraphicsRenderer implements OpenGraphicsRenderer {
 
         @Override
         default void prepare(IGraphicsContext context) {
-            if (context instanceof OpenGraphicsContext impl && impl.renderer() instanceof AbstractGraphicsRenderer renderer) {
+            if (context instanceof SceneGraphicsContext impl && impl.renderer() instanceof AbstractGraphicsRenderer renderer) {
                 // noinspection unchecked
                 renderer.call.accept((Invoker<Entity>) this);
             }

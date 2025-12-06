@@ -52,7 +52,12 @@ public class AbstractRenderType extends SkinRenderType implements IAssociatedCon
 
     public void apply(ArrayList<Consumer<AbstractRenderType>> updater) {
         updater.forEach(it -> it.accept(this));
-        outline.ifPresent(type -> ((AbstractRenderType) type).ordinal = ordinal);
+        outline.ifPresent(type -> {
+            if (type instanceof AbstractRenderType type1) {
+                type1.group = group.outline();
+                type1.ordinal = ordinal;
+            }
+        });
     }
 
     @Override

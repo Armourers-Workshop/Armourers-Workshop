@@ -11,24 +11,24 @@ import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRen
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
 
 @OnlyIn(Dist.CLIENT)
-public class OpenGraphicsContext implements IGraphicsContext {
+public class SceneGraphicsContext implements IGraphicsContext {
 
-    private static final OpenGraphicsContext OUTLINE = new OpenGraphicsContext(AbstractGraphicsRenderer.OUTLINE);
-    private static final OpenGraphicsContext TESSELATOR = new OpenGraphicsContext(AbstractGraphicsRenderer.TESSELATOR);
+    private static final SceneGraphicsContext OUTLINE = new SceneGraphicsContext(AbstractGraphicsRenderer.OUTLINE);
+    private static final SceneGraphicsContext TESSELATOR = new SceneGraphicsContext(AbstractGraphicsRenderer.TESSELATOR);
 
     protected final IPoseStack poseStack;
-    protected final OpenGraphicsRenderer renderer;
+    protected final SceneGraphicsRenderer renderer;
 
-    public OpenGraphicsContext(OpenGraphicsRenderer renderer) {
+    public SceneGraphicsContext(SceneGraphicsRenderer renderer) {
         this.poseStack = renderer.poseStack();
         this.renderer = renderer;
     }
 
-    public static OpenGraphicsContext outline() {
+    public static SceneGraphicsContext outline() {
         return OUTLINE;
     }
 
-    public static OpenGraphicsContext tesselator() {
+    public static SceneGraphicsContext tesselator() {
         return TESSELATOR;
     }
 
@@ -85,7 +85,7 @@ public class OpenGraphicsContext implements IGraphicsContext {
         return poseStack;
     }
 
-    public OpenGraphicsRenderer renderer() {
+    public SceneGraphicsRenderer renderer() {
         return renderer;
     }
 }

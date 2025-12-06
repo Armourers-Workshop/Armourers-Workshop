@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
-import moe.plushie.armourers_workshop.core.client.other.OpenGraphicsContext;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.gui.render.state.GuiRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -89,7 +89,7 @@ public class AbstractComposeGuiGraphicsRenderer extends PictureInPictureRenderer
         private int normalPassTotal = 0;
 
         private IBufferSource gameBufferSource;
-        private OpenGraphicsContext gameContext;
+        private SceneGraphicsContext gameContext;
 
         public OffscreenDispatcherImpl(IPoseStack poseStack, IBufferSource bufferSource) {
             this.poseStack = poseStack;
