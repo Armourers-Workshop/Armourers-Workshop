@@ -24,6 +24,7 @@ public class OpenVector3i implements Comparable<OpenVector3i>, IVector3i {
     public OpenVector3i() {
         this(0, 0, 0);
     }
+
     public OpenVector3i(int x, int y, int z) {
         this.x = x;
         this.y = y;

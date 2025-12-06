@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.api.common;
 
 import moe.plushie.armourers_workshop.api.core.utils.IDirection;
 import moe.plushie.armourers_workshop.core.math.OpenVector3d;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;

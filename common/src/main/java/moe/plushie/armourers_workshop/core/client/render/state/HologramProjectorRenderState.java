@@ -82,6 +82,7 @@ public class HologramProjectorRenderState extends BlockEntityRenderState {
         renderState.shouldShowRotationPoint = entity.shouldShowRotationPoint();
         renderState.modelAngle = entity.getModelAngle();
         renderState.modelOffset = entity.getModelOffset();
+        renderState.modelScale = entity.getModelScale();
         renderState.rotationSpeed = entity.getRotationSpeed();
         renderState.rotationOffset = entity.getRotationOffset();
         var blockState = entity.getBlockState();

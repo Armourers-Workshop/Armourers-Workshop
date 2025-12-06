@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.level.storage.DimensionDataStorage;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.data.AbstractPackResourcesImpl;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedData;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataType;
 import net.minecraft.world.level.storage.DimensionDataStorage;

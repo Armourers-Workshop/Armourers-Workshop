@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compat.client;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.shader.state.AbstractShaderUniformState;
 import moe.plushie.armourers_workshop.core.client.render.element.SkinPartElement;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;

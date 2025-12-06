@@ -7,12 +7,11 @@ import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeEnt
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeLauncherLifecycleEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgePlayerEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeRegisterCommandsEvent;
-import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeRegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeRegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeRegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeServerLevelEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeServerLifecycleEvent;
 import moe.plushie.armourers_workshop.compat.forge.event.common.AbstractForgeServerTickEvent;
-import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.init.event.common.BlockEvent;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.EntityEvent;
@@ -22,8 +21,8 @@ import moe.plushie.armourers_workshop.init.event.common.LauncherConfigSetupEvent
 import moe.plushie.armourers_workshop.init.event.common.LauncherLoadCompleteEvent;
 import moe.plushie.armourers_workshop.init.event.common.PlayerEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterCommandsEvent;
-import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterEntityAttributesEvent;
+import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelAddEntityEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelTickEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStartedEvent;
@@ -31,6 +30,7 @@ import moe.plushie.armourers_workshop.init.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppingEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerTickEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 
 public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
 

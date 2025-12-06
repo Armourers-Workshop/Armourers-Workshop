@@ -3,9 +3,6 @@ package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.syst
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;

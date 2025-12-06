@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.HashMap;

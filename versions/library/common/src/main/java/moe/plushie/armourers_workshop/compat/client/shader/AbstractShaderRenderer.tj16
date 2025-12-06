@@ -4,10 +4,9 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.AbstractColorBufferObject;
 import moe.plushie.armourers_workshop.compat.client.AbstractLightBufferObject;
 import moe.plushie.armourers_workshop.compat.client.AbstractModelViewStack;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderRenderer;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderContext;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderRenderer;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
-import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.lwjgl.opengl.GL15;
 
 @Available("[1.16, 1.18)")

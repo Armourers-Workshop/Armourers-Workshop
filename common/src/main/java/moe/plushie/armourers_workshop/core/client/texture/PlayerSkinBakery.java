@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedPlayerSkinPart;
 import moe.plushie.armourers_workshop.core.data.LoadableHashMap;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.TrackableResultHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.TrackableResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.awt.image.BufferedImage;

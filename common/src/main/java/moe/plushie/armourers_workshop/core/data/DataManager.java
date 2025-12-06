@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import moe.plushie.armourers_workshop.core.data.source.FileDataSource;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
-import moe.plushie.armourers_workshop.core.data.source.FileDataSource;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import org.jetbrains.annotations.Nullable;
 

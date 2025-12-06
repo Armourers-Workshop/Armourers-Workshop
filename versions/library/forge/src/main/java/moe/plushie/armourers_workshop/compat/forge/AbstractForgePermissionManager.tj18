@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.compat.forge;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;

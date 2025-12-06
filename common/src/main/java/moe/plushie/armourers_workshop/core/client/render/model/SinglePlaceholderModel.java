@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render.model;
 
-public class SinglePlaceholderModel<S > extends PlaceholderModel<S, PlaceholderModelPart> {
+public class SinglePlaceholderModel<S> extends PlaceholderModel<S, PlaceholderModelPart> {
 
     public final PlaceholderModelPart root;
 

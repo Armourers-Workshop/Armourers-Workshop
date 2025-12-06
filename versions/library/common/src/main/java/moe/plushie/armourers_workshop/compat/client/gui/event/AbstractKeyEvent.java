@@ -25,7 +25,7 @@ public class AbstractKeyEvent implements InputKeyEvent {
     }
 
     public static InputConstants.Key create(int code, int modifier) {
-        return InputConstants.getKey(code, modifier) ;
+        return InputConstants.getKey(code, modifier);
     }
 
     @Override

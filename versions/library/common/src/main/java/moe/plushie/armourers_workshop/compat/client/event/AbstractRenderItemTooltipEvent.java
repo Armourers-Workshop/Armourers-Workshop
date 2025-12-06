@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Available("[1.20, )")
 @OnlyIn(Dist.CLIENT)

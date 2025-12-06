@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.syst
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
 import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.ThisClass;
 
 @Available("[1.18, )")
 @Extension

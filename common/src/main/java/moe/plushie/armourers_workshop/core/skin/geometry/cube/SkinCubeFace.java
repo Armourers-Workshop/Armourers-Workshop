@@ -111,18 +111,22 @@ public class SkinCubeFace extends SkinGeometryFace {
         var texturePos = texturePos();
         var textureRotation = getTextureRotation(texturePos);
 
-        // https://learnopengl.com/Getting-started/Coordinate-Systems
-        var x = boundingBox.x();
-        var y = boundingBox.y();
-        var z = boundingBox.z();
-        var w = boundingBox.width();
-        var h = boundingBox.height();
-        var d = boundingBox.depth();
+        // we need inflate bounding box, which will avoid the size is zero.
+        // when size is zero, it will cause the z-flight problems.
+        var inflate = 0.01f;
 
-        var u = roundUp(texturePos.u());
-        var v = roundUp(texturePos.v());
-        var s = roundDown(texturePos.width());
-        var t = roundDown(texturePos.height());
+        // https://learnopengl.com/Getting-started/Coordinate-Systems
+        var x = boundingBox.x() - inflate / 2;
+        var y = boundingBox.y() - inflate / 2;
+        var z = boundingBox.z() - inflate / 2;
+        var w = boundingBox.width() + inflate;
+        var h = boundingBox.height() + inflate;
+        var d = boundingBox.depth() + inflate;
+
+        var u = texturePos.u();
+        var v = texturePos.v();
+        var s = texturePos.width() * 0.98f;
+        var t = texturePos.height() * 0.98f;
 
         var color = new SkinGeometryVertex.Color(paintColor, alpha);
         var vertices = new ArrayList<SkinGeometryVertex>();
@@ -138,22 +142,6 @@ public class SkinCubeFace extends SkinGeometryFace {
         }
 
         return vertices;
-    }
-
-    private float roundUp(float edg) {
-        if (edg == 0) {
-            return 0.0004f;
-        }
-        return edg;
-    }
-
-    // avoid out-of-bounds behavior caused by floating point precision.
-    private float roundDown(float edg) {
-        if (edg < 0) {
-            return edg + 0.01f;
-        } else {
-            return edg - 0.01f;
-        }
     }
 
     private int getTextureRotation(SkinTexturePos key) {

@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.model.CachedModel;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.NamedClass;

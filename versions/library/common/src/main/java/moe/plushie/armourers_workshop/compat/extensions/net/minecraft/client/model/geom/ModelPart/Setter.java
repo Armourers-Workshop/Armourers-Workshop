@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.model.geom.ModelPart;
 
-import manifold.ext.rt.api.Extension;
-import manifold.ext.rt.api.This;
-
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Rotations;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
 
 @Extension
 public class Setter {

@@ -6,7 +6,6 @@ import dev.emi.trinkets.api.TrinketsApi;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.fabric.addon.TrinketsAddon;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.LivingEntity;

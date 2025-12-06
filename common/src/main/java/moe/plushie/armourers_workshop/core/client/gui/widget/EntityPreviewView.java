@@ -5,7 +5,6 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.uikit.UIControl;
 import com.apple.library.uikit.UIEvent;
-import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.world.entity.Entity;

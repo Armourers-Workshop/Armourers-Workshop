@@ -571,6 +571,7 @@ public abstract class ShapeElement implements IGraphicsElement {
 
         protected abstract OpenVector3f[] vertices();
     }
+
     /**
      * A cone shape (RHS, CCW) of the render element.
      * <pre>

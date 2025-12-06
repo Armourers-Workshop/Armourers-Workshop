@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.Colors;
-import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.Camera;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.init.registry;
 
+import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
-import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.api.common.IEntityCapability;
 import moe.plushie.armourers_workshop.api.common.IEntityType;
-import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.api.common.ILootItemFunctionType;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
+import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.api.core.IDataAttachmentType;
 import moe.plushie.armourers_workshop.api.core.IDataComponentType;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;

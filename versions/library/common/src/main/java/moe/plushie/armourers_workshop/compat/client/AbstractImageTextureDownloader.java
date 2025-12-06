@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinDecoder;
-import moe.plushie.armourers_workshop.core.math.OpenSize2i;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -13,8 +12,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
-import java.util.function.BiConsumer;
 
 @Available("[1.16, 1.22)")
 @OnlyIn(Dist.CLIENT)

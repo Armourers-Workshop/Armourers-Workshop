@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.AbstractItemDisplayContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;

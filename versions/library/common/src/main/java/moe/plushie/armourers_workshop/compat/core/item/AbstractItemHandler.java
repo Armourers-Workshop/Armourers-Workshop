@@ -41,8 +41,9 @@ public interface AbstractItemHandler {
 
     /**
      * fill all display item stack into creative mode tab.
+     *
      * @param displayItems all display items.
-     * @param tab the current creative mode tab.
+     * @param tab          the current creative mode tab.
      */
     void fill(List<ItemStack> displayItems, CreativeModeTab tab);
 

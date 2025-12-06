@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.data.paint.IItemPaintable;
 import moe.plushie.armourers_workshop.core.menu.ContainerMenu;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;

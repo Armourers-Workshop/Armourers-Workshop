@@ -1,11 +1,8 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
 import moe.plushie.armourers_workshop.core.data.DataContainer;

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compat.mixin.patch;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
-import moe.plushie.armourers_workshop.api.client.state.ILivingEntityRenderState;
 import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.state.ILivingEntityRenderState;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

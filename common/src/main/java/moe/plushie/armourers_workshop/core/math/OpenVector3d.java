@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.math;
 
-import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.core.BlockPos;
 

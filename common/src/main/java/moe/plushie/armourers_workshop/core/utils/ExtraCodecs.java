@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;

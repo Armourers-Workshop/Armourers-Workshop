@@ -7,7 +7,6 @@ import net.minecraft.nbt.ListTag;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;

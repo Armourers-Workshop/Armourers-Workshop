@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeResourceLoader;
-import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.init.ModConstants;
+import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 
 @Available("[1.16, 1.22)")
 public class AbstractForgeRegisterServerDataPackEvent {

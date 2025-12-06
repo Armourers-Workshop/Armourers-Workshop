@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
-import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPart;
 import moe.plushie.armourers_workshop.core.utils.OpenModelPartBuilder;
 

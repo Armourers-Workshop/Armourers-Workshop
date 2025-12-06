@@ -1,4 +1,3 @@
-
 package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;

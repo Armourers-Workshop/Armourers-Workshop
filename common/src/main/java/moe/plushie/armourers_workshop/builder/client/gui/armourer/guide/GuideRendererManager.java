@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
-import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;

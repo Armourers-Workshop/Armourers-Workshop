@@ -11,7 +11,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 

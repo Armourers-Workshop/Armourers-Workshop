@@ -118,7 +118,7 @@ public class CapabilityStorage {
 
         public static final IDataSerializerKey<CompoundTag> NEW_CAPABILITY = IDataSerializerKey.create(Constants.Key.NEW_CAPABILITY, ExtraCodecs.COMPOUND_TAG);
         public static final IDataSerializerKey<CompoundTag> OLD_CAPABILITY = IDataSerializerKey.create(Constants.Key.OLD_CAPABILITY, ExtraCodecs.COMPOUND_TAG);
-        
+
         public static final IDataSerializerKey<CompoundTag> ACTIVATED_CAPABILITY = IDataSerializerKey.create(AbstractCapabilityStorage.KEY, ExtraCodecs.COMPOUND_TAG);
     }
 

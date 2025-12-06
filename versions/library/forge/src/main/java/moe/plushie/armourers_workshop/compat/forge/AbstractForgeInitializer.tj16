@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compat.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.proxy.ClientProxyImpl;
 import moe.plushie.armourers_workshop.init.platform.forge.proxy.CommonProxyImpl;
 import net.minecraftforge.common.MinecraftForge;

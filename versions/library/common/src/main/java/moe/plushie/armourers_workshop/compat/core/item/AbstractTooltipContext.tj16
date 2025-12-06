@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compat.core.item;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 @Available("[1.16, 1.21)")

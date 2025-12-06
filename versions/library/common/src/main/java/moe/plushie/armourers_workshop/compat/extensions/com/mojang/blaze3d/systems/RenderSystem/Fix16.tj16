@@ -3,11 +3,6 @@ package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.syst
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.function.IntConsumer;
-import java.util.function.IntSupplier;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;

@@ -5,8 +5,6 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ContainerMenuScreen;
 import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 

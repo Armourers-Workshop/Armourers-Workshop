@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEntityRende
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
-import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 

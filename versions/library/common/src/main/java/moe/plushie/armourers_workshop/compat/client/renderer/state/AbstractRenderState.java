@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.compat.client.renderer.state;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.render.state.BlockEntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
-import moe.plushie.armourers_workshop.core.client.render.state.ModelVisibilityState;
 import moe.plushie.armourers_workshop.core.client.render.state.RenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.RenderStateManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
