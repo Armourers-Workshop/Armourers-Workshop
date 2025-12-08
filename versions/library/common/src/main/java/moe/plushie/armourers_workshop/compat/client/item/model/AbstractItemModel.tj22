@@ -7,28 +7,33 @@ import moe.plushie.armourers_workshop.compat.client.AbstractItemDisplayContext;
 import moe.plushie.armourers_workshop.compat.client.AbstractItemTransform;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.ItemModel;
 
-@Available("[1.16, 1.22)")
+@Available("[1.22, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractItemModel {
 
-    private final BakedModel impl;
+    private final ItemModel impl;
 
-    private AbstractItemModel(BakedModel impl) {
+    private AbstractItemModel(ItemModel impl) {
         this.impl = impl;
     }
 
-    public static AbstractItemModel wrap(BakedModel model) {
+    public static AbstractItemModel wrap(ItemModel model) {
         return new AbstractItemModel(model);
     }
 
-    public static BakedModel unwrap(AbstractItemModel model) {
+    public static ItemModel unwrap(AbstractItemModel model) {
         return model.impl;
     }
 
     public OpenItemTransform getTransform(OpenItemDisplayContext transformType) {
-        return AbstractItemTransform.wrap(impl.getTransforms().getTransform(AbstractItemDisplayContext.unwrap(transformType)));
+        if (impl instanceof BlockModelWrapper wrapper) {
+            var transform = wrapper.properties.transforms().getTransform(AbstractItemDisplayContext.unwrap(transformType));
+            return AbstractItemTransform.wrap(transform);
+        }
+        return OpenItemTransform.NO_TRANSFORM;
     }
 
     @Override

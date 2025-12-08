@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
+package moe.plushie.armourers_workshop.compat.mixin.bugfix;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;

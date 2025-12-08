@@ -22,21 +22,19 @@ public class EntitySlot {
     protected final SkinPaintScheme paintScheme;
     protected final Source source;
     protected final float renderPriority;
-    protected final boolean soft;
     protected final boolean useOverlayColor;
 
     public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor) {
-        this(skin, entityScheme, itemStack, descriptor, 0, false, Source.UNKNOWN);
+        this(skin, entityScheme, itemStack, descriptor, 0, Source.UNKNOWN);
     }
 
-    public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor, float renderPriority, boolean soft, Source source) {
+    public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor, float renderPriority, Source source) {
         this.itemStack = itemStack;
         this.descriptor = descriptor;
         this.skin = skin;
         this.paintScheme = baking(descriptor.paintScheme(), entityScheme, source);
         this.renderPriority = renderPriority;
         this.source = source;
-        this.soft = soft;
         this.useOverlayColor = skin.properties().get(SkinProperty.USE_OVERLAY_COLOR);
     }
 

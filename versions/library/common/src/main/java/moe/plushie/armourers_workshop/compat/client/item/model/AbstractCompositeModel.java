@@ -4,15 +4,15 @@ import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 
 import java.util.List;
 
-public class AbstractCompositeModel implements AbstractItemModel {
+public class AbstractCompositeModel implements AbstractItemModelImpl {
 
-    public static class Unbaked implements AbstractItemModel.Unbaked {
+    public static class Unbaked implements AbstractItemModelImpl.Unbaked {
 
         public static final IDataMapCodec<Unbaked> MAP_CODEC = IDataMapCodec.create(instance -> instance.group(AbstractItemModels.CODEC.listOf().fieldOf("models").forGetter(Unbaked::models)).apply(instance, Unbaked::new));
 
-        private final List<AbstractItemModel.Unbaked> models;
+        private final List<AbstractItemModelImpl.Unbaked> models;
 
-        public Unbaked(List<AbstractItemModel.Unbaked> models) {
+        public Unbaked(List<AbstractItemModelImpl.Unbaked> models) {
             this.models = models;
         }
 
@@ -21,7 +21,7 @@ public class AbstractCompositeModel implements AbstractItemModel {
             return MAP_CODEC;
         }
 
-        public List<AbstractItemModel.Unbaked> models() {
+        public List<AbstractItemModelImpl.Unbaked> models() {
             return models;
         }
     }

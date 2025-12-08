@@ -25,13 +25,16 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,8 +114,9 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         wardrobeProvider.loadDye(wardrobe);
         wardrobeProvider.loadWardrobeFlags(wardrobe, overriddenManager);
 
-        entityProvider.load(source, this::loadSkin);
-        wardrobeProvider.load(wardrobe, this::loadSkin);
+        entityProvider.load(source, this::loadSkinFromItemStack);
+        wardrobeProvider.load(wardrobe, this::loadSkinFromItemStack);
+        entityProvider.load(source, this::loadSkinFromItemModel);
 
         loadSkinInfos();
         loadSkinLightInfos(source);
@@ -142,17 +146,35 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         tickets.invalidate();
     }
 
-    private void loadSkin(ItemStack itemStack, float renderPriority, boolean soft, EntitySlot.Source source) {
+    private void loadSkinFromItemStack(Object entity, ItemStack itemStack, float renderPriority, EntitySlot.Source source) {
         var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
-            return;
+            return; // not found skin in the item stack.
         }
+        loadSkin(descriptor, itemStack, renderPriority, source);
+    }
+
+    private void loadSkinFromItemModel(Object entity, ItemStack itemStack, float renderPriority, EntitySlot.Source source) {
+        // the item model has very low priority, when found a skin from the wardrobe or item stack will cause it discarded.
+        var owner = Objects.safeCast(entity, LivingEntity.class);
+        var itemModel = itemStack.getItemModel(getLevel(entity), owner, 0);
+        var descriptor = DiscoveerableSkinManager.getInstance().get(itemModel);
+        if (descriptor.isEmpty()) {
+            return; // not found a skin in the item model.
+        }
+        if (allSkins.stream().anyMatch(it -> it.type() == descriptor.type())) {
+            return; // already exists this skin type in the wardrobe or item stack.
+        }
+        loadSkin(descriptor, itemStack, renderPriority, source);
+    }
+
+    private void loadSkin(SkinDescriptor descriptor, ItemStack itemStack, float renderPriority, EntitySlot.Source source) {
         var bakedSkin = SkinBakery.getInstance().loadSkin(tickets.get(descriptor));
         if (bakedSkin == null) {
             missingSkins.add(descriptor.identifier());
             return;
         }
-        var slot = new EntitySlot(bakedSkin, wardrobeProvider.colorScheme, itemStack, descriptor, renderPriority, soft, source);
+        var slot = new EntitySlot(bakedSkin, wardrobeProvider.colorScheme, itemStack, descriptor, renderPriority, source);
         switch (source) {
             case IN_HELD -> {
                 // If held a skin of armor type, nothing happen
@@ -263,19 +285,6 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         }
     }
 
-    private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean inMannequinHand) {
-        // for skin item, we don't consider it an embedded skin.
-        if (!inMannequinHand && itemStack.is(ModItems.SKIN.get())) {
-            return SkinDescriptor.EMPTY;
-        }
-        var target = SkinDescriptor.of(itemStack);
-        if (target.type() == SkinTypes.BOAT || target.type() == SkinTypes.ITEM_FISHING || target.type() == SkinTypes.HORSE) {
-            return SkinDescriptor.EMPTY;
-        }
-        return target;
-    }
-
-
     public List<EntitySlot> getItemSkins(ItemStack itemStack, boolean inMannequinHand) {
         var target = getEmbeddedSkin(itemStack, inMannequinHand);
         if (target.isEmpty()) {
@@ -366,6 +375,29 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         dataStorage.setAssociatedObject(key, value);
     }
 
+    private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean inMannequinHand) {
+        // for skin item, we don't consider it an embedded skin.
+        if (!inMannequinHand && itemStack.is(ModItems.SKIN.get())) {
+            return SkinDescriptor.EMPTY;
+        }
+        var target = SkinDescriptor.of(itemStack);
+        if (target.type() == SkinTypes.BOAT || target.type() == SkinTypes.ITEM_FISHING || target.type() == SkinTypes.HORSE) {
+            return SkinDescriptor.EMPTY;
+        }
+        return target;
+    }
+
+    @Nullable
+    private Level getLevel(Object entity) {
+        if (entity instanceof Entity entity1) {
+            return entity1.level();
+        }
+        if (entity instanceof BlockEntity entity1) {
+            return entity1.getLevel();
+        }
+        return null;
+    }
+
     protected static abstract class SlotProvider<T> {
 
         protected List<ItemStack> slots = new ArrayList<>();
@@ -388,7 +420,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
     protected interface SlotConsumer {
 
-        void accept(ItemStack itemStack, float priority, boolean soft, EntitySlot.Source source);
+        void accept(Object entity, ItemStack itemStack, float priority, EntitySlot.Source source);
     }
 
     protected static class WardrobeProvider extends SlotProvider<SkinWardrobe> {
@@ -475,7 +507,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
                     if (!descriptor.isEmpty()) {
                         usedSlots.add(slotType); // mark the slot is used.
                     }
-                    consumer.accept(itemStack, i * 10, false, EntitySlot.Source.IN_WARDROBE);
+                    consumer.accept(wardrobe, itemStack, i * 10, EntitySlot.Source.IN_WARDROBE);
                 }
             }
             // load default skin when not user provided.
@@ -491,7 +523,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
                 if (usedSlots.contains(realSlotType)) {
                     continue;
                 }
-                consumer.accept(itemStack, i * 10, false, EntitySlot.Source.IN_WARDROBE);
+                consumer.accept(wardrobe, itemStack, i * 10, EntitySlot.Source.IN_WARDROBE);
             }
         }
 
@@ -511,13 +543,13 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         protected List<ItemStack> armourSlots = new ArrayList<>();
 
         @Override
-        protected void load(Entity source, SlotConsumer consumer) {
-            int i = 0;
+        protected void load(Entity entity, SlotConsumer consumer) {
+            var i = 400;
             for (var itemStack : armourSlots) {
-                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_EQUIPMENT);
+                consumer.accept(entity, itemStack, i++, EntitySlot.Source.IN_EQUIPMENT);
             }
             for (var itemStack : handSlots) {
-                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_HELD);
+                consumer.accept(entity, itemStack, i++, EntitySlot.Source.IN_HELD);
             }
         }
 
@@ -539,10 +571,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     protected static class BlockEntityProvider extends SlotProvider<BlockEntity> {
 
         @Override
-        protected void load(BlockEntity source, SlotConsumer consumer) {
-            int i = 0;
+        protected void load(BlockEntity entity, SlotConsumer consumer) {
+            var i = 400;
             for (var itemStack : lastSlots) {
-                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_CONTAINER);
+                consumer.accept(entity, itemStack, i++, EntitySlot.Source.IN_CONTAINER);
             }
         }
 

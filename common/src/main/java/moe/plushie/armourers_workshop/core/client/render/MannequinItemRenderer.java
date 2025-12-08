@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
@@ -31,7 +30,7 @@ public class MannequinItemRenderer extends AbstractSpecialModelRenderer<ItemStac
         if (itemStack.isEmpty()) {
             return;
         }
-        var itemModel = Minecraft.getInstance().getItemModel(itemStack, null, null, 0);
+        var itemModel = itemStack.getItemModel(null, null, 0);
         var itemTransform = itemModel.getTransform(displayContext);
         var descriptor = PlayerSkinDescriptor.of(itemStack);
 

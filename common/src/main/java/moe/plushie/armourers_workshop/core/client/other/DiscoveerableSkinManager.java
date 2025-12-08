@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
@@ -16,7 +17,6 @@ import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 
 @OnlyIn(Dist.CLIENT)
 public class DiscoveerableSkinManager {
@@ -24,7 +24,7 @@ public class DiscoveerableSkinManager {
     private static final DiscoveerableSkinManager INSTANCE = new DiscoveerableSkinManager();
 
     private final HashMap<String, Entry> entries = new HashMap<>();
-    private final IdentityHashMap<Object, Entry> bakedModels = new IdentityHashMap<>();
+    private final HashMap<AbstractItemModel, Entry> bakedModels = new HashMap<>();
 
     public static DiscoveerableSkinManager getInstance() {
         return INSTANCE;
@@ -40,7 +40,7 @@ public class DiscoveerableSkinManager {
         // nope
     }
 
-    public void put(Object itemModel, OpenResourceLocation model) {
+    public void put(AbstractItemModel itemModel, OpenResourceLocation model) {
         try {
             var resourceManager = EnvironmentManager.getClientResourceManager();
             var location = model.withPath("models/" + model.path() + ".json");
@@ -53,13 +53,12 @@ public class DiscoveerableSkinManager {
             ModLog.debug("Registering resource pack skin: '{}' in '{}'", entry.identifier, model);
             bakedModels.put(itemModel, entry);
             entries.put(entry.identifier, entry);
-            entry.load();
         } catch (Exception e) {
-            ModLog.warn("Unable to bake model: '{}', {}", model, e.getMessage());
+            ModLog.warn("Unable to bake model: '{}'", model, e);
         }
     }
 
-    public SkinDescriptor get(Object itemModel) {
+    public SkinDescriptor get(AbstractItemModel itemModel) {
         var entry = bakedModels.get(itemModel);
         if (entry != null && entry.canUse()) {
             return entry.descriptor;

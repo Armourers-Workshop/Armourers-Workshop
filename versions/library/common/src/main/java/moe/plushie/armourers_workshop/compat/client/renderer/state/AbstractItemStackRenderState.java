@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.state;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
 import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderState;
@@ -18,7 +19,7 @@ public class AbstractItemStackRenderState {
     private static ItemStack RENDERING_GUI_ITEM = null;
 
     public static ItemStackRenderState wrap(ItemStack itemStack, @Nullable LivingEntity entity, @Nullable Level level, BakedModel originItemModel) {
-        return new ItemStackRenderState(itemStack, originItemModel, new ModelResolverImpl(entity, level), itemStack == RENDERING_GUI_ITEM);
+        return new ItemStackRenderState(itemStack, AbstractItemModel.wrap(originItemModel), new ModelResolverImpl(entity, level), itemStack == RENDERING_GUI_ITEM);
     }
 
     public static void startRenderGuiItem(ItemStack itemStack) {

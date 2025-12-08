@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.item.ItemStack;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+@Extension
+public class ItemModelProvider {
+
+    public static AbstractItemModel getItemModel(@This ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity, int flags) {
+        // referenced: ItemModelResolver.appendItemLayers
+        var location = itemStack.get(DataComponents.ITEM_MODEL);
+        if (location != null) {
+            return AbstractItemModel.wrap(Minecraft.getInstance().getModelManager().getItemModel(location));
+        }
+        return null;
+    }
+}

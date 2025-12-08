@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModelDiscovery;
+import moe.plushie.armourers_workshop.compat.client.AbstractItemModelFinder;
 import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
@@ -26,7 +26,7 @@ public class ModelBakeryMixin {
         private void aw2$init(Map<ResourceLocation, UnbakedModel> map, UnbakedModel missingModel, CallbackInfo ci) {
             var discovery = ModelDiscovery.class.cast(this);
             discovery.addSpecialModel(ResourceLocation.withDefaultNamespace("builtin/entity"), new ItemModelGenerator());
-            discovery.addSpecialModel(AbstractItemModelDiscovery.MARKER_ID, new ItemModelGenerator());
+            discovery.addSpecialModel(AbstractItemModelFinder.MARKER_ID, new ItemModelGenerator());
         }
     }
 
@@ -37,7 +37,7 @@ public class ModelBakeryMixin {
         private void aw2$bake(ItemModel.BakingContext context, CallbackInfoReturnable<ItemModel> cir) {
             var blockModel = BlockModelWrapper.Unbaked.class.cast(this);
             var resolvedModel = context.blockModelBaker().getModel(blockModel.model());
-            AbstractItemModelDiscovery.bake(blockModel.model(), resolvedModel.wrapped(), cir.getReturnValue());
+            AbstractItemModelFinder.accept(blockModel.model(), resolvedModel.wrapped(), cir.getReturnValue());
         }
     }
 }

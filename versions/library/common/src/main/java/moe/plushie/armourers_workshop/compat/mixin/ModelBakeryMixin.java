@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModelDiscovery;
+import moe.plushie.armourers_workshop.compat.client.AbstractItemModelFinder;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -27,7 +27,7 @@ public class ModelBakeryMixin {
         private void aw2$bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function, ModelState modelState, CallbackInfoReturnable<BakedModel> cir) {
             var unbakedModel = BlockModel.class.cast(this);
             var bakedModel = cir.getReturnValue();
-            AbstractItemModelDiscovery.bake(unbakedModel, bakedModel);
+            AbstractItemModelFinder.accept(unbakedModel, bakedModel);
         }
     }
 
@@ -36,7 +36,7 @@ public class ModelBakeryMixin {
 
         @Inject(method = "loadBlockModel", at = @At("HEAD"), cancellable = true)
         private void aw2$loadBlockModel(ResourceLocation id, CallbackInfoReturnable<BlockModel> cir) {
-            var unbakedModel = AbstractItemModelDiscovery.resolve(id);
+            var unbakedModel = AbstractItemModelFinder.resolve(id);
             if (unbakedModel != null) {
                 cir.setReturnValue(unbakedModel);
             }

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compat.client.item.model;
 
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 
-public class AbstractConditionalItemModel implements AbstractItemModel {
+public class AbstractConditionalItemModel implements AbstractItemModelImpl {
 
-    public static class Unbaked implements AbstractItemModel.Unbaked {
+    public static class Unbaked implements AbstractItemModelImpl.Unbaked {
 
         public static final IDataMapCodec<Unbaked> MAP_CODEC = IDataMapCodec.create(
                 instance -> instance.group(
@@ -16,10 +16,10 @@ public class AbstractConditionalItemModel implements AbstractItemModel {
         );
 
         //private final ConditionalItemModelProperty property;
-        private final AbstractItemModel.Unbaked onTrue;
-        private final AbstractItemModel.Unbaked onFalse;
+        private final AbstractItemModelImpl.Unbaked onTrue;
+        private final AbstractItemModelImpl.Unbaked onFalse;
 
-        public Unbaked(AbstractItemModel.Unbaked onTrue, AbstractItemModel.Unbaked onFalse) {
+        public Unbaked(AbstractItemModelImpl.Unbaked onTrue, AbstractItemModelImpl.Unbaked onFalse) {
             this.onTrue = onTrue;
             this.onFalse = onFalse;
         }
@@ -29,11 +29,11 @@ public class AbstractConditionalItemModel implements AbstractItemModel {
             return MAP_CODEC;
         }
 
-        public AbstractItemModel.Unbaked onFalse() {
+        public AbstractItemModelImpl.Unbaked onFalse() {
             return onFalse;
         }
 
-        public AbstractItemModel.Unbaked onTrue() {
+        public AbstractItemModelImpl.Unbaked onTrue() {
             return onTrue;
         }
     }

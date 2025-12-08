@@ -4,9 +4,9 @@ import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 
 import java.util.Optional;
 
-public class AbstractSelectItemModel implements AbstractItemModel {
+public class AbstractSelectItemModel implements AbstractItemModelImpl {
 
-    public static class Unbaked implements AbstractItemModel.Unbaked {
+    public static class Unbaked implements AbstractItemModelImpl.Unbaked {
 
         public static final IDataMapCodec<Unbaked> MAP_CODEC = IDataMapCodec.create(
                 instance -> instance.group(
@@ -17,9 +17,9 @@ public class AbstractSelectItemModel implements AbstractItemModel {
         );
 
         //private final SelectItemModel.UnbakedSwitch<?, ?> unbakedSwitch;
-        private final Optional<AbstractItemModel.Unbaked> fallback;
+        private final Optional<AbstractItemModelImpl.Unbaked> fallback;
 
-        public Unbaked(Optional<AbstractItemModel.Unbaked> fallback) {
+        public Unbaked(Optional<AbstractItemModelImpl.Unbaked> fallback) {
             this.fallback = fallback;
         }
 
@@ -28,7 +28,7 @@ public class AbstractSelectItemModel implements AbstractItemModel {
             return MAP_CODEC;
         }
 
-        public Optional<AbstractItemModel.Unbaked> fallback() {
+        public Optional<AbstractItemModelImpl.Unbaked> fallback() {
             return fallback;
         }
     }

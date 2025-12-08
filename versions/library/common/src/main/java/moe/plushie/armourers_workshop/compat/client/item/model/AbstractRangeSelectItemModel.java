@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import java.util.Optional;
 
 
-public class AbstractRangeSelectItemModel implements AbstractItemModel {
+public class AbstractRangeSelectItemModel implements AbstractItemModelImpl {
 
-    public static class Unbaked implements AbstractItemModel.Unbaked {
+    public static class Unbaked implements AbstractItemModelImpl.Unbaked {
 
         public static final IDataMapCodec<Unbaked> MAP_CODEC = IDataMapCodec.create(
                 instance -> instance.group(
@@ -23,9 +23,9 @@ public class AbstractRangeSelectItemModel implements AbstractItemModel {
         //private final RangeSelectItemModelProperty property;
         private final float scale;
         //private final List<RangeSelectItemModel.Entry> entries;
-        private final Optional<AbstractItemModel.Unbaked> fallback;
+        private final Optional<AbstractItemModelImpl.Unbaked> fallback;
 
-        public Unbaked(float scale, Optional<AbstractItemModel.Unbaked> fallback) {
+        public Unbaked(float scale, Optional<AbstractItemModelImpl.Unbaked> fallback) {
             this.scale = scale;
             this.fallback = fallback;
         }
@@ -39,7 +39,7 @@ public class AbstractRangeSelectItemModel implements AbstractItemModel {
             return scale;
         }
 
-        public Optional<AbstractItemModel.Unbaked> fallback() {
+        public Optional<AbstractItemModelImpl.Unbaked> fallback() {
             return fallback;
         }
     }

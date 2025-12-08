@@ -8,9 +8,9 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 import java.util.List;
 
-public class AbstractBlockModelWrapper implements AbstractItemModel {
+public class AbstractBlockModelWrapper implements AbstractItemModelImpl {
 
-    public static class Unbaked implements AbstractItemModel.Unbaked {
+    public static class Unbaked implements AbstractItemModelImpl.Unbaked {
 
         public static final IDataMapCodec<Unbaked> MAP_CODEC = IDataMapCodec.create(instance -> instance.group(OpenResourceLocation.CODEC.fieldOf("model").forGetter(Unbaked::model), AbstractItemTintSources.CODEC.listOf().optionalFieldOf("tints", Collections.emptyList()).forGetter(Unbaked::tints)).apply(instance, Unbaked::new));
 

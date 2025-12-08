@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
 
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
 import net.minecraft.world.item.ItemStack;
 
@@ -8,18 +9,18 @@ public class ItemStackRenderState {
 
     protected final boolean shouldRenderInGUI;
 
-    protected final Object itemModel;
+    protected final AbstractItemModel itemModel;
     protected final ItemStack itemStack;
     protected final SkinItemModelResolver itemModelResolver;
 
-    public ItemStackRenderState(ItemStack itemStack, Object originItemModel, SkinItemModelResolver itemModelResolver, boolean shouldRenderInGUI) {
+    public ItemStackRenderState(ItemStack itemStack, AbstractItemModel originItemModel, SkinItemModelResolver itemModelResolver, boolean shouldRenderInGUI) {
         this.itemStack = itemStack;
         this.itemModel = originItemModel;
         this.itemModelResolver = itemModelResolver;
         this.shouldRenderInGUI = shouldRenderInGUI;
     }
 
-    public Object itemModel() {
+    public AbstractItemModel itemModel() {
         return itemModel;
     }
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.state;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
 import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderState;
@@ -9,7 +10,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public class AbstractItemStackRenderState {
     private static ItemStack RENDERING_GUI_ITEM = null;
 
     public static ItemStackRenderState wrap(ItemStack itemStack, ItemModelResolver itemModelResolver, @Nullable ClientLevel level, @Nullable Entity itemOwner, ItemModel originItemModel) {
-        return new ItemStackRenderState(itemStack, originItemModel, new ModelResolverImpl(itemModelResolver, level, itemOwner), itemStack == RENDERING_GUI_ITEM);
+        return new ItemStackRenderState(itemStack, AbstractItemModel.wrap(originItemModel), new ModelResolverImpl(itemModelResolver, level, itemOwner), itemStack == RENDERING_GUI_ITEM);
     }
 
     public static void startRenderGuiItem(ItemStack itemStack) {

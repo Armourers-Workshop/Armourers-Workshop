@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 public class AbstractItemModels {
 
-    private static final LateBoundIdMapper<OpenResourceLocation, IDataMapCodec<? extends AbstractItemModel.Unbaked>> ID_MAPPER = new LateBoundIdMapper<>();
-    public static final IDataCodec<AbstractItemModel.Unbaked> CODEC = ID_MAPPER.codec(OpenResourceLocation.CODEC).dispatch(AbstractItemModel.Unbaked::type, e -> e);
+    private static final LateBoundIdMapper<OpenResourceLocation, IDataMapCodec<? extends AbstractItemModelImpl.Unbaked>> ID_MAPPER = new LateBoundIdMapper<>();
+    public static final IDataCodec<AbstractItemModelImpl.Unbaked> CODEC = ID_MAPPER.codec(OpenResourceLocation.CODEC).dispatch(AbstractItemModelImpl.Unbaked::type, e -> e);
 
     public static void init() {
         // add builtin item model.

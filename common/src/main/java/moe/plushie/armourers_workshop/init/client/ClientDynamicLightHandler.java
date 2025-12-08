@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.client.other.SkinLightSource;
 import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModel;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -87,7 +86,7 @@ public class ClientDynamicLightHandler {
     }
 
     private static EmbeddedItemModel getItemModel(ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity) {
-        var model = Minecraft.getInstance().getItemModel(itemStack, level, entity, 0);
+        var model = itemStack.getItemModel(level, entity, 0);
         return itemStack.getEmbeddedItemModel(model);
     }
 }
