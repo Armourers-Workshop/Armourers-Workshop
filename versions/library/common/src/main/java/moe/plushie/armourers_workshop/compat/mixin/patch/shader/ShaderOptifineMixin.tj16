@@ -9,15 +9,15 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Available("[1.18, )")
+@Available("[1.16, 1.18)")
 @Conditional("optifine")
 @Pseudo
 @Mixin(targets = "net.optifine.shaders.Shaders")
 public class ShaderOptifineMixin {
 
-    @ModifyArg(method = "createVertShader", at = @At(value = "INVOKE", target = "Lnet/optifine/shaders/Shaders;shaderSource(ILjava/lang/String;)V"), remap = false)
-    private static String aw2$createVertShader(int shader, String value) {
+    @ModifyArg(method = "createVertShader", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/ARBShaderObjects;glShaderSourceARB(ILjava/lang/CharSequence;)V"), remap = false)
+    private static CharSequence aw2$createVertShader(int shader, CharSequence value) {
         AbstractClientHooks.createShaders();
-        return new ShaderPreprocessor("optifine", 2).process(value);
+        return new ShaderPreprocessor("optifine", 1).process((String) value);
     }
 }

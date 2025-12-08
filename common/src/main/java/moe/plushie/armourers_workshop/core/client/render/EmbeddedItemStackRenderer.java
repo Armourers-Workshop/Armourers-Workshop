@@ -6,11 +6,11 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.EntitySlot;
 import moe.plushie.armourers_workshop.core.client.other.SkinItemSource;
 import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModel;
-import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
@@ -52,7 +52,7 @@ public class EmbeddedItemStackRenderer {
         var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             // Try to get skin descriptor from item model config.
-            descriptor = EmbeddedItemModelDiscovery.resolve(itemRenderState);
+            descriptor = DiscoveerableSkinManager.getInstance().get(itemRenderState.itemModel());
             if (!descriptor.isEmpty()) {
                 return EmbeddedItemModel.fromComponent(descriptor, itemRenderState);
             }
@@ -112,7 +112,7 @@ public class EmbeddedItemStackRenderer {
                 // it's only rendering in the entity back by third-party mods:
                 //   Sophisticated Backpacks
                 //   Traveler's Backpack
-                if (entitySlot.skinType() == SkinTypes.ITEM_BACKPACK && entitySlot.slotType() == EntitySlot.Type.IN_WARDROBE) {
+                if (entitySlot.type() == SkinTypes.ITEM_BACKPACK && entitySlot.source() == EntitySlot.Source.IN_WARDROBE) {
                     return 0;
                 }
 
@@ -200,7 +200,7 @@ public class EmbeddedItemStackRenderer {
         var slots = new SkinRenderState();
         var skin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));
         if (skin != null) {
-            var slot = new EntitySlot(skin, SkinPaintScheme.EMPTY, itemSource.itemStack(), descriptor, 0, EntitySlot.Type.UNKNOWN);
+            var slot = new EntitySlot(skin, SkinPaintScheme.EMPTY, itemSource.itemStack(), descriptor);
             slots.prepare(Collections.newList(slot));
         }
         return slots;

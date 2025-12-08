@@ -22,9 +22,9 @@ public abstract class ShaderVanillaMixin {
         AbstractClientHooks.createShaders();
         // this is a iris shader resource?
         if (arg1 instanceof AbstractResourceProvider provider) {
-            return new AbstractShaderTransformer(arg1, new ShaderPreprocessor(provider.type(), 1));
+            return new AbstractShaderTransformer(arg1, new ShaderPreprocessor(provider.type(), 2));
         }
         // this is a vanilla shader resource.
-        return new AbstractShaderTransformer(arg1, new ShaderPreprocessor("vanilla", 1), AbstractShaderSelector.DEFAULT);
+        return new AbstractShaderTransformer(arg1, new ShaderPreprocessor("vanilla", 2), AbstractShaderSelector.DEFAULT);
     }
 }

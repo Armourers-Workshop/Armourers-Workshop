@@ -106,7 +106,6 @@ public class ModConfig {
         public static int enableEmbeddedSkinRenderer = 0;
         public static int enableFirstPersonSkinRenderer = 0;
         public static boolean enableMatchingByItemId = true;
-        public static boolean enableServerSkinsInResourcePack = false;
         public static boolean enableLinkDimensional = true;
         public static int maxLinkDistance = 0;
 
@@ -132,6 +131,10 @@ public class ModConfig {
         public static int prefersWardrobePlayerSlots = 3;
         public static int prefersWardrobeMobSlots = 3;
         public static int prefersWardrobeDropOnDeath = 0;
+
+        // Resource Pack
+        public static String authCodeOfResourcePack = "";
+        public static boolean allowsServerSkinsInResourcePack = false;
 
         // Library
         public static boolean extractOfficialSkins;

@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.20, )")
+@Available("[1.18, 1.20)")
 @Conditional("iris || oculus")
 @Pseudo
-@Mixin(targets = "net.irisshaders.iris.pipeline.programs.ExtendedShader")
+@Mixin(targets = "net.coderbot.iris.pipeline.newshader.ExtendedShader")
 public class ShaderIrisMixin {
 
     @ModifyVariable(method = "<init>", at = @At(value = "HEAD"), argsOnly = true, remap = false)

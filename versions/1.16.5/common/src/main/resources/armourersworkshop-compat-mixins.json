@@ -35,7 +35,8 @@
     "patch/attachment/ParrotOnShoulderLayerMixin$ModelPatch",
     "patch/attachment/ParrotOnShoulderLayerMixin$LayerPatch",
     "patch/attachment/EntityNameLayerMixin",
-    "patch/attachment/EntityRidingLayerMixin"
+    "patch/attachment/EntityRidingLayerMixin",
+    "bugfix/WindowIconMixin"
   ],
   "mixins": [
     "ServerGameMixin",

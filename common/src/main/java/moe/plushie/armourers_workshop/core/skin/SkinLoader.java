@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.api.skin.serializer.ISkinFileProvider;
+import moe.plushie.armourers_workshop.core.data.DataAlgorithm;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
@@ -167,18 +168,6 @@ public class SkinLoader {
         });
     }
 
-    //    public void loadSkinFromDB(String identifier, ColorScheme scheme, boolean needCopy, IResultHandler<SkinDescriptor> handler) {
-//        backend.execute(() -> {
-//            try {
-//                ModLog.debug("'{}' => preload into database", identifier);
-//                handler.accept(loadSkinFromDB(identifier, scheme, needCopy));
-
-    /// /                caches.add(handler);
-//            } catch (Exception exception) {
-//                handler.reject(exception);
-//            }
-//        });
-//    }
     public InputStream loadSkinData(String identifier) throws Exception {
         var session = taskManager.get(DataDomain.byName(identifier));
         if (session instanceof LoadingSession loadingSession) {
@@ -424,10 +413,12 @@ public class SkinLoader {
     private static class Request {
 
         private final String identifier;
-        private final SkinFileOptions options;
 
         private int level = 0;
         private boolean isRunning = false;
+
+        private SkinFileOptions options;
+
         private Method method = Method.ASYNC;
         private Entry delegate;
 
@@ -626,12 +617,25 @@ public class SkinLoader {
         }
 
         @Override
-        public InputStream loadData(String identifier) throws Exception {
+        public Skin load(Request request) throws Exception {
             // never get resource manager in dedicated server.
             if (EnvironmentManager.isDedicatedServer()) {
                 throw new IllegalAccessException("the resource pack session only work in the client side.");
             }
-            // pk:<pack-id>:<skin-path>
+            // fill security key when resource pack auth code provided.
+            if (!ModConfig.Common.authCodeOfResourcePack.isEmpty()) {
+                var key = DataAlgorithm.AUTH.key(ModConfig.Common.authCodeOfResourcePack);
+                var options = new SkinFileOptions();
+                options.setSecurityKey(key);
+                options.setSecurityData(DataAlgorithm.AUTH.signature(key));
+                request.options = options;
+            }
+            return super.load(request);
+        }
+
+        @Override
+        public InputStream loadData(String identifier) throws Exception {
+            // rs:<pack-id>:<skin-path>
             var path = DataDomain.getPath(identifier);
             if (path.isEmpty()) {
                 throw new FileNotFoundException(identifier);
@@ -641,7 +645,7 @@ public class SkinLoader {
             if (resourceManager.hasResource(file)) {
                 return resourceManager.readResource(file).inputStream();
             }
-            // pk:<pack-id>:<skin-path>.armour
+            // rs:<pack-id>:<skin-path>.armour
             file = file.withPath(file.path() + Constants.EXT);
             if (resourceManager.hasResource(file)) {
                 return resourceManager.readResource(file).inputStream();

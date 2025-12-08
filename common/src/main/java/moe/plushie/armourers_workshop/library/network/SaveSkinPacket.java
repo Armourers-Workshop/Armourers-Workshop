@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.DataEncryptMethod;
+import moe.plushie.armourers_workshop.core.data.DataAlgorithm;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -213,7 +213,7 @@ public class SaveSkinPacket extends CustomPacket {
             if (server.isRunning() && Objects.equals(options.securityData(), server.publicKey())) {
                 var fixedOptions = new SkinFileOptions();
                 fixedOptions.merge(options);
-                fixedOptions.setSecurityKey(DataEncryptMethod.AUTH.key(server.privateKey()));
+                fixedOptions.setSecurityKey(DataAlgorithm.AUTH.key(server.privateKey()));
                 fixedOptions.setSecurityData(server.publicKey());
                 return fixedOptions;
             }

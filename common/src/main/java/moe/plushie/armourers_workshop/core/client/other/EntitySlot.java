@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
@@ -11,29 +13,36 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+@OnlyIn(Dist.CLIENT)
 public class EntitySlot {
 
     protected final ItemStack itemStack;
     protected final SkinDescriptor descriptor;
     protected final BakedSkin skin;
     protected final SkinPaintScheme paintScheme;
-    protected final Type slotType;
+    protected final Source source;
     protected final float renderPriority;
+    protected final boolean soft;
     protected final boolean useOverlayColor;
 
-    public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor, float renderPriority, Type slotType) {
+    public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor) {
+        this(skin, entityScheme, itemStack, descriptor, 0, false, Source.UNKNOWN);
+    }
+
+    public EntitySlot(BakedSkin skin, SkinPaintScheme entityScheme, ItemStack itemStack, SkinDescriptor descriptor, float renderPriority, boolean soft, Source source) {
         this.itemStack = itemStack;
         this.descriptor = descriptor;
         this.skin = skin;
-        this.paintScheme = baking(descriptor.paintScheme(), entityScheme, slotType);
+        this.paintScheme = baking(descriptor.paintScheme(), entityScheme, source);
         this.renderPriority = renderPriority;
-        this.slotType = slotType;
+        this.source = source;
+        this.soft = soft;
         this.useOverlayColor = skin.properties().get(SkinProperty.USE_OVERLAY_COLOR);
     }
 
-    private static SkinPaintScheme baking(SkinPaintScheme skinScheme, SkinPaintScheme entityScheme, Type slotType) {
+    private static SkinPaintScheme baking(SkinPaintScheme skinScheme, SkinPaintScheme entityScheme, Source slotType) {
         // when player held item we can't use the entity scheme.
-        if (slotType == Type.UNKNOWN || slotType == Type.IN_HELD) {
+        if (slotType == Source.UNKNOWN || slotType == Source.IN_HELD) {
             return skinScheme;
         }
         if (skinScheme.isEmpty()) {
@@ -88,12 +97,12 @@ public class EntitySlot {
         return skin;
     }
 
-    public SkinType skinType() {
+    public SkinType type() {
         return skin.type();
     }
 
-    public Type slotType() {
-        return slotType;
+    public Source source() {
+        return source;
     }
 
     public SkinPaintScheme paintScheme() {
@@ -108,7 +117,7 @@ public class EntitySlot {
         return itemStack;
     }
 
-    public enum Type {
-        UNKNOWN, IN_HELD, IN_EQUIPMENT, IN_WARDROBE, IN_CONTAINER
+    public enum Source {
+        UNKNOWN, IN_HELD, IN_EQUIPMENT, IN_WARDROBE, IN_CONTAINER,
     }
 }

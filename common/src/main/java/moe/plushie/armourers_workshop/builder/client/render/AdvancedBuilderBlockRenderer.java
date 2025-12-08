@@ -270,7 +270,7 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
         var slots = new SkinRenderState();
         var skin = SkinBakery.getInstance().loadSkin(TicketManager.RENDERER.get(descriptor));
         if (skin != null) {
-            var slot = new EntitySlot(skin, SkinPaintScheme.EMPTY, descriptor.sharedItemStack(), descriptor, 0, EntitySlot.Type.UNKNOWN);
+            var slot = new EntitySlot(skin, SkinPaintScheme.EMPTY, descriptor.sharedItemStack(), descriptor);
             slots.prepare(Collections.newList(slot));
         }
         return slots;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.client.item.model;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
+import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
@@ -19,7 +19,7 @@ public class AbstractItemModelDiscovery {
             return;
         }
         var model = OpenResourceLocation.parse(unbakedModel.name);
-        EmbeddedItemModelDiscovery.bake(bakedModel, model);
+        DiscoveerableSkinManager.getInstance().put(bakedModel, model);
     }
 
     public static BlockModel resolve(ResourceLocation id) {

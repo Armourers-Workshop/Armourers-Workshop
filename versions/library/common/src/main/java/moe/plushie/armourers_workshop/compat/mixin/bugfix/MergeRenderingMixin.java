@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Available("[1.21, 1.22)")
 @Conditional("iris >= 1.8.12-snapshot")
 @Mixin(AbstractRenderPipeline.class)
-public class ShaderIrisBugfixMixin {
+public class MergeRenderingMixin {
 
     @Unique
     private static final FieldAccessor<Boolean> MERGE_RENDERING = FieldAccessor.create("net.irisshaders.iris.vertices.ImmediateState.mergeRendering");

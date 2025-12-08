@@ -40,10 +40,10 @@
     "patch/attachment/ParrotOnShoulderLayerMixin$LayerPatch",
     "patch/attachment/EntityNameLayerMixin",
     "patch/attachment/EntityRidingLayerMixin",
-    "patch/shader/ShaderIrisBugfixMixin",
     "patch/shader/ShaderVanillaMixin",
     "patch/shader/ShaderOptifineMixin",
-    "patch/shader/ShaderIrisMixin"
+    "patch/shader/ShaderIrisMixin",
+    "bugfix/MergeRenderingMixin"
   ],
   "mixins": [
     "KubeJSMixin",

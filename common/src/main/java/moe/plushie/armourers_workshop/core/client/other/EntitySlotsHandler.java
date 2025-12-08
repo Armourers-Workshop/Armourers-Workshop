@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
@@ -41,6 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.IBakeListener {
 
     private final SlotProvider<T> entityProvider;
@@ -139,7 +142,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         tickets.invalidate();
     }
 
-    private void loadSkin(ItemStack itemStack, float renderPriority, EntitySlot.Type slotType) {
+    private void loadSkin(ItemStack itemStack, float renderPriority, boolean soft, EntitySlot.Source source) {
         var descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
@@ -149,8 +152,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             missingSkins.add(descriptor.identifier());
             return;
         }
-        var slot = new EntitySlot(bakedSkin, wardrobeProvider.colorScheme, itemStack, descriptor, renderPriority, slotType);
-        switch (slotType) {
+        var slot = new EntitySlot(bakedSkin, wardrobeProvider.colorScheme, itemStack, descriptor, renderPriority, soft, source);
+        switch (source) {
             case IN_HELD -> {
                 // If held a skin of armor type, nothing happen
                 if (bakedSkin.type().isTool() || bakedSkin.type() == SkinTypes.ITEM) {
@@ -209,7 +212,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         var isMannequinHand = source instanceof MannequinEntity;
         for (var itemStack : entityProvider1.armourSlots) {
             for (var slot : getItemSkins(itemStack, isMannequinHand)) {
-                if (slot.skinType() == SkinTypes.ITEM_BACKPACK) {
+                if (slot.type() == SkinTypes.ITEM_BACKPACK) {
                     armorSkins.add(slot);
                     overriddenManager.addProperty(SkinProperty.OVERRIDE_MODEL_BACKPACK);
                 }
@@ -279,7 +282,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
             // the item stack is not embedded skin, using matching pattern,
             // only need to find the first matching skin by item.
             for (var entry : itemSkins) {
-                if (entry.slotType != EntitySlot.Type.IN_HELD && entry.shouldRenderInHeld(itemStack)) {
+                if (entry.source != EntitySlot.Source.IN_HELD && entry.shouldRenderInHeld(itemStack)) {
                     return Collections.singletonList(entry);
                 }
             }
@@ -384,8 +387,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     }
 
     protected interface SlotConsumer {
-        void accept(ItemStack itemStack, float priority, EntitySlot.Type slotType);
 
+        void accept(ItemStack itemStack, float priority, boolean soft, EntitySlot.Source source);
     }
 
     protected static class WardrobeProvider extends SlotProvider<SkinWardrobe> {
@@ -472,7 +475,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
                     if (!descriptor.isEmpty()) {
                         usedSlots.add(slotType); // mark the slot is used.
                     }
-                    consumer.accept(itemStack, i * 10, EntitySlot.Type.IN_WARDROBE);
+                    consumer.accept(itemStack, i * 10, false, EntitySlot.Source.IN_WARDROBE);
                 }
             }
             // load default skin when not user provided.
@@ -488,7 +491,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
                 if (usedSlots.contains(realSlotType)) {
                     continue;
                 }
-                consumer.accept(itemStack, i * 10, EntitySlot.Type.IN_WARDROBE);
+                consumer.accept(itemStack, i * 10, false, EntitySlot.Source.IN_WARDROBE);
             }
         }
 
@@ -511,10 +514,10 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         protected void load(Entity source, SlotConsumer consumer) {
             int i = 0;
             for (var itemStack : armourSlots) {
-                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_EQUIPMENT);
+                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_EQUIPMENT);
             }
             for (var itemStack : handSlots) {
-                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_HELD);
+                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_HELD);
             }
         }
 
@@ -539,7 +542,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         protected void load(BlockEntity source, SlotConsumer consumer) {
             int i = 0;
             for (var itemStack : lastSlots) {
-                consumer.accept(itemStack, 400 + i++, EntitySlot.Type.IN_CONTAINER);
+                consumer.accept(itemStack, 400 + i++, false, EntitySlot.Source.IN_CONTAINER);
             }
         }
 

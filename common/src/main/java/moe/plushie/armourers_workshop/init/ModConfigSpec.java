@@ -21,54 +21,54 @@ public class ModConfigSpec {
 
         public Client() {
             defineCategory("general", "General settings.", () -> {
-                defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = auto", "1 = disable", "2 = enable").bind(v -> enableEmbeddedSkinRenderer = v, () -> enableEmbeddedSkinRenderer);
-                defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = auto", "1 = always disable", "2 = always enable").bind(v -> enableFirstPersonSkinRenderer = v, () -> enableFirstPersonSkinRenderer);
+                defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = auto", "1 = disable", "2 = enable").bind(it -> enableEmbeddedSkinRenderer = it, () -> enableEmbeddedSkinRenderer);
+                defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = auto", "1 = always disable", "2 = always enable").bind(it -> enableFirstPersonSkinRenderer = it, () -> enableFirstPersonSkinRenderer);
             });
             defineCategory("misc", "Miscellaneous settings.", () -> {
-                defineInRange("skinLoadAnimationTime", 200, 0, 10000, "How long skins will display their loading animation for in milliseconds", "Settings this to 0 will disable loading animations.").bind(v -> skinLoadAnimationTime = v, () -> skinLoadAnimationTime);
-                define("enableSkinLimitLimbs", true, "Whether allows skin to limit limbs of entities.").bind(v -> enableSkinLimitLimbs = v, () -> enableSkinLimitLimbs);
-                define("enableClipInInventory", true, "Whether clipLayer the excess skin in the inventory gui.").bind(v -> enableEntityClipInInventory = v, () -> enableEntityClipInInventory);
+                defineInRange("skinLoadAnimationTime", 200, 0, 10000, "How long skins will display their loading animation for in milliseconds", "Settings this to 0 will disable loading animations.").bind(it -> skinLoadAnimationTime = it, () -> skinLoadAnimationTime);
+                define("enableSkinLimitLimbs", true, "Whether allows skin to limit limbs of entities.").bind(it -> enableSkinLimitLimbs = it, () -> enableSkinLimitLimbs);
+                define("enableClipInInventory", true, "Whether clipLayer the excess skin in the inventory gui.").bind(it -> enableEntityClipInInventory = it, () -> enableEntityClipInInventory);
             });
             defineCategory("performance", "Change (visual quality/performance) ratio by changing setting in this category.", () -> {
-                defineInRange("renderDistanceSkin", 128, 16, 512, "The max distance in blocks that skins will render.").bind(v -> renderDistanceSkin = v, () -> renderDistanceSkin);
-                defineInRange("renderDistanceBlockSkin", 128, 16, 512, "The max distance in blocks that block skins will be rendered.").bind(v -> renderDistanceBlockSkin = v, () -> renderDistanceBlockSkin);
-                defineInRange("renderDistanceMannequinEquipment", 64, 16, 512, "The max distance in blocks that equipment will be rendered on mannequins.").bind(v -> renderDistanceMannequinEquipment = v, () -> renderDistanceMannequinEquipment);
-                defineInRange("modelBakingThreadCount", getBakingCores(), 1, 16, "The maximum number of threads that will be used to bake models. ").bind(v -> modelBakingThreadCount = v, () -> modelBakingThreadCount);
-                defineInRange("vertexCompileThreadCount", 2, 1, 16, "The maximum number of threads that will be used to build model vertexes. ").bind(v -> vertexCompileThreadCount = v, () -> vertexCompileThreadCount);
-                define("multipassSkinRendering", true, "When enabled skin will render in multiple passes to reduce visual artifacts.", "Disabling this will improve skin rendering performance at the cost of visual quality.").bind(v -> multipassSkinRendering = v, () -> multipassSkinRendering);
-                defineInRange("lodDistance", 32.0, 8.0, 128.0, "Distance away that skins will have lod applied to them.").bind(v -> lodDistance = v, () -> lodDistance);
-                defineInRange("maxLodLevels", 4, 0, 4, "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.").bind(v -> maxLodLevels = v, () -> maxLodLevels);
-                defineInRange("skinDynamicLight", -1, -1, 15, "Determines how luminance of dynamic lighting when the skin contains growing channels.", "-1 = auto (based skin cubes)", "0 = disabled", "1 ~ 15 = fixed luminance").bind(v -> skinDynamicLight = v, () -> skinDynamicLight);
+                defineInRange("renderDistanceSkin", 128, 16, 512, "The max distance in blocks that skins will render.").bind(it -> renderDistanceSkin = it, () -> renderDistanceSkin);
+                defineInRange("renderDistanceBlockSkin", 128, 16, 512, "The max distance in blocks that block skins will be rendered.").bind(it -> renderDistanceBlockSkin = it, () -> renderDistanceBlockSkin);
+                defineInRange("renderDistanceMannequinEquipment", 64, 16, 512, "The max distance in blocks that equipment will be rendered on mannequins.").bind(it -> renderDistanceMannequinEquipment = it, () -> renderDistanceMannequinEquipment);
+                defineInRange("modelBakingThreadCount", getBakingCores(), 1, 16, "The maximum number of threads that will be used to bake models. ").bind(it -> modelBakingThreadCount = it, () -> modelBakingThreadCount);
+                defineInRange("vertexCompileThreadCount", 2, 1, 16, "The maximum number of threads that will be used to build model vertexes. ").bind(it -> vertexCompileThreadCount = it, () -> vertexCompileThreadCount);
+                define("multipassSkinRendering", true, "When enabled skin will render in multiple passes to reduce visual artifacts.", "Disabling this will improve skin rendering performance at the cost of visual quality.").bind(it -> multipassSkinRendering = it, () -> multipassSkinRendering);
+                defineInRange("lodDistance", 32.0, 8.0, 128.0, "Distance away that skins will have lod applied to them.").bind(it -> lodDistance = it, () -> lodDistance);
+                defineInRange("maxLodLevels", 4, 0, 4, "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.").bind(it -> maxLodLevels = it, () -> maxLodLevels);
+                defineInRange("skinDynamicLight", -1, -1, 15, "Determines how luminance of dynamic lighting when the skin contains growing channels.", "-1 = auto (based skin cubes)", "0 = disabled", "1 ~ 15 = fixed luminance").bind(it -> skinDynamicLight = it, () -> skinDynamicLight);
             });
             defineCategory("cache", "Change (memory use/IO access) ratio by changing setting in this category.", () -> {
                 // Skin cache
-                defineInRange("skinCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep skins in it's cache.", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(v -> skinCacheExpireTime = v, () -> skinCacheExpireTime); // setRequiresMcRestart
-                defineInRange("skinCacheMaxSize", 2000, 0, 10000, "Max size the skin cache can reach before skins are removed.", "Setting to 0 turns off this option.").bind(v -> skinCacheMaxSize = v, () -> skinCacheMaxSize); // setRequiresMcRestart
+                defineInRange("skinCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep skins in it's cache.", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(it -> skinCacheExpireTime = it, () -> skinCacheExpireTime); // setRequiresMcRestart
+                defineInRange("skinCacheMaxSize", 2000, 0, 10000, "Max size the skin cache can reach before skins are removed.", "Setting to 0 turns off this option.").bind(it -> skinCacheMaxSize = it, () -> skinCacheMaxSize); // setRequiresMcRestart
 
                 // Model cache
-                defineInRange("modelPartCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep model parts in it's cache.", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(v -> modelPartCacheExpireTime = v, () -> modelPartCacheExpireTime); // setRequiresMcRestart
-                defineInRange("modelPartCacheMaxSize", 2000, 0, 10000, "Max size the cache can reach before model parts are removed.", "Setting to 0 turns off this option.").bind(v -> modelPartCacheMaxSize = v, () -> modelPartCacheMaxSize); // setRequiresMcRestart
+                defineInRange("modelPartCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep model parts in it's cache.", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(it -> modelPartCacheExpireTime = it, () -> modelPartCacheExpireTime); // setRequiresMcRestart
+                defineInRange("modelPartCacheMaxSize", 2000, 0, 10000, "Max size the cache can reach before model parts are removed.", "Setting to 0 turns off this option.").bind(it -> modelPartCacheMaxSize = it, () -> modelPartCacheMaxSize); // setRequiresMcRestart
 
                 // Texture cache
-                defineInRange("textureCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep textures in it's cache", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(v -> textureCacheExpireTime = v, () -> textureCacheExpireTime); // setRequiresMcRestart
-                defineInRange("textureCacheMaxSize", 1000, 0, 5000, "Max size the texture cache can reach before textures are removed.", "Setting to 0 turns off this option.").bind(v -> textureCacheMaxSize = v, () -> textureCacheMaxSize); // setRequiresMcRestart
-                defineInRange("maxSkinRequests", 10, 1, 50, "Maximum number of skin the client can request at one time.").bind(v -> maxSkinRequests = v, () -> maxSkinRequests);
-                defineInRange("fastCacheSize", 5000, 0, Integer.MAX_VALUE, "Size of client size cache.", "Setting to 0 turns off this option.").bind(v -> fastCacheSize = v, () -> fastCacheSize);
+                defineInRange("textureCacheExpireTime", 600, 0, 3600, "How long in seconds the client will keep textures in it's cache", "Default 600 seconds is 10 minutes.", "Setting to 0 turns off this option.").bind(it -> textureCacheExpireTime = it, () -> textureCacheExpireTime); // setRequiresMcRestart
+                defineInRange("textureCacheMaxSize", 1000, 0, 5000, "Max size the texture cache can reach before textures are removed.", "Setting to 0 turns off this option.").bind(it -> textureCacheMaxSize = it, () -> textureCacheMaxSize); // setRequiresMcRestart
+                defineInRange("maxSkinRequests", 10, 1, 50, "Maximum number of skin the client can request at one time.").bind(it -> maxSkinRequests = it, () -> maxSkinRequests);
+                defineInRange("fastCacheSize", 5000, 0, Integer.MAX_VALUE, "Size of client size cache.", "Setting to 0 turns off this option.").bind(it -> fastCacheSize = it, () -> fastCacheSize);
             });
             defineCategory("skin-preview", "Setting to configure the skin preview box.", () -> {
                 define("skinPreEnabled", true, "Enables a larger skin preview box when hovering the mouse over a skin.").bind(n -> skinPreEnabled = n, () -> skinPreEnabled);
-                define("skinPreDrawBackground", true, "Draw a background box for the skin preview.").bind(v -> skinPreDrawBackground = v, () -> skinPreDrawBackground);
-                defineInRange("skinPreSize", 96, 16, 256, "Size of the skin preview.").bind(v -> skinPreSize = v, () -> skinPreSize);
-                defineInRange("skinPreLocHorizontal", 0F, 0F, 1F, "Horizontal location of the skin preview: 0 = left, 1 = right.").bind(v -> skinPreLocHorizontal = v, () -> skinPreLocHorizontal);
-                defineInRange("skinPreLocVertical", 0.5F, 0F, 1F, "Vertical location of the skin preview: 0 = top, 1 = bottom.").bind(v -> skinPreLocVertical = v, () -> skinPreLocVertical);
-                define("skinPreLocFollowMouse", true, "Skin preview will be rendered next to the mouse.").bind(v -> skinPreLocFollowMouse = v, () -> skinPreLocFollowMouse);
+                define("skinPreDrawBackground", true, "Draw a background box for the skin preview.").bind(it -> skinPreDrawBackground = it, () -> skinPreDrawBackground);
+                defineInRange("skinPreSize", 96, 16, 256, "Size of the skin preview.").bind(it -> skinPreSize = it, () -> skinPreSize);
+                defineInRange("skinPreLocHorizontal", 0.0f, 0.0f, 1.0f, "Horizontal location of the skin preview: 0 = left, 1 = right.").bind(it -> skinPreLocHorizontal = it, () -> skinPreLocHorizontal);
+                defineInRange("skinPreLocVertical", 0.5f, 0.0f, 1.0f, "Vertical location of the skin preview: 0 = top, 1 = bottom.").bind(it -> skinPreLocVertical = it, () -> skinPreLocVertical);
+                define("skinPreLocFollowMouse", true, "Skin preview will be rendered next to the mouse.").bind(it -> skinPreLocFollowMouse = it, () -> skinPreLocFollowMouse);
             });
             defineCategory("debug", "Debug Settings.", () -> {
-                define("shader", false, "Shows shader mixin results in logs.").bind(v -> enableShaderDebug = v, () -> enableShaderDebug);
-                define("resource", false, "Shows resource register/unregister in logs.").bind(v -> enableResourceDebug = v, () -> enableResourceDebug);
-                define("animation", false, "Shows animation running states in logs.").bind(v -> enableAnimationDebug = v, () -> enableAnimationDebug);
-                define("molang", false, "Shows molang compile states in logs.").bind(v -> enableMolangDebug = v, () -> enableMolangDebug);
-                define("showF3DebugInfo", true, "Shows extra info on the F3 debug screen.").bind(v -> showF3DebugInfo = v, () -> showF3DebugInfo);
+                define("shader", false, "Shows shader mixin results in logs.").bind(it -> enableShaderDebug = it, () -> enableShaderDebug);
+                define("resource", false, "Shows resource register/unregister in logs.").bind(it -> enableResourceDebug = it, () -> enableResourceDebug);
+                define("animation", false, "Shows animation running states in logs.").bind(it -> enableAnimationDebug = it, () -> enableAnimationDebug);
+                define("molang", false, "Shows molang compile states in logs.").bind(it -> enableMolangDebug = it, () -> enableMolangDebug);
+                define("showF3DebugInfo", true, "Shows extra info on the F3 debug screen.").bind(it -> showF3DebugInfo = it, () -> showF3DebugInfo);
                 defineInRange("texturePaintingType", 0, -1, 2, "Texture painting replacing the players texture with a painted version.", "Turning this off may fix issues with the players texture rendering", "incorrectly or showing the steve skin.", "", "-1 = disabled", "0 = auto", "1 = texture_replace (replaces the players texture - LEGACY)", "2 = model_replace_mc (render using a mc model - slower, more compatible - NOT IMPLEMENTED)", "3 = model_replace_aw (render using a aw model - faster, less compatible)").bind(n -> texturePaintingType = n, () -> texturePaintingType);
             });
         }
@@ -84,63 +84,66 @@ public class ModConfigSpec {
 
         public Common() {
             defineCategory("general", "General settings.", () -> {
-                defineInRange("maxUndos", 100, 0, 1000, "Max number of undos a player has for block painting.").bind(v -> maxUndos = v, () -> maxUndos);
-                defineInRange("blockTaskRate", 10, 1, 1000, "Max number of processing blocks in per tick.").bind(v -> blockTaskRate = v, () -> blockTaskRate);
-                define("lockDyesOnSkins", false, "When enabled players will not be able to remove dyes from skins in the dye table.").bind(v -> lockDyesOnSkins = v, () -> lockDyesOnSkins);
-                define("instancedDyeTable", false, "If true the dye table will be instanced for each player. Items will be dropped when the table is closed.").bind(v -> instancedDyeTable = v, () -> instancedDyeTable);
-                define("enableProtocolCheck", true, "If enabled the server will check the client protocol version in the login.", "Highly recommended unless the server does not support handshake.").bind(v -> enableProtocolCheck = v, () -> enableProtocolCheck);
-                define("enablePermissionCheck", true, "If enabled the server will check permission node in the each operation.", "Highly recommended in the forge server.").bind(v -> enablePermissionCheck = v, () -> enablePermissionCheck);
+                defineInRange("maxUndos", 100, 0, 1000, "Max number of undos a player has for block painting.").bind(it -> maxUndos = it, () -> maxUndos);
+                defineInRange("blockTaskRate", 10, 1, 1000, "Max number of processing blocks in per tick.").bind(it -> blockTaskRate = it, () -> blockTaskRate);
+                define("lockDyesOnSkins", false, "When enabled players will not be able to remove dyes from skins in the dye table.").bind(it -> lockDyesOnSkins = it, () -> lockDyesOnSkins);
+                define("instancedDyeTable", false, "If true the dye table will be instanced for each player. Items will be dropped when the table is closed.").bind(it -> instancedDyeTable = it, () -> instancedDyeTable);
+                define("enableProtocolCheck", true, "If enabled the server will check the client protocol version in the login.", "Highly recommended unless the server does not support handshake.").bind(it -> enableProtocolCheck = it, () -> enableProtocolCheck);
+                define("enablePermissionCheck", true, "If enabled the server will check permission node in the each operation.", "Highly recommended in the forge server.").bind(it -> enablePermissionCheck = it, () -> enablePermissionCheck);
                 defineInRange("serverModelSendRate", 4000, 0, 8000, "The maximum number of skins the server is allow to send every minute.", "Less that 1 equals unlimited. (not recommended may cause bandwidth and cpu spikes on the server)").bind(n -> serverSkinSendRate = n, () -> serverSkinSendRate);
-                define("serverCompressesSkins", true, "If enabled the server will compress skins before sending them to clients.", "Highly recommended unless the server has a very slow CPU.").bind(v -> enableServerCompressesSkins = v, () -> enableServerCompressesSkins);
-                defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableEmbeddedSkinRenderer = v, () -> enableEmbeddedSkinRenderer);
-                defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(v -> enableFirstPersonSkinRenderer = v, () -> enableFirstPersonSkinRenderer);
-                define("enableServerSkinsInResourcePack", false, "If enabled the server will allow client use server skins in the resource pack.").bind(v -> enableServerSkinsInResourcePack = v, () -> enableServerSkinsInResourcePack);
-                define("enableLinkDimensional", true, "If enabled the link tool will allow bind between different dimensions block.").bind(v -> enableLinkDimensional = v, () -> enableLinkDimensional);
-                defineInRange("maxLinkDistance", 0, 0, 100000, "the link tool will allow max range in which blocks can be bound?", "0 = infinite range").bind(v -> maxLinkDistance = v, () -> maxLinkDistance);
+                define("serverCompressesSkins", true, "If enabled the server will compress skins before sending them to clients.", "Highly recommended unless the server has a very slow CPU.").bind(it -> enableServerCompressesSkins = it, () -> enableServerCompressesSkins);
+                defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2, "Using embedded skin renderer to replace the original item renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(it -> enableEmbeddedSkinRenderer = it, () -> enableEmbeddedSkinRenderer);
+                defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(it -> enableFirstPersonSkinRenderer = it, () -> enableFirstPersonSkinRenderer);
+                define("enableLinkDimensional", true, "If enabled the link tool will allow bind between different dimensions block.").bind(it -> enableLinkDimensional = it, () -> enableLinkDimensional);
+                defineInRange("maxLinkDistance", 0, 0, 100000, "the link tool will allow max range in which blocks can be bound?", "0 = infinite range").bind(it -> maxLinkDistance = it, () -> maxLinkDistance);
             });
             defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
-                define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(v -> tooltipHasSkin = v, () -> tooltipHasSkin);
-                define("tooltipSkinName", true, "Show skin name tooltip on items.").bind(v -> tooltipSkinName = v, () -> tooltipSkinName);
-                define("tooltipSkinAuthor", true, "Show skin author tooltip on items.").bind(v -> tooltipSkinAuthor = v, () -> tooltipSkinAuthor);
-                define("tooltipSkinType", true, "Show skin type tooltip on items.").bind(v -> tooltipSkinType = v, () -> tooltipSkinType);
-                define("tooltipFlavour", true, "Show skin flavour text tooltip on items.").bind(v -> tooltipFlavour = v, () -> tooltipFlavour);
-                define("tooltipSkinPreview", true, "Show skin preview tooltip on items.").bind(v -> tooltipSkinPreview = v, () -> tooltipSkinPreview);
-                define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.").bind(v -> tooltipOpenWardrobe = v, () -> tooltipOpenWardrobe);
+                define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(it -> tooltipHasSkin = it, () -> tooltipHasSkin);
+                define("tooltipSkinName", true, "Show skin name tooltip on items.").bind(it -> tooltipSkinName = it, () -> tooltipSkinName);
+                define("tooltipSkinAuthor", true, "Show skin author tooltip on items.").bind(it -> tooltipSkinAuthor = it, () -> tooltipSkinAuthor);
+                define("tooltipSkinType", true, "Show skin type tooltip on items.").bind(it -> tooltipSkinType = it, () -> tooltipSkinType);
+                define("tooltipFlavour", true, "Show skin flavour text tooltip on items.").bind(it -> tooltipFlavour = it, () -> tooltipFlavour);
+                define("tooltipSkinPreview", true, "Show skin preview tooltip on items.").bind(it -> tooltipSkinPreview = it, () -> tooltipSkinPreview);
+                define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.").bind(it -> tooltipOpenWardrobe = it, () -> tooltipOpenWardrobe);
             });
             defineCategory("wardrobe", "Setting for the players wardrobe.", () -> {
-                define("allowOpening", true, "Allow the player to open the wardrobe GUI.").bind(v -> wardrobeAllowOpening = v, () -> wardrobeAllowOpening);
-                define("enableSkinTab", true, "Enable the wardrobe skins tab.").bind(v -> showWardrobeSkins = v, () -> showWardrobeSkins);
-                define("enableOutfitTab", true, "Enable the wardrobe outfits tab.").bind(v -> showWardrobeOutfits = v, () -> showWardrobeOutfits);
-                define("enableDisplayTab", true, "Enable the wardrobe display settings tab.").bind(v -> showWardrobeDisplaySettings = v, () -> showWardrobeDisplaySettings);
-                define("enableColourTab", true, "Enable the wardrobe colour settings tab.").bind(v -> showWardrobeColorSettings = v, () -> showWardrobeColorSettings);
-                define("enableDyeTab", true, "Enable the wardrobe dyes tab.").bind(v -> showWardrobeDyeSetting = v, () -> showWardrobeDyeSetting);
-                define("onlySkinIntoSlots", false, "Only allows the player place to skin item into slots.").bind(v -> onlySkinIntoSlots = v, () -> onlySkinIntoSlots);
-                defineInRange("mobStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the mob starts with for skins.").bind(v -> prefersWardrobeMobSlots = v, () -> prefersWardrobeMobSlots);
-                defineInRange("playerStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the player starts with for skins.").bind(v -> prefersWardrobePlayerSlots = v, () -> prefersWardrobePlayerSlots);
-                defineInRange("playerDropSkinsOnDeath", 0, 0, 2, "Should skins be dropped on player death.", "0 = use keep inventory rule", "1 = never drop", "2 = always drop").bind(v -> prefersWardrobeDropOnDeath = v, () -> prefersWardrobeDropOnDeath);
+                define("allowOpening", true, "Allow the player to open the wardrobe GUI.").bind(it -> wardrobeAllowOpening = it, () -> wardrobeAllowOpening);
+                define("enableSkinTab", true, "Enable the wardrobe skins tab.").bind(it -> showWardrobeSkins = it, () -> showWardrobeSkins);
+                define("enableOutfitTab", true, "Enable the wardrobe outfits tab.").bind(it -> showWardrobeOutfits = it, () -> showWardrobeOutfits);
+                define("enableDisplayTab", true, "Enable the wardrobe display settings tab.").bind(it -> showWardrobeDisplaySettings = it, () -> showWardrobeDisplaySettings);
+                define("enableColourTab", true, "Enable the wardrobe colour settings tab.").bind(it -> showWardrobeColorSettings = it, () -> showWardrobeColorSettings);
+                define("enableDyeTab", true, "Enable the wardrobe dyes tab.").bind(it -> showWardrobeDyeSetting = it, () -> showWardrobeDyeSetting);
+                define("onlySkinIntoSlots", false, "Only allows the player place to skin item into slots.").bind(it -> onlySkinIntoSlots = it, () -> onlySkinIntoSlots);
+                defineInRange("mobStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the mob starts with for skins.").bind(it -> prefersWardrobeMobSlots = it, () -> prefersWardrobeMobSlots);
+                defineInRange("playerStartingSlots", 3, 1, SkinSlotType.getMaxSlotSize(), "Number of slot columns the player starts with for skins.").bind(it -> prefersWardrobePlayerSlots = it, () -> prefersWardrobePlayerSlots);
+                defineInRange("playerDropSkinsOnDeath", 0, 0, 2, "Should skins be dropped on player death.", "0 = use keep inventory rule", "1 = never drop", "2 = always drop").bind(it -> prefersWardrobeDropOnDeath = it, () -> prefersWardrobeDropOnDeath);
+            });
+            defineCategory("resource-pack", "Setting for the resource pack.", () -> {
+                define("resourceAuthCode", "", "Allow users to place a encrypted (auth-code mode) skin file into resource packs.").bind(it -> authCodeOfResourcePack = it, () -> authCodeOfResourcePack);
+                define("allowsServerSkinsInResourcePack", false, "If enabled the server will allow client use server skins in the resource pack.").bind(it -> allowsServerSkinsInResourcePack = it, () -> allowsServerSkinsInResourcePack);
             });
             defineCategory("library", "Setting for the library blocks.", () -> {
-                define("allowDownloadingSkins", false, "Allows clients to save skins from a server to their local computer using the library.").bind(v -> allowDownloadingSkins = v, () -> allowDownloadingSkins);
-                define("allowUploadingSkins", true, "Allows clients to load skins from their local computer onto the server using the library.").bind(v -> allowUploadingSkins = v, () -> allowUploadingSkins);
-                define("extractOfficialSkins", true, "Allow the mod to extract the official skins that come with the mod into the library folder.").bind(v -> extractOfficialSkins = v, () -> extractOfficialSkins);
+                define("allowDownloadingSkins", false, "Allows clients to save skins from a server to their local computer using the library.").bind(it -> allowDownloadingSkins = it, () -> allowDownloadingSkins);
+                define("allowUploadingSkins", true, "Allows clients to load skins from their local computer onto the server using the library.").bind(it -> allowUploadingSkins = it, () -> allowUploadingSkins);
+                define("extractOfficialSkins", true, "Allow the mod to extract the official skins that come with the mod into the library folder.").bind(it -> extractOfficialSkins = it, () -> extractOfficialSkins);
                 define("allowPreviewSkins", true, "Shows model previews in the library.", "Causes a lot of extra load on servers.", "Best to turn off on high population servers").bind(n -> allowLibraryPreviews = n, () -> allowLibraryPreviews);
-                define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(v -> allowLibraryRemoteManage = v, () -> allowLibraryRemoteManage);
+                define("allowManageSkins", false, "Allows clients to manage skins of the server computer library.", "Required permission level 5 or higher.").bind(it -> allowLibraryRemoteManage = it, () -> allowLibraryRemoteManage);
 
-                defineList("skinServerURLs", String.class, "We priority use https for the access token APIs.").bind(v -> customSkinServerURLs = new ArrayList<>(v), () -> new ArrayList<>(customSkinServerURLs));
+                defineList("skinServerURLs", String.class, "We priority use https for the access token APIs.").bind(it -> customSkinServerURLs = new ArrayList<>(it), () -> new ArrayList<>(customSkinServerURLs));
             });
             defineCategory("database", "Setting for the Database.", () -> {
-                define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(v -> skinDatabaseURL = v, null);
-                defineInRange("fallback", 0, 0, 2, "Use fallback when database is specified.", "0 = enable", "1 = disable", "2 = migrate to database").bind(v -> skinDatabaseFallback = v, null);
-                defineInRange("keepalive", 600, 0, 86400, "Keep alive time check when database is specified.", "the unit is seconds, 0 is disabled.").bind(v -> skinDatabaseKeepAlive = v, null);
+                define("skin", "", "Save/Load skin data for the database.", "example1: \"jdbc:mysql://<localhost>[:3306]/<database>[?user=<username>][&password=<password>]\"", "example2: \"jdbc:sqlite://</path/name.db>\"").bind(it -> skinDatabaseURL = it, null);
+                defineInRange("fallback", 0, 0, 2, "Use fallback when database is specified.", "0 = enable", "1 = disable", "2 = migrate to database").bind(it -> skinDatabaseFallback = it, null);
+                defineInRange("keepalive", 600, 0, 86400, "Keep alive time check when database is specified.", "the unit is seconds, 0 is disabled.").bind(it -> skinDatabaseKeepAlive = it, null);
             });
 
             defineCategory("holiday-events", "Enable/disable holiday events.", () -> {
-                define("disableAllHolidayEvents", false, "Setting to true will disable all holiday events. What's wrong with you!").bind(v -> disableAllHolidayEvents = v, () -> disableAllHolidayEvents);
+                define("disableAllHolidayEvents", false, "Setting to true will disable all holiday events. What's wrong with you!").bind(it -> disableAllHolidayEvents = it, () -> disableAllHolidayEvents);
             });
 
             defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {
-                defineInRange("expireTime", 86400, 0, 86400 * 365, "How long in seconds the server will keep skins in it's cache.", "Setting to 0 turns off this option.").bind(v -> skinCacheExpireTime = v, () -> skinCacheExpireTime);
-                defineInRange("maxSize", 2000, 0, 10000, "Max size the skin cache can reach before skins are removed.", "Setting to 0 turns off this option.").bind(v -> skinCacheMaxSize = v, () -> skinCacheMaxSize);
+                defineInRange("expireTime", 86400, 0, 86400 * 365, "How long in seconds the server will keep skins in it's cache.", "Setting to 0 turns off this option.").bind(it -> skinCacheExpireTime = it, () -> skinCacheExpireTime);
+                defineInRange("maxSize", 2000, 0, 10000, "Max size the skin cache can reach before skins are removed.", "Setting to 0 turns off this option.").bind(it -> skinCacheMaxSize = it, () -> skinCacheMaxSize);
             });
 
 //            config.setCategoryComment(CATEGORY_COMPATIBILITY, "Allows auto item skinning for supported mod to be enable/disable.");
@@ -156,8 +159,8 @@ public class ModConfigSpec {
             defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
                 defineList("itemOverrides", String.class, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
 
-                define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and object.").bind(v -> enableMatchingByItemId = v, () -> enableMatchingByItemId);
-                defineList("matchingBlacklistByItemId", String.class, "If the matching system wrong, you can add the item id here to this ignore it.").bind(v -> disableMatchingItems = new ArrayList<>(v), () -> new ArrayList<>(disableMatchingItems));
+                define("enableMatchingByItemId", true, "Tries to automatically assign the correct type of skin type without config and object.").bind(it -> enableMatchingByItemId = it, () -> enableMatchingByItemId);
+                defineList("matchingBlacklistByItemId", String.class, "If the matching system wrong, you can add the item id here to this ignore it.").bind(it -> disableMatchingItems = new ArrayList<>(it), () -> new ArrayList<>(disableMatchingItems));
             });
         }
     }

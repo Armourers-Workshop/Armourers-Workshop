@@ -2,15 +2,21 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
-public enum DataEncryptMethod {
+public class DataAlgorithm {
 
-    PASSWORD("password"),
-    AUTH("auth");
+    public static final DataAlgorithm PASSWORD = new DataAlgorithm("password");
+    public static final DataAlgorithm AUTH = new DataAlgorithm("auth");
+
+    private static final DataAlgorithm[] VALUES = {PASSWORD, AUTH};
 
     private final String method;
 
-    DataEncryptMethod(String method) {
+    private DataAlgorithm(String method) {
         this.method = method;
+    }
+
+    public static DataAlgorithm[] values() {
+        return VALUES;
     }
 
     public String key(String text) {
@@ -24,5 +30,4 @@ public enum DataEncryptMethod {
     public String method() {
         return method;
     }
-
 }

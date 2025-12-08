@@ -1,8 +1,8 @@
-package moe.plushie.armourers_workshop.core.client.bake;
+package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
+import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -10,17 +10,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinPreloadManager {
+public class PreloadableSkinManager {
 
     private static Object lastInventoryVersion = null;
 
     public static void start() {
         lastInventoryVersion = null;
-        EmbeddedItemModelDiscovery.start();
     }
 
     public static void stop() {
-        EmbeddedItemModelDiscovery.stop();
     }
 
     public static void tick(boolean isPaused) {

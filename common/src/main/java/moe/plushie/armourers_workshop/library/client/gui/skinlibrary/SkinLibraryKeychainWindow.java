@@ -5,7 +5,7 @@ import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.gui.widget.InputDialog;
-import moe.plushie.armourers_workshop.core.data.DataEncryptMethod;
+import moe.plushie.armourers_workshop.core.data.DataAlgorithm;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.exception.TranslatableException;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -20,7 +20,7 @@ public class SkinLibraryKeychainWindow {
 
     public void showInView(UIView view, IResultHandler<SkinFileOptions> consumer) {
         // password algorithm
-        if (securityData.startsWith(DataEncryptMethod.PASSWORD.method() + ";")) {
+        if (securityData.startsWith(DataAlgorithm.PASSWORD.method() + ";")) {
             var dialog = new InputDialog();
             dialog.setTitle(NSString.localizedString("skin-library.dialog.passwordProvider.title"));
             dialog.setMessageColor(UIColor.of(0xffff5555));
@@ -30,8 +30,8 @@ public class SkinLibraryKeychainWindow {
                 if (dialog.isCancelled()) {
                     return;
                 }
-                var password = DataEncryptMethod.PASSWORD.key(dialog.value());
-                var inputSecurityData = DataEncryptMethod.PASSWORD.signature(password);
+                var password = DataAlgorithm.PASSWORD.key(dialog.value());
+                var inputSecurityData = DataAlgorithm.PASSWORD.signature(password);
                 if (!securityData.equals(inputSecurityData)) {
                     consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalPassword"));
                     return;
@@ -44,7 +44,7 @@ public class SkinLibraryKeychainWindow {
             return;
         }
         // auth algorithm
-        if (securityData.startsWith(DataEncryptMethod.AUTH.method() + ";")) {
+        if (securityData.startsWith(DataAlgorithm.AUTH.method() + ";")) {
             var setting = SkinLibraryManager.getClient().setting();
             if (!securityData.equals(setting.publicKey())) {
                 consumer.abort(new TranslatableException("inventory.armourers_workshop.skin-library.error.illegalServer"));

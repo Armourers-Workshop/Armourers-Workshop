@@ -58,7 +58,7 @@ public abstract class SkinGuiElement implements CGGraphicsElement, IGraphicsElem
         if (skin == null) {
             return;
         }
-        var slot = new EntitySlot(skin, scheme, itemStack, SkinDescriptor.EMPTY, 0, EntitySlot.Type.UNKNOWN);
+        var slot = new EntitySlot(skin, scheme, itemStack, SkinDescriptor.EMPTY);
         slots.prepare(Collections.newList(slot));
     }
 

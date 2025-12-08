@@ -23,7 +23,7 @@ public abstract class ShaderVanillaMixin {
         AbstractClientHooks.createShaders();
         // this is a vanilla shader resource.
         if (AbstractShaderSelector.DEFAULT.contains(location)) {
-            var processor = new ShaderPreprocessor("vanilla", 2);
+            var processor = new ShaderPreprocessor("vanilla", 3);
             source = processor.process(source);
         }
         return original.call(instance, source);

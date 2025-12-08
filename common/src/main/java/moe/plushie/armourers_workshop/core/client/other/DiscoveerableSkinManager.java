@@ -1,10 +1,9 @@
-package moe.plushie.armourers_workshop.core.client.render.model;
+package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderState;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
@@ -20,14 +19,20 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 
 @OnlyIn(Dist.CLIENT)
-public class EmbeddedItemModelDiscovery {
+public class DiscoveerableSkinManager {
 
-    private static final HashMap<String, Entry> ENTRIES = new HashMap<>();
-    private static final IdentityHashMap<Object, Entry> BAKED_MODELS = new IdentityHashMap<>();
+    private static final DiscoveerableSkinManager INSTANCE = new DiscoveerableSkinManager();
+
+    private final HashMap<String, Entry> entries = new HashMap<>();
+    private final IdentityHashMap<Object, Entry> bakedModels = new IdentityHashMap<>();
+
+    public static DiscoveerableSkinManager getInstance() {
+        return INSTANCE;
+    }
 
     public static void start() {
-        for (var entry : ENTRIES.values()) {
-            entry.preload(SkinBakery.getInstance());
+        for (var entry : INSTANCE.entries.values()) {
+            entry.load();
         }
     }
 
@@ -35,24 +40,7 @@ public class EmbeddedItemModelDiscovery {
         // nope
     }
 
-    public static void reload(DataPackEvent.Reloading event) {
-        // when resource pack did changes, we need to clear invalid resource.
-        if (event.type() == DataPackType.CLIENT_RESOURCES) {
-            ModLog.debug("Reloading resource pack skins");
-            ENTRIES.clear();
-            BAKED_MODELS.clear();
-        }
-    }
-
-    public static SkinDescriptor resolve(ItemStackRenderState itemRenderState) {
-        var entry = BAKED_MODELS.get(itemRenderState.itemModel());
-        if (entry != null && entry.canUse()) {
-            return entry.descriptor;
-        }
-        return SkinDescriptor.EMPTY;
-    }
-
-    public static void bake(Object itemModel, OpenResourceLocation model) {
+    public void put(Object itemModel, OpenResourceLocation model) {
         try {
             var resourceManager = EnvironmentManager.getClientResourceManager();
             var location = model.withPath("models/" + model.path() + ".json");
@@ -63,11 +51,28 @@ public class EmbeddedItemModelDiscovery {
             var firstObject = rootObject.get("providers").get("layer0");
             var entry = new Entry(firstObject.stringValue());
             ModLog.debug("Registering resource pack skin: '{}' in '{}'", entry.identifier, model);
-            BAKED_MODELS.put(itemModel, entry);
-            ENTRIES.put(entry.identifier, entry);
-            entry.preload(SkinBakery.getInstance());
+            bakedModels.put(itemModel, entry);
+            entries.put(entry.identifier, entry);
+            entry.load();
         } catch (Exception e) {
             ModLog.warn("Unable to bake model: '{}', {}", model, e.getMessage());
+        }
+    }
+
+    public SkinDescriptor get(Object itemModel) {
+        var entry = bakedModels.get(itemModel);
+        if (entry != null && entry.canUse()) {
+            return entry.descriptor;
+        }
+        return SkinDescriptor.EMPTY;
+    }
+
+    public void reload(DataPackEvent.Reloading event) {
+        // when resource pack did changes, we need to clear invalid resource.
+        if (event.type() == DataPackType.CLIENT_RESOURCES) {
+            ModLog.debug("Reloading resource pack skins");
+            entries.clear();
+            bakedModels.clear();
         }
     }
 
@@ -84,14 +89,14 @@ public class EmbeddedItemModelDiscovery {
             this.descriptor = new SkinDescriptor(identifier);
         }
 
-        public void preload(SkinBakery bakery) {
+        public void load() {
             // when we can't use this skin, don't preload it.
             if (!canUse()) {
                 return;
             }
             ModLog.debug("'{}' => start preload skin", identifier);
             descriptor = new SkinDescriptor(identifier);
-            bakery.loadSkin(TicketManager.PRELOAD.get(identifier), this::complete);
+            SkinBakery.getInstance().loadSkin(TicketManager.PRELOAD.get(identifier), this::complete);
         }
 
         public void complete(BakedSkin bakedSkin, Throwable exception) {
@@ -105,7 +110,7 @@ public class EmbeddedItemModelDiscovery {
 
         public boolean canUse() {
             // because some server disallow user to bind skin to item by self, so we need respect the server options.
-            return isLocalFile || ModConfig.Common.enableServerSkinsInResourcePack;
+            return isLocalFile || ModConfig.Common.allowsServerSkinsInResourcePack;
         }
     }
 }

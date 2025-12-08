@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeEnvironment;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeOptiFineLoader;
 import moe.plushie.armourers_workshop.init.platform.VersionResolver;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,9 @@ public class VersionResolverImpl extends VersionResolver {
         if (fileInfo != null && !fileInfo.getMods().isEmpty()) {
             var version = fileInfo.getMods().get(0).getVersion();
             return version.toString();
+        }
+        if (modId.equals("optifine")) {
+            return AbstractForgeOptiFineLoader.getVersion();
         }
         return null;
     }

@@ -5,10 +5,10 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
+import moe.plushie.armourers_workshop.core.client.other.PreloadableSkinManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.client.bake.SkinPreloadManager;
+import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
-import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModelDiscovery;
 import moe.plushie.armourers_workshop.core.client.render.plugin.FallbackEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.render.plugin.LivingEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -128,7 +128,8 @@ public class ClientProxy {
                 return; // other players join
             }
             SkinBakery.start();
-            SkinPreloadManager.start();
+            PreloadableSkinManager.start();
+            DiscoveerableSkinManager.start();
             SmartSoundManager.getInstance().start();
             SmartTextureManager.getInstance().start();
             PlayerSkinBakery.start();
@@ -139,7 +140,8 @@ public class ClientProxy {
                 return; // other players leave
             }
             PlayerSkinBakery.stop();
-            SkinPreloadManager.stop();
+            DiscoveerableSkinManager.stop();
+            PreloadableSkinManager.stop();
             SkinBakery.stop();
             TicketManager.invalidateAll();
             SmartSoundManager.getInstance().stop();
@@ -162,7 +164,7 @@ public class ClientProxy {
             Scheduler.CLIENT.begin();
             AutoreleasePool.begin();
             TickUtils.tick(event.deltaTracker().isPaused() || event.deltaTracker().isFrozen()); // respect the /tick frozen command.
-            SkinPreloadManager.tick(event.deltaTracker().isPaused());
+            PreloadableSkinManager.tick(event.deltaTracker().isPaused());
         });
 
         EventBus.register(RenderFrameEvent.Post.class, event -> {
@@ -211,6 +213,6 @@ public class ClientProxy {
         EventBus.register(ItemTooltipEvent.Gather.class, ItemTooltipManager::gatherSkinTooltip);
         EventBus.register(ItemTooltipEvent.Render.class, ItemTooltipManager::renderSkinTooltip);
 
-        EventBus.register(DataPackEvent.Reloading.class, EmbeddedItemModelDiscovery::reload);
+        EventBus.register(DataPackEvent.Reloading.class, DiscoveerableSkinManager.getInstance()::reload);
     }
 }

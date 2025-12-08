@@ -3,8 +3,8 @@
 plugins {
     id "java"
     id "architectury-plugin" version "3.4.162"
-    id "dev.architectury.loom" version "1.11.458" apply false
-    id "moe.plushie.armourers_workshop.loom" version "2.3.10" apply false
+    id "dev.architectury.loom" version "1.13.467" apply false
+    id "moe.plushie.armourers_workshop.loom" version "3.0.0" apply false
 }
 
 architectury {
