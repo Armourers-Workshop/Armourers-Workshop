@@ -103,6 +103,10 @@ public class EntitySlot {
         return source;
     }
 
+    public SkinLightSource lightSource() {
+        return skin.renderInfo().lightSource();
+    }
+
     public SkinPaintScheme paintScheme() {
         return paintScheme;
     }

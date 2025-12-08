@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class BakedLuminanceCalculator {
+public class BakedSkinLightHandler {
 
     private static final OpenRectangle3f DEFAULT = new OpenRectangle3f(0, 0, 0, 8, 8, 8);
     private static final Map<SkinPartType, OpenRectangle3f> BOXES = Collections.immutableMap(it -> {
@@ -43,7 +43,7 @@ public class BakedLuminanceCalculator {
         it.put(SkinPartTypes.BIPPED_RIGHT_LEG, new OpenRectangle3f(0, 0, 0, 4, 12, 4));
     });
 
-    public static int apply(List<BakedSkinPart> skinParts) {
+    public static int calculate(List<BakedSkinPart> skinParts) {
         // only calculate when user requires accurate luminance.
         if (ModConfig.Client.skinDynamicLight >= 0) {
             return ModConfig.Client.skinDynamicLight;

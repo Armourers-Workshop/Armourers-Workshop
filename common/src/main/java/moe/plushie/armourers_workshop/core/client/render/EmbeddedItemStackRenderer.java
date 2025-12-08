@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderSt
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.SkinRenderState;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -42,7 +41,7 @@ public class EmbeddedItemStackRenderer {
         if (!itemRenderState.shouldRenderInGUI()) {
             var renderData = EntityRenderData.of(itemOwner);
             if (renderData != null) {
-                var entries = renderData.getItemSkins(itemStack, itemOwner instanceof MannequinEntity);
+                var entries = renderData.getHeldSkins(itemStack);
                 for (var entry : entries) {
                     return EmbeddedItemModel.fromWardrobe(entry, itemRenderState);
                 }
