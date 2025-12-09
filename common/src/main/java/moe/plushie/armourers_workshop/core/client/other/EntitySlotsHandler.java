@@ -172,9 +172,6 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         if (descriptor.isEmpty()) {
             return; // not found a skin in the item model.
         }
-        if (allSkins.stream().anyMatch(it -> it.type() == descriptor.type())) {
-            return; // already exists this skin type in the wardrobe or item stack.
-        }
         loadSkin(descriptor, itemStack, renderPriority, source);
     }
 
