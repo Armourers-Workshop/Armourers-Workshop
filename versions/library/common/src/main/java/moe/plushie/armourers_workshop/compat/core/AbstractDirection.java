@@ -19,17 +19,11 @@ public class AbstractDirection {
     });
 
     public static OpenDirection wrap(Direction direction) {
-        if (direction != null) {
-            return MAPPER.getKey(direction);
-        }
-        return null;
+        return MAPPER.getKey(direction);
     }
 
     public static Direction unwrap(OpenDirection direction) {
-        if (direction != null) {
-            return MAPPER.getValue(direction);
-        }
-        return null;
+        return MAPPER.getValue(direction);
     }
 
     public static Direction unwrap(IDirection direction) {

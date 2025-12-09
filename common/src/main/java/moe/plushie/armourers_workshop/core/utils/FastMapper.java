@@ -1,5 +1,8 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+
+import org.jetbrains.annotations.Contract;
+
 import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -23,8 +26,10 @@ public abstract class FastMapper<K, V> {
         return new EnumMapper<>(builder.defaultKey, builder.defaultValue, builder.keyToValue, builder.valueToKey);
     }
 
+    @Contract(value = "null -> null", pure = true)
     public abstract K getKey(V value);
 
+    @Contract(value = "null -> null", pure = true)
     public abstract V getValue(K key);
 
     public static class Builder<K, V> {
@@ -71,12 +76,18 @@ public abstract class FastMapper<K, V> {
 
         @Override
         public K getKey(V value) {
-            return keys.getOrDefault(value, defaultKey);
+            if (value != null) {
+                return keys.getOrDefault(value, defaultKey);
+            }
+            return defaultKey;
         }
 
         @Override
         public V getValue(K key) {
-            return values.getOrDefault(key, defaultValue);
+            if (key != null) {
+                return values.getOrDefault(key, defaultValue);
+            }
+            return defaultValue;
         }
     }
 
@@ -100,12 +111,18 @@ public abstract class FastMapper<K, V> {
 
         @Override
         public K getKey(V value) {
-            return keys[value.ordinal()];
+            if (value != null) {
+                return keys[value.ordinal()];
+            }
+            return null;
         }
 
         @Override
         public V getValue(K key) {
-            return values[key.ordinal()];
+            if (key != null) {
+                return values[key.ordinal()];
+            }
+            return null;
         }
     }
 }

@@ -100,9 +100,9 @@ public class SkinningTableSettingWindow extends ConfirmDialog {
                 @Override
                 public void set(SkinDescriptor.Options options, Boolean value) {
                     if (value) {
-                        options.setEnableEmbeddedItemRenderer(2);
+                        options.setEmbeddedItemRenderer(2);
                     } else {
-                        options.setEnableEmbeddedItemRenderer(0);
+                        options.setEmbeddedItemRenderer(0);
                     }
                 }
             };

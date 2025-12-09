@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render.state;
 
 import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemStackRenderState {
@@ -34,5 +35,14 @@ public class ItemStackRenderState {
 
     public boolean shouldRenderInGUI() {
         return shouldRenderInGUI;
+    }
+
+    public boolean shouldRenderItemRenderer(SkinDescriptor.Options options) {
+        // 0: auto, 1: disable, 2: enable, 3: enable without gui
+        return switch (options.embeddedItemRenderer()) {
+            case 3 -> !shouldRenderInGUI;
+            case 2 -> true;
+            default -> false;
+        };
     }
 }

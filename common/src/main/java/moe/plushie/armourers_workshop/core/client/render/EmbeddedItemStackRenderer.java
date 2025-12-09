@@ -48,13 +48,8 @@ public class EmbeddedItemStackRenderer {
             }
         }
         // Try to get skin descriptor from item stack.
-        var descriptor = SkinDescriptor.of(itemStack);
+        var descriptor = loadSkinFromState(itemRenderState);
         if (descriptor.isEmpty()) {
-            // Try to get skin descriptor from item model config.
-            descriptor = DiscoveerableSkinManager.getInstance().get(itemRenderState.itemModel());
-            if (!descriptor.isEmpty()) {
-                return EmbeddedItemModel.fromComponent(descriptor, itemRenderState);
-            }
             return null;
         }
         // when the item is a skin item itself,
@@ -64,7 +59,7 @@ public class EmbeddedItemStackRenderer {
         }
         // we allow server manually control the item whether to use the embedded renderer.
         if (descriptor.options().embeddedItemRenderer() != 0) {
-            if (descriptor.options().embeddedItemRenderer() == 2) {
+            if (itemRenderState.shouldRenderItemRenderer(descriptor.options())) {
                 return EmbeddedItemModel.fromComponent(descriptor, itemRenderState);
             }
             return null;
@@ -203,5 +198,19 @@ public class EmbeddedItemStackRenderer {
             slots.prepare(Collections.newList(slot));
         }
         return slots;
+    }
+
+    private static SkinDescriptor loadSkinFromState(ItemStackRenderState renderState) {
+        // Try to get skin descriptor from item stack.
+        var descriptor = SkinDescriptor.of(renderState.itemStack());
+        if (!descriptor.isEmpty()) {
+            return descriptor;
+        }
+        // Try to get skin descriptor from item model config.
+        descriptor = DiscoveerableSkinManager.getInstance().get(renderState.itemModel());
+        if (!descriptor.isEmpty()) {
+            return descriptor;
+        }
+        return SkinDescriptor.EMPTY;
     }
 }

@@ -177,28 +177,31 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
 
         public static final IDataCodec<Options> CODEC = ExtraCodecs.serializable(Options::new);
 
-        private int tooltipFlags = 0;
-        private int enableEmbeddedItemRenderer = 0;
+        private int tooltipFlags;
+        private int embeddedItemRenderer; // 0 auto, 1 disable, 2 enable, 3 enable without gui.
 
         public Options() {
+            this(0, 0);
+        }
+
+        public Options(int tooltipFlags, int embeddedItemRenderer) {
+            this.tooltipFlags = tooltipFlags;
+            this.embeddedItemRenderer = embeddedItemRenderer;
         }
 
         public Options(IDataSerializer serializer) {
             this.tooltipFlags = serializer.read(CodingKeys.TOOLTIP_FLAGS);
-            this.enableEmbeddedItemRenderer = serializer.read(CodingKeys.USING_EMBEDDED_RENDERER);
+            this.embeddedItemRenderer = serializer.read(CodingKeys.USING_EMBEDDED_RENDERER);
         }
 
         @Override
         public void serialize(IDataSerializer serializer) {
             serializer.write(CodingKeys.TOOLTIP_FLAGS, tooltipFlags);
-            serializer.write(CodingKeys.USING_EMBEDDED_RENDERER, enableEmbeddedItemRenderer);
+            serializer.write(CodingKeys.USING_EMBEDDED_RENDERER, embeddedItemRenderer);
         }
 
         public Options copy() {
-            var options = new Options();
-            options.tooltipFlags = tooltipFlags;
-            options.enableEmbeddedItemRenderer = enableEmbeddedItemRenderer;
-            return options;
+            return new Options(tooltipFlags, embeddedItemRenderer);
         }
 
 
@@ -206,12 +209,12 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Options that)) return false;
-            return tooltipFlags == that.tooltipFlags && enableEmbeddedItemRenderer == that.enableEmbeddedItemRenderer;
+            return tooltipFlags == that.tooltipFlags && embeddedItemRenderer == that.embeddedItemRenderer;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(tooltipFlags, enableEmbeddedItemRenderer);
+            return Objects.hash(tooltipFlags, embeddedItemRenderer);
         }
 
 
@@ -235,12 +238,12 @@ public class SkinDescriptor implements ISkinDescriptor, IDataSerializable.Immuta
             return (tooltipFlags & flags.flags) == 0;
         }
 
-        public void setEnableEmbeddedItemRenderer(int enableEmbeddedItemRenderer) {
-            this.enableEmbeddedItemRenderer = enableEmbeddedItemRenderer;
+        public void setEmbeddedItemRenderer(int embeddedItemRenderer) {
+            this.embeddedItemRenderer = embeddedItemRenderer;
         }
 
         public int embeddedItemRenderer() {
-            return enableEmbeddedItemRenderer;
+            return embeddedItemRenderer;
         }
     }
 

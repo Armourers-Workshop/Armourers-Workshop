@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.AbstractItemModelFinder;
 import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
@@ -9,6 +10,9 @@ import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -48,8 +52,7 @@ public class DiscoveerableSkinManager {
             if (rootObject == null) {
                 return;
             }
-            var firstObject = rootObject.get("providers").get("layer0");
-            var entry = new Entry(firstObject.stringValue());
+            var entry = new Entry(rootObject);
             ModLog.debug("Registering resource pack skin: '{}' in '{}'", entry.identifier, model);
             bakedModels.put(itemModel, entry);
             entries.put(entry.identifier, entry);
@@ -82,10 +85,10 @@ public class DiscoveerableSkinManager {
 
         private SkinDescriptor descriptor;
 
-        public Entry(String identifier) {
-            this.identifier = identifier;
+        public Entry(IODataObject object) {
+            this.identifier = object.get("providers").get("layer0").stringValue();
             this.isLocalFile = DataDomain.isLocal(identifier);
-            this.descriptor = new SkinDescriptor(identifier);
+            this.descriptor = new SkinDescriptor(identifier, SkinTypes.UNKNOWN, parseOptions(object.get("options")), SkinPaintScheme.EMPTY);
         }
 
         public void load() {
@@ -94,7 +97,7 @@ public class DiscoveerableSkinManager {
                 return;
             }
             ModLog.debug("'{}' => start preload skin", identifier);
-            descriptor = new SkinDescriptor(identifier);
+            descriptor = descriptor.withType(SkinTypes.UNKNOWN);
             SkinBakery.getInstance().loadSkin(TicketManager.PRELOAD.get(identifier), this::complete);
         }
 
@@ -104,12 +107,21 @@ public class DiscoveerableSkinManager {
                 return;
             }
             ModLog.debug("'{}' => did preload skin", identifier);
-            descriptor = new SkinDescriptor(identifier, bakedSkin.type());
+            descriptor = descriptor.withType(bakedSkin.type());
         }
 
         public boolean canUse() {
             // because some server disallow user to bind skin to item by self, so we need respect the server options.
             return isLocalFile || ModConfig.Common.allowsServerSkinsInResourcePack;
+        }
+
+        private SkinDescriptor.Options parseOptions(IODataObject object) {
+            // default is always enable embedded item renderer.
+            var options = new SkinDescriptor.Options(0, 2);
+            object.get("embeddedItemRenderer").ifPresent(it -> {
+                options.setEmbeddedItemRenderer(it.intValue());
+            });
+            return options;
         }
     }
 }

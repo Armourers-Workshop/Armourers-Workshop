@@ -14,16 +14,10 @@ public class AbstractInteractionHand {
     });
 
     public static OpenInteractionHand wrap(InteractionHand hand) {
-        if (hand != null) {
-            return MAPPER.getKey(hand);
-        }
-        return null;
+        return MAPPER.getKey(hand);
     }
 
     public static InteractionHand unwrap(OpenInteractionHand hand) {
-        if (hand != null) {
-            return MAPPER.getValue(hand);
-        }
-        return null;
+        return MAPPER.getValue(hand);
     }
 }
