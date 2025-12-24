@@ -13,7 +13,7 @@ public class AbstractFabricRegisterServerDataPackEvent {
 
     public static IEventHandler<RegisterServerDataPackEvent> registryFactory() {
         return (priority, receiveCancelled, subscriber) -> subscriber.accept(loader -> {
-            var name = ModConstants.key("custom-server-data-pack").toLocation();
+            var name = ModConstants.key("custom-server-data-pack").get();
             var resourceLoader = new AbstractFabricResourceLoader(name, loader);
             ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(resourceLoader);
         });

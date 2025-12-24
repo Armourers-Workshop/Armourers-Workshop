@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractForgeRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {

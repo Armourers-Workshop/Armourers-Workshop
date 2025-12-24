@@ -13,7 +13,7 @@ public abstract class AbstractForgeRegistryImpl {
 
     public static <T> TypedProvider<T> from(Registry<T> registry) {
         return TypedProvider.passthrough((registryName, value) -> {
-            Registry.register(registry, registryName.toLocation(), value);
+            Registry.register(registry, registryName.get(), value);
         });
     }
 

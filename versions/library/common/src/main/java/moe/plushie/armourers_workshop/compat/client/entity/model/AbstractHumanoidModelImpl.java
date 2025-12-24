@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractHumanoidModelImpl<T extends LivingEntity> extends PlayerModel<T> {
 

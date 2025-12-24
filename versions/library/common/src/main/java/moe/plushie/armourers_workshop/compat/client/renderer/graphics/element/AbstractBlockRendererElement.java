@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractBlockRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
 

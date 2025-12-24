@@ -1,0 +1,49 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.graphics.element;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderable;
+import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.entity.Entity;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractEntityRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
+
+    private final Entity entity;
+    private final float f;
+    private final float partialTick;
+    private final int lightmap;
+    private final int overlay;
+
+    protected AbstractEntityRendererElement(Entity entity, float f, float partialTick, int lightmap, int overlay) {
+        this.entity = entity;
+        this.f = f;
+        this.partialTick = partialTick;
+        this.lightmap = lightmap;
+        this.overlay = overlay;
+    }
+
+    public static AbstractEntityRendererElement newInstance(Entity entity, float f, float partialTick, int lightmap, int overlay) {
+        return new AbstractEntityRendererElement(entity, f, partialTick, lightmap, overlay);
+    }
+
+    @Override
+    public void render(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        var dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        var entityRenderer = dispatcher.getRenderer(entity);
+
+        var renderState = entityRenderer.createRenderState(entity, partialTick);
+        renderState.lightCoords = lightmap;
+        renderState.hitboxesRenderState = null;
+        renderState.shadowPieces.clear();
+        renderState.outlineColor = 0;
+
+        dispatcher.submit(renderState, cameraRenderState, 0.0, 0.0, 0.0, poseStack, submitNodeCollector);
+    }
+}

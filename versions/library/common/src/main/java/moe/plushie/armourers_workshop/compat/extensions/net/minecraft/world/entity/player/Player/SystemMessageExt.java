@@ -5,6 +5,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import manifold.ext.rt.api.Extension;
 
 @Extension
-@Available("[1.19, 1.22)")
+@Available("[1.19, 1.26)")
 public class SystemMessageExt {
 }

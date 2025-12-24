@@ -14,11 +14,11 @@ import manifold.ext.rt.api.This;
 public class ABI {
 
     public static void register(@This TextureManager textureManager, OpenResourceLocation location, AbstractTexture texture) {
-        textureManager.register(location.toLocation(), texture);
+        textureManager.register(location.get(), texture);
     }
 
     public static void release(@This TextureManager textureManager, OpenResourceLocation location) {
         // the vanilla doesn't have a remove and close, so we set to missing texture.
-        textureManager.register(location.toLocation(), MissingTextureAtlasSprite.getTexture());
+        textureManager.register(location.get(), MissingTextureAtlasSprite.getTexture());
     }
 }

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @Mixin(FishingHookRenderer.class)
 public class FishingHookRendererMixin<T extends FishingHook, S extends FishingHookRenderState> implements IEntityModel.Provider<S> {
 

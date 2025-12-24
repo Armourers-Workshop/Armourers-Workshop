@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEven
 import moe.plushie.armourers_workshop.init.platform.fabric.EventManagerImpl;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractFabricRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
-        return EventManagerImpl.factory(() -> ((registryName, item, property) -> FabricModelPredicateProviderRegistry.register(item, registryName.toLocation(), property::getValue)));
+        return EventManagerImpl.factory(() -> ((registryName, item, property) -> FabricModelPredicateProviderRegistry.register(item, registryName.get(), property::getValue)));
     }
 }

@@ -56,18 +56,18 @@ public class AbstractFabricNetwork {
         @Override
         public void register() {
             ServerLoginConnectionEvents.QUERY_START.register(this::onServerQueryEvent);
-            ServerLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onServerLoginEvent);
-            ServerPlayNetworking.registerGlobalReceiver(channelName.toLocation(), this::onServerEvent);
+            ServerLoginNetworking.registerGlobalReceiver(channelName.get(), this::onServerLoginEvent);
+            ServerPlayNetworking.registerGlobalReceiver(channelName.get(), this::onServerEvent);
 
             EnvironmentExecutor.runOnClient(() -> () -> {
-                ClientLoginNetworking.registerGlobalReceiver(channelName.toLocation(), this::onClientLoginEvent);
-                ClientPlayNetworking.registerGlobalReceiver(channelName.toLocation(), this::onClientEvent);
+                ClientLoginNetworking.registerGlobalReceiver(channelName.get(), this::onClientLoginEvent);
+                ClientPlayNetworking.registerGlobalReceiver(channelName.get(), this::onClientEvent);
             });
         }
 
         public void onServerQueryEvent(Object handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
             if (ModConfig.Common.enableProtocolCheck) {
-                sender.sendPacket(channelName.toLocation(), PacketByteBufs.empty());
+                sender.sendPacket(channelName.get(), PacketByteBufs.empty());
             }
         }
 
@@ -212,7 +212,7 @@ public class AbstractFabricNetwork {
         }
 
         public Packet<?> buildPacket(IFriendlyByteBuf buf, OpenResourceLocation channelName) {
-            return builder.get().apply(channelName.toLocation(), (FriendlyByteBuf) buf.asByteBuf());
+            return builder.get().apply(channelName.get(), (FriendlyByteBuf) buf.asByteBuf());
         }
     }
 }

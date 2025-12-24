@@ -14,7 +14,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class Constructor {
 
     public static <T extends Entity> T create(@This EntityType<T> entityType, ServerLevel level, BlockPos pos, @Nullable ItemStack itemStack, IEntitySpawnReason reason) {

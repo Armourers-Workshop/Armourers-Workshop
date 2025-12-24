@@ -32,7 +32,7 @@ public class AbstractForgeNetwork {
 
         @Override
         public void register() {
-            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.toLocation());
+            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.get());
             AbstractForgeNetworkImpl.register(channelName.namespace(), channelVersion, Proxy.TYPE, Proxy.CODEC, this::handleServerboundData, this::handleClientboundData);
         }
 

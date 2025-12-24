@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> extends AbstractBlockEntityRendererImpl<T> implements IBlockEntityRenderer<T, S> {
 

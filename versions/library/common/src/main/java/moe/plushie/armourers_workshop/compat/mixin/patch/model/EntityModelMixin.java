@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Collection;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @Mixin(EntityModel.class)
 public abstract class EntityModelMixin<S> implements IEntityModel<S> {
 

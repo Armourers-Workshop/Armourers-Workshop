@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractForgeCapability<T> implements IEntityCapability<T> {
 
     private static final TypedProvider<AttachmentType<?>> REGISTRY = AbstractForgeRegistry.from(NeoForgeRegistries.ATTACHMENT_TYPES);
@@ -35,7 +35,7 @@ public class AbstractForgeCapability<T> implements IEntityCapability<T> {
 
     public AbstractForgeCapability(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         this.factory = factory;
-        this.capability = EntityCapability.createVoid(registryName.toLocation(), type);
+        this.capability = EntityCapability.createVoid(registryName.get(), type);
         this.attachmentType = REGISTRY.register(registryName, key -> AttachmentType.serializable(this::create).build());
         // register into all entity.
         AbstractForgeEventBus.observer(RegisterCapabilitiesEvent.class, event -> {

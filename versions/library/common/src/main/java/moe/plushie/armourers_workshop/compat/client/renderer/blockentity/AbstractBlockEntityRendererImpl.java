@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> implements BlockEntityRenderer<T> {
 
@@ -43,12 +43,12 @@ public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> imp
 
     public abstract void render(T entity, float f, PoseStack poseStack, MultiBufferSource bufferSource, int i, int j, Vec3 pos);
 
-    @Patch("implemented in 1.22+")
+    @Patch("implemented in 1.26+")
     public final void render(T entity, float f, PoseStack poseStack, MultiBufferSource bufferSource, int i, int j) {
         render(entity, f, poseStack, bufferSource, i, j, Vec3.ZERO);
     }
 
-    @Patch("implemented in 1.22+")
+    @Patch("implemented in 1.26+")
     public boolean shouldRenderOffScreen() {
         return false;
     }

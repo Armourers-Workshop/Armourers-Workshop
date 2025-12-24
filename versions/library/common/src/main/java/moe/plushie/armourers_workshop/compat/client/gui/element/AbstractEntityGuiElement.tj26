@@ -1,0 +1,112 @@
+package moe.plushie.armourers_workshop.compat.client.gui.element;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.core.client.gui.element.EntityGuiElement;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
+
+import java.util.IdentityHashMap;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractEntityGuiElement extends EntityGuiElement implements AbstractEntityGuiElementImpl {
+
+    private final Entity entity;
+
+    private final int lightmap;
+    private final int overlay;
+
+    private final float tx;
+    private final float ty;
+    private final float rx;
+    private final float ry;
+    private final float scale;
+
+    private final DrawState<?, ?> drawState;
+
+    protected AbstractEntityGuiElement(Entity entity, int lightmap, int overlay, CGPoint origin, float scale, CGPoint focus) {
+        this.entity = entity;
+        this.lightmap = lightmap;
+        this.overlay = overlay;
+        this.tx = origin.x();
+        this.ty = origin.y();
+        this.rx = (float) Math.atan((0 - focus.y) / 40.0f);
+        this.ry = (float) Math.atan((0 - focus.x) / 40.0f);
+        this.scale = scale;
+        this.drawState = new DrawState<>(entity, Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity));
+    }
+
+    public static AbstractEntityGuiElement newInstance(Entity entity, int lightmap, int overlay, CGPoint origin, float scale, CGPoint focus) {
+        return new AbstractEntityGuiElement(entity, lightmap, overlay, origin, scale, focus);
+    }
+
+    @Override
+    public void prepare(CGGraphicsContext context) {
+        super.prepare(context);
+
+        // extract the render state when create the element.
+        apply(entity, rx, ry, () -> drawState.extract(1.0f));
+    }
+
+    @Override
+    public void render(IPoseStack poseStack, IBufferSource bufferSource) {
+        var quaternion = OpenVector3f.ZP.rotationDegrees(180.0f);
+        var quaternion2 = OpenVector3f.XP.rotationDegrees(rx * 20.0f);
+        quaternion.multiply(quaternion2);
+
+        poseStack.pushPose();
+        poseStack.translate(tx, ty, 50.0f);
+        poseStack.multiply(OpenMatrix4f.createScaleMatrix(scale, scale, -scale));
+        //poseStack.translate(0, center, 0);
+        poseStack.rotate(quaternion);
+
+        renderEntityInInventory(drawState.renderState, lightmap, overlay, OpenVector3f.ZERO, quaternion2, poseStack, bufferSource);
+
+        poseStack.popPose();
+    }
+
+    private static class DrawState<T extends Entity, S extends EntityRenderState> {
+
+        private static final IdentityHashMap<EntityRenderer<?, ?>, EntityRenderState> POOL = new IdentityHashMap<>();
+
+        private final T entity;
+        private final S renderState;
+        private final EntityRenderer<? super T, S> entityRenderer;
+
+        private DrawState(T entity, EntityRenderer<? super T, S> entityRenderer) {
+            this.entity = entity;
+            this.entityRenderer = entityRenderer;
+            this.renderState = poll();
+        }
+
+        public void extract(float f) {
+            entityRenderer.extractRenderState(entity, renderState, f);
+            //
+            renderState.lightCoords = LightmapTexture.DEFAULT;
+            renderState.shadowPieces.clear();
+            renderState.outlineColor = 0;
+        }
+
+        private S poll() {
+            var renderState = POOL.get(entityRenderer);
+            if (renderState == null) {
+                var state = entityRenderer.createRenderState();
+                POOL.put(entityRenderer, state);
+                renderState = state;
+            }
+            return Objects.unsafeCast(renderState);
+        }
+    }
+}

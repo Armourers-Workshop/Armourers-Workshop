@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import net.minecraft.client.model.Model;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEntityModel {
 

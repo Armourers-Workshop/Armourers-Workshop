@@ -1,15 +1,19 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterOnceLifetime extends SkinParticleComponent {
+/**
+ * Emitter will execute once, and once the lifetime ends or the number of particles allowed to emit have emitted, the emitter expires.
+ */
+public class EmitterOnceLifetime implements SkinParticleComponent {
 
+    /// how long the particles emit for evaluated once.
     private final OpenPrimitive activeTime;
 
     public EmitterOnceLifetime(OpenPrimitive activeTime) {
@@ -26,14 +30,20 @@ public class EmitterOnceLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var activeTime = builder.compile(this.activeTime, 10.0);
-        builder.updateEmitter((emitter, context) -> {
+    public void compile(SkinParticleGenerator generator) {
+        var activeTime = generator.compile(this.activeTime, 10.0);
+        generator.emitter().tick((emitter, context) -> {
             var active = activeTime.compute(context);
-            emitter.setDuration(active);
-            if (emitter.getTime() >= emitter.getDuration()) {
+            var time = emitter.time();
+            if (time >= active) {
                 emitter.stop();
             }
+            emitter.setDuration(active);
         });
+    }
+
+    @Override
+    public int priority() {
+        return -10;
     }
 }

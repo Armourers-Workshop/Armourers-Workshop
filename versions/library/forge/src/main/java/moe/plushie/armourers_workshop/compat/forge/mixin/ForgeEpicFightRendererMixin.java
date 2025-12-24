@@ -25,7 +25,7 @@ import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRender
 import yesman.epicfight.client.renderer.patched.layer.EmptyLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Conditional("epicfight")
 @Pseudo
 @Mixin(PatchedLivingEntityRenderer.class)

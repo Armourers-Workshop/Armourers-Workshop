@@ -1,0 +1,33 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.item.Item;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.26, )")
+@Extension
+public class NameExt {
+
+    @Extension
+    public static class Properties {
+
+        public static Item.Properties setId(@This Item.Properties properties, OpenResourceLocation id) {
+            return properties.setId(ResourceKey.create(Registries.ITEM, id.get()));
+        }
+
+        public static Item.Properties useDescriptionPrefix(@This Item.Properties properties, String prefix) {
+            if (prefix.equals("block")) {
+                return properties.useBlockDescriptionPrefix();
+            }
+            if (prefix.equals("item")) {
+                return properties.useItemDescriptionPrefix();
+            }
+            throw new IllegalArgumentException("Unknown prefix: " + prefix);
+        }
+    }
+}

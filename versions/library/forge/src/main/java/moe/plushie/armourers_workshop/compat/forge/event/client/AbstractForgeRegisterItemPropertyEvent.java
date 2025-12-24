@@ -6,13 +6,13 @@ import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl
 import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractForgeRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
         return AbstractForgeCommonEventsImpl.FML_LOAD_COMPLETE.map(event -> (registryName, item, property) -> {
             // forward
-            ItemProperties.register(item, registryName.toLocation(), property::getValue);
+            ItemProperties.register(item, registryName.get(), property::getValue);
         });
     }
 }

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractItemTransform {
 
     public static OpenItemTransform wrap(ItemTransform transform) {

@@ -1,16 +1,24 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class ParticleInitialSpin extends SkinParticleComponent {
+/**
+ * Starts the particle with a specified orientation and rotation rate.
+ */
+public class ParticleInitialSpin implements SkinParticleComponent {
 
+    /// specifies the initial rotation in degrees
+    /// evaluated once
     private final OpenPrimitive rotation;
+
+    /// specifies the spin rate in degrees/second
+    /// evaluated once
     private final OpenPrimitive rotationRate;
 
     public ParticleInitialSpin(OpenPrimitive rotation, OpenPrimitive rotationRate) {
@@ -30,15 +38,14 @@ public class ParticleInitialSpin extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var rotation = builder.compile(this.rotation, 0.0);
-        var rotationRate = builder.compile(this.rotationRate, 0.0);
-        builder.applyParticle((emitter, particle, context) -> {
-            var rot = rotation.compute(context);
-            var velocity = rotationRate.compute(context);
-            // TODO: NO IMPL @SAGESSE
-//            particle.initialRotation = (float) rot;
-//            particle.rotationVelocity = (float) velocity / 20;
+    public void compile(SkinParticleGenerator generator) {
+        var rotation = generator.compile(this.rotation, 0.0);
+        var rotationRate = generator.compile(this.rotationRate, 0.0);
+        generator.instance().prepare((emitter, particle, context) -> {
+            var rot = (float) rotation.compute(context);
+            var velocity = (float) rotationRate.compute(context);
+            particle.setRotationInitial(rot);
+            particle.setRotationVelocity(velocity / 20.0f);
         });
     }
 }

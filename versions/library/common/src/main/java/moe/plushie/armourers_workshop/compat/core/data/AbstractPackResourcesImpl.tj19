@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.FilePackResources;
@@ -34,7 +35,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
 
     @Override
     public final InputStream getResource(PackType packType, ResourceLocation location) throws IOException {
-        var supplier = getResource(packType, OpenResourceLocation.of(location));
+        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
         if (supplier != null) {
             return supplier.get();
         }
@@ -48,7 +49,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
 
     @Override
     public boolean hasResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, OpenResourceLocation.of(location));
+        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
         return supplier != null;
     }
 

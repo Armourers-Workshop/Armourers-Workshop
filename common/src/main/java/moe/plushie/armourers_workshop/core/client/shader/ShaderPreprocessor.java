@@ -138,6 +138,7 @@ public class ShaderPreprocessor {
             builder.append("#else\n");
             builder.append("uniform int aw_MatrixFlags = 0;\n");
             builder.append("#endif\n");
+            builder.append("\n");
             builder.append("void aw_main_pre() {\n");
             builder.append("  if ((aw_MatrixFlags & 0x01) != 0) {\n");
             builder.append("    ", initializer2, ";\n");

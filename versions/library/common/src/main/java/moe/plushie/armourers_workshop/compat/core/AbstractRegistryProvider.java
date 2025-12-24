@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractRegistryProvider<T> {
 
     @Nullable

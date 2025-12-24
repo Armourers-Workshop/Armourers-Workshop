@@ -44,14 +44,14 @@ public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> ext
         return context -> AbstractBlockEntityRenderer.unwrap(provider.create(wrap(context)));
     }
 
-    @Patch("implemented in 1.22+")
+    @Patch("implemented in 1.26+")
     public abstract void render(T entity, float f, PoseStack poseStack, MultiBufferSource bufferSource, int i, int j, Vec3 pos);
 
     public final void render(T entity, float f, PoseStack poseStack, MultiBufferSource bufferSource, int i, int j) {
         this.render(entity, f, poseStack, bufferSource, i, j, null);
     }
 
-    @Patch("implemented in 1.22+")
+    @Patch("implemented in 1.26+")
     public boolean shouldRenderOffScreen() {
         return false;
     }

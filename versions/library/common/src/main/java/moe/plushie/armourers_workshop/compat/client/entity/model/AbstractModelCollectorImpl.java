@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 
 import java.util.Map;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractModelCollectorImpl {
 
     public static void apply(Map<String, Map<String, String>> builder) {

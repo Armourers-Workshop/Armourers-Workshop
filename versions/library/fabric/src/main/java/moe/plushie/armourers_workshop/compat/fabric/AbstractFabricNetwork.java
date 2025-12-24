@@ -55,24 +55,24 @@ public class AbstractFabricNetwork {
 
         @Override
         public void register() {
-            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.toLocation());
+            Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.get());
 
             PayloadTypeRegistry.playC2S().register(Proxy.TYPE, Proxy.CODEC);
             PayloadTypeRegistry.playS2C().register(Proxy.TYPE, Proxy.CODEC);
 
             AbstractFabricServerNetworking.registerQueryReceiver(this::onServerQueryEvent);
-            AbstractFabricServerNetworking.registerLoginReceiver(channelName.toLocation(), this::onServerLoginEvent);
+            AbstractFabricServerNetworking.registerLoginReceiver(channelName.get(), this::onServerLoginEvent);
             AbstractFabricServerNetworking.registerPlayReceiver(Proxy.TYPE, this::onServerPlayEvent);
 
             EnvironmentExecutor.runOnClient(() -> () -> {
-                AbstractFabricClientNetworking.registerLoginReceiver(channelName.toLocation(), this::onClientLoginEvent);
+                AbstractFabricClientNetworking.registerLoginReceiver(channelName.get(), this::onClientLoginEvent);
                 AbstractFabricClientNetworking.registerPlayReceiver(Proxy.TYPE, this::onClientEvent);
             });
         }
 
         public void onServerQueryEvent(MinecraftServer server, ServerLoginPacketListenerImpl handler, ServerLoginNetworking.LoginSynchronizer synchronizer, LoginPacketSender sender) {
             if (ModConfig.Common.enableProtocolCheck) {
-                sender.sendPacket(channelName.toLocation(), PacketByteBufs.empty());
+                sender.sendPacket(channelName.get(), PacketByteBufs.empty());
             }
         }
 

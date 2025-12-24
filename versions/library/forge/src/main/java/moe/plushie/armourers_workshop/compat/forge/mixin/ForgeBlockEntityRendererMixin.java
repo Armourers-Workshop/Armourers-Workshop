@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @Mixin(AbstractBlockEntityRendererImpl.class)
 public abstract class ForgeBlockEntityRendererMixin<T extends BlockEntity> implements BlockEntityRenderer<T> {
 

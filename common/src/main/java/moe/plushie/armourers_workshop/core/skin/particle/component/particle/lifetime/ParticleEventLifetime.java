@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
@@ -11,10 +11,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParticleEventLifetime extends SkinParticleComponent {
+/**
+ * This component allows for triggering events based on various lifetime events.
+ */
+public class ParticleEventLifetime implements SkinParticleComponent {
 
+    /// fires when the particle is created
     private final List<String> creation;
+
+    /// fires when the particle expires (does not wait for particles to expire too)
     private final List<String> expiration;
+
+    /// a series of times, e.g. 0.0 or 1.0, that trigger the event
+    /// "time" is the time, e.g. one line might be: {"0.4":"event"}
     private final Map<Float, List<String>> timelineEvents;
 
     public ParticleEventLifetime(List<String> creation, List<String> expiration, Map<Float, List<String>> timelineEvents) {
@@ -37,7 +46,7 @@ public class ParticleEventLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
+    public void compile(SkinParticleGenerator generator) {
         // TODO: NO IMPL @SAGESSE
     }
 

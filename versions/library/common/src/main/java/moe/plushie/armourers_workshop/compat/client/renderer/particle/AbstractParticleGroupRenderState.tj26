@@ -1,0 +1,69 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.particle;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IGraphicsRenderable;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderable;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.ParticleGroupRenderState;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractParticleGroupRenderState implements ParticleGroupRenderState, SceneGraphicsRenderer {
+
+    private final AbstractPoseStack poseStack = new AbstractPoseStack();
+    private final ArrayList<Entry> entries = new ArrayList<>();
+
+    @Override
+    public void clear() {
+        entries.clear();
+    }
+
+    @Override
+    public void submit(IGraphicsRenderable renderable) {
+        entries.add(new Entry(poseStack.last(), it -> it.submit(renderable)));
+    }
+
+    @Override
+    public void submit(AbstractGraphicsRenderable renderable) {
+        entries.add(new Entry(poseStack.last(), it -> it.submit(renderable)));
+    }
+
+    @Override
+    public void submit(SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        var context = AbstractGraphicsRenderer.wrap(new PoseStack(), submitNodeCollector, cameraRenderState);
+        entries.forEach(it -> it.submit(context.renderer()));
+    }
+
+    @Override
+    public IPoseStack poseStack() {
+        return poseStack;
+    }
+
+    private static class Entry {
+
+        private final IPoseStack.Pose pose;
+        private final Consumer<SceneGraphicsRenderer> provider;
+
+        private Entry(IPoseStack.Pose pose, Consumer<SceneGraphicsRenderer> provider) {
+            this.pose = new OpenPoseStack.Pose(pose);
+            this.provider = provider;
+        }
+
+        public void submit(SceneGraphicsRenderer renderer) {
+            renderer.poseStack().last().set(pose);
+            provider.accept(renderer);
+        }
+    }
+}

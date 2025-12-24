@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @Conditional("roughlyenoughitems")
 @Pseudo
 @Mixin(targets = "me.shedaniel.rei.plugin.client.entry.ItemEntryDefinition$ItemEntryRenderer")

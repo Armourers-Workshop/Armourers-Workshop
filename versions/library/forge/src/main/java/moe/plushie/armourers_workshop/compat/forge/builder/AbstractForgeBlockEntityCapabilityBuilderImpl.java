@@ -5,7 +5,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractForgeBlockEntityCapabilityBuilderImpl {
 
     public static final auto BLOCK_ITEM_HANDLER = Capabilities.ItemHandler.BLOCK;

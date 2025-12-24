@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.api.core;
 
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
 
-public interface IResourceLocation {
+public interface IResourceLocation extends AbstractResourceLocation {
 
     String namespace();
 
@@ -11,10 +11,6 @@ public interface IResourceLocation {
     IResourceLocation withNamespace(String namespace);
 
     IResourceLocation withPath(String path);
-
-    default ResourceLocation toLocation() {
-        return ResourceLocation.create(namespace(), path());
-    }
 
     default String toLanguageKey() {
         return namespace() + "." + path();

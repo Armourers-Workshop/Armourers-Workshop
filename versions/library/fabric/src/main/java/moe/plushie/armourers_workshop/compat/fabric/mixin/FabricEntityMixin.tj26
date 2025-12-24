@@ -1,0 +1,39 @@
+package moe.plushie.armourers_workshop.compat.fabric.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.data.serializer.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.data.CapabilityStorage;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.26, )")
+@Mixin(Entity.class)
+public class FabricEntityMixin implements CapabilityStorage.Provider {
+
+    public CapabilityStorage aw2$capabilityStorage;
+
+    @Override
+    public CapabilityStorage getCapabilityStorage() {
+        if (aw2$capabilityStorage == null) {
+            aw2$capabilityStorage = CapabilityStorage.attachCapability(Entity.class.cast(this));
+        }
+        return aw2$capabilityStorage;
+    }
+
+    @Inject(method = "saveWithoutId", at = @At(value = "RETURN"))
+    private void aw2$save(ValueOutput output, CallbackInfo ci) {
+        var entity = Entity.class.cast(this);
+        getCapabilityStorage().save(entity, AbstractDataSerializer.wrap(output));
+    }
+
+    @Inject(method = "load", at = @At(value = "RETURN"))
+    private void aw2$load(ValueInput input, CallbackInfo ci) {
+        var entity = Entity.class.cast(this);
+        getCapabilityStorage().load(entity, AbstractDataSerializer.wrap(input));
+    }
+}

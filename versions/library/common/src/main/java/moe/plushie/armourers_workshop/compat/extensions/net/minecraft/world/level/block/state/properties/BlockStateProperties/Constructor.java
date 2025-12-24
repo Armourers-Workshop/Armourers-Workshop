@@ -9,7 +9,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
 @Extension
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class Constructor {
 
     public static DirectionProperty createDirectionProperty(@ThisClass Class<?> clazz, String name) {

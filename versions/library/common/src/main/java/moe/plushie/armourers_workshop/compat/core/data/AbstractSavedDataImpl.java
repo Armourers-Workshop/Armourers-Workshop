@@ -8,7 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public abstract class AbstractSavedDataImpl extends SavedData implements IDataSerializable.Mutable {
 
     @Override

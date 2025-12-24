@@ -1,0 +1,32 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.entity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractEntityRendererImpl<T extends Entity, S extends EntityRenderState> extends EntityRenderer<T, S> {
+
+    public AbstractEntityRendererImpl(IEntityRenderer.Context context) {
+        super(unwrap(context));
+    }
+
+    public static IEntityRenderer.Context wrap(EntityRendererProvider.Context context) {
+        return () -> context;
+    }
+
+    public static EntityRendererProvider.Context unwrap(IEntityRenderer.Context context) {
+        return Objects.unsafeCast(context.get());
+    }
+
+    public static <T extends Entity> EntityRendererProvider<T> builder(IEntityRenderer.Provider<T> provider) {
+        return context -> AbstractEntityRenderer.unwrap(provider.create(wrap(context)));
+    }
+}

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractForgeKeyCategory implements IKeyCategory {
 
     private final OpenResourceLocation name;

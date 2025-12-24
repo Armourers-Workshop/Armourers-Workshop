@@ -12,7 +12,7 @@ public class AbstractFabricRegisterTextureEvent {
     public static IEventHandler<RegisterTextureEvent> registryFactory() {
         return (priority, receiveCancelled, subscriber) -> ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlas, registry) -> {
             if (atlas.location().equals(InventoryMenu.BLOCK_ATLAS)) {
-                subscriber.accept(registryName -> registry.register(registryName.toLocation()));
+                subscriber.accept(registryName -> registry.register(registryName.get()));
             }
         });
     }

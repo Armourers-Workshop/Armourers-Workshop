@@ -10,6 +10,7 @@
     "ForgeCuriosAddonMixin",
     "ForgeTacZeroItemRenderMixin",
     "ForgeClientScreenRenderMixin",
+    "particle/ForgeParticleManagerMixin",
     "dynamiclight/ForgeRyoamicLightsMixin$ItemLightHandler",
     "dynamiclight/ForgeRyoamicLightsMixin$EntityLightHandler",
     "dynamiclight/ForgeRyoamicLightsMixin$BlockEntityLightHandler",

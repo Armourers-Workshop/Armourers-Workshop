@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexElement;
 import org.lwjgl.opengl.GL20;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public abstract class AbstractVertexElementImpl implements IVertexElement {
 
     @Override

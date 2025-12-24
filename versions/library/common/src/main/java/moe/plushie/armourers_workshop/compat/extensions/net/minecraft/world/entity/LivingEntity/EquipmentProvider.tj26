@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.LivingEntity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.Collections;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.26, )")
+@Extension
+public class EquipmentProvider {
+
+    private static final List<EquipmentSlot> ARMOUR_SLOTS = Collections.filter(EquipmentSlot.values(), EquipmentSlot::isArmor);
+
+    public static Iterable<ItemStack> getHandSlots(@This LivingEntity entity) {
+        return Collections.newList(entity.getMainHandItem(), entity.getOffhandItem());
+    }
+
+    public static Iterable<ItemStack> getArmorSlots(@This LivingEntity entity) {
+        return Collections.compactMap(ARMOUR_SLOTS, entity::getItemBySlot);
+    }
+}

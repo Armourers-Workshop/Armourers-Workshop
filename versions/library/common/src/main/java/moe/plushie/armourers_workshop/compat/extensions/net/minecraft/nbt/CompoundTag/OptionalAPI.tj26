@@ -1,0 +1,62 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.nbt.CompoundTag;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[1.26, )")
+@Extension
+public class OptionalAPI {
+
+    public static boolean contains(@This CompoundTag tag, String key, int type) {
+        // TODO: NO IMPL - 1.26
+        return tag.contains(key);
+    }
+
+    public static Optional<String> getOptionalString(@This CompoundTag tag, String key) {
+        return tag.getString(key);
+    }
+
+    public static Optional<Double> getOptionalDouble(@This CompoundTag tag, String key) {
+        return tag.getDouble(key);
+    }
+
+    public static Optional<Float> getOptionalFloat(@This CompoundTag tag, String key) {
+        return tag.getFloat(key);
+    }
+
+    public static Optional<Long> getOptionalLong(@This CompoundTag tag, String key) {
+        return tag.getLong(key);
+    }
+
+    public static Optional<Integer> getOptionalInt(@This CompoundTag tag, String key) {
+        return tag.getInt(key);
+    }
+
+    public static Optional<Short> getOptionalShort(@This CompoundTag tag, String key) {
+        return tag.getShort(key);
+    }
+
+    public static Optional<Byte> getOptionalByte(@This CompoundTag tag, String key) {
+        return tag.getByte(key);
+    }
+
+    public static Optional<Boolean> getOptionalBoolean(@This CompoundTag tag, String key) {
+        return tag.getBoolean(key);
+    }
+
+    public static Optional<ListTag> getOptionalList(@This CompoundTag tag, String key, int type) {
+        return tag.getList(key);
+    }
+
+    public static Optional<CompoundTag> getOptionalCompound(@This CompoundTag tag, String key) {
+            return tag.getCompound(key);
+    }
+}

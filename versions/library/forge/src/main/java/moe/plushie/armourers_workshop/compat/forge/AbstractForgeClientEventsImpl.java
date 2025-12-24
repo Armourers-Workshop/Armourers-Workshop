@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractForgeClientEventsImpl {
 
     public static final auto PLAYER_LOGIN = AbstractForgeEventBus.create(ClientPlayerNetworkEvent.LoggingIn.class);

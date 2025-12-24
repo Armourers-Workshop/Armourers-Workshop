@@ -20,7 +20,6 @@ import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 

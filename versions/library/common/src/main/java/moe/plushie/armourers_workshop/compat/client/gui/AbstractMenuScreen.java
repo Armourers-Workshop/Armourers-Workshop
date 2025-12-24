@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractMenuScreen<T extends AbstractContainerMenu> extends AbstractMenuScreenImpl<T> {
 

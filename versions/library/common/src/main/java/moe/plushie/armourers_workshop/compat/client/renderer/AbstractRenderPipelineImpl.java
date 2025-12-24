@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.client.IGraphicsRenderable;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractRenderPipelineImpl implements IBufferSource {
 

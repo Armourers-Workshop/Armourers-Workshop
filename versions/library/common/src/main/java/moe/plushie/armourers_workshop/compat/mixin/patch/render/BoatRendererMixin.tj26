@@ -1,0 +1,52 @@
+package moe.plushie.armourers_workshop.compat.mixin.patch.render;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderEntityEvent;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractEntityModel;
+import moe.plushie.armourers_workshop.core.client.render.state.BoatRenderState;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.AbstractBoatRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.entity.vehicle.AbstractBoat;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.26, )")
+@Mixin(AbstractBoatRenderer.class)
+public abstract class BoatRendererMixin<T extends AbstractBoat, S extends BoatRenderState, I extends net.minecraft.client.renderer.entity.state.BoatRenderState> implements IEntityModel.Provider<S> {
+
+    @Shadow
+    protected abstract EntityModel<I> model();
+
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/vehicle/AbstractBoat;Lnet/minecraft/client/renderer/entity/state/BoatRenderState;F)V", at = @At(value = "TAIL"))
+    public void aw2$renderSetup(T entity, I renderState, float f, CallbackInfo ci) {
+        EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, renderState, f, Objects.unsafeCast(this)));
+    }
+
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/BoatRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
+    public void aw2$renderPre(I renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
+        EventManager.post(RenderEntityEvent.Pre.class, AbstractRenderEntityEvent.pre(renderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack, submitNodeCollector, cameraRenderState, EntityRenderer.class.cast(this)));
+    }
+
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/BoatRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "TAIL"))
+    public void aw2$renderPost(I renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
+        EventManager.post(RenderEntityEvent.Post.class, AbstractRenderEntityEvent.post(renderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack, submitNodeCollector, cameraRenderState, EntityRenderer.class.cast(this)));
+    }
+
+    @Override
+    public IEntityModel<S> abi$getEntityModel(S renderState) {
+        return AbstractEntityModel.wrap(model());
+    }
+}

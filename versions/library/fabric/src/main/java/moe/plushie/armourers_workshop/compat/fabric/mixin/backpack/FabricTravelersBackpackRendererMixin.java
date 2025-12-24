@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.lang.reflect.Method;
 import java.util.function.Function;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Conditional("travelersbackpack")
 @Pseudo
 @Mixin(BackpackLayer.class)

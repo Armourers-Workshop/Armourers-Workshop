@@ -38,7 +38,7 @@ public abstract class AbstractForgePermissionManager {
     private static final PermissionDynamicContextKey<Direction> FACING = new PermissionDynamicContextKey<>(Direction.class, "facing", Direction::getSerializedName);
 
     public static IPermissionNode makeNode(OpenResourceLocation registryName, int level) {
-        var node = new PermissionNode<>(registryName.toLocation(), PermissionTypes.BOOLEAN, (player, uuid, contexts) -> true, TARGET, PLAYER, BLOCK_POS, BLOCK_STATE, FACING);
+        var node = new PermissionNode<>(registryName.get(), PermissionTypes.BOOLEAN, (player, uuid, contexts) -> true, TARGET, PLAYER, BLOCK_POS, BLOCK_STATE, FACING);
         var nodeImpl = new PermissionNodeBuilderImpl.NodeImpl(registryName) {
 
             @Override

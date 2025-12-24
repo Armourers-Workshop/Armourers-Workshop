@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compat.client.graphics.renderer.AbstractGraphicsRenderable;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderable;
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.utils.Colors;

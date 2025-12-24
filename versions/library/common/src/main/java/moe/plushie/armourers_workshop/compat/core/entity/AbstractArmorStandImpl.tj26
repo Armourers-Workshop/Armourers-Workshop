@@ -1,0 +1,105 @@
+package moe.plushie.armourers_workshop.compat.core.entity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Export;
+import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
+import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
+import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
+import moe.plushie.armourers_workshop.compat.core.data.serializer.AbstractDataSerializer;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
+@Available("[1.26, )")
+public class AbstractArmorStandImpl extends ArmorStand {
+
+    public AbstractArmorStandImpl(EntityType<? extends ArmorStand> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    public OpenInteractionResult interactAt(Player player, Vec3 pos, OpenInteractionHand hand, Object context) {
+        return AbstractInteractionResult.wrap(super.interactAt(player, pos, AbstractInteractionHand.unwrap(hand)));
+    }
+
+    @Override
+    public final InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand hand) {
+        return AbstractInteractionResult.unwrap(interactAt(player, vec3, AbstractInteractionHand.wrap(hand), null));
+    }
+
+    public boolean hurt(ServerLevel level, DamageSource source, float amount) {
+        return super.hurtServer(level, source, amount);
+    }
+
+    @Override
+    public final boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+        return hurt(serverLevel, damageSource, f);
+    }
+
+    public void readAdditionalSaveData(IDataSerializer serializer) {
+        super.readAdditionalSaveData(AbstractDataSerializer.unwrapToInput(serializer));
+    }
+
+    @Override
+    public final void readAdditionalSaveData(ValueInput input) {
+        readAdditionalSaveData(AbstractDataSerializer.wrap(input));
+    }
+
+    public void addAdditionalSaveData(IDataSerializer serializer) {
+        super.addAdditionalSaveData(AbstractDataSerializer.unwrapToOutput(serializer));
+    }
+
+    @Override
+    public final void addAdditionalSaveData(ValueOutput output) {
+        addAdditionalSaveData(AbstractDataSerializer.wrap(output));
+    }
+
+    public void defineSynchedData(IEntityDataBuilder builder) {
+        super.defineSynchedData(AbstractEntityDataBuilder.unwrap(builder));
+    }
+
+    @Override
+    protected final void defineSynchedData(SynchedEntityData.Builder builder) {
+        defineSynchedData(AbstractEntityDataBuilder.wrap(builder));
+    }
+
+    public void brokenByPlayer(ServerLevel serverLevel, DamageSource damageSource, Object context) {
+        super.brokenByPlayer(serverLevel, damageSource);
+    }
+
+    @Override
+    public final void brokenByPlayer(ServerLevel serverLevel, DamageSource damageSource) {
+        brokenByPlayer(serverLevel, damageSource, null);
+    }
+
+    public void brokenByAnything(ServerLevel serverLevel, DamageSource damageSource, Object context) {
+        super.brokenByAnything(serverLevel, damageSource);
+    }
+
+    @Override
+    public final void brokenByAnything(ServerLevel serverLevel, DamageSource damageSource) {
+        brokenByAnything(serverLevel, damageSource, null);
+    }
+
+    @Export("dummy")
+    public float getYBodyRot() {
+        return yBodyRot;
+    }
+
+    @Export("dummy")
+    public AABB getBoundingBoxForCulling() {
+        return null;
+    }
+}

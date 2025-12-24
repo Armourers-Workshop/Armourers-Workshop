@@ -1,27 +1,44 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.shape;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
+import moe.plushie.armourers_workshop.core.math.OpenMath;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterDiscShape extends SkinParticleComponent {
+/**
+ * This component spawns particles using a disc shape.
+ * Particles can be spawned inside the shape, or on its outer perimeter.
+ */
+public class EmitterDiscShape implements SkinParticleComponent {
 
+    /// specifies the offset from the emitter to emit the particles
+    /// evaluated once per particle emitted
     private final OpenPrimitive x;
     private final OpenPrimitive y;
     private final OpenPrimitive z;
 
+    /// disc radius
+    /// evaluated once per particle emitted
     private final OpenPrimitive radius;
 
+    /// specifies the normal of the disc plane, the disc will be perpendicular to this direction
+    /// defaults to [ 0, 1, 0 ]
     private final OpenPrimitive planeNormalX;
     private final OpenPrimitive planeNormalY;
     private final OpenPrimitive planeNormalZ;
 
+    /// specifies the direction of particles.  Defaults to "outwards"
     private final EmitterShapeDirection direction;
 
+    /// emit only from the edge of the disc
     private final boolean surface;
 
     public EmitterDiscShape(OpenPrimitive x, OpenPrimitive y, OpenPrimitive z, OpenPrimitive radius, OpenPrimitive planeNormalX, OpenPrimitive planeNormalY, OpenPrimitive planeNormalZ, EmitterShapeDirection direction, boolean surface) {
@@ -62,48 +79,38 @@ public class EmitterDiscShape extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var x = builder.compile(this.x, 0.0);
-        var y = builder.compile(this.y, 0.0);
-        var z = builder.compile(this.z, 0.0);
-        var radius = builder.compile(this.radius, 0.0);
-        var normalX = builder.compile(this.planeNormalX, 0.0);
-        var normalY = builder.compile(this.planeNormalY, 0.0);
-        var normalZ = builder.compile(this.planeNormalZ, 0.0);
-        builder.applyParticle((emitter, particle, context) -> {
-            var cx = x.compute(context);
-            var cy = y.compute(context);
-            var cz = z.compute(context);
-            var r = radius.compute(context);
-            var nx = normalX.compute(context);
-            var ny = normalY.compute(context);
-            var nz = normalZ.compute(context);
+    public void compile(SkinParticleGenerator generator) {
+        var offsetX = generator.compile(this.x, 0.0);
+        var offsetY = generator.compile(this.y, 0.0);
+        var offsetZ = generator.compile(this.z, 0.0);
+        var radius = generator.compile(this.radius, 0.0);
+        var normalX = generator.compile(this.planeNormalX, 0.0);
+        var normalY = generator.compile(this.planeNormalY, 1.0);
+        var normalZ = generator.compile(this.planeNormalZ, 0.0);
+        var direction = this.direction.compile(generator);
+        var surface = this.surface;
+        generator.instance().prepare((emitter, particle, context) -> {
+            var cx = (float) offsetX.compute(context);
+            var cy = (float) offsetY.compute(context);
+            var cz = (float) offsetZ.compute(context);
+            var nx = (float) normalX.compute(context);
+            var ny = (float) normalY.compute(context);
+            var nz = (float) normalZ.compute(context);
+            var r = (float) radius.compute(context);
 
-            // TODO: NO IMPL @SAGESSE
-            //        float centerX = (float) this.offset[0].get();
-//        float centerY = (float) this.offset[1].get();
-//        float centerZ = (float) this.offset[2].get();
-//
-//        Vector3f normal = new Vector3f((float) this.normal[0].get(), (float) this.normal[1].get(), (float) this.normal[2].get());
-//
-//        normal.normalize();
-//
-//        Quat4f quaternion = new Quat4f(normal.x, normal.y, normal.z, 1);
-//        Matrix4f rotation = new Matrix4f();
-//        rotation.set(quaternion);
-//
-//        Vector4f position = new Vector4f((float) Math.random() - 0.5F, 0, (float) Math.random() - 0.5F, 0);
-//        position.normalize();
-//        rotation.transform(position);
-//
-//        position.scale((float) (this.radius.get() * (this.surface ? 1 : Math.random())));
-//        position.add(new Vector4f(centerX, centerY, centerZ, 0));
-//
-//        particle.position.x += position.x;
-//        particle.position.y += position.y;
-//        particle.position.z += position.z;
-//
-//        this.direction.applyDirection(particle, centerX, centerY, centerZ);
+            var normal = new OpenVector3f(nx, ny, nz);
+            normal.normalize();
+
+            var pos = new OpenVector4f(OpenMath.randomf() - 0.5f, 0.0f, OpenMath.randomf() - 0.5f, 0.0f);
+            pos.normalize();
+            pos.transform(new OpenQuaternionf(normal.x(), normal.y(), normal.z(), 1));
+            if (!surface) {
+                r *= OpenMath.randomf();
+            }
+            pos.scale(r);
+
+            particle.setPosition(cx + pos.x(), cy + pos.y(), cz + pos.z());
+            direction.apply(particle, cx, cy, cz, context);
         });
     }
 }

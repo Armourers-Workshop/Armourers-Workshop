@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @Mixin(ShaderInstance.class)
 public abstract class ShaderVanillaMixin {
 

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractRenderLivingEntityEvent {
 
     public static <T extends LivingEntity, S extends LivingEntityRenderState> RenderLivingEntityEvent.Setup<T, S> setup(T entity, float partialTick, LivingEntityRenderer<?, ?> renderer) {

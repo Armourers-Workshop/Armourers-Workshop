@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
@@ -11,13 +11,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmitterEventLifetime extends SkinParticleComponent {
+/**
+ * Allows for lifetime events on the emitter to trigger certain events.
+ */
+public class EmitterEventLifetime implements SkinParticleComponent {
 
+    /// all events use the event names in the event section
+    /// all events can be an array or a string
+
+    /// Fires when the emitter is created
     private final List<String> creation;
+    /// Fires when the emitter expires (does not wait for particles to expire too)
     private final List<String> expiration;
 
+    /// a series of times, e.g. 0.0 or 1.0, that trigger the event
+    /// these get fired on every loop the emitter goes through
+    /// "time" is the time, e.g. one line might be: {"0.4": ["event"]}
     private final Map<Float, List<String>> timelineEvents;
+
+    /// a series of distances, e.g. 0.0 or 1.0, that trigger the event
+    /// these get fired when the emitter has moved by the specified input
+    /// distance, e.g. one line might be: {"0.4": ["event"]}
     private final Map<Float, List<String>> travelDistanceEvents;
+
+    /// a series of events that occur at set intervals
+    /// these get fired every time the emitter has moved the specified input
+    /// distance from the last time it was fired.
+    /// An example for how to format these events would be: {"distance":1.0,"effects":["effect_one"]}
     private final Map<Float, List<String>> travelDistanceLoopEvents;
 
     public EmitterEventLifetime(List<String> creation, List<String> expiration, Map<Float, List<String>> timelineEvents, Map<Float, List<String>> travelDistanceEvents, Map<Float, List<String>> travelDistanceLoopEvents) {
@@ -46,8 +66,8 @@ public class EmitterEventLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        // TODO: NO IMPL @SAGESSE
+    public void compile(SkinParticleGenerator generator) {
+        // TODO: NO IMPL - @SAGESSE
     }
 
     private List<String> readEventsFromStream(IInputStream stream) throws IOException {

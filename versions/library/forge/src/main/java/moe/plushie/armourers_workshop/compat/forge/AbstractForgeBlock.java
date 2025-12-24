@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @SuppressWarnings("NullableProblems")
 public interface AbstractForgeBlock extends IBlockExtension {
 

@@ -11,7 +11,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractForgeResourceLoader implements PreparableReloadListener {
 
     private final OpenResourceLocation name;

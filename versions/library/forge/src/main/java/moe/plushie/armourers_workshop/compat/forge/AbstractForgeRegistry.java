@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
@@ -31,7 +32,7 @@ public class AbstractForgeRegistry<T> extends AbstractForgeRegistryImpl implemen
     @Override
     public OpenResourceLocation getKey(T object) {
         if (keyProvider != null) {
-            return Objects.flatMap(keyProvider.apply(object), OpenResourceLocation::of);
+            return Objects.flatMap(keyProvider.apply(object), AbstractResourceLocation::wrap);
         }
         return null;
     }
@@ -39,7 +40,7 @@ public class AbstractForgeRegistry<T> extends AbstractForgeRegistryImpl implemen
     @Override
     public T getValue(OpenResourceLocation registryName) {
         if (valueProvider != null) {
-            return valueProvider.apply(registryName.toLocation());
+            return valueProvider.apply(registryName.get());
         }
         return null;
     }

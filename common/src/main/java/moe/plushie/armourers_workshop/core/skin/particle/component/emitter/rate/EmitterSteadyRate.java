@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.rate;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -9,13 +9,16 @@ import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 import java.io.IOException;
 
 /**
- * Particles are spawned steadily during the lifetime of the emitter
+ * Particles come out at a steady or Molang rate over time.
  */
-public class EmitterSteadyRate extends SkinParticleComponent {
+public class EmitterSteadyRate implements SkinParticleComponent {
 
-    /// How often a particle is emitted, in particles/second.
+    /// how often a particle is emitted, in particles/sec
+    /// evaluated once per particle emitted
     private final OpenPrimitive spawnRate;
-    /// Maximum amount of particles that can be active before the emitter stops spawning new ones.
+
+    /// maximum number of particles that can be active at once for this emitter
+    /// evaluated once per particle emitter loop
     private final OpenPrimitive maxParticles;
 
     public EmitterSteadyRate(OpenPrimitive spawnRate, OpenPrimitive maxParticles) {
@@ -35,21 +38,27 @@ public class EmitterSteadyRate extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var spawnRate = builder.compile(this.spawnRate, 1.0);
-        var maxParticles = builder.compile(this.maxParticles, 50.0);
-        builder.renderEmitterPost((emitter, partialTicks, context) -> {
+    public void compile(SkinParticleGenerator generator) {
+        var spawnRate = generator.compile(this.spawnRate, 1.0);
+        var maxParticles = generator.compile(this.maxParticles, 50.0);
+        generator.emitter().render((emitter, context) -> {
             if (!emitter.isRunning()) {
                 return;
             }
+            // target particles = current time * rate(particles/sec)
             var rate = spawnRate.compute(context);
             var maxSize = maxParticles.compute(context);
-            var targetSize = Math.ceil(rate * emitter.getTime());
+            var targetSize = Math.ceil(rate * emitter.time());
             // create up to a specified size of particles.
-            var size = emitter.getParticles().size();
-            for (int i = size; i < targetSize && i < maxSize; i++) {
-                emitter.spawnParticle();
+            var size = emitter.spawnedParticles();
+            for (var i = size; i < targetSize && i < maxSize; i++) {
+                emitter.spawn();
             }
         });
+    }
+
+    @Override
+    public int priority() {
+        return 10;
     }
 }

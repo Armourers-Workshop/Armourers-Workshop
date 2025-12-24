@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Function;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractHumanoidEntityRenderer<T extends LivingEntity, S extends LivingEntityRenderState, M extends AbstractHumanoidModel<T, S>, A extends AbstractHumanoidArmourModel<T, S>> extends AbstractHumanoidEntityRendererImpl<T, S, M, A> implements IEntityRenderer<T, S> {
 

@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.player.Player;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[1.26, )")
+public class SystemMessageExt {
+
+    public static void sendSystemMessage(@This Player player, Component text) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.sendSystemMessage(text);
+        } else {
+            Minecraft.getInstance().getChatListener().handleSystemMessage(text, false); // show in gui.
+        }
+    }
+}

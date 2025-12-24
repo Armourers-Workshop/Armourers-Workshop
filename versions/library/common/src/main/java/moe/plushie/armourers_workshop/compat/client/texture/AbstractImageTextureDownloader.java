@@ -13,14 +13,14 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractImageTextureDownloader {
 
     public void download(OpenResourceLocation location, IResultHandler<BufferedImage> handler) {
         RenderSystem.safeCall(() -> {
             try {
-                var texture = Minecraft.getInstance().getTextureManager().getTexture(location.toLocation(), null);
+                var texture = Minecraft.getInstance().getTextureManager().getTexture(location.get(), null);
                 if (texture == null) {
                     throw new IllegalAccessException("can't found texture " + location);
                 }

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.client.Minecraft;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractKeyEvent implements InputKeyEvent {
 
     public static final boolean ON_OSX = Minecraft.ON_OSX;

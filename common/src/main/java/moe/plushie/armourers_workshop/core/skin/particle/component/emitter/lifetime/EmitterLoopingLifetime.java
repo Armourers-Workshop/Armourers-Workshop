@@ -1,16 +1,24 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterLoopingLifetime extends SkinParticleComponent {
+/**
+ * Emitter will loop until it is removed.
+ */
+public class EmitterLoopingLifetime implements SkinParticleComponent {
 
+    /// emitter will emit particles for this time per loop,
+    /// evaluated once per particle emitter loop.
     private final OpenPrimitive activeTime;
+
+    /// emitter will pause emitting particles for this time per loop,
+    /// evaluated once per particle emitter loop.
     private final OpenPrimitive sleepTime;
 
     public EmitterLoopingLifetime(OpenPrimitive activeTime, OpenPrimitive sleepTime) {
@@ -30,20 +38,25 @@ public class EmitterLoopingLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var activeTime = builder.compile(this.activeTime, 10.0);
-        var sleepTime = builder.compile(this.sleepTime, 0.0);
-        builder.updateEmitter((emitter, context) -> {
+    public void compile(SkinParticleGenerator generator) {
+        var activeTime = generator.compile(this.activeTime, 10.0);
+        var sleepTime = generator.compile(this.sleepTime, 0.0);
+        generator.emitter().tick((emitter, context) -> {
             var active = activeTime.compute(context);
             var sleep = sleepTime.compute(context);
-            var time = emitter.getTime();
-            emitter.setDuration(active);
-            if (time >= active && emitter.isRunning()) {
-                emitter.stop();
-            }
-            if (time >= sleep && !emitter.isRunning()) {
+            var time = emitter.time();
+            if (!emitter.isRunning() && time >= sleep) {
                 emitter.start();
             }
+            if (emitter.isRunning() && time >= active) {
+                emitter.stop();
+            }
+            emitter.setDuration(active);
         });
+    }
+
+    @Override
+    public int priority() {
+        return -10;
     }
 }

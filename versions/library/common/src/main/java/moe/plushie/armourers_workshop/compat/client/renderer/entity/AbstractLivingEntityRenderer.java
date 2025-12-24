@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<T>> extends AbstractLivingEntityRendererImpl<T, S, M> implements IEntityRenderer<T, S> {
 
@@ -72,7 +72,7 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S ext
     public final ResourceLocation getTextureLocation(T entity) {
         var location = abi$getTextureLocation(AbstractRenderState.wrap(entity));
         if (location != null) {
-            return location.toLocation();
+            return location.get();
         }
         return null;
     }

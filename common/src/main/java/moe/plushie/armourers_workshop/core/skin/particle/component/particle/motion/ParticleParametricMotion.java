@@ -1,21 +1,37 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.motion;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class ParticleParametricMotion extends SkinParticleComponent {
+/**
+ * This component directly controls the particle.
+ */
+public class ParticleParametricMotion implements SkinParticleComponent {
 
+    /// directly set the position relative to the emitter.
+    /// E.g. a spiral might be:
+    /// "relative_position": ["Math.cos(Params.LifeTime)", 1.0,
+    ///                       "Math.sin(Params.Lifetime)"]
+    /// defaults to [0, 0, 0]
+    /// evaluated every frame
     private final OpenPrimitive relativePositionX;
     private final OpenPrimitive relativePositionY;
     private final OpenPrimitive relativePositionZ;
+
+    /// directly set the 3d direction of the particle
+    /// doesn't affect direction if not specified
+    /// evaluated every frame
     private final OpenPrimitive directionX;
     private final OpenPrimitive directionY;
     private final OpenPrimitive directionZ;
+
+    /// directly set the rotation of the particle
+    /// evaluated every frame
     private final OpenPrimitive rotation;
 
     public ParticleParametricMotion(OpenPrimitive relativePositionX, OpenPrimitive relativePositionY, OpenPrimitive relativePositionZ, OpenPrimitive directionX, OpenPrimitive directionY, OpenPrimitive directionZ, OpenPrimitive rotation) {
@@ -50,19 +66,19 @@ public class ParticleParametricMotion extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var relativePositionX = builder.compile(this.relativePositionX, 0.0);
-        var relativePositionY = builder.compile(this.relativePositionY, 0.0);
-        var relativePositionZ = builder.compile(this.relativePositionZ, 0.0);
-        var directionX = builder.compile(this.directionX, 0.0);
-        var directionY = builder.compile(this.directionY, 0.0);
-        var directionZ = builder.compile(this.directionZ, 0.0);
-        var rotation = builder.compile(this.rotation, 0.0);
-        builder.applyParticle((emitter, particle, context) -> {
+    public void compile(SkinParticleGenerator generator) {
+        var relativePositionX = generator.compile(this.relativePositionX, 0.0);
+        var relativePositionY = generator.compile(this.relativePositionY, 0.0);
+        var relativePositionZ = generator.compile(this.relativePositionZ, 0.0);
+        var directionX = generator.compile(this.directionX, 0.0);
+        var directionY = generator.compile(this.directionY, 0.0);
+        var directionZ = generator.compile(this.directionZ, 0.0);
+        var rotation = generator.compile(this.rotation, 0.0);
+        generator.instance().prepare((emitter, particle, context) -> {
             // TODO: NO IMPL @SAGESSE
 //            Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
 //
-//        particle.manual = true;
+            particle.setManualMode(true);
 //        particle.initialPosition.set(particle.position);
 //
 //        particle.matrix.transform(position);
@@ -71,7 +87,7 @@ public class ParticleParametricMotion extends SkinParticleComponent {
 //        particle.position.z = particle.initialPosition.z + position.z;
 //        particle.rotation = (float) this.rotation.get();
         });
-        builder.updateParticle((emitter, particle, context) -> {
+        generator.instance().tick((emitter, particle, context) -> {
             // TODO: NO IMPL @SAGESSE
 //            Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
 //
@@ -82,5 +98,10 @@ public class ParticleParametricMotion extends SkinParticleComponent {
 //        particle.rotation = (float) this.rotation.get();
 
         });
+    }
+
+    @Override
+    public int priority() {
+        return 10;
     }
 }

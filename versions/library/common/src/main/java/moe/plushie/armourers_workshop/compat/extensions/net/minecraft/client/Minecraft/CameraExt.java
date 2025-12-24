@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Extension
 public class CameraExt {
 

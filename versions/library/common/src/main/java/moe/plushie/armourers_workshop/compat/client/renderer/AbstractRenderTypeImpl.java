@@ -19,7 +19,7 @@ import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractRenderTypeImpl extends RenderType {
 
     private static final Map<SkinVertexFormat, Supplier<Builder>> MAPPER = Collections.immutableMap(it -> {
@@ -41,23 +41,23 @@ public class AbstractRenderTypeImpl extends RenderType {
         it.put(SkinVertexFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER));
         it.put(SkinVertexFormat.ENTITY_ALPHA, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_ALPHA_SHADER));
 
-        it.put(SkinVertexFormat.PARTICLE_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER));
-        it.put(SkinVertexFormat.PARTICLE_LIGHTING, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_LIGHTMAP_SHADER));
+        it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER));
+        it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT_EMISSIVE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, POSITION_COLOR_TEX_LIGHTMAP_SHADER));
 
         it.put(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SHADOW_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SHADOW_SHADER).overlay().lightmap().emissive());
         it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SHADOW_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SHADOW_SHADER).overlay().lightmap().emissive());
 
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_CUTOUT_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
 
         it.put(SkinVertexFormat.SKIN_MESH_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENTITY_CUTOUT_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
         it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENTITY_SOLID_SHADER).overlay().lightmap());
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RENDERTYPE_ENERGY_SWIRL_SHADER).overlay().lightmap().emissive());
     });
 
 
@@ -140,7 +140,7 @@ public class AbstractRenderTypeImpl extends RenderType {
 
         @Override
         public Builder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
-            stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), blur, mipmap));
+            stateBuilder.setTextureState(new TextureStateShard(texture.get(), blur, mipmap));
             super.texture(texture, blur, mipmap);
             return this;
         }

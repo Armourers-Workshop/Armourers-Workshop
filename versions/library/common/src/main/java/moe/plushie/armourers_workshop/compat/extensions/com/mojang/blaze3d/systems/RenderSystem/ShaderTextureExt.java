@@ -7,11 +7,11 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @Extension
 public class ShaderTextureExt {
 
     public static void setShaderTexture(@ThisClass Class<?> clazz, int i, OpenResourceLocation texture) {
-        RenderSystem.setShaderTexture(i, texture.toLocation());
+        RenderSystem.setShaderTexture(i, texture.get());
     }
 }

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractGraphicsRenderable {
 

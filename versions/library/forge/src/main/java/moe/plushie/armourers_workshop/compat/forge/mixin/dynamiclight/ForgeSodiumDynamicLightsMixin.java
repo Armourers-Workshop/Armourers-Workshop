@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 public class ForgeSodiumDynamicLightsMixin {
 
     @Conditional("sodiumdynamiclights")

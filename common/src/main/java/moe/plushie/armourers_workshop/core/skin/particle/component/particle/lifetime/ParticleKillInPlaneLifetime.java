@@ -1,14 +1,19 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
 import java.io.IOException;
 
-public class ParticleKillInPlaneLifetime extends SkinParticleComponent {
+/**
+ * Particles that cross this plane expire. The plane is relative to the emitter, but oriented in world space. The four parameters are the usual 4 elements of a plane equation.
+ */
+public class ParticleKillInPlaneLifetime implements SkinParticleComponent {
 
+    /// A*x + B*y + C*z + D = 0
+    /// with the parameters being [A, B, C, D ]
     private final float a;
     private final float b;
     private final float c;
@@ -37,20 +42,25 @@ public class ParticleKillInPlaneLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
+    public void compile(SkinParticleGenerator generator) {
         // the particles that cross this plane expire.
         // the plane is relative to the emitter, but oriented in world space.
-        builder.updateParticle((emitter, particle, context) -> {
-            if (!particle.isAlive()) {
+        generator.instance().tick((emitter, particle, context) -> {
+            if (particle.isDead()) {
                 return;
             }
-            var p0 = particle.getLocalPositionOld();
-            var p1 = particle.getLocalPosition();
+            var p0 = particle.positionAt(0.0f);
+            var p1 = particle.positionAt(1.0f);
             var prev = a * p0.x() + b * p0.y() + c * p0.z() + d;
             var now = a * p1.x() + b * p1.y() + c * p1.y() + d;
             if ((prev > 0 && now < 0) || (prev < 0 && now > 0)) {
                 particle.kill();
             }
         });
+    }
+
+    @Override
+    public int priority() {
+        return 100;
     }
 }

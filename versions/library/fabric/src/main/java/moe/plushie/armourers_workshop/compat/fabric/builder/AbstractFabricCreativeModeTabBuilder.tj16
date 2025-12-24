@@ -15,7 +15,7 @@ public class AbstractFabricCreativeModeTabBuilder<T extends CreativeModeTab> ext
 
     @Override
     protected CreativeModeTab create(OpenResourceLocation registryName, Consumer<List<ItemStack>> provider) {
-        return FabricItemGroupBuilder.create(registryName.toLocation())
+        return FabricItemGroupBuilder.create(registryName.get())
                 .icon(() -> icon.get().get())
                 .appendItems(provider)
                 .build();

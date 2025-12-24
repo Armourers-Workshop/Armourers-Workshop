@@ -25,7 +25,7 @@ accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/mine
 accessible method net/minecraft/world/entity/player/Player hurtCurrentlyUsedShield (F)V
 ##endif
 
-##if MC >= 12100 && MC < 12200
+##if MC >= 12100 && MC < 12600
 accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 ##endif
 
@@ -47,7 +47,7 @@ accessible field net/minecraft/client/renderer/entity/LivingEntityRenderer layer
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher playerRenderers Ljava/util/Map;
 
-##if MC < 12200
+##if MC < 12600
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer innerModel Lnet/minecraft/client/model/HumanoidModel;
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer outerModel Lnet/minecraft/client/model/HumanoidModel;
 ##endif

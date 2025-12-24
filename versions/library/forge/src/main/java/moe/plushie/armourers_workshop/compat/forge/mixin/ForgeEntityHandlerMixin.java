@@ -7,7 +7,7 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.extensions.IEntityExtension;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @Mixin(AbstractEntityHandler.class)
 public interface ForgeEntityHandlerMixin extends IEntityExtension {
 

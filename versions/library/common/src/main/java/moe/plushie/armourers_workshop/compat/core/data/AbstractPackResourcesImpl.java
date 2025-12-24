@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public abstract class AbstractPackResourcesImpl implements PackResources {
 
     private PackLocationInfo location;
@@ -39,7 +40,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
     @Nullable
     @Override
     public final IoSupplier<InputStream> getResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, OpenResourceLocation.of(location));
+        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
         if (supplier != null) {
             return supplier::get;
         }

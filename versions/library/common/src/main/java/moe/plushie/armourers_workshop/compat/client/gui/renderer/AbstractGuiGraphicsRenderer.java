@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.function.Consumer;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
 

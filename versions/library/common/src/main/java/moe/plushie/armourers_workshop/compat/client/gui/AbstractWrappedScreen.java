@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractWrappedScreen extends AbstractWrappedScreenImpl {
 

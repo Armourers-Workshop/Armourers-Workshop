@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractInteractionResultHolder {
 
     public static OpenInteractionResult wrap(InteractionResultHolder<ItemStack> result) {

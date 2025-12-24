@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractLootContextParams {
 
     public static final IContextKey<Entity> THIS_ENTITY = wrap(LootContextParams.THIS_ENTITY);
@@ -45,7 +45,7 @@ public class AbstractLootContextParams {
 
         private Proxy(LootContextParam<T> impl) {
             this.impl = impl;
-            this.registryName = OpenResourceLocation.of(impl.getName());
+            this.registryName = AbstractResourceLocation.wrap(impl.getName());
         }
 
         @Override

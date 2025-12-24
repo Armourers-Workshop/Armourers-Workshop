@@ -11,6 +11,6 @@ public class AbstractSoundEventBuilder<T extends SoundEvent> {
     }
 
     protected SoundEvent create(OpenResourceLocation registryName) {
-        return SoundEvent.createVariableRangeEvent(registryName.toLocation());
+        return SoundEvent.createVariableRangeEvent(registryName.get());
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public abstract class AbstractForgeRegistryImpl {
 
     public static <T> TypedProvider<T> from(ResourceKey<Registry<T>> registryKey) {

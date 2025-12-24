@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public abstract class AbstractBlockEntityImpl extends BlockEntity {
 
     public AbstractBlockEntityImpl(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {

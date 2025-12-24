@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractShaderSelector {
 
     public static final List<ResourceLocation> DEFAULT = Collections.immutableList(builder -> {

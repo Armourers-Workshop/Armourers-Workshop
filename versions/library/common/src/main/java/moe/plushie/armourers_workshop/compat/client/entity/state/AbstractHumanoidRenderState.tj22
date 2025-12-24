@@ -1,8 +1,0 @@
-package moe.plushie.armourers_workshop.compat.client.entity.state;
-
-import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-
-@Available("[1.22, )")
-public class AbstractHumanoidRenderState extends HumanoidRenderState {
-}

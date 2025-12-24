@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractShaderContextImpl extends AbstractShaderContext {
 

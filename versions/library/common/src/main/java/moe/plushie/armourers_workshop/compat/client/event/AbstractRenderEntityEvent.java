@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractRenderEntityEvent {
 
     public static <T extends Entity, S extends EntityRenderState> RenderEntityEvent.Setup<T, S> setup(T entity, float partialTick, EntityRenderer<?> renderer) {

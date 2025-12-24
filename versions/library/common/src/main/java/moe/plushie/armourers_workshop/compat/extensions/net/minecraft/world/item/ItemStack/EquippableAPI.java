@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @Extension
 public class EquippableAPI {
 

@@ -1,0 +1,18 @@
+package moe.plushie.armourers_workshop.compat.forge.event.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl;
+import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
+
+@Available("[1.26, )")
+public class AbstractForgeRegisterItemPropertyEvent {
+
+    public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {
+        return AbstractForgeCommonEventsImpl.FML_LOAD_COMPLETE.map(event -> (registryName, item, property) -> {
+            // forward
+            // TODO: NO IMPL - 1.26
+//            ItemProperties.register(item, registryName.toLocation(), property::getValue);
+        });
+    }
+}

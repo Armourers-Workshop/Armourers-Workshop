@@ -5,7 +5,7 @@ import net.minecraft.network.chat.ClickEvent;
 
 import java.net.URI;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractOpenURLEvent extends ClickEvent {
 
     public AbstractOpenURLEvent(String url) {

@@ -1,13 +1,16 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.appearance;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
 import java.io.IOException;
 
-public class ParticleLightingAppearance extends SkinParticleComponent {
+/**
+ * When this component exists, particle will be tinted by local lighting conditions in-game.
+ */
+public class ParticleLightingAppearance implements SkinParticleComponent {
 
     public ParticleLightingAppearance() {
     }
@@ -20,9 +23,9 @@ public class ParticleLightingAppearance extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        builder.applyEmitter((emitter, context) -> {
-            emitter.setEmissive(false);
+    public void compile(SkinParticleGenerator generator) {
+        generator.emitter().prepare((emitter, context) -> {
+            emitter.setEmissiveMode(false);
         });
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractEntityRendererImpl<T extends Entity, S extends EntityRenderState> extends EntityRenderer<T> implements IEntityRenderer<T, S> {
 

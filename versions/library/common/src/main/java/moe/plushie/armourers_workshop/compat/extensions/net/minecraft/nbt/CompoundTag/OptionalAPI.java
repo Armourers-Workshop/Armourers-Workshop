@@ -11,7 +11,7 @@ import java.util.Set;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @Extension
 public class OptionalAPI {
 

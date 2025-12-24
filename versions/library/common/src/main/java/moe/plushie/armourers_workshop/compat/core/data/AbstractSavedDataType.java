@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.DimensionDataStorage;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractSavedDataType<T extends AbstractSavedData> {
 
     private final String id;

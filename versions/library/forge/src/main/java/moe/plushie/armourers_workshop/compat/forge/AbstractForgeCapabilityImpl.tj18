@@ -58,7 +58,7 @@ public class AbstractForgeCapabilityImpl<T> {
 
         public void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
             provider.apply(event.getObject()).ifPresent(it -> {
-                event.addCapability(registryName.toLocation(), it);
+                event.addCapability(registryName.get(), it);
             });
         }
     }

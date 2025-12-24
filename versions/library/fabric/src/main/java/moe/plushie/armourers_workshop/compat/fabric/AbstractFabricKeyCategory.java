@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.network.chat.Component;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractFabricKeyCategory implements IKeyCategory {
 
     private final OpenResourceLocation name;

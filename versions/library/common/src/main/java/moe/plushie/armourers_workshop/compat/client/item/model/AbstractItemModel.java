@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
 import net.minecraft.client.resources.model.BakedModel;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractItemModel {
 

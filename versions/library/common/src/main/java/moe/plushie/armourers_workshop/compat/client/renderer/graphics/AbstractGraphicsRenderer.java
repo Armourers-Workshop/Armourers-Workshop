@@ -20,7 +20,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.function.Consumer;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractGraphicsRenderer implements SceneGraphicsRenderer {
 

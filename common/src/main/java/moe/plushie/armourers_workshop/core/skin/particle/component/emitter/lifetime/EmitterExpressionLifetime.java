@@ -1,16 +1,25 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterExpressionLifetime extends SkinParticleComponent {
+/**
+ * Emitter will turn 'on' when the activation expression is non-zero, and will turn 'off' when it's zero.
+ * This is useful for situations like driving an entity-attached emitter from an entity variable.
+ */
+public class EmitterExpressionLifetime implements SkinParticleComponent {
 
+    /// When the expression is non-zero, the emitter will emit particles.
+    /// Evaluated every frame
     private final OpenPrimitive activation;
+
+    /// Emitter will expire if the expression is non-zero.
+    /// Evaluated every frame
     private final OpenPrimitive expiration;
 
     public EmitterExpressionLifetime(OpenPrimitive activation, OpenPrimitive expiration) {
@@ -30,18 +39,23 @@ public class EmitterExpressionLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var activation = builder.compile(this.activation, 0.0);
-        var expiration = builder.compile(this.expiration, 0.0);
-        builder.updateEmitter((emitter, context) -> {
-            // start when activation is true.
+    public void compile(SkinParticleGenerator generator) {
+        var activation = generator.compile(this.activation, 0.0);
+        var expiration = generator.compile(this.expiration, 0.0);
+        generator.emitter().tick((emitter, context) -> {
+            // stop emit when activation expression result is true.
             if (activation.test(context)) {
                 emitter.start();
             }
-            // stop when expiration is true.
+            // stop emit when expiration expression result is true.
             if (expiration.test(context)) {
                 emitter.stop();
             }
         });
+    }
+
+    @Override
+    public int priority() {
+        return -10;
     }
 }

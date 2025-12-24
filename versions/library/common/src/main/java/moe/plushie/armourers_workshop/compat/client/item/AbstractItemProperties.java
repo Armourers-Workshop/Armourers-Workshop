@@ -7,11 +7,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractItemProperties {
 
     public static SkinItemProperty getProperty(OpenResourceLocation location) {
-        var location1 = location.toLocation();
+        var location1 = location.get();
         return (itemStack, entity, level, flags, displayContext) -> {
             var property = ItemProperties.getProperty(itemStack, location1);
             if (property != null) {

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.gui.event;
 import com.apple.library.impl.event.InputKeyEvent;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractCharacterEvent implements InputKeyEvent {
 
     public final char ch;

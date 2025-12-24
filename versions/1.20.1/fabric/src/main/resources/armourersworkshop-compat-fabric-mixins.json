@@ -12,6 +12,7 @@
     "FabricClientScreenRenderMixin",
     "FabricItemTooltipMixin",
     "FabricTrinketsAddonMixin",
+    "particle/FabricParticleManagerMixin",
     "dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",
     "dynamiclight/FabricRyoamicLightsMixin$EntityLightHandler",
     "dynamiclight/FabricRyoamicLightsMixin$BlockEntityLightHandler",

@@ -1,0 +1,49 @@
+package moe.plushie.armourers_workshop.compat.client.item.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemTransform;
+import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
+import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
+import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.ItemModel;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractItemModel {
+
+    private final ItemModel impl;
+
+    private AbstractItemModel(ItemModel impl) {
+        this.impl = impl;
+    }
+
+    public static AbstractItemModel wrap(ItemModel model) {
+        return new AbstractItemModel(model);
+    }
+
+    public static ItemModel unwrap(AbstractItemModel model) {
+        return model.impl;
+    }
+
+    public OpenItemTransform getTransform(OpenItemDisplayContext transformType) {
+        if (impl instanceof BlockModelWrapper wrapper) {
+            var transform = wrapper.properties.transforms().getTransform(AbstractItemDisplayContext.unwrap(transformType));
+            return AbstractItemTransform.wrap(transform);
+        }
+        return OpenItemTransform.NO_TRANSFORM;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof AbstractItemModel that)) return false;
+        return impl.equals(that.impl);
+    }
+
+    @Override
+    public int hashCode() {
+        return impl.hashCode();
+    }
+}

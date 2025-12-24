@@ -29,7 +29,7 @@ public class AbstractForgeCreativeModeTabBuilder<T extends CreativeModeTab> exte
                     output.acceptAll(list);
                 });
         if (lastItemGroup != null) {
-            builder = builder.withTabsBefore(lastItemGroup.toLocation());
+            builder = builder.withTabsBefore(lastItemGroup.get());
         } else {
             builder = builder.withTabsBefore(CreativeModeTabs.SPAWN_EGGS);
         }

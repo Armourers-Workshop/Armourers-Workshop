@@ -60,23 +60,23 @@ public class AbstractRenderTypeImpl extends RenderType {
         it.put(SkinVertexFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
         it.put(SkinVertexFormat.ENTITY_ALPHA, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
-        it.put(SkinVertexFormat.PARTICLE_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
-        it.put(SkinVertexFormat.PARTICLE_LIGHTING, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
+        it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
+        it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT_EMISSIVE, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
         it.put(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder).emissive());
+        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder).emissive());
         it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP).setAlphaState(DEFAULT_ALPHA)));
-        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
+        it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
 
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
         it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
+        it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
 
         it.put(SkinVertexFormat.SKIN_MESH_FACE_SOLID, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
         it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING).setLightmapState(LIGHTMAP)));
-        it.put(SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
+        it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_TRIANGLES, builder -> builder.setAlphaState(DEFAULT_ALPHA)).emissive());
     });
 
     public AbstractRenderTypeImpl(String name, RenderType delegate, boolean affectsCrumbling, boolean sortUpload, Runnable setupRenderState, Runnable clearRenderState) {
@@ -152,7 +152,7 @@ public class AbstractRenderTypeImpl extends RenderType {
 
         @Override
         public Builder texture(IResourceLocation texture, boolean blur, boolean mipmap) {
-            stateBuilder.setTextureState(new TextureStateShard(texture.toLocation(), blur, mipmap));
+            stateBuilder.setTextureState(new TextureStateShard(texture.get(), blur, mipmap));
             super.texture(texture, blur, mipmap);
             return this;
         }

@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compat.fabric;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+
+@Available("[1.26, )")
+public class AbstractFabricKeyCategory implements IKeyCategory {
+
+    private final KeyMapping.Category category;
+
+    public AbstractFabricKeyCategory(OpenResourceLocation name) {
+        this.category = KeyMapping.Category.register(name.get());
+    }
+
+    public static AbstractFabricKeyCategory unwrap(IKeyCategory category) {
+        return Objects.unsafeCast(category);
+    }
+
+    @Override
+    public Component name() {
+        return category.label();
+    }
+
+    public KeyMapping.Category category() {
+        return category;
+    }
+}

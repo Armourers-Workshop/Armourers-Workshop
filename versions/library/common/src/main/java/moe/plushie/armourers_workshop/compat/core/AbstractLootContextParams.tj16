@@ -43,7 +43,7 @@ public class AbstractLootContextParams {
 
         private Proxy(LootContextParam<T> impl) {
             this.impl = impl;
-            this.registryName = OpenResourceLocation.of(impl.getName());
+            this.registryName = AbstractResourceLocation.wrap(impl.getName());
         }
 
         @Override

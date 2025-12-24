@@ -1,0 +1,50 @@
+package moe.plushie.armourers_workshop.compat.client.entity.state;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModel;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelResolver;
+import moe.plushie.armourers_workshop.core.client.render.state.ItemStackRenderState;
+import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+@Available("[1.26, )")
+public class AbstractItemStackRenderState {
+
+    private static ItemStack RENDERING_GUI_ITEM = null;
+
+    public static ItemStackRenderState wrap(ItemStack itemStack, ItemModelResolver itemModelResolver, @Nullable ClientLevel level, @Nullable Entity itemOwner, ItemModel originItemModel) {
+        return new ItemStackRenderState(itemStack, AbstractItemModel.wrap(originItemModel), new ModelResolverImpl(itemModelResolver, level, itemOwner), itemStack == RENDERING_GUI_ITEM);
+    }
+
+    public static void startRenderGuiItem(ItemStack itemStack) {
+        RENDERING_GUI_ITEM = itemStack;
+    }
+
+    public static void endRenderGuiItem(ItemStack itemStack) {
+        RENDERING_GUI_ITEM = null;
+    }
+
+    private static class ModelResolverImpl implements SkinItemModelResolver {
+
+        private final ItemModelResolver itemModelResolver;
+        private final ClientLevel level;
+        private final Entity itemOwner;
+
+        public ModelResolverImpl(ItemModelResolver itemModelResolver, @Nullable ClientLevel level, @Nullable Entity itemOwner) {
+            this.itemModelResolver = itemModelResolver;
+            this.level = level;
+            this.itemOwner = itemOwner;
+        }
+
+        @Override
+        public SkinItemModel resolve(SkinItemModel itemModel, ItemStack itemStack, int flags, OpenItemDisplayContext displayContext) {
+            return itemModel.resolve(itemStack, itemOwner, level, flags, displayContext);
+        }
+    }
+}

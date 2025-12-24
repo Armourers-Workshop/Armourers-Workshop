@@ -1,16 +1,22 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterInitialization extends SkinParticleComponent {
+/**
+ * This component allows the emitter to run some Molang at creation, primarily to populate any Molang variables that get used later.
+ */
+public class EmitterInitialization implements SkinParticleComponent {
 
+    /// this is run once at emitter startup.
     private final OpenPrimitive creation;
+
+    /// this is run once per emitter update.
     private final OpenPrimitive update;
 
     public EmitterInitialization(OpenPrimitive creation, OpenPrimitive update) {
@@ -30,13 +36,13 @@ public class EmitterInitialization extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var creation = builder.compile(this.creation, 0.0);
-        var update = builder.compile(this.update, 0.0);
-        builder.applyEmitter((emitter, context) -> {
+    public void compile(SkinParticleGenerator generator) {
+        var creation = generator.compile(this.creation, 0.0);
+        var update = generator.compile(this.update, 0.0);
+        generator.emitter().prepare((emitter, context) -> {
             creation.evaluate(context);
         });
-        builder.updateEmitter((emitter, context) -> {
+        generator.emitter().tick((emitter, context) -> {
             update.evaluate(context);
         });
     }

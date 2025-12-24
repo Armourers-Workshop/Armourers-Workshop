@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractGameProfileResolver {
 
     public void resolve(OpenGameProfile profile, IResultHandler<OpenGameProfile> handler) {

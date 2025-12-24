@@ -1,0 +1,38 @@
+package moe.plushie.armourers_workshop.compat.client.gui.event;
+
+import com.apple.library.impl.event.InputKeyEvent;
+import com.mojang.blaze3d.platform.InputConstants;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.KeyEvent;
+
+@Available("[1.26, )")
+public class AbstractKeyEvent implements InputKeyEvent {
+
+    public static final boolean ON_OSX = Util.getPlatform() == Util.OS.OSX;
+
+    public final KeyEvent event;
+
+    public AbstractKeyEvent(KeyEvent event) {
+        this.event = event;
+    }
+
+    public static boolean isKeyDown(int key) {
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), key);
+    }
+
+    public static InputConstants.Key create(int code, int modifier) {
+        return InputConstants.getKey(new KeyEvent(code, -1, modifier));
+    }
+
+    @Override
+    public int code() {
+        return event.key();
+    }
+
+    @Override
+    public int modifiers() {
+        return event.modifiers();
+    }
+}

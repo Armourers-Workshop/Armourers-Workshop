@@ -78,7 +78,7 @@ public class AbstractContainerSlot extends AbstractContainerSlotImpl {
     public final ResourceLocation noItemIcon() {
         var location = abi$noItemIcon();
         if (location != null) {
-            return location.toLocation();
+            return location.get();
         }
         return null;
     }

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.compat.forge.AbstractForgeResourceLoader;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractForgeRegisterServerDataPackEvent {
 
     public static IEventHandler<RegisterServerDataPackEvent> registryFactory() {

@@ -21,7 +21,7 @@ import yesman.epicfight.client.mesh.HumanoidMesh;
 import yesman.epicfight.client.renderer.FirstPersonRenderer;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Conditional("epicfight")
 @Pseudo
 @Mixin(FirstPersonRenderer.class)

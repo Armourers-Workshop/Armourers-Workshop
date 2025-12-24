@@ -1,37 +1,94 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.appearance;
 
+import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
+import moe.plushie.armourers_workshop.core.math.OpenSize2f;
 import moe.plushie.armourers_workshop.core.math.OpenSize2i;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleFacing;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.math.ParticleCameraFacing;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class ParticleBillboardAppearance extends SkinParticleComponent {
+/**
+ * This component tells the particle system to render the particle as a billboard, a rectangle in the world facing a particular direction.
+ */
+public class ParticleBillboardAppearance implements SkinParticleComponent {
 
+    /// specifies the x/y size of the billboard
+    /// evaluated every frame
     private final OpenPrimitive width;
     private final OpenPrimitive height;
-    private final SkinParticleFacing facingCameraMode;
+
+    /// used to orient the billboard.  Options are:
+    /// "rotate_xyz" - aligned to the camera, perpendicular to the view axis
+    /// "rotate_y" - aligned to camera, but rotating around world y axis
+    /// "lookat_xyz" - aimed at the camera, biased towards world y up
+    /// "lookat_y" - aimed at the camera, but rotating around world y axis
+    /// "direction_x" - unrotated particle x axis is along the direction vector, unrotated y axis attempts to aim upwards
+    /// "direction_y" - unrotated particle y axis is along the direction vector, unrotated x axis attempts to aim upwards
+    /// "direction_z" - billboard face is along the direction vector, unrotated y axis attempts to aim upwards
+    /// emitter_transform_xy, // orient the particles to match the emitter's transform (the billboard plane will match the transform's xy plane).
+    /// emitter_transform_xz, // orient the particles to match the emitter's transform (the billboard plane will match the transform's xz plane).
+    /// emitter_transform_yz, // orient the particles to match the emitter's transform (the billboard plane will match the transform's yz plane).
+    private final ParticleCameraFacing cameraFacing;
+
+//    // Specifies how to calculate the direction of a particle, this will be used by facing modes that require a direction as input (for instance: lookat_direction and direction)
+//    // Options are:
+//    // "derive_from_velocity" - The direction matches the direction of the velocity.
+//    // "custom_direction" - The direction is specified in the json definition using a vector of floats or molang expressions.
+//    // If the direction subsection is not defined, the default will be "derive_from_velocity" mode with a "min_speed_threshold" of 0.01.
+//    "direction": {
+//        "mode": "derive_from_velocity" or "custom_direction",
+//        "min_speed_threshold": <float> // only used in "derive_from_velocity" mode. The direction is set if the speed of the particle is above the threshold. The default is 0.01
+//        "custom_direction": [ <float/molang>, <float/molang>, <float/molang> ], // only used in "custom_direction" mode. Specifies the direction vector
+//    }
+
+    /// specifies the assumed texture width/height
+    /// defaults to 1
+    /// when set to 1, UV's work just like normalized UV's
+    /// when set to the texture width/height, this works like texels
     private final OpenSize2i textureSize;
+
+    /// Assuming the specified texture width and height, use these
+    /// uv coordinates.
+    /// evaluated every frame
     private final OpenPrimitive textureCoordsX;
     private final OpenPrimitive textureCoordsY;
     private final OpenPrimitive textureCoordsWidth;
     private final OpenPrimitive textureCoordsHeight;
+
+    /// alternate way via specifying a flipbook animation
+    /// a flipbook animation uses pieces of the texture to animate, by stepping over time from one
+    /// "frame" to another
+    private final boolean flipbook;
+
+    /// how far to move the UV patch each frame
     private final OpenPrimitive stepX;
     private final OpenPrimitive stepY;
-    private final boolean isUseAnimation;
+
+//    "base_UV": [ <float/molang>, <float/molang> ], // upper-left corner of starting UV patch
+//    "size_UV": [ <float>, <float> ], // size of UV patch
+//    "step_UV": [ <float>, <float> ], //
+
+    /// default frames per second
     private final int fps;
+
+    /// maximum frame number, with first frame being frame 1
     private final OpenPrimitive maxFrame;
+
+    /// optional, adjust fps to match lifetime of particle. default=false
     private final boolean isStretchToLifetime;
+
+    /// optional, makes the animation loop when it reaches the end? default=false
     private final boolean isLoop;
 
-    public ParticleBillboardAppearance(OpenPrimitive width, OpenPrimitive height, SkinParticleFacing facingCameraMode, OpenSize2i textureSize, OpenPrimitive textureCoordsX, OpenPrimitive textureCoordsY, OpenPrimitive textureCoordsWidth, OpenPrimitive textureCoordsHeight, OpenPrimitive stepX, OpenPrimitive stepY, boolean isUseAnimation, int fps, OpenPrimitive maxFrame, boolean isStretchToLifetime, boolean isLoop) {
+    public ParticleBillboardAppearance(OpenPrimitive width, OpenPrimitive height, ParticleCameraFacing cameraFacing, OpenSize2i textureSize, OpenPrimitive textureCoordsX, OpenPrimitive textureCoordsY, OpenPrimitive textureCoordsWidth, OpenPrimitive textureCoordsHeight, OpenPrimitive stepX, OpenPrimitive stepY, boolean flipbook, int fps, OpenPrimitive maxFrame, boolean isStretchToLifetime, boolean isLoop) {
         this.width = width;
         this.height = height;
-        this.facingCameraMode = facingCameraMode;
+        this.cameraFacing = cameraFacing;
         this.textureSize = textureSize;
         this.textureCoordsX = textureCoordsX;
         this.textureCoordsY = textureCoordsY;
@@ -39,7 +96,7 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
         this.textureCoordsHeight = textureCoordsHeight;
         this.stepX = stepX;
         this.stepY = stepY;
-        this.isUseAnimation = isUseAnimation;
+        this.flipbook = flipbook;
         this.fps = fps;
         this.maxFrame = maxFrame;
         this.isStretchToLifetime = isStretchToLifetime;
@@ -49,7 +106,7 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
     public ParticleBillboardAppearance(IInputStream stream) throws IOException {
         this.width = stream.readPrimitiveObject();
         this.height = stream.readPrimitiveObject();
-        this.facingCameraMode = stream.readEnum(SkinParticleFacing.class);
+        this.cameraFacing = stream.readEnum(ParticleCameraFacing.class);
         int textureWidth = stream.readInt();
         int textureHeight = stream.readInt();
         this.textureSize = new OpenSize2i(textureWidth, textureHeight);
@@ -59,7 +116,7 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
         this.textureCoordsHeight = stream.readPrimitiveObject();
         this.stepX = stream.readPrimitiveObject();
         this.stepY = stream.readPrimitiveObject();
-        this.isUseAnimation = stream.readBoolean();
+        this.flipbook = stream.readBoolean();
         this.fps = stream.readInt();
         this.maxFrame = stream.readPrimitiveObject();
         this.isStretchToLifetime = stream.readBoolean();
@@ -70,7 +127,7 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
     public void writeToStream(IOutputStream stream) throws IOException {
         stream.writePrimitiveObject(width);
         stream.writePrimitiveObject(height);
-        stream.writeEnum(facingCameraMode);
+        stream.writeEnum(cameraFacing);
         stream.writeInt(textureSize.width());
         stream.writeInt(textureSize.height());
         stream.writePrimitiveObject(textureCoordsX);
@@ -79,7 +136,7 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
         stream.writePrimitiveObject(textureCoordsHeight);
         stream.writePrimitiveObject(stepX);
         stream.writePrimitiveObject(stepY);
-        stream.writeBoolean(isUseAnimation);
+        stream.writeBoolean(flipbook);
         stream.writeInt(fps);
         stream.writePrimitiveObject(maxFrame);
         stream.writeBoolean(isStretchToLifetime);
@@ -87,194 +144,53 @@ public class ParticleBillboardAppearance extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-
-        // TODO: NO IMPL @SAGESSE
+    public void compile(SkinParticleGenerator generator) {
+        var width = generator.compile(this.width, 0.0);
+        var height = generator.compile(this.height, 0.0);
+        var textureCoordsX = generator.compile(this.textureCoordsX, 0.0);
+        var textureCoordsY = generator.compile(this.textureCoordsY, 0.0);
+        var textureCoordsWidth = generator.compile(this.textureCoordsWidth, 0.0);
+        var textureCoordsHeight = generator.compile(this.textureCoordsHeight, 0.0);
+        var maxFrame = generator.compile(this.maxFrame, 0);
+        var stepX = generator.compile(this.stepX, 0);
+        var stepY = generator.compile(this.stepY, 0);
+        generator.instance().render((emitter, particle, context) -> {
+            // calculate texture uvs.
+            var w = width.compute(context);
+            var h = height.compute(context);
+            var u = textureCoordsX.compute(context);
+            var v = textureCoordsY.compute(context);
+            var s = textureCoordsWidth.compute(context);
+            var t = textureCoordsHeight.compute(context);
+            var n = Math.max(textureSize.width, 1);
+            var m = Math.max(textureSize.height, 1);
+            // is a animation texture.
+            if (flipbook) {
+                var time = particle.time();
+                var index = Math.floor(time * fps);
+                var frames = maxFrame.compute(context);
+                // adjust fps to match lifetime of particle.
+                if (isStretchToLifetime) {
+                    var duration = particle.duration();
+                    if (duration > 0) {
+                        index = Math.floor((time / duration) * frames);
+                    } else {
+                        index = 0;
+                    }
+                }
+                // makes the animation loop when it reaches the end
+                if (this.isLoop && frames > 0) {
+                    index = index % frames;
+                }
+                u += stepX.compute(context) * index;
+                v += stepY.compute(context) * index;
+            }
+            // submit a element into render pipeline.
+            var pos = particle.position();
+            var rotation = particle.rotation();
+            var size = new OpenSize2f(w * 2.25, h * 2.25);
+            var textureBox = new OpenRectangle2f(u / n, v / m, s / n, t / m);
+            particle.pipeline().submit(pos, rotation, size, textureBox, cameraFacing);
+        });
     }
-
-    //    public void calculateUVs(BedrockParticle particle, float partialTicks)
-//    {
-//        /* Update particle's UVs and size */
-//        this.w = (float) this.sizeW.get() * 2.25F;
-//        this.h = (float) this.sizeH.get() * 2.25F;
-//
-//        float u = (float) this.uvX.get();
-//        float v = (float) this.uvY.get();
-//        float w = (float) this.uvW.get();
-//        float h = (float) this.uvH.get();
-//
-//        if (this.flipbook)
-//        {
-//            int index = (int) (particle.getAge(partialTicks) * this.fps);
-//            int max = (int) this.maxFrame.get();
-//
-//            if (this.stretchFPS)
-//            {
-//                float lifetime = particle.lifetime <= 0 ? 0 : (particle.age + partialTicks) / particle.lifetime;
-//
-//                index = (int) (lifetime * max);
-//            }
-//
-//            if (this.loop && max != 0)
-//            {
-//                index = index % max;
-//            }
-//
-//            if (index > max)
-//            {
-//                index = max;
-//            }
-//
-//            u += this.stepX * index;
-//            v += this.stepY * index;
-//        }
-//
-//        this.u1 = u;
-//        this.v1 = v;
-//        this.u2 = u + w;
-//        this.v2 = v + h;
-//    }
-
-
-//    @Override
-//    public void render(RenderableBedrockEmitter emitter, BedrockParticle particle, BufferBuilder builder, float partialTicks)
-//    {
-//        this.calculateUVs(particle, partialTicks);
-//
-//        /* Render the particle */
-//        double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
-//        double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
-//        double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
-//        float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
-//
-//        if (particle.relativePosition && particle.relativeRotation)
-//        {
-//            this.vector.set((float) px, (float) py, (float) pz);
-//            emitter.rotation.transform(this.vector);
-//
-//            px = this.vector.x;
-//            py = this.vector.y;
-//            pz = this.vector.z;
-//
-//            px += emitter.lastGlobal.x;
-//            py += emitter.lastGlobal.y;
-//            pz += emitter.lastGlobal.z;
-//        }
-//
-//        /* Calculate yaw and pitch based on the facing mode */
-//        float entityYaw = emitter.cYaw;
-//        float entityPitch = emitter.cPitch;
-//        double entityX = emitter.cX;
-//        double entityY = emitter.cY;
-//        double entityZ = emitter.cZ;
-//        boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
-//
-//        /* Flip width when frontal perspective mode */
-//        if (emitter.perspective == 2)
-//        {
-//            this.w = -this.w;
-//        }
-//        /* In GUI renderer */
-//        else if (emitter.perspective == 100 && !lookAt)
-//        {
-//            entityYaw = 180 - entityYaw;
-//
-//            this.w = -this.w;
-//            this.h = -this.h;
-//        }
-//
-//        if (lookAt)
-//        {
-//            double dX = entityX - px;
-//            double dY = entityY - py;
-//            double dZ = entityZ - pz;
-//            double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
-//
-//            entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
-//            entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
-//        }
-//
-//        /* Calculate the geometry for billboards using cool matrix math */
-//        int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
-//        int lightX = light >> 16 & 65535;
-//        int lightY = light & 65535;
-//
-//        this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
-//        this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
-//        this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
-//        this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
-//        this.transform.setIdentity();
-//
-//        if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
-//        {
-//            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-//            this.transform.mul(this.rotation);
-//            this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
-//            this.transform.mul(this.rotation);
-//        }
-//        else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
-//            this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-//            this.transform.mul(this.rotation);
-//        }
-//
-//        this.rotation.rotZ(angle / 180 * (float) Math.PI);
-//        this.transform.mul(this.rotation);
-//        this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
-//
-//        for (Vector4f vertex : this.vertices)
-//        {
-//            this.transform.transform(vertex);
-//        }
-//
-//        float u1 = this.u1 / (float) this.textureWidth;
-//        float u2 = this.u2 / (float) this.textureWidth;
-//        float v1 = this.v1 / (float) this.textureHeight;
-//        float v2 = this.v2 / (float) this.textureHeight;
-//
-//        builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//    }
-//
-//    @Override
-//    public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
-//    {
-//        this.calculateUVs(particle, partialTicks);
-//
-//        this.w = this.h = 0.5F;
-//        float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
-//
-//        /* Calculate the geometry for billboards using cool matrix math */
-//        this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
-//        this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
-//        this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
-//        this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
-//        this.transform.setIdentity();
-//        this.transform.setScale(scale * 2.75F);
-//        this.transform.setTranslation(new Vector3f(x, y - scale / 2, 0));
-//
-//        this.rotation.rotZ(angle / 180 * (float) Math.PI);
-//        this.transform.mul(this.rotation);
-//
-//        for (Vector4f vertex : this.vertices)
-//        {
-//            this.transform.transform(vertex);
-//        }
-//
-//        float u1 = this.u1 / (float) this.textureWidth;
-//        float u2 = this.u2 / (float) this.textureWidth;
-//        float v1 = this.v1 / (float) this.textureHeight;
-//        float v2 = this.v2 / (float) this.textureHeight;
-//
-//        BufferBuilder builder = Tessellator.getInstance().getBuffer();
-//
-//        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-//        builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//        builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-//
-//        Tessellator.getInstance().draw();
-//    }
 }

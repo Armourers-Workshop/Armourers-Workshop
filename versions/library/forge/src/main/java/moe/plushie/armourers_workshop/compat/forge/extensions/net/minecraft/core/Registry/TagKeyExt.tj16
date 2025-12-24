@@ -17,14 +17,14 @@ public class TagKeyExt {
 
     public static TypedProvider<ITagKey<?>> createItemTagRegistryFO(@ThisClass Class<?> clazz) {
         return TypedProvider.factory(registryName -> {
-            var tag = ItemTags.createOptional(registryName.toLocation());
+            var tag = ItemTags.createOptional(registryName.get());
             return (AbstractItemTag) itemStack -> itemStack.getItem().is(tag);
         });
     }
 
     public static TypedProvider<ITagKey<?>> createBlockTagRegistryFO(@ThisClass Class<?> clazz) {
         return TypedProvider.factory(registryName -> {
-            var tag = BlockTags.createOptional(registryName.toLocation());
+            var tag = BlockTags.createOptional(registryName.get());
             return (AbstractBlockTag) blockState -> blockState.getBlock().is(tag);
         });
     }

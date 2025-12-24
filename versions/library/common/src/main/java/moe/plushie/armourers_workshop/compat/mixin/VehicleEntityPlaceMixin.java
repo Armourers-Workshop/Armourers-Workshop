@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Consumer;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @Mixin(EntityType.class)
 public class VehicleEntityPlaceMixin {
 

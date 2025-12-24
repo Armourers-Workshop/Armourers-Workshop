@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -10,8 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParticleKillInBlocksLifetime extends SkinParticleComponent {
+/**
+ * Particles expire when in a block of the type in the list. Note: this component can exist alongside particle_lifetime_expression.
+ */
+public class ParticleKillInBlocksLifetime implements SkinParticleComponent {
 
+    /// minecraft block names, e.g. 'minecraft:water', 'minecraft:air'
+    /// these are typically the same name as in the /setblock command
+    /// except for the minecraft: prefix
     private final List<String> blocks;
 
     public ParticleKillInBlocksLifetime(List<String> blocks) {
@@ -36,11 +42,11 @@ public class ParticleKillInBlocksLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
+    public void compile(SkinParticleGenerator generator) {
         // the blocks that let the particle expire on contact.
-        var blocks = Collections.compactMap(this.blocks, builder::getBlock);
-        builder.updateParticle((emitter, particle, context) -> {
-            if (particle.isAlive() && blocks.contains(particle.getBlock())) {
+        var blocks = Collections.compactMap(this.blocks, generator.registry()::getBlock);
+        generator.instance().tick((emitter, particle, context) -> {
+            if (particle.isAlive() && blocks.contains(particle.level().getBlock(particle.position()))) {
                 particle.kill();
             }
         });

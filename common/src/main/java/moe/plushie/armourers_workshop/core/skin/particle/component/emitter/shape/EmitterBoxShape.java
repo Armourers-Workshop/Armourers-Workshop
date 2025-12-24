@@ -1,25 +1,38 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.shape;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
+import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterBoxShape extends SkinParticleComponent {
+/**
+ * All particles come out of a box of the specified size from the emitter.
+ */
+public class EmitterBoxShape implements SkinParticleComponent {
 
+    /// specifies the offset from the emitter to emit the particles
+    /// evaluated once per particle emitted
     private final OpenPrimitive x;
     private final OpenPrimitive y;
     private final OpenPrimitive z;
 
+    /// box dimensions
+    /// these are the half dimensions, the box is formed centered on the emitter
+    /// with the box extending in the 3 principal x/y/z axes by these values
     private final OpenPrimitive width;
     private final OpenPrimitive height;
     private final OpenPrimitive depth;
 
+    /// specifies the direction of particles.  Defaults to "outwards"
+    /// evaluated once per particle emitted
     private final EmitterShapeDirection direction;
 
+    /// emit only from the surface of the sphere
     private final boolean surface;
 
     public EmitterBoxShape(OpenPrimitive x, OpenPrimitive y, OpenPrimitive z, OpenPrimitive width, OpenPrimitive height, OpenPrimitive depth, EmitterShapeDirection direction, boolean surface) {
@@ -57,37 +70,40 @@ public class EmitterBoxShape extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var x = builder.compile(this.x, 0.0);
-        var y = builder.compile(this.y, 0.0);
-        var z = builder.compile(this.z, 0.0);
-        var width = builder.compile(this.width, 0.0);
-        var height = builder.compile(this.height, 0.0);
-        var depth = builder.compile(this.depth, 0.0);
-        builder.applyParticle((emitter, particle, context) -> {
-            var cx = x.compute(context);
-            var cy = y.compute(context);
-            var cz = z.compute(context);
-            var w = width.compute(context);
-            var h = height.compute(context);
-            var d = depth.compute(context);
-            // TODO: NO IMPL @SAGESSE
-//            particle.position.x = cx + ((float) Math.random() * 2 - 1F) * w;
-//            particle.position.y = cy + ((float) Math.random() * 2 - 1F) * h;
-//            particle.position.z = cz + ((float) Math.random() * 2 - 1F) * d;
-//
-//            if (this.surface) {
-//                int roll = (int) (Math.random() * 6 * 100) % 6;
-//
-//                if (roll == 0) particle.position.x = cx + w;
-//                else if (roll == 1) particle.position.x = cx - w;
-//                else if (roll == 2) particle.position.y = cy + h;
-//                else if (roll == 3) particle.position.y = cy - h;
-//                else if (roll == 4) particle.position.z = cz + d;
-//                else if (roll == 5) particle.position.z = cz - d;
-//            }
-//
-//            this.direction.applyDirection(particle, centerX, cy, cz);
+    public void compile(SkinParticleGenerator generator) {
+        var x = generator.compile(this.x, 0.0);
+        var y = generator.compile(this.y, 0.0);
+        var z = generator.compile(this.z, 0.0);
+        var width = generator.compile(this.width, 0.0);
+        var height = generator.compile(this.height, 0.0);
+        var depth = generator.compile(this.depth, 0.0);
+        var direction = this.direction.compile(generator);
+        var surface = this.surface;
+        generator.instance().prepare((emitter, particle, context) -> {
+            var cx = (float) x.compute(context);
+            var cy = (float) y.compute(context);
+            var cz = (float) z.compute(context);
+            var w = (float) width.compute(context);
+            var h = (float) height.compute(context);
+            var d = (float) depth.compute(context);
+
+            var tx = cx + (OpenMath.randomf() * 2 - 1) * w;
+            var ty = cy + (OpenMath.randomf() * 2 - 1) * h;
+            var tz = cz + (OpenMath.randomf() * 2 - 1) * d;
+
+            if (surface) {
+                switch ((int) (OpenMath.randomf() * 6 * 100) % 6) {
+                    case 0 -> tx = cx + w;
+                    case 1 -> tx = cx - w;
+                    case 2 -> ty = cy + h;
+                    case 3 -> ty = cy - h;
+                    case 4 -> tz = cz + d;
+                    case 5 -> tz = cz - d;
+                }
+            }
+
+            particle.setPosition(tx, ty, tz);
+            direction.apply(particle, cx, cy, cz, context);
         });
     }
 }

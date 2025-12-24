@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 
 public class OpenResourceLocation implements IResourceLocation, Comparable<OpenResourceLocation> {
 
@@ -10,8 +9,6 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
 
     private final String namespace;
     private final String path;
-
-    private ResourceLocation location;
 
     private OpenResourceLocation(String namespace, String path) {
         this.namespace = namespace;
@@ -46,12 +43,6 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
             return location1;
         }
         return new OpenResourceLocation(location.namespace(), location.path());
-    }
-
-    public static OpenResourceLocation of(ResourceLocation location) {
-        var newValue = new OpenResourceLocation(location.getNamespace(), location.getPath());
-        newValue.location = location;
-        return newValue;
     }
 
     @Override
@@ -98,13 +89,5 @@ public class OpenResourceLocation implements IResourceLocation, Comparable<OpenR
     @Override
     public OpenResourceLocation withNamespace(String namespace) {
         return create(namespace, path);
-    }
-
-    @Override
-    public ResourceLocation toLocation() {
-        if (location == null) {
-            location = IResourceLocation.super.toLocation();
-        }
-        return location;
     }
 }

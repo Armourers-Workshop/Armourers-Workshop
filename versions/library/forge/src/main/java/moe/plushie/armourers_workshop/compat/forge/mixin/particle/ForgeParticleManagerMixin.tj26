@@ -1,0 +1,51 @@
+package moe.plushie.armourers_workshop.compat.forge.mixin.particle;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
+import moe.plushie.armourers_workshop.compat.client.particle.AbstractParticleInstance;
+import moe.plushie.armourers_workshop.compat.client.particle.AbstractParticleManager;
+import moe.plushie.armourers_workshop.compat.client.particle.AbstractParticleManagerImpl;
+import moe.plushie.armourers_workshop.compat.client.renderer.particle.AbstractParticleGroupRenderState;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
+import net.minecraft.client.Camera;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.state.ParticlesRenderState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Available("[1.26, )")
+@Mixin(ParticleEngine.class)
+public class ForgeParticleManagerMixin implements AbstractParticleManagerImpl {
+
+    private final AbstractParticleManager aw2$particleManager = new AbstractParticleManager();
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void aw2$tick(CallbackInfo ci) {
+        aw2$particleManager.tick();
+    }
+
+    @Inject(method = "extract", at = @At(value = "HEAD"))
+    private void aw2$render(ParticlesRenderState particlesRenderState, Frustum frustum, Camera camera, float f, CallbackInfo ci) {
+        var renderState = new AbstractParticleGroupRenderState();
+        aw2$particleManager.render(AbstractCamera.wrap(camera), f, new SceneGraphicsContext(renderState));
+        particlesRenderState.add(renderState);
+    }
+
+    @Inject(method = "setLevel", at = @At("HEAD"))
+    private void aw2$changeLevel(CallbackInfo ci) {
+        aw2$particleManager.clear();
+    }
+
+    @Override
+    public void aw2$add(AbstractParticleInstance particleInstance) {
+        aw2$particleManager.add(particleInstance);
+    }
+
+    @Override
+    public void aw2$remove(AbstractParticleInstance particleInstance) {
+        aw2$particleManager.remove(particleInstance);
+    }
+}

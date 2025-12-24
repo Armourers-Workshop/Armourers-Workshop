@@ -38,7 +38,7 @@ public class AbstractForgeNetwork {
         @Override
         public void register() {
             var channel = NetworkRegistry.ChannelBuilder
-                    .named(channelName.toLocation())
+                    .named(channelName.get())
                     .networkProtocolVersion(() -> channelVersion)
                     .clientAcceptedVersions(sv -> true)
                     .serverAcceptedVersions(cv -> {
@@ -111,7 +111,7 @@ public class AbstractForgeNetwork {
         @Override
         public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
             var direction = target.getDirection();
-            var packet1 = direction.buildPacket(Pair.of((FriendlyByteBuf) buf.asByteBuf(), 0), channel.toLocation()).getThis();
+            var packet1 = direction.buildPacket(Pair.of((FriendlyByteBuf) buf.asByteBuf(), 0), channel.get()).getThis();
             return new Distributor(target, packet1);
         }
 

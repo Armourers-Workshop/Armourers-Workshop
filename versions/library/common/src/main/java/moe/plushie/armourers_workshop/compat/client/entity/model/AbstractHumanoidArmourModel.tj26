@@ -1,0 +1,27 @@
+package moe.plushie.armourers_workshop.compat.client.entity.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractHumanoidRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
+
+@Available("[1.26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractHumanoidArmourModel<T extends LivingEntity, S extends LivingEntityRenderState> extends AbstractHumanoidArmourModelImpl<T, AbstractHumanoidRenderState> {
+
+    public AbstractHumanoidArmourModel(Context context) {
+        super(context);
+    }
+
+    public void abi$setupAnim(S renderState) {
+        super.setupAnim(AbstractRenderState.unwrap(renderState));
+    }
+
+    @Override
+    public final void setupAnim(AbstractHumanoidRenderState renderState) {
+        abi$setupAnim(AbstractRenderState.wrap(renderState));
+    }
+}

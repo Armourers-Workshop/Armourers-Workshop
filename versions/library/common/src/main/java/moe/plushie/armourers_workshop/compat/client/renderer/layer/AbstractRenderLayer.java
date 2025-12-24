@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractRenderLayer<T extends Entity, S extends EntityRenderState, M extends IEntityModel<S>> extends RenderLayer<T, EntityModel<T>> {
 

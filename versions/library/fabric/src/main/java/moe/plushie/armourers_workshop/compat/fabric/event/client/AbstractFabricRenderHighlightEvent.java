@@ -11,7 +11,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractFabricRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {

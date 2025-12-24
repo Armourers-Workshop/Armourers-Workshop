@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -10,8 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParticleOnlyInBlocksLifetime extends SkinParticleComponent {
+/**
+ * Particles expire when in a block of the type not in the list.
+ */
+public class ParticleOnlyInBlocksLifetime implements SkinParticleComponent {
 
+    /// minecraft block names, e.g. 'minecraft:water', 'minecraft:air'
+    /// these are typically the same name as in the /setblock command
+    /// except for the minecraft: prefix
     private final List<String> blocks;
 
     public ParticleOnlyInBlocksLifetime(List<String> blocks) {
@@ -36,11 +42,11 @@ public class ParticleOnlyInBlocksLifetime extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        // the blocks outside of which the particle expires.
-        var blocks = Collections.compactMap(this.blocks, builder::getBlock);
-        builder.updateParticle((emitter, particle, context) -> {
-            if (particle.isAlive() && !blocks.contains(particle.getBlock())) {
+    public void compile(SkinParticleGenerator generator) {
+        // the blocks outside which the particle expires.
+        var blocks = Collections.compactMap(this.blocks, generator.registry()::getBlock);
+        generator.instance().tick((emitter, particle, context) -> {
+            if (particle.isAlive() && !blocks.contains(particle.level().getBlock(particle.position()))) {
                 particle.kill();
             }
         });

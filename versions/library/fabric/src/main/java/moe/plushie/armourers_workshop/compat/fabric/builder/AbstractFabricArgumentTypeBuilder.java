@@ -17,6 +17,6 @@ public class AbstractFabricArgumentTypeBuilder<T extends IArgumentType<?>> exten
 
     @Override
     protected void register(OpenResourceLocation registryName, AbstractArgumentTypeInfo<T> info) {
-        ArgumentTypeRegistry.registerArgumentType(registryName.toLocation(), info.type(), info);
+        ArgumentTypeRegistry.registerArgumentType(registryName.get(), info.type(), info);
     }
 }

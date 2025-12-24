@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 public class AbstractLootItemFunctionType<T extends ILootItemFunction> implements ILootItemFunctionType<T> {
 
     private final LootItemFunctionType<?> type;

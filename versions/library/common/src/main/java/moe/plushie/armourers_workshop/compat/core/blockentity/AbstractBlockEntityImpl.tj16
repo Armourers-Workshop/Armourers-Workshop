@@ -65,7 +65,7 @@ public abstract class AbstractBlockEntityImpl extends BlockEntity {
         return serializer.tag();
     }
 
-    // TODO: 1.22 remove only in
+    // TODO: 1.26 remove only in
     @Override
     public final double getViewDistance() {
         if (viewDistanceProvider == null) {

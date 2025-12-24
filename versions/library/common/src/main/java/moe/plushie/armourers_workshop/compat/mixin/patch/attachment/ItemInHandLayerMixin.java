@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Mixin(ItemInHandLayer.class)
 public class ItemInHandLayerMixin {
 

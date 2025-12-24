@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractEntityRenderer<T extends Entity, S extends EntityRenderState> extends AbstractEntityRendererImpl<T, S> implements IEntityRenderer<T, S> {
 
@@ -60,7 +60,7 @@ public abstract class AbstractEntityRenderer<T extends Entity, S extends EntityR
 
     @Override
     public final ResourceLocation getTextureLocation(T entity) {
-        // TODO: 1.22
+        // TODO: 1.26
         return null; // check not support get the texture?
     }
 }

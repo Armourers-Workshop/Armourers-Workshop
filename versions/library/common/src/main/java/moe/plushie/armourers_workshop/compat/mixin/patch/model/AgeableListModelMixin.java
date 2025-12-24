@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @Mixin(AgeableListModel.class)
 public abstract class AgeableListModelMixin implements AbstractModelCollector {
 

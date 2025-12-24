@@ -12,6 +12,6 @@ import manifold.ext.rt.api.ThisClass;
 public class ShaderTextureExt {
 
     public static void setShaderTexture(@ThisClass Class<?> clazz, int i, OpenResourceLocation texture) {
-        Minecraft.getInstance().getTextureManager().bind(texture.toLocation());
+        Minecraft.getInstance().getTextureManager().bind(texture.get());
     }
 }

@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractMenuToast implements Toast {
 

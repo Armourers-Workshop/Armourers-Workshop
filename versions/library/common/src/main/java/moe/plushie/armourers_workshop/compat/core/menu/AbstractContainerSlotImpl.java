@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public abstract class AbstractContainerSlotImpl extends Slot {
 
     public AbstractContainerSlotImpl(Container container, int i, int j, int k) {

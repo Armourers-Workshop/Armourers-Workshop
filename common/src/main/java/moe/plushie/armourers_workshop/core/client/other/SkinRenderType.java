@@ -31,16 +31,16 @@ public abstract class SkinRenderType implements IRenderType {
     public static final IRenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(ModTextures.MANNEQUIN_DEFAULT);
     public static final IRenderType PLAYER_TRANSLUCENT = entityTranslucentCull(ModTextures.MANNEQUIN_DEFAULT);
 
-    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.EARTH).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).cull().build("block_earth");
+    public static final IRenderType BLOCK_EARTH = _builder(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT_EMISSIVE).texture(ModTextures.EARTH).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).cull().build("block_earth");
 
     public static final IRenderType BLOCK_CUBE = _block(ModTextures.BLOCK_CUBE).group(Group.SOLID_BLOCKS).build("block_cube");
     public static final IRenderType BLOCK_CUBE_GLASS = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).sortOnUpload().build("block_cube_glass");
     public static final IRenderType BLOCK_CUBE_GLASS_UNSORTED = _block(ModTextures.BLOCK_CUBE_GLASS).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).build("block_cube_glass_unsorted");
 
     public static final IRenderType BLOCK_FACE_SOLID = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID).texture(ModTextures.CUBE).group(Group.SOLID_BLOCKS).ordinal(200).build("block_face_sold");
-    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING).texture(ModTextures.LIGHTING_CUBE).group(Group.SOLID_BLOCKS).ordinal(200).build("block_face_lighting");
+    public static final IRenderType BLOCK_FACE_LIGHTING = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_EMISSIVE).texture(ModTextures.LIGHTING_CUBE).group(Group.SOLID_BLOCKS).ordinal(200).build("block_face_emissive");
     public static final IRenderType BLOCK_FACE_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT).texture(ModTextures.CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).ordinal(400).build("block_face_translucent");
-    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_LIGHTING_TRANSLUCENT).texture(ModTextures.LIGHTING_CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).ordinal(400).build("block_face_translucent_lighting");
+    public static final IRenderType BLOCK_FACE_LIGHTING_TRANSLUCENT = _blockFace(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT_EMISSIVE).texture(ModTextures.LIGHTING_CUBE).blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS).ordinal(400).build("block_face_translucent_emissive");
 
     private static final IRenderType LINES = _line(1).build("lines");
     private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("line_strip");
@@ -72,9 +72,9 @@ public abstract class SkinRenderType implements IRenderType {
 
     public static IRenderType particle(OpenResourceLocation texture, boolean isEmissive, boolean isCull) {
         if (isEmissive) {
-            return _customParticle("particle_lighting_cutout", SkinVertexFormat.PARTICLE_LIGHTING, texture, false, true, isCull);
+            return _customParticle("particle_cutout_emissive", SkinVertexFormat.SKIN_PARTICLE_CUTOUT_EMISSIVE, texture, false, true, isCull);
         }
-        return _customParticle("particle_cutout", SkinVertexFormat.PARTICLE_CUTOUT, texture, false, false, isCull);
+        return _customParticle("particle_cutout", SkinVertexFormat.SKIN_PARTICLE_CUTOUT, texture, false, false, isCull);
     }
 
     public static IRenderType image(OpenResourceLocation texture) {
@@ -177,24 +177,24 @@ public abstract class SkinRenderType implements IRenderType {
         private static final List<GeometryFaceBuilder> BUILDERS = Collections.immutableList(it -> {
 
             it.add(new GeometryFaceBuilder("aw_cube_face_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_face_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, false));
             it.add(new GeometryFaceBuilder("aw_cube_face_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_lighting", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
 
             it.add(new GeometryFaceBuilder("aw_cube_face_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_face_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, true));
             it.add(new GeometryFaceBuilder("aw_cube_face_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_lighting_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
 
             it.add(new GeometryFaceBuilder("aw_mesh_face_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, false));
             it.add(new GeometryFaceBuilder("aw_mesh_face_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_lighting", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, false));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
 
             it.add(new GeometryFaceBuilder("aw_mesh_face_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING, false, true, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, true));
             it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_lighting_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_LIGHTING_TRANSLUCENT, true, true, true));
+            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
         });
 
         private final String name;

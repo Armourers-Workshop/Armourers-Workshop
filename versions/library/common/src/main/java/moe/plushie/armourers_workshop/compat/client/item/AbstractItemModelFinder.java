@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 public class AbstractItemModelFinder {
 
     private static final ResourceLocation MARKER_ID = ResourceLocation.withDefaultNamespace("skin/generated");

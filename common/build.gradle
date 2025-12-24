@@ -1,4 +1,5 @@
 cocoon {
+    injectables()
     common()
     loom {
         accessWidenerPath = file("src/main/resources/armourersworkshop.accesswidener")

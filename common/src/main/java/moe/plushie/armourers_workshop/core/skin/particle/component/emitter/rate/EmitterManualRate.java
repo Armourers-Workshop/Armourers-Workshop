@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.rate;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -9,10 +9,11 @@ import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 import java.io.IOException;
 
 /**
- * Particles are spawned manually, independent from the emitter. This is used for some vanilla effects, and for particle effects that are triggered by events using the "particle" type.
+ * Particle emission will occur only when the emitter is told to emit via the game itself. This is mostly used by legacy particle effects.
  */
-public class EmitterManualRate extends SkinParticleComponent {
+public class EmitterManualRate implements SkinParticleComponent {
 
+    /// Evaluated once per particle emitted
     private final OpenPrimitive maxParticles;
 
     public EmitterManualRate(OpenPrimitive maxParticles) {
@@ -29,7 +30,7 @@ public class EmitterManualRate extends SkinParticleComponent {
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-
+    public void compile(SkinParticleGenerator generator) {
+        // nop
     }
 }

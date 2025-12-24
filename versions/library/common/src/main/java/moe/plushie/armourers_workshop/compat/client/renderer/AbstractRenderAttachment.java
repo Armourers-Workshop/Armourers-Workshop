@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.22)")
+@Available("[1.16, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractRenderAttachment {
 
@@ -31,7 +31,6 @@ public class AbstractRenderAttachment {
 
         it.put(IRenderType.Group.CLOUDS, normal(RenderType::waterMask));
         it.put(IRenderType.Group.WEATHER, normal(RenderType::waterMask));
-        it.put(IRenderType.Group.PARTICLES, normal(RenderType::waterMask));
     });
 
     @Nullable

@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @Extension
 public class Constructor {
 

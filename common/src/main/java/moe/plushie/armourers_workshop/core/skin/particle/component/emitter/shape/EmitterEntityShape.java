@@ -1,28 +1,37 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.shape;
 
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleBuilder;
+import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
 
-public class EmitterEntityShape extends SkinParticleComponent {
+/**
+ * All particles come out of the axis-aligned bounding box (AABB) for the entity the emitter is attached to, or the emitter point if no entity.
+ */
+public class EmitterEntityShape implements SkinParticleComponent {
 
     private final OpenPrimitive x;
     private final OpenPrimitive y;
     private final OpenPrimitive z;
 
+    /// evaluated once per particle emitted
+    /// defaults to outwards
     private final EmitterShapeDirection direction;
-    private final boolean surfaceOnly;
+
+    /// emit only from the surface of the sphere
+    private final boolean surface;
 
     public EmitterEntityShape(OpenPrimitive x, OpenPrimitive y, OpenPrimitive z, EmitterShapeDirection direction, boolean surfaceOnly) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.direction = direction;
-        this.surfaceOnly = surfaceOnly;
+        this.surface = surfaceOnly;
     }
 
     public EmitterEntityShape(IInputStream stream) throws IOException {
@@ -30,7 +39,7 @@ public class EmitterEntityShape extends SkinParticleComponent {
         this.y = stream.readPrimitiveObject();
         this.z = stream.readPrimitiveObject();
         this.direction = EmitterShapeDirection.readFromStream(stream);
-        this.surfaceOnly = stream.readBoolean();
+        this.surface = stream.readBoolean();
     }
 
     @Override
@@ -39,48 +48,42 @@ public class EmitterEntityShape extends SkinParticleComponent {
         stream.writePrimitiveObject(y);
         stream.writePrimitiveObject(z);
         direction.writeToStream(stream);
-        stream.writeBoolean(surfaceOnly);
+        stream.writeBoolean(surface);
     }
 
     @Override
-    public void applyToBuilder(SkinParticleBuilder builder) throws Exception {
-        var x = builder.compile(this.x, 0.0);
-        var y = builder.compile(this.y, 0.0);
-        var z = builder.compile(this.z, 0.0);
-        builder.applyParticle((emitter, particle, context) -> {
-            var cx = x.compute(context);
-            var cy = y.compute(context);
-            var cz = z.compute(context);
+    public void compile(SkinParticleGenerator generator) {
+        var x = generator.compile(this.x, 0.0);
+        var y = generator.compile(this.y, 0.0);
+        var z = generator.compile(this.z, 0.0);
+        var direction = this.direction.compile(generator);
+        var surface = this.surface;
+        generator.instance().prepare((emitter, particle, context) -> {
+            var size = emitter.size();
+            var cx = (float) x.compute(context);
+            var cy = (float) y.compute(context);
+            var cz = (float) z.compute(context);
+            var width = size.width();
+            var height = size.height();
+            var depth = size.depth();
 
-            // TODO: NO IMPL @SAGESSE
-//        float w = 0;
-//        float h = 0;
-//        float d = 0;
-//
-//        if (emitter.target != null)
-//        {
-//            w = emitter.target.width;
-//            h = emitter.target.height;
-//            d = emitter.target.width;
-//        }
-//
-//        particle.position.x = centerX + ((float) Math.random() - 0.5F) * w;
-//        particle.position.y = centerY + ((float) Math.random() - 0.5F) * h;
-//        particle.position.z = centerZ + ((float) Math.random() - 0.5F) * d;
-//
-//        if (this.surface)
-//        {
-//            int roll = (int) (Math.random() * 6 * 100) % 6;
-//
-//            if (roll == 0) particle.position.x = centerX + w / 2F;
-//            else if (roll == 1) particle.position.x = centerX - w / 2F;
-//            else if (roll == 2) particle.position.y = centerY + h / 2F;
-//            else if (roll == 3) particle.position.y = centerY - h / 2F;
-//            else if (roll == 4) particle.position.z = centerZ + d / 2F;
-//            else if (roll == 5) particle.position.z = centerZ - d / 2F;
-//        }
-//
-//        this.direction.applyDirection(particle, centerX, centerY, centerZ);
+            var tx = cx + (OpenMath.randomf() - 0.5f) * width;
+            var ty = cy + (OpenMath.randomf() - 0.5f) * height;
+            var tz = cz + (OpenMath.randomf() - 0.5f) * depth;
+
+            if (surface) {
+                switch ((int) (OpenMath.randomf() * 6 * 100) % 6) {
+                    case 0 -> tx = cx + width / 2;
+                    case 1 -> tx = cx - width / 2;
+                    case 2 -> ty = cy + height / 2;
+                    case 3 -> ty = cy - height / 2;
+                    case 4 -> tz = cz + depth / 2;
+                    case 5 -> tz = cz - depth / 2;
+                }
+            }
+
+            particle.setPosition(tx, ty, tz);
+            direction.apply(particle, cx, cy, cz, context);
         });
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.22)")
+@Available("[1.18, 1.26)")
 public class AbstractForgeBlockEntityTypeBuilder<T extends BlockEntity> extends AbstractBlockEntityTypeBuilder<T> {
 
     public AbstractForgeBlockEntityTypeBuilder(IBlockEntityType.Serializer<T> serializer) {

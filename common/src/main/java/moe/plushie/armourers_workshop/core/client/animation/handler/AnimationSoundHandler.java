@@ -61,7 +61,7 @@ public class AnimationSoundHandler implements OptimizedExpression<Object> {
     private SoundEvent resolveSoundEvent(SkinSoundData provider) {
         return SmartSoundManager.getInstance().register(provider).create(it -> {
             var location = it.location();
-            return SoundEvent.createVariableRangeEvent(location.toLocation());
+            return SoundEvent.createVariableRangeEvent(location.get());
         });
     }
 

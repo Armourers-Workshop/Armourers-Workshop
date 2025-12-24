@@ -1,0 +1,28 @@
+package moe.plushie.armourers_workshop.compat.mixin.patch;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[1.26, )")
+@Mixin(BlockEntityRenderState.class)
+public class BlockEntityRenderStateMixin implements IAssociatedContainer {
+
+    private IAssociatedContainer aw2$associatedContainer;
+
+    public <T> T getAssociatedObject(IAssociatedContainer.Key<T> key) {
+        if (aw2$associatedContainer != null) {
+            return aw2$associatedContainer.getAssociatedObject(key);
+        }
+        return key.defaultValue();
+    }
+
+    public <T> void setAssociatedObject(IAssociatedContainer.Key<T> key, T value) {
+        if (aw2$associatedContainer == null) {
+            aw2$associatedContainer = new DataContainer.Builtin();
+        }
+        aw2$associatedContainer.setAssociatedObject(key, value);
+    }
+}

@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Available("[1.21, 1.22)")
+@Available("[1.21, 1.26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractModelRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
 

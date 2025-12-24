@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.api.core.IResourceLocation;
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -33,12 +32,12 @@ public class AbstractResourceManager implements IResourceManager {
 
     @Override
     public boolean hasResource(IResourceLocation location) {
-        return resourceManager.getResource(location.toLocation()).isPresent();
+        return resourceManager.getResource(location.get()).isPresent();
     }
 
     @Override
     public IResource readResource(IResourceLocation location) throws IOException {
-        var resource = resourceManager.getResource(location.toLocation());
+        var resource = resourceManager.getResource(location.get());
         if (resource.isPresent()) {
             return wrap(location, resource.get());
         }
@@ -53,7 +52,7 @@ public class AbstractResourceManager implements IResourceManager {
                     if (!key.getNamespace().equals(target.namespace())) {
                         return;
                     }
-                    var key1 = OpenResourceLocation.of(key);
+                    var key1 = AbstractResourceLocation.wrap(key);
                     consumer.accept(key1, wrap(key1, resource));
                 } catch (Exception exception) {
                     exception.printStackTrace();

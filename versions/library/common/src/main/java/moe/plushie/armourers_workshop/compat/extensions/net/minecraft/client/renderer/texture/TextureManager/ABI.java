@@ -8,15 +8,15 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.20, 1.22)")
+@Available("[1.20, 1.26)")
 @Extension
 public class ABI {
 
     public static void register(@This TextureManager textureManager, OpenResourceLocation location, AbstractTexture texture) {
-        textureManager.register(location.toLocation(), texture);
+        textureManager.register(location.get(), texture);
     }
 
     public static void release(@This TextureManager textureManager, OpenResourceLocation location) {
-        textureManager.release(location.toLocation());
+        textureManager.release(location.get());
     }
 }

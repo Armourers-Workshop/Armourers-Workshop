@@ -17,7 +17,7 @@ public class AbstractFabricRegisterClientDataPackEvent {
         return (priority, receiveCancelled, subscriber) -> {
             EnvironmentExecutor.willSetup(EnvironmentType.CLIENT, () -> () -> {
                 subscriber.accept(loader -> {
-                    var name = ModConstants.key("custom-client-data-pack").toLocation();
+                    var name = ModConstants.key("custom-client-data-pack").get();
                     var resourceLoader = new AbstractFabricResourceLoader(name, loader);
                     ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(resourceLoader);
                 });
