@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.shader;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
-import moe.plushie.armourers_workshop.compat.client.shader.AbstractResourceProvider;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceProvider;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;

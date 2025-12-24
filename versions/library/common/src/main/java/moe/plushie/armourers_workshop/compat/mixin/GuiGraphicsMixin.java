@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractItemStackRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractItemStackRenderState;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 
 public interface RenderSpecificHandEvent {
 
-    float partialTicks();
+    float partialTick();
 
     int lightmap();
 

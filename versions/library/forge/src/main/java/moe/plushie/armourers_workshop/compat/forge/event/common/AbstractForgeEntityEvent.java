@@ -14,7 +14,7 @@ public class AbstractForgeEntityEvent {
         return AbstractForgeCommonEventsImpl.ENTITY_RELOAD_SIZE.flatMap(event -> new EntityEvent.ReloadSize() {
 
             @Override
-            public Entity getEntity() {
+            public Entity entity() {
                 return event.getEntity();
             }
 
@@ -24,7 +24,7 @@ public class AbstractForgeEntityEvent {
             }
 
             @Override
-            public EntityDimensions getSize() {
+            public EntityDimensions size() {
                 return event.getNewSize();
             }
         });

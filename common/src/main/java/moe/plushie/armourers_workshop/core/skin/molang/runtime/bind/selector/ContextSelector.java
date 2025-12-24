@@ -4,7 +4,7 @@ public interface ContextSelector {
 
     float partialTick();
 
-    double animationTicks();
+    double animationTick();
 
     double animTime();
 

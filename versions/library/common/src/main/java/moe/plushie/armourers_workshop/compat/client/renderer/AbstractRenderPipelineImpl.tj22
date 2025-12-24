@@ -1,0 +1,56 @@
+package moe.plushie.armourers_workshop.compat.client.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IBufferSource;
+import moe.plushie.armourers_workshop.api.client.IGraphicsRenderable;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+
+import java.util.ArrayList;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractRenderPipelineImpl implements IBufferSource {
+
+    protected IRenderType owner;
+    protected boolean started = false;
+
+    protected final ArrayList<Runnable> tasks = new ArrayList<>();
+
+    public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, IGraphicsRenderable renderable) {
+        // we must start batch pipeline in first submit rendering task.
+        if (!started) {
+            startBatch(poseStack, submitNodeCollector);
+        }
+        // submit a task into pipeline.
+        var pose = AbstractPoseStack.wrap(poseStack.last().copy());
+        tasks.add(() -> {
+            var builder = getBuffer(renderable.renderType());
+            renderable.render(pose, builder);
+        });
+    }
+
+    public void startBatch(PoseStack poseStack, SubmitNodeCollector submitNodeCollector) {
+        // submit a first call.
+        submitNodeCollector.submitCustomGeometry(poseStack, owner.get(), (pose, builder) -> {
+            // we still need to add a placeholder block to the vertex builder,
+            // otherwise RenderType.clearRenderState maybe ignore of the empty vertexes.
+            for (var i = 0; i < 4; ++i) {
+                builder.addVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+            tasks.forEach(Runnable::run);
+            tasks.clear();
+        });
+        started = true;
+    }
+
+    @Override
+    public void endBatch() {
+        // mark the pipeline is ended.
+        started = false;
+    }
+}

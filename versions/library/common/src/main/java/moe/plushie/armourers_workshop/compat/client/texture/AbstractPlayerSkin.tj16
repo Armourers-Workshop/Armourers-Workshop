@@ -1,0 +1,34 @@
+package moe.plushie.armourers_workshop.compat.client.texture;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
+import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import net.minecraft.client.player.AbstractClientPlayer;
+
+import java.util.IdentityHashMap;
+
+@Available("[1.16, 1.21)")
+public class AbstractPlayerSkin {
+
+    private static final IdentityHashMap<Object, PlayerSkin> CACHES = new IdentityHashMap<>();
+
+    public static PlayerSkin by(AbstractClientPlayer player) {
+        var skin = player.getSkinTextureLocation();
+        var result = CACHES.get(skin);
+        if (result != null) {
+            return result;
+        }
+        var body = Objects.flatMap(player.getSkinTextureLocation(), OpenResourceLocation::of);
+        var cape = Objects.flatMap(player.getCloakTextureLocation(), OpenResourceLocation::of);
+        var elytra = Objects.flatMap(player.getElytraTextureLocation(), OpenResourceLocation::of);
+        var model = PlayerSkinModel.WIDE;
+        if (Objects.equals(player.getModelName(), "slim")) {
+            model = PlayerSkinModel.SLIM;
+        }
+        result = new PlayerSkin(body, cape, elytra, model);
+        CACHES.put(skin, result);
+        return result;
+    }
+}

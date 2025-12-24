@@ -27,6 +27,6 @@ public class SkinnableRenderState extends BlockEntityRenderState {
         renderData.tick(entity);
         renderState.animationManager = renderData.animationManager();
         renderState.slots.prepare(renderData.allSkins());
-        renderState.renderRotations = entity.getRenderRotations(blockState).orElse(OpenQuaternionf.ONE);
+        renderState.renderRotations = entity.getRenderRotations(blockState).orElse(OpenQuaternionf.identity());
     }
 }

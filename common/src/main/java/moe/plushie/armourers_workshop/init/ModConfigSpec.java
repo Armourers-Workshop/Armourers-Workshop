@@ -142,7 +142,7 @@ public class ModConfigSpec {
             });
 
             defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {
-                defineInRange("expireTime", 86400, 0, 86400 * 365, "How long in seconds the server will keep skins in it's cache.", "Setting to 0 turns off this option.").bind(it -> skinCacheExpireTime = it, () -> skinCacheExpireTime);
+                defineInRange("expireTime", 0, 0, 86400 * 365, "How long in seconds the server will keep skins in it's cache.", "Setting to 0 turns off this option.").bind(it -> skinCacheExpireTime = it, () -> skinCacheExpireTime);
                 defineInRange("maxSize", 2000, 0, 10000, "Max size the skin cache can reach before skins are removed.", "Setting to 0 turns off this option.").bind(it -> skinCacheMaxSize = it, () -> skinCacheMaxSize);
             });
 

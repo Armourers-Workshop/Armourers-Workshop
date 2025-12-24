@@ -62,8 +62,8 @@ public class ClientWardrobeHandler {
         context.saveGraphicsState();
         context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
 
-        model.setPartialTicks(renderState.partialTicks());
-        model.setAnimationTicks(renderState.animationTicks());
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
         model.setAnimationManager(renderState.animationManager());
         model.setOutlineColor(0); // never show outline in the hand?
 
@@ -88,8 +88,8 @@ public class ClientWardrobeHandler {
         context.saveGraphicsState();
         context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
 
-        model.setPartialTicks(renderState.partialTicks());
-        model.setAnimationTicks(renderState.animationTicks());
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
         model.setAnimationManager(renderState.animationManager());
         model.setOutlineColor(renderState.outlineColor());
 

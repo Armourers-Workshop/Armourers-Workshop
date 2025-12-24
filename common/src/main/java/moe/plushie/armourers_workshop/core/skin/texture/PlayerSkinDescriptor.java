@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compat.client.AbstractGameProfile;
+import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;

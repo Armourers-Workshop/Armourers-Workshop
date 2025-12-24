@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractHumanoidEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractHumanoidEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.render.model.MannequinModel;

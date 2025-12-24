@@ -29,6 +29,7 @@
     "patch/model/HierarchicalModelMixin",
     "patch/model/EntityModelMixin",
     "patch/model/ModelPartMixin",
+    "patch/model/ModelDataAttachMixin",
     "patch/render/LivingEntityRendererMixin",
     "patch/render/ArrowRendererMixin",
     "patch/render/BoatRendererMixin",

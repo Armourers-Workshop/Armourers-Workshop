@@ -207,8 +207,8 @@ public class Compiler {
     private Expression parseCompoundExpression(Lexer lexer, int lastPrecedence) throws SyntaxException {
         var expr = parseSingle(lexer);
         while (true) {
-            final var compoundExpr = parseCompound(lexer, expr, lastPrecedence);
-            final var current = lexer.current();
+            var compoundExpr = parseCompound(lexer, expr, lastPrecedence);
+            var current = lexer.current();
             if (current.kind() == Lexer.Kind.EOF || current.kind() == Lexer.Kind.SEMICOLON) {
                 // found eof, stop parsing, return expr
                 return compoundExpr;
@@ -263,7 +263,7 @@ public class Compiler {
             }
             case LPAREN: { // CALL EXPRESSION: "left(arguments)"
                 token = lexer.next();
-                final var arguments = new ArrayList<Expression>();
+                var arguments = new ArrayList<Expression>();
 
                 // start reading the arguments
                 if (token.kind() == Lexer.Kind.EOF) {
@@ -317,7 +317,7 @@ public class Compiler {
         }
 
         // check for binary expressions
-        final var op = switch (token.kind()) {
+        var op = switch (token.kind()) {
             case AMPAMP -> Binary.Operator.AND;
             case BARBAR -> Binary.Operator.OR;
             case LT -> Binary.Operator.LT;

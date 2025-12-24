@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render.model;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractHumanoidArmourModel;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractHumanoidArmourModel;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 

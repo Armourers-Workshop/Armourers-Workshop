@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.api.client;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
+import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 
 public interface IGraphicsContext {
 
@@ -39,10 +40,24 @@ public interface IGraphicsContext {
     }
 
     /**
+     * Translate the current graphics state's transformation matrix (the CTM) by `(tx, ty, tz)`.
+     */
+    default void translateCTM(IVector3f translation) {
+        translateCTM(translation.x(), translation.y(), translation.z());
+    }
+
+    /**
      * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
      */
     default void scaleCTM(float x, float y, float z) {
         ctm().scale(x, y, z);
+    }
+
+    /**
+     * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
+     */
+    default void scaleCTM(IVector3f scalar) {
+        scaleCTM(scalar.x(), scalar.y(), scalar.z());
     }
 
     /**

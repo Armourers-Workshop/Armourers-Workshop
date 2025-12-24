@@ -39,7 +39,7 @@ public class LambdaVariableHolder extends ConstantHolder {
 
     @Override
     public Result evaluate(final ExecutionContext context) {
-        // when version is 0 means, not enable cache.
+        // when version is 0 means disabled cache.
         int version = CACHED_VERSION;
         if (version == 0) {
             return impl.evaluate(context);

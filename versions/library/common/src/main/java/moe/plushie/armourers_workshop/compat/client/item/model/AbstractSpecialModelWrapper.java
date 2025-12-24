@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.client.item.model;
 
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRenderer;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
-import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderers;
+import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderers;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 
 public class AbstractSpecialModelWrapper implements AbstractItemModelImpl {

@@ -3,7 +3,7 @@ package com.apple.library.impl;
 import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.platform.Window;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
-import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModLog;

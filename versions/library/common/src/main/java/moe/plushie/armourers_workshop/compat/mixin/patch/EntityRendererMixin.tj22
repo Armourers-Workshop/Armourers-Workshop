@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.mixin.patch;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;

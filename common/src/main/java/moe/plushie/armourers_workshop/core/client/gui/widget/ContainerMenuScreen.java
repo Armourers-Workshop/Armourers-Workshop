@@ -59,7 +59,7 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
         manager.tick();
         manager.render(context, this::_render, this::_renderBackground, this::_renderTooltip);
     }
@@ -127,18 +127,18 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
         return false;
     }
 
-    protected void _render(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
-        super.render(context, mouseX, mouseY, partialTicks);
+    protected void _render(int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
+        super.render(context, mouseX, mouseY, partialTick);
     }
 
-    protected void _renderTooltip(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    protected void _renderTooltip(int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
         context.saveGraphicsState();
         context.translateCTM(0, 0, 400);
         renderTooltip(context, mouseX, mouseY);
         context.restoreGraphicsState();
     }
 
-    protected void _renderBackground(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    protected void _renderBackground(int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
         // draw bg
         if (menuWindow != null && menuWindow.shouldRenderBackground()) {
             renderBackground(context);

@@ -13,7 +13,6 @@ public class OpenRectangle2i {
     public int height;
 
     public OpenRectangle2i() {
-        this(0, 0, 0, 0);
     }
 
     public OpenRectangle2i(int x, int y, int width, int height) {

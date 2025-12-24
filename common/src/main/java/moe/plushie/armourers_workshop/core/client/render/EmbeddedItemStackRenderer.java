@@ -132,8 +132,8 @@ public class EmbeddedItemStackRenderer {
         itemSource.setItemModelResolver(itemModel.renderState().itemModelResolver());
         // configure the skin render state.
         var model = loadSkin(itemModel.skin(), itemSource);
-        model.setPartialTicks(1.0f);
-        model.setAnimationTicks(TickUtils.animationTicks());
+        model.setPartialTick(1.0f);
+        model.setAnimationTick(TickUtils.animationTick());
         model.setAnimationManager(AnimationManager.NONE);
         model.setItemSource(itemSource);
         model.setOutlineColor(outlineColor);
@@ -150,8 +150,8 @@ public class EmbeddedItemStackRenderer {
         itemSource.setItemModelResolver(itemModel.renderState().itemModelResolver());
         // configure the skin render state.
         var model = loadSkin(itemModel.skin(), itemSource);
-        model.setPartialTicks(1.0f);
-        model.setAnimationTicks(TickUtils.animationTicks());
+        model.setPartialTick(1.0f);
+        model.setAnimationTick(TickUtils.animationTick());
         model.setAnimationManager(AnimationManager.NONE);
         model.setItemSource(itemSource);
         model.setOutlineColor(outlineColor);
@@ -168,8 +168,8 @@ public class EmbeddedItemStackRenderer {
         itemSource.setItemModelResolver(itemModel.renderState().itemModelResolver());
         // configure the skin render state.
         var model = loadSkin(itemModel.skin(), itemSource);
-        model.setPartialTicks(entityRenderState.partialTicks());
-        model.setAnimationTicks(entityRenderState.animationTicks());
+        model.setPartialTick(entityRenderState.partialTick());
+        model.setAnimationTick(entityRenderState.animationTick());
         model.setAnimationManager(entityRenderState.animationManager());
         model.setItemSource(itemSource);
         model.setOutlineColor(outlineColor);

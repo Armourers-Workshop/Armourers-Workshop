@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractTransformModel;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractTransformModel;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 

@@ -2,22 +2,11 @@ package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.core.client.other.VertexArrayObject;
-import moe.plushie.armourers_workshop.core.client.other.VertexBufferObject;
-import moe.plushie.armourers_workshop.core.client.other.VertexIndexObject;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 
 public interface ShaderVertexObject {
 
-    int vertexOffset();
-
-    int vertexCount();
-
-    VertexArrayObject arrayObject();
-
-    VertexBufferObject bufferObject();
-
-    VertexIndexObject indexObject();
+    ShaderVertexBuffer.Slice slice();
 
     int overlay();
 

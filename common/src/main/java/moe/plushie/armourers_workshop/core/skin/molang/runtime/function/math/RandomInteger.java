@@ -42,8 +42,7 @@ public final class RandomInteger extends Function {
 
     @Override
     public double compute(final ExecutionContext context) {
-        int result;
-        int valueA = (int) Math.round(this.valueA.compute(context));
+        var valueA = (int) Math.round(this.valueA.compute(context));
         Random random;
 
         if (this.random != null) {
@@ -57,13 +56,10 @@ public final class RandomInteger extends Function {
             int valueB = (int) Math.round(this.valueB.compute(context));
             int min = Math.min(valueA, valueB);
             int max = Math.max(valueA, valueB);
-
-            result = min + random.nextInt(max + 1 - min);
-        } else {
-            result = random.nextInt(valueA + 1);
+            return min + random.nextInt(max + 1 - min);
         }
 
-        return result;
+        return random.nextInt(valueA + 1);
     }
 
     @Override

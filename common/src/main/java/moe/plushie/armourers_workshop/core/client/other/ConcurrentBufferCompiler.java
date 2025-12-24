@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.compat.client.AbstractVertexArrayObject;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.buffer.BufferBuilder;
 import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexBuffer;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTexture;
@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.utils.Executors;
 import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,14 +36,6 @@ public class ConcurrentBufferCompiler {
 
     private static final ExecutorService QUEUE = Executors.newFixedThreadPool(ModConfig.Client.vertexCompileThreadCount, "AW-SKIN-VB");
     private static final CacheQueue<Object, Group> CACHING = new CacheQueue<>(Duration.ofSeconds(30), it -> RenderSystem.recordRenderCall(it::release));
-    private static final VertexIndexObject INDEXER = new VertexIndexObject(4, 6, (builder, index) -> {
-        builder.accept(index);
-        builder.accept(index + 1);
-        builder.accept(index + 2);
-        builder.accept(index + 2);
-        builder.accept(index + 3);
-        builder.accept(index);
-    });
 
     private ArrayList<Group> pendingTasks;
 
@@ -88,16 +81,16 @@ public class ConcurrentBufferCompiler {
         if (pendingTasks == null || pendingTasks.isEmpty()) {
             return;
         }
-        //long startTime = System.nanoTime();
+        //var startTime = System.nanoTime();
         var poseStack1 = new OpenPoseStack();
         var buildingTasks = new ArrayList<Pass>();
-        for (var task : pendingTasks) {
-            var part = task.part;
-            var scheme = task.scheme;
+        for (var pendingTask : pendingTasks) {
+            var part = pendingTask.part;
+            var scheme = pendingTask.scheme;
             var usingTypes = new HashSet<IRenderType>();
             var mergedTasks = new ArrayList<Pass>();
             part.quads().forEach((renderType, quads) -> {
-                var builder = createBufferBuilder(renderType, quads.size(), task);
+                var builder = createBufferBuilder(renderType, quads.size(), pendingTask);
                 quads.forEach((transform, faces) -> {
                     poseStack1.pushPose();
                     transform.apply(poseStack1);
@@ -105,21 +98,20 @@ public class ConcurrentBufferCompiler {
                     poseStack1.popPose();
                 });
                 var renderedBuffer = builder.end();
-                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), task);
+                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), pendingTask);
                 usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
-            task.mergedTasks = mergedTasks;
-            task.usingTypes = Collections.compactMap(usingTypes, SmartTexture::of);
+            pendingTask.mergedTasks = mergedTasks;
+            pendingTask.usingTypes = Collections.compactMap(usingTypes, SmartTexture::of);
         }
         link(pendingTasks, buildingTasks);
-        //long totalTime = System.nanoTime() - startTime;
+        //var totalTime = System.nanoTime() - startTime;
         //ModLog.debug("compile tasks {}, times: {}ms", pendingTasks.size(), totalTime / 1e6f);
     }
 
     private void link(ArrayList<Group> cachedTasks, ArrayList<Pass> buildingTasks) {
-        var indexer = INDEXER;
         var totalRenderedBytes = 0;
         var byteBuffers = new ArrayList<ByteBuffer>();
 
@@ -134,8 +126,6 @@ public class ConcurrentBufferCompiler {
             byteBuffers.add(byteBuffer);
             totalRenderedBytes += byteBuffer.remaining();
             renderedBuffer.release();
-            // make sure the index buffer is of sufficient size.
-            indexer.ensureCapacity(compiledTask.vertexCount * 2);
         }
 
         var mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
@@ -149,13 +139,12 @@ public class ConcurrentBufferCompiler {
     }
 
     private void upload(ByteBuffer byteBuffer, ArrayList<Group> cachedTasks) {
-        var vertexBuffer = new VertexBufferObject();
+        var vertexBuffer = ShaderVertexBuffer.newInstance();
         vertexBuffer.upload(byteBuffer);
         for (var cachedTask : cachedTasks) {
-            cachedTask.bufferObject = vertexBuffer;
+            cachedTask.buffer = vertexBuffer;
             cachedTask.retain();
         }
-        vertexBuffer.release();
     }
 
     private int createOptions(boolean isOutline) {
@@ -185,7 +174,7 @@ public class ConcurrentBufferCompiler {
         private ArrayList<Pass> mergedTasks;
         private ArrayList<ReferenceCounted> usingTypes;
 
-        private VertexBufferObject bufferObject;
+        private ShaderVertexBuffer buffer;
 
         private boolean isComplied = false;
 
@@ -202,8 +191,8 @@ public class ConcurrentBufferCompiler {
             if (mergedTasks == null || usingTypes == null) {
                 return; // is released or not init.
             }
-            this.bufferObject.retain();
-            this.mergedTasks.forEach(it -> it.upload(bufferObject));
+            this.buffer.retain();
+            this.mergedTasks.forEach(it -> it.upload(buffer));
             this.usingTypes.forEach(ReferenceCounted::retain);
             this.isComplied = true;
         }
@@ -211,13 +200,13 @@ public class ConcurrentBufferCompiler {
         @Override
         protected void dispose() {
             RenderSystem.assertOnRenderThread();
-            if (bufferObject == null || mergedTasks == null || usingTypes == null) {
+            if (buffer == null || mergedTasks == null || usingTypes == null) {
                 return; // is release
             }
             this.isComplied = false;
             this.usingTypes.forEach(ReferenceCounted::release);
             this.mergedTasks.forEach(Pass::close);
-            this.bufferObject.release();
+            this.buffer.release();
         }
 
         public List<Pass> passes() {
@@ -244,7 +233,6 @@ public class ConcurrentBufferCompiler {
         final boolean isEmissive;
         final boolean isTranslucent;
         final boolean isOutline;
-        final boolean isUsingIndex;
 
         final float polygonOffset;
         final SkinPartType partType;
@@ -256,9 +244,7 @@ public class ConcurrentBufferCompiler {
         IRenderedBuffer bufferBuilder;
         IVertexFormat format;
 
-        VertexArrayObject arrayObject;
-        VertexBufferObject bufferObject;
-        VertexIndexObject indexObject;
+        ShaderVertexBuffer.Slice slice;
 
         boolean isCompiled = false;
 
@@ -271,22 +257,18 @@ public class ConcurrentBufferCompiler {
             this.isEmissive = renderType.isEmissive();
             this.isTranslucent = renderType.isTranslucent();
             this.isOutline = group.isOutline();
-            this.isUsingIndex = renderType.mode() == IVertexFormat.Mode.QUADS;
         }
 
-        public void upload(VertexBufferObject bufferObject) {
-            this.indexObject = isUsingIndex ? INDEXER : null;
-            this.bufferObject = bufferObject;
-            this.arrayObject = AbstractVertexArrayObject.create(format, vertexOffset, bufferObject, indexObject);
+        public void upload(ShaderVertexBuffer buffer) {
+            this.slice = buffer.slice(vertexOffset, vertexCount, renderType.mode(), format);
+            this.slice.retain();
             this.isCompiled = true;
         }
 
         public void close() {
             this.isCompiled = false;
-            this.arrayObject.close();
-            this.bufferObject = null;
-            this.indexObject = null;
-            this.arrayObject = null;
+            this.slice.release();
+            this.slice = null;
         }
 
         public void retain() {

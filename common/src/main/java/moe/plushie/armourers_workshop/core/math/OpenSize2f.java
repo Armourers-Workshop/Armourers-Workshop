@@ -5,14 +5,21 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 @SuppressWarnings("unused")
 public class OpenSize2f {
 
-    public static final OpenSize2f ZERO = new OpenSize2f(0, 0);
+    public static final OpenSize2f ZERO = new OpenSize2f();
 
     public float width;
     public float height;
 
+    public OpenSize2f() {
+    }
+
     public OpenSize2f(float width, float height) {
         this.width = width;
         this.height = height;
+    }
+
+    public OpenSize2f(double width, double height) {
+        this((float) width, (float) height);
     }
 
     public void setWidth(float width) {

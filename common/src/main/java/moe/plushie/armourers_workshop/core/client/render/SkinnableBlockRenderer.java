@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.armature.Armatures;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
@@ -45,8 +45,8 @@ public class SkinnableBlockRenderer<T extends SkinnableBlockEntity, S extends Sk
         context.rotateCTM(renderState.renderRotations());
         context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
 
-        model.setPartialTicks(renderState.partialTicks());
-        model.setAnimationTicks(renderState.animationTicks());
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
         model.setAnimationManager(renderState.animationManager());
         model.setOutlineColor(0); // never show outline in the skinnable block.
 

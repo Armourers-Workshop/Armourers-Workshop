@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.cor
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractItemSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractItemSpecialRenderer;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 

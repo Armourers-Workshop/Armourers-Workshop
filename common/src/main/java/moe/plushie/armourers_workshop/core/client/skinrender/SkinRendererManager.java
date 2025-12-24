@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.builder.client.render.state.AdvancedBuilde
 import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.client.render.state.SkinCubeRenderState;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientNamedClass;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractModelHolder;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractModelHolder;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;

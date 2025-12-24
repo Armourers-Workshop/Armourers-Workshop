@@ -1,0 +1,41 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.item;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+
+@Available("[1.18, 1.20)")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractItemSpecialRendererImpl {
+
+    public abstract AbstractSpecialModelRenderer<?> renderer();
+
+    public BlockEntityWithoutLevelRenderer bake(Object context) {
+        return new Wrapper<>(renderer());
+    }
+
+    private static class Wrapper<T> extends BlockEntityWithoutLevelRenderer {
+
+        private final AbstractSpecialModelRenderer<T> source;
+
+        public Wrapper(AbstractSpecialModelRenderer<T> source) {
+            super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+            this.source = source;
+        }
+
+        @Override
+        public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, int overlay) {
+            T data = source.extractArgument(itemStack);
+            source.render(data, AbstractItemDisplayContext.wrap(transformType), lightmap, overlay, AbstractGraphicsRenderer.wrap(poseStack, bufferSource));
+        }
+    }
+}

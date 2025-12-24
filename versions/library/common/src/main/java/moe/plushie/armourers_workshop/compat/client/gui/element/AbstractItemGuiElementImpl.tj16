@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;

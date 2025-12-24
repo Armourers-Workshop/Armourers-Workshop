@@ -28,8 +28,8 @@ import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerP
 public abstract class ForgeEpicFightFirstPersonRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/player/LocalPlayer;Lyesman/epicfight/client/world/capabilites/entitypatch/player/LocalPlayerPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("HEAD"), remap = false)
-    public void aw2$renderPre(LocalPlayer entityIn, LocalPlayerPatch entitypatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo ci) {
-        AbstractForgeEpicFightHandler.onRenderPre(entityIn, packedLightIn, partialTicks, true, poseStackIn, bufferSourceIn, renderer);
+    public void aw2$renderPre(LocalPlayer entityIn, LocalPlayerPatch entitypatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTick, CallbackInfo ci) {
+        AbstractForgeEpicFightHandler.onRenderPre(entityIn, packedLightIn, partialTick, true, poseStackIn, bufferSourceIn, renderer);
     }
 
     @Redirect(method = "render(Lnet/minecraft/client/player/LocalPlayer;Lyesman/epicfight/client/world/capabilites/entitypatch/player/LocalPlayerPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At(value = "INVOKE", target = "Lyesman/epicfight/client/mesh/HumanoidMesh;draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;IFFFFILyesman/epicfight/api/model/Armature;[Lyesman/epicfight/api/utils/math/OpenMatrix4f;)V", remap = false), remap = false)
@@ -40,7 +40,7 @@ public abstract class ForgeEpicFightFirstPersonRendererMixin {
     }
 
     @Inject(method = "render(Lnet/minecraft/client/player/LocalPlayer;Lyesman/epicfight/client/world/capabilites/entitypatch/player/LocalPlayerPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("RETURN"), remap = false)
-    public void aw2$renderPost(LocalPlayer entityIn, LocalPlayerPatch entitypatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo ci) {
-        AbstractForgeEpicFightHandler.onRenderPost(entityIn, packedLightIn, partialTicks, poseStackIn, bufferSourceIn, renderer);
+    public void aw2$renderPost(LocalPlayer entityIn, LocalPlayerPatch entitypatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTick, CallbackInfo ci) {
+        AbstractForgeEpicFightHandler.onRenderPost(entityIn, packedLightIn, partialTick, poseStackIn, bufferSourceIn, renderer);
     }
 }

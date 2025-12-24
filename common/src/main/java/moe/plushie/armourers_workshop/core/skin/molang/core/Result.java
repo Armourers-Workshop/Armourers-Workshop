@@ -104,19 +104,19 @@ public class Result implements BooleanSupplier, DoubleSupplier {
     public Result copy() {
         // is a array value?
         if (arrayValue != null) {
-            var newArrayValue = new ArrayList<Result>(arrayValue.size());
+            var newValue = new ArrayList<Result>(arrayValue.size());
             for (var element : arrayValue) {
-                newArrayValue.add(element.copy()); // deep copy
+                newValue.add(element.copy()); // deep copy
             }
-            return valueOf(newArrayValue);
+            return valueOf(newValue);
         }
         // is a struct value?
         if (structValue != null) {
-            var newStructValue = new HashMap<Name, Result>(structValue.size());
+            var newValue = new HashMap<Name, Result>(structValue.size());
             for (var element : structValue.entrySet()) {
-                newStructValue.put(element.getKey(), element.getValue().copy()); // deep copy
+                newValue.put(element.getKey(), element.getValue().copy()); // deep copy
             }
-            return valueOf(newStructValue);
+            return valueOf(newValue);
         }
         return this;
     }
@@ -159,7 +159,7 @@ public class Result implements BooleanSupplier, DoubleSupplier {
         return switch (type) {
             case NULL -> "<null>";
             case NUMBER -> String.format("%s", doubleValue);
-            case STRING -> String.format("'%s'", stringValue);
+            case STRING -> String.format("%s", stringValue);
             case ARRAY -> String.format("%s", arrayValue);
             case STRUCT -> String.format("%s", structValue);
             case REFERENCE -> String.format("%s", referenceValue);

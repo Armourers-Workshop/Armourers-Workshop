@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import java.util.Objects;
-
 public class OpenPrimitive {
 
     public static final OpenPrimitive NULL = new OpenPrimitive(null);

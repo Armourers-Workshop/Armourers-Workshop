@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.texture;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.AbstractImageTextureDownloader;
+import moe.plushie.armourers_workshop.compat.client.texture.AbstractImageTextureDownloader;
 import moe.plushie.armourers_workshop.core.client.bake.BakedPlayerSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedPlayerSkinPart;
 import moe.plushie.armourers_workshop.core.data.LoadableHashMap;

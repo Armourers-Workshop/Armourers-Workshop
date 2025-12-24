@@ -4,7 +4,7 @@ import net.minecraft.world.entity.player.Player;
 
 public interface ClientPlayerEvent {
 
-    Player getPlayer();
+    Player player();
 
     interface LoggingIn extends ClientPlayerEvent {
     }
@@ -14,13 +14,13 @@ public interface ClientPlayerEvent {
 
     interface Clone extends ClientPlayerEvent {
 
-        Player getOldPlayer();
+        Player oldPlayer();
 
-        Player getNewPlayer();
+        Player newPlayer();
 
         @Override
-        default Player getPlayer() {
-            return getNewPlayer();
+        default Player player() {
+            return newPlayer();
         }
     }
 }

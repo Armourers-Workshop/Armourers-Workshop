@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
-import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderLivingEntityEvent;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.init.event.client.RenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.init.platform.EventManager;

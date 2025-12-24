@@ -12,6 +12,10 @@ public class LevelSelectorImpl<T extends Level> implements LevelSelector {
         return this;
     }
 
+    public T level() {
+        return level;
+    }
+
     @Override
     public int moonPhase() {
         return level.getMoonPhase();

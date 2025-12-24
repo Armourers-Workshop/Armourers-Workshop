@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataAlgorithm;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenUUID;

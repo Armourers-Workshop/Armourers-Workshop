@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderAttachment;
-import moe.plushie.armourers_workshop.compat.client.AbstractBufferBuilder;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

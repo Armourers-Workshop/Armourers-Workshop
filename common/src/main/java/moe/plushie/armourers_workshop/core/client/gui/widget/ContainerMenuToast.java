@@ -30,7 +30,7 @@ public class ContainerMenuToast<W extends ToastWindow> extends AbstractMenuToast
         return window.duration();
     }
 
-    private void nop(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    private void nop(int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
         // nop
     }
 }

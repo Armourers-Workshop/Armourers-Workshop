@@ -16,7 +16,7 @@ public class AbstractFabricEntityEvent {
             outputSize[0] = newSize;
             subscriber.accept(new EntityEvent.ReloadSize() {
                 @Override
-                public Entity getEntity() {
+                public Entity entity() {
                     return entity;
                 }
 
@@ -26,7 +26,7 @@ public class AbstractFabricEntityEvent {
                 }
 
                 @Override
-                public EntityDimensions getSize() {
+                public EntityDimensions size() {
                     return outputSize[0];
                 }
             });

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

@@ -109,6 +109,10 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
         add(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth());
     }
 
+    public void add(float x, float y, float z) {
+        add(new OpenVector4f(x, y, z, 1.0f));
+    }
+
     public void add(IVector3f vertex) {
         add(new OpenVector4f(vertex.x(), vertex.y(), vertex.z(), 1.0f));
     }

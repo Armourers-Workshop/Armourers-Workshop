@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 
 public interface RenderScreenEvent {
 
-    CGGraphicsContext getContext();
+    CGGraphicsContext context();
 
     interface Pre extends RenderScreenEvent {
 

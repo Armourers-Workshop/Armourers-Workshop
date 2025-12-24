@@ -90,13 +90,13 @@ public class AnimationContext {
             this.transform = transform;
         }
 
-        public void beginUpdates(double animationTicks) {
+        public void beginUpdates(double animationTick) {
             // set snapshot to null, the transform will skip calculations.
             transform.snapshot = null;
             transform.clear();
             //
             if (transitingAnimation != null) {
-                transitingAnimation.update(animationTicks);
+                transitingAnimation.update(animationTick);
                 if (transitingAnimation.isCompleted()) {
                     transitingAnimation = null;
                 }

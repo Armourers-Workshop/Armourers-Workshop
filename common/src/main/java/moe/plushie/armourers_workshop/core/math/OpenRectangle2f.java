@@ -5,18 +5,25 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 @SuppressWarnings("unused")
 public class OpenRectangle2f {
 
-    public final static OpenRectangle2f ZERO = new OpenRectangle2f(0, 0, 0, 0);
+    public final static OpenRectangle2f ZERO = new OpenRectangle2f();
 
     public float x;
     public float y;
     public float width;
     public float height;
 
+    public OpenRectangle2f() {
+    }
+
     public OpenRectangle2f(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    public OpenRectangle2f(double x, double y, double width, double height) {
+        this((float) x, (float) y, (float) width, (float) height);
     }
 
     public void setX(float x) {

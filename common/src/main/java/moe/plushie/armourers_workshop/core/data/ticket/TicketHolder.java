@@ -87,7 +87,7 @@ public class TicketHolder {
 
         @Override
         public String toString() {
-            return String.format("[%s.%s@%.1f]", name, key, priority);
+            return String.format("[%s/%s@%.1f]", name, key, priority);
         }
     }
 

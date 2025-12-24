@@ -70,14 +70,14 @@ public class ServerAlertWindow extends MenuWindow<ContainerMenu> {
         }
 
         @Override
-        public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+        public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
             // we need reset mouse to impossible position to fool the original tooltip render.
             if (targetScreen != null) {
-                targetScreen.render(context, Integer.MIN_VALUE, Integer.MIN_VALUE, partialTicks);
+                targetScreen.render(context, Integer.MIN_VALUE, Integer.MIN_VALUE, partialTick);
             }
             context.saveGraphicsState();
             context.translateCTM(0, 0, 500);
-            super.render(context, mouseX, mouseY, partialTicks);
+            super.render(context, mouseX, mouseY, partialTick);
             context.restoreGraphicsState();
         }
 

@@ -45,12 +45,14 @@ public final class SkinBakery implements ISkinLibraryListener {
             .build();
 
     public SkinBakery() {
+        // nop
     }
 
     public static SkinBakery getInstance() {
         if (BAKERY != null) {
             return BAKERY;
         }
+        ModLog.warn("get a stopped bakery instance");
         return EMPTY;
     }
 

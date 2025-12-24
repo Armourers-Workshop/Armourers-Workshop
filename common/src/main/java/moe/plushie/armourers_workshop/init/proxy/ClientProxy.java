@@ -5,9 +5,10 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.builder.client.render.PaintingHighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
-import moe.plushie.armourers_workshop.core.client.other.PreloadableSkinManager;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
+import moe.plushie.armourers_workshop.core.client.other.PreloadableSkinManager;
+import moe.plushie.armourers_workshop.core.client.particle.SmartParticleManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.render.plugin.FallbackEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.render.plugin.LivingEntityRenderPlugin;
@@ -123,29 +124,31 @@ public class ClientProxy {
         }));
 
         EventBus.register(ClientPlayerEvent.LoggingIn.class, event -> {
-            var player = event.getPlayer();
+            var player = event.player();
             if (player == null || !player.equals(Minecraft.getInstance().player)) {
                 return; // other players join
             }
             SkinBakery.start();
+            PlayerSkinBakery.start();
             PreloadableSkinManager.start();
             DiscoveerableSkinManager.start();
-            SmartSoundManager.getInstance().start();
-            SmartTextureManager.getInstance().start();
-            PlayerSkinBakery.start();
+            SmartSoundManager.start();
+            SmartTextureManager.start();
+            SmartParticleManager.start();
         });
         EventBus.register(ClientPlayerEvent.LoggingOut.class, event -> {
-            var player = event.getPlayer();
+            var player = event.player();
             if (player == null || !player.equals(Minecraft.getInstance().player)) {
                 return; // other players leave
             }
-            PlayerSkinBakery.stop();
+            SmartParticleManager.stop();
+            SmartTextureManager.stop();
+            SmartSoundManager.stop();
             DiscoveerableSkinManager.stop();
             PreloadableSkinManager.stop();
+            PlayerSkinBakery.stop();
             SkinBakery.stop();
             TicketManager.invalidateAll();
-            SmartSoundManager.getInstance().stop();
-            SmartTextureManager.getInstance().stop();
             SkinLoader.getInstance().stop();
             GlobalSkinLibrary.getInstance().disconnect();
             SkinLibraryManager.getClient().publicLibrary().reset();
@@ -157,14 +160,14 @@ public class ClientProxy {
 
         EventBus.register(ClientPlayerEvent.Clone.class, event -> {
             // we can use the old wardrobe data until the next wardrobe sync packet.
-            SkinUtils.copySkinWardrobe(event.getOldPlayer(), event.getNewPlayer());
+            SkinUtils.copySkinWardrobe(event.oldPlayer(), event.newPlayer());
         });
 
         EventBus.register(RenderFrameEvent.Pre.class, event -> {
             Scheduler.CLIENT.begin();
             AutoreleasePool.begin();
-            TickUtils.tick(event.deltaTracker().isPaused() || event.deltaTracker().isFrozen()); // respect the /tick frozen command.
-            PreloadableSkinManager.tick(event.deltaTracker().isPaused());
+            TickUtils.tick(event.deltaTracker()); // respect the /tick rate/step/frozen command.
+            PreloadableSkinManager.tick(event.deltaTracker());
         });
 
         EventBus.register(RenderFrameEvent.Post.class, event -> {

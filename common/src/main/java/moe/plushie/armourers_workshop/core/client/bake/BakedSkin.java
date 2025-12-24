@@ -229,12 +229,12 @@ public class BakedSkin {
         // search all wings transform.
         skinParts.forEach(it -> it.transform().children().forEach(transform -> {
             if (transform instanceof WingPartTransform wingTransform) {
-                animationHandler.normal((renderState, skin, armature, context) -> wingTransform.setup(renderState.isFlying(), renderState.isFallFlying(), context.animationTicks()));
+                animationHandler.normal((renderState, skin, armature, context) -> wingTransform.setup(renderState.isFlying(), renderState.isFallFlying(), context.animationTick()));
             }
         }));
         // search all locator part, and then a attachment transform.
         BakedAttachmentPartTransform.create(skinParts).forEach(attachmentTransform -> {
-            animationHandler.normal((renderState, skin, armature, context) -> attachmentTransform.setup(renderState, armature, context.partialTicks(), context.ctm()));
+            animationHandler.normal((renderState, skin, armature, context) -> attachmentTransform.setup(renderState, armature, context.partialTick(), context.ctm()));
         });
         // search all backpack part, and then attach a backpack part transform.
         Collections.filter(skinParts, it -> it.type() == SkinPartTypes.ITEM_BACKPACK).forEach(it -> {

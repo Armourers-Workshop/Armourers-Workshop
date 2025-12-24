@@ -57,8 +57,8 @@ public class SkinWardrobeLayer<T extends Entity, S extends EntityRenderState, M 
 
         context.scaleCTM(0.0625f, 0.0625f, 0.0625f);
 
-        model.setPartialTicks(renderState.partialTicks());
-        model.setAnimationTicks(renderState.animationTicks());
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
         model.setAnimationManager(renderState.animationManager());
         model.setOutlineColor(renderState.outlineColor());
 
@@ -74,7 +74,7 @@ public class SkinWardrobeLayer<T extends Entity, S extends EntityRenderState, M 
             var scale = pose.bodyScale();
             var offset = pose.bodyOffset();
             context.scaleCTM(scale, scale, scale);
-            context.translateCTM(offset.x(), offset.y(), offset.z());
+            context.translateCTM(offset);
         }
     }
 

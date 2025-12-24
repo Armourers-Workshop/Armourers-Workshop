@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
-import moe.plushie.armourers_workshop.compat.client.AbstractGameProfileResolver;
-import moe.plushie.armourers_workshop.compat.client.AbstractPlayerSkinResolver;
+import moe.plushie.armourers_workshop.compat.client.texture.AbstractPlayerSkinResolver;
+import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfileResolver;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
@@ -35,7 +35,7 @@ public class PlayerSkinDownloader {
     private final AbstractGameProfileResolver profileResolver = new AbstractGameProfileResolver();
     private final AbstractPlayerSkinResolver skinResolver = new AbstractPlayerSkinResolver();
 
-    private final Executor workThread = Executors.newFixedThreadPool(1, "AW-SKIN/T-LD");
+    private final Executor workThread = Executors.newFixedThreadPool(1, "AW-SKIN-SD");
 
     public void downloadProfile(OpenGameProfile profile, IResultHandler<OpenGameProfile> handler) {
         workThread.execute(() -> {

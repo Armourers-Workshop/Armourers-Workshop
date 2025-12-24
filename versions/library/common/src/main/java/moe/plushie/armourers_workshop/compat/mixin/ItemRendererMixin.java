@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractItemDisplayContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEmbeddedItemRenderer;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
+import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractEmbeddedItemRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;

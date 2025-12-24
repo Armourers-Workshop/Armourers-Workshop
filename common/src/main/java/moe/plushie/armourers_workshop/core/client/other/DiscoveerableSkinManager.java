@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.AbstractItemModelFinder;
 import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;

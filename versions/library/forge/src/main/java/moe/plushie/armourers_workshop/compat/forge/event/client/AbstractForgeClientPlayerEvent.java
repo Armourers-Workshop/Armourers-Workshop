@@ -20,12 +20,12 @@ public class AbstractForgeClientPlayerEvent {
     public static IEventHandler<ClientPlayerEvent.Clone> cloneFactory() {
         return AbstractForgeClientEventsImpl.PLAYER_CLONE.map(event -> new ClientPlayerEvent.Clone() {
             @Override
-            public Player getOldPlayer() {
+            public Player oldPlayer() {
                 return event.getOldPlayer();
             }
 
             @Override
-            public Player getNewPlayer() {
+            public Player newPlayer() {
                 return event.getNewPlayer();
             }
         });

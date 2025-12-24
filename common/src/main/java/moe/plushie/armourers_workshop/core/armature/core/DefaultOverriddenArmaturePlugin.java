@@ -35,7 +35,7 @@ public class DefaultOverriddenArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void prepare(EntityRenderState renderState, Entity entity, float partialTicks) {
+    public void prepare(EntityRenderState renderState, Entity entity, float partialTick) {
         var renderData = EntityRenderData.of(entity);
         var overriddenManager = renderData.overriddenManager();
 

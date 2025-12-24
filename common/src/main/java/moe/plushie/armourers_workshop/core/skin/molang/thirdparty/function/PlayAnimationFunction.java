@@ -30,7 +30,7 @@ public class PlayAnimationFunction extends Function {
         if (name.isEmpty()) {
             return 0;
         }
-        target.play(name, TickUtils.animationTicks(), new CompoundTag());
+        target.play(name, TickUtils.animationTick(), new CompoundTag());
         return 0;
     }
 
@@ -39,7 +39,7 @@ public class PlayAnimationFunction extends Function {
             return AnimationManager.of(entity.entity());
         }
         if (context instanceof BlockEntitySelectorImpl<?> entity) {
-            return AnimationManager.of(entity.getEntity());
+            return AnimationManager.of(entity.entity());
         }
         return null;
     }

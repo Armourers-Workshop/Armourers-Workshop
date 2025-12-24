@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.texture;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.AbstractImageTexture;
+import moe.plushie.armourers_workshop.compat.client.texture.AbstractImageTexture;
 
 import java.awt.image.BufferedImage;
 

@@ -57,11 +57,11 @@ public final class Call implements Expression, Optimizable {
 
     @Override
     public String toString() {
-        var joiner = new StringJoiner(", ", "(", ")");
+        var joiner = new StringJoiner(", ");
         for (var arg : arguments) {
             joiner.add(arg.toString());
         }
-        return receiver.toString() + joiner;
+        return String.format("%s.call(%s)", receiver.toString(), joiner);
     }
 
     public Expression receiver() {

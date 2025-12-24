@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractRenderPipeline;
 import net.minecraft.client.renderer.RenderStateShard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

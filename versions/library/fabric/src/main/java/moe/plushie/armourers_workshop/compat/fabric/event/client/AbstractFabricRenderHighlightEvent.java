@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.fabric.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -18,7 +18,7 @@ public class AbstractFabricRenderHighlightEvent {
         return (priority, receiveCancelled, subscriber) -> WorldRenderEvents.BLOCK_OUTLINE.register(((context, outlineContext) -> {
             subscriber.accept(new RenderHighlightEvent.Block() {
                 @Override
-                public float partialTicks() {
+                public float partialTick() {
                     return context.tickCounter().getGameTimeDeltaTicks();
                 }
 

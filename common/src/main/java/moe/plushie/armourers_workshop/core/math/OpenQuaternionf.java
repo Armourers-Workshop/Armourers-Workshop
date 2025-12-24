@@ -65,6 +65,10 @@ public class OpenQuaternionf implements IQuaternionf {
         this.w = other.w();
     }
 
+    public static OpenQuaternionf identity() {
+        return ONE;
+    }
+
     public static OpenQuaternionf fromEulerAnglesXYZ(float angleX, float angleY, float angleZ) {
         float sx = OpenMath.sin(angleX * 0.5f);
         float cx = OpenMath.cosFromSin(sx, angleX * 0.5f);

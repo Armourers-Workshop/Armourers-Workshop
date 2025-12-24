@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.AbstractModelViewStack;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractModelViewStack;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -34,22 +34,22 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         containerTick();
     }
 
-    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
         AbstractGuiGraphicsRenderer.unwrap(context, "overlay", (screen, poseStack) -> {
             var modelViewStack = AbstractModelViewStack.getInstance();
             modelViewStack.pushMatrix();
             modelViewStack.last().translate(0, 0, zLevel);
             modelViewStack.apply();
-            super.render(poseStack, mouseX, mouseY, partialTicks);
+            super.render(poseStack, mouseX, mouseY, partialTick);
             modelViewStack.popMatrix();
             modelViewStack.apply();
             super.renderTooltip(poseStack, mouseX, mouseY);
         });
     }
 
-    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
         AbstractGuiGraphicsRenderer.unwrap(context, "container", (screen, poseStack) -> {
-            super.render(poseStack, mouseX, mouseY, partialTicks);
+            super.render(poseStack, mouseX, mouseY, partialTick);
         });
     }
 

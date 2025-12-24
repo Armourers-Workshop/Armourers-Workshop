@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.level.block.entity.BlockEntity;

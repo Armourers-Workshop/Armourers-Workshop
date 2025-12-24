@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
-import moe.plushie.armourers_workshop.compat.client.AbstractPlayerSkin;
+import moe.plushie.armourers_workshop.compat.client.texture.AbstractPlayerSkin;
 import moe.plushie.armourers_workshop.core.data.LoadableHashMap;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;

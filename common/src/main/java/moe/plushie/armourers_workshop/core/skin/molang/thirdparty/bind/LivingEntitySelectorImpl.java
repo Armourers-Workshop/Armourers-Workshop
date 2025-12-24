@@ -41,13 +41,13 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
     }
 
     @Override
-    public double bodyYaw() {
-        return MathHelper.lerp(partialTick(), entity.xRotO, entity.getXRot());
+    public double getBodyYaw(float partialTick) {
+        return MathHelper.lerp(partialTick, entity.xRotO, entity.getXRot());
     }
 
     @Override
-    public double bodyPitch() {
-        return MathHelper.wrapDegrees(MathHelper.lerp(partialTick(), entity.yRotO, entity.getYRot()));
+    public double getBodyPitch(float partialTick) {
+        return MathHelper.wrapDegrees(MathHelper.lerp(partialTick, entity.yRotO, entity.getYRot()));
     }
 
     @Override
@@ -146,7 +146,7 @@ public class LivingEntitySelectorImpl<T extends LivingEntity> extends EntitySele
 
     @Nullable
     @Override
-    public ItemSelector equippedItemBySlot(String name) {
+    public ItemSelector equipmentBySlot(String name) {
         var slot = NAMED_SLOTS.computeIfAbsent(name, LivingEntitySelectorImpl::findSlot);
         var itemStack = slot.map(it -> entity.getItemBySlot(it)).orElse(ItemStack.EMPTY);
         if (!itemStack.isEmpty()) {

@@ -4,11 +4,9 @@ public interface LevelSelector {
 
     int moonPhase();
 
-
     double days();
 
     double timestamp();
-
 
     int weather();
 

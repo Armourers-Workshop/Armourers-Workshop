@@ -9,5 +9,5 @@ import net.minecraft.server.MinecraftServer;
  */
 public interface ServerStoppedEvent {
 
-    MinecraftServer getServer();
+    MinecraftServer server();
 }

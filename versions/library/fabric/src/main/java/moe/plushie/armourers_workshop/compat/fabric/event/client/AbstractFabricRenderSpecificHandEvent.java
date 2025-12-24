@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.fabric.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.PlayerRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
@@ -19,7 +19,7 @@ public class AbstractFabricRenderSpecificHandEvent {
             subscriber.accept(new RenderSpecificHandEvent() {
 
                 @Override
-                public float partialTicks() {
+                public float partialTick() {
                     return 0;
                 }
 

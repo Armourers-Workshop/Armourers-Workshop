@@ -5,12 +5,12 @@ import net.minecraft.world.entity.EntityDimensions;
 
 public interface EntityEvent {
 
-    Entity getEntity();
+    Entity entity();
 
     interface ReloadSize extends EntityEvent {
 
         void setSize(EntityDimensions size);
 
-        EntityDimensions getSize();
+        EntityDimensions size();
     }
 }

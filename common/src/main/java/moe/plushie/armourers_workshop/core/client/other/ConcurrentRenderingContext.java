@@ -22,11 +22,11 @@ public interface ConcurrentRenderingContext extends IGraphicsContext {
         return LightmapTexture.DEFAULT;
     }
 
-    default float partialTicks() {
+    default float partialTick() {
         return 1.0f;
     }
 
-    default double animationTicks() {
+    default double animationTick() {
         return 0.0;
     }
 

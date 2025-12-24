@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.cli
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.block.AbstractBlockSpecialRenderer;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;

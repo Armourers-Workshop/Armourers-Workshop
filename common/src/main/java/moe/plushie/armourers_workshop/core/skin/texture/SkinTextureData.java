@@ -99,6 +99,10 @@ public class SkinTextureData implements ISkinTextureProvider {
         return variants;
     }
 
+    public String extension() {
+        return "png";
+    }
+
     @Override
     public String toString() {
         return Objects.toString(this, "name", name, "width", width, "height", height, "animation", animation, "properties", properties);

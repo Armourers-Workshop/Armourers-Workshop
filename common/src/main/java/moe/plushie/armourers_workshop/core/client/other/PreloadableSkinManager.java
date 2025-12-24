@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.common.IDeltaTracker;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -21,8 +22,8 @@ public class PreloadableSkinManager {
     public static void stop() {
     }
 
-    public static void tick(boolean isPaused) {
-        if (isPaused) {
+    public static void tick(IDeltaTracker deltaTracker) {
+        if (deltaTracker.isPaused()) {
             return;
         }
         // we need to preload all skin in the current player's inventory.

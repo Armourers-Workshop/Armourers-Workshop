@@ -23,8 +23,10 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTexturePos;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -207,28 +209,34 @@ public class BakedGeometryFace {
     }
 
     private IRenderType resolveRenderType(SkinGeometryFace face) {
-        var texturePos = face.texturePos();
-        if (texturePos != null && texturePos.provider() != null) {
-            return SmartTextureManager.getInstance().register(texturePos.provider(), face.type());
+        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::provider);
+        if (parent != null) {
+            return resolveRenderType(parent, face.type());
         }
-        return SkinRenderType.by(face.type());
+        return SkinRenderType.geometry(face.type());
     }
 
     private Collection<IRenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
-        var texture = face.texturePos();
-        if (texture == null || texture.provider() == null) {
+        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::provider);
+        if (parent == null) {
             return null;
         }
-        var parent = texture.provider();
         var renderTypes = new ArrayList<IRenderType>();
         for (var variant : parent.variants()) {
             var properties = variant.properties();
             if (properties.isNormal() || properties.isSpecular()) {
                 continue; // normal/specular map, only use from shader mod.
             }
-            renderTypes.add(SmartTextureManager.getInstance().register(variant, face.type()));
+            renderTypes.add(resolveRenderType(variant, face.type()));
         }
         return renderTypes;
+    }
+
+    private IRenderType resolveRenderType(SkinTextureData provider, SkinGeometryType geometryType) {
+        return SmartTextureManager.getInstance().register(provider).create(it -> {
+            var location = it.location();
+            return SkinRenderType.geometry(geometryType, location, it.isTranslucent(), it.isEmissive());
+        });
     }
 
     public float priority() {

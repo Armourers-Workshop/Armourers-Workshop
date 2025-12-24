@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.cl
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.block.AbstractBlockSpecialRenderer;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;

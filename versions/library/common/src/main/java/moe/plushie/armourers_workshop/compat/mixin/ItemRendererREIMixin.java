@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractItemStackRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractItemStackRenderState;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.LivingEntity;

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.math;
 
-import moe.plushie.armourers_workshop.compat.core.AbstractMath;
+import moe.plushie.armourers_workshop.compat.core.math.AbstractMath;
 
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
@@ -97,11 +97,23 @@ public class OpenMath {
     }
 
     public static float safeAsin(float r) {
-        return r <= -1.0f ? -PIHalf_f : r >= 1.0f ? PIHalf_f : asin(r);
+        if (r <= -1.0f) {
+            return -PIHalf_f;
+        }
+        if (r >= 1.0f) {
+            return PIHalf_f;
+        }
+        return asin(r);
     }
 
     public static double safeAsin(double r) {
-        return r <= -1.0 ? -PIHalf : r >= 1.0 ? PIHalf : asin(r);
+        if (r <= -1.0) {
+            return -PIHalf;
+        }
+        if (r >= 1.0) {
+            return PIHalf;
+        }
+        return asin(r);
     }
 
     public static float cosFromSin(float sin, float angle) {
@@ -182,6 +194,31 @@ public class OpenMath {
 
     public static double lerp(double position, double a, double b) {
         return fma(position, b - a, a);
+    }
+
+    public static OpenVector3f lerp(float position, OpenVector3f a, OpenVector3f b) {
+        if (position == 0.0f) {
+            return a;
+        }
+        if (position == 1.0f) {
+            return b;
+        }
+        var x = lerp(position, a.x, b.x);
+        var y = lerp(position, a.y, b.y);
+        var z = lerp(position, a.z, b.z);
+        return new OpenVector3f(x, y, z);
+    }
+
+    public static OpenQuaternionf lerp(float position, OpenQuaternionf a, OpenQuaternionf b) {
+        if (position == 0.0f) {
+            return a;
+        }
+        if (position == 1.0f) {
+            return b;
+        }
+        var quat = new OpenQuaternionf(lerp(position, a.x(), b.x()), lerp(position, a.y(), b.y()), lerp(position, a.z(), b.z()), lerp(position, a.w(), b.w()));
+        quat.normalize();
+        return quat;
     }
 
     public static float rotLerp(float position, float a, float n) {
@@ -288,6 +325,13 @@ public class OpenMath {
         return -Math.floorDiv(-i, j);
     }
 
+    public static double random() {
+        return Math.random();
+    }
+
+    public static float randomf() {
+        return (float) Math.random();
+    }
 
     public static void normalize(float[] values) {
         float f = fma(values[0], values[0], fma(values[1], values[1], values[2] * values[2]));

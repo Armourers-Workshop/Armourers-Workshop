@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.A
 import moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide.AdvancedMinecartGuideRenderer;
 import moe.plushie.armourers_workshop.builder.client.render.state.AdvancedBuilderRenderState;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationManager;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -130,10 +130,10 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
         var carmeScale = renderState.carmeScale();
 
         context.saveGraphicsState();
-        context.translateCTM(offset.x(), offset.y(), offset.z());
+        context.translateCTM(offset);
         context.translateCTM(0.5f, 0.5f, 0.5f);
         context.rotateCTM(CubeTransform.getFacingRotation(renderState.facing())); // apply facing rotation
-        context.scaleCTM(carmeScale.x(), carmeScale.y(), carmeScale.z());
+        context.scaleCTM(carmeScale);
         context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
 
         var document = renderState.document();
@@ -177,9 +177,9 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
             context.translateCTM(-pos.getX(), -pos.getY(), -pos.getZ());
             context.draw(ShapeElement.stroke(renderState.visibleBox(), Colors.RED));
             var origin = renderState.renderOrigin();
-            context.translateCTM(origin.x(), origin.y(), origin.z());
+            context.translateCTM(origin);
             context.draw(ShapeElement.arrow(OpenVector3f.ZERO, 1));
-            context.translateCTM(carmeOffset.x(), carmeOffset.y(), carmeOffset.z());
+            context.translateCTM(carmeOffset);
             //context.rotateCTM(new OpenQuaternionf(-carmeRot.x(), carmeRot.y(), carmeRot.z(), true));
             context.draw(ShapeElement.arrow(OpenVector3f.ZERO, 1));
             context.restoreGraphicsState();
@@ -225,8 +225,8 @@ public class AdvancedBuilderBlockRenderer<T extends AdvancedBuilderBlockEntity, 
         if (model.isEmpty()) {
             return;
         }
-        model.setPartialTicks(1.0f);
-        model.setAnimationTicks(0.0);
+        model.setPartialTick(1.0f);
+        model.setAnimationTick(0.0);
         model.setAnimationManager(AnimationManager.NONE);
         model.setOutlineColor(0);
 

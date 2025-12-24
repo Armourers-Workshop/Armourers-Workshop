@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientResourceManager;
-import moe.plushie.armourers_workshop.compat.client.AbstractGameProfile;
+import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;

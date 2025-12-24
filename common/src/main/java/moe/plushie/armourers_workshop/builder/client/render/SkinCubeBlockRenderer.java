@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
 import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.render.state.SkinCubeRenderState;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;

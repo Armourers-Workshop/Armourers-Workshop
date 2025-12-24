@@ -166,7 +166,14 @@ public class BedrockParticleReader {
                 object.at("radius", it -> builder.radius(it.expression()));
                 object.at("surface_only", it -> builder.surfaceOnly(it.boolValue()));
             });
-
+            case "minecraft:emitter_shape_custom" -> parse(BedrockComponent.EmitterCustomShape.Builder::new, builder -> {
+                object.at("offset", it -> {
+                    builder.offsetX(it.at(0).expression());
+                    builder.offsetY(it.at(1).expression());
+                    builder.offsetZ(it.at(2).expression());
+                });
+                object.at("direction", it -> builder.direction(parseShapeDirection(it)));
+            });
             // ..
             case "minecraft:particle_initialization" -> parse(BedrockComponent.ParticleInitialization.Builder::new, builder -> {
                 object.at("per_update_expression", it -> builder.update(it.expression()));
@@ -265,7 +272,7 @@ public class BedrockParticleReader {
                     });
 
                     // animated
-                    it.at("flipbook", it1 -> builder.useAnimation(true));
+                    it.at("flipbook", it1 -> builder.flipbook(true));
                     it.at("flipbook", it1 -> {
                         it1.at("base_UV", it2 -> {
                             builder.textureCoordsX(it2.at(0).expression());
@@ -298,6 +305,7 @@ public class BedrockParticleReader {
                         case DICTIONARY -> {
                             it.at("interpolant", it2 -> builder.interpolation(it2.expression()));
                             it.each("gradient", (key, value) -> builder.addColor(key, value.stringValue())); // 0xAARRGGBB
+                            // gradient is array, i / (float) colors.size() - 1
                         }
                     }
                 });

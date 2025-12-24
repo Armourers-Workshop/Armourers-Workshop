@@ -172,8 +172,8 @@ public interface IInputStream {
     }
 
     default OpenPrimitive readPrimitiveObject() throws IOException {
-        var len = readVarInt();
-        return switch (len) {
+        var type = readVarInt();
+        return switch (type) {
             case 0 -> OpenPrimitive.NULL;
             case 1 -> OpenPrimitive.FALSE;
             case 2 -> OpenPrimitive.TRUE;
@@ -182,7 +182,7 @@ public interface IInputStream {
             case 5 -> OpenPrimitive.of(readLong());
             case 6 -> OpenPrimitive.of(readFloat());
             case 7 -> OpenPrimitive.of(readDouble());
-            default -> OpenPrimitive.of(readString(len - 8));
+            default -> OpenPrimitive.of(readString(type - 8));
         };
     }
 

@@ -5,7 +5,7 @@ import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -21,16 +21,16 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
         addWidget(new AbstractMenuTabDelegate(this));
     }
 
-    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTicks, CGGraphicsContext context) {
+    public void renderInView(UIView view, int zLevel, int mouseX, int mouseY, float partialTick, CGGraphicsContext context) {
         AbstractGuiGraphicsRenderer.unwrap(context, "overlay", graphics -> {
-            super.render(graphics, mouseX, mouseY, partialTicks);
+            super.render(graphics, mouseX, mouseY, partialTick);
             super.renderTooltip(graphics, mouseX, mouseY);
         });
     }
 
-    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+    public void render(CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
         AbstractGuiGraphicsRenderer.unwrap(context, "container", graphics -> {
-            super.render(graphics, mouseX, mouseY, partialTicks);
+            super.render(graphics, mouseX, mouseY, partialTick);
         });
     }
 
@@ -53,9 +53,9 @@ public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> ex
     }
 
     @Override
-    public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        AbstractGuiGraphicsRenderer.wrap(graphics, width, height, mouseX, mouseY, partialTicks, context -> {
-            this.render(context, mouseX, mouseY, partialTicks);
+    public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        AbstractGuiGraphicsRenderer.wrap(graphics, width, height, mouseX, mouseY, partialTick, context -> {
+            this.render(context, mouseX, mouseY, partialTick);
         });
     }
 

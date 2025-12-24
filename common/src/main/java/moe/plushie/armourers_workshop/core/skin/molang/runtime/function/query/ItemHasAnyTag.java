@@ -21,7 +21,7 @@ public class ItemHasAnyTag extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var item = entity.equippedItemBySlot(this.slot.evaluate(context).getAsString());
+        var item = entity.equipmentBySlot(this.slot.evaluate(context).getAsString());
         if (item == null) {
             return 0; // can't found item.
         }

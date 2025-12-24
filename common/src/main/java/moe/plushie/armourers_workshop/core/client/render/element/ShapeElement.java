@@ -64,7 +64,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement arrow(float x, float y, float z, float w, float h, float d) {
-        return ArrowImpl.newInstance(x, y, z, w, h, d);
+        return Arrow.newInstance(x, y, z, w, h, d);
     }
 
     public static ShapeElement stroke(IRectangle3i rect, int color) {
@@ -88,7 +88,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement stroke(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, int color, IRenderType renderType) {
-        var cube = CubeImpl.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
         cube.setTextureOffset(0, 0, 0);
         cube.setTextureSize(1, 1, 1);
         cube.setColor(color);
@@ -105,7 +105,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement fill(float x, float y, float z, float w, float h, float d, BlockPaintColor color, int lightmap, int overlay, IRenderType renderType) {
-        var cube = CubeImpl.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
         cube.setTextureOffset(0, 0, 0);
         cube.setTextureSize(1, 1, 1);
         for (var dir : OpenDirection.values()) {
@@ -128,7 +128,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement fill(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, int color, IRenderType renderType) {
-        var cube = CubeImpl.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
         cube.setTextureOffset(0, 0, 0);
         cube.setTextureSize(1, 1, 1);
         cube.setColor(color);
@@ -140,7 +140,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement line(float x0, float y0, float z0, float x1, float y1, float z1, int color, IRenderType renderType) {
-        return LineImpl.newInstance(x0, y0, z0, x1, y1, z1, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, renderType);
+        return Line.newInstance(x0, y0, z0, x1, y1, z1, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, renderType);
     }
 
     public static ShapeElement cone(float x0, float y0, float z0, float x1, float y1, float z1, float radius, int color) {
@@ -148,7 +148,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement cone(float x0, float y0, float z0, float x1, float y1, float z1, float radius, int color, IRenderType renderType) {
-        return ConeImpl.newInstance(x0, y0, z0, x1, y1, z1, radius, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, renderType);
+        return Cone.newInstance(x0, y0, z0, x1, y1, z1, radius, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, renderType);
     }
 
 
@@ -157,7 +157,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement marker(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, BlockPaintColor color, float alpha) {
-        var cube = CubeImpl.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, SkinRenderType.IMAGE_MARKER);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, SkinRenderType.IMAGE_MARKER);
         for (var dir : OpenDirection.values()) {
             var type = color.getOrDefault(dir, SkinPaintColor.CLEAR).paintType();
             if (type == SkinPaintTypes.NONE || type == SkinPaintTypes.NORMAL) {
@@ -188,7 +188,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement guide(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, int color, IRenderType renderType) {
-        var cube = CubeImpl.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, renderType);
         cube.setTextureOffset(0, 0, 0);
         cube.setTextureSize(w, h, d); // the texture will use tile mode.
         cube.setColor(color);
@@ -210,12 +210,12 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement stroke(BakedArmature armature, boolean showOriginPoint) {
-        return ArmatureImpl.newInstance(armature, showOriginPoint, ModDebugger.defaultArmature);
+        return Armature.newInstance(armature, showOriginPoint, ModDebugger.defaultArmature);
     }
 
     public static ShapeElement fill(JointShape shape, SkinTextureData texture, int lightmap, int overlay, int color, IRenderType renderType) {
         var rect = shape.bounds();
-        var cube = CubeImpl.newInstance(rect.minX(), rect.minY(), rect.minZ(), rect.maxX(), rect.maxY(), rect.maxZ(), lightmap, overlay, renderType);
+        var cube = Cube.newInstance(rect.minX(), rect.minY(), rect.minZ(), rect.maxX(), rect.maxY(), rect.maxZ(), lightmap, overlay, renderType);
         for (var dir : OpenDirection.values()) {
             var uv = shape.getUV(dir);
             if (uv == null) {
@@ -233,6 +233,69 @@ public abstract class ShapeElement implements IGraphicsElement {
             cube.setTextureSize(dir, s * n, t * m);
         }
         return cube;
+    }
+
+    protected static abstract class Base extends ShapeElement implements IGraphicsRenderable {
+
+        protected float u = 0.0f;
+        protected float v = 0.0f;
+
+        protected int color = -1;
+
+        protected int lightmap = LightmapTexture.DEFAULT;
+        protected int overlay = OverlayTexture.NO_OVERLAY;
+
+        protected OpenVector3f normal = OpenVector3f.ZERO;
+
+        protected IRenderType renderType;
+
+        @Override
+        public void render(IPoseStack.Pose pose, IVertexConsumer builder) {
+            var normal = new float[3];
+            var position = new float[4];
+
+            var u1 = OverlayTexture.getU(overlay);
+            var v1 = OverlayTexture.getV(overlay);
+
+            var u2 = LightmapTexture.getU(lightmap);
+            var v2 = LightmapTexture.getV(lightmap);
+
+            var r = Colors.getRed(color);
+            var g = Colors.getGreen(color);
+            var b = Colors.getBlue(color);
+            var a = Colors.getAlpha(color);
+
+            // apply pose transform of the normal.
+            normal[0] = this.normal.x;
+            normal[1] = this.normal.y;
+            normal[2] = this.normal.z;
+            pose.transformNormal(normal);
+
+            for (var vertex : vertices()) {
+                // apply pose transform of the pos.
+                position[0] = vertex.x;
+                position[1] = vertex.y;
+                position[2] = vertex.z;
+                position[3] = 1.0f;
+                pose.transformPose(position);
+
+                // submit into builder.
+                builder.vertex(position[0], position[1], position[2])
+                        .color(r, g, b, a)
+                        .uv(u, v)
+                        .overlayCoords(u1, v1)
+                        .uv2(u2, v2)
+                        .normal(normal[0], normal[1], normal[2])
+                        .endVertex();
+            }
+        }
+
+        @Override
+        public IRenderType renderType() {
+            return renderType;
+        }
+
+        protected abstract OpenVector3f[] vertices();
     }
 
     /**
@@ -258,9 +321,9 @@ public abstract class ShapeElement implements IGraphicsElement {
      * <a href="https://web..org/web/20250920105830/https://learnopengl.com/Getting-started/Coordinate-Systems">Coordinate-Systems</a>
      **/
     @SuppressWarnings("SuspiciousNameCombination")
-    protected static class CubeImpl extends ShapeElement implements IGraphicsRenderable {
+    protected static class Cube extends ShapeElement implements IGraphicsRenderable {
 
-        private static final ObjectPool<CubeImpl> POOL = ObjectPool.create(CubeImpl::new);
+        private static final ObjectPool<Cube> POOL = ObjectPool.create(Cube::new);
 
         private int overlay;
         private int lightmap;
@@ -285,7 +348,7 @@ public abstract class ShapeElement implements IGraphicsElement {
 
         private final Polygon[] polygons = {top, bottom, front, back, left, right}; // down, up, north, south, west, east
 
-        public static CubeImpl newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, int lightmap, int overlay, IRenderType renderType) {
+        public static Cube newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, int lightmap, int overlay, IRenderType renderType) {
             var that = POOL.alloc();
             that.p0.set(minX, minY, minZ);
             that.p1.set(maxX, minY, minZ);
@@ -511,67 +574,6 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static abstract class BasicImpl extends ShapeElement implements IGraphicsRenderable {
-
-        protected float u = 0.0f;
-        protected float v = 0.0f;
-
-        protected int color = -1;
-
-        protected int lightmap = LightmapTexture.DEFAULT;
-        protected int overlay = OverlayTexture.NO_OVERLAY;
-
-        protected IRenderType renderType;
-
-        @Override
-        public void render(IPoseStack.Pose pose, IVertexConsumer builder) {
-            var normal = new float[3];
-            var position = new float[4];
-
-            var u1 = OverlayTexture.getU(overlay);
-            var v1 = OverlayTexture.getV(overlay);
-
-            var u2 = LightmapTexture.getU(lightmap);
-            var v2 = LightmapTexture.getV(lightmap);
-
-            var r = Colors.getRed(color);
-            var g = Colors.getGreen(color);
-            var b = Colors.getBlue(color);
-            var a = Colors.getAlpha(color);
-
-            for (var vertex : vertices()) {
-                // apply pose transform of the normal.
-                normal[0] = 0;
-                normal[1] = 0;
-                normal[2] = 0;
-                pose.transformNormal(normal);
-
-                // apply pose transform of the pos.
-                position[0] = vertex.x;
-                position[1] = vertex.y;
-                position[2] = vertex.z;
-                position[3] = 1.0f;
-                pose.transformPose(position);
-
-                // submit into builder.
-                builder.vertex(position[0], position[1], position[2])
-                        .color(r, g, b, a)
-                        .uv(u, v)
-                        .overlayCoords(u1, v1)
-                        .uv2(u2, v2)
-                        .normal(normal[0], normal[1], normal[2])
-                        .endVertex();
-            }
-        }
-
-        @Override
-        public IRenderType renderType() {
-            return renderType;
-        }
-
-        protected abstract OpenVector3f[] vertices();
-    }
-
     /**
      * A cone shape (RHS, CCW) of the render element.
      * <pre>
@@ -589,9 +591,9 @@ public abstract class ShapeElement implements IGraphicsElement {
      *       p0 +--------------------+ p3
      * </pre>
      **/
-    protected static class ConeImpl extends BasicImpl {
+    protected static class Cone extends Base {
 
-        private static final ObjectPool<ConeImpl> POOL = ObjectPool.create(ConeImpl::new);
+        private static final ObjectPool<Cone> POOL = ObjectPool.create(Cone::new);
 
         private float radius;
 
@@ -614,7 +616,7 @@ public abstract class ShapeElement implements IGraphicsElement {
                 p2, p3, p0,
         };
 
-        public static ConeImpl newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float radius, int lightmap, int overlay, int color, IRenderType renderType) {
+        public static Cone newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, float radius, int lightmap, int overlay, int color, IRenderType renderType) {
             var that = POOL.alloc();
             that.color = color;
             that.lightmap = lightmap;
@@ -663,9 +665,9 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class LineImpl extends BasicImpl {
+    protected static class Line extends Base {
 
-        private static final ObjectPool<LineImpl> POOL = ObjectPool.create(LineImpl::new);
+        private static final ObjectPool<Line> POOL = ObjectPool.create(Line::new);
 
         private final OpenVector3f p0 = new OpenVector3f(); // start
         private final OpenVector3f p1 = new OpenVector3f(); // end
@@ -674,7 +676,7 @@ public abstract class ShapeElement implements IGraphicsElement {
                 p0, p1
         };
 
-        public static LineImpl newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, int lightmap, int overlay, int color, IRenderType renderType) {
+        public static Line newInstance(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, int lightmap, int overlay, int color, IRenderType renderType) {
             var that = POOL.alloc();
             that.color = color;
             that.lightmap = lightmap;
@@ -691,9 +693,9 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class ArrowImpl extends ShapeElement {
+    protected static class Arrow extends ShapeElement {
 
-        private static final ObjectPool<ArrowImpl> POOL = ObjectPool.create(ArrowImpl::new);
+        private static final ObjectPool<Arrow> POOL = ObjectPool.create(Arrow::new);
 
         private float x;
         private float y;
@@ -702,7 +704,7 @@ public abstract class ShapeElement implements IGraphicsElement {
         private float height;
         private float depth;
 
-        public static ArrowImpl newInstance(float x, float y, float z, float width, float height, float depth) {
+        public static Arrow newInstance(float x, float y, float z, float width, float height, float depth) {
             var that = POOL.alloc();
             that.x = x;
             that.y = y;
@@ -738,16 +740,16 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class ArmatureImpl extends ShapeElement {
+    protected static class Armature extends ShapeElement {
 
-        private static final ObjectPool<ArmatureImpl> POOL = ObjectPool.create(ArmatureImpl::new);
+        private static final ObjectPool<Armature> POOL = ObjectPool.create(Armature::new);
 
         private boolean showOriginPoint;
         private boolean showDefaultArmature;
 
         private BakedArmature armature;
 
-        public static ArmatureImpl newInstance(BakedArmature armature, boolean showOriginPoint, boolean showDefaultArmature) {
+        public static Armature newInstance(BakedArmature armature, boolean showOriginPoint, boolean showDefaultArmature) {
             var that = POOL.alloc();
             that.armature = armature;
             that.showOriginPoint = showOriginPoint;

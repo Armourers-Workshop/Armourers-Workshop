@@ -57,9 +57,9 @@ public class BakedArmatureTransformer {
     }
 
 
-    public void prepare(EntityRenderState renderState, Entity entity, float partialTicks) {
+    public void prepare(EntityRenderState renderState, Entity entity, float partialTick) {
         for (var plugin : plugins) {
-            plugin.prepare(renderState, entity, partialTicks);
+            plugin.prepare(renderState, entity, partialTick);
         }
     }
 

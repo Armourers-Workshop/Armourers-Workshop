@@ -13,7 +13,7 @@ public interface RenderEntityEvent<T extends Entity, S extends EntityRenderState
 
     interface Setup<T extends Entity, S extends EntityRenderState> extends RenderEntityEvent<T, S> {
 
-        float partialTicks();
+        float partialTick();
 
         T entity();
     }

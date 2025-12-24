@@ -3,8 +3,7 @@ package moe.plushie.armourers_workshop.core.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compat.client.AbstractSimpleTexture;
-import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
+import moe.plushie.armourers_workshop.compat.client.texture.AbstractSimpleTexture;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -24,13 +23,13 @@ public class SmartTextureManager {
         return INSTANCE;
     }
 
-    public synchronized void start() {
+    public static void start() {
     }
 
-    public synchronized void stop() {
+    public static void stop() {
         // release all registered textures.
-        textures.values().forEach(SmartTexture::unbind);
-        textures.clear();
+        INSTANCE.textures.values().forEach(SmartTexture::unbind);
+        INSTANCE.textures.clear();
     }
 
     public void open(IRenderType renderType) {
@@ -47,22 +46,22 @@ public class SmartTextureManager {
         }
     }
 
-    public synchronized IRenderType register(SkinTextureData provider, SkinGeometryType type) {
+    public SmartTexture register(SkinTextureData provider) {
         var texture = textures.get(provider);
         if (texture == null) {
             texture = new SmartTexture(provider);
             textures.put(provider, texture);
         }
-        return texture.getRenderType(type);
+        return texture;
     }
 
-    public TextureManager textureManager() {
+    public TextureManager getTextureManager() {
         return Minecraft.getInstance().getTextureManager();
     }
 
     protected void uploadTexture(SmartTexture texture) {
         var location = texture.location();
-        textureManager().register(location, AbstractSimpleTexture.create(location));
+        getTextureManager().register(location, AbstractSimpleTexture.create(location));
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Texture '{}'", location);
         }
@@ -70,7 +69,7 @@ public class SmartTextureManager {
 
     protected void releaseTexture(SmartTexture texture) {
         var location = texture.location();
-        textureManager().release(location);
+        getTextureManager().release(location);
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Unregistering Texture '{}'", location);
         }

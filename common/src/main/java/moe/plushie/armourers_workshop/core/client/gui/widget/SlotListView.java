@@ -47,7 +47,7 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         var offset = screen.contentOffset();
         context.saveGraphicsState();
         context.translateCTM(-offset.x, -offset.y, 0);
-        screen.renderInView(this, 400, (int) param.mouseX(), (int) param.mouseY(), param.partialTicks(), context);
+        screen.renderInView(this, 400, (int) param.mouseX(), (int) param.mouseY(), param.partialTick(), context);
         context.restoreGraphicsState();
     }
 

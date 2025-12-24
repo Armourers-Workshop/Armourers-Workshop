@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderEntityEvent;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractEntityModel;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractEntityModel;
 import moe.plushie.armourers_workshop.core.client.render.state.BoatRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;

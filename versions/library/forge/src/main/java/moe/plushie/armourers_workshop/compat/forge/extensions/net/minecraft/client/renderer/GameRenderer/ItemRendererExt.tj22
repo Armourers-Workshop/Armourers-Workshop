@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.cli
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractItemSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractItemSpecialRenderer;
 import net.minecraft.world.item.Item;
 
 import manifold.ext.rt.api.Extension;

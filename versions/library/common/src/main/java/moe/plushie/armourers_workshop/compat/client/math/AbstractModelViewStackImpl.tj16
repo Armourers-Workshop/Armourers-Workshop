@@ -1,0 +1,101 @@
+package moe.plushie.armourers_workshop.compat.client.math;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
+import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
+import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.nio.FloatBuffer;
+
+@Available("[1.16, 1.18)")
+public class AbstractModelViewStackImpl implements IModelViewStack {
+
+    private final Proxy entry = new Proxy();
+
+    @Override
+    public void pushMatrix() {
+        GL11.glPushMatrix();
+    }
+
+    @Override
+    public void popMatrix() {
+        GL11.glPopMatrix();
+    }
+
+    public void apply() {
+    }
+
+    @Override
+    public IMatrix4f last() {
+        return entry;
+    }
+
+    private static class Proxy implements IMatrix4f {
+
+        private final FloatBuffer buffer = MatrixUtils.createFloatBuffer(16);
+
+        @Override
+        public void set(IMatrix4f matrix) {
+            setIdentity();
+            multiply(matrix);
+        }
+
+        @Override
+        public void load(FloatBuffer buffer) {
+            setIdentity();
+            multiply(buffer);
+        }
+
+        @Override
+        public void store(FloatBuffer buffer) {
+            GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, buffer);
+        }
+
+        @Override
+        public void translate(float x, float y, float z) {
+            GL11.glTranslatef(x, y, z);
+        }
+
+        @Override
+        public void rotate(IQuaternionf quaternion) {
+            GL11.glRotatef(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
+        }
+
+        @Override
+        public void scale(float x, float y, float z) {
+            GL11.glScalef(x, y, z);
+        }
+
+        @Override
+        public void multiply(IMatrix4f matrix) {
+            matrix.store(buffer);
+            buffer.rewind();
+            multiply(buffer);
+        }
+
+        @Override
+        public void multiply(float[] values) {
+            // nop
+        }
+
+        @Override
+        public void invert() {
+            // nop
+        }
+
+        @Override
+        public void transpose() {
+            // nop
+        }
+
+        public void setIdentity() {
+            GL11.glLoadIdentity();
+        }
+
+        public void multiply(FloatBuffer buffer) {
+            GL11.glMultMatrixf(buffer);
+        }
+    }
+}

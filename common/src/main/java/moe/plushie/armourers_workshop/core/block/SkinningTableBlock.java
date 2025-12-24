@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;

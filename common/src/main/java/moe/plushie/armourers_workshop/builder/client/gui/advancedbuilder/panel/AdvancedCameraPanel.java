@@ -206,7 +206,7 @@ public class AdvancedCameraPanel extends UIView {
 //        poseStack.scale(-MathUtils.SCALE, -MathUtils.SCALE, MathUtils.SCALE);
 //
 //        tesselator.setLightmap(0xf000f0);
-//        tesselator.setPartialTicks(0);
+//        tesselator.setPartialTick(0);
 //        tesselator.setBufferProvider(skin -> (bakedPart, skin, scheme, shouldRender, context) -> {
 //            if (shouldRender) {
 //                OpenMatrix4f mat = new OpenMatrix4f(context.pose().lastPose());

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;

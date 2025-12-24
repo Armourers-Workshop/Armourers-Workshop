@@ -1,0 +1,8 @@
+package moe.plushie.armourers_workshop.compat.client.entity.state;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+
+@Available("[1.22, )")
+public class AbstractLivingEntityRenderState extends LivingEntityRenderState {
+}

@@ -60,7 +60,7 @@ public class UpdateAnimationPacket extends CustomPacket {
                     var name = value.getOptionalString("name").orElse("");
                     var properties = value.getOptionalCompound("properties").orElseGet(CompoundTag::new);
                     ModLog.debug("play animation {}", value);
-                    animationManager.play(name, TickUtils.animationTicks(), properties);
+                    animationManager.play(name, TickUtils.animationTick(), properties);
                 }
                 break;
             }

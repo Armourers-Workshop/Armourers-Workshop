@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.gu
 
 import com.apple.library.coregraphics.CGGraphicsContext;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.gui.screens.Screen;
 
 import manifold.ext.rt.api.Extension;
@@ -12,9 +12,9 @@ import manifold.ext.rt.api.This;
 @Extension
 public class ABI {
 
-    public static void render(@This Screen screen, CGGraphicsContext context, int mouseX, int mouseY, float partialTicks) {
+    public static void render(@This Screen screen, CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
         AbstractGuiGraphicsRenderer.unwrap(context, "overlay", graphics -> {
-            screen.render(graphics, mouseX, mouseY, partialTicks);
+            screen.render(graphics, mouseX, mouseY, partialTick);
         });
     }
 }

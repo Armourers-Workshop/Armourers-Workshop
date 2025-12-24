@@ -22,12 +22,12 @@ public class AbstractForgePlayerEvent {
     public static IEventHandler<PlayerEvent.Clone> cloneFactory() {
         return AbstractForgeCommonEventsImpl.PLAYER_CLONE.map(event -> new PlayerEvent.Clone() {
             @Override
-            public Player getOriginal() {
+            public Player original() {
                 return event.getOriginal();
             }
 
             @Override
-            public Player getPlayer() {
+            public Player player() {
                 return event.getEntity();
             }
         });
@@ -46,12 +46,12 @@ public class AbstractForgePlayerEvent {
     public static IEventHandler<PlayerEvent.Attack> attackFactory() {
         return AbstractForgeCommonEventsImpl.PLAYER_ATTACK.map(event -> new PlayerEvent.Attack() {
             @Override
-            public Entity getTarget() {
+            public Entity target() {
                 return event.getTarget();
             }
 
             @Override
-            public Player getPlayer() {
+            public Player player() {
                 return event.getEntity();
             }
 
@@ -65,12 +65,12 @@ public class AbstractForgePlayerEvent {
     public static IEventHandler<PlayerEvent.StartTracking> startTrackingFactory() {
         return AbstractForgeCommonEventsImpl.PLAYER_TRACKING.map(event -> new PlayerEvent.StartTracking() {
             @Override
-            public Entity getTarget() {
+            public Entity target() {
                 return event.getTarget();
             }
 
             @Override
-            public Player getPlayer() {
+            public Player player() {
                 return event.getEntity();
             }
         });

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.math;
 
+import moe.plushie.armourers_workshop.api.core.math.IVector3f;
+import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.core.BlockPos;
 
@@ -7,15 +9,27 @@ import net.minecraft.core.BlockPos;
 public class OpenVector3d {
 
     public static final OpenVector3d ZERO = new OpenVector3d(0.0D, 0.0D, 0.0D);
+    public static final OpenVector3d ONE = new OpenVector3d(1.0D, 1.0D, 1.0D);
 
     public double x;
     public double y;
     public double z;
 
+    public OpenVector3d() {
+    }
+
     public OpenVector3d(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public OpenVector3d(IVector3i pos) {
+        this(pos.x(), pos.y(), pos.z());
+    }
+
+    public OpenVector3d(IVector3f pos) {
+        this(pos.x(), pos.y(), pos.z());
     }
 
     public static OpenVector3d fromRGB24(int rgb) {
@@ -104,18 +118,18 @@ public class OpenVector3d {
     }
 
     public OpenVector3d scale(double v) {
-        return transform(v, v, v);
+        return multiply(v, v, v);
     }
 
     public OpenVector3d reverse() {
         return scale(-1.0D);
     }
 
-    public OpenVector3d transform(OpenVector3d pos) {
-        return transform(pos.x, pos.y, pos.z);
+    public OpenVector3d multiply(OpenVector3d pos) {
+        return multiply(pos.x, pos.y, pos.z);
     }
 
-    public OpenVector3d transform(double dx, double dy, double dz) {
+    public OpenVector3d multiply(double dx, double dy, double dz) {
         return new OpenVector3d(x * dx, y * dy, z * dz);
     }
 
@@ -180,6 +194,12 @@ public class OpenVector3d {
 //        double d2 = set.contains(OpenDirection.Axis.Z) ? Math.floor(z) : z;
 //        return new Vector3d(d0, d1, d2);
 //    }
+
+    public void set(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     public void setX(double x) {
         this.x = x;

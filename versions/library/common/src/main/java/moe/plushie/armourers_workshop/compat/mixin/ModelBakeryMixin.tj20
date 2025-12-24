@@ -2,10 +2,9 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import com.mojang.datafixers.util.Either;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractItemModelFinder;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemModelFinder;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

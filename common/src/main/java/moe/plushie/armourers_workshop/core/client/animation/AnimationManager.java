@@ -50,7 +50,7 @@ public class AnimationManager {
     private final HashMap<String, PlayAction> lastActions = new HashMap<>();
 
     private EntityActionSet lastAnimationState;
-    private double lastAnimationTicks = 0;
+    private double lastAnimationTick = 0;
 
     private final ClientExecutionContextImpl executionContext;
 
@@ -134,7 +134,7 @@ public class AnimationManager {
                 lastAnimationState = animationState.copy();
             }
         }
-        lastAnimationTicks = animationTime;
+        lastAnimationTick = animationTime;
     }
 
     public void play(String name, double atTime, CompoundTag tag) {
@@ -240,7 +240,7 @@ public class AnimationManager {
         public void autoplay() {
             animationControllers.stream().filter(AnimationController::isParallel).forEach(it -> {
                 // autoplay the parallel animation.
-                startPlay(it, TickUtils.animationTicks(), 1, 0);
+                startPlay(it, TickUtils.animationTick(), 1, 0);
             });
         }
 
@@ -495,7 +495,7 @@ public class AnimationManager {
             // check it still playing.
             if (animationController.loop() == SkinAnimationLoop.NONE) {
                 var endTime = time + animationController.duration();
-                if (endTime < lastAnimationTicks) {
+                if (endTime < lastAnimationTick) {
                     return; // can't play
                 }
             }

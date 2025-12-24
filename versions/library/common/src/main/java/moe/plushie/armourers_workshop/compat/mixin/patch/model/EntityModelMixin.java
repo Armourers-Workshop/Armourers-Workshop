@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.model;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityModel;
 import moe.plushie.armourers_workshop.api.client.model.IModelPart;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractModelHolder;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractModelHolder;
 import net.minecraft.client.model.EntityModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

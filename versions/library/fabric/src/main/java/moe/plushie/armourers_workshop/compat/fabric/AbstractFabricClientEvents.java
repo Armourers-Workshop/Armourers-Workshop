@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricR
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRegisterItemPropertyEvent;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRegisterScreensEvent;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRegisterTextureEvent;
-import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRenderFrameEvent;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRenderHighlightEvent;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRenderScreenEvent;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricRenderSpecificHandEvent;
@@ -16,7 +15,6 @@ import moe.plushie.armourers_workshop.init.event.client.RegisterClientDataPackEv
 import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
 import moe.plushie.armourers_workshop.init.event.client.RegisterScreensEvent;
 import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
-import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderScreenEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderSpecificHandEvent;
@@ -29,9 +27,6 @@ public class AbstractFabricClientEvents {
         EventManager.post(ClientPlayerEvent.LoggingOut.class, AbstractFabricClientPlayerEvent.loggingOutFactory());
 
         EventManager.post(ClientPlayerEvent.Clone.class, AbstractFabricClientPlayerEvent.cloneFactory());
-
-        EventManager.post(RenderFrameEvent.Pre.class, AbstractFabricRenderFrameEvent.preFactory());
-        EventManager.post(RenderFrameEvent.Post.class, AbstractFabricRenderFrameEvent.postFactory());
 
         EventManager.post(RenderScreenEvent.Pre.class, AbstractFabricRenderScreenEvent.preFactory());
         EventManager.post(RenderScreenEvent.Post.class, AbstractFabricRenderScreenEvent.postFactory());

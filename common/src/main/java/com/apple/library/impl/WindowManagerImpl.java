@@ -79,7 +79,7 @@ public class WindowManagerImpl {
     }
 
     public void render(CGGraphicsContext context, RenderInvoker foreground, RenderInvoker background, RenderInvoker overlay) {
-        var partialTicks = context.param().partialTicks();
+        var partialTick = context.param().partialTick();
         var mouseX = (int) context.param().mouseX();
         var mouseY = (int) context.param().mouseY();
         // we need to display a custom tooltip, so must cancel the original tooltip render,
@@ -92,14 +92,14 @@ public class WindowManagerImpl {
         for (var window : windows) {
             window.render(context);
             if (window == WindowDispatcherImpl.BACKGROUND) {
-                background.invoke(mouseX, mouseY, partialTicks, context);
+                background.invoke(mouseX, mouseY, partialTick, context);
             }
             if (window == WindowDispatcherImpl.FOREGROUND) {
-                foreground.invoke(mouseX, mouseY, partialTicks, context);
+                foreground.invoke(mouseX, mouseY, partialTick, context);
             }
             if (window == WindowDispatcherImpl.OVERLAY) {
                 renderTooltip(tooltipResponder, context);
-                overlay.invoke(mouseX, mouseY, partialTicks, context);
+                overlay.invoke(mouseX, mouseY, partialTick, context);
             }
         }
     }
@@ -195,7 +195,7 @@ public class WindowManagerImpl {
 
     @FunctionalInterface
     public interface RenderInvoker {
-        void invoke(int mouseX, int mouseY, float partialTicks, CGGraphicsContext context);
+        void invoke(int mouseX, int mouseY, float partialTick, CGGraphicsContext context);
     }
 
     public static class Queue<T extends WindowDispatcherImpl> implements Iterable<T> {

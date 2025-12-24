@@ -39,6 +39,6 @@ public class ObjectUtilsImpl extends ObjectImpl {
     }
 
     public static double currentMediaTime() {
-        return TickUtils.animationTicks();
+        return TickUtils.animationTick();
     }
 }

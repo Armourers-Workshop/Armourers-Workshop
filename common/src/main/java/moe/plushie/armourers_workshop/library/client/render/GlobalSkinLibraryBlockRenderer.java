@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.library.client.render;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
@@ -40,7 +40,7 @@ public class GlobalSkinLibraryBlockRenderer<T extends GlobalSkinLibraryBlockEnti
 
         context.scaleCTM(0.2f, 0.2f, 0.2f);
 
-        var angle = renderState.gameTime() % 360 + renderState.partialTicks();
+        var angle = renderState.gameTime() % 360 + renderState.partialTick();
         context.rotateCTM(new OpenQuaternionf(angle * 4, angle, angle * 2, true));
 
         context.draw(ModelPartElement.newInstance(model, lightmap, overlay, 0x7fffffff, SkinRenderType.BLOCK_EARTH));

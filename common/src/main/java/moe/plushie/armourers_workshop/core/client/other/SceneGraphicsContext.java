@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
 import moe.plushie.armourers_workshop.api.client.IGraphicsRenderable;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderable;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderable;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class SceneGraphicsContext implements IGraphicsContext {

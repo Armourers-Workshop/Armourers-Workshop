@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.sound;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.AbstractSimpleSound;
-import moe.plushie.armourers_workshop.compat.client.AbstractSoundManagerImpl;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSimpleSound;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSoundManagerImpl;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -23,13 +23,13 @@ public class SmartSoundManager {
         return INSTANCE;
     }
 
-    public synchronized void start() {
+    public static void start() {
     }
 
-    public synchronized void stop() {
+    public static void stop() {
         // release all registered sounds.
-        sounds.values().forEach(SmartSound::unbind);
-        sounds.clear();
+        INSTANCE.sounds.values().forEach(SmartSound::unbind);
+        INSTANCE.sounds.clear();
     }
 
     public void open(SoundEvent soundEvent) {
@@ -46,13 +46,13 @@ public class SmartSoundManager {
         }
     }
 
-    public synchronized SoundEvent register(SkinSoundData provider) {
+    public SmartSound register(SkinSoundData provider) {
         var sound = sounds.get(provider);
         if (sound == null) {
             sound = new SmartSound(provider);
             sounds.put(provider, sound);
         }
-        return sound.soundEvent();
+        return sound;
     }
 
     public AbstractSoundManagerImpl getSoundManager() {
@@ -62,7 +62,7 @@ public class SmartSoundManager {
     protected void uploadSound(SmartSound sound) {
         var name = sound.name();
         var location = sound.location();
-        var id = location.withPath(location.path().replaceFirst("sounds/(.+)\\.ogg", "$1"));
+        var id = location.withPath(location.path().replaceAll("^sounds/(.+)\\.(\\w+)$", "$1"));
         getSoundManager().aw2$register(location.toLocation(), AbstractSimpleSound.create(id.toLocation(), name));
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Sound '{}'", location);

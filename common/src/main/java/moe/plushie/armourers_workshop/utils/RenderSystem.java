@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.compat.client.AbstractRenderSystem;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractRenderSystem;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

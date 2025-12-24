@@ -4,22 +4,49 @@ import org.jetbrains.annotations.Nullable;
 
 public interface EntitySelector {
 
+    float partialTick();
 
-    double eyeYaw();
+    default double x() {
+        return getX(partialTick());
+    }
 
-    double eyePitch();
+    default double y() {
+        return getY(partialTick());
+    }
 
-    double headYaw();
+    default double z() {
+        return getZ(partialTick());
+    }
 
-    double headPitch();
+    default double eyeYaw() {
+        return getEyeYaw(partialTick());
+    }
 
+    default double eyePitch() {
+        return getEyePitch(partialTick());
+    }
 
-    double x(double partialTicks);
+    default double headYaw() {
+        return getHeadYaw(partialTick());
+    }
 
-    double y(double partialTicks);
+    default double headPitch() {
+        return getHeadPitch(partialTick());
+    }
 
-    double z(double partialTicks);
+    double getX(float partialTick);
 
+    double getY(float partialTick);
+
+    double getZ(float partialTick);
+
+    double getEyeYaw(float partialTick);
+
+    double getEyePitch(float partialTick);
+
+    double getHeadYaw(float partialTick);
+
+    double getHeadPitch(float partialTick);
 
     int cardinalFacing();
 
@@ -29,13 +56,11 @@ public interface EntitySelector {
 
     double distanceFromWalk();
 
-
     double yawSpeed();
 
     double groundSpeed();
 
     double verticalSpeed();
-
 
     boolean isVehicle();
 
@@ -71,12 +96,9 @@ public interface EntitySelector {
 
     double airSupply();
 
-
     @Nullable
     BiomeSelector biome();
 
     @Nullable
     BlockSelector relativeBlock(int offsetX, int offsetY, int offsetZ);
-
-    float partialTick();
 }

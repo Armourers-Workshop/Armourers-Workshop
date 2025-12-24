@@ -18,12 +18,12 @@ public class Position extends EntityFunction {
 
     @Override
     public double compute(final EntitySelector entity, final ExecutionContext context) {
-        int axis = this.axis.evaluate(context).getAsInt();
-        double partialTicks = entity.partialTick();
+        var axis = this.axis.evaluate(context).getAsInt();
+        var partialTick = entity.partialTick();
         return switch (axis) {
-            case 0 -> entity.x(partialTicks);
-            case 1 -> entity.y(partialTicks);
-            case 2 -> entity.z(partialTicks);
+            case 0 -> entity.getX(partialTick);
+            case 1 -> entity.getY(partialTick);
+            case 2 -> entity.getZ(partialTick);
             default -> 0;
         };
     }

@@ -107,10 +107,10 @@ public class YSMBinding extends ContextBinding {
     private static LivingEntityVariableBinding hasEquipmentSlot(String name) {
         // the elytra have a space handle.
         if (!name.equals("elytra")) {
-            return entity -> entity.equippedItemBySlot(name) != null;
+            return entity -> entity.equipmentBySlot(name) != null;
         }
         return entity -> {
-            var item = entity.equippedItemBySlot("chest");
+            var item = entity.equipmentBySlot("chest");
             return item != null && item.id().equals("minecraft:elytra");
         };
     }

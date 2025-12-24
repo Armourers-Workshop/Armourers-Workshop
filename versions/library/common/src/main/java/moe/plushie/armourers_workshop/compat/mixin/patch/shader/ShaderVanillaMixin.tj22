@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.preprocessor.GlslPreprocessor;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
-import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderSelector;
+import moe.plushie.armourers_workshop.compat.client.renderer.shader.AbstractShaderSelector;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
 import net.minecraft.client.renderer.ShaderManager;
 import net.minecraft.resources.ResourceLocation;

@@ -8,5 +8,5 @@ import net.minecraft.server.MinecraftServer;
  */
 public interface ServerStartingEvent {
 
-    MinecraftServer getServer();
+    MinecraftServer server();
 }

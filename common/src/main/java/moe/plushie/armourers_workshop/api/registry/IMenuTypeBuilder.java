@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.api.registry;
 
 import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
-import moe.plushie.armourers_workshop.compat.client.AbstractMenuWindowProvider;
+import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuWindowProvider;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.api.common.ILootBuilder;
 import moe.plushie.armourers_workshop.compat.core.AbstractLootContextParams;
-import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockEntityProvider;
+import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;

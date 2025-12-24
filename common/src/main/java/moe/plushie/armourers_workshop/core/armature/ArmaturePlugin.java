@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity;
 
 public abstract class ArmaturePlugin {
 
-    public void prepare(EntityRenderState renderState, Entity entity, float partialTicks) {
+    public void prepare(EntityRenderState renderState, Entity entity, float partialTick) {
     }
 
     public void activate(EntityRenderState renderState, int lightmap, int overlay, IGraphicsContext context) {
@@ -25,8 +25,8 @@ public abstract class ArmaturePlugin {
 
         int lightmap();
 
-        float partialTicks();
+        float partialTick();
 
-        double animationTicks();
+        double animationTick();
     }
 }

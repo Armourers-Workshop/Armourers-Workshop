@@ -4,7 +4,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.api.permission.IPermissionContext;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
-import moe.plushie.armourers_workshop.compat.client.AbstractGameProfile;
+import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.PermissionNodeBuilderImpl;

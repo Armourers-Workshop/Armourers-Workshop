@@ -12,7 +12,6 @@ public class OpenVector2i implements IVector2i {
     public int y;
 
     public OpenVector2i() {
-        this(0, 0);
     }
 
     public OpenVector2i(int x, int y) {

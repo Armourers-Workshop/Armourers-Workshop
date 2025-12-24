@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.api.registry.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBinder;
-import moe.plushie.armourers_workshop.compat.client.AbstractMenuWindowProvider;
+import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuWindowProvider;
 import moe.plushie.armourers_workshop.compat.fabric.builder.AbstractFabricMenuTypeBuilder;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;

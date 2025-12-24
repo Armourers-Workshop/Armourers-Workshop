@@ -20,7 +20,7 @@ public class PacketSplitter {
     private final int SPLIT_END_FLAG = -3;
 
     private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
-    private final ExecutorService workThread = Executors.newFixedThreadPool(2, "AW-NET/N-ED");
+    private final ExecutorService workThread = Executors.newFixedThreadPool(2, "AW-NET-SP");
 
     public PacketSplitter() {
     }

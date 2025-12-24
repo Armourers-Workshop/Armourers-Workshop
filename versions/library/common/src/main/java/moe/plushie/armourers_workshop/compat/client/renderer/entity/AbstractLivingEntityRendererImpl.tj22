@@ -1,0 +1,44 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.entity;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
+import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.LivingEntity;
+
+@Available("[1.22, )")
+@OnlyIn(Dist.CLIENT)
+public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<S>> extends LivingEntityRenderer<T, S, M> {
+
+    public AbstractLivingEntityRendererImpl(IEntityRenderer.Context context, M entityModel, float f) {
+        super(AbstractEntityRenderer.unwrap(context), entityModel, f);
+    }
+
+    protected abstract float getEntityScale(S renderState);
+
+    protected abstract OpenQuaternionf getEntityRotations(S renderState);
+
+    @Override
+    protected final void scale(S renderState, PoseStack poseStack) {
+        // in the 1.21.4 the renderer will auto apply the entity scale, but maybe we need change it.
+        var newScale = getEntityScale(renderState);
+        poseStack.scale(newScale / renderState.scale, newScale / renderState.scale, newScale / renderState.scale);
+        super.scale(renderState, poseStack);
+    }
+
+    @Override
+    protected final void setupRotations(S renderState, PoseStack poseStack, float f, float g) {
+        super.setupRotations(renderState, poseStack, f, g);
+        var rotation = getEntityRotations(renderState);
+        if (rotation != null) {
+            poseStack.mulPose(AbstractPoseStack.convertQuaternion(rotation));
+        }
+    }
+}
+

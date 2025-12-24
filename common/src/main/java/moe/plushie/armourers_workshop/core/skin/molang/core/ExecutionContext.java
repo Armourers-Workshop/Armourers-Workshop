@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.runtime.LocalVariableStor
 public interface ExecutionContext extends VariableStorage {
 
     /**
-     * Creates a new, child, expression evaluate context.
+     * Creates a new child, expression evaluate context.
      *
      * <p>Child evaluators have all the bindings of
      * their parents and may have extra bindings.</p>

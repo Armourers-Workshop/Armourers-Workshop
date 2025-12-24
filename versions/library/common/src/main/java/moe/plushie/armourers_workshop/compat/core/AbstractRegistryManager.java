@@ -24,6 +24,9 @@ public abstract class AbstractRegistryManager {
     private static final Map<Item, String> ITEM_NAMES = new ConcurrentHashMap<>();
     private static final Map<Block, String> BLOCK_NAMES = new ConcurrentHashMap<>();
 
+    private static final Map<String, Optional<Item>> NAMED_ITEMS = new ConcurrentHashMap<>();
+    private static final Map<String, Optional<Block>> NAMED_BLOCKS = new ConcurrentHashMap<>();
+
     private static final Map<String, Optional<Predicate<ItemStack>>> NAMED_ITEM_TAGS = new ConcurrentHashMap<>();
     private static final Map<String, Optional<Predicate<BlockState>>> NAMED_BLOCK_TAGS = new ConcurrentHashMap<>();
     private static final Map<String, Optional<Predicate<Biome>>> NAMED_BIOME_TAGS = new ConcurrentHashMap<>();
@@ -55,6 +58,16 @@ public abstract class AbstractRegistryManager {
     public static boolean hasBiomeTag(Biome biome, String tagName) {
         var tag = NAMED_BIOME_TAGS.computeIfAbsent(tagName, it -> parse(it, AbstractRegistryManager::getBiomeTag0));
         return tag.map(it -> it.test(biome)).orElse(false);
+    }
+
+    @Nullable
+    public static Item getItem(String registryName) {
+        return NAMED_ITEMS.computeIfAbsent(registryName, it -> parse(it, AbstractRegistryManager::getItem0)).orElse(null);
+    }
+
+    @Nullable
+    public static Block getBlock(String registryName) {
+        return NAMED_BLOCKS.computeIfAbsent(registryName, it -> parse(it, AbstractRegistryManager::getBlock0)).orElse(null);
     }
 
     public static Biome getBiome(Level level, BlockPos blockPos) {
@@ -106,6 +119,9 @@ public abstract class AbstractRegistryManager {
 
     protected abstract Predicate<Biome> getBiomeTag0(ResourceLocation key);
 
+    protected abstract Item getItem0(ResourceLocation key);
+
+    protected abstract Block getBlock0(ResourceLocation key);
 
     protected abstract Function<ItemStack, Integer> getEnchantment0(ResourceLocation key);
 

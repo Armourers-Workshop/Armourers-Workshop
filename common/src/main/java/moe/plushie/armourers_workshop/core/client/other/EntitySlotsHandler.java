@@ -69,7 +69,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     private final AnimationManager animationManager;
     private final SkinOverriddenManager overriddenManager;
 
-    private final TicketHolder tickets = new TicketHolder("EntitySlotsHandler");
+    private final TicketHolder tickets = new TicketHolder(getClass().getSimpleName());
     private final SkinLightSource lightSource = new SkinLightSource();
 
     private final DataContainer dataStorage = new DataContainer();
@@ -93,7 +93,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
-        animationManager.tick(source, TickUtils.animationTicks());
+        animationManager.tick(source, TickUtils.animationTick());
     }
 
     private void tickSlots(T source, @Nullable SkinWardrobe wardrobe) {
@@ -151,7 +151,6 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         allSkins.clear();
         activeSkins.clear();
         animatedSkins.clear();
-
 
         tickets.invalidate();
     }

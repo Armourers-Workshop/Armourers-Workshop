@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.mixin.patch.model;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractModelCollector;
+import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractModelCollector;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;

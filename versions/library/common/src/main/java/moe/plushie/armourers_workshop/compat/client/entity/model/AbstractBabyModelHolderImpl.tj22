@@ -1,0 +1,74 @@
+package moe.plushie.armourers_workshop.compat.client.entity.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+
+import java.util.IdentityHashMap;
+import java.util.function.BiFunction;
+
+@Available("[1.22, )")
+public abstract class AbstractBabyModelHolderImpl {
+
+    public static final DataContainer.Key<IEntityModel<?>> ADULT_MODEL_KEY = DataContainer.key("AdultModel");
+
+    public static final IdentityHashMap<ModelPart, ModelLayerLocation> NAMED_PARTS = new IdentityHashMap<>();
+
+    //    protected final IEntityModel<?> entityModel;
+//    protected final IEntityModel<?> adultModel;
+    private final ModelLayerLocation name;
+    private final boolean isBaby;
+
+    public AbstractBabyModelHolderImpl(IEntityModel<?> entityModel) {
+        this.name = NAMED_PARTS.get(((EntityModel<?>) entityModel).root());
+        this.isBaby = Objects.flatMap(name, it -> it.model().getPath().contains("baby"), false);;
+    }
+
+    public static void register(ModelLayerLocation name, ModelPart part, LayerDefinition definition) {
+        NAMED_PARTS.put(part, name);
+    }
+
+    protected float headScale() {
+        return getOrDefault((adultModel, babyModel) -> {
+            return babyModel.root().yScale / adultModel.root().yScale;
+        }, 1.0f);
+    }
+
+    protected OpenVector3f headOffset() {
+        return getOrDefault((adultModel, babyModel) -> {
+            return OpenVector3f.ZERO;
+        }, OpenVector3f.ZERO);
+    }
+
+    protected float bodyScale() {
+        return getOrDefault((adultModel, babyModel) -> babyModel.root().yScale / adultModel.root().yScale, 1.0f);
+    }
+
+    protected OpenVector3f bodyOffset() {
+        return getOrDefault((adultModel, babyModel) -> {
+            var scale = babyModel.root().yScale / adultModel.root().yScale;
+            var y1 = babyModel.root().y / babyModel.root().yScale;
+            var y2 = adultModel.root().y / adultModel.root().yScale;
+            //(12.7585/0.46875 - 1.501/0.9375/0.5)/16
+            return new OpenVector3f(0, (y1 - y2 / scale) / 16.0f, 0);
+        }, OpenVector3f.ZERO);
+    }
+
+    protected boolean isBaby() {
+//        return adultModel != null && adultModel != entityModel;
+        return isBaby;
+    }
+
+    private <T> T getOrDefault(BiFunction<EntityModel<?>, EntityModel<?>, T> provider, T defaultValue) {
+//        if (adultModel != null && adultModel != entityModel) {
+//            return provider.apply((EntityModel<?>) adultModel, (EntityModel<?>) entityModel);
+//        }
+        return defaultValue;
+    }
+}

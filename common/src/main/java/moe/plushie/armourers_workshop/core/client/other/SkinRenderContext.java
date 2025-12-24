@@ -15,8 +15,8 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
     private int overlay;
     private int lightmap;
 
-    private float partialTicks = 1.0f;
-    private double animationTicks = 0.0;
+    private float partialTick = 1.0f;
+    private double animationTick = 0.0;
     private AnimationManager animationManager;
     private SkinItemSource itemSource;
 
@@ -72,22 +72,22 @@ public class SkinRenderContext implements ConcurrentRenderingContext {
         return lightmap;
     }
 
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
+    public void setPartialTick(float partialTick) {
+        this.partialTick = partialTick;
     }
 
     @Override
-    public float partialTicks() {
-        return partialTicks;
+    public float partialTick() {
+        return partialTick;
     }
 
-    public void setAnimationTicks(double animationTicks) {
-        this.animationTicks = animationTicks;
+    public void setAnimationTick(double animationTick) {
+        this.animationTick = animationTick;
     }
 
     @Override
-    public double animationTicks() {
-        return animationTicks;
+    public double animationTick() {
+        return animationTick;
     }
 
     public void setAnimationManager(AnimationManager animationManager) {

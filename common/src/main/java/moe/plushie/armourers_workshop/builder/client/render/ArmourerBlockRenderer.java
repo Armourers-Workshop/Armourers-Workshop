@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;

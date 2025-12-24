@@ -1,0 +1,48 @@
+package moe.plushie.armourers_workshop.compat.client.entity.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IEntityModel;
+import moe.plushie.armourers_workshop.core.math.OpenVector3f;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.EntityModel;
+
+import java.util.function.Function;
+
+@Available("[1.16, 1.18)")
+public abstract class AbstractBabyModelHolderImpl {
+
+    private final EntityModel<?> entityModel;
+
+    protected AbstractBabyModelHolderImpl(IEntityModel<?> entityModel) {
+        this.entityModel = (EntityModel<?>) entityModel;
+    }
+
+    protected float headScale() {
+        return getOrDefault(model -> model.scaleHead ? 1.5f / model.babyHeadScale : 1.0f, 1.0f);
+    }
+
+    protected OpenVector3f headOffset() {
+        return getOrDefault(model -> new OpenVector3f(0, model.yHeadOffset / 16.0f, model.zHeadOffset / 16.0f), OpenVector3f.ZERO);
+    }
+
+    protected float bodyScale() {
+        return getOrDefault(model -> 1.0f / model.babyBodyScale, 1.0f);
+    }
+
+    protected OpenVector3f bodyOffset() {
+        return getOrDefault(model -> new OpenVector3f(0, model.bodyYOffset / 16.0f, 0), OpenVector3f.ZERO);
+    }
+
+    protected boolean isBaby() {
+        return entityModel.young;
+    }
+
+    private <T> T getOrDefault(Function<AgeableListModel<?>, T> provider, T defaultValue) {
+        var model = Objects.safeCast(entityModel, AgeableListModel.class);
+        if (model != null) {
+            return provider.apply(model);
+        }
+        return defaultValue;
+    }
+}

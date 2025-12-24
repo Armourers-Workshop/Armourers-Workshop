@@ -32,8 +32,8 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 public abstract class ForgeEpicFightRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("HEAD"), remap = false)
-    public void aw2$renderPre(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo ci) {
-        AbstractForgeEpicFightHandler.onRenderPre(entityIn, packedLightIn, partialTicks, false, poseStackIn, bufferSourceIn, renderer);
+    public void aw2$renderPre(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTick, CallbackInfo ci) {
+        AbstractForgeEpicFightHandler.onRenderPre(entityIn, packedLightIn, partialTick, false, poseStackIn, bufferSourceIn, renderer);
     }
 
     @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At(value = "INVOKE", target = "Lyesman/epicfight/api/client/model/SkinnedMesh;draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;IFFFFILyesman/epicfight/api/model/Armature;[Lyesman/epicfight/api/utils/math/OpenMatrix4f;)V", remap = false), remap = false)
@@ -44,8 +44,8 @@ public abstract class ForgeEpicFightRendererMixin {
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;Lyesman/epicfight/world/capabilities/entitypatch/LivingEntityPatch;Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;IF)V", at = @At("RETURN"), remap = false)
-    public void aw2$renderPost(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTicks, CallbackInfo ci) {
-        AbstractForgeEpicFightHandler.onRenderPost(entityIn, packedLightIn, partialTicks, poseStackIn, bufferSourceIn, renderer);
+    public void aw2$renderPost(LivingEntity entityIn, LivingEntityPatch<?> entityPatch, LivingEntityRenderer<?, ?> renderer, MultiBufferSource bufferSourceIn, PoseStack poseStackIn, int packedLightIn, float partialTick, CallbackInfo ci) {
+        AbstractForgeEpicFightHandler.onRenderPost(entityIn, packedLightIn, partialTick, poseStackIn, bufferSourceIn, renderer);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
@@ -54,8 +54,8 @@ public abstract class ForgeEpicFightRendererMixin {
         var entityRenderer = PatchedLivingEntityRenderer.class.cast(this);
         entityRenderer.addPatchedLayer(SkinWardrobeLayer.class, new EmptyLayer<>() {
             @Override
-            protected void renderLayer(LivingEntityPatch<LivingEntity> entityPatch, LivingEntity entityIn, RenderLayer<LivingEntity, EntityModel<LivingEntity>> originalLayer, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
-                originalLayer.render(poseStack, buffer, packedLightIn, entityIn, partialTicks, 0, partialTicks, packedLightIn, xRot, yRot);
+            protected void renderLayer(LivingEntityPatch<LivingEntity> entityPatch, LivingEntity entityIn, RenderLayer<LivingEntity, EntityModel<LivingEntity>> originalLayer, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTick) {
+                originalLayer.render(poseStack, buffer, packedLightIn, entityIn, partialTick, 0, partialTick, packedLightIn, xRot, yRot);
             }
         });
     }

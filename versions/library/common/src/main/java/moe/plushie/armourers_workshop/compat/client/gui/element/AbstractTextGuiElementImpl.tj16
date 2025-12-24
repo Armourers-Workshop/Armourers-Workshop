@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.util.FormattedCharSequence;
 

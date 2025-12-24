@@ -10,8 +10,8 @@ public interface ItemSelector {
 
     int maxDamage();
 
+    boolean hasTag(String tag);
+
     @Nullable
     EnchantmentSelector enchantmentByName(String name);
-
-    boolean hasTag(String tag);
 }

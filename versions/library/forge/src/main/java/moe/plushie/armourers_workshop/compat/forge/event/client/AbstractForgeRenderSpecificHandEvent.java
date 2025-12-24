@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.compat.forge.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.core.client.render.state.PlayerRenderState;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
@@ -17,9 +17,8 @@ public class AbstractForgeRenderSpecificHandEvent {
 
     public static IEventHandler<RenderSpecificHandEvent> armFactory() {
         return AbstractForgeClientEventsImpl.RENDER_SPECIFIC_HAND.map(event -> new RenderSpecificHandEvent() {
-
             @Override
-            public float partialTicks() {
+            public float partialTick() {
                 return 1.0f;
             }
 

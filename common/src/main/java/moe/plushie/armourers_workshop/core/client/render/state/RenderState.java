@@ -5,25 +5,25 @@ import moe.plushie.armourers_workshop.core.data.DataContainer;
 
 public abstract class RenderState extends DataContainer {
 
-    protected float partialTicks = 0.0f;
-    protected double animationTicks = 0.0d;
+    protected float partialTick = 0.0f;
+    protected double animationTick = 0.0d;
 
     protected AnimationManager animationManager = AnimationManager.NONE;
 
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
+    public void setPartialTick(float partialTick) {
+        this.partialTick = partialTick;
     }
 
-    public float partialTicks() {
-        return partialTicks;
+    public float partialTick() {
+        return partialTick;
     }
 
-    public void setAnimationTicks(double animationTicks) {
-        this.animationTicks = animationTicks;
+    public void setAnimationTick(double animationTick) {
+        this.animationTick = animationTick;
     }
 
-    public double animationTicks() {
-        return animationTicks;
+    public double animationTick() {
+        return animationTick;
     }
 
     public AnimationManager animationManager() {

@@ -5,10 +5,8 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
-import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureProperties;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
@@ -19,8 +17,11 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class SmartTexture extends ReferenceCounted {
@@ -34,10 +35,10 @@ public class SmartTexture extends ReferenceCounted {
 
     private final Map<OpenResourceLocation, ByteBuf> textureBuffers;
 
-    private final Map<SkinGeometryType, IRenderType> bindingRenderTypes = new LinkedHashMap<>();
+    private final Set<IRenderType> binding = new HashSet<>();
 
     public SmartTexture(SkinTextureData provider) {
-        this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + ".png");
+        this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + "." + provider.extension());
         this.properties = provider.properties();
         this.textureBuffers = resolveTextureBuffers(location, provider);
         this.animationController = new TextureAnimationController(provider.animation());
@@ -46,6 +47,14 @@ public class SmartTexture extends ReferenceCounted {
     @Nullable
     public static SmartTexture of(IRenderType renderType) {
         return DataContainer.get(renderType, KEY);
+    }
+
+    public IRenderType create(Function<SmartTexture, IRenderType> factory) {
+        var renderType = factory.apply(this);
+        if (binding.add(renderType)) {
+            DataContainer.set(renderType, KEY, this);
+        }
+        return renderType;
     }
 
     @Override
@@ -64,20 +73,24 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public IRenderType getRenderType(SkinGeometryType type) {
-        return bindingRenderTypes.computeIfAbsent(type, it -> {
-            var renderType = SkinRenderType.geometryFace(it, location, properties.isTranslucent(), properties.isEmissive());
-            DataContainer.set(renderType, KEY, this);
-            return renderType;
-        });
-    }
-
     public OpenResourceLocation location() {
         return location;
     }
 
+    public SkinTextureProperties properties() {
+        return properties;
+    }
+
     public TextureAnimationController animationController() {
         return animationController;
+    }
+
+    public boolean isTranslucent() {
+        return properties.isTranslucent();
+    }
+
+    public boolean isEmissive() {
+        return properties.isEmissive();
     }
 
     @Override
@@ -86,7 +99,7 @@ public class SmartTexture extends ReferenceCounted {
     }
 
     protected void unbind() {
-        bindingRenderTypes.forEach((key, value) -> DataContainer.set(value, KEY, null));
+        binding.forEach(value -> DataContainer.set(value, KEY, null));
         // when unbind the object, we must ensure that all resources release.
         while (refCnt() > 0) {
             release();
@@ -110,7 +123,7 @@ public class SmartTexture extends ReferenceCounted {
 
     private static class TextureBufferBuilder {
 
-        private final Map<OpenResourceLocation, ByteBuf> buffers = new LinkedHashMap<OpenResourceLocation, ByteBuf>();
+        private final Map<OpenResourceLocation, ByteBuf> buffers = new LinkedHashMap<>();
 
         private final SkinTextureProperties parentProperties;
 

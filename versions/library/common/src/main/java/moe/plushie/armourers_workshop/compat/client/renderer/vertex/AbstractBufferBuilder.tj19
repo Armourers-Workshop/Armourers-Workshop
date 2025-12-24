@@ -1,0 +1,69 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.vertex;
+
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
+import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+
+import java.nio.ByteBuffer;
+
+@Available("[1.19, 1.20)")
+public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
+
+    private final BufferBuilder bufferBuilder;
+
+    public AbstractBufferBuilder(int size) {
+        this(new BufferBuilder(size));
+    }
+
+    public AbstractBufferBuilder(BufferBuilder bufferBuilder) {
+        super(bufferBuilder);
+        this.bufferBuilder = bufferBuilder;
+    }
+
+    public static void upload(IRenderType renderType, AbstractBufferBuilder builder) {
+        var renderType1 = renderType.get();
+        renderType1.end(builder.bufferBuilder, 0, 0, 0);
+    }
+
+    @Override
+    public void begin(IRenderType renderType) {
+        var renderType1 = renderType.get();
+        bufferBuilder.begin(renderType1.mode(), renderType1.format());
+    }
+
+    @Override
+    public IRenderedBuffer end() {
+        var buffer = bufferBuilder.end();
+        var state = buffer.drawState();
+        var format = AbstractVertexFormat.wrap(state.format());
+        return new IRenderedBuffer() {
+
+            @Override
+            public IVertexFormat format() {
+                return format;
+            }
+
+            @Override
+            public ByteBuffer vertexBuffer() {
+                return buffer.vertexBuffer();
+            }
+
+            @Override
+            public int vertexCount() {
+                return state.vertexCount();
+            }
+
+            @Override
+            public void release() {
+                buffer.release();
+            }
+        };
+    }
+
+    public BufferBuilder bufferBuilder() {
+        return bufferBuilder;
+    }
+}

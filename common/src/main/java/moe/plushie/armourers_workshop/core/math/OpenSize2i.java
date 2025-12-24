@@ -6,8 +6,13 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 @SuppressWarnings("unused")
 public class OpenSize2i implements ISize2i {
 
+    public static final OpenSize2i ZERO = new OpenSize2i();
+
     public int width;
     public int height;
+
+    public OpenSize2i() {
+    }
 
     public OpenSize2i(int width, int height) {
         this.width = width;

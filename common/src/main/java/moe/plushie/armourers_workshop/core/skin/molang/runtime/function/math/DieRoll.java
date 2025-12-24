@@ -43,7 +43,7 @@ public final class DieRoll extends Function {
 
     @Override
     public double compute(final ExecutionContext context) {
-        int rolls = (int) (Math.floor(this.rolls.compute(context)));
+        var rolls = (int) (Math.floor(this.rolls.compute(context)));
         double min = this.min.compute(context);
         double max = this.max.compute(context);
         double sum = 0;
@@ -56,7 +56,7 @@ public final class DieRoll extends Function {
             random = ThreadLocalRandom.current();
         }
 
-        for (int i = 0; i < rolls; i++) {
+        for (var i = 0; i < rolls; i++) {
             sum += min + random.nextDouble() * (max - min);
         }
 

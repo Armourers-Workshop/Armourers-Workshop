@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.mixin.patch.attachment;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractItemDisplayContext;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
 import moe.plushie.armourers_workshop.init.client.ClientAttachmentHandler;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.mixin.bugfix;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
-import moe.plushie.armourers_workshop.compat.client.AbstractRenderPipeline;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractRenderPipeline;
 import moe.plushie.armourers_workshop.core.utils.FieldAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

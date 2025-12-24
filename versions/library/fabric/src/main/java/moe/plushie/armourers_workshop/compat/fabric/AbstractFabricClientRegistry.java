@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compat.fabric;
 
 import moe.plushie.armourers_workshop.compat.client.block.tintsource.AbstractBlockTintSource;
 import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockSpecialRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractItemSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.block.AbstractBlockSpecialRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractItemSpecialRenderer;
 import moe.plushie.armourers_workshop.core.utils.TypedHolder;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.item.Item;

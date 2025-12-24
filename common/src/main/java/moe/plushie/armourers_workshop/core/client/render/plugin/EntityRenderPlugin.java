@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render.plugin;
 
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerContext;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmatureTransformer;
@@ -36,8 +36,8 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
                 return; // can't create.
             }
         }
-        renderPlugin.init(renderState, event.partialTicks(), event.entityRenderer());
-        renderPlugin.prepare(renderState, event.entity(), event.partialTicks());
+        renderPlugin.init(renderState, event.partialTick(), event.entityRenderer());
+        renderPlugin.prepare(renderState, event.entity(), event.partialTick());
         if (handler != null) {
             handler.accept(renderPlugin);
         }
@@ -69,13 +69,13 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
         }
     }
 
-    protected void init(S renderState, float partialTicks, IEntityRenderer<T, S> renderer) {
+    protected void init(S renderState, float partialTick, IEntityRenderer<T, S> renderer) {
     }
 
-    protected void prepare(S renderState, T entity, float partialTicks) {
+    protected void prepare(S renderState, T entity, float partialTick) {
         updateTransformerIfNeeded();
         if (transformer != null) {
-            transformer.prepare(renderState, entity, partialTicks);
+            transformer.prepare(renderState, entity, partialTick);
         }
     }
 

@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientFrameRenderEvents;
+import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderFrameEvent;
+import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,13 +17,11 @@ public class FabricClientFrameRenderMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void aw2$renderPre(float f, long l, boolean bl, CallbackInfo ci) {
-        var delta = new AbstractDeltaTracker(f, Minecraft.getInstance().isPaused(), false);
-        ClientFrameRenderEvents.START.invoker().onStart(delta);
+        EventManager.post(RenderFrameEvent.Pre.class, AbstractRenderFrameEvent.pre(f, Minecraft.getInstance().isPaused()));
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void aw2$renderPost(float f, long l, boolean bl, CallbackInfo ci) {
-        var delta = new AbstractDeltaTracker(f, Minecraft.getInstance().isPaused(), false);
-        ClientFrameRenderEvents.END.invoker().onEnd(delta);
+        EventManager.post(RenderFrameEvent.Post.class, AbstractRenderFrameEvent.post(f, Minecraft.getInstance().isPaused()));
     }
 }

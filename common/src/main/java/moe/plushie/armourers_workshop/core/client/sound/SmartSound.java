@@ -15,8 +15,11 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.sounds.SoundEvent;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public class SmartSound extends ReferenceCounted {
@@ -24,21 +27,30 @@ public class SmartSound extends ReferenceCounted {
     private static final DataContainer.Key<SmartSound> KEY = DataContainer.key("SmartSound");
 
     private final String name;
+
     private final OpenResourceLocation location;
     private final SkinSoundProperties properties;
     private final Map<OpenResourceLocation, ByteBuf> soundBuffers;
 
-    private SoundEvent soundEvent;
+    private final Set<SoundEvent> binding = new HashSet<>();
 
     public SmartSound(SkinSoundData provider) {
-        this.name = provider.name();
+        this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + "." + provider.extension());
         this.properties = provider.properties();
-        this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + ".ogg");
         this.soundBuffers = resolveSoundBuffers(location, provider);
+        this.name = provider.name();
     }
 
     public static SmartSound of(SoundEvent soundEvent) {
         return DataContainer.get(soundEvent, KEY);
+    }
+
+    public SoundEvent create(Function<SmartSound, SoundEvent> factory) {
+        var soundEvent = factory.apply(this);
+        if (binding.add(soundEvent)) {
+            DataContainer.set(soundEvent, KEY, this);
+        }
+        return soundEvent;
     }
 
     @Override
@@ -65,16 +77,8 @@ public class SmartSound extends ReferenceCounted {
         return location;
     }
 
-    public SoundEvent soundEvent() {
-        if (soundEvent == null) {
-            soundEvent = SoundEvent.createVariableRangeEvent(location.toLocation());
-            DataContainer.set(soundEvent, KEY, this);
-        }
-        return soundEvent;
-    }
-
     protected void unbind() {
-        DataContainer.set(soundEvent, KEY, null);
+        binding.forEach(value -> DataContainer.set(value, KEY, null));
         // when unbind the object, we must ensure that all resources release.
         while (refCnt() > 0) {
             release();

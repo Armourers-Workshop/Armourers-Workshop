@@ -1020,7 +1020,7 @@ public class BlockBenchExporter {
         }
 
         private int resolveTextureFrame(BlockBenchTexture texture, byte[] imageBytes) throws IOException {
-            // in Version.parse block bench provides image size.
+            // in new version block bench provides image size.
             var imageSize = texture.imageSize();
             if (imageSize == null) {
                 var image = ImageIO.read(new ByteArrayInputStream(imageBytes));
@@ -1045,7 +1045,7 @@ public class BlockBenchExporter {
         private OpenSize2f resolveTextureSize(BlockBenchTexture texture, int frameCount) {
             var width = resolution.width();
             var height = resolution.height();
-            // in Version.parse block bench provides texture size.
+            // in new version block bench provides texture size.
             if (texture.textureSize() != null) {
                 width = texture.textureSize().width();
                 height = texture.textureSize().height();

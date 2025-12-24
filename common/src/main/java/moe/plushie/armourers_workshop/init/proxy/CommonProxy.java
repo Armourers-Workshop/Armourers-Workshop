@@ -71,18 +71,18 @@ public class CommonProxy {
         EventBus.register(ServerStartingEvent.class, event -> {
             ModLog.debug("hello");
             DataManager.getInstance().connect(EnvironmentManager.getSkinDatabaseDirectory());
-            SkinLoader.getInstance().prepare(EnvironmentManager.getDistributionType(event.getServer()));
+            SkinLoader.getInstance().prepare(EnvironmentManager.getDistributionType(event.server()));
         });
         EventBus.register(ServerStartedEvent.class, event -> {
             ModLog.debug("init");
-            ModContext.init(event.getServer());
+            ModContext.init(event.server());
             SkinLoader.getInstance().start();
         });
 
         EventBus.register(ServerStoppingEvent.class, event -> {
             ModLog.debug("wait");
             // before server stopping, we need to sure that all data saved.
-            for (var level : event.getServer().getAllLevels()) {
+            for (var level : event.server().getAllLevels()) {
                 WorldUpdater.getInstance().drain(level);
             }
             DataManager.getInstance().disconnect();
@@ -106,35 +106,35 @@ public class CommonProxy {
 
         EventBus.register(PlayerEvent.LoggingIn.class, event -> {
             // when the player login, check and give gifts for holiday
-            ModLog.debug("welcome back {}", event.getPlayer().getScoreboardName());
-            ModHolidays.welcome(event.getPlayer());
+            ModLog.debug("welcome back {}", event.player().getScoreboardName());
+            ModHolidays.welcome(event.player());
             // when the player login, initialize wardrobe.
-            if (event.getPlayer() instanceof ServerPlayer player) {
+            if (event.player() instanceof ServerPlayer player) {
                 NetworkManager.sendWardrobeTo(player, player);
             }
         });
         EventBus.register(PlayerEvent.LoggingOut.class, event -> {
-            ModLog.debug("good bye {}", event.getPlayer().getScoreboardName());
-            SkinLibraryManager.getServer().remove(event.getPlayer());
-            ReplayManager.stopRecording(event.getPlayer().server(), event.getPlayer());
+            ModLog.debug("good bye {}", event.player().getScoreboardName());
+            SkinLibraryManager.getServer().remove(event.player());
+            ReplayManager.stopRecording(event.player().server(), event.player());
         });
         EventBus.register(PlayerEvent.Death.class, event -> {
-            ModLog.debug("keep careful {}", event.getPlayer().getScoreboardName());
-            SkinUtils.dropAllIfNeeded((ServerLevel) event.getPlayer().level(), event.getPlayer());
+            ModLog.debug("keep careful {}", event.player().getScoreboardName());
+            SkinUtils.dropAllIfNeeded((ServerLevel) event.player().level(), event.player());
         });
         EventBus.register(PlayerEvent.Clone.class, event -> {
-            ModLog.debug("woa {}", event.getPlayer().getScoreboardName());
-            SkinUtils.copySkinWardrobe(event.getOriginal(), event.getPlayer());
+            ModLog.debug("woa {}", event.player().getScoreboardName());
+            SkinUtils.copySkinWardrobe(event.original(), event.player());
         });
 
         EventBus.register(PlayerEvent.Attack.class, event -> {
-            var player = event.getPlayer();
+            var player = event.player();
             if (player == null || player.isSpectator()) {
                 return;
             }
             var itemStack = player.getMainHandItem();
             if (itemStack.getItem() instanceof AbstractItemHandler handler) {
-                var result = handler.attackLivingEntity(itemStack, player, event.getTarget());
+                var result = handler.attackLivingEntity(itemStack, player, event.target());
                 if (result.consumesAction()) {
                     event.setCancelled(true);
                 }
@@ -142,26 +142,26 @@ public class CommonProxy {
         });
 
         EventBus.register(PlayerEvent.StartTracking.class, event -> {
-            var entityProfile = ModEntityProfiles.getProfile(event.getTarget());
+            var entityProfile = ModEntityProfiles.getProfile(event.target());
             if (entityProfile != null) {
-                NetworkManager.sendWardrobeTo(event.getTarget(), (ServerPlayer) event.getPlayer());
+                NetworkManager.sendWardrobeTo(event.target(), (ServerPlayer) event.player());
             }
         });
 
         EventBus.register(EntityEvent.ReloadSize.class, event -> {
-            var collisionShape = event.getEntity().getCustomCollision();
+            var collisionShape = event.entity().getCustomCollision();
             if (collisionShape != null) {
-                event.setSize(event.getSize().withCollisionShape(collisionShape));
+                event.setSize(event.size().withCollisionShape(collisionShape));
             }
         });
 
 
         EventBus.register(ServerLevelTickEvent.Pre.class, event -> {
-            WorldUpdater.getInstance().tick(event.getLevel());
+            WorldUpdater.getInstance().tick(event.level());
         });
 
         EventBus.register(ServerLevelAddEntityEvent.class, event -> {
-            SkinUtils.copySkinFromOwner(event.getEntity());
+            SkinUtils.copySkinFromOwner(event.entity());
         });
 
         EventBus.register(BlockEvent.Place.class, BlockUtils::snapshot);

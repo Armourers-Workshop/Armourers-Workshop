@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compat.client.event;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
+import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
+
+@SuppressWarnings("JavaExistingMethodCanBeUsed")
+@Available("[1.16, 1.21)")
+public class AbstractRenderFrameEvent {
+
+    public static RenderFrameEvent.Pre pre(float partialTick, boolean isPaused) {
+        var deltaTracker1 = AbstractDeltaTracker.of(partialTick, isPaused);
+        return () -> deltaTracker1;
+    }
+
+    public static RenderFrameEvent.Post post(float partialTick, boolean isPaused) {
+        var deltaTracker1 = AbstractDeltaTracker.of(partialTick, isPaused);
+        return () -> deltaTracker1;
+    }
+}

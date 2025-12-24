@@ -43,7 +43,7 @@ public abstract class ImageGuiElement implements CGGraphicsElement {
 
     @Override
     public void render(IPoseStack poseStack, IBufferSource bufferSource) {
-        var builder = bufferSource.getBuffer(SkinRenderType.customImage(texture));
+        var builder = bufferSource.getBuffer(SkinRenderType.image(texture));
         buildVertexes(new Tesselator(tintColor, texWidth, texHeight, poseStack, builder));
     }
 

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.sounds.SoundEvent;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin({Model.class, EntityRenderer.class, PoseStack.class, PoseStack.Pose.class, RenderType.class, SoundEvent.class})
+@Mixin({Model.class, ModelPart.class, EntityRenderer.class, PoseStack.class, PoseStack.Pose.class, RenderType.class, SoundEvent.class})
 @Implements(@Interface(iface = IAssociatedContainer.class, prefix = "aw2$"))
 public abstract class ClientDataAttachMixin {
 

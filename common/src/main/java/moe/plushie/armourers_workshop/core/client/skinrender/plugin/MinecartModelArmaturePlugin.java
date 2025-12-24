@@ -22,9 +22,9 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
     }
 
     @Override
-    public void prepare(EntityRenderState renderState, Entity entity, float partialTicks) {
+    public void prepare(EntityRenderState renderState, Entity entity, float partialTick) {
         var renderData = EntityRenderData.of(entity);
-        var isFlapped = isFlapped(entity, partialTicks, renderData);
+        var isFlapped = isFlapped(entity, partialTick, renderData);
         renderState.setAssociatedObject(IS_FLAPPED, isFlapped);
     }
 
@@ -43,7 +43,7 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
         context.rotateCTM(OpenVector3f.YP.rotationDegrees(180));
     }
 
-    private boolean isFlapped(Entity entity, float partialTicks, EntityRenderData renderData) {
+    private boolean isFlapped(Entity entity, float partialTick, EntityRenderData renderData) {
         var delta = entity.getDeltaMovement();
         var dx = delta.x();
         var dz = delta.z();
@@ -52,9 +52,9 @@ public class MinecartModelArmaturePlugin extends ArmaturePlugin {
             return renderData.getAssociatedObject(IS_FLAPPED);
         }
         var level = entity.level();
-        var i = OpenMath.floori(OpenMath.lerp(partialTicks, entity.xOld, entity.getX()));
-        var j = OpenMath.floori(OpenMath.lerp(partialTicks, entity.yOld, entity.getY()));
-        var k = OpenMath.floori(OpenMath.lerp(partialTicks, entity.zOld, entity.getZ()));
+        var i = OpenMath.floori(OpenMath.lerp(partialTick, entity.xOld, entity.getX()));
+        var j = OpenMath.floori(OpenMath.lerp(partialTick, entity.yOld, entity.getY()));
+        var k = OpenMath.floori(OpenMath.lerp(partialTick, entity.zOld, entity.getZ()));
         if (level.getBlockState(new BlockPos(i, j - 1, k)).is(BlockTags.RAILS)) {
             j -= 1;
         }

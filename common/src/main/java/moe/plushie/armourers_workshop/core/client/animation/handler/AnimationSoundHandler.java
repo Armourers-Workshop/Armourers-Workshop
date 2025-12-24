@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationPoint;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind.BlockEntitySelectorImpl;
 import moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind.EntitySelectorImpl;
+import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OptimizedExpression;
 import moe.plushie.armourers_workshop.init.ModConfig;
@@ -18,59 +19,66 @@ import net.minecraft.sounds.SoundEvent;
 public class AnimationSoundHandler implements OptimizedExpression<Object> {
 
     private final String name;
-    private final SoundEvent soundEvent;
+    private final SoundEvent sound;
 
-    private final float volume;
     private final float pitch;
+    private final float volume;
 
     public AnimationSoundHandler(SkinAnimationPoint.Sound sound) {
         var soundProvider = sound.provider();
         var soundProperties = soundProvider.properties();
         this.name = sound.effect();
-        this.volume = soundProperties.volume();
         this.pitch = soundProperties.pitch();
-        this.soundEvent = SmartSoundManager.getInstance().register(soundProvider);
+        this.volume = soundProperties.volume();
+        this.sound = resolveSoundEvent(soundProvider);
     }
 
     @Override
     public Runnable evaluate(ExecutionContext context) {
-        SmartSoundManager.getInstance().open(soundEvent);
-        var sound = createSound(context);
-        startPlay(sound);
+        SmartSoundManager.getInstance().open(sound);
+        var soundInstance = createSoundInstance(context);
+        startPlay(soundInstance);
         return () -> {
-            stopPlay(sound);
-            RenderSystem.recordRenderCall(() -> SmartSoundManager.getInstance().close(soundEvent));
+            stopPlay(soundInstance);
+            RenderSystem.recordRenderCall(() -> SmartSoundManager.getInstance().close(sound));
         };
     }
 
-    private void startPlay(SoundInstance sound) {
-        soundManager().play(sound);
+    private void startPlay(SoundInstance soundInstance) {
+        getSoundManager().play(soundInstance);
         if (ModConfig.Client.enableAnimationDebug) {
             ModLog.debug("start play {}", this);
         }
     }
 
-    private void stopPlay(SoundInstance sound) {
-        soundManager().stop(sound);
+    private void stopPlay(SoundInstance soundInstance) {
+        getSoundManager().stop(soundInstance);
         if (ModConfig.Client.enableAnimationDebug) {
             ModLog.debug("stop play {}", this);
         }
     }
 
-    private SoundInstance createSound(ExecutionContext context) {
+    private SoundEvent resolveSoundEvent(SkinSoundData provider) {
+        return SmartSoundManager.getInstance().register(provider).create(it -> {
+            var location = it.location();
+            return SoundEvent.createVariableRangeEvent(location.toLocation());
+        });
+    }
+
+    private SoundInstance createSoundInstance(ExecutionContext context) {
         // this current entity is block entity?
         if (context instanceof BlockEntitySelectorImpl<?> entity) {
-            return SoundInstance.forBlockEntity(soundEvent, entity.getEntity(), volume, pitch);
+            return SoundInstance.forBlockEntity(sound, entity.entity(), volume, pitch);
         }
         // the current entity is entity?
         if (context instanceof EntitySelectorImpl<?> entity) {
-            return SoundInstance.forEntity(soundEvent, entity.entity(), volume, pitch);
+            return SoundInstance.forEntity(sound, entity.entity(), volume, pitch);
         }
         // the fallback is gui sounds, maybe?
-        return SoundInstance.forUI(soundEvent, volume, pitch);
+        return SoundInstance.forUI(sound, volume, pitch);
     }
 
-    private SoundManager soundManager() {
+    private SoundManager getSoundManager() {
         return Minecraft.getInstance().getSoundManager();
     }
 

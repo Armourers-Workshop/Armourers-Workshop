@@ -51,6 +51,16 @@ public class AbstractFabricRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
+    protected Item getItem0(ResourceLocation key) {
+        return BuiltInRegistries.ITEM.get(key);
+    }
+
+    @Override
+    protected Block getBlock0(ResourceLocation key) {
+        return BuiltInRegistries.BLOCK.get(key);
+    }
+
+    @Override
     protected Function<ItemStack, Integer> getEnchantment0(ResourceLocation key) {
         var enchantment = BuiltInRegistries.ENCHANTMENT.get(key);
         if (enchantment != null) {

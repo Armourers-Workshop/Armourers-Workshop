@@ -16,8 +16,8 @@ public class CommonProxyImpl {
         ArmourersWorkshop.init();
 
         // prioritize handle.
-        EventBus.register(ServerStartingEvent.class, event -> PlatformManagerImpl.attach(event.getServer()));
-        EventBus.register(ServerStoppedEvent.class, event -> PlatformManagerImpl.detach(event.getServer()));
+        EventBus.register(ServerStartingEvent.class, event -> PlatformManagerImpl.attach(event.server()));
+        EventBus.register(ServerStoppedEvent.class, event -> PlatformManagerImpl.detach(event.server()));
 
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);

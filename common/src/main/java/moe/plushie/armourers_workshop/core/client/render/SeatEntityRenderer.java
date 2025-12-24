@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;

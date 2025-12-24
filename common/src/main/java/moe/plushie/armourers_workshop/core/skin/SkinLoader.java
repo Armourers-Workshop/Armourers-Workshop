@@ -613,7 +613,7 @@ public class SkinLoader {
     private static class ResourcePackSession extends LoadingSession {
 
         public ResourcePackSession() {
-            super("AW-SKIN-RS");
+            super("AW-SKIN-RP");
         }
 
         @Override
@@ -950,7 +950,7 @@ public class SkinLoader {
     private static class SliceSession extends Session {
 
         public SliceSession() {
-            super("AW-SKIN-SL");
+            super("AW-SKIN-SC");
         }
 
         @Override

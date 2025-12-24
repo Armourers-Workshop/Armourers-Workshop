@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import moe.plushie.armourers_workshop.compat.core.AbstractDataCodec;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractDataCodec;
 
 import java.nio.ByteBuffer;
 import java.util.List;

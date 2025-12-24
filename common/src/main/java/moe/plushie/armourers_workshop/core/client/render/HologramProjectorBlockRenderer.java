@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractBlockEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.state.HologramProjectorRenderState;
@@ -49,8 +49,8 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
 
         apply(renderState, model, context);
 
-        model.setPartialTicks(renderState.partialTicks());
-        model.setAnimationTicks(renderState.animationTicks());
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
         model.setAnimationManager(renderState.animationManager());
         model.setOutlineColor(0); // never show outline in the hologram projector block.
 
@@ -65,7 +65,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
     }
 
     private void apply(S renderState, SkinRenderState skin, IGraphicsContext context) {
-        var animationTicks = renderState.animationTicks();
+        var animationTick = renderState.animationTick();
         var angle = renderState.modelAngle();
         var offset = renderState.modelOffset();
         var rotationOffset = renderState.rotationOffset();
@@ -74,19 +74,19 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
         var rotX = angle.x();
         var speedX = rotationSpeed.x() / 1000f;
         if (speedX != 0) {
-            rotX += (float) (((animationTicks % speedX) / speedX) * 360.0);
+            rotX += (float) (((animationTick % speedX) / speedX) * 360.0);
         }
 
         var rotY = angle.y();
         var speedY = rotationSpeed.y() / 1000f;
         if (speedY != 0) {
-            rotY += (float) (((animationTicks % speedY) / speedY) * 360.0);
+            rotY += (float) (((animationTick % speedY) / speedY) * 360.0);
         }
 
         var rotZ = angle.z();
         var speedZ = rotationSpeed.z() / 1000f;
         if (speedZ != 0) {
-            rotZ += (float) (((animationTicks % speedZ) / speedZ) * 360.0);
+            rotZ += (float) (((animationTick % speedZ) / speedZ) * 360.0);
         }
 
         var scale = renderState.modelScale();

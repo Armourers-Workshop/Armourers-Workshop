@@ -4,7 +4,7 @@ import net.minecraft.server.MinecraftServer;
 
 public interface ServerTickEvent {
 
-    MinecraftServer getServer();
+    MinecraftServer server();
 
     interface Pre extends ServerTickEvent {
     }

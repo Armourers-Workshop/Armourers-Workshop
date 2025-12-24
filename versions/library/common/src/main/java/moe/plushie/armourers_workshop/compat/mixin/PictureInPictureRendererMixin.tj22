@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.gui.render.AbstractComposeGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractComposeGuiGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;

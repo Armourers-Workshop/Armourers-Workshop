@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import com.google.common.collect.Maps;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractSimpleSound;
-import moe.plushie.armourers_workshop.compat.client.AbstractSoundManagerImpl;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSimpleSound;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSoundManagerImpl;
 import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;

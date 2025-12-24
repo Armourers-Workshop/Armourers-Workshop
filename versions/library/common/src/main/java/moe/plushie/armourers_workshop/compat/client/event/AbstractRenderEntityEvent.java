@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractEntityRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,12 +16,12 @@ import net.minecraft.world.entity.Entity;
 @Available("[1.16, 1.22)")
 public class AbstractRenderEntityEvent {
 
-    public static <T extends Entity, S extends EntityRenderState> RenderEntityEvent.Setup<T, S> setup(T entity, float partialTicks, EntityRenderer<?> renderer) {
+    public static <T extends Entity, S extends EntityRenderState> RenderEntityEvent.Setup<T, S> setup(T entity, float partialTick, EntityRenderer<?> renderer) {
         return new RenderEntityEvent.Setup<>() {
 
             @Override
-            public float partialTicks() {
-                return partialTicks;
+            public float partialTick() {
+                return partialTick;
             }
 
             @Override

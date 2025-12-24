@@ -50,6 +50,16 @@ public class AbstractForgeRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
+    protected Item getItem0(ResourceLocation key) {
+        return ForgeRegistries.ITEMS.getValue(key);
+    }
+
+    @Override
+    protected Block getBlock0(ResourceLocation key) {
+        return ForgeRegistries.BLOCKS.getValue(key);
+    }
+
+    @Override
     protected Function<ItemStack, Integer> getEnchantment0(ResourceLocation key) {
         var enchantment = ForgeRegistries.ENCHANTMENTS.getValue(key);
         if (enchantment != null) {

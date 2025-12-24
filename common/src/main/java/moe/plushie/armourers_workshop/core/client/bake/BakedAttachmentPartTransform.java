@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractVehicleUpdater;
+import moe.plushie.armourers_workshop.compat.client.entity.AbstractVehicleUpdater;
 import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
@@ -62,10 +62,10 @@ public class BakedAttachmentPartTransform {
         return new BakedAttachmentPartTransform(type, index, children);
     }
 
-    public void setup(EntityRenderState renderState, BakedArmature armature, float partialTicks, IPoseStack poseStack) {
+    public void setup(EntityRenderState renderState, BakedArmature armature, float partialTick, IPoseStack poseStack) {
         poseStack.pushPose();
 
-        apply(renderState, armature, partialTicks, poseStack);
+        apply(renderState, armature, partialTick, poseStack);
 
         if (ModDebugger.attachmentOverride && renderState != MannequinRenderState.getPlaceholder()) {
             var tesselator = SceneGraphicsContext.tesselator();
@@ -76,7 +76,7 @@ public class BakedAttachmentPartTransform {
         poseStack.popPose();
     }
 
-    protected void apply(EntityRenderState renderState, BakedArmature armature, float partialTicks, IPoseStack poseStack) {
+    protected void apply(EntityRenderState renderState, BakedArmature armature, float partialTick, IPoseStack poseStack) {
         for (var child : children) {
             var jointTransform = armature.transformByPart(child);
             if (jointTransform != null) {
@@ -97,7 +97,7 @@ public class BakedAttachmentPartTransform {
         }
 
         @Override
-        public void setup(EntityRenderState renderState, BakedArmature armature, float partialTicks, IPoseStack poseStack) {
+        public void setup(EntityRenderState renderState, BakedArmature armature, float partialTick, IPoseStack poseStack) {
             // theory we still need to compute in gui, but currently it not display in the gui.
             // and it will affect the update in the next frame start.
             if (renderState.shouldRenderInGUI()) {
@@ -106,7 +106,7 @@ public class BakedAttachmentPartTransform {
 
             // we need to use a separate pose stack, because the current pose stack is affected by the camera.
             var poseStack1 = new OpenPoseStack();
-            apply(renderState, armature, partialTicks, poseStack1);
+            apply(renderState, armature, partialTick, poseStack1);
 
             // submit vehicle changes into the updater and defer updates.
             AbstractVehicleUpdater.getInstance().submit(renderState);
@@ -122,16 +122,16 @@ public class BakedAttachmentPartTransform {
 //                poseStack.setIdentity();
 //                var cameraPos = Minecraft.getInstance().getCameraPosition();
 //                var mat = OpenMatrix4f.createScaleMatrix(1, 1, 1);
-//                mat.rotate(OpenVector3f.YP.rotationDegrees(180 - entity.getViewYRot(partialTicks)));
+//                mat.rotate(OpenVector3f.YP.rotationDegrees(180 - entity.getViewYRot(partialTick)));
 //                mat.scale(-1, -1, 1);
 //                mat.scale(1.1f, 1.1f, 1.1f);
 //                mat.translate(0, -1.501f, 0);
 //                mat.scale(1 / 16f, 1 / 16f, 1 / 16f);
 //                mat.multiply(poseStack1.last().pose());
 //                var offset = OpenVector3f.ZERO.transforming(mat);
-//                double d0 = OpenMath.lerp(partialTicks, renderState.xo, renderState.x) + offset.x() - cameraPos.x();
-//                double d1 = OpenMath.lerp(partialTicks, renderState.yo, renderState.y) + offset.y() - cameraPos.y();
-//                double d2 = OpenMath.lerp(partialTicks, renderState.zo, renderState.z) + offset.z() - cameraPos.z();
+//                double d0 = OpenMath.lerp(partialTick, renderState.xo, renderState.x) + offset.x() - cameraPos.x();
+//                double d1 = OpenMath.lerp(partialTick, renderState.yo, renderState.y) + offset.y() - cameraPos.y();
+//                double d2 = OpenMath.lerp(partialTick, renderState.zo, renderState.z) + offset.z() - cameraPos.z();
 //                poseStack.translate((float) d0, (float) d1, (float) d2);
 //                ShapeTesselator.vector(0, 0, 0, 2, 2, 2, poseStack, tesselator);
 //                tesselator.endBatch();

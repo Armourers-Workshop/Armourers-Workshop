@@ -11,18 +11,18 @@ public class CGGraphicsParameters {
     private final float mouseX;
     private final float mouseY;
 
-    private final float partialTicks;
+    private final float partialTick;
 
     private final Object context;
 
     private Map<String, Object> extra;
 
-    public CGGraphicsParameters(float width, float height, float mouseX, float mouseY, float partialTicks, Object context) {
+    public CGGraphicsParameters(float width, float height, float mouseX, float mouseY, float partialTick, Object context) {
         this.width = width;
         this.height = height;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
-        this.partialTicks = partialTicks;
+        this.partialTick = partialTick;
         this.context = context;
     }
 
@@ -60,8 +60,8 @@ public class CGGraphicsParameters {
         return new CGPoint(mouseX, mouseY);
     }
 
-    public float partialTicks() {
-        return partialTicks;
+    public float partialTick() {
+        return partialTick;
     }
 
     public Object context() {

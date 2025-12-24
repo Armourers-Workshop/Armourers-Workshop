@@ -13,6 +13,6 @@ public interface RegisterScreensEvent {
 
     interface Factory<T extends AbstractContainerMenu, U extends Screen & MenuAccess<T>> {
 
-        U create(T abstractContainerMenu, Inventory inventory, Component component);
+        U create(T menu, Inventory inventory, Component component);
     }
 }

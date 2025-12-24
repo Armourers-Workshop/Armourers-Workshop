@@ -2,12 +2,25 @@ package moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector;
 
 public interface PlayerSelector {
 
+    float partialTick();
 
-    double elytraYaw();
+    default double elytraYaw() {
+        return getElytraYaw(partialTick());
+    }
 
-    double elytraPitch();
+    default double elytraPitch() {
+        return getElytraPitch(partialTick());
+    }
 
-    double elytraRoll();
+    default double elytraRoll() {
+        return getElytraRoll(partialTick());
+    }
+
+    double getElytraYaw(float partialTick);
+
+    double getElytraPitch(float partialTick);
+
+    double getElytraRoll(float partialTick);
 
     boolean hasCape();
 

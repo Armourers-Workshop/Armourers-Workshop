@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;

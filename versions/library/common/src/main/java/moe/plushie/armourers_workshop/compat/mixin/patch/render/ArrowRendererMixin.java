@@ -27,12 +27,12 @@ public class ArrowRendererMixin<T extends AbstractArrow, S extends ArrowRenderSt
     private final SinglePlaceholderModel<S> aw2$transformModel = new SinglePlaceholderModel<>();
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "HEAD"))
-    public void aw2$willRender(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int light, CallbackInfo ci) {
-        EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, partialTicks, EntityRenderer.class.cast(this)));
+    public void aw2$willRender(T entity, float p_225623_2_, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, CallbackInfo ci) {
+        EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, partialTick, EntityRenderer.class.cast(this)));
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", shift = At.Shift.BEFORE))
-    public void aw2$render(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, CallbackInfo ci) {
+    public void aw2$render(T entity, float p_225623_2_, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Pre.class, AbstractRenderEntityEvent.pre(entity, lightmap, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, EntityRenderer.class.cast(this)));
         if (!aw2$transformModel.root.isVisible()) {
             poseStack.setIdentity();
@@ -41,7 +41,7 @@ public class ArrowRendererMixin<T extends AbstractArrow, S extends ArrowRenderSt
     }
 
     @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "RETURN"))
-    public void aw2$didRender(T entity, float p_225623_2_, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, CallbackInfo ci) {
+    public void aw2$didRender(T entity, float p_225623_2_, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Post.class, AbstractRenderEntityEvent.post(entity, lightmap, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, EntityRenderer.class.cast(this)));
     }
 

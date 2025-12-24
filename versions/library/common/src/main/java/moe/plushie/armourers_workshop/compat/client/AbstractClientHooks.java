@@ -4,22 +4,36 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.client.render.element.SkinPartElement;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.event.client.ClientShaderEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 
 @OnlyIn(Dist.CLIENT)
 public class AbstractClientHooks {
 
-    public static void reloadResources() {
-        SkinRendererManager.reload();
-    }
+    private static boolean RELOADING = false;
 
     public static void createShaders() {
-        //AbstractShaderUniformState.VERSION += 1;
+        if (RELOADING) {
+            return;
+        }
+        RELOADING = true;
+        RenderSystem.recordRenderCall(() -> {
+            RELOADING = false;
+            reloadShaders();
+        });
     }
 
     public static void reloadShaders() {
-        //AbstractShaderUniformState.VERSION += 1;
+        ModLog.debug("Reloading shaders");
+        EventManager.post(ClientShaderEvent.Reloading.class, new ReloadShader());
         SkinPartElement.clearCache();
+    }
+
+    public static void reloadResources() {
+        ModLog.debug("Reloading resources");
+        SkinRendererManager.reload();
     }
 
     public static void drawElements() {
@@ -27,5 +41,9 @@ public class AbstractClientHooks {
         if (callback != null) {
             callback.run();
         }
+    }
+
+    private static class ReloadShader implements ClientShaderEvent.Reloading {
+
     }
 }

@@ -12,17 +12,17 @@ public class PlayerSelectorImpl<T extends Player> extends LivingEntitySelectorIm
     }
 
     @Override
-    public double elytraYaw() {
+    public double getElytraYaw(float partialTick) {
         return 0;
     }
 
     @Override
-    public double elytraPitch() {
+    public double getElytraPitch(float partialTick) {
         return 0;
     }
 
     @Override
-    public double elytraRoll() {
+    public double getElytraRoll(float partialTick) {
         return 0;
     }
 

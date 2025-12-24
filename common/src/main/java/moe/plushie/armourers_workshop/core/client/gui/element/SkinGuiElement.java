@@ -70,8 +70,8 @@ public abstract class SkinGuiElement implements CGGraphicsElement, IGraphicsElem
         }
         context.saveGraphicsState();
 
-        model.setPartialTicks(1.0f);
-        model.setAnimationTicks(0.0d); // never show animations in the gui.
+        model.setPartialTick(1.0f);
+        model.setAnimationTick(0.0d); // never show animations in the gui.
         model.setAnimationManager(AnimationManager.NONE);
         model.setItemSource(resolveItemSource(SkinItemSource.EMPTY));
         model.setOutlineColor(0); // never show outlines in the gui.
@@ -117,7 +117,7 @@ public abstract class SkinGuiElement implements CGGraphicsElement, IGraphicsElem
 
         @Override
         protected void apply(EntityRenderState renderState, SkinRenderState model, IGraphicsContext context) {
-            var t = TickUtils.animationTicks();
+            var t = TickUtils.animationTick();
             var si = Math.min(width, height);
             context.translateCTM(x + width / 2f, y + height / 2f, z);
             context.scaleCTM(1, -1, 1);

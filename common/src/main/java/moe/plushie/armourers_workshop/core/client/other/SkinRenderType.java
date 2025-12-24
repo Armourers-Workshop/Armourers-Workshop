@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compat.client.AbstractRenderTypeImpl;
+import moe.plushie.armourers_workshop.compat.client.renderer.AbstractRenderTypeImpl;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameParameterValue"})
 public abstract class SkinRenderType implements IRenderType {
 
     public static final IRenderType BLIT_COLOR = _builder(SkinVertexFormat.BLIT_MASK).build("blit_color");
@@ -45,10 +45,11 @@ public abstract class SkinRenderType implements IRenderType {
     private static final IRenderType LINES = _line(1).build("lines");
     private static final IRenderType LINE_STRIP = _builder(SkinVertexFormat.LINE_STRIP).lineWidth(1).build("line_strip");
 
+    private static final ConcurrentHashMap<String, IRenderType> CUSTOM_PARTICLE_VARIANTS = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, IRenderType> CUSTOM_FACE_VARIANTS = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, IRenderType> CUSTOM_GUI_IMAGES = new ConcurrentHashMap<>();
 
-    public static IRenderType by(SkinGeometryType geometryType) {
+    public static IRenderType geometry(SkinGeometryType geometryType) {
         if (geometryType == SkinGeometryTypes.BLOCK_GLASS) {
             return BLOCK_FACE_TRANSLUCENT;
         }
@@ -61,10 +62,49 @@ public abstract class SkinRenderType implements IRenderType {
         return BLOCK_FACE_SOLID;
     }
 
-    public static IRenderType customFace(String name, SkinVertexFormat format, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
+    public static IRenderType geometry(SkinGeometryType type, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive) {
+        var builder = GeometryFaceBuilder.search(type, isTranslucent, isEmissive);
+        if (builder != null) {
+            return builder.build(texture);
+        }
+        return geometry(type);
+    }
+
+    public static IRenderType particle(OpenResourceLocation texture, boolean isEmissive, boolean isCull) {
+        if (isEmissive) {
+            return _customParticle("particle_lighting_cutout", SkinVertexFormat.PARTICLE_LIGHTING, texture, false, true, isCull);
+        }
+        return _customParticle("particle_cutout", SkinVertexFormat.PARTICLE_CUTOUT, texture, false, false, isCull);
+    }
+
+    public static IRenderType image(OpenResourceLocation texture) {
+        return _customImage("gui_image", texture);
+    }
+
+    public static IRenderType line() {
+        return LINES;
+    }
+
+    public static IRenderType lineStrip() {
+        return LINE_STRIP;
+    }
+
+    public static IRenderType entityCutout(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).group(Group.SOLID_ENTITIES).cull().build("player_solid");
+    }
+
+    public static IRenderType entityCutoutNoCull(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).group(Group.CUTOUT_ENTITIES).build("player_cutout");
+    }
+
+    public static IRenderType entityTranslucentCull(OpenResourceLocation texture) {
+        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().blend(BlendMode.TRANSLUCENT).group(Group.TRANSLUCENT_ENTITIES).build("player_translucent");
+    }
+
+    private static IRenderType _customGeometry(String name, SkinVertexFormat format, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
         var key = String.format("%s/%s", name, texture.path());
         return CUSTOM_FACE_VARIANTS.computeIfAbsent(key, it -> {
-            var builder = _customFace(format).texture(texture).group(Group.SOLID_BLOCKS);
+            var builder = _builder(format).texture(texture).group(Group.SOLID_BLOCKS).outline();
             if (isTranslucent) {
                 builder = builder.blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT).group(Group.TRANSLUCENT_BLOCKS);
             }
@@ -80,37 +120,28 @@ public abstract class SkinRenderType implements IRenderType {
         });
     }
 
-    public static IRenderType geometryFace(SkinGeometryType type, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive) {
-        var builder = GeometryFaceBuilder.search(type, isTranslucent, isEmissive);
-        if (builder != null) {
-            return builder.build(texture);
-        }
-        return by(type);
+    private static IRenderType _customParticle(String name, SkinVertexFormat format, OpenResourceLocation texture, boolean isTranslucent, boolean isEmissive, boolean isCull) {
+        var key = String.format("%s/%s", name, texture.path());
+        return CUSTOM_PARTICLE_VARIANTS.computeIfAbsent(key, it -> {
+            var builder = _builder(format).texture(texture).group(Group.PARTICLES);
+            if (isTranslucent) {
+                builder = builder.blend(BlendMode.TRANSLUCENT).target(Target.TRANSLUCENT);
+            }
+            if (isCull) {
+                builder = builder.cull();
+            }
+            if (isTranslucent) {
+                builder = builder.ordinal(400);
+            } else {
+                builder = builder.ordinal(200);
+            }
+            return builder.build(it);
+        });
     }
 
-    public static IRenderType line() {
-        return LINES;
-    }
-
-    public static IRenderType lineStrip() {
-        return LINE_STRIP;
-    }
-
-    public static IRenderType customImage(OpenResourceLocation texture) {
-        var key = String.format("gui_image/%s", texture.path());
+    private static IRenderType _customImage(String name, OpenResourceLocation texture) {
+        var key = String.format("%s/%s", name, texture.path());
         return CUSTOM_GUI_IMAGES.computeIfAbsent(key, it -> _builder(SkinVertexFormat.GUI_TEXTURED).texture(texture).blend(BlendMode.TRANSLUCENT).build(it));
-    }
-
-    public static IRenderType entityCutout(OpenResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT, texture).group(Group.SOLID_ENTITIES).cull().build("player_solid");
-    }
-
-    public static IRenderType entityCutoutNoCull(OpenResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, texture).group(Group.CUTOUT_ENTITIES).build("player_cutout");
-    }
-
-    public static IRenderType entityTranslucentCull(OpenResourceLocation texture) {
-        return _entity(SkinVertexFormat.ENTITY_TRANSLUCENT, texture).cull().blend(BlendMode.TRANSLUCENT).group(Group.TRANSLUCENT_ENTITIES).build("player_translucent");
     }
 
     private static Builder _entity(SkinVertexFormat format, OpenResourceLocation texture) {
@@ -122,10 +153,6 @@ public abstract class SkinRenderType implements IRenderType {
     }
 
     private static Builder _blockFace(SkinVertexFormat format) {
-        return _builder(format).outline();
-    }
-
-    private static Builder _customFace(SkinVertexFormat format) {
         return _builder(format).outline();
     }
 
@@ -196,7 +223,7 @@ public abstract class SkinRenderType implements IRenderType {
         }
 
         public IRenderType build(OpenResourceLocation texture) {
-            return customFace(name, format, texture, isTranslucent, isEmissive, isCull);
+            return _customGeometry(name, format, texture, isTranslucent, isEmissive, isCull);
         }
     }
 }

@@ -28,9 +28,9 @@ public class RelativeBlockName extends EntityFunction {
 
     @Override
     public Result evaluate(EntitySelector entity, ExecutionContext context) {
-        int offsetX = this.offsetX.evaluate(context).getAsInt();
-        int offsetY = this.offsetY.evaluate(context).getAsInt();
-        int offsetZ = this.offsetZ.evaluate(context).getAsInt();
+        var offsetX = this.offsetX.evaluate(context).getAsInt();
+        var offsetY = this.offsetY.evaluate(context).getAsInt();
+        var offsetZ = this.offsetZ.evaluate(context).getAsInt();
         // query limit
         if (Math.abs(offsetX) > 8 || Math.abs(offsetY) > 8 || Math.abs(offsetZ) > 8) {
             return Result.NULL; // too far

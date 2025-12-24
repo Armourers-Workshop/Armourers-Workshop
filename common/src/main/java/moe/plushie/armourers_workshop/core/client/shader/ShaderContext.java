@@ -1,10 +1,19 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.compat.client.renderer.shader.AbstractShaderContext;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 
 public interface ShaderContext {
+
+    static ShaderContext newInstance() {
+        return AbstractShaderContext.newInstance();
+    }
+
+    default void draw(ShaderVertexObject object) {
+        object.slice().draw();
+    }
 
     void saveUniforms();
 

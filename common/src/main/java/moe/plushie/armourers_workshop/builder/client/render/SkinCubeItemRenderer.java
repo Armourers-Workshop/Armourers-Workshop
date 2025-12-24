@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
-import moe.plushie.armourers_workshop.compat.client.renderer.special.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;

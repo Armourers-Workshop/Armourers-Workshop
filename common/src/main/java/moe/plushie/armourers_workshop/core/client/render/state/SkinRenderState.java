@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SkinRenderState {
 
-    protected float partialTicks = 1.0f;
-    protected double animationTicks = 0.0d;
+    protected float partialTick = 1.0f;
+    protected double animationTick = 0.0d;
 
     protected int outlineColor = 0;
 
@@ -41,14 +41,14 @@ public class SkinRenderState {
             var resolvedArmature = skin.resolve(renderState, armature);
             var resolvedPaintScheme = skin.resolve(renderState, slot.paintScheme());
 
-            renderingContext.setPartialTicks(partialTicks);
+            renderingContext.setPartialTick(partialTick);
 
             renderingContext.setOverlay(slot.resolveOverlay(renderState, overlay));
             renderingContext.setLightmap(slot.resolveLightmap(renderState, lightmap));
 
             renderingContext.setOutlineColor(outlineColor);
 
-            renderingContext.setAnimationTicks(animationTicks);
+            renderingContext.setAnimationTick(animationTick);
             renderingContext.setAnimationManager(animationManager);
 
             renderingContext.setItemSource(slot.resolveItemSource(renderState, itemSource));
@@ -65,20 +65,20 @@ public class SkinRenderState {
         return renderCount;
     }
 
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
+    public void setPartialTick(float partialTick) {
+        this.partialTick = partialTick;
     }
 
-    public float partialTicks() {
-        return partialTicks;
+    public float partialTick() {
+        return partialTick;
     }
 
-    public void setAnimationTicks(double animationTicks) {
-        this.animationTicks = animationTicks;
+    public void setAnimationTick(double animationTick) {
+        this.animationTick = animationTick;
     }
 
-    public double animationTicks() {
-        return animationTicks;
+    public double animationTick() {
+        return animationTick;
     }
 
     public void setAnimationManager(AnimationManager animationManager) {

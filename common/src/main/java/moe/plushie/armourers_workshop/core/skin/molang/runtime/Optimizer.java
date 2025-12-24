@@ -36,7 +36,7 @@ public final class Optimizer extends Transformer {
             // TODO: @SAGESSE NO IMPL
             //return new Call(transform(access), transform(expression.arguments()));
         }
-        return transform(expression.receiver());
+        return super.visitCall(expression);
     }
 
     @Override

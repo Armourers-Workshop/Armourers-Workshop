@@ -2,8 +2,6 @@ package moe.plushie.armourers_workshop.core.client.shader;
 
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderContext;
-import moe.plushie.armourers_workshop.compat.client.shader.AbstractShaderRenderer;
 import moe.plushie.armourers_workshop.core.client.texture.ColorModulator;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
@@ -15,8 +13,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 @OnlyIn(Dist.CLIENT)
 public class Shader {
 
-    protected final ShaderRenderer impl = AbstractShaderRenderer.newInstance();
-    protected final ShaderContext context = AbstractShaderContext.newInstance();
+    protected final ShaderContext context = ShaderContext.newInstance();
 
     public void setupRenderState() {
         context.saveStates();
@@ -37,10 +34,7 @@ public class Shader {
         context.setPolygonOffset(0.0f, -50.0f);
 
         // apply changes of texture animation.
-        context.setTextureMatrix(group.getTextureMatrix(TickUtils.animationTicks()));
-
-        // apply the renderer render state.
-        impl.setupRenderState(group);
+        context.setTextureMatrix(group.getTextureMatrix(TickUtils.animationTick()));
     }
 
     public void render(ShaderVertexObject object, ShaderVertexGroup group) {
@@ -66,13 +60,10 @@ public class Shader {
         context.applyUniforms();
 
         // submit draw into renderer.
-        impl.draw(object, context);
+        context.draw(object);
     }
 
     public void clearRenderState(ShaderVertexGroup group) {
-        // clear the renderer render state.
-        impl.clearRenderState(group);
-
         context.setPolygonOffset(0.0f, 0.0f);
         context.restoreUniforms();
         context.restoreObjects();

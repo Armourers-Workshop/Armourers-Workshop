@@ -6,8 +6,8 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
 
     protected int overlay = 0x0a0000;
     protected int lightmap = 0xf000f0;
-    protected float partialTicks;
-    protected double animationTicks;
+    protected float partialTick;
+    protected double animationTick;
 
     public void setOverlay(int overlay) {
         this.overlay = overlay;
@@ -27,21 +27,21 @@ public class DefaultArmaturePluginContext implements ArmaturePlugin.Context {
         return lightmap;
     }
 
-    public void setPartialTicks(float partialTicks) {
-        this.partialTicks = partialTicks;
+    public void setPartialTick(float partialTick) {
+        this.partialTick = partialTick;
     }
 
-    public void setAnimationTicks(double animationTicks) {
-        this.animationTicks = animationTicks;
-    }
-
-    @Override
-    public double animationTicks() {
-        return animationTicks;
+    public void setAnimationTick(double animationTick) {
+        this.animationTick = animationTick;
     }
 
     @Override
-    public float partialTicks() {
-        return partialTicks;
+    public double animationTick() {
+        return animationTick;
+    }
+
+    @Override
+    public float partialTick() {
+        return partialTick;
     }
 }

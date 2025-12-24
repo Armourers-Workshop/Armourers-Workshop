@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.client.IRenderAttachment;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractModelViewStack;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractModelViewStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentBufferCompiler;

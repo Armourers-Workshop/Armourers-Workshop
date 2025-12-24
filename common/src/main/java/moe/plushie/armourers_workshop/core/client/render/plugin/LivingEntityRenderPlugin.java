@@ -30,14 +30,14 @@ public class LivingEntityRenderPlugin<T extends LivingEntity, S extends LivingEn
     }
 
     @Override
-    protected void init(S renderState, float partialTicks, IEntityRenderer<T, S> renderer) {
+    protected void init(S renderState, float partialTick, IEntityRenderer<T, S> renderer) {
         if (renderer instanceof ILivingEntityRenderer<T, S, ?> renderer1) {
-            init(renderState, partialTicks, renderer1);
+            init(renderState, partialTick, renderer1);
         }
     }
 
-    protected void init(S renderState, float partialTicks, ILivingEntityRenderer<T, S, ?> renderer) {
-        super.init(renderState, partialTicks, renderer);
+    protected void init(S renderState, float partialTick, ILivingEntityRenderer<T, S, ?> renderer) {
+        super.init(renderState, partialTick, renderer);
         this.entityRenderer = renderer;
     }
 

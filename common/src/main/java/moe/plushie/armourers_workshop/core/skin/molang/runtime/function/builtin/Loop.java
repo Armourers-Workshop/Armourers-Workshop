@@ -33,7 +33,7 @@ public final class Loop extends Function {
     public Result evaluate(final ExecutionContext context) {
         var scope = context.stack().scope().beginEnumerate();
         // The maximum loop counter is (as of this document being written) 1024.
-        int total = MathHelper.floor(MathHelper.clamp(count.compute(context), 0, 1024));
+        var total = MathHelper.floor(MathHelper.clamp(count.compute(context), 0, 1024));
         for (int i = 0; i < total; i++) {
             body.evaluate(context);
             if (scope.isBreakOrReturn()) {

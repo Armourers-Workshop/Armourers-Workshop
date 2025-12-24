@@ -674,6 +674,46 @@ public class BedrockComponent {
         }
     }
 
+    protected static class EmitterCustomShape extends BedrockComponent {
+
+        private final OpenExpression offsetX;
+        private final OpenExpression offsetY;
+        private final OpenExpression offsetZ;
+
+        private final Object direction;
+
+        public EmitterCustomShape(OpenExpression offsetX, OpenExpression offsetY, OpenExpression offsetZ, Object direction) {
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+            this.offsetZ = offsetZ;
+            this.direction = direction;
+        }
+
+        public OpenExpression offsetX() {
+            return offsetX;
+        }
+
+        public OpenExpression offsetY() {
+            return offsetY;
+        }
+
+        public OpenExpression offsetZ() {
+            return offsetZ;
+        }
+
+        public Object direction() {
+            return direction;
+        }
+
+        protected static class Builder extends ShapeBuilder {
+
+            @Override
+            public BedrockComponent build() {
+                return new EmitterCustomShape(offsetX, offsetY, offsetZ, direction);
+            }
+        }
+    }
+
     protected static class ParticleInitialization extends BedrockComponent {
 
         private final OpenExpression update;
@@ -996,9 +1036,9 @@ public class BedrockComponent {
 
             OpenExpression enabled;
 
-            float collisionDrag;
-            float collisionRadius;
-            float coefficientOfRestitution;
+            float collisionDrag = 0.0f;
+            float collisionRadius = 0.01f;
+            float coefficientOfRestitution = 1.0f;
 
             boolean expireOnContact = false;
 
@@ -1246,13 +1286,13 @@ public class BedrockComponent {
         private final OpenExpression stepX;
         private final OpenExpression stepY;
 
-        private final boolean useAnimation;
+        private final boolean flipbook;
         private final int fps;
         private final OpenExpression maxFrame;
         private final boolean stretchToLifetime;
         private final boolean loop;
 
-        public ParticleBillboardAppearance(OpenExpression width, OpenExpression height, String facingCameraMode, OpenSize2i textureSize, OpenExpression textureCoordsX, OpenExpression textureCoordsY, OpenExpression textureCoordsWidth, OpenExpression textureCoordsHeight, OpenExpression stepX, OpenExpression stepY, boolean useAnimation, int fps, OpenExpression maxFrame, boolean stretchToLifetime, boolean loop) {
+        public ParticleBillboardAppearance(OpenExpression width, OpenExpression height, String facingCameraMode, OpenSize2i textureSize, OpenExpression textureCoordsX, OpenExpression textureCoordsY, OpenExpression textureCoordsWidth, OpenExpression textureCoordsHeight, OpenExpression stepX, OpenExpression stepY, boolean flipbook, int fps, OpenExpression maxFrame, boolean stretchToLifetime, boolean loop) {
             this.width = width;
             this.height = height;
             this.facingCameraMode = facingCameraMode;
@@ -1263,7 +1303,7 @@ public class BedrockComponent {
             this.textureCoordsHeight = textureCoordsHeight;
             this.stepX = stepX;
             this.stepY = stepY;
-            this.useAnimation = useAnimation;
+            this.flipbook = flipbook;
             this.fps = fps;
             this.maxFrame = maxFrame;
             this.stretchToLifetime = stretchToLifetime;
@@ -1310,8 +1350,8 @@ public class BedrockComponent {
             return stepY;
         }
 
-        public boolean isUseAnimation() {
-            return useAnimation;
+        public boolean flipbook() {
+            return flipbook;
         }
 
         public int fps() {
@@ -1347,7 +1387,7 @@ public class BedrockComponent {
             private OpenExpression stepX;
             private OpenExpression stepY;
 
-            private boolean useAnimation;
+            private boolean flipbook;
             private int fps;
             private OpenExpression maxFrame;
             private boolean stretchToLifetime;
@@ -1399,8 +1439,8 @@ public class BedrockComponent {
             }
 
 
-            public void useAnimation(boolean useAnimation) {
-                this.useAnimation = useAnimation;
+            public void flipbook(boolean flipbook) {
+                this.flipbook = flipbook;
             }
 
             public void fps(int fps) {
@@ -1421,7 +1461,7 @@ public class BedrockComponent {
 
             @Override
             public BedrockComponent build() {
-                return new ParticleBillboardAppearance(width, height, facingCameraMode, new OpenSize2i(textureWidth, textureHeight), textureCoordsX, textureCoordsY, textureCoordsWidth, textureCoordsHeight, stepX, stepY, useAnimation, fps, maxFrame, stretchToLifetime, loop);
+                return new ParticleBillboardAppearance(width, height, facingCameraMode, new OpenSize2i(textureWidth, textureHeight), textureCoordsX, textureCoordsY, textureCoordsWidth, textureCoordsHeight, stepX, stepY, flipbook, fps, maxFrame, stretchToLifetime, loop);
             }
         }
     }
@@ -1486,7 +1526,7 @@ public class BedrockComponent {
         OpenExpression offsetY;
         OpenExpression offsetZ;
 
-        Object direction;
+        Object direction = "outwards";
         OpenExpression radius;
         boolean surfaceOnly;
 

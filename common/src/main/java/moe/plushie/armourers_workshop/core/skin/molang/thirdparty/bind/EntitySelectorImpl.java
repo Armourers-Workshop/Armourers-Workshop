@@ -36,38 +36,43 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     }
 
     @Override
-    public double eyeYaw() {
-        return entity.getViewXRot(partialTick());
+    public float partialTick() {
+        return contextSelector.partialTick();
     }
 
     @Override
-    public double eyePitch() {
-        return entity.getViewYRot(partialTick());
+    public double getX(float partialTick) {
+        return MathHelper.lerp(partialTick, entity.xo, entity.getX());
     }
 
     @Override
-    public double headYaw() {
-        return entity.getHeadYaw(partialTick());
+    public double getY(float partialTick) {
+        return MathHelper.lerp(partialTick, entity.yo, entity.getY());
     }
 
     @Override
-    public double headPitch() {
-        return entity.getHeadPatch(partialTick());
+    public double getZ(float partialTick) {
+        return MathHelper.lerp(partialTick, entity.zo, entity.getZ());
     }
 
     @Override
-    public double x(double partialTicks) {
-        return MathHelper.lerp(partialTicks, entity.xo, entity.getX());
+    public double getEyeYaw(float partialTick) {
+        return entity.getViewXRot(partialTick);
     }
 
     @Override
-    public double y(double partialTicks) {
-        return MathHelper.lerp(partialTicks, entity.yo, entity.getY());
+    public double getEyePitch(float partialTick) {
+        return entity.getViewYRot(partialTick);
     }
 
     @Override
-    public double z(double partialTicks) {
-        return MathHelper.lerp(partialTicks, entity.zo, entity.getZ());
+    public double getHeadYaw(float partialTick) {
+        return entity.getHeadYaw(partialTick);
+    }
+
+    @Override
+    public double getHeadPitch(float partialTick) {
+        return entity.getHeadPatch(partialTick);
     }
 
     @Override
@@ -180,7 +185,7 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
             return true;
         }
         var noise = (entity.getId() * 0.05);
-        var time = (contextSelector.animationTicks() + noise) % 4.5;
+        var time = (contextSelector.animationTick() + noise) % 4.5;
         return time > 4.25;
     }
 
@@ -221,12 +226,6 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
         var blockState = level.getBlockState(new BlockPos((int) x, (int) y, (int) z));
         return blockSelector.apply(blockState);
     }
-
-    @Override
-    public float partialTick() {
-        return contextSelector.partialTick();
-    }
-
 
     @Override
     public void setVariable(Name name, Result value) {

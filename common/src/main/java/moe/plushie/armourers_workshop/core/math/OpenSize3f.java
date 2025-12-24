@@ -6,10 +6,14 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 public class OpenSize3f {
 
     public static final OpenSize3f ZERO = new OpenSize3f(0, 0, 0);
+    public static final OpenSize3f ONE = new OpenSize3f(1, 1, 1);
 
     public float width;
     public float height;
     public float depth;
+
+    public OpenSize3f() {
+    }
 
     public OpenSize3f(float width, float height, float depth) {
         this.width = width;

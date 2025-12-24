@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Player;
 
 public interface PlayerEvent {
 
-    Player getPlayer();
+    Player player();
 
     interface LoggingIn extends PlayerEvent {
     }
@@ -18,17 +18,17 @@ public interface PlayerEvent {
 
     interface Clone extends PlayerEvent {
 
-        Player getOriginal();
+        Player original();
     }
 
     interface StartTracking extends PlayerEvent {
 
-        Entity getTarget();
+        Entity target();
     }
 
     interface Attack extends PlayerEvent {
 
-        Entity getTarget();
+        Entity target();
 
         void setCancelled(boolean isCancelled);
     }

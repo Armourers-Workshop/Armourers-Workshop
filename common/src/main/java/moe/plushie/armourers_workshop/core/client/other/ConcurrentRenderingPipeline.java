@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.client.shader.Shader;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexBuffer;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
 import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
@@ -146,7 +147,7 @@ public class ConcurrentRenderingPipeline {
         public int vertexCount() {
             var vertexTotal = 0;
             for (var object : objects) {
-                vertexTotal += object.vertexCount();
+                vertexTotal += object.slice().count();
             }
             return vertexTotal;
         }
@@ -191,28 +192,8 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public int vertexOffset() {
-            return compiledTask.vertexOffset;
-        }
-
-        @Override
-        public int vertexCount() {
-            return compiledTask.vertexCount;
-        }
-
-        @Override
-        public VertexArrayObject arrayObject() {
-            return compiledTask.arrayObject;
-        }
-
-        @Override
-        public VertexIndexObject indexObject() {
-            return compiledTask.indexObject;
-        }
-
-        @Override
-        public VertexBufferObject bufferObject() {
-            return compiledTask.bufferObject;
+        public ShaderVertexBuffer.Slice slice() {
+            return compiledTask.slice;
         }
 
         @Override

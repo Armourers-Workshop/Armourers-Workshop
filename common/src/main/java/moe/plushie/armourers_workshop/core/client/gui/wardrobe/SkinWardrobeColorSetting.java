@@ -9,7 +9,7 @@ import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
-import moe.plushie.armourers_workshop.compat.client.AbstractColorPicker;
+import moe.plushie.armourers_workshop.compat.client.utils.AbstractColorPicker;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinLoader;

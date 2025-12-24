@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelHolder;
 import moe.plushie.armourers_workshop.core.client.other.thirdparty.EpicFlightModelPartProvider;
@@ -25,13 +25,13 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
 
     private static final FloatBuffer AW_MAT_BUFFER4 = MatrixUtils.createFloatBuffer(16);
 
-    public static void onRenderPre(LivingEntity entityIn, int packedLightIn, float partialTicks, boolean isFirstPerson, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
-        EpicFightEntityRenderPlugin.prepare(AbstractRenderLivingEntityEvent.setup(entityIn, partialTicks, renderer), patch -> {
+    public static void onRenderPre(LivingEntity entityIn, int packedLightIn, float partialTick, boolean isFirstPerson, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
+        EpicFightEntityRenderPlugin.prepare(AbstractRenderLivingEntityEvent.setup(entityIn, partialTick, renderer), patch -> {
             patch.setFirstPerson(isFirstPerson);
         });
     }
 
-    public static void onRenderEntity(LivingEntity entityIn, Armature armature, int lightmap, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
+    public static void onRenderEntity(LivingEntity entityIn, Armature armature, int lightmap, float partialTick, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, CallbackInfoReturnable<OpenMatrix4f[]> cir) {
         EpicFightEntityRenderPlugin.activate(AbstractRenderLivingEntityEvent.pre(entityIn, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, null), patch -> {
             var poses = cir.getReturnValue();
             var overridePoses = Arrays.copyOf(poses, poses.length);
@@ -58,7 +58,7 @@ public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandler
         });
     }
 
-    public static void onRenderPost(LivingEntity entityIn, int lightmap, float partialTicks, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
+    public static void onRenderPost(LivingEntity entityIn, int lightmap, float partialTick, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, LivingEntityRenderer<?, ?> renderer) {
         EpicFightEntityRenderPlugin.deactivate(AbstractRenderLivingEntityEvent.post(entityIn, lightmap, OverlayTexture.NO_OVERLAY, poseStackIn, bufferSourceIn, renderer), patch -> {
             patch.setFirstPerson(false);
             patch.setTransformProvider(null);

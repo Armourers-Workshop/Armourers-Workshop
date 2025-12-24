@@ -7,5 +7,5 @@ import net.minecraft.server.MinecraftServer;
  */
 public interface ServerStartedEvent {
 
-    MinecraftServer getServer();
+    MinecraftServer server();
 }

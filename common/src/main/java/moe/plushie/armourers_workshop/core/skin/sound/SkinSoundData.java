@@ -43,6 +43,10 @@ public class SkinSoundData implements ISkinSoundProvider {
         return properties;
     }
 
+    public String extension() {
+        return "ogg";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

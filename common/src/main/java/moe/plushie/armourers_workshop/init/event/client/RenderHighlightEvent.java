@@ -8,7 +8,7 @@ public interface RenderHighlightEvent {
 
     interface Block {
 
-        float partialTicks();
+        float partialTick();
 
         Camera camera();
 

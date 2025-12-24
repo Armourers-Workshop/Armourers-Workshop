@@ -26,12 +26,12 @@ public class AbstractFabricPlayerEvent {
     public static IEventHandler<PlayerEvent.Clone> cloneFactory() {
         return (priority, receiveCancelled, subscriber) -> ServerPlayerEvents.COPY_FROM.register(((oldPlayer, newPlayer, alive) -> subscriber.accept(new PlayerEvent.Clone() {
             @Override
-            public Player getOriginal() {
+            public Player original() {
                 return oldPlayer;
             }
 
             @Override
-            public Player getPlayer() {
+            public Player player() {
                 return newPlayer;
             }
         })));
@@ -49,12 +49,12 @@ public class AbstractFabricPlayerEvent {
             InteractionResult[] results = {InteractionResult.PASS};
             subscriber.accept(new PlayerEvent.Attack() {
                 @Override
-                public Entity getTarget() {
+                public Entity target() {
                     return entity;
                 }
 
                 @Override
-                public Player getPlayer() {
+                public Player player() {
                     return player;
                 }
 
@@ -75,12 +75,12 @@ public class AbstractFabricPlayerEvent {
     public static IEventHandler<PlayerEvent.StartTracking> startTrackingFactory() {
         return (priority, receiveCancelled, subscriber) -> EntityLifecycleEvents.DID_START_TRACKING.register((target, player) -> subscriber.accept(new PlayerEvent.StartTracking() {
             @Override
-            public Entity getTarget() {
+            public Entity target() {
                 return target;
             }
 
             @Override
-            public Player getPlayer() {
+            public Player player() {
                 return player;
             }
         }));

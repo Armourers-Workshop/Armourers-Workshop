@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
@@ -11,6 +13,7 @@ import java.util.Objects;
 import java.util.Stack;
 import java.util.function.Supplier;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class ShaderUniform {
 
     protected final String name;
@@ -81,7 +84,7 @@ public abstract class ShaderUniform {
 
         @Override
         public void apply() {
-            int newValue = value.get();
+            var newValue = value.get();
             if (cachedValue != newValue) {
                 cachedValue = newValue;
                 GL20.glUniform1i(location, newValue);
@@ -95,7 +98,7 @@ public abstract class ShaderUniform {
 
         @Override
         public void pop() {
-            int newValue = cachedValues.pop();
+            var newValue = cachedValues.pop();
             cachedValue = newValue;
             GL20.glUniform1i(location, newValue);
         }
@@ -104,7 +107,7 @@ public abstract class ShaderUniform {
     private static class Vec4fValue extends ShaderUniform {
 
         private final Supplier<OpenVector4f> value;
-        private OpenVector4f cachedValue = OpenVector4f.ZERO;
+        private OpenVector4f cachedValue;
 
         Vec4fValue(String name, Supplier<OpenVector4f> value) {
             super(name);

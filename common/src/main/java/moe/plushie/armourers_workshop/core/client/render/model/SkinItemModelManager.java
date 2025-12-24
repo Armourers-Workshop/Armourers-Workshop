@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.client.render.model;
 
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.compat.client.AbstractItemProperties;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemProperties;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;

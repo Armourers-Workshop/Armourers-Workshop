@@ -1,35 +1,50 @@
 package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IDeltaTracker;
 import net.minecraft.world.entity.Entity;
 
 @Available("[1.16, 1.21)")
-public class AbstractDeltaTracker {
+public class AbstractDeltaTracker implements IDeltaTracker {
 
     private final float partialTick;
 
     private final boolean isPaused;
-    private final boolean isFrozen;
 
-    public AbstractDeltaTracker(float partialTick, boolean isPaused, boolean isFrozen) {
+    private AbstractDeltaTracker(float partialTick, boolean isPaused) {
         this.partialTick = partialTick;
         this.isPaused = isPaused;
-        this.isFrozen = isFrozen;
     }
 
-    public float getPartialTick() {
-        return partialTick;
+    public static AbstractDeltaTracker of(float partialTick, boolean isPaused) {
+        return new AbstractDeltaTracker(partialTick, isPaused);
     }
 
-    public float getPartialTick(Entity entity) {
-        return partialTick;
-    }
-
+    @Override
     public boolean isPaused() {
         return isPaused;
     }
 
+    @Override
     public boolean isFrozen() {
-        return isFrozen;
+        return false;
+    }
+
+    @Override
+    public float partialTick() {
+        return partialTick;
+    }
+
+    @Override
+    public float partialTick(Entity entity) {
+        return partialTick;
+    }
+
+    @Override
+    public float rate() {
+        if (isPaused) {
+            return 0.0f;
+        }
+        return 1.0f;
     }
 }

@@ -20,13 +20,28 @@ public class BlockEntitySelectorImpl<T extends BlockEntity> implements BlockEnti
         return this;
     }
 
-    public T getEntity() {
+    public T entity() {
         return entity;
     }
 
     @Override
     public float partialTick() {
         return contextSelector.partialTick();
+    }
+
+    @Override
+    public double getX(double partialTick) {
+        return entity.getBlockPos().getX();
+    }
+
+    @Override
+    public double getY(double partialTick) {
+        return entity.getBlockPos().getY();
+    }
+
+    @Override
+    public double getZ(double partialTick) {
+        return entity.getBlockPos().getZ();
     }
 
     @Override

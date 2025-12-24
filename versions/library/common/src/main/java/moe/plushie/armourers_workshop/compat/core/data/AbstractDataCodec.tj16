@@ -1,0 +1,15 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import com.mojang.serialization.Codec;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
+
+import java.util.function.Function;
+
+@Available("[1.16, 1.21)")
+public class AbstractDataCodec {
+
+    public static <A, E> Codec<E> dispatch(Codec<A> that, String key, Function<? super E, ? extends A> type, Function<? super A, ? extends IDataMapCodec<? extends E>> targetCodec) {
+        return that.dispatch(key, type, it -> targetCodec.apply(it).mapCodec().codec());
+    }
+}

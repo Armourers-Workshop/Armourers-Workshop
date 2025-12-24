@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.resources.sounds.Sound;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.client.AbstractSimpleSound;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSimpleSound;
 import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.util.valueproviders.ConstantFloat;
 
