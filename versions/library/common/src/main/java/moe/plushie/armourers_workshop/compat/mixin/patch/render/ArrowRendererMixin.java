@@ -31,7 +31,7 @@ public class ArrowRendererMixin<T extends AbstractArrow, S extends ArrowRenderSt
         EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, partialTick, EntityRenderer.class.cast(this)));
     }
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V", shift = At.Shift.BEFORE))
+    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/AbstractArrow;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
     public void aw2$render(T entity, float p_225623_2_, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int lightmap, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Pre.class, AbstractRenderEntityEvent.pre(entity, lightmap, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, EntityRenderer.class.cast(this)));
         if (!aw2$transformModel.root.isVisible()) {

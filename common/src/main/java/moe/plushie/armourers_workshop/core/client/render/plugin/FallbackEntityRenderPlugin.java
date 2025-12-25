@@ -38,14 +38,33 @@ public class FallbackEntityRenderPlugin<T extends Entity, S extends EntityRender
 
     @Override
     protected void activate(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        var model = renderState.hands();
+        if (model.isEmpty()) {
+            return; // nothing to rendering!
+        }
         context.saveGraphicsState();
+
         super.activate(renderState, lightmap, overlay, context);
+
+        context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
+
+        model.setPartialTick(renderState.partialTick());
+        model.setAnimationTick(renderState.animationTick());
+        model.setAnimationManager(renderState.animationManager());
+        model.setOutlineColor(renderState.outlineColor());
+
+        model.render(renderState, getArmature(null), lightmap, overlay, context);
+
+        context.restoreGraphicsState();
     }
 
     @Override
     protected void deactivate(S renderState, int lightmap, int overlay, IGraphicsContext context) {
+        var model = renderState.hands();
+        if (model.isEmpty()) {
+            return; // nothing to rendering!
+        }
         super.deactivate(renderState, lightmap, overlay, context);
-        context.restoreGraphicsState();
     }
 
     @Override

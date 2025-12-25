@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderSpecificHandEvent;
 import net.minecraft.world.entity.Entity;
 
@@ -71,29 +70,6 @@ public class ClientWardrobeHandler {
         if (count != 0 && overrideHand && !ModDebugger.handOverride) {
             event.setCancelled(true);
         }
-
-        context.restoreGraphicsState();
-    }
-
-    public static void renderFallback(RenderEntityEvent.Pre<?, ?> event) {
-        var context = event.context();
-        var renderState = event.renderState();
-        if (renderState == null) {
-            return;
-        }
-        var model = renderState.hands();
-        if (model.isEmpty()) {
-            return;
-        }
-        context.saveGraphicsState();
-        context.scaleCTM(-0.0625f, -0.0625f, 0.0625f);
-
-        model.setPartialTick(renderState.partialTick());
-        model.setAnimationTick(renderState.animationTick());
-        model.setAnimationManager(renderState.animationManager());
-        model.setOutlineColor(renderState.outlineColor());
-
-        model.render(renderState, null, event.lightmap(), event.overlay(), context);
 
         context.restoreGraphicsState();
     }

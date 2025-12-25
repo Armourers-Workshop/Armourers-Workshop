@@ -31,7 +31,7 @@ public class FishingHookRendererMixin<T extends FishingHook, S extends FishingHo
         EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, g, EntityRenderer.class.cast(this)));
     }
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", ordinal = 1, shift = At.Shift.AFTER))
+    @Inject(method = "render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
     public void aw2$render(T entity, float f, float g, PoseStack poseStack, MultiBufferSource bufferSource, int i, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Pre.class, AbstractRenderEntityEvent.pre(entity, i, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, EntityRenderer.class.cast(this)));
         if (!aw2$transformModel.root.isVisible()) {

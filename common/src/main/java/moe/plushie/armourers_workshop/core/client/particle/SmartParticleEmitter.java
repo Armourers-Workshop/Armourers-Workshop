@@ -23,6 +23,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind.EntitySel
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticle;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleEmitter;
 import moe.plushie.armourers_workshop.core.skin.particle.runtime.LevelAccessor;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.TickUtils;
 import net.minecraft.world.level.Level;
@@ -176,7 +177,7 @@ public class SmartParticleEmitter implements SkinParticleEmitter, VariableStorag
 
     @Override
     public List<OpenAxisAlignedBoundingBox> getCollisionBlocks(OpenAxisAlignedBoundingBox box) {
-        return List.of();
+        return Collections.emptyList();
     }
 
     @Override

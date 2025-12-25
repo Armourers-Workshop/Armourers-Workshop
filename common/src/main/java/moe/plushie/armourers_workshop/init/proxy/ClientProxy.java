@@ -210,7 +210,6 @@ public class ClientProxy {
         EventBus.register(RenderLivingEntityEvent.Pre.class, LivingEntityRenderPlugin::activate);
         EventBus.register(RenderLivingEntityEvent.Post.class, LivingEntityRenderPlugin::deactivate);
 
-        EventBus.register(RenderEntityEvent.Pre.class, ClientWardrobeHandler::renderFallback);
         EventBus.register(RenderSpecificHandEvent.class, ClientWardrobeHandler::renderSpecificHand);
 
         EventBus.register(ItemTooltipEvent.Gather.class, ItemTooltipManager::gatherSkinTooltip);
