@@ -45,7 +45,7 @@ public class SmartParticle extends ReferenceCounted {
 
     public SmartParticle(SkinParticleData provider) {
         this.name = provider.name();
-        this.renderer = new Renderer(resolveRenderType(provider.texture()));
+        this.renderer = new Renderer(provider.texture());
         this.generator = new Generator(provider);
     }
 
@@ -64,12 +64,14 @@ public class SmartParticle extends ReferenceCounted {
 
     @Override
     protected void init() {
-        SmartTextureManager.getInstance().open(renderer.renderType);
+        SmartTextureManager.getInstance().open(renderer.normalRenderType);
+        SmartTextureManager.getInstance().open(renderer.emissiveRenderType);
     }
 
     @Override
     protected void dispose() {
-        SmartTextureManager.getInstance().close(renderer.renderType);
+        SmartTextureManager.getInstance().close(renderer.normalRenderType);
+        SmartTextureManager.getInstance().close(renderer.emissiveRenderType);
     }
 
     protected void unbind() {
@@ -77,19 +79,6 @@ public class SmartParticle extends ReferenceCounted {
         while (refCnt() > 0) {
             release();
         }
-    }
-
-    private IRenderType resolveRenderType(SkinTextureData textureData) {
-        // this is a builtin particle texture.
-        if (textureData.name().startsWith(ModConstants.MOD_ID)) {
-            var location = OpenResourceLocation.parse(textureData.name() + ".png");
-            return SkinRenderType.particle(location, true, true);
-        }
-        // this is a custom particle texture.
-        return SmartTextureManager.getInstance().register(textureData).create(it -> {
-            var location = it.location();
-            return SkinRenderType.particle(location, true, true);
-        });
     }
 
     private static class Renderer implements AbstractParticleRenderer {
@@ -105,15 +94,17 @@ public class SmartParticle extends ReferenceCounted {
         private OpenVector3f initialGlobalPosition;
         private OpenQuaternionf initialGlobalRotation;
 
-        private final IRenderType renderType;
+        private final IRenderType normalRenderType;
+        private final IRenderType emissiveRenderType;
 
-        private Renderer(IRenderType renderType) {
-            this.renderType = renderType;
+        private Renderer(SkinTextureData textureData) {
+            this.normalRenderType = resolveRenderType(textureData, false);
+            this.emissiveRenderType = resolveRenderType(textureData, true);
         }
 
         @Override
         public void prepare(AbstractCamera camera, float partialTick, SmartParticleEmitter emitter) {
-            this.group = new Group(renderType);
+            this.group = resolveRenderGroup(emitter.isEmissiveMode());
             this.camera = camera;
 
             // em.globalPos = bone.globalPos + bone.globalRot * em.localPos
@@ -134,11 +125,11 @@ public class SmartParticle extends ReferenceCounted {
 
             // particle.globalRot = emitter.globalRot * camera.lookAt(particle.globalPos) * particle.localRot
             var quat = globalRotation.copy();
-            quat.multiply(getFacingRotation(cameraFacing, pos));
+            quat.multiply(resolveFacingRotation(cameraFacing, pos));
             quat.multiply(rotation);
 
             // merge all particles into a group.
-            group.add(ParticleElement.newInstance(pos, quat, size, textureBox, tintColor, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, renderType));
+            group.add(ParticleElement.newInstance(pos, quat, size, textureBox, tintColor, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, group.type));
         }
 
         @Override
@@ -162,7 +153,27 @@ public class SmartParticle extends ReferenceCounted {
             this.initialGlobalRotation = position;
         }
 
-        private OpenQuaternionf getFacingRotation(ParticleCameraFacing facing, OpenVector3f pos) {
+        private Group resolveRenderGroup(boolean isEmissive) {
+            if (isEmissive) {
+                return new Group(emissiveRenderType);
+            }
+            return new Group(normalRenderType);
+        }
+
+        private IRenderType resolveRenderType(SkinTextureData textureData, boolean isEmissive) {
+            // this is a builtin particle texture.
+            if (textureData.name().startsWith(ModConstants.MOD_ID)) {
+                var location = OpenResourceLocation.parse(textureData.name() + ".png");
+                return SkinRenderType.particle(location, isEmissive, true);
+            }
+            // this is a custom particle texture.
+            return SmartTextureManager.getInstance().register(textureData).create(it -> {
+                var location = it.location();
+                return SkinRenderType.particle(location, isEmissive, true);
+            });
+        }
+
+        private OpenQuaternionf resolveFacingRotation(ParticleCameraFacing facing, OpenVector3f pos) {
             return switch (facing) {
                 case ROTATE_XYZ -> camera.rotation();
                 case ROTATE_Y -> {

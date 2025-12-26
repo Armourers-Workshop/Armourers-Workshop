@@ -171,11 +171,8 @@ public class TestMolangCase {
     }
 
     private void evaluate(String source, Result expectedValue) throws Exception {
-        var oldValue = ModConfig.Client.enableMolangDebug;
-        ModConfig.Client.enableMolangDebug = true;
         var expr = vm.compile(source);
         var resultValue = expr.evaluate(context);
-        ModConfig.Client.enableMolangDebug = oldValue;
         assertEquals(resultValue, expectedValue, "Source \"" + source + "\", expected " + expectedValue + " but got " + resultValue);
     }
 

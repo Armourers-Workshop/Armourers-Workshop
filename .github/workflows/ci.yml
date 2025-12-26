@@ -20,13 +20,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up release version
+      - name: Setup release version
         id: release-version
         run: |
           version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Set up gradle from cache
+      - name: Setup gradle from cache
         uses: actions/cache/restore@v4
         with:
           key: build-cache-${{ matrix.version }}
@@ -38,10 +38,10 @@ jobs:
       - name: Remove game test
         run: rm -rf "versions/gametest"
 
-      - name: Switch ${{ matrix.version }}
+      - name: Switch to ${{ matrix.version }}
         run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
 
-      - name: Build ${{ matrix.version }}
+      - name: Build Project
         run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} build
         env:
           AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
@@ -49,7 +49,7 @@ jobs:
           AW_SIGN_STORE: ${{ secrets.AW_SIGN_STORE }}
           AW_SIGN_STORE_PASS: ${{ secrets.AW_SIGN_STORE_PASS }}
 
-      - name: Upload Fabric ${{ matrix.version }}
+      - name: Upload Fabric Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
@@ -73,7 +73,7 @@ jobs:
           retry-delay: 30000
           fail-mode: warn
 
-      - name: Upload Forge ${{ matrix.version }}
+      - name: Upload Forge Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}

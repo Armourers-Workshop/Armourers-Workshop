@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up gradle from cache
+      - name: Setup gradle from cache
         uses: actions/cache@v4
         with:
           key: build-cache-${{ matrix.version }}
@@ -29,11 +29,24 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
 
-      - name: Switch ${{ matrix.version }}
+      - name: Switch to ${{ matrix.version }}
         run: ./gradlew -p "versions/${{ matrix.version }}"
 
-      - name: Build ${{ matrix.version }}
+      - name: Configure Project
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ./gradlew configureLaunch configureClientLaunch
+
+      - name: Build Project
         run: ./gradlew build
 
-      - name: Test ${{ matrix.version }}
+      - name: Run Server Test
         run: ./gradlew runServerTest
+
+      - name: Run Client Test
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: ./gradlew runClientTest
+          working-directory: ./
