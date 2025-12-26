@@ -7,33 +7,52 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class EntityEquipmentManager {
+public class SlotManager {
 
     private static final List<Provider> PROVIDERS = Collections.newList(new Builtin());
 
+    public static Collection<? extends Provider> getProviders() {
+        return PROVIDERS;
+    }
+
+    public static <T extends Entity> void registerHandSlot(Class<T> entityClass, Function<T, ItemStack> provider) {
+        registerHandSlots(entityClass, it -> Collections.singleton(provider.apply(it)));
+    }
+
+    public static <T extends Entity> void registerHandSlots(Class<T> entityClass, Function<T, ? extends Collection<ItemStack>> provider) {
+        register(new SlotManager.Provider() {
+            @Override
+            public Iterable<ItemStack> getHandSlots(Entity entity) {
+                if (entityClass.isInstance(entity)) {
+                    return provider.apply(entityClass.cast(entity));
+                }
+                return null;
+            }
+        });
+    }
+
+    public static <T extends Entity> void registerArmorSlot(Class<T> entityClass, Function<T, ItemStack> provider) {
+        registerArmorSlots(entityClass, it -> Collections.singleton(provider.apply(it)));
+    }
+
+    public static <T extends Entity> void registerArmorSlots(Class<T> entityClass, Function<T, ? extends Collection<ItemStack>> provider) {
+        register(new SlotManager.Provider() {
+            @Override
+            public Iterable<ItemStack> getArmorSlots(Entity entity) {
+                if (entityClass.isInstance(entity)) {
+                    return provider.apply(entityClass.cast(entity));
+                }
+                return null;
+            }
+        });
+    }
+
     public static void register(Provider provider) {
         PROVIDERS.add(provider);
-    }
-
-    public static void getHandSlots(Entity entity, Consumer<ItemStack> handler) {
-        for (var provider : PROVIDERS) {
-            var slots = provider.getHandSlots(entity);
-            if (slots != null) {
-                slots.forEach(handler);
-            }
-        }
-    }
-
-    public static void getArmorSlots(Entity entity, Consumer<ItemStack> handler) {
-        for (var provider : PROVIDERS) {
-            var slots = provider.getArmorSlots(entity);
-            if (slots != null) {
-                slots.forEach(handler);
-            }
-        }
     }
 
     public interface Provider {

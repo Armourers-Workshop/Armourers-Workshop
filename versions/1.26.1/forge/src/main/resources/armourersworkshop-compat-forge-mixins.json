@@ -5,9 +5,10 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "ForgeBlockEntityRendererMixin",
-    "ForgeCuriosAddonMixin",
     "ForgeKeyMappingMixin",
     "ForgeClientScreenRenderMixin",
+    "addon/ForgeCuriosApiMixin",
+    "addon/ForgeAccessoriesApiMixin",
     "particle/ForgeParticleManagerMixin"
   ],
   "mixins": [

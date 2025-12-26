@@ -6,11 +6,12 @@ import com.tiviacz.travelersbackpack.client.renderer.BackpackLayer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
+import moe.plushie.armourers_workshop.core.data.SlotManager;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.platform.forge.addon.TravelersBackpackAddon;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -33,6 +34,6 @@ public class ForgeTravelersBackpackRendererMixin {
     }
 
     static {
-        TravelersBackpackAddon.register(AttachmentUtils::getWearingBackpack);
+        SlotManager.registerArmorSlot(Player.class, AttachmentUtils::getWearingBackpack);
     }
 }

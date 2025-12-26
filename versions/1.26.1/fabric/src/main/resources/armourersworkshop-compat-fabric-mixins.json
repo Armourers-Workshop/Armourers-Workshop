@@ -11,7 +11,8 @@
     "FabricClientPlayerLifecycleMixin",
     "FabricClientScreenRenderMixin",
     "FabricItemTooltipMixin",
-    "FabricTrinketsAddonMixin",
+    "addon/FabricTrinketsApiMixin",
+    "addon/FabricAccessoriesApiMixin",
     "particle/FabricParticleManagerMixin"
   ],
   "mixins": [

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.Entity;
 
-import moe.plushie.armourers_workshop.core.data.EntityEquipmentManager;
+import moe.plushie.armourers_workshop.core.data.SlotManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
@@ -13,10 +13,20 @@ import manifold.ext.rt.api.This;
 public class EquipmentProvider {
 
     public static void getHandSlots(@This Entity entity, Consumer<ItemStack> handler) {
-        EntityEquipmentManager.getHandSlots(entity, handler);
+        SlotManager.getProviders().forEach(provider -> {
+            var slots = provider.getHandSlots(entity);
+            if (slots != null) {
+                slots.forEach(handler);
+            }
+        });
     }
 
     public static void getArmorSlots(@This Entity entity, Consumer<ItemStack> handler) {
-        EntityEquipmentManager.getArmorSlots(entity, handler);
+        SlotManager.getProviders().forEach(provider -> {
+            var slots = provider.getArmorSlots(entity);
+            if (slots != null) {
+                slots.forEach(handler);
+            }
+        });
     }
 }

@@ -1,0 +1,31 @@
+package moe.plushie.armourers_workshop.compat.fabric.mixin.addon;
+
+import dev.emi.trinkets.api.TrinketsApi;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.core.data.SlotManager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+
+import java.util.ArrayList;
+
+@Available("[1.16, 1.18)")
+@Conditional("trinkets")
+@Pseudo
+@Mixin(TrinketsApi.class)
+public class FabricTrinketsApiMixin {
+
+    static {
+        SlotManager.registerArmorSlots(Player.class, entity -> {
+            var container = TrinketsApi.getTrinketsInventory(entity);
+            int size = container.getContainerSize();
+            var itemStacks = new ArrayList<ItemStack>(size);
+            for (int i = 0; i < size; ++i) {
+                itemStacks.add(container.getItem(i));
+            }
+            return itemStacks;
+        });
+    }
+}
