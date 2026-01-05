@@ -1,0 +1,51 @@
+package moe.plushie.armourers_workshop.compat.forge.mixin;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.api.event.client.AddRendererLayerEvent;
+import moe.plushie.armourers_workshop.api.event.client.RemoveRendererLayerEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+
+import java.util.List;
+
+@Available("[1.16, 1.20)")
+@Conditional("customnpcs")
+@Pseudo
+@Mixin(targets = "noppes.npcs.client.renderer.RenderCustomNpc")
+public class ForgeCustomNPCRendererMixin {
+
+    static {
+        try {
+            var clazz = Class.forName("noppes.npcs.client.renderer.RenderCustomNpc");
+            var field = clazz.getField("npclayers");
+            EventManager.listen(AddRendererLayerEvent.class, event -> {
+                try {
+                    if (clazz.isInstance(event.getRenderer())) {
+                        var layers = (List<Object>) field.get(event.getRenderer());
+                        if (layers != null) {
+                            layers.add(event.getLayer());
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            EventManager.listen(RemoveRendererLayerEvent.class, event -> {
+                try {
+                    if (clazz.isInstance(event.getRenderer())) {
+                        var layers = (List<Object>) field.get(event.getRenderer());
+                        if (layers != null) {
+                            layers.remove(event.getLayer());
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (ClassNotFoundException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
