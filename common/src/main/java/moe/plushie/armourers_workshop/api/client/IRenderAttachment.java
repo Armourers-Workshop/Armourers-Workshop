@@ -5,8 +5,4 @@ public interface IRenderAttachment {
     void setupRenderState();
 
     void clearRenderState();
-
-    default boolean shouldRemove() {
-        return false;
-    }
 }

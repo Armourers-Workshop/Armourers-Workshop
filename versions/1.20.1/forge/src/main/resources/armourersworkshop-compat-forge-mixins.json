@@ -10,6 +10,7 @@
     "ForgeEpicFightShieldRendererMixin",
     "ForgeTacZeroItemRenderMixin",
     "ForgeClientScreenRenderMixin",
+    "ForgeReplayMixin",
     "addon/ForgeCuriosApiMixin",
     "addon/ForgeAccessoriesApiMixin",
     "particle/ForgeParticleManagerMixin",

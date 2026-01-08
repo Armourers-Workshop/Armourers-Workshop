@@ -245,7 +245,7 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
 
     @Override
     public boolean isDead() {
-        return isDead || emitter.level() == null;
+        return isDead || emitter.isRemoved();
     }
 
     @Override

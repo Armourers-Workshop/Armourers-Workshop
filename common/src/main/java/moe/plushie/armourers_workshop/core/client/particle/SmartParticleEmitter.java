@@ -196,6 +196,11 @@ public class SmartParticleEmitter implements SkinParticleEmitter, VariableStorag
     }
 
     @Override
+    public boolean isRemoved() {
+        return entity.isRemoved();
+    }
+
+    @Override
     public boolean isEmissiveMode() {
         return isEmissiveMode;
     }
@@ -350,6 +355,16 @@ public class SmartParticleEmitter implements SkinParticleEmitter, VariableStorag
                 return blockEntity.entity().getLevel();
             }
             return null;
+        }
+
+        public boolean isRemoved() {
+            if (entity != null) {
+                return entity.entity().isRemoved();
+            }
+            if (blockEntity != null) {
+                return blockEntity.entity().isRemoved();
+            }
+            return false;
         }
     }
 }

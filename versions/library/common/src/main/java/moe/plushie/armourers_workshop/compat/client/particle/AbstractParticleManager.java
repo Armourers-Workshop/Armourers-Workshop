@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compat.client.particle;
 
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
@@ -7,6 +8,7 @@ import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 
 import java.util.ArrayList;
 
+@Available("[1.16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractParticleManager {
 
@@ -25,6 +27,7 @@ public class AbstractParticleManager {
 
     public void tick() {
         particleInstances.forEach(AbstractParticleInstance::tick);
+        particleInstances.removeIf(AbstractParticleInstance::isRemoved);
     }
 
     public void add(AbstractParticleInstance particleInstance) {

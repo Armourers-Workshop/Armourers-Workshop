@@ -11,6 +11,7 @@
     "ForgeCustomNPCRendererMixin",
     "ForgeTacZeroItemRenderMixin",
     "ForgeClientScreenRenderMixin",
+    "ForgeReplayMixin",
     "addon/ForgeCuriosApiMixin",
     "particle/ForgeParticleManagerMixin",
     "dynamiclight/ForgeRyoamicLightsMixin$ItemLightHandler",

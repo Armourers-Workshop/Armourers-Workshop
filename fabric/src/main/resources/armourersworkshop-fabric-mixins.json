@@ -3,7 +3,6 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.fabric",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "FabricReplayMixin"
   ],
   "mixins": [
   ],

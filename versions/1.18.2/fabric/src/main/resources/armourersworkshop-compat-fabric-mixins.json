@@ -11,6 +11,7 @@
     "FabricClientPlayerLifecycleMixin",
     "FabricClientScreenRenderMixin",
     "FabricItemTooltipMixin",
+    "FabricReplayMixin",
     "addon/FabricTrinketsApiMixin",
     "particle/FabricParticleManagerMixin",
     "dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",

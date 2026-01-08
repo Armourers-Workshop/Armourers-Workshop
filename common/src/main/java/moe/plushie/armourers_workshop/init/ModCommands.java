@@ -203,7 +203,7 @@ public class ModCommands {
         }
 
         static boolean containsNode(CommandContext<CommandSourceStack> context, String name) {
-            for (ParsedCommandNode<?> node : context.getNodes()) {
+            for (var node : context.getNodes()) {
                 if (name.equals(node.getNode().getName())) {
                     return true;
                 }
@@ -235,7 +235,7 @@ public class ModCommands {
         static int giveSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
             var descriptor = loadSkinDescriptor(context);
             var itemStack = descriptor.asItemStack();
-            for (Player player : EntityArgument.getPlayers(context, "targets")) {
+            for (var player : EntityArgument.getPlayers(context, "targets")) {
                 player.giveItem(itemStack);
                 context.getSource().sendSuccess(Component.translatable("commands.give.success.single", 1, itemStack.getDisplayName(), player.getDisplayName()), true);
             }
@@ -295,7 +295,7 @@ public class ModCommands {
         static int exportSkin(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
             var format = ListArgumentType.getString(context, "format");
             var filename = StringArgumentType.getString(context, "name");
-            float scale = 1.0f;
+            var scale = 1.0f;
             if (containsNode(context, "scale")) {
                 scale = FloatArgumentType.getFloat(context, "scale");
             }
@@ -306,8 +306,8 @@ public class ModCommands {
             if (skin == null) {
                 throw ERROR_MISSING_SKIN.create(identifier);
             }
-            float resolvedScale = scale;
-            CompoundTag tag = new CompoundTag();
+            var resolvedScale = scale;
+            var tag = new CompoundTag();
             tag.putString("Skin", identifier);
             if (!skin.settings().isExportable()) {
                 player.sendSystemMessage(Component.translatable("commands.armourers_workshop.armourers.error.notExportInServer", identifier));
@@ -361,8 +361,8 @@ public class ModCommands {
         }
 
         static int resyncWardrobe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            for (ServerPlayer player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            for (var player : EntityArgument.getPlayers(context, "targets")) {
+                var wardrobe = SkinWardrobe.of(player);
                 if (wardrobe != null) {
                     wardrobe.broadcast();
                 }
@@ -392,7 +392,7 @@ public class ModCommands {
                 if (slotType == null) {
                     continue;
                 }
-                int amount = IntegerArgumentType.getInteger(context, "amount");
+                var amount = IntegerArgumentType.getInteger(context, "amount");
                 wardrobe.setUnlockedSize(slotType, OpenMath.clamp(amount, 0, slotType.maxSize()));
                 wardrobe.broadcast();
             }

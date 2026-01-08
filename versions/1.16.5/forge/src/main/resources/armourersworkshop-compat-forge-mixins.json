@@ -9,6 +9,7 @@
     "ForgeEpicFightFirstPersonRendererMixin",
     "ForgeCustomNPCRendererMixin",
     "ForgeClientScreenRenderMixin",
+    "ForgeReplayMixin",
     "addon/ForgeCuriosApiMixin",
     "particle/ForgeParticleManagerMixin",
     "dynamiclight/ForgeRyoamicLightsMixin$ItemLightHandler",

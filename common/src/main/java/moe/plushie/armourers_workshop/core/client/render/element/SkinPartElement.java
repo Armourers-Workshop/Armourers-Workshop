@@ -35,6 +35,9 @@ public class SkinPartElement implements IGraphicsElement {
 
     private static final ObjectPool<SkinPartElement> POOL = ObjectPool.create(SkinPartElement::new);
 
+    private static final ConcurrentBufferCompiler COMPILER = new ConcurrentBufferCompiler();
+    private static final ConcurrentRenderingPipeline PIPELINE = new ConcurrentRenderingPipeline();
+
     private BakedSkinPart part;
     private BakedSkin skin;
     private SkinPaintScheme scheme;
@@ -58,7 +61,8 @@ public class SkinPartElement implements IGraphicsElement {
     }
 
     public static void clearCache() {
-        Dispatcher.INSTANCE.clear();
+        COMPILER.clear();
+        PIPELINE.clear();
     }
 
     @Override
@@ -78,7 +82,7 @@ public class SkinPartElement implements IGraphicsElement {
         dest.pose().multiply(src.pose());
         dest.normal().set(src.normal());
         // submit skin vertex into graphics.
-        var collector = Dispatcher.INSTANCE.collect();
+        var collector = new Collector(COMPILER, PIPELINE);
         submitWithVBO(dest, collector);
         collector.submit(context);
     }
@@ -93,7 +97,7 @@ public class SkinPartElement implements IGraphicsElement {
     private void submitWithoutVBO(IGraphicsContext context) {
         var poseStack = new OpenPoseStack();
         part.quads().forEach((renderType, quads) -> {
-            context.draw(LazyPassImpl.create(renderType, (pose, builder) -> {
+            context.draw(Lazy.create(renderType, (pose, builder) -> {
                 var smartTexture = Optional.ofNullable(SmartTexture.of(renderType));
                 smartTexture.ifPresent(ReferenceCounted::retain);
                 quads.forEach((transform, faces) -> {
@@ -113,10 +117,10 @@ public class SkinPartElement implements IGraphicsElement {
     /**
      * Lazy the contents rendering.
      */
-    protected interface LazyPassImpl extends IGraphicsElement, IGraphicsRenderable {
+    private interface Lazy extends IGraphicsElement, IGraphicsRenderable {
 
-        static LazyPassImpl create(IRenderType renderType, BiConsumer<IPoseStack.Pose, IVertexConsumer> consumer) {
-            return new LazyPassImpl() {
+        static Lazy create(IRenderType renderType, BiConsumer<IPoseStack.Pose, IVertexConsumer> consumer) {
+            return new Lazy() {
 
                 @Override
                 public void render(IPoseStack.Pose pose, IVertexConsumer builder) {
@@ -131,24 +135,7 @@ public class SkinPartElement implements IGraphicsElement {
         }
     }
 
-    protected static class Dispatcher {
-
-        private static final Dispatcher INSTANCE = new Dispatcher();
-
-        private final ConcurrentBufferCompiler compiler = new ConcurrentBufferCompiler();
-        private final ConcurrentRenderingPipeline pipeline = new ConcurrentRenderingPipeline();
-
-        public void clear() {
-            compiler.clear();
-            pipeline.clear();
-        }
-
-        public Collector collect() {
-            return new Collector(compiler, pipeline);
-        }
-    }
-
-    protected static class Collector {
+    private static class Collector {
 
         private final ConcurrentBufferCompiler compiler;
         private final ConcurrentRenderingPipeline pipeline;
@@ -185,7 +172,7 @@ public class SkinPartElement implements IGraphicsElement {
         }
     }
 
-    protected static class Channel implements IGraphicsElement, IGraphicsRenderable, IRenderAttachment {
+    private static class Channel implements IGraphicsElement, IGraphicsRenderable, IRenderAttachment {
 
         private static final IdentityHashMap<IRenderType, Channel> CHANNELS = new IdentityHashMap<>();
 

@@ -2,9 +2,10 @@
 // https://maven.shedaniel.me/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 plugins {
     id "java"
+    id 'base'
     id "architectury-plugin" version "3.4.162"
     id "dev.architectury.loom" version "1.13.467" apply false
-    id "moe.plushie.armourers_workshop.loom" version "3.0.0" apply false
+    id "moe.plushie.armourers_workshop.loom" version "3.0.1" apply false
 }
 
 architectury {
@@ -48,12 +49,14 @@ allprojects {
         version = "2.0.0-homebaked"
     }
 
-    def uname = rootProject.archives_base_name.replaceAll("-", "")
+    def uname = rootProject.archives_base_name.replaceAll("-", "").toLowerCase()
+    def release = rootProject.java_version as int
 
     group = rootProject.maven_group
-    archivesBaseName = "${uname.toLowerCase()}-${project.name}-${rootProject.minecraft_version}"
-    targetCompatibility = rootProject.java_version
-    sourceCompatibility = 16
+
+    base {
+        archivesName = "${uname}-${project.name}-${rootProject.minecraft_version}"
+    }
 
     repositories {
         // Add repositories to retrieve artifacts from in here.
@@ -76,12 +79,13 @@ allprojects {
         testAnnotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
     }
 
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.compilerArgs << "-Xplugin:Manifold no-bootstrap"
-    }
-
     java {
         withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.release = release
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-Xplugin:Manifold no-bootstrap"
     }
 }
