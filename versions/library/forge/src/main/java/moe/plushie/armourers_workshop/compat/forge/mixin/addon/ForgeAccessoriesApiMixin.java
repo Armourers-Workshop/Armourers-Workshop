@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 
-@Available("[1.20, )")
+@Available("[20, )")
 @Conditional("accessories")
 @Pseudo
 @Mixin(AccessoriesAPI.class)

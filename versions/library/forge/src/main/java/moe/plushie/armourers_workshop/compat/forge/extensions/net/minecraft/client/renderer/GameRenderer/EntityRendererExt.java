@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Extension
 public class EntityRendererExt {
 

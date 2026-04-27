@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class ModelBakeryMixin {
 
     @Mixin(BlockModel.class)

@@ -7,7 +7,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class BuiltInRegistriesExt {
 
     public static final auto ITEM = BuiltInRegistries.ITEM;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -42,16 +42,16 @@ public class FeetGuideRenderer extends AbstractGuideRenderer {
     }
 
     public void renderLeftLeg(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(legLeft, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(legLeft, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_LEFT_PANTS)) {
-            context.draw(ModelPartElement.newInstance(leftPants, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(leftPants, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
     public void renderRightLeg(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(legRight, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(legRight, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_RIGHT_PANTS)) {
-            context.draw(ModelPartElement.newInstance(rightPants, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(rightPants, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 }

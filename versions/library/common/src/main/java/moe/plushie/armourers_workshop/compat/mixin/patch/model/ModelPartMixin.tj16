@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Mixin(ModelPart.class)
 public class ModelPartMixin implements AbstractModelCollector {
 

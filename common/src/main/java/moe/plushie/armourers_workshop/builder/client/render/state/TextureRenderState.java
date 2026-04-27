@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.client.Minecraft;
 
@@ -16,7 +16,7 @@ public class TextureRenderState implements GuideDataProvider {
     private static final DataContainer.Key<TextureRenderState> KEY = DataContainer.key("TextureRenderState");
 
     protected final PaintableTexture texture;
-    protected final OpenResourceLocation location;
+    protected final OpenResourceKey location;
     protected int lastVersion;
     protected boolean shouldRenderOverlay = false;
     protected SkinProperties skinProperties = SkinProperties.EMPTY;
@@ -55,7 +55,7 @@ public class TextureRenderState implements GuideDataProvider {
         return false;
     }
 
-    public OpenResourceLocation location() {
+    public OpenResourceKey location() {
         return location;
     }
 }

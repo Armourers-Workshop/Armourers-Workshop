@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.compat.client.item;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemProperty;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractItemProperties {
 
-    public static SkinItemProperty getProperty(OpenResourceLocation location) {
-        var location1 = location.get();
+    public static SkinItemProperty getProperty(OpenResourceKey key) {
+        var key1 = key.get();
         return (itemStack, entity, level, flags, displayContext) -> {
             // TODO: NO IMPL - 1.26
 //            var property = ItemProperties.getProperty(itemStack, location1);

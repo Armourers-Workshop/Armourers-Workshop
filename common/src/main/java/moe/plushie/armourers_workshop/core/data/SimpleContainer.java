@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerListener;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.NonNullItemList;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,20 +15,20 @@ import java.util.List;
 public class SimpleContainer implements Container, IDataSerializable.Mutable {
 
     private final NonNullItemList items;
-    private List<ContainerListener> listeners;
+    private List<AbstractContainerListener> listeners;
 
     public SimpleContainer(int size) {
         this.items = new NonNullItemList(size);
     }
 
-    public void addListener(ContainerListener containerListener) {
+    public void addListener(AbstractContainerListener containerListener) {
         if (listeners == null) {
             listeners = Collections.newList();
         }
         listeners.add(containerListener);
     }
 
-    public void removeListener(ContainerListener containerListener) {
+    public void removeListener(AbstractContainerListener containerListener) {
         if (listeners != null) {
             listeners.remove(containerListener);
         }

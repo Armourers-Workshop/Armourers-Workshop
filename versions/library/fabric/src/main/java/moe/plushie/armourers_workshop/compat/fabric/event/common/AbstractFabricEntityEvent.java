@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycle
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricEntityEvent {
 
     public static IEventHandler<EntityEvent.ReloadSize> reloadSizeFactory() {

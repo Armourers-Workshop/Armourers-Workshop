@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.client;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public abstract class AbstractClientRegistryImpl {
 
     protected AbstractClientRegistryImpl() {

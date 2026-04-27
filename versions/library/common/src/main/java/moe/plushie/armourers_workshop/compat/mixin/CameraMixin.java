@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.21, )")
+@Available("[21, 26)")
 @Mixin(Camera.class)
 public class CameraMixin {
 

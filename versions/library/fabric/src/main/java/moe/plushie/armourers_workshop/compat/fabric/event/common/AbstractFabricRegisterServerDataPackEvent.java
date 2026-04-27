@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEv
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.server.packs.PackType;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricRegisterServerDataPackEvent {
 
     public static IEventHandler<RegisterServerDataPackEvent> registryFactory() {

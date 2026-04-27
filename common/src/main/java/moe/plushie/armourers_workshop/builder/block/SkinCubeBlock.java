@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -88,7 +87,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos, int layerIndex) {
+    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockGetter level, @Nullable BlockPos blockPos, int layerIndex) {
         if (level == null || blockPos == null) {
             return 0xffffffff;
         }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(ClientboundBlockEntityDataPacket.class)
 public class FabricBlockEntityUpdatePacketMixin {
 

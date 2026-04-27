@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractLootParamsBuilder implements ILootBuilder {
 
     private final LootParams.Builder impl;

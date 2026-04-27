@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 public class AbstractTransformModel<T extends LivingEntity, S extends EntityRenderState> extends AbstractHumanoidModelImpl<T> {
 
     public AbstractTransformModel() {

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractEquipmentSlot {
 
     private static final FastMapper<OpenEquipmentSlot, EquipmentSlot> MAPPER = FastMapper.builder(OpenEquipmentSlot.MAINHAND, EquipmentSlot.MAINHAND, it -> {

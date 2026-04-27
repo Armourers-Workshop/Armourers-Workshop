@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderFrameEve
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeRenderFrameEvent {
 
     public static IEventHandler<RenderFrameEvent.Pre> preFactory() {

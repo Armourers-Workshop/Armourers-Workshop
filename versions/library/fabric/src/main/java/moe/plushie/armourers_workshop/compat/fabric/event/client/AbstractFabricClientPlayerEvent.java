@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.world.entity.player.Player;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricClientPlayerEvent {
 
     public static IEventHandler<ClientPlayerEvent.LoggingIn> loggingInFactory() {

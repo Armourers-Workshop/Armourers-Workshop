@@ -1,0 +1,22 @@
+package moe.plushie.armourers_workshop.compat.client.gui.event;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.inventory.ContainerInput;
+
+@Available("[26, )")
+public class AbstractContainerInput {
+
+    private final ContainerInput input;
+
+    private AbstractContainerInput(ContainerInput input) {
+        this.input = input;
+    }
+
+    public static AbstractContainerInput wrap(ContainerInput input) {
+        return new AbstractContainerInput(input);
+    }
+
+    public static ContainerInput unwrap(AbstractContainerInput input) {
+        return input.input;
+    }
+}

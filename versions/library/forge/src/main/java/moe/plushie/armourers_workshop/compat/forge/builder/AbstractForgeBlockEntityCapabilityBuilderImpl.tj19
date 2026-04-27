@@ -5,7 +5,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public class AbstractForgeBlockEntityCapabilityBuilderImpl {
 
     public static final auto BLOCK_ITEM_HANDLER = ForgeCapabilities.ITEM_HANDLER;

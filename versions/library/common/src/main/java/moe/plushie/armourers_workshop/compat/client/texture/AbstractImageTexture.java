@@ -10,7 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractImageTexture extends AbstractTexture {
 

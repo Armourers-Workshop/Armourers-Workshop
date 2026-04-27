@@ -7,11 +7,12 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        version: [ '1.16.5', '1.18.2', '1.19.2', '1.20.1', '1.21.1', '1.26.1' ]
-
+    needs: init
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [ '16.5', '18.2', '19.2', '20.1', '21.1' ]
 
     steps:
       - uses: actions/checkout@v4
@@ -20,33 +21,46 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Setup gradle from cache
-        uses: actions/cache@v4
+      - name: Setup environment
+        id: setup-env
+        run: ./scripts/setup.sh >> "$GITHUB_OUTPUT"
+
+      - name: Setup cache
+        uses: actions/cache/restore@v4
         with:
-          key: build-cache-${{ matrix.version }}
-          path: |
-            .gradle
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+          key: ${{ steps.setup-env.outputs.cache_key }}
+          path: ${{ steps.setup-env.outputs.cache_path }}
 
       - name: Switch to ${{ matrix.version }}
         run: ./gradlew -p "versions/${{ matrix.version }}"
 
-      - name: Configure Project
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: ./gradlew configureLaunch configureClientLaunch
-
-      - name: Build Project
+      - name: Build project
         run: ./gradlew build
 
-      - name: Run Server Test
+      - name: Run server test
         run: ./gradlew runServerTest
 
-      - name: Run Client Test
-        uses: GabrielBB/xvfb-action@v1
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          run: ./gradlew runClientTest
-          working-directory: ./
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Setup environment
+        id: setup-env
+        run: ./scripts/setup.sh >> "$GITHUB_OUTPUT"
+
+      - name: Setup cache
+        id: setup-cache
+        uses: actions/cache@v4
+        with:
+          key: ${{ steps.setup-env.outputs.cache_key }}
+          path: ${{ steps.setup-env.outputs.cache_path }}
+          lookup-only: true
+
+      - name: Generate cache
+        if: ${{ steps.setup-cache.outputs.cache-hit != 'true' }}
+        run: ./scripts/generate.sh

@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 

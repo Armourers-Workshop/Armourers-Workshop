@@ -3,16 +3,16 @@ package moe.plushie.armourers_workshop.compat.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractForgeKeyCategory implements IKeyCategory {
 
-    private final OpenResourceLocation name;
+    private final OpenResourceKey name;
 
-    public AbstractForgeKeyCategory(OpenResourceLocation name) {
+    public AbstractForgeKeyCategory(OpenResourceKey name) {
         this.name = name;
     }
 

@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractArmorStandImpl extends ArmorStand {
 
     public AbstractArmorStandImpl(EntityType<? extends ArmorStand> entityType, Level level) {
@@ -31,11 +31,11 @@ public class AbstractArmorStandImpl extends ArmorStand {
     }
 
     public OpenInteractionResult interactAt(Player player, Vec3 pos, OpenInteractionHand hand, Object context) {
-        return AbstractInteractionResult.wrap(super.interactAt(player, pos, AbstractInteractionHand.unwrap(hand)));
+        return AbstractInteractionResult.wrap(super.interact(player, AbstractInteractionHand.unwrap(hand), pos));
     }
 
     @Override
-    public final InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand hand) {
+    public final InteractionResult interact(Player player, InteractionHand hand, Vec3 vec3) {
         return AbstractInteractionResult.unwrap(interactAt(player, vec3, AbstractInteractionHand.wrap(hand), null));
     }
 

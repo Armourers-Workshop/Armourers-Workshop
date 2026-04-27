@@ -6,7 +6,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 public class AbstractForgeEpicFightHandlerImpl {
 
     public static void copyTo(Joint joint, OpenMatrix4f[] poses, FloatBuffer buf) {

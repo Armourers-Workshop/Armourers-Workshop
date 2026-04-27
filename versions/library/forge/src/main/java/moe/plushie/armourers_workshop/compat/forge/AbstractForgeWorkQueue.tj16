@@ -5,7 +5,7 @@ import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkDirection;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeWorkQueue {
 
     public static BlockableEventLoop<?> get(NetworkDirection direction) {

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Available("[1.21, )")
+@Available("[21, )")
 @Mixin(KeyMappingLookup.class)
 public class ForgeKeyMappingMixin {
 

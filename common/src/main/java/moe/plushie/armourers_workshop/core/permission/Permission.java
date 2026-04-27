@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.permission;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 public abstract class Permission {
 
     protected final String name;
-    protected final HashMap<IResourceLocation, IPermissionNode> nodes = new HashMap<>();
+    protected final HashMap<IResourceKey, IPermissionNode> nodes = new HashMap<>();
 
     public Permission(String name) {
         this.name = name;
@@ -26,7 +26,7 @@ public abstract class Permission {
         nodes.put(registryName, node);
     }
 
-    protected IPermissionNode get(IResourceLocation registryName) {
+    protected IPermissionNode get(IResourceKey registryName) {
         return nodes.get(registryName);
     }
 

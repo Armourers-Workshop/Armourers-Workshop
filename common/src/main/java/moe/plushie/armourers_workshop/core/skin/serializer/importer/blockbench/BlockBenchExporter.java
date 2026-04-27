@@ -13,11 +13,8 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationKeyframe;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationPoint;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData.Loop;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryOptions;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
@@ -261,18 +258,18 @@ public class BlockBenchExporter {
         return itemTransforms;
     }
 
-    protected List<SkinAnimation> exportAnimations(List<BlockBenchAnimation> allAnimations) {
-        var results = new ArrayList<SkinAnimation>();
+    protected List<SkinAnimationData> exportAnimations(List<BlockBenchAnimation> allAnimations) {
+        var results = new ArrayList<SkinAnimationData>();
         var animator = new Animator(pack, virtualMachine());
         allAnimations.forEach(animation -> {
             var name = animation.name();
             var duration = animation.duration();
             var loop = animator.convertToAnimationLoop(animation.loop());
-            var values = animator.exportAnimationKeyframes(animation.animators());
-            if (values.isEmpty()) {
+            var animators = animator.exportAnimationAnimators(animation.animators());
+            if (animators.isEmpty()) {
                 return;
             }
-            results.add(new SkinAnimation(name, duration, loop, values));
+            results.add(new SkinAnimationData(name, duration, loop, animators));
         });
         return results;
     }
@@ -625,30 +622,38 @@ public class BlockBenchExporter {
             this.virtualMachine = virtualMachine;
         }
 
-        public Map<String, List<SkinAnimationKeyframe>> exportAnimationKeyframes(List<BlockBenchAnimator> animators) {
-            var results = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
+        public List<SkinAnimationData.Animator> exportAnimationAnimators(List<BlockBenchAnimator> animators) {
+            var results = new ArrayList<SkinAnimationData.Animator>();
             for (var animator : animators) {
-                var keyframes = results.computeIfAbsent(animator.name(), k -> new ArrayList<>());
+                var keyframes = new ArrayList<SkinAnimationData.Keyframe>();
+                //animator.isRotationGlobal();
+                //animator.isQuaternionInterpolation();
                 for (var keyframe : animator.keyframes()) {
                     var time = keyframe.time();
                     var channel = keyframe.name();
-                    var function = convertToAnimationFunction(keyframe);
+                    var interpolation = convertToAnimationFunction(keyframe);
                     var points = exportAnimationPoints(keyframe, animator);
                     if (!points.isEmpty()) {
-                        keyframes.add(new SkinAnimationKeyframe(time, channel, function, points));
+                        keyframes.add(new SkinAnimationData.Keyframe(time, channel, interpolation, points));
                     }
                 }
+                results.add(new SkinAnimationData.Animator(animator.name(), exportAnimationOptions(animator), keyframes));
             }
             return results;
         }
 
-        public List<SkinAnimationPoint> exportAnimationPoints(BlockBenchKeyframe keyframe, BlockBenchAnimator animator) {
+        protected int exportAnimationOptions(BlockBenchAnimator animator) {
+            // reserved for future options mapping.
+            return 0;
+        }
+
+        public List<SkinAnimationData.Point> exportAnimationPoints(BlockBenchKeyframe keyframe, BlockBenchAnimator animator) {
             var type = animator.type();
             var channel = keyframe.name();
             return Collections.compactMap(keyframe.points(), it -> exportAnimationPoint(type, channel, it));
         }
 
-        protected SkinAnimationPoint exportAnimationPoint(String type, String channel, Map<String, OpenPrimitive> point) {
+        protected SkinAnimationData.Point exportAnimationPoint(String type, String channel, Map<String, OpenPrimitive> point) {
             return switch (type) {
                 case "bone" -> exportAnimationBone(channel, point);
                 case "effect" -> switch (channel) {
@@ -661,13 +666,13 @@ public class BlockBenchExporter {
             };
         }
 
-        protected SkinAnimationPoint.Instruct exportAnimationInstruct(Map<String, OpenPrimitive> point) {
+        protected SkinAnimationData.Point.Instruct exportAnimationInstruct(Map<String, OpenPrimitive> point) {
             try {
                 var value = point.getOrDefault("script", OpenPrimitive.EMPTY_STRING);
                 if (value.isString()) {
                     var expr = virtualMachine.compile(value.stringValue());
                     if (expr.isMutable()) {
-                        return new SkinAnimationPoint.Instruct(value.stringValue());
+                        return new SkinAnimationData.Point.Instruct(value.stringValue());
                     }
                 }
             } catch (Exception exception) {
@@ -676,7 +681,7 @@ public class BlockBenchExporter {
             return null;
         }
 
-        protected SkinAnimationPoint.Bone exportAnimationBone(String channel, Map<String, OpenPrimitive> point) {
+        protected SkinAnimationData.Point.Bone exportAnimationBone(String channel, Map<String, OpenPrimitive> point) {
             var x = convertToAnimationPoint(point.getOrDefault("x", OpenPrimitive.FLOAT_ZERO));
             var y = convertToAnimationPoint(point.getOrDefault("y", OpenPrimitive.FLOAT_ZERO));
             var z = convertToAnimationPoint(point.getOrDefault("z", OpenPrimitive.FLOAT_ZERO));
@@ -692,10 +697,10 @@ public class BlockBenchExporter {
                     y = y.negative();
                 }
             }
-            return new SkinAnimationPoint.Bone(x, y, z);
+            return new SkinAnimationData.Point.Bone(x, y, z);
         }
 
-        protected SkinAnimationPoint.Sound exportAnimationSound(Map<String, OpenPrimitive> point) {
+        protected SkinAnimationData.Point.Sound exportAnimationSound(Map<String, OpenPrimitive> point) {
             var effect = point.getOrDefault("effect", OpenPrimitive.EMPTY_STRING).stringValue();
             var filePath = point.getOrDefault("file", OpenPrimitive.EMPTY_STRING).stringValue();
             if (effect.isEmpty() && filePath.isEmpty()) {
@@ -705,7 +710,7 @@ public class BlockBenchExporter {
             return soundBuilder.build(effect, filePath);
         }
 
-        protected SkinAnimationPoint.Particle exportAnimationParticle(Map<String, OpenPrimitive> point) {
+        protected SkinAnimationData.Point.Particle exportAnimationParticle(Map<String, OpenPrimitive> point) {
             var effect = point.getOrDefault("effect", OpenPrimitive.EMPTY_STRING).stringValue();
             var locator = point.getOrDefault("locator", OpenPrimitive.EMPTY_STRING).stringValue();
             var script = point.getOrDefault("script", OpenPrimitive.EMPTY_STRING).stringValue();
@@ -741,22 +746,22 @@ public class BlockBenchExporter {
             return OpenPrimitive.FLOAT_ZERO;
         }
 
-        public SkinAnimationLoop convertToAnimationLoop(String value) {
+        public Loop convertToAnimationLoop(String value) {
             return switch (value) {
-                case "once" -> SkinAnimationLoop.NONE;
-                case "hold" -> SkinAnimationLoop.LAST_FRAME;
-                case "loop" -> SkinAnimationLoop.LOOP;
-                default -> SkinAnimationLoop.LOOP; // missing
+                case "once" -> Loop.NONE;
+                case "hold" -> Loop.LAST_FRAME;
+                case "loop" -> Loop.LOOP;
+                default -> Loop.LOOP; // missing
             };
         }
 
-        public static SkinAnimationFunction convertToAnimationFunction(BlockBenchKeyframe keyframe) {
+        public static SkinAnimationData.Interpolation convertToAnimationFunction(BlockBenchKeyframe keyframe) {
             return switch (keyframe.interpolation()) {
-                case "bezier" -> SkinAnimationFunction.bezier(keyframe.parameters());
-                case "linear" -> SkinAnimationFunction.linear();
-                case "step" -> SkinAnimationFunction.step();
-                case "smooth" -> SkinAnimationFunction.smooth();
-                default -> SkinAnimationFunction.linear(); // missing
+                case "bezier" -> SkinAnimationData.Interpolation.bezier(keyframe.parameters());
+                case "linear" -> SkinAnimationData.Interpolation.linear();
+                case "step" -> SkinAnimationData.Interpolation.step();
+                case "smooth" -> SkinAnimationData.Interpolation.smooth();
+                default -> SkinAnimationData.Interpolation.linear(); // missing
             };
         }
 
@@ -768,12 +773,12 @@ public class BlockBenchExporter {
                 this.virtualMachine = virtualMachine;
             }
 
-            public SkinAnimationPoint.Sound build(String effect, String filePath) {
+            public SkinAnimationData.Point.Sound build(String effect, String filePath) {
                 // mod_id:sound_id|volume|pitch
                 if (effect != null && effect.contains(":")) {
                     var properties = resolveSoundProperties(effect);
                     var soundProvider = new SkinSoundData(null, Unpooled.EMPTY_BUFFER, properties);
-                    return new SkinAnimationPoint.Sound(effect, soundProvider);
+                    return new SkinAnimationData.Point.Sound(effect, soundProvider);
                 }
                 var soundBytes = resolveSoundData(filePath);
                 if (soundBytes == null) {
@@ -788,7 +793,7 @@ public class BlockBenchExporter {
                 if (effect == null || effect.isEmpty()) {
                     effect = fileName;
                 }
-                return new SkinAnimationPoint.Sound(effect, soundProvider);
+                return new SkinAnimationData.Point.Sound(effect, soundProvider);
             }
 
             private SkinSoundProperties resolveSoundProperties(String name) {
@@ -834,7 +839,7 @@ public class BlockBenchExporter {
                 this.virtualMachine = virtualMachine;
             }
 
-            public SkinAnimationPoint.Particle build(String effect, String locator, String filePath, String script) {
+            public SkinAnimationData.Point.Particle build(String effect, String locator, String filePath, String script) {
                 // mod_id:sound_id|volume|pitch
                 if (effect != null && effect.contains(":")) {
                     ModLog.warn("can't support builtin particle '{}' now", effect);
@@ -852,7 +857,7 @@ public class BlockBenchExporter {
                 if (effect == null || effect.isEmpty()) {
                     effect = fileName;
                 }
-                return new SkinAnimationPoint.Particle(effect, locator, resolveScript(script), particleProvider);
+                return new SkinAnimationData.Point.Particle(effect, locator, resolveScript(script), particleProvider);
             }
 
             protected SkinParticleData exportParticle(BedrockParticle particle) {

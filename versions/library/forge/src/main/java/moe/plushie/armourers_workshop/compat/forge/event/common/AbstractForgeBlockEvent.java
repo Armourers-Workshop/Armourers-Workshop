@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeBlockEvent {
 
     public static IEventHandler<BlockEvent.Place> placeFactory() {

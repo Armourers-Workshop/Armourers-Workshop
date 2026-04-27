@@ -7,20 +7,19 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRenderer;
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
-import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemSpecialRendererImpl {
 
@@ -47,12 +46,12 @@ public abstract class AbstractItemSpecialRendererImpl {
         }
 
         @Override
-        public void submit(@Nullable T object, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightmap, int overlay, boolean hasFov, int k) {
-            source.render(object, AbstractItemDisplayContext.wrap(displayContext), lightmap, overlay, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector));
+        public void submit(@Nullable T object, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
+            source.render(object, OpenItemDisplayContext.NONE, lightCoords, overlayCoords, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector));
         }
 
         @Override
-        public void getExtents(Set<Vector3f> extents) {
+        public void getExtents(Consumer<Vector3fc> output) {
         }
 
         @Nullable

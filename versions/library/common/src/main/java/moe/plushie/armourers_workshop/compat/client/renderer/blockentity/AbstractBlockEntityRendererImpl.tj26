@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
 

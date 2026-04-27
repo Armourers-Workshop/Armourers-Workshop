@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.21, )")
+@Available("[21, )")
 @Extension
 public class DataComponentTypeExt {
 

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(LivingEntity.class)
 public class FabricLivingEntityMixin {
 

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public interface AbstractForgeItemStackRendererProvider {
 
     void setItemRenderer(AbstractForgeItemStackRenderer value);

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeConfigSpec extends AbstractConfigSpec {
 
     public AbstractForgeConfigSpec(Type type, HashMap<String, Value<Object>> values) {

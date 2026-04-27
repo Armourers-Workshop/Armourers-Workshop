@@ -5,12 +5,11 @@ import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import org.lwjgl.opengl.GL11;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractVertexFormatImpl implements IVertexFormat {
 
     protected static final FastMapper<Mode, Integer> MODE_MAPPER = FastMapper.builder(Mode.QUADS, GL11.GL_QUADS, it -> {
         it.put(Mode.LINES, GL11.GL_LINE);
-        it.put(Mode.LINE_STRIP, GL11.GL_LINE_STRIP);
         it.put(Mode.DEBUG_LINES, GL11.GL_LINE);
         it.put(Mode.DEBUG_LINE_STRIP, GL11.GL_LINE_STRIP);
         it.put(Mode.TRIANGLES, GL11.GL_TRIANGLES);

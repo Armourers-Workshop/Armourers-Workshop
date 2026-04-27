@@ -1,0 +1,62 @@
+package moe.plushie.armourers_workshop.compat.mixin;
+
+import com.google.common.collect.Maps;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSimpleSound;
+import moe.plushie.armourers_workshop.compat.client.sound.AbstractSoundManagerImpl;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.Sound;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.sounds.WeighedSoundEvents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceProvider;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Map;
+import java.util.Optional;
+
+@Available("[26, )")
+@Mixin(SoundManager.class)
+public class SoundManagerMixin implements AbstractSoundManagerImpl {
+
+    @Unique
+    private final Map<Identifier, WeighedSoundEvents> aw2$registry = Maps.newHashMap();
+
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ResourceProvider;fromMap(Ljava/util/Map;)Lnet/minecraft/server/packs/resources/ResourceProvider;"))
+    private ResourceProvider aw2$init(Map<Identifier, Resource> map) {
+        return location -> {
+            var resource = map.get(location);
+            if (resource != null) {
+                return Optional.of(resource);
+            }
+            return Minecraft.getInstance().getResourceManager().getResource(location);
+        };
+    }
+
+    @Inject(method = "getSoundEvent", at = @At("HEAD"), cancellable = true)
+    private void aw2$getSoundEvent(Identifier identifier, CallbackInfoReturnable<WeighedSoundEvents> cir) {
+        var event = aw2$registry.get(identifier);
+        if (event != null) {
+            cir.setReturnValue(event);
+        }
+    }
+
+    @Override
+    public void aw2$register(OpenResourceKey key, AbstractSimpleSound sound) {
+        var event = new WeighedSoundEvents(key.get(), sound.name());
+        event.addSound(Sound.create(sound));
+        aw2$registry.put(key.get(), event);
+    }
+
+    @Override
+    public void aw2$unregister(OpenResourceKey key) {
+        aw2$registry.remove(key.get());
+    }
+}

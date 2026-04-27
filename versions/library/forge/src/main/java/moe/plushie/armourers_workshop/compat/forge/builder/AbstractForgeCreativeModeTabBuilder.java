@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.builder;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.builder.AbstractCreativeModeTabBuilder;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractForgeCreativeModeTabBuilder<T extends CreativeModeTab> extends AbstractCreativeModeTabBuilder<T> {
 
-    private static OpenResourceLocation LAST_ITEM_GROUP;
+    private static OpenResourceKey LAST_ITEM_GROUP;
 
     @Override
-    protected CreativeModeTab create(OpenResourceLocation registryName, Consumer<List<ItemStack>> provider) {
+    protected CreativeModeTab create(OpenResourceKey registryName, Consumer<List<ItemStack>> provider) {
         var lastItemGroup = LAST_ITEM_GROUP;
         var builder = CreativeModeTab.builder()
                 .title(Component.translatable(registryName.toLanguageKey("itemGroup")))

@@ -1,25 +1,18 @@
 package moe.plushie.armourers_workshop.compat.client.entity.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.api.annotation.Patch;
 import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractHumanoidEntityRenderer;
-import net.minecraft.Util;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractHumanoidModelImpl<T extends LivingEntity, S extends HumanoidRenderState> extends HumanoidModel<S> {
 

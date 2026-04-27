@@ -19,7 +19,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.IdentityHashMap;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEntityGuiElement extends EntityGuiElement implements AbstractEntityGuiElementImpl {
 

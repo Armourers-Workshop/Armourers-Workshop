@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.core.item;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -47,7 +47,7 @@ public interface AbstractItemHandler {
      */
     void fill(List<ItemStack> displayItems, CreativeModeTab tab);
 
-    void appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder);
+    void appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder);
 
     int getModelTintColor(ItemStack stack, @Nullable Level level, @Nullable LivingEntity entity, int layerIndex);
 }

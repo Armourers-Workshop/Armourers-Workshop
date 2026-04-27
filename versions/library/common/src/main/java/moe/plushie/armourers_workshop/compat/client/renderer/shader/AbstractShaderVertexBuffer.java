@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL30;
 import java.nio.ByteBuffer;
 import java.util.function.IntConsumer;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractShaderVertexBuffer extends ShaderVertexBuffer {
 

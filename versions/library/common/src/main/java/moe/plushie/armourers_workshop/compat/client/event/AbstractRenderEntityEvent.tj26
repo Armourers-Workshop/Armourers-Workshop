@@ -4,17 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractEntityRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractRenderEntityEvent {
 
     public static <T extends Entity, S extends EntityRenderState, R extends net.minecraft.client.renderer.entity.state.EntityRenderState> RenderEntityEvent.Setup<T, S> setup(T entity, R renderState, float partialTick, EntityRenderer<?, ?> renderer) {

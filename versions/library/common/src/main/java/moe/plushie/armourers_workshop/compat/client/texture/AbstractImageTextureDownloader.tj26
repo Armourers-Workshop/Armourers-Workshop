@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinDecoder;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ import net.minecraft.client.Minecraft;
 import java.awt.image.BufferedImage;
 import java.util.OptionalInt;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractImageTextureDownloader {
 
@@ -44,10 +44,10 @@ public class AbstractImageTextureDownloader {
             .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
             .build();
 
-    public void download(OpenResourceLocation location, IResultHandler<BufferedImage> handler) {
+    public void download(OpenResourceKey key, IResultHandler<BufferedImage> handler) {
         RenderSystem.recordRenderCall(() -> {
             try {
-                var texture = Minecraft.getInstance().getTextureManager().getTexture(location.get());
+                var texture = Minecraft.getInstance().getTextureManager().getTexture(key.get());
                 downloadTexture(texture.getTexture(), 0, (image, exception) -> {
                     RenderSystem.recordRenderCall(() -> {
                         handler.apply(image, exception);

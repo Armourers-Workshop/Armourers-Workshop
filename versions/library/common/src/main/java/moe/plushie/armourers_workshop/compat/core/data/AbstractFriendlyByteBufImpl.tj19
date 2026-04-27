@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
 
     protected final FriendlyByteBuf source;

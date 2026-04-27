@@ -4,17 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractLivingEntityRenderer;
 import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderState;
+import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractLivingEntityRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
 import moe.plushie.armourers_workshop.init.event.client.RenderLivingEntityEvent;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractRenderLivingEntityEvent {
 
     public static <T extends LivingEntity, S extends LivingEntityRenderState, R extends net.minecraft.client.renderer.entity.state.LivingEntityRenderState> RenderLivingEntityEvent.Setup<T, S> setup(T entity, R renderState, float partialTick, LivingEntityRenderer<?, ?, ?> renderer) {

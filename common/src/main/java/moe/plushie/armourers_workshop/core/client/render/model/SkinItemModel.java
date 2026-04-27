@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -18,13 +18,13 @@ import java.util.function.Predicate;
 @OnlyIn(Dist.CLIENT)
 public class SkinItemModel {
 
-    private final OpenResourceLocation name;
+    private final OpenResourceKey name;
     private final Map<OpenItemDisplayContext, OpenItemTransform> transforms;
 
     private final SkinItemProperty[] properties;
     private final List<Matcher> matchers = new ArrayList<>();
 
-    public SkinItemModel(OpenResourceLocation name, List<SkinItemOverride> overrides, Map<OpenItemDisplayContext, OpenItemTransform> transforms) {
+    public SkinItemModel(OpenResourceKey name, List<SkinItemOverride> overrides, Map<OpenItemDisplayContext, OpenItemTransform> transforms) {
         this.name = name;
         this.transforms = transforms;
         // bake
@@ -76,7 +76,7 @@ public class SkinItemModel {
         return transforms.getOrDefault(transformType, OpenItemTransform.NO_TRANSFORM);
     }
 
-    public OpenResourceLocation name() {
+    public OpenResourceKey name() {
         return name;
     }
 

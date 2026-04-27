@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
 import moe.plushie.armourers_workshop.init.platform.fabric.EventManagerImpl;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractFabricRegisterTextureEvent {
 
     public static IEventHandler<RegisterTextureEvent> registryFactory() {

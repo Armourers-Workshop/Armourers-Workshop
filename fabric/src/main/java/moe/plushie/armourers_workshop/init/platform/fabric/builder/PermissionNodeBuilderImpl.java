@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.api.registry.IPermissionNodeBuilder;
 import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricPermissionManager;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,7 +32,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         return Objects.unsafeCast(makeNode(registryName, level));
     }
 
-    private static IPermissionNode makeNode(OpenResourceLocation registryName, int level) {
+    private static IPermissionNode makeNode(OpenResourceKey registryName, int level) {
         // requires install fabric permission api, like luckperm mod.
         if (FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0")) {
             var node = (Supplier<Supplier<IPermissionNode>>) () -> () -> AbstractFabricPermissionManager.makeNode(registryName, level);
@@ -45,9 +45,9 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
     public static class NodeImpl implements IPermissionNode {
 
         private final String key;
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
 
-        public NodeImpl(OpenResourceLocation registryName) {
+        public NodeImpl(OpenResourceKey registryName) {
             this.registryName = registryName;
             this.key = registryName.toLanguageKey();
         }
@@ -77,7 +77,7 @@ public class PermissionNodeBuilderImpl<T extends IPermissionNode> implements IPe
         }
 
         @Override
-        public OpenResourceLocation registryName() {
+        public OpenResourceKey registryName() {
             return registryName;
         }
     }

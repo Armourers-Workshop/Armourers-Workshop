@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.common.IEntityDataSerializer;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
 public class AbstractEntityDataSerializerBuilder<T> {
@@ -12,7 +12,7 @@ public class AbstractEntityDataSerializerBuilder<T> {
         this.serializer = serializer;
     }
 
-    public EntityDataSerializer<T> build(OpenResourceLocation key) {
+    public EntityDataSerializer<T> build(OpenResourceKey key) {
         return new AbstractEntityDataSerializer.Proxy<>(serializer);
     }
 }

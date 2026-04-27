@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 
 import java.util.function.Function;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractHumanoidModelProvider<M, A> {
 

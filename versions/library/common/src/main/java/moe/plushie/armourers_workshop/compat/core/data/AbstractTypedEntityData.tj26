@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.component.TypedEntityData;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractTypedEntityData<T> extends moe.plushie.armourers_workshop.core.data.TypedEntityData<T> {
 
     protected final TypedEntityData<?> impl;

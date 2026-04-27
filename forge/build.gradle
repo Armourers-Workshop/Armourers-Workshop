@@ -1,11 +1,12 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "9.3.1"
 }
 
 cocoon {
-    injectables()
-    ide()
-    forge()
+    forge {
+        api = project.forge_api_version
+        loader = project.forge_loader_version
+    }
 }
 
 repositories {
@@ -16,8 +17,6 @@ repositories {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_api_version}"
-
     //modCompileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
 
     //modLocalRuntime "com.sk89q.worldedit:worldedit-mod:7.2.5-dist"
@@ -70,7 +69,7 @@ shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
-    //relocate 'gg.moonflower', 'moe.plushie.armourers_workshop.runtime'
+    //relocate "gg.moonflower", "moe.plushie.armourers_workshop.runtime"
 }
 
 runClientTest {
@@ -85,18 +84,4 @@ runServerTest {
     selectPackage("moe.plushie.armourers_workshop.gametest.server")
     selectPackage("moe.plushie.armourers_workshop.gametest.forge.common")
     selectPackage("moe.plushie.armourers_workshop.gametest.forge.server")
-}
-
-publishing {
-    publications {
-        mavenForge(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
 }

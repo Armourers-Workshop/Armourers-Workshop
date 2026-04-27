@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-@Available("[1.20, 1.21)")
+@Available("[20, 21)")
 public abstract class AbstractBlockImpl extends Block {
 
     public AbstractBlockImpl(Properties properties) {

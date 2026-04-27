@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.world.inventory.InventoryMenu;
 
-@Available("[1.16, 1.20)")
+@Available("[16, 20)")
 public class AbstractFabricRegisterTextureEvent {
 
     public static IEventHandler<RegisterTextureEvent> registryFactory() {

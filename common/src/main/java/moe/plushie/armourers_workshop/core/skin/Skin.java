@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -34,7 +34,7 @@ public class Skin implements ISkin {
     private final SkinProperties properties;
     private final SkinType type;
     private final List<SkinPart> parts;
-    private final List<SkinAnimation> animations;
+    private final List<SkinAnimationData> animations;
 
     private final SkinPaintData paintData;
     private final SkinPreviewData previewData;
@@ -42,7 +42,7 @@ public class Skin implements ISkin {
 
     private Map<OpenVector3i, OpenRectangle3f> blockBounds;
 
-    protected Skin(int id, int fileVersion, SkinType type, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, List<SkinAnimation> animations, List<SkinPart> parts, Object blobs) {
+    protected Skin(int id, int fileVersion, SkinType type, SkinProperties properties, SkinSettings settings, SkinPaintData paintData, SkinPreviewData previewData, List<SkinAnimationData> animations, List<SkinPart> parts, Object blobs) {
         this.id = id;
         this.fileVersion = fileVersion;
         this.type = type;
@@ -133,7 +133,7 @@ public class Skin implements ISkin {
         return parts;
     }
 
-    public List<SkinAnimation> animations() {
+    public List<SkinAnimationData> animations() {
         return animations;
     }
 
@@ -213,7 +213,7 @@ public class Skin implements ISkin {
         private final SkinType type;
 
         private ArrayList<SkinPart> skinParts = new ArrayList<>();
-        private ArrayList<SkinAnimation> animations = new ArrayList<>();
+        private ArrayList<SkinAnimationData> animations = new ArrayList<>();
 
         private SkinPaintData paintData;
         private SkinPreviewData previewData;
@@ -267,7 +267,7 @@ public class Skin implements ISkin {
             return this;
         }
 
-        public Builder animations(List<SkinAnimation> animations) {
+        public Builder animations(List<SkinAnimationData> animations) {
             if (animations != null) {
                 this.animations = new ArrayList<>(animations);
             }

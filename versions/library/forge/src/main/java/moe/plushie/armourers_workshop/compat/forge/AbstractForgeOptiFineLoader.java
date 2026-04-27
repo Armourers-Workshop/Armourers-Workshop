@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeOptiFineLoader {
 
     /// String(0x01) + Length(0x00, 0x07) + VERSION(0x56, 0x45, 0x52, 0x53, 0x49, 0x4F, 0x4E) + String(0x01)

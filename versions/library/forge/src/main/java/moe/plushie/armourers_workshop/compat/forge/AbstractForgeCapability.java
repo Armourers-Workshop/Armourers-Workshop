@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntityCapability;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractForgeCapability<T> implements IEntityCapability<T> {
 
     private static final TypedProvider<AttachmentType<?>> REGISTRY = AbstractForgeRegistry.from(NeoForgeRegistries.ATTACHMENT_TYPES);
@@ -33,7 +33,7 @@ public class AbstractForgeCapability<T> implements IEntityCapability<T> {
     private final EntityCapability<T, Void> capability;
     private final Supplier<AttachmentType<Serializer<T>>> attachmentType;
 
-    public AbstractForgeCapability(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
+    public AbstractForgeCapability(OpenResourceKey registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         this.factory = factory;
         this.capability = EntityCapability.createVoid(registryName.get(), type);
         this.attachmentType = REGISTRY.register(registryName, key -> AttachmentType.serializable(this::create).build());

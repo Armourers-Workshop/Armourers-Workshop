@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.core.Registry;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,51 +18,51 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeRegistryManager extends AbstractRegistryManager {
 
     public static final AbstractForgeRegistryManager INSTANCE = new AbstractForgeRegistryManager();
 
     @Override
-    protected ResourceLocation getItemKey0(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item);
+    protected OpenResourceKey getItemKey0(Item item) {
+        return Registry.findKey(ForgeRegistries.ITEMS, item);
     }
 
     @Override
-    protected ResourceLocation getBlockKey0(Block block) {
-        return ForgeRegistries.BLOCKS.getKey(block);
+    protected OpenResourceKey getBlockKey0(Block block) {
+        return Registry.findKey(ForgeRegistries.BLOCKS, block);
     }
 
     @Override
-    protected Predicate<ItemStack> getItemTag0(ResourceLocation key) {
-        var tag = ItemTags.createOptional(key);
+    protected Predicate<ItemStack> getItemTag0(OpenResourceKey key) {
+        var tag = ItemTags.createOptional(key.get());
         return itemStack -> itemStack.getItem().is(tag);
     }
 
     @Override
-    protected Predicate<BlockState> getBlockTag0(ResourceLocation key) {
-        var tag = BlockTags.createOptional(key);
+    protected Predicate<BlockState> getBlockTag0(OpenResourceKey key) {
+        var tag = BlockTags.createOptional(key.get());
         return blockState -> blockState.is(tag);
     }
 
     @Override
-    protected Predicate<Biome> getBiomeTag0(ResourceLocation key) {
+    protected Predicate<Biome> getBiomeTag0(OpenResourceKey key) {
         return null; // not support in the 1.16.5
     }
 
     @Override
-    protected Item getItem0(ResourceLocation key) {
-        return ForgeRegistries.ITEMS.getValue(key);
+    protected Item getItem0(OpenResourceKey key) {
+        return Registry.findValue(ForgeRegistries.ITEMS, key);
     }
 
     @Override
-    protected Block getBlock0(ResourceLocation key) {
-        return ForgeRegistries.BLOCKS.getValue(key);
+    protected Block getBlock0(OpenResourceKey key) {
+        return Registry.findValue(ForgeRegistries.BLOCKS, key);
     }
 
     @Override
-    protected Function<ItemStack, Integer> getEnchantment0(ResourceLocation key) {
-        var enchantment = ForgeRegistries.ENCHANTMENTS.getValue(key);
+    protected Function<ItemStack, Integer> getEnchantment0(OpenResourceKey key) {
+        var enchantment = Registry.findValue(ForgeRegistries.ENCHANTMENTS, key);
         if (enchantment != null) {
             return itemStack -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
         }
@@ -69,8 +70,8 @@ public class AbstractForgeRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
-    protected Function<LivingEntity, MobEffectInstance> getEffect0(ResourceLocation key) {
-        var effect = ForgeRegistries.POTIONS.getValue(key);
+    protected Function<LivingEntity, MobEffectInstance> getEffect0(OpenResourceKey key) {
+        var effect = Registry.findValue(ForgeRegistries.POTIONS, key);
         if (effect != null) {
             return entity -> entity.getEffect(effect);
         }
@@ -78,8 +79,8 @@ public class AbstractForgeRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
-    protected Function<LivingEntity, Double> getAttribute0(ResourceLocation key) {
-        var attribute = ForgeRegistries.ATTRIBUTES.getValue(key);
+    protected Function<LivingEntity, Double> getAttribute0(OpenResourceKey key) {
+        var attribute = Registry.findValue(ForgeRegistries.ATTRIBUTES, key);
         if (attribute != null) {
             return entity -> entity.getAttributeValue(attribute);
         }

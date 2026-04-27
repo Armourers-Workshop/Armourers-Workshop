@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind;
 
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.selector.ProjectileEntitySelector;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.SpectralArrow;
 
 public class ProjectileEntitySelectorImpl<T extends Projectile> extends EntitySelectorImpl<T> implements ProjectileEntitySelector {
 
@@ -19,7 +18,7 @@ public class ProjectileEntitySelectorImpl<T extends Projectile> extends EntitySe
 
     @Override
     public boolean isSpectral() {
-        return entity instanceof SpectralArrow;
+        return entity.isSpectralArrow();
     }
 
     @Override

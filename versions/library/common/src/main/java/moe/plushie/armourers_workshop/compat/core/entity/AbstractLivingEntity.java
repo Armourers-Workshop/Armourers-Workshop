@@ -21,7 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public abstract class AbstractLivingEntity extends AbstractLivingEntityImpl implements AbstractEntityHandler {
 
     public AbstractLivingEntity(EntityType<? extends LivingEntity> entityType, Level level) {

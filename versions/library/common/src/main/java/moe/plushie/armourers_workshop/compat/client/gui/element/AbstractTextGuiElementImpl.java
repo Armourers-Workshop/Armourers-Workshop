@@ -15,7 +15,7 @@ import net.minecraft.util.FormattedCharSequence;
 import java.util.Collection;
 import java.util.List;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractTextGuiElementImpl {
 

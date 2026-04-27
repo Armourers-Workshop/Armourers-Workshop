@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 @Mod(ModConstants.MOD_ID)
 public class AbstractForgeInitializer {
 

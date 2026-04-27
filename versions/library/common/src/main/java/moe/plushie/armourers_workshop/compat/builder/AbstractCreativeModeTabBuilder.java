@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.builder;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
 import moe.plushie.armourers_workshop.core.item.DisplayItemProvider;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,7 +19,7 @@ public abstract class AbstractCreativeModeTabBuilder<T extends CreativeModeTab> 
         this.icon = icon;
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var reference = new CreativeModeTab[1];
         var tab = create(registryName, displayItems -> {
             var tab1 = reference[0];
@@ -33,5 +33,5 @@ public abstract class AbstractCreativeModeTabBuilder<T extends CreativeModeTab> 
         return Objects.unsafeCast(tab);
     }
 
-    protected abstract CreativeModeTab create(OpenResourceLocation registryName, Consumer<List<ItemStack>> provider);
+    protected abstract CreativeModeTab create(OpenResourceKey registryName, Consumer<List<ItemStack>> provider);
 }

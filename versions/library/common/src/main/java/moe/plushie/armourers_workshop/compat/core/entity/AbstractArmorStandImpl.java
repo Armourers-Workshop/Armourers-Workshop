@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractArmorStandImpl extends ArmorStand {
 
     public AbstractArmorStandImpl(EntityType<? extends ArmorStand> entityType, Level level) {

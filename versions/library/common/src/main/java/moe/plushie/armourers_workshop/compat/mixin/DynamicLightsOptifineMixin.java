@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Conditional("optifine")
 @Pseudo
 @Mixin(targets = "net.optifine.DynamicLights")

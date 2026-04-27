@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.builder;
 import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public abstract class AbstractMenuTypeBuilder<T extends AbstractContainerMenu, V> {
@@ -16,5 +16,5 @@ public abstract class AbstractMenuTypeBuilder<T extends AbstractContainerMenu, V
         this.serializer = serializer;
     }
 
-    public abstract IMenuType<T> build(OpenResourceLocation registryName);
+    public abstract IMenuType<T> build(OpenResourceKey registryName);
 }

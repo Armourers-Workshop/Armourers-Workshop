@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
@@ -19,13 +19,13 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeCapabilityImpl<T> {
 
     @CapabilityInject(SkinWardrobe.class)
     public static Capability<SkinWardrobe> WARDROBE_KEY;
 
-    protected void registerCapability(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
+    protected void registerCapability(OpenResourceKey registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
         // setup event bus.
         var handler = new Handler(registryName, type, provider);
         AbstractForgeInitializer.getEventBus().addGenericListener(Entity.class, handler::attachEntityCapability);
@@ -47,10 +47,10 @@ public class AbstractForgeCapabilityImpl<T> {
     private class Handler implements Capability.IStorage<T> {
 
         private final Class<T> type;
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
         private final Function<Entity, Optional<ICapabilityProvider>> provider;
 
-        public Handler(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
+        public Handler(OpenResourceKey registryName, Class<T> type, Function<Entity, Optional<ICapabilityProvider>> provider) {
             this.type = type;
             this.registryName = registryName;
             this.provider = provider;

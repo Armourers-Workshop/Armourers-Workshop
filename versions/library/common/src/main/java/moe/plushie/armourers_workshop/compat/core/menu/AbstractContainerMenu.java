@@ -6,7 +6,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public abstract class AbstractContainerMenu extends AbstractContainerMenuImpl {
 
     public AbstractContainerMenu(IMenuType<?> menuType, int containerId) {

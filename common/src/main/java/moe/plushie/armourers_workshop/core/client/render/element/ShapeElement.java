@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.api.core.math.IVoxelShape;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
@@ -68,19 +68,19 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement stroke(IRectangle3i rect, int color) {
-        return stroke(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth(), color, SkinRenderType.line());
+        return stroke(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth(), color, SkinRenderTypes.line());
     }
 
     public static ShapeElement stroke(IRectangle3f rect, int color) {
-        return stroke(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth(), color, SkinRenderType.line());
+        return stroke(rect.x(), rect.y(), rect.z(), rect.width(), rect.height(), rect.depth(), color, SkinRenderTypes.line());
     }
 
     public static ShapeElement stroke(float x, float y, float z, float w, float h, float d, int color) {
-        return stroke(x, y, z, w, h, d, color, SkinRenderType.line());
+        return stroke(x, y, z, w, h, d, color, SkinRenderTypes.line());
     }
 
     public static ShapeElement stroke(double x, double y, double z, double w, double h, double d, int color) {
-        return stroke((float) x, (float) y, (float) z, (float) w, (float) h, (float) d, color, SkinRenderType.line());
+        return stroke((float) x, (float) y, (float) z, (float) w, (float) h, (float) d, color, SkinRenderTypes.line());
     }
 
     public static ShapeElement stroke(float x, float y, float z, float w, float h, float d, int color, IRenderType renderType) {
@@ -136,7 +136,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement line(float x0, float y0, float z0, float x1, float y1, float z1, int color) {
-        return line(x0, y0, z0, x1, y1, z1, color, SkinRenderType.line());
+        return line(x0, y0, z0, x1, y1, z1, color, SkinRenderTypes.line());
     }
 
     public static ShapeElement line(float x0, float y0, float z0, float x1, float y1, float z1, int color, IRenderType renderType) {
@@ -144,7 +144,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement cone(float x0, float y0, float z0, float x1, float y1, float z1, float radius, int color) {
-        return cone(x0, y0, z0, x1, y1, z1, radius, color, SkinRenderType.BLIT_COLOR);
+        return cone(x0, y0, z0, x1, y1, z1, radius, color, SkinRenderTypes.BLIT_COLOR);
     }
 
     public static ShapeElement cone(float x0, float y0, float z0, float x1, float y1, float z1, float radius, int color, IRenderType renderType) {
@@ -157,7 +157,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement marker(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, BlockPaintColor color, float alpha) {
-        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, SkinRenderType.IMAGE_MARKER);
+        var cube = Cube.newInstance(x, y, z, x + w, y + h, z + d, lightmap, overlay, SkinRenderTypes.IMAGE_MARKER);
         for (var dir : OpenDirection.values()) {
             var type = color.getOrDefault(dir, SkinPaintColor.CLEAR).paintType();
             if (type == SkinPaintTypes.NONE || type == SkinPaintTypes.NORMAL) {
@@ -184,7 +184,7 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement guide(float x, float y, float z, float w, float h, float d, int color) {
-        return guide(x, y, z, w, h, d, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, SkinRenderType.IMAGE_GUIDE);
+        return guide(x, y, z, w, h, d, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, SkinRenderTypes.IMAGE_GUIDE);
     }
 
     public static ShapeElement guide(float x, float y, float z, float w, float h, float d, int lightmap, int overlay, int color, IRenderType renderType) {

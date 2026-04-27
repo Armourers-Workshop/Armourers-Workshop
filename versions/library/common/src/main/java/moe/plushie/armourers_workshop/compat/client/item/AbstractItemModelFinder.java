@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel
 import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractItemModelFinder {
 
     private static final ResourceLocation MARKER_ID = ResourceLocation.withDefaultNamespace("skin/generated");
@@ -38,7 +38,7 @@ public class AbstractItemModelFinder {
         var name = unbakedModel.name;
         for (var model : MARK_MODELS) {
             if (Objects.equals(model.name, name)) {
-                var modelId = OpenResourceLocation.parse(name);
+                var modelId = OpenResourceKey.parse(name);
                 var itemModel = AbstractItemModel.wrap(bakedModel);
                 DiscoveerableSkinManager.getInstance().put(itemModel, modelId);
                 break;

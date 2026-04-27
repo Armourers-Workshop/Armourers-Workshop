@@ -5,11 +5,11 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3i;
 import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public abstract class SkinPartType implements ISkinPartType {
 
-    protected OpenResourceLocation registryName;
+    protected OpenResourceKey registryName;
 
     protected OpenRectangle3i bounds = OpenRectangle3i.ZERO;
     protected OpenRectangle3i buildingSpace = OpenRectangle3i.ZERO;
@@ -29,11 +29,11 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 
-    public SkinPartType setRegistryName(OpenResourceLocation registryName) {
+    public SkinPartType setRegistryName(OpenResourceKey registryName) {
         this.registryName = registryName;
         return this;
     }

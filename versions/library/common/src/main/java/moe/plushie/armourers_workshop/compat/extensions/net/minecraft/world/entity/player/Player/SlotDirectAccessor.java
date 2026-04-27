@@ -9,7 +9,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class SlotDirectAccessor {
 
     public static void setItemSlotDirect(@This Player player, OpenEquipmentSlot equipmentSlot, ItemStack itemStack) {

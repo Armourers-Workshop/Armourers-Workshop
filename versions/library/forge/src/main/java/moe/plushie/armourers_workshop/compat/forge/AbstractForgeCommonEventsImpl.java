@@ -24,7 +24,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractForgeCommonEventsImpl {
 
     public static final auto FML_CONFIG = AbstractForgeEventBus.create(ModConfigEvent.class);

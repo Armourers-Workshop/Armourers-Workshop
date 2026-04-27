@@ -12,7 +12,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractLivingEntityRendererImpl<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<T>> extends LivingEntityRenderer<T, M> implements IEntityRenderer<T, S> {
 

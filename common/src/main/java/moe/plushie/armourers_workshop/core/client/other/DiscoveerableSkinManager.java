@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
@@ -43,11 +43,11 @@ public class DiscoveerableSkinManager {
         // nope
     }
 
-    public void put(AbstractItemModel itemModel, OpenResourceLocation model) {
+    public void put(AbstractItemModel itemModel, OpenResourceKey model) {
         try {
             var resourceManager = EnvironmentManager.getClientResourceManager();
-            var location = model.withPath("models/" + model.path() + ".json");
-            var rootObject = JsonSerializer.readFromResource(resourceManager.readResource(location));
+            var identifier = model.withPath("models/" + model.path() + ".json");
+            var rootObject = JsonSerializer.readFromResource(resourceManager.readResource(identifier));
             if (rootObject == null) {
                 return;
             }

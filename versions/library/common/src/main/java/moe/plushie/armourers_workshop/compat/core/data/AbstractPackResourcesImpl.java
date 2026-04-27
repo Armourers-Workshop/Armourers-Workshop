@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackLocationInfo;
@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public abstract class AbstractPackResourcesImpl implements PackResources {
 
     private PackLocationInfo location;
@@ -27,7 +27,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
         return !resources.packId().startsWith("file/");
     }
 
-    public abstract Supplier<InputStream> getResource(PackType packType, OpenResourceLocation location);
+    public abstract Supplier<InputStream> getResource(PackType packType, OpenResourceKey key);
 
     public abstract String getName();
 
@@ -40,7 +40,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
     @Nullable
     @Override
     public final IoSupplier<InputStream> getResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
+        var supplier = getResource(packType, AbstractResourceKey.wrap(location));
         if (supplier != null) {
             return supplier::get;
         }

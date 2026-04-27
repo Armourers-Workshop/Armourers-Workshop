@@ -17,7 +17,7 @@ import net.neoforged.neoforge.client.CustomBlockOutlineRenderer;
 
 import java.util.ArrayList;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractForgeBlockOutlineRenderer implements CustomBlockOutlineRenderer, IGraphicsContext {
 

@@ -1,18 +1,17 @@
 package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Available("[1.20, )")
+@Available("[19, 26)")
 public abstract class AbstractResourceProviderImpl implements ResourceProvider {
 
     private final ResourceProvider impl;
@@ -24,24 +23,13 @@ public abstract class AbstractResourceProviderImpl implements ResourceProvider {
     @Override
     public Optional<Resource> getResource(ResourceLocation location) {
         var resource = impl.getResource(location);
-        var transformer = getTransformer(location);
+        var transformer = createTransformer(AbstractResourceKey.wrap(location));
         if (transformer == null || resource.isEmpty()) {
             return resource;
         }
-        var resource1 = resource.get();
-        return Optional.of(new Resource(resource1.source(), () -> {
-            var inputStream = resource1.open();
-            try {
-                var source = StreamUtils.readStreamToString(inputStream, StandardCharsets.UTF_8);
-                source = transformer.apply(source);
-                return new ByteArrayInputStream(source.getBytes());
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-            return inputStream;
-        }, resource1::metadata));
+        return Optional.of(AbstractResource.transform(resource.get(), transformer));
     }
 
     @Nullable
-    public abstract Function<String, String> getTransformer(ResourceLocation location);
+    protected abstract Function<InputStream, InputStream> createTransformer(OpenResourceKey key);
 }

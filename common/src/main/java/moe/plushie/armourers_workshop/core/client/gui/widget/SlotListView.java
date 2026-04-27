@@ -7,11 +7,11 @@ import com.apple.library.coregraphics.CGSize;
 import com.apple.library.uikit.UIEvent;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuScreen;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractContainerInput;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 
 public class SlotListView<M extends AbstractContainerMenu> extends UIView {
@@ -111,9 +111,9 @@ public class SlotListView<M extends AbstractContainerMenu> extends UIView {
         }
 
         @Override
-        public void slotClicked(Slot slot, int i, int j, ClickType clickType) {
+        public void slotClicked(Slot slot, int slotId, int buttonNum, AbstractContainerInput input) {
             if (slot != null) {
-                menu.clicked(slot.index, j, clickType, inventory.player);
+                menu.clicked(slot, slotId, buttonNum, input, inventory.player);
             }
         }
     }

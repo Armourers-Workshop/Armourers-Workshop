@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -70,11 +71,11 @@ public class Collections {
 
     public static <S, R> ArrayList<R> compactMap(Collection<? extends S> in, Function<S, ? extends R> transform) {
         var results = new ArrayList<R>(in.size());
-        for (S value : in) {
+        for (var value : in) {
             if (value == null) {
                 continue;
             }
-            R result = transform.apply(value);
+            var result = transform.apply(value);
             if (result == null) {
                 continue;
             }
@@ -118,7 +119,7 @@ public class Collections {
 
     public static <S, R> ArrayList<R> flatMap(Collection<? extends S> in, Function<S, Collection<? extends R>> transform) {
         var results = new ArrayList<R>(in.size());
-        for (S value : in) {
+        for (var value : in) {
             if (value == null) {
                 continue;
             }

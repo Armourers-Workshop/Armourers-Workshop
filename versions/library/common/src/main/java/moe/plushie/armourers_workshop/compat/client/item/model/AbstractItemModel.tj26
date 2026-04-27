@@ -7,10 +7,10 @@ import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayCont
 import moe.plushie.armourers_workshop.compat.client.item.AbstractItemTransform;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
-import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractItemModel {
 
@@ -29,7 +29,7 @@ public class AbstractItemModel {
     }
 
     public OpenItemTransform getTransform(OpenItemDisplayContext transformType) {
-        if (impl instanceof BlockModelWrapper wrapper) {
+        if (impl instanceof CuboidItemModelWrapper wrapper) {
             var transform = wrapper.properties.transforms().getTransform(AbstractItemDisplayContext.unwrap(transformType));
             return AbstractItemTransform.wrap(transform);
         }

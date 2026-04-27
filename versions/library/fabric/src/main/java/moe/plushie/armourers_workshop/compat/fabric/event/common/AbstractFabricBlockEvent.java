@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricBlockEvent {
 
     public static IEventHandler<BlockEvent.Place> placeFactory() {

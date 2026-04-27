@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("iris || oculus")
 @Pseudo
 @Mixin(targets = "net.coderbot.iris.gl.program.ProgramBuilder")

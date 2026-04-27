@@ -9,7 +9,7 @@ import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractDeltaTracker implements IDeltaTracker {
 
     private final boolean isPaused;

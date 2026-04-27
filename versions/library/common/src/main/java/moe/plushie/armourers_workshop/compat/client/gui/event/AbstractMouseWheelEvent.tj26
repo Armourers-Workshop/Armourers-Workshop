@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.gui.event;
 import com.apple.library.coregraphics.CGPoint;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractMouseWheelEvent extends AbstractMouseEvent {
 
     public final double deltaX;

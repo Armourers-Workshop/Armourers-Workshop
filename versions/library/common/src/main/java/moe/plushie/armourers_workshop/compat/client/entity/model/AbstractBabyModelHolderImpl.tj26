@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import java.util.IdentityHashMap;
 import java.util.function.BiFunction;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public abstract class AbstractBabyModelHolderImpl {
 
     public static final DataContainer.Key<IEntityModel<?>> ADULT_MODEL_KEY = DataContainer.key("AdultModel");

@@ -4,7 +4,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractPlayerSkinResolver {
 
     public void resolve(OpenGameProfile profile, IResultHandler<PlayerSkin> handler) {
@@ -39,7 +39,7 @@ public class AbstractPlayerSkinResolver {
     }
 
     private PlayerSkin create(OpenGameProfile profile, ResourceLocation texture, String url, String modelName) {
-        var body = new PlayerSkinPart(AbstractResourceLocation.wrap(texture), url);
+        var body = new PlayerSkinPart(AbstractResourceKey.wrap(texture), url);
         var descriptor = PlayerSkinDescriptor.fromProfile(profile);
         var model = PlayerSkinModel.WIDE;
         if (Objects.equals(modelName, "slim")) {

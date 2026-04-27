@@ -16,11 +16,11 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractEntityRenderer<T extends Entity, S extends EntityRenderState> extends AbstractEntityRendererImpl<T, AbstractEntityRenderState> implements IEntityRenderer<T, S> {
 

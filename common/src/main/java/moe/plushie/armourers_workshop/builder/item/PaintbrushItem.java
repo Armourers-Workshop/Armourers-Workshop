@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
 import moe.plushie.armourers_workshop.init.ModSoundEvents;
@@ -126,7 +126,7 @@ public class PaintbrushItem extends AbstractColoredToolItem implements IItemPain
     }
 
     @Override
-    public void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    public void abi$appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("small"), (itemStack, level, entity, id) -> itemStack.get(PaintingToolOptions.FULL_BLOCK_MODE) ? 0 : 1);
     }
 

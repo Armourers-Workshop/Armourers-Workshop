@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.18, 1.21)")
+@Available("[18, 21)")
 public class StorageAPI {
 
     public static void saveFullData(@This BlockEntity blockEntity, TagSerializer serializer) {

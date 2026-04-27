@@ -15,11 +15,10 @@ import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentTypes;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.horse.Horse;
 
 import java.util.ArrayList;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractVehicleUpdater extends AbstractVehicleUpdaterImpl {
 
@@ -103,7 +102,7 @@ public class AbstractVehicleUpdater extends AbstractVehicleUpdaterImpl {
     }
 
     private float getRiddingScale(Entity entity) {
-        if (entity instanceof Horse) {
+        if (entity.isHorse()) {
             return 1.1f;
         }
         return 1.0f;

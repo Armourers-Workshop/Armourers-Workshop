@@ -2,16 +2,16 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeRegistry<T> extends AbstractForgeRegistryImpl implements TypedProvider<T> {
 
     private final Function<T, ResourceLocation> keyProvider;
@@ -25,20 +25,20 @@ public class AbstractForgeRegistry<T> extends AbstractForgeRegistryImpl implemen
     }
 
     @Override
-    public <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> provider) {
+    public <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> provider) {
         return registryProvider.register(registryName, provider);
     }
 
     @Override
-    public OpenResourceLocation getKey(T object) {
+    public OpenResourceKey getKey(T object) {
         if (keyProvider != null) {
-            return Objects.flatMap(keyProvider.apply(object), AbstractResourceLocation::wrap);
+            return Objects.flatMap(keyProvider.apply(object), AbstractResourceKey::wrap);
         }
         return null;
     }
 
     @Override
-    public T getValue(OpenResourceLocation registryName) {
+    public T getValue(OpenResourceKey registryName) {
         if (valueProvider != null) {
             return valueProvider.apply(registryName.get());
         }

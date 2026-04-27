@@ -7,7 +7,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 public class AnimationModifier {
 
     public static void applyLimitLimbs(@This LivingEntity entity) {

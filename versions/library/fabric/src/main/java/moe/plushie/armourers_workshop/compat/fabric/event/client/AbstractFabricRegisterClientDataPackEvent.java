@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.init.event.client.RegisterClientDataPackEv
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricRegisterClientDataPackEvent {
 
     public static IEventHandler<RegisterClientDataPackEvent> registryFactory() {

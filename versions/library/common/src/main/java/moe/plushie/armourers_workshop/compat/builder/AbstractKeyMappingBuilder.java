@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,13 +35,13 @@ public abstract class AbstractKeyMappingBuilder<T extends IKeyMapping> {
         this.handler = handler;
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var keyMapping = create(registryName);
         Objects.flatMap(handler, it -> inputs.add(Pair.of(keyMapping, it)));
         return Objects.unsafeCast(keyMapping);
     }
 
-    protected abstract IKeyMapping create(OpenResourceLocation registryName);
+    protected abstract IKeyMapping create(OpenResourceKey registryName);
 
     static {
         // attach the input event to client end frame.

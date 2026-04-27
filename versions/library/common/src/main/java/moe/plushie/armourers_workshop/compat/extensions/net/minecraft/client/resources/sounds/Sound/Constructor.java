@@ -9,12 +9,12 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.21, )")
+@Available("[21, )")
 @Extension
 public class Constructor {
 
     public static @Self Sound create(@ThisClass Class<?> clazz, AbstractSimpleSound sound) {
-        var location = sound.id();
+        var location = sound.id().get();
         var volume = ConstantFloat.of(sound.volume());
         var pitch = ConstantFloat.of(sound.pitch());
         var weight = sound.weight();

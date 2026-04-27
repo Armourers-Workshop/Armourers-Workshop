@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public interface AbstractForgeItemStackRenderer extends IClientItemExtensions {
 
     BlockEntityWithoutLevelRenderer getItemStackRenderer();

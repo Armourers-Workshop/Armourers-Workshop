@@ -6,9 +6,9 @@ import java.util.function.Predicate;
 
 public interface IResourceManager {
 
-    boolean hasResource(IResourceLocation location);
+    boolean hasResource(IResourceKey key);
 
-    IResource readResource(IResourceLocation location) throws IOException;
+    IResource readResource(IResourceKey key) throws IOException;
 
-    void readResources(IResourceLocation target, Predicate<String> validator, BiConsumer<IResourceLocation, IResource> consumer);
+    void readResources(IResourceKey target, Predicate<String> validator, BiConsumer<IResourceKey, IResource> consumer);
 }

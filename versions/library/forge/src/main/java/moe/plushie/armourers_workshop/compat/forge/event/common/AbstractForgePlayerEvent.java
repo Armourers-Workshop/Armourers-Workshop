@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.event.common.PlayerEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-@Available("[1.19, )")
+@Available("[19, )")
 public class AbstractForgePlayerEvent {
 
     public static IEventHandler<PlayerEvent.LoggingIn> loggingInFactory() {

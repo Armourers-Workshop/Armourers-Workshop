@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppingEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricServerLifecycleEvent {
 
     public static IEventHandler<ServerStartingEvent> aboutToStartFactory() {

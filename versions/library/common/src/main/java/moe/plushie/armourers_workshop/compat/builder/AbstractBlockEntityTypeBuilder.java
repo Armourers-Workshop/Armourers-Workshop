@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.builder;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +22,7 @@ public abstract class AbstractBlockEntityTypeBuilder<T extends BlockEntity> {
         this.blocks.add(block);
     }
 
-    public abstract IBlockEntityType<T> build(OpenResourceLocation registryName);
+    public abstract IBlockEntityType<T> build(OpenResourceKey registryName);
 
     protected abstract static class Proxy<T extends BlockEntity> implements IBlockEntityType<T> {
 

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 
-@Available("[1.18, 1.20)")
+@Available("[18, 20)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemSpecialRendererImpl {
 

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -46,37 +46,37 @@ public class ChestGuideRenderer extends AbstractGuideRenderer {
     }
 
     public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(body, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(body, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_JACKET)) {
-            context.draw(ModelPartElement.newInstance(jacket, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(jacket, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
     public void renderLeftArm(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(leftArm, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(leftArm, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE)) {
-            context.draw(ModelPartElement.newInstance(leftSleeve, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(leftSleeve, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
     public void renderRightArm(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(rightArm, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(rightArm, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE)) {
-            context.draw(ModelPartElement.newInstance(rightSleeve, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(rightSleeve, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
     public void renderLeftArmSlim(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(leftArmSlim, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(leftArmSlim, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_LEFT_SLEEVE)) {
-            context.draw(ModelPartElement.newInstance(leftSleeveSlim, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(leftSleeveSlim, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 
     public void renderRightArmSlim(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(rightArmSlim, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(rightArmSlim, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_RIGHT_SLEEVE)) {
-            context.draw(ModelPartElement.newInstance(rightSleeveSlim, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(rightSleeveSlim, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 }

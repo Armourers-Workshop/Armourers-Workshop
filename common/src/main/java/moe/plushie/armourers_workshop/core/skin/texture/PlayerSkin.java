@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.texture;
 
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModTextures;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ public class PlayerSkin {
     private final PlayerSkinPart elytra;
     private final PlayerSkinModel model;
 
-    public PlayerSkin(OpenResourceLocation body, @Nullable OpenResourceLocation cape, @Nullable OpenResourceLocation elytra, PlayerSkinModel model) {
+    public PlayerSkin(OpenResourceKey body, @Nullable OpenResourceKey cape, @Nullable OpenResourceKey elytra, PlayerSkinModel model) {
         this(PlayerSkinDescriptor.DEFAULT.withModel(model), new PlayerSkinPart(body), Objects.flatMap(cape, PlayerSkinPart::new), Objects.flatMap(elytra, PlayerSkinPart::new), model);
     }
 

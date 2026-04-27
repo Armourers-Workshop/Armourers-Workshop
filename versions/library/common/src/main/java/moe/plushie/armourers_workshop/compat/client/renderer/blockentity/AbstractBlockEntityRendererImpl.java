@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> implements BlockEntityRenderer<T> {
 

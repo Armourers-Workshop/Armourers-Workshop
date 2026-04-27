@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.geometry;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.skin.geometry.ISkinGeometryType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.level.block.Block;
 
 public class SkinGeometryType implements ISkinGeometryType {
@@ -10,7 +10,7 @@ public class SkinGeometryType implements ISkinGeometryType {
     protected final int id;
     protected final IRegistryHolder<Block> block;
 
-    protected OpenResourceLocation registryName;
+    protected OpenResourceKey registryName;
 
     public SkinGeometryType(int id, IRegistryHolder<Block> block) {
         this.id = id;
@@ -18,11 +18,11 @@ public class SkinGeometryType implements ISkinGeometryType {
     }
 
     @Override
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 
-    public void setRegistryName(OpenResourceLocation registryName) {
+    public void setRegistryName(OpenResourceKey registryName) {
         this.registryName = registryName;
     }
 

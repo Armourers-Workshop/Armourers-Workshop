@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResource;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
 import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-@Available("[1.19, )")
+@Available("[19, )")
 public class AbstractResourceManager implements IResourceManager {
 
     private final ResourceManager resourceManager;
@@ -31,28 +31,28 @@ public class AbstractResourceManager implements IResourceManager {
     }
 
     @Override
-    public boolean hasResource(IResourceLocation location) {
-        return resourceManager.getResource(location.get()).isPresent();
+    public boolean hasResource(IResourceKey key) {
+        return resourceManager.getResource(key.get()).isPresent();
     }
 
     @Override
-    public IResource readResource(IResourceLocation location) throws IOException {
-        var resource = resourceManager.getResource(location.get());
+    public IResource readResource(IResourceKey key) throws IOException {
+        var resource = resourceManager.getResource(key.get());
         if (resource.isPresent()) {
-            return wrap(location, resource.get());
+            return wrap(key, resource.get());
         }
-        throw new FileNotFoundException(location.toString());
+        throw new FileNotFoundException(key.toString());
     }
 
     @Override
-    public void readResources(IResourceLocation target, Predicate<String> validator, BiConsumer<IResourceLocation, IResource> consumer) {
+    public void readResources(IResourceKey target, Predicate<String> validator, BiConsumer<IResourceKey, IResource> consumer) {
         resourceManager.listResources(target.path(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
             try {
                 try {
                     if (!key.getNamespace().equals(target.namespace())) {
                         return;
                     }
-                    var key1 = AbstractResourceLocation.wrap(key);
+                    var key1 = AbstractResourceKey.wrap(key);
                     consumer.accept(key1, wrap(key1, resource));
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -63,7 +63,7 @@ public class AbstractResourceManager implements IResourceManager {
         });
     }
 
-    private IResource wrap(IResourceLocation name, Resource resource) {
+    private IResource wrap(IResourceKey name, Resource resource) {
         return new IResource() {
             @Override
             public String name() {

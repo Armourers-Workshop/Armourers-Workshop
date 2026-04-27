@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.DoubleSupplier;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractBlockEntityImpl extends BlockEntity {
 
     private DoubleSupplier viewDistanceProvider;

@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Extension
 public class OpenAPI {
 

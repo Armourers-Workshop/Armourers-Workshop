@@ -7,19 +7,19 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricKeyMapping extends AbstractFabricKeyMappingImpl implements IKeyMapping {
 
     private boolean canConsumeClick = false;
 
     private final IKeyCategory category;
 
-    public AbstractFabricKeyMapping(OpenResourceLocation name, String key, Collection<IKeyModifier> modifiers, IKeyCategory category) {
+    public AbstractFabricKeyMapping(OpenResourceKey name, String key, Collection<IKeyModifier> modifiers, IKeyCategory category) {
         super(name, unwrap(key), null, AbstractFabricKeyCategory.unwrap(category));
         this.category = category;
     }

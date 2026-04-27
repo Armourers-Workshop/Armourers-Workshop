@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Extension
 public class CustomRiddingExt {
 

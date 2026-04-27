@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractGameProfile extends OpenGameProfile {
 
     protected final GameProfile profile;

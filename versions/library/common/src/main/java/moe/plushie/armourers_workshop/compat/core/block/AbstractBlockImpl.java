@@ -34,7 +34,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractBlockImpl extends Block {
 
     private static final FastMapper<OpenInteractionResult, ItemInteractionResult> ITEM_INTERACTION_CONVERTER = FastMapper.builder(OpenInteractionResult.FAIL, ItemInteractionResult.FAIL, it -> {

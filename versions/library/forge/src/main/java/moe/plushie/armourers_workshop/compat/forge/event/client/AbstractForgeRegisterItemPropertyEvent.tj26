@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl;
 import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractForgeRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {

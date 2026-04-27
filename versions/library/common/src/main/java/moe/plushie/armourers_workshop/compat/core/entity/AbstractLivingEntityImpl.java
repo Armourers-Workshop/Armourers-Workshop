@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public abstract class AbstractLivingEntityImpl extends LivingEntity {
 
     public AbstractLivingEntityImpl(EntityType<? extends LivingEntity> entityType, Level level) {

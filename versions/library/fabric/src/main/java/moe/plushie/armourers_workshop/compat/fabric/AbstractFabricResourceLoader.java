@@ -11,7 +11,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractFabricResourceLoader implements IdentifiableResourceReloadListener {
 
     private final ResourceLocation name;

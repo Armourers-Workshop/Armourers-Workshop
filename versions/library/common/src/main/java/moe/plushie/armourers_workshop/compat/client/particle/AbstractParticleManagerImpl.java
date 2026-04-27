@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractParticleManagerImpl {
 

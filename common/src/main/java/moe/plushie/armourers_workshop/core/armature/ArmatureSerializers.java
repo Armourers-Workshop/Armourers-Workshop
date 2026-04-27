@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureBox;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class ArmatureSerializers {
 
-    private static final HashMap<OpenResourceLocation, Class<?>> NAMED_CLASSES = new HashMap<>();
+    private static final HashMap<OpenResourceKey, Class<?>> NAMED_CLASSES = new HashMap<>();
     private static final HashMap<String, Supplier<? extends JointModifier>> NAMED_MODIFIERS = new HashMap<>();
     private static final HashMap<String, Function<ArmatureTransformerContext, ? extends ArmaturePlugin>> NAMED_PLUGINS = new HashMap<>();
 
@@ -132,16 +132,16 @@ public class ArmatureSerializers {
         return AbstractEntityTypeBuilder.lazy(object.stringValue());
     }
 
-    public static OpenResourceLocation readResourceLocation(IODataObject object) {
-        return OpenResourceLocation.parse(object.stringValue());
+    public static OpenResourceKey readResourceLocation(IODataObject object) {
+        return OpenResourceKey.parse(object.stringValue());
     }
 
 
     public static <T> void registerClass(String registryName, Class<T> clazz) {
-        NAMED_CLASSES.put(OpenResourceLocation.parse(registryName), clazz);
+        NAMED_CLASSES.put(OpenResourceKey.parse(registryName), clazz);
     }
 
-    public static <T> Class<?> getClass(OpenResourceLocation registryName) {
+    public static <T> Class<?> getClass(OpenResourceKey registryName) {
         return NAMED_CLASSES.get(registryName);
     }
 

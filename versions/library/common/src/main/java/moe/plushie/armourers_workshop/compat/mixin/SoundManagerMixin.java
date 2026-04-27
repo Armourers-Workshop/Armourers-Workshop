@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.sound.AbstractSimpleSound;
 import moe.plushie.armourers_workshop.compat.client.sound.AbstractSoundManagerImpl;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.client.sounds.SoundManager;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 import java.util.Optional;
 
-@Available("[1.20, )")
+@Available("[20, 26)")
 @Mixin(SoundManager.class)
 public class SoundManagerMixin implements AbstractSoundManagerImpl {
 
@@ -48,14 +49,14 @@ public class SoundManagerMixin implements AbstractSoundManagerImpl {
     }
 
     @Override
-    public void aw2$register(ResourceLocation location, AbstractSimpleSound sound) {
-        var event = new WeighedSoundEvents(location, sound.name());
+    public void aw2$register(OpenResourceKey key, AbstractSimpleSound sound) {
+        var event = new WeighedSoundEvents(key.get(), sound.name());
         event.addSound(Sound.create(sound));
-        aw2$registry.put(location, event);
+        aw2$registry.put(key.get(), event);
     }
 
     @Override
-    public void aw2$unregister(ResourceLocation location) {
-        aw2$registry.remove(location);
+    public void aw2$unregister(OpenResourceKey key) {
+        aw2$registry.remove(key.get());
     }
 }

@@ -6,13 +6,13 @@ import moe.plushie.armourers_workshop.core.armature.Joint;
 import moe.plushie.armourers_workshop.core.armature.JointContext;
 import moe.plushie.armourers_workshop.core.armature.JointModifier;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.Collection;
 
 public class EpicFightArmatureTransformerBuilder extends ArmatureTransformerBuilder {
 
-    public EpicFightArmatureTransformerBuilder(OpenResourceLocation name) {
+    public EpicFightArmatureTransformerBuilder(OpenResourceKey name) {
         super(name);
     }
 

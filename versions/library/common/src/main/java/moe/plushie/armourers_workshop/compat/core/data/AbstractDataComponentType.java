@@ -12,8 +12,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.21, )")
-public class AbstractDataComponentType<T> implements DataComponentType<T>, IDataComponentType<T> {
+@Available("[21, )")
+public class AbstractDataComponentType<T> extends AbstractDataComponentTypeImpl<T> implements IDataComponentType<T> {
 
     protected final DataComponentType<T> key;
     protected final String tag;

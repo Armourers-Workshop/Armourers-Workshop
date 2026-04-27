@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.compat.core.menu.AbstractContainerSlot;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class SkinSlot extends AbstractContainerSlot {
 
     protected final List<SkinSlotType> slotTypes;
-    protected final List<OpenResourceLocation> slotTypeIcons;
+    protected final List<OpenResourceKey> slotTypeIcons;
 
     public SkinSlot(Container inventory, int index, int x, int y, SkinSlotType... slotTypes) {
         super(inventory, index, x, y);
@@ -34,7 +34,7 @@ public class SkinSlot extends AbstractContainerSlot {
     }
 
     @Override
-    protected OpenResourceLocation abi$noItemIcon() {
+    protected OpenResourceKey abi$noItemIcon() {
         int size = slotTypeIcons.size();
         if (size > 0) {
             return slotTypeIcons.get((int) ((System.currentTimeMillis() / 1000L) % size));

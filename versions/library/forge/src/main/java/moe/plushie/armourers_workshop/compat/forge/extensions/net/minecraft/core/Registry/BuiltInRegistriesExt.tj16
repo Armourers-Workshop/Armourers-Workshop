@@ -6,7 +6,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class BuiltInRegistriesExt {
 
     public static final auto ITEM = ForgeRegistries.ITEMS;

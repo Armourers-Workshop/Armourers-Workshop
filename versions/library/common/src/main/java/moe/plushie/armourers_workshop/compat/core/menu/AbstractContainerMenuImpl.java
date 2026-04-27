@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
-@Available("[1.18, )")
+@Available("[18, )")
 public abstract class AbstractContainerMenuImpl extends AbstractContainerMenu {
 
     public AbstractContainerMenuImpl(IMenuType<?> menuType, int containerId) {

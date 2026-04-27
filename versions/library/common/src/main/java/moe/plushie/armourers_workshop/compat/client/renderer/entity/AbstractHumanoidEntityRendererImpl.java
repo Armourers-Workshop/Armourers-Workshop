@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractHumanoidEntityRendererImpl<T extends LivingEntity, S extends LivingEntityRenderState, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends AbstractLivingEntityRenderer<T, S, M> implements IEntityRenderer<T, S> {
 

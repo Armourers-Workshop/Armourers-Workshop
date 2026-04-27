@@ -8,7 +8,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractForgeNetworkImpl {
 
     public static <T extends CustomPacketPayload> void register(String channel, String version, CustomPacketPayload.Type<T> type, StreamCodec<? super RegistryFriendlyByteBuf, T> codec, IPayloadHandler<T> serverHandler, @Nullable IPayloadHandler<T> clientHandler) {

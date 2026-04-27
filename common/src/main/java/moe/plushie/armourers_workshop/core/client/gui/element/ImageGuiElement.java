@@ -7,8 +7,8 @@ import com.apple.library.uikit.UIEdgeInsets;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 @SuppressWarnings("unused")
 public abstract class ImageGuiElement implements CGGraphicsElement {
@@ -18,19 +18,19 @@ public abstract class ImageGuiElement implements CGGraphicsElement {
     protected final float texWidth;
     protected final float texHeight;
 
-    protected final OpenResourceLocation texture;
+    protected final OpenResourceKey texture;
 
-    protected ImageGuiElement(OpenResourceLocation texture, float texWidth, float texHeight) {
+    protected ImageGuiElement(OpenResourceKey texture, float texWidth, float texHeight) {
         this.texture = texture;
         this.texWidth = texWidth;
         this.texHeight = texHeight;
     }
 
-    public static ImageGuiElement tilable(float x, float y, float width, float height, OpenResourceLocation texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, UIEdgeInsets border) {
+    public static ImageGuiElement tilable(float x, float y, float width, float height, OpenResourceKey texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, UIEdgeInsets border) {
         return new TilableImpl(x, y, width, height, texture, u, v, sourceWidth, sourceHeight, texWidth, texHeight, border);
     }
 
-    public static ImageGuiElement resizable(float x, float y, float width, float height, OpenResourceLocation texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
+    public static ImageGuiElement resizable(float x, float y, float width, float height, OpenResourceKey texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
         return new ResizableImpl(x, y, width, height, texture, u, v, sourceWidth, sourceHeight, texWidth, texHeight);
     }
 
@@ -43,7 +43,7 @@ public abstract class ImageGuiElement implements CGGraphicsElement {
 
     @Override
     public void render(IPoseStack poseStack, IBufferSource bufferSource) {
-        var builder = bufferSource.getBuffer(SkinRenderType.image(texture));
+        var builder = bufferSource.getBuffer(SkinRenderTypes.image(texture));
         buildVertexes(new Tesselator(tintColor, texWidth, texHeight, poseStack, builder));
     }
 
@@ -112,7 +112,7 @@ public abstract class ImageGuiElement implements CGGraphicsElement {
         private final float sourceWidth;
         private final float sourceHeight;
 
-        public ResizableImpl(float x, float y, float width, float height, OpenResourceLocation texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
+        public ResizableImpl(float x, float y, float width, float height, OpenResourceKey texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
             super(texture, texWidth, texHeight);
             this.x = x;
             this.y = y;
@@ -143,7 +143,7 @@ public abstract class ImageGuiElement implements CGGraphicsElement {
 
         private final UIEdgeInsets border;
 
-        public TilableImpl(float x, float y, float width, float height, OpenResourceLocation texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, UIEdgeInsets border) {
+        public TilableImpl(float x, float y, float width, float height, OpenResourceKey texture, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, UIEdgeInsets border) {
             super(texture, texWidth, texHeight);
             this.x = x;
             this.y = y;

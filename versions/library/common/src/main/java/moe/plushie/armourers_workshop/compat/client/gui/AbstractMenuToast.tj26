@@ -9,11 +9,11 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractMenuToast implements Toast {
 
@@ -34,8 +34,8 @@ public abstract class AbstractMenuToast implements Toast {
     }
 
     @Override
-    public final void render(GuiGraphics guiGraphics, Font font, long l) {
-        AbstractGuiGraphicsRenderer.wrap(guiGraphics, width(), height(), 0, 0, l, context -> {
+    public final void extractRenderState(GuiGraphicsExtractor graphics, Font font, long fullyVisibleForMs) {
+        AbstractGuiGraphicsRenderer.wrap(graphics, width(), height(), 0, 0, fullyVisibleForMs, context -> {
             this.render(CGPoint.ZERO, context);
         });
     }

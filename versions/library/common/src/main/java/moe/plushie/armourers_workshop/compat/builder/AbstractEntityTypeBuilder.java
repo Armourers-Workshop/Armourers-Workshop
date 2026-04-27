@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntitySpawnReason;
 import moe.plushie.armourers_workshop.api.common.IEntityType;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TypedHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractEntityTypeBuilder<T extends Entity> {
 
     protected final IEntityType.Serializer<T> serializer;
@@ -33,7 +33,7 @@ public class AbstractEntityTypeBuilder<T extends Entity> {
     public static <T extends Entity> TypedHolder<EntityType<T>> lazy(String id) {
         // noinspection unchecked
         var value = LazyValue.of(() -> (EntityType<T>) EntityType.byString(id).orElse(null));
-        var registryName = OpenResourceLocation.parse(id);
+        var registryName = OpenResourceKey.parse(id);
         return TypedHolder.of(registryName, value);
     }
 
@@ -41,11 +41,11 @@ public class AbstractEntityTypeBuilder<T extends Entity> {
         this.updaters.add(updater);
     }
 
-    public IEntityType<T> build(OpenResourceLocation registryName) {
+    public IEntityType<T> build(OpenResourceKey registryName) {
         return new Proxy<>(create(registryName));
     }
 
-    protected EntityType<T> create(OpenResourceLocation registryName) {
+    protected EntityType<T> create(OpenResourceKey registryName) {
         var builder = EntityType.Builder.of(serializer::create, category);
         for (var updater : updaters) {
             builder = updater.apply(builder);

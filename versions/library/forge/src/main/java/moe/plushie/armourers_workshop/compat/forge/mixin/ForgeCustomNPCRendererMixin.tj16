@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 
 import java.util.List;
 
-@Available("[1.16, 1.20)")
+@Available("[16, 20)")
 @Conditional("customnpcs")
 @Pseudo
 @Mixin(targets = "noppes.npcs.client.renderer.RenderCustomNpc")

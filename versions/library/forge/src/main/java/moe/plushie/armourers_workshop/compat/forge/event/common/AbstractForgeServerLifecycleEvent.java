@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.event.common.ServerStartingEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStoppingEvent;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeServerLifecycleEvent {
 
     public static IEventHandler<ServerStartingEvent> aboutToStartFactory() {

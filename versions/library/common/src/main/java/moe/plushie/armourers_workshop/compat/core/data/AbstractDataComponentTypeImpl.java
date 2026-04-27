@@ -1,0 +1,8 @@
+package moe.plushie.armourers_workshop.compat.core.data;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.core.component.DataComponentType;
+
+@Available("[21, 26)")
+public abstract class AbstractDataComponentTypeImpl<T> implements DataComponentType<T> {
+}

@@ -9,7 +9,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
 @Extension
-@Available("[1.26, )")
+@Available("[26, )")
 public class Constructor {
 
     public static EnumProperty<Direction> createDirectionProperty(@ThisClass Class<?> clazz, String name) {

@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(GuiGraphics.class)
 public class FabricItemTooltipMixin {
 
@@ -28,12 +28,12 @@ public class FabricItemTooltipMixin {
     private static ItemStack RENDERING_ITEM_STACK;
 
     @Inject(method = "renderTooltip", at = @At("HEAD"))
-    private void aw2$renderTooltipPre(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation resourceLocation, CallbackInfo ci) {
+    private void aw2$renderTooltipPre(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation identifier, CallbackInfo ci) {
         RENDERING_ITEM_STACK = AbstractFabricTooltipComponent.deattach(tooltips);
     }
 
     @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;", ordinal = 0))
-    private void aw2$renderTooltip(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation resourceLocation, CallbackInfo ci, @Local(ordinal = 2) int w, @Local(ordinal = 3) int h) {
+    private void aw2$renderTooltip(Font font, List<ClientTooltipComponent> tooltips, int mouseX, int mouseY, ClientTooltipPositioner positioner, ResourceLocation identifier, CallbackInfo ci, @Local(ordinal = 2) int w, @Local(ordinal = 3) int h) {
         // ignore when the tooltip without from item stack.
         var itemStack = RENDERING_ITEM_STACK;
         if (itemStack == null) {

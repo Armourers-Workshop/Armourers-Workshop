@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -27,9 +27,9 @@ public class ModEntityProfiles {
     private static final ArrayList<BiConsumer<IRegistryHolder<?>, EntityProfile>> REMOVE_HANDLERS = new ArrayList<>();
     private static final ArrayList<BiConsumer<IRegistryHolder<?>, EntityProfile>> UPDATE_HANDLERS = new ArrayList<>();
 
-    private static final Map<OpenResourceLocation, EntityProfile> USING_PROFILES = new LinkedHashMap<>();
-    private static final Map<OpenResourceLocation, EntityProfile> CUSTOM_PROFILES = new LinkedHashMap<>();
-    private static final Map<OpenResourceLocation, EntityProfile> BUILTIN_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceKey, EntityProfile> USING_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceKey, EntityProfile> CUSTOM_PROFILES = new LinkedHashMap<>();
+    private static final Map<OpenResourceKey, EntityProfile> BUILTIN_PROFILES = new LinkedHashMap<>();
 
     private static final Map<IRegistryHolder<?>, EntityProfile> USING_ENTITIES = new LinkedHashMap<>();
     private static final Map<IRegistryHolder<?>, EntityProfile> CUSTOM_ENTITIES = new LinkedHashMap<>();
@@ -66,7 +66,7 @@ public class ModEntityProfiles {
     }
 
     @Nullable
-    public static EntityProfile getProfile(OpenResourceLocation registryName) {
+    public static EntityProfile getProfile(OpenResourceKey registryName) {
         return USING_PROFILES.get(registryName);
     }
 
@@ -87,8 +87,8 @@ public class ModEntityProfiles {
 
     private static class SimpleLoader implements DataPackBuilder {
 
-        private static final Map<OpenResourceLocation, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();
-        private static final Map<OpenResourceLocation, SimpleBuilder> BUILTIN_PROFILE_BUILDERS = new LinkedHashMap<>();
+        private static final Map<OpenResourceKey, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();
+        private static final Map<OpenResourceKey, SimpleBuilder> BUILTIN_PROFILE_BUILDERS = new LinkedHashMap<>();
 
         private final SimpleBuilder builder;
 
@@ -96,16 +96,16 @@ public class ModEntityProfiles {
             this.builder = builder;
         }
 
-        public static SimpleLoader builtin(OpenResourceLocation registryName) {
+        public static SimpleLoader builtin(OpenResourceKey registryName) {
             return new SimpleLoader(BUILTIN_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::builtin));
         }
 
-        public static SimpleLoader custom(OpenResourceLocation registryName) {
+        public static SimpleLoader custom(OpenResourceKey registryName) {
             return new SimpleLoader(CUSTOM_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::custom));
         }
 
         @Override
-        public void append(IODataObject object, OpenResourceLocation location) {
+        public void append(IODataObject object, OpenResourceKey key) {
             if (object.get("replace").boolValue()) {
                 builder.isLocked = false;
                 builder.supports.clear();
@@ -123,7 +123,7 @@ public class ModEntityProfiles {
                 }
             });
             object.get("transformers").allValues().forEach(o -> {
-                builder.transformers.add(OpenResourceLocation.parse(o.stringValue()));
+                builder.transformers.add(OpenResourceKey.parse(o.stringValue()));
             });
             object.get("entities").allValues().forEach(o -> {
                 builder.entities.add(AbstractEntityTypeBuilder.lazy(o.stringValue()));
@@ -145,7 +145,7 @@ public class ModEntityProfiles {
             });
             CUSTOM_PROFILE_BUILDERS.clear();
             // only use when custom profile changed.
-            var usedProfiles = new LinkedHashMap<OpenResourceLocation, EntityProfile>();
+            var usedProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
             newEntities.forEach((entityType, profile) -> {
                 var oldProfile = BUILTIN_ENTITIES.get(entityType);
                 if (oldProfile != null && EntityProfile.same(oldProfile, profile)) {
@@ -168,7 +168,7 @@ public class ModEntityProfiles {
 
         private static void freezeBuiltin() {
             // regenerate all entity profile.
-            var newProfiles = new LinkedHashMap<OpenResourceLocation, EntityProfile>();
+            var newProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
             BUILTIN_ENTITIES.clear();
             BUILTIN_PROFILE_BUILDERS.forEach((key, builder) -> {
                 var profile = builder.build();
@@ -230,27 +230,27 @@ public class ModEntityProfiles {
 
     private static class SimpleBuilder {
 
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
 
         private final List<IRegistryHolder<?>> entities = new ArrayList<>();
-        private final List<OpenResourceLocation> transformers = new ArrayList<>();
+        private final List<OpenResourceKey> transformers = new ArrayList<>();
 
         private final Map<SkinSlotType, String> supports = new LinkedHashMap<>();
 
         private boolean isLocked = false;
 
-        public SimpleBuilder(OpenResourceLocation registryName) {
+        public SimpleBuilder(OpenResourceKey registryName) {
             this.registryName = registryName;
         }
 
-        public static SimpleBuilder builtin(OpenResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
-            return new SimpleBuilder(location.withPath("builtin/" + path));
+        public static SimpleBuilder builtin(OpenResourceKey key) {
+            var path = FileUtils.getRegistryName(key.path(), "skin/profiles/");
+            return new SimpleBuilder(key.withPath("builtin/" + path));
         }
 
-        public static SimpleBuilder custom(OpenResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.path(), "skin/profiles/");
-            return new SimpleBuilder(location.withPath(path));
+        public static SimpleBuilder custom(OpenResourceKey key) {
+            var path = FileUtils.getRegistryName(key.path(), "skin/profiles/");
+            return new SimpleBuilder(key.withPath(path));
         }
 
         public EntityProfile build() {

@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntityCapability;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.Direction;
@@ -21,15 +21,15 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractForgeCapability<T> extends AbstractForgeCapabilityImpl<T> implements IEntityCapability<T> {
 
-    protected final OpenResourceLocation registryName;
+    protected final OpenResourceKey registryName;
     protected final Class<T> type;
     protected final Supplier<Capability<T>> capability;
     protected final Function<Entity, Optional<T>> factory;
 
-    public AbstractForgeCapability(OpenResourceLocation registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
+    public AbstractForgeCapability(OpenResourceKey registryName, Class<T> type, Function<Entity, Optional<T>> factory) {
         this.registryName = registryName;
         this.type = type;
         this.capability = createCapability(type);

@@ -8,7 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractEntityDataSerializer<T> implements IEntityDataSerializer<T> {
 
     private final StreamCodec<? super RegistryFriendlyByteBuf, T> codec;

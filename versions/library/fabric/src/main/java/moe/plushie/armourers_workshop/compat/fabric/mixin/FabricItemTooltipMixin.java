@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @Mixin(GuiGraphics.class)
 public class FabricItemTooltipMixin {
 

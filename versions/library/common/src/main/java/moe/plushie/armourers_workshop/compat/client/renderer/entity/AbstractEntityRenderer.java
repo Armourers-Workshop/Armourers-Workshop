@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractEntityRenderer<T extends Entity, S extends EntityRenderState> extends AbstractEntityRendererImpl<T, S> implements IEntityRenderer<T, S> {
 

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeDataPackEvent {
 
     public static IEventHandler<DataPackEvent.Sync> syncFactory() {

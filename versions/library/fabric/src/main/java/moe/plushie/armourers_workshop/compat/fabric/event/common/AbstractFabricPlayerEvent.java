@@ -11,7 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricPlayerEvent {
 
     public static IEventHandler<PlayerEvent.LoggingIn> loggingInFactory() {

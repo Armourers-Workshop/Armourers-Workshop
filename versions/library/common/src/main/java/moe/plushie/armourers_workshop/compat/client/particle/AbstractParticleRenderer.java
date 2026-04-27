@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.particle.runtime.GraphicsAccessor;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractParticleRenderer extends GraphicsAccessor {
 

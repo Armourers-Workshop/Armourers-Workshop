@@ -20,6 +20,11 @@ public class SkinPartTransform implements ITransform {
         this.parent = SkinPartTransform.IDENTITY;
     }
 
+    public SkinPartTransform(ITransform parent) {
+        this.parent = parent;
+        this.addChild(parent);
+    }
+
     public SkinPartTransform(SkinPart part, ITransform quadsTransform) {
         this.parent = part.transform();
         if (quadsTransform != null) {
@@ -58,7 +63,7 @@ public class SkinPartTransform implements ITransform {
         children.add(transform);
     }
 
-    public void insertChild(ITransform transform, int index) {
+    public void insertChild(int index, ITransform transform) {
         children.add(index, transform);
     }
 

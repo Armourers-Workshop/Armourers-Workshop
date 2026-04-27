@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 public abstract class AbstractBlockImpl extends Block {
 
     public AbstractBlockImpl(Properties properties) {

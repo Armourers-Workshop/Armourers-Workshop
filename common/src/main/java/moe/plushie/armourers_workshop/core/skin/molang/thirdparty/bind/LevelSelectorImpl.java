@@ -18,18 +18,18 @@ public class LevelSelectorImpl<T extends Level> implements LevelSelector {
 
     @Override
     public int moonPhase() {
-        return level.getMoonPhase();
+        return level.moonPhase();
     }
 
     @Override
     public double days() {
         // ((float) (level.getDayTime() + 6000L) / 24000) % 1;
-        return (level.getDayTime() + 6000L) / 24000d;
+        return (level.dayTime() + 6000L) / 24000d;
     }
 
     @Override
     public double timestamp() {
-        return level.getDayTime();
+        return level.dayTime();
     }
 
     @Override
@@ -45,6 +45,6 @@ public class LevelSelectorImpl<T extends Level> implements LevelSelector {
 
     @Override
     public String dimensionId() {
-        return level.dimension().location().toString();
+        return level.dimension().identifier().toString();
     }
 }

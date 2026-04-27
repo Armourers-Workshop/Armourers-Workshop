@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.IRandomSource;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractLootContext implements ILootContext {
 
     private final LootContext impl;

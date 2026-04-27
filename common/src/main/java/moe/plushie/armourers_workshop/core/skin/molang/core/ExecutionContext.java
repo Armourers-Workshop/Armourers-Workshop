@@ -17,7 +17,21 @@ public interface ExecutionContext extends VariableStorage {
      */
     ExecutionContext fork(Object target);
 
+    /**
+     * Gets the entity-scoped variable storage for this evaluation context.
+     *
+     * <p>This storage is shared with child contexts created by {@link #fork(Object)}.</p>
+     *
+     * @return The entity-scoped variable storage.
+     */
     VariableStorage entity();
 
+    /**
+     * Gets the local stack storage for this evaluation context.
+     *
+     * <p>Each context has its own stack storage and it is not shared across forks.</p>
+     *
+     * @return The local variable stack storage.
+     */
     LocalVariableStorage stack();
 }

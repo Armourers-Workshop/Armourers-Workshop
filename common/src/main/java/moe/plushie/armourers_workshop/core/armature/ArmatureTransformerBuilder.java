@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.math.OpenTransform3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,28 +18,28 @@ import java.util.Objects;
 
 public abstract class ArmatureTransformerBuilder {
 
-    protected OpenResourceLocation parent;
+    protected OpenResourceKey parent;
     protected Armature armature;
     protected IODataObject contents;
 
-    protected final OpenResourceLocation name;
-    protected final ArrayList<OpenResourceLocation> models = new ArrayList<>();
+    protected final OpenResourceKey name;
+    protected final ArrayList<OpenResourceKey> models = new ArrayList<>();
     protected final ArrayList<IRegistryHolder<?>> entities = new ArrayList<>();
     protected final ArrayList<String> pluginModifiers = new ArrayList<>();
     protected final HashMap<String, Collection<String>> overrideModifiers = new HashMap<>();
     protected final HashMap<Joint, Collection<JointModifier>> jointModifiers = new HashMap<>();
     protected final HashMap<Joint, Collection<JointModifier>> transformModifiers = new HashMap<>();
 
-    public ArmatureTransformerBuilder(OpenResourceLocation name) {
+    public ArmatureTransformerBuilder(OpenResourceKey name) {
         this.name = name;
     }
 
     public void load(IODataObject object) {
         object.get("parent").ifPresent(it -> {
-            parent = OpenResourceLocation.parse(it.stringValue());
+            parent = OpenResourceKey.parse(it.stringValue());
         });
         object.get("target").ifPresent(it -> {
-            armature = Armatures.byName(OpenResourceLocation.parse(it.stringValue()));
+            armature = Armatures.byName(OpenResourceKey.parse(it.stringValue()));
         });
         contents = object;
         if (armature != null) {
@@ -95,7 +95,7 @@ public abstract class ArmatureTransformerBuilder {
 
     protected abstract JointModifier buildJointTarget(String name, IODataObject parameters);
 
-    public ArrayList<OpenResourceLocation> models() {
+    public ArrayList<OpenResourceKey> models() {
         return models;
     }
 
@@ -103,11 +103,11 @@ public abstract class ArmatureTransformerBuilder {
         return entities;
     }
 
-    public OpenResourceLocation parent() {
+    public OpenResourceKey parent() {
         return parent;
     }
 
-    public OpenResourceLocation name() {
+    public OpenResourceKey name() {
         return name;
     }
 

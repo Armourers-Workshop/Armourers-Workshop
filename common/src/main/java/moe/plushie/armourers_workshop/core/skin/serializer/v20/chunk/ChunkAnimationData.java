@@ -1,10 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationFunction;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationKeyframe;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationLoop;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationPoint;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundProperties;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -18,13 +14,13 @@ import java.util.Map;
 
 public class ChunkAnimationData {
 
-    private final List<SkinAnimation> animations;
+    private final List<SkinAnimationData> animations;
 
-    public ChunkAnimationData(List<SkinAnimation> animations) {
+    public ChunkAnimationData(List<SkinAnimationData> animations) {
         this.animations = animations;
     }
 
-    public List<SkinAnimation> animations() {
+    public List<SkinAnimationData> animations() {
         return animations;
     }
 
@@ -38,9 +34,9 @@ public class ChunkAnimationData {
         for (int i = 0; i < animationCount; ++i) {
             var name = stream.readString();
             var duration = stream.readFloat();
-            var loop = stream.readEnum(SkinAnimationLoop.class);
-            var keyframes = readKeyframesFromStream(stream);
-            animations.add(new SkinAnimation(name, duration, loop, keyframes));
+            var loop = stream.readEnum(SkinAnimationData.Loop.class);
+            var animators = readAnimatorsFromStream(stream);
+            animations.add(new SkinAnimationData(name, duration, loop, animators));
         }
     }
 
@@ -50,12 +46,13 @@ public class ChunkAnimationData {
             stream.writeString(animation.name());
             stream.writeFloat(animation.duration());
             stream.writeEnum(animation.loop());
-            writeKeyframesToStream(animation.keyframes(), stream);
+            writeAnimatorsToStream(animation.animators(), stream);
         }
     }
 
-    private Map<String, List<SkinAnimationKeyframe>> readKeyframesFromStream(ChunkInputStream stream) throws IOException {
-        var keyframes = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
+    private List<SkinAnimationData.Animator> readAnimatorsFromStream(ChunkInputStream stream) throws IOException {
+        // read channel -> bone -> values map into grouped keyframes.
+        var keyframes = new LinkedHashMap<String, List<SkinAnimationData.Keyframe>>();
         while (true) {
             var channel = stream.readString();
             if (channel.isEmpty()) {
@@ -75,16 +72,19 @@ public class ChunkAnimationData {
                 }
             }
         }
-        return keyframes;
+        // convert the grouped keyframes into animator.
+        var animators = new ArrayList<SkinAnimationData.Animator>();
+        keyframes.forEach((bone, values) -> animators.add(new SkinAnimationData.Animator(bone, 0, values)));
+        return animators;
     }
 
-    private void writeKeyframesToStream(Map<String, List<SkinAnimationKeyframe>> keyframes, ChunkOutputStream stream) throws IOException {
-        // ..
-        var sortedKeyframes = new LinkedHashMap<String, Map<String, List<SkinAnimationKeyframe>>>();
-        for (var entry1 : keyframes.entrySet()) {
-            var bone = entry1.getKey();
-            for (var entry2 : entry1.getValue()) {
-                var channel = entry2.key();
+    private void writeAnimatorsToStream(List<SkinAnimationData.Animator> animators, ChunkOutputStream stream) throws IOException {
+        // convert animators into channel -> bone -> values map.
+        var sortedKeyframes = new LinkedHashMap<String, Map<String, List<SkinAnimationData.Keyframe>>>();
+        for (var animator : animators) {
+            var bone = animator.bone();
+            for (var entry2 : animator.keyframes()) {
+                var channel = entry2.channel();
                 sortedKeyframes.computeIfAbsent(channel, it -> new LinkedHashMap<>()).computeIfAbsent(bone, it -> new ArrayList<>()).add(entry2);
             }
         }
@@ -105,15 +105,15 @@ public class ChunkAnimationData {
         stream.writeString(""); // empty channel.
     }
 
-    private SkinAnimationKeyframe readKeyframeFromStream(String channel, ChunkInputStream stream) throws IOException {
+    private SkinAnimationData.Keyframe readKeyframeFromStream(String channel, ChunkInputStream stream) throws IOException {
         // 0 is null keyframe.
         var pointCount = stream.readVarInt();
         if (pointCount == 0) {
             return null;
         }
         var time = stream.readFloat();
-        var function = SkinAnimationFunction.readFromStream(stream);
-        var points = new ArrayList<SkinAnimationPoint>();
+        var function = SkinAnimationData.Interpolation.readFromStream(stream);
+        var points = new ArrayList<SkinAnimationData.Point>();
         // 1 is empty keyframe.
         for (int i = 1; i < pointCount; ++i) {
             var type = stream.readVarInt();
@@ -123,10 +123,10 @@ public class ChunkAnimationData {
             }
             points.add(serializer.readFromStream(stream));
         }
-        return new SkinAnimationKeyframe(time, channel, function, points);
+        return new SkinAnimationData.Keyframe(time, channel, function, points);
     }
 
-    private void writeKeyframeToStream(SkinAnimationKeyframe keyframe, String channel, ChunkOutputStream stream) throws IOException {
+    private void writeKeyframeToStream(SkinAnimationData.Keyframe keyframe, String channel, ChunkOutputStream stream) throws IOException {
         // 0 is null keyframe.
         if (keyframe == null || channel == null) {
             stream.writeVarInt(0);
@@ -135,7 +135,7 @@ public class ChunkAnimationData {
         // 1 is empty keyframe.
         stream.writeVarInt(keyframe.points().size() + 1);
         stream.writeFloat(keyframe.time());
-        keyframe.function().writeToStream(stream);
+        keyframe.interpolation().writeToStream(stream);
         // write all points into stream.
         for (var point : keyframe.points()) {
             var serializer = PointSerializer.byValue(point);
@@ -148,22 +148,22 @@ public class ChunkAnimationData {
     }
 
     @SuppressWarnings("unused")
-    private static abstract class PointSerializer<T extends SkinAnimationPoint> {
+    private static abstract class PointSerializer<T extends SkinAnimationData.Point> {
 
         private static final List<PointSerializer<?>> SERIALIZERS = new ArrayList<>();
 
-        private static final PointSerializer<?> BONE = new PointSerializer<>(8, SkinAnimationPoint.Bone.class) {
+        private static final PointSerializer<?> BONE = new PointSerializer<>(8, SkinAnimationData.Point.Bone.class) {
 
             @Override
-            public SkinAnimationPoint.Bone readFromStream(ChunkInputStream stream) throws IOException {
+            public SkinAnimationData.Point.Bone readFromStream(ChunkInputStream stream) throws IOException {
                 var x = readField(stream);
                 var y = readField(stream);
                 var z = readField(stream);
-                return new SkinAnimationPoint.Bone(x, y, z);
+                return new SkinAnimationData.Point.Bone(x, y, z);
             }
 
             @Override
-            public void writeToStream(SkinAnimationPoint.Bone value, ChunkOutputStream stream) throws IOException {
+            public void writeToStream(SkinAnimationData.Point.Bone value, ChunkOutputStream stream) throws IOException {
                 writeField(value.x(), stream);
                 writeField(value.y(), stream);
                 writeField(value.z(), stream);
@@ -191,41 +191,41 @@ public class ChunkAnimationData {
             }
         };
 
-        private static final PointSerializer<?> INSTRUCT = new PointSerializer<>(9, SkinAnimationPoint.Instruct.class) {
+        private static final PointSerializer<?> INSTRUCT = new PointSerializer<>(9, SkinAnimationData.Point.Instruct.class) {
 
             @Override
-            public SkinAnimationPoint.Instruct readFromStream(ChunkInputStream stream) throws IOException {
+            public SkinAnimationData.Point.Instruct readFromStream(ChunkInputStream stream) throws IOException {
                 var script = stream.readString();
-                return new SkinAnimationPoint.Instruct(script);
+                return new SkinAnimationData.Point.Instruct(script);
             }
 
             @Override
-            public void writeToStream(SkinAnimationPoint.Instruct value, ChunkOutputStream stream) throws IOException {
+            public void writeToStream(SkinAnimationData.Point.Instruct value, ChunkOutputStream stream) throws IOException {
                 stream.writeString(value.script());
             }
         };
 
-        private static final PointSerializer<?> SOUND = new PointSerializer<>(10, SkinAnimationPoint.Sound.class) {
+        private static final PointSerializer<?> SOUND = new PointSerializer<>(10, SkinAnimationData.Point.Sound.class) {
 
             @Override
-            public SkinAnimationPoint.Sound readFromStream(ChunkInputStream stream) throws IOException {
+            public SkinAnimationData.Point.Sound readFromStream(ChunkInputStream stream) throws IOException {
                 // TODO: remove in the future (23-builtin-sound).
                 if (stream.fileVersion() < 23) {
                     var effect = stream.readString();
                     var file = stream.readFile();
                     var sound = new SkinSoundData(file.name(), file.bytes(), SkinSoundProperties.EMPTY);
-                    return new SkinAnimationPoint.Sound(effect, sound);
+                    return new SkinAnimationData.Point.Sound(effect, sound);
                 }
                 var effect = stream.readString();
                 var properties = new SkinSoundProperties();
                 properties.readFromStream(stream);
                 var file = stream.readFile();
                 var sound = new SkinSoundData(file.name(), file.bytes(), properties);
-                return new SkinAnimationPoint.Sound(effect, sound);
+                return new SkinAnimationData.Point.Sound(effect, sound);
             }
 
             @Override
-            public void writeToStream(SkinAnimationPoint.Sound value, ChunkOutputStream stream) throws IOException {
+            public void writeToStream(SkinAnimationData.Point.Sound value, ChunkOutputStream stream) throws IOException {
                 var sound = value.provider();
                 var properties = sound.properties();
                 stream.writeString(value.effect());
@@ -234,20 +234,20 @@ public class ChunkAnimationData {
             }
         };
 
-        private static final PointSerializer<?> PARTICLE = new PointSerializer<>(11, SkinAnimationPoint.Particle.class) {
+        private static final PointSerializer<?> PARTICLE = new PointSerializer<>(11, SkinAnimationData.Point.Particle.class) {
 
             @Override
-            public SkinAnimationPoint.Particle readFromStream(ChunkInputStream stream) throws IOException {
+            public SkinAnimationData.Point.Particle readFromStream(ChunkInputStream stream) throws IOException {
                 var effect = stream.readString();
                 var locator = stream.readOptionalString();
                 var script = stream.readOptionalString();
                 var particleData = new ChunkParticleData();
                 particleData.readFromStream(stream);
-                return new SkinAnimationPoint.Particle(effect, locator.orElse(null), script.orElse(null), particleData.particle());
+                return new SkinAnimationData.Point.Particle(effect, locator.orElse(null), script.orElse(null), particleData.particle());
             }
 
             @Override
-            public void writeToStream(SkinAnimationPoint.Particle value, ChunkOutputStream stream) throws IOException {
+            public void writeToStream(SkinAnimationData.Point.Particle value, ChunkOutputStream stream) throws IOException {
                 var particle = value.provider();
                 stream.writeString(value.effect());
                 stream.writeOptionalString(value.locator());
@@ -275,7 +275,7 @@ public class ChunkAnimationData {
             return null;
         }
 
-        public static PointSerializer<?> byValue(SkinAnimationPoint value) {
+        public static PointSerializer<?> byValue(SkinAnimationData.Point value) {
             for (var serializer : SERIALIZERS) {
                 if (serializer.valueClass.isInstance(value)) {
                     return serializer;
@@ -292,8 +292,8 @@ public class ChunkAnimationData {
 
     private static class LegacyHelperV20 {
 
-        private static List<SkinAnimation> readFromStream(ChunkInputStream stream) throws IOException {
-            var results = new ArrayList<SkinAnimation>();
+        private static List<SkinAnimationData> readFromStream(ChunkInputStream stream) throws IOException {
+            var results = new ArrayList<SkinAnimationData>();
             var count = stream.readVarInt();
             for (int i = 0; i < count; i++) {
                 var animation = readAnimationFromStream(stream);
@@ -302,11 +302,11 @@ public class ChunkAnimationData {
             return results;
         }
 
-        private static SkinAnimation readAnimationFromStream(ChunkInputStream stream) throws IOException {
+        private static SkinAnimationData readAnimationFromStream(ChunkInputStream stream) throws IOException {
             var id = stream.readString();
             var duration = stream.readFloat();
-            var loop = stream.readEnum(SkinAnimationLoop.class);
-            var keyframes = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
+            var loop = stream.readEnum(SkinAnimationData.Loop.class);
+            var keyframes = new LinkedHashMap<String, List<SkinAnimationData.Keyframe>>();
             while (true) {
                 int count = stream.readVarInt();
                 if (count == 0) {
@@ -319,13 +319,15 @@ public class ChunkAnimationData {
                     keyframes.computeIfAbsent(bone, k -> new ArrayList<>()).add(keyframe);
                 }
             }
-            return new SkinAnimation(id, duration, loop, keyframes);
+            var animators = new ArrayList<SkinAnimationData.Animator>();
+            keyframes.forEach((bone, values) -> animators.add(new SkinAnimationData.Animator(bone, 0, values)));
+            return new SkinAnimationData(id, duration, loop, animators);
         }
 
-        private static SkinAnimationKeyframe readKeyframeFromStream(String key, ChunkInputStream stream) throws IOException {
+        private static SkinAnimationData.Keyframe readKeyframeFromStream(String key, ChunkInputStream stream) throws IOException {
             var time = stream.readFloat();
-            var function = SkinAnimationFunction.readFromStream(stream);
-            var points = new ArrayList<SkinAnimationPoint>();
+            var function = SkinAnimationData.Interpolation.readFromStream(stream);
+            var points = new ArrayList<SkinAnimationData.Point>();
             int type = stream.readVarInt();
             // old version is: 0,3,6
             if (type == 3 || type == 6) {
@@ -340,11 +342,11 @@ public class ChunkAnimationData {
                 points.add(serializer.readFromStream(stream));
                 type = stream.readVarInt();
             }
-            return new SkinAnimationKeyframe(time, key, function, points);
+            return new SkinAnimationData.Keyframe(time, key, function, points);
         }
 
-        private static List<SkinAnimationPoint> readKeyframePointsFromStream(int length, ChunkInputStream stream) throws IOException {
-            var points = new ArrayList<SkinAnimationPoint>();
+        private static List<SkinAnimationData.Point> readKeyframePointsFromStream(int length, ChunkInputStream stream) throws IOException {
+            var points = new ArrayList<SkinAnimationData.Point>();
             var objects = new ArrayList<OpenPrimitive>();
             for (int i = 0; i < length; i++) {
                 var flags = stream.readVarInt();
@@ -358,7 +360,7 @@ public class ChunkAnimationData {
                 var x = objects.get(i);
                 var y = objects.get(i + 1);
                 var z = objects.get(i + 2);
-                points.add(new SkinAnimationPoint.Bone(x, y, z));
+                points.add(new SkinAnimationData.Point.Bone(x, y, z));
             }
             return points;
         }

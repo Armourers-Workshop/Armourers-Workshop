@@ -8,10 +8,10 @@ import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGr
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEntityRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
 

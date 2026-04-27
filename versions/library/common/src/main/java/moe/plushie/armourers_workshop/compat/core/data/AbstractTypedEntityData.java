@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.apache.commons.lang3.NotImplementedException;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractTypedEntityData<T> extends TypedEntityData<T> {
 
     protected final CustomData impl;

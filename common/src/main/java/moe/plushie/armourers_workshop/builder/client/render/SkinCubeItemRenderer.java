@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -40,15 +40,15 @@ public class SkinCubeItemRenderer extends AbstractSpecialModelRenderer<ItemStack
         var isGlass = block.equals(ModBlocks.SKIN_CUBE_GLASS.get()) || block.equals(ModBlocks.SKIN_CUBE_GLASS_GLOWING.get());
 
 
-        var outerRenderType = SkinRenderType.BLOCK_CUBE;
-        var innerRenderType = SkinRenderType.BLOCK_CUBE;
+        var outerRenderType = SkinRenderTypes.BLOCK_CUBE;
+        var innerRenderType = SkinRenderTypes.BLOCK_CUBE;
 
         if (isGlass) {
-            outerRenderType = SkinRenderType.BLOCK_CUBE_GLASS;
-            innerRenderType = SkinRenderType.BLOCK_CUBE_GLASS;
+            outerRenderType = SkinRenderTypes.BLOCK_CUBE_GLASS;
+            innerRenderType = SkinRenderTypes.BLOCK_CUBE_GLASS;
         }
         if (isGlowing) {
-            outerRenderType = SkinRenderType.BLOCK_CUBE_GLASS_UNSORTED;
+            outerRenderType = SkinRenderTypes.BLOCK_CUBE_GLASS_UNSORTED;
         }
 
         if (innerRenderType != outerRenderType) {

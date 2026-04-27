@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.19, )")
+@Available("[19, )")
 @Extension
 public class Constructor {
 

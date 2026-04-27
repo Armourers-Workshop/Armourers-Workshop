@@ -6,7 +6,7 @@ import net.minecraft.world.entity.Entity;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Extension
 public class RemoveExt {
 

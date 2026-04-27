@@ -2,12 +2,13 @@ package moe.plushie.armourers_workshop.compat.mixin;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.item.AbstractItemModelFinder;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
-import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.ModelDiscovery;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.cuboid.ItemModelGenerator;
+import net.minecraft.resources.Identifier;
+import org.joml.Matrix4fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,26 +17,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class ModelBakeryMixin {
 
     @Mixin(ModelDiscovery.class)
     public static class ModelPatch {
 
         @Inject(method = "<init>", at = @At("RETURN"))
-        private void aw2$init(Map<ResourceLocation, UnbakedModel> map, UnbakedModel missingModel, CallbackInfo ci) {
+        private void aw2$init(Map<Identifier, UnbakedModel> map, UnbakedModel missingModel, CallbackInfo ci) {
             var discovery = ModelDiscovery.class.cast(this);
-            discovery.addSpecialModel(ResourceLocation.withDefaultNamespace("builtin/entity"), new ItemModelGenerator());
+            discovery.addSpecialModel(Identifier.withDefaultNamespace("builtin/entity"), new ItemModelGenerator());
             discovery.addSpecialModel(AbstractItemModelFinder.MARKER_ID, new ItemModelGenerator());
         }
     }
 
-    @Mixin(BlockModelWrapper.Unbaked.class)
+    @Mixin(CuboidItemModelWrapper.Unbaked.class)
     public static class BakeryPatch {
 
         @Inject(method = "bake", at = @At("RETURN"))
-        private void aw2$bake(ItemModel.BakingContext context, CallbackInfoReturnable<ItemModel> cir) {
-            var blockModel = BlockModelWrapper.Unbaked.class.cast(this);
+        private void aw2$bake(ItemModel.BakingContext context, Matrix4fc transformation, CallbackInfoReturnable<ItemModel> cir) {
+            var blockModel = CuboidItemModelWrapper.Unbaked.class.cast(this);
             var resolvedModel = context.blockModelBaker().getModel(blockModel.model());
             AbstractItemModelFinder.accept(blockModel.model(), resolvedModel.wrapped(), cir.getReturnValue());
         }

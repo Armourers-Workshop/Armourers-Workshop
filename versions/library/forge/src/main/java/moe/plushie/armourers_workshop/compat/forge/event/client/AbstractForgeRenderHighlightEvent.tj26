@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.compat.forge.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
+import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeBlockOutlineRenderer;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
-import net.minecraft.client.Camera;
 import net.minecraft.world.phys.BlockHitResult;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractForgeRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
@@ -23,8 +23,8 @@ public class AbstractForgeRenderHighlightEvent {
                 }
 
                 @Override
-                public Camera camera() {
-                    return event.getCamera();
+                public AbstractCamera camera() {
+                    return AbstractCamera.wrap(event.getCamera());
                 }
 
                 @Override

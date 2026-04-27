@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.DataContainer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(EntityRenderState.class)
 public class EntityRenderStateMixin implements IAssociatedContainer {
 

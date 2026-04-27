@@ -1,0 +1,51 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.server.packs.resources.Resource;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.function.Function;
+
+@Available("[18, 19)")
+public class AbstractResource {
+
+    public static Resource transform(Resource resource, Function<InputStream, InputStream> transformer) {
+        return new Resource() {
+
+            @Override
+            public ResourceLocation getLocation() {
+                return resource.getLocation();
+            }
+
+            @Override
+            public InputStream getInputStream() {
+                return transformer.apply(resource.getInputStream());
+            }
+
+            @Override
+            public boolean hasMetadata() {
+                return resource.hasMetadata();
+            }
+
+            @Nullable
+            @Override
+            public <T> T getMetadata(MetadataSectionSerializer<T> metadataSectionSerializer) {
+                return resource.getMetadata(metadataSectionSerializer);
+            }
+
+            @Override
+            public String getSourceName() {
+                return resource.getSourceName();
+            }
+
+            @Override
+            public void close() throws IOException {
+                resource.close();
+            }
+        };
+    }
+}

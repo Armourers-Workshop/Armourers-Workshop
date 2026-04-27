@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.init.event.common.LauncherClientSetupEvent
 import moe.plushie.armourers_workshop.init.event.common.LauncherCommonSetupEvent;
 import moe.plushie.armourers_workshop.init.event.common.LauncherLoadCompleteEvent;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricLauncherLifecycleEvent {
 
     public static IEventHandler<LauncherClientSetupEvent> clientSetupFactory() {

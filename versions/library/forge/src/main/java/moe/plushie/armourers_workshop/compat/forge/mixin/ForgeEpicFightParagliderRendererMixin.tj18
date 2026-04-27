@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.18, 1.19)")
+@Available("[18, 19)")
 @Conditional("dawncraft")
 @Pseudo
 @Mixin(targets = "com.afunproject.dawncraft.integration.epicfight.client.EpicFightParagliderEvents")

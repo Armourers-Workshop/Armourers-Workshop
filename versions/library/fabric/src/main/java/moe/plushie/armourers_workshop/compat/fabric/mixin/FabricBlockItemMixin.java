@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(BlockItem.class)
 public class FabricBlockItemMixin {
 

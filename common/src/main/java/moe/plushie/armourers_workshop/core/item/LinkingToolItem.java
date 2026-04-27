@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
@@ -72,7 +72,7 @@ public class LinkingToolItem extends FlavouredItem {
     }
 
     @Override
-    public void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    public void abi$appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> {
             if (itemStack.has(ModDataComponents.LINKED_POS.get())) {
                 return 0;

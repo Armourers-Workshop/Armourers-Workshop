@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.fabric.builder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityType;
 import moe.plushie.armourers_workshop.compat.builder.AbstractBlockEntityTypeBuilder;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -12,9 +12,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-@Available("[1.18, )")
+@Available("[18, )")
 public class AbstractFabricBlockEntityTypeBuilder<T extends BlockEntity> extends AbstractBlockEntityTypeBuilder<T> {
 
     public AbstractFabricBlockEntityTypeBuilder(IBlockEntityType.Serializer<T> serializer) {
@@ -22,7 +23,7 @@ public class AbstractFabricBlockEntityTypeBuilder<T extends BlockEntity> extends
     }
 
     @Override
-    public IBlockEntityType<T> build(OpenResourceLocation registryName) {
+    public IBlockEntityType<T> build(OpenResourceKey registryName) {
         return new Proxy<T>(create(registryName)) {
             @Override
             public T create(BlockGetter level, BlockPos blockPos, BlockState blockState) {
@@ -31,11 +32,10 @@ public class AbstractFabricBlockEntityTypeBuilder<T extends BlockEntity> extends
         };
     }
 
-    private BlockEntityType<T> create(OpenResourceLocation registryName) {
-        Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
-        BlockEntityType<?>[] entityTypes = {null};
-        BlockEntityType<T> entityType = FabricBlockEntityTypeBuilder.create((blockPos, blockState) -> serializer.create(entityTypes[0], blockPos, blockState), blocks1).build();
-        entityTypes[0] = entityType;
-        return entityType;
+    private BlockEntityType<T> create(OpenResourceKey registryName) {
+        var blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
+        var entityType = new AtomicReference<BlockEntityType<T>>();
+        entityType.set(FabricBlockEntityTypeBuilder.create((blockPos, blockState) -> serializer.create(entityType.get(), blockPos, blockState), blocks1).build());
+        return entityType.get();
     }
 }

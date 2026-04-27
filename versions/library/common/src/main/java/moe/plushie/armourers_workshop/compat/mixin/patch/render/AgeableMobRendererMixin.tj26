@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(EntityModelSet.class)
 public class AgeableMobRendererMixin {
 

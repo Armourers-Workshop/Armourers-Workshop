@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
     private final MenuType<C> type;

@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.Colors;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModDataComponents;
@@ -75,7 +75,7 @@ public class BottleItem extends FlavouredItem implements IItemPaintable, IPaintT
     }
 
     @Override
-    protected void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    protected void abi$appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("empty"), (itemStack, level, entity, id) -> itemStack.has(ModDataComponents.TOOL_COLOR.get()) ? 0 : 1);
     }
 

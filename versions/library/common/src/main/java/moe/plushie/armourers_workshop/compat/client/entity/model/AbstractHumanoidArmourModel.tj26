@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractRenderS
 import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractHumanoidArmourModel<T extends LivingEntity, S extends LivingEntityRenderState> extends AbstractHumanoidArmourModelImpl<T, AbstractHumanoidRenderState> {
 

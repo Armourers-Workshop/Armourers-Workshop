@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
-@Available("[1.20, )")
+@Available("[20, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractRenderItemTooltipEvent {
 

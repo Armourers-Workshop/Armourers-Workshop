@@ -17,9 +17,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractLootItemFunctionType<T extends ILootItemFunction> implements ILootItemFunctionType<T> {
 
     private final LootItemFunctionType<?> type;
@@ -29,9 +30,9 @@ public class AbstractLootItemFunctionType<T extends ILootItemFunction> implement
     }
 
     public static <T extends ILootItemFunction> AbstractLootItemFunctionType<T> conditional(IDataMapCodec<T> codec) {
-        LootItemFunctionType<?>[] type = {null};
-        type[0] = new LootItemFunctionType<>(ConditionalFunction.createCodec(() -> Objects.unsafeCast(type[0]), codec.mapCodec()));
-        return new AbstractLootItemFunctionType<>(type[0]);
+        var type = new AtomicReference<LootItemFunctionType<?>>();
+        type.set(new LootItemFunctionType<>(ConditionalFunction.createCodec(() -> Objects.unsafeCast(type.get()), codec.mapCodec())));
+        return new AbstractLootItemFunctionType<>(type.get());
     }
 
     public static LootItemFunctionType<?> unwrap(ILootItemFunctionType<?> type) {

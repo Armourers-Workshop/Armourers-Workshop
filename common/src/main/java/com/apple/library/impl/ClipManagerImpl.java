@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.mojang.blaze3d.platform.Window;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -122,7 +122,7 @@ public class ClipManagerImpl {
                 GL30.glStencilFunc(GL30.GL_ALWAYS, 1, 0xff);
                 GL30.glStencilOp(GL30.GL_REPLACE, GL30.GL_REPLACE, GL30.GL_REPLACE);
 
-                var maskBuilder = buffers.getBuffer(SkinRenderType.BLIT_MASK);
+                var maskBuilder = buffers.getBuffer(SkinRenderTypes.BLIT_MASK);
                 passes.forEach(it -> buffer.mask(it.destination, maskBuilder));
                 buffers.endBatch();
 
@@ -130,7 +130,7 @@ public class ClipManagerImpl {
                 GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_KEEP);
 
                 RenderSystem.setShaderTexture(0, oldMainTexture);
-                var blitBuilder = buffers.getBuffer(SkinRenderType.BLIT_TEXTURED);
+                var blitBuilder = buffers.getBuffer(SkinRenderTypes.BLIT_TEXTURED);
                 passes.forEach(it -> buffer.blit(it.source, it.destination, blitBuilder));
                 buffers.endBatch();
 

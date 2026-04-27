@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.animation.bind;
 
+import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.VariableStorage;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.LocalVariableStorage;
@@ -53,13 +54,13 @@ public class ClientExecutionContextImpl extends ExecutionContextImpl {
 
     @Override
     public boolean isRenderingInInventory() {
-        // TODO: @SAGSSE no impl
+        // TODO: @SAGESSE no impl
         return false;
     }
 
     @Override
     public boolean isRenderingInFirstPersonMod() {
-        // TODO: @SAGSSE no impl
+        // TODO: @SAGESSE no impl
         return false;
     }
 
@@ -70,7 +71,9 @@ public class ClientExecutionContextImpl extends ExecutionContextImpl {
 
     @Override
     public double getCameraDistanceFormEntity(Entity entity) {
-        return minecraft.gameRenderer.getMainCamera().getPosition().distanceTo(entity.position());
+        var position = entity.position();
+        var camera = AbstractCamera.getMainCamera();
+        return camera.position().distanceTo(position.x(), position.y(), position.z());
     }
 
     @Override

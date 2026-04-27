@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
 import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.material.MapColor;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractBlockBuilder<T extends Block> {
 
     private static final FastMapper<AbstractBlockMaterial, NoteBlockInstrument> INSTRUMENTS = FastMapper.builder(builder -> {
@@ -47,7 +47,7 @@ public class AbstractBlockBuilder<T extends Block> {
         this.updaters.add(updater);
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var properties = BlockBehaviour.Properties.of();
         properties = properties.instrument(INSTRUMENTS.getValue(material));
         properties = properties.sound(SOUNDS.getValue(material));

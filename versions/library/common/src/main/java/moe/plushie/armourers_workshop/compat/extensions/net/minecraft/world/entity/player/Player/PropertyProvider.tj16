@@ -9,7 +9,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class PropertyProvider {
 
     public static Abilities getAbilities(@This Player player) {

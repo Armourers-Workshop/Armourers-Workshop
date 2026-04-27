@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.client;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.Camera;
+import net.minecraft.world.phys.Vec3;
+
+@Available("[26, )")
+public abstract class AbstractCameraImpl {
+
+    protected float getXRot() {
+        return getCamera().xRot();
+    }
+
+    protected float getYRot() {
+        return getCamera().yRot();
+    }
+
+    protected Vec3 getPosition() {
+        return getCamera().position();
+    }
+
+    protected abstract Camera getCamera();
+}

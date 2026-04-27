@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.network.Connection;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,12 +21,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(OpenResourceLocation channelName, String channelVersion) {
+        public Dispatcher(OpenResourceKey channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
@@ -84,7 +84,7 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceKey channel, IFriendlyByteBuf buf) {
             return new Distributor(sender, target, new Proxy(buf));
         }
 

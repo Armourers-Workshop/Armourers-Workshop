@@ -9,7 +9,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.21, )")
+@Available("[21, )")
 public class ABI {
 
     public static String getUuid(@This User user) {

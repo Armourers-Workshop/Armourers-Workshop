@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extends ILivingEntityRenderState, M extends IEntityModel<S>> implements ILivingEntityRenderer<T, S, M> {
 

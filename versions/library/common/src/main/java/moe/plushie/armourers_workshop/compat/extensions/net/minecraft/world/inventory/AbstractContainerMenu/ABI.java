@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.inventory.AbstractContainerMenu;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractContainerInput;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[16, 26)")
+public class ABI {
+
+    public static void clicked(@This AbstractContainerMenu menu, Slot slot, int slotId, int buttonNum, AbstractContainerInput input, Player player) {
+        menu.clicked(slot.index, buttonNum, AbstractContainerInput.unwrap(input), player);
+    }
+}

@@ -21,7 +21,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.FirstPersonRenderer;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("epicfight")
 @Pseudo
 @Mixin(FirstPersonRenderer.class)

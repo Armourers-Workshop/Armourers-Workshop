@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.core.armature.JointShape;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.Colors;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideRenderer {
 
@@ -32,7 +32,7 @@ public abstract class AdvancedEntityGuideRenderer extends AdvancedAbstractGuideR
     public abstract BakedArmature armature();
 
     public IRenderType getRenderType(SkinTextureData texture) {
-        return SkinRenderType.entityCutoutNoCull(OpenResourceLocation.parse(texture.name()));
+        return SkinRenderTypes.entityCutoutNoCull(OpenResourceKey.parse(texture.name()));
     }
 
     public void applyOffset(SkinDocument document, IGraphicsContext context) {

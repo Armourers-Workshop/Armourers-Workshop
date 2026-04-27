@@ -11,7 +11,7 @@ import net.minecraftforge.forgespi.language.IModFileInfo;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractForgeEnvironment {
 
     public static IModFileInfo getModFileById(String modId) {

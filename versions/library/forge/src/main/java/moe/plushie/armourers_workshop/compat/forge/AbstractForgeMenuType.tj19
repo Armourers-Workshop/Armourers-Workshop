@@ -19,7 +19,7 @@ import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public class AbstractForgeMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
     private final MenuType<C> type;

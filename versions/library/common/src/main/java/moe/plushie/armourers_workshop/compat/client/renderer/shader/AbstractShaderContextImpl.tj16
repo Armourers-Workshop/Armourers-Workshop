@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL15;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractShaderContextImpl extends AbstractShaderContext {
 

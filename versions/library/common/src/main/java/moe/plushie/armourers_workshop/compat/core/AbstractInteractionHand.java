@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import net.minecraft.world.InteractionHand;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractInteractionHand {
 
     private static final FastMapper<OpenInteractionHand, InteractionHand> MAPPER = FastMapper.builder(OpenInteractionHand.MAIN_HAND, InteractionHand.MAIN_HAND, it -> {

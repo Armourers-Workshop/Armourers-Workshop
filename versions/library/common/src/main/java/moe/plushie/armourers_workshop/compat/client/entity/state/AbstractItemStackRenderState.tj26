@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractItemStackRenderState {
 
     private static ItemStack RENDERING_GUI_ITEM = null;

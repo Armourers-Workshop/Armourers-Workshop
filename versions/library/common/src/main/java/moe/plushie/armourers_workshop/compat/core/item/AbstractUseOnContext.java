@@ -17,7 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractUseOnContext implements IUseOnContext {
 
     private final UseOnContext context;

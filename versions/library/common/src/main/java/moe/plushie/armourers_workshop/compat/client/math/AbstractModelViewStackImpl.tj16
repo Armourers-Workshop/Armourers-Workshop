@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractModelViewStackImpl implements IModelViewStack {
 
     private final Proxy entry = new Proxy();

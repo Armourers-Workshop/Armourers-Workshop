@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractFabricItemTooltipEvent {
 
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {

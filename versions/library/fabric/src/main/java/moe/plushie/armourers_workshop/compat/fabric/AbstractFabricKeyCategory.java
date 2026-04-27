@@ -3,15 +3,15 @@ package moe.plushie.armourers_workshop.compat.fabric;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.network.chat.Component;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractFabricKeyCategory implements IKeyCategory {
 
-    private final OpenResourceLocation name;
+    private final OpenResourceKey name;
 
-    public AbstractFabricKeyCategory(OpenResourceLocation name) {
+    public AbstractFabricKeyCategory(OpenResourceKey name) {
         this.name = name;
     }
 

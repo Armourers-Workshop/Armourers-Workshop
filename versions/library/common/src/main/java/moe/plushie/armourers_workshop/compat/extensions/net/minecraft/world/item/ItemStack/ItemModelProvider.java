@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 @OnlyIn(Dist.CLIENT)
 @Extension
 public class ItemModelProvider {

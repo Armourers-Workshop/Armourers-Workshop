@@ -1,11 +1,12 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "com.gradleup.shadow" version "9.3.1"
 }
 
 cocoon {
-    injectables()
-    ide()
-    fabric()
+    fabric {
+        api = project.fabric_api_version
+        loader = project.fabric_loader_version
+    }
 }
 
 repositories {
@@ -15,9 +16,6 @@ repositories {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-
     modShadow "com.electronwill.night-config:core:${project.night_config}"
     modShadow "com.electronwill.night-config:toml:${project.night_config}"
 
@@ -57,8 +55,8 @@ processResources {
 shadowJar {
     exclude "architectury.common.json"
 
-    //relocate 'gg.moonflower', 'moe.plushie.armourers_workshop.runtime'
-    relocate 'com.electronwill', 'moe.plushie.armourers_workshop.runtime'
+    //relocate "gg.moonflower", "moe.plushie.armourers_workshop.runtime"
+    relocate "com.electronwill", "moe.plushie.armourers_workshop.runtime"
 }
 
 runClientTest {
@@ -73,22 +71,4 @@ runServerTest {
     selectPackage("moe.plushie.armourers_workshop.gametest.server")
     selectPackage("moe.plushie.armourers_workshop.gametest.fabric.common")
     selectPackage("moe.plushie.armourers_workshop.gametest.fabric.server")
-}
-
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
-}
-
-repositories {
-    mavenCentral()
 }

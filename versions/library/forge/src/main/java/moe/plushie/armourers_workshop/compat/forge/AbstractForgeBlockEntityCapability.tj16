@@ -13,7 +13,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.IdentityHashMap;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractForgeBlockEntityCapability<T> implements IBlockEntityCapability<T> {
 
     private static final IdentityHashMap<Capability<?>, IBlockEntityCapability<?>> REGISTERED_CAPABILITIES = new IdentityHashMap<>();

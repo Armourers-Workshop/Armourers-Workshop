@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractContainerMenuImpl extends AbstractContainerMenu {
 
     public AbstractContainerMenuImpl(@Nullable IMenuType<?> menuType, int menuId) {

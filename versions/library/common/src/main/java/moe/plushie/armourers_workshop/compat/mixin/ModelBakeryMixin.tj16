@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Available("[1.16, 1.20)")
+@Available("[16, 20)")
 public class ModelBakeryMixin {
 
     @Mixin(BlockModel.class)
@@ -31,12 +31,12 @@ public class ModelBakeryMixin {
         protected ResourceLocation parentLocation;
 
         @Inject(method = "<init>", at = @At("TAIL"))
-        private void aw2$init(ResourceLocation resourceLocation, List<?> list, Map<?, ?> map, boolean bl, BlockModel.GuiLight guiLight, ItemTransforms itemTransforms, List<?> list2, CallbackInfo ci) {
+        private void aw2$init(ResourceLocation identifier, List<?> list, Map<?, ?> map, boolean bl, BlockModel.GuiLight guiLight, ItemTransforms itemTransforms, List<?> list2, CallbackInfo ci) {
             parentLocation = AbstractItemModelFinder.resolve(BlockModel.class.cast(this), parentLocation);
         }
 
         @Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("RETURN"))
-        private void aw2$bake(ModelBakery modelBakery, BlockModel blockModel, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation resourceLocation, boolean bl, CallbackInfoReturnable<BakedModel> cir) {
+        private void aw2$bake(ModelBakery modelBakery, BlockModel blockModel, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation identifier, boolean bl, CallbackInfoReturnable<BakedModel> cir) {
             AbstractItemModelFinder.accept(BlockModel.class.cast(this), cir.getReturnValue());
         }
     }

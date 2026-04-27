@@ -8,7 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.19, )")
+@Available("[19, )")
 @Extension
 public class EntityDataSerializerExt {
 

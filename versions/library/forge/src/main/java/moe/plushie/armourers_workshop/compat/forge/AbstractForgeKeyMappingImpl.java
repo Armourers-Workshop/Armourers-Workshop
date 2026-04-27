@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.utils.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.neoforge.client.settings.KeyModifier;
@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public abstract class AbstractForgeKeyMappingImpl extends KeyMapping {
 
     private static final HashMap<InputConstants.Key, ArrayList<KeyMapping>> MAPPINGS = new HashMap<>();
 
-    public AbstractForgeKeyMappingImpl(OpenResourceLocation name, InputConstants.Key key, KeyModifier modifier, AbstractForgeKeyCategory category) {
+    public AbstractForgeKeyMappingImpl(OpenResourceKey name, InputConstants.Key key, KeyModifier modifier, AbstractForgeKeyCategory category) {
         super(name.toLanguageKey("key"), category.context(), modifier, key, category.category());
         bind(getKey(), this);
     }

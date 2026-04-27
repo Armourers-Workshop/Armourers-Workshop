@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGrap
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @OnlyIn(Dist.CLIENT)
 public interface AbstractItemGuiElementImpl {
 

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * but vanilla events are different.
  * so we need a proxy to forward the tab event.
  */
-@Available("[1.20, )")
+@Available("[20, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractMenuTabDelegate implements GuiEventListener, NarratableEntry {
 

@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Function;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRendererImpl<T extends BlockEntity> extends BlockEntityRenderer<T> {
 

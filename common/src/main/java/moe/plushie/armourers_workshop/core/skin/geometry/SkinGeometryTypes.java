@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.geometry;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.world.level.block.Block;
@@ -66,7 +66,7 @@ public final class SkinGeometryTypes {
 
     private static SkinGeometryType register(String name, int id, IRegistryHolder<Block> block) {
         var geometryType = new SkinGeometryType(id, block);
-        geometryType.setRegistryName(OpenResourceLocation.create("armourers", name));
+        geometryType.setRegistryName(OpenResourceKey.create("armourers", name));
         if (ALL_GEOMETRY_TYPES.containsKey(geometryType.registryName().toString())) {
             ModLog.warn("A mod tried to register a geometry type with an id that is in use.");
             return geometryType;

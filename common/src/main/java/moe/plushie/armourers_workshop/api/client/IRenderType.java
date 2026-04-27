@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.api.client;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
-import net.minecraft.client.renderer.RenderType;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
+import moe.plushie.armourers_workshop.compat.client.renderer.rendertype.AbstractRenderType;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
-public interface IRenderType extends Supplier<RenderType> {
+public interface IRenderType extends AbstractRenderType {
 
     boolean isEmissive();
 
@@ -87,11 +86,11 @@ public interface IRenderType extends Supplier<RenderType> {
 
     interface Builder {
 
-        default Builder texture(IResourceLocation texture) {
+        default Builder texture(IResourceKey texture) {
             return texture(texture, false, false);
         }
 
-        Builder texture(IResourceLocation texture, boolean blur, boolean mipmap);
+        Builder texture(IResourceKey texture, boolean blur, boolean mipmap);
 
 
         Builder group(Group group);

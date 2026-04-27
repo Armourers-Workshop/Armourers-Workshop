@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.init.event.client.RenderScreenEvent;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientScreenRenderEvents;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricRenderScreenEvent {
 
     public static IEventHandler<RenderScreenEvent.Pre> preFactory() {

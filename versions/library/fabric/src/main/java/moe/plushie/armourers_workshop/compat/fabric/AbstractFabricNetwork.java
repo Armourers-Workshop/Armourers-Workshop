@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.compat.fabric.event.client.AbstractFabricClientNetworking;
 import moe.plushie.armourers_workshop.compat.fabric.event.common.AbstractFabricServerNetworking;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
@@ -44,12 +44,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractFabricNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(OpenResourceLocation channelName, String channelVersion) {
+        public Dispatcher(OpenResourceKey channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
@@ -145,7 +145,7 @@ public class AbstractFabricNetwork {
         }
 
         @Override
-        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceKey channel, IFriendlyByteBuf buf) {
             return new Distributor(sender, target, new Proxy(buf));
         }
 

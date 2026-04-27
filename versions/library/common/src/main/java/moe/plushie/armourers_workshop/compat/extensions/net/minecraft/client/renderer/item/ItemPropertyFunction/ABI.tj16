@@ -11,7 +11,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class ABI {
 
     public static float call(@This ItemPropertyFunction function, ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int i) {

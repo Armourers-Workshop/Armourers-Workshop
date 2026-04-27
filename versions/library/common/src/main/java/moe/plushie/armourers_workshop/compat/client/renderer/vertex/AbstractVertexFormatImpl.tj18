@@ -5,12 +5,11 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
 
-@Available("[1.18, 1.21)")
+@Available("[18, 21)")
 public abstract class AbstractVertexFormatImpl implements IVertexFormat {
 
     protected static final FastMapper<Mode, VertexFormat.Mode> MODE_MAPPER = FastMapper.builder(Mode.LINES, VertexFormat.Mode.LINES, it -> {
         it.put(Mode.LINES, VertexFormat.Mode.LINES);
-        it.put(Mode.LINE_STRIP, VertexFormat.Mode.LINE_STRIP);
         it.put(Mode.DEBUG_LINES, VertexFormat.Mode.DEBUG_LINES);
         it.put(Mode.DEBUG_LINE_STRIP, VertexFormat.Mode.DEBUG_LINE_STRIP);
         it.put(Mode.TRIANGLES, VertexFormat.Mode.TRIANGLES);

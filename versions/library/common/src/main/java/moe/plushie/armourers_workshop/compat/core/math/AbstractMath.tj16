@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.core.math;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractMath {
 
     public static final boolean HAS_FAST_MATH = false;

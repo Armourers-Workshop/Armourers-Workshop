@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -169,8 +169,8 @@ public class SkinDocumentExporter {
         return allParts;
     }
 
-    private ArrayList<SkinAnimation> convertToAnimations(List<SkinDocumentAnimation> importedAnimations) throws TranslatableException {
-        var animations = new ArrayList<SkinAnimation>();
+    private ArrayList<SkinAnimationData> convertToAnimations(List<SkinDocumentAnimation> importedAnimations) throws TranslatableException {
+        var animations = new ArrayList<SkinAnimationData>();
         if (importedAnimations == null || importedAnimations.isEmpty()) {
             return animations;
         }
@@ -195,7 +195,7 @@ public class SkinDocumentExporter {
     }
 
     @Nullable
-    private SkinAnimation loadSkinAnimation(SkinDocumentAnimation ref) throws TranslatableException {
+    private SkinAnimationData loadSkinAnimation(SkinDocumentAnimation ref) throws TranslatableException {
         var name = ref.name();
         var descriptor = ref.descriptor();
         if (name.isEmpty() || descriptor.isEmpty()) {

@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.18, 1.21)")
+@Available("[18, 21)")
 @Mixin(Item.class)
 public abstract class ForgeItemRendererMixin implements AbstractForgeItemStackRendererProvider {
 

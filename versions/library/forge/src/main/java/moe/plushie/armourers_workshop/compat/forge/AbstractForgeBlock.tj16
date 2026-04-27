@@ -18,7 +18,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.extensions.IForgeBlock;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public interface AbstractForgeBlock extends IForgeBlock {
 
     boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper);

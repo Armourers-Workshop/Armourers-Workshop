@@ -5,10 +5,10 @@ import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.compat.builder.AbstractArgumentTypeBuilder;
 import moe.plushie.armourers_workshop.compat.core.AbstractArgumentTypeInfo;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 
-@Available("[1.19, )")
+@Available("[19, )")
 public class AbstractFabricArgumentTypeBuilder<T extends IArgumentType<?>> extends AbstractArgumentTypeBuilder<T> {
 
     public AbstractFabricArgumentTypeBuilder(IArgumentSerializer<T> serializer) {
@@ -16,7 +16,7 @@ public class AbstractFabricArgumentTypeBuilder<T extends IArgumentType<?>> exten
     }
 
     @Override
-    protected void register(OpenResourceLocation registryName, AbstractArgumentTypeInfo<T> info) {
+    protected void register(OpenResourceKey registryName, AbstractArgumentTypeInfo<T> info) {
         ArgumentTypeRegistry.registerArgumentType(registryName.get(), info.type(), info);
     }
 }

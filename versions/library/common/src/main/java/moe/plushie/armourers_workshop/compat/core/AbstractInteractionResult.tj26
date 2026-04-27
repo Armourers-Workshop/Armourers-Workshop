@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.world.InteractionResult;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractInteractionResult {
 
     private static final FastMapper<OpenInteractionResult.SwingSource, InteractionResult.SwingSource> SOURCE_MAPPER = FastMapper.builder(OpenInteractionResult.SwingSource.NONE, InteractionResult.SwingSource.NONE, it -> {

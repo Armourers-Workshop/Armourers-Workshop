@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.core.client.gui.element.TextGuiElement;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Colors;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -83,32 +83,32 @@ public class CGGraphicsContext {
             float b = clipData.contentInsets.bottom;
             float l = clipData.contentInsets.left;
             float r = clipData.contentInsets.right;
-            drawTilableImage(image.rl(), rect.x, rect.y, rect.width, rect.height, u, v, w, h, mw, mh, t, b, l, r);
+            drawTilableImage(image.key(), rect.x, rect.y, rect.width, rect.height, u, v, w, h, mw, mh, t, b, l, r);
             return;
         }
         var sourceSize = image.source();
         if (sourceSize != null) {
             float sw = sourceSize.width;
             float sh = sourceSize.height;
-            drawResizableImage(image.rl(), rect.x, rect.y, w, h, u, v, sw, sh, mw, mh);
+            drawResizableImage(image.key(), rect.x, rect.y, w, h, u, v, sw, sh, mw, mh);
             return;
         }
-        drawResizableImage(image.rl(), rect.x, rect.y, w, h, u, v, w, h, mw, mh);
+        drawResizableImage(image.key(), rect.x, rect.y, w, h, u, v, w, h, mw, mh);
     }
 
-    public void drawImage(OpenResourceLocation texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight) {
+    public void drawImage(OpenResourceKey texture, float x, float y, float width, float height, float u, float v, float texWidth, float texHeight) {
         drawResizableImage(texture, x, y, width, height, u, v, width, height, texWidth, texHeight);
     }
 
-    public void drawResizableImage(OpenResourceLocation texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
+    public void drawResizableImage(OpenResourceKey texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight) {
         draw(ImageGuiElement.resizable(x, y, width, height, texture, u, v, sourceWidth, sourceHeight, texWidth, texHeight));
     }
 
-    public void drawTilableImage(OpenResourceLocation texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
+    public void drawTilableImage(OpenResourceKey texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
         drawTilableImage(texture, x, y, width, height, u, v, sourceWidth, sourceHeight, 256, 256, topBorder, bottomBorder, leftBorder, rightBorder);
     }
 
-    public void drawTilableImage(OpenResourceLocation texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
+    public void drawTilableImage(OpenResourceKey texture, float x, float y, float width, float height, float u, float v, float sourceWidth, float sourceHeight, float texWidth, float texHeight, float topBorder, float bottomBorder, float leftBorder, float rightBorder) {
         var border = new UIEdgeInsets(topBorder, leftBorder, bottomBorder, rightBorder);
         draw(ImageGuiElement.tilable(x, y, width, height, texture, u, v, sourceWidth, sourceHeight, texWidth, texHeight, border));
     }

@@ -1,24 +1,20 @@
-// https://maven.shedaniel.me/architectury-plugin/architectury-plugin.gradle.plugin/
-// https://maven.shedaniel.me/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 plugins {
+    id "base"
     id "java"
-    id 'base'
-    id "architectury-plugin" version "3.4.162"
-    id "dev.architectury.loom" version "1.13.467" apply false
-    id "moe.plushie.armourers_workshop.loom" version "3.0.1" apply false
+    id "cocoon-loom" version "1.3"
 }
 
-architectury {
-    minecraft = rootProject.minecraft_api_version
+cocoon {
+    minecraft = project.minecraft_api_version
+    mappings = "official"
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
-    apply plugin: "moe.plushie.armourers_workshop.loom"
+    apply plugin: "cocoon-loom"
 
     sourceSets.forEach {
-        it.java.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/java"
-        it.resources.srcDirs "../versions/${rootProject.minecraft_version}/${project.name}/src/${it.name}/resources"
+        it.java.srcDirs "../versions/${project.minecraft_version}/${project.name}/src/${it.name}/java"
+        it.resources.srcDirs "../versions/${project.minecraft_version}/${project.name}/src/${it.name}/resources"
         it.java.srcDirs "../versions/library/${project.name}/src/${it.name}/java"
         it.resources.srcDirs "../versions/library/${project.name}/src/${it.name}/resources"
         it.java.srcDirs "../versions/gametest/${project.name}/src/${it.name}/java"
@@ -26,11 +22,10 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_api_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-        mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        // mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
+        compileOnly "org.checkerframework:checker-qual:3.49.5"
+        testCompileOnly "org.checkerframework:checker-qual:3.49.5"
+        compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+        testCompileOnly "com.google.code.findbugs:jsr305:3.0.2"
     }
 
     signJar {
@@ -39,23 +34,33 @@ subprojects {
         keyStore = System.getenv("AW_SIGN_STORE")
         keyStorePass = System.getenv("AW_SIGN_STORE_PASS")
     }
+
+    jabel {
+        api = "com.xpdustry:jabel"
+        version = "1.1.0"
+        compilerArgs << "-Xmx2048M"
+        // we only enable jabel for minecraft 1.16.x
+        onlyIf {
+            cocoon.minecraftNumber < 180000
+        }
+    }
 }
 
 allprojects {
-    apply plugin: "architectury-plugin"
+    apply plugin: "java-library"
     apply plugin: "maven-publish"
+
+    def uname = project.archives_base_name.toLowerCase()
+    def release = project.java_version as int
+
+    group = project.maven_group
 
     if (version == "unspecified") {
         version = "2.0.0-homebaked"
     }
 
-    def uname = rootProject.archives_base_name.replaceAll("-", "").toLowerCase()
-    def release = rootProject.java_version as int
-
-    group = rootProject.maven_group
-
     base {
-        archivesName = "${uname}-${project.name}-${rootProject.minecraft_version}"
+        archivesName = "${uname}-${project.name}-${project.minecraft_version}"
     }
 
     repositories {
@@ -70,17 +75,22 @@ allprojects {
         maven { url "https://api.modrinth.com/maven/" }
         maven { url "https://cursemaven.com/" }
         maven { url "https://maven.blamejared.com/" }
+        maven { url "https://maven.xpdustry.com/releases/" }
     }
 
     dependencies {
-        compileOnly "systems.manifold:manifold-ext:${rootProject.manifold_version}"
-        annotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
-        testCompileOnly "systems.manifold:manifold-ext:${rootProject.manifold_version}"
-        testAnnotationProcessor "systems.manifold:manifold-ext:${rootProject.manifold_version}"
+        compileOnly "systems.manifold:manifold-ext:${project.manifold_version}"
+        annotationProcessor "systems.manifold:manifold-ext:${project.manifold_version}"
+        testCompileOnly "systems.manifold:manifold-ext:${project.manifold_version}"
+        testAnnotationProcessor "systems.manifold:manifold-ext:${project.manifold_version}"
     }
 
     java {
         withSourcesJar()
+    }
+
+    tasks.withType(Test).configureEach {
+        failOnNoDiscoveredTests = false
     }
 
     tasks.withType(JavaCompile).configureEach {

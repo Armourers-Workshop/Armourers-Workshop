@@ -2,25 +2,25 @@ package moe.plushie.armourers_workshop.compat.client.item;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractItemModelFinder {
 
-    public static final ResourceLocation MARKER_ID = ResourceLocation.withDefaultNamespace("skin/generated");
+    public static final Identifier MARKER_ID = Identifier.withDefaultNamespace("skin/generated");
 
     /// Find a new item model
-    public static void accept(ResourceLocation id, UnbakedModel unbakedModel, ItemModel bakedModel) {
+    public static void accept(Identifier id, UnbakedModel unbakedModel, ItemModel bakedModel) {
         // only support the skin model.
         var parent = unbakedModel.parent();
         if (parent == null || !parent.equals(MARKER_ID)) {
             return;
         }
-        var model = AbstractResourceLocation.wrap(id);
+        var model = AbstractResourceKey.wrap(id);
         var itemModel = AbstractItemModel.wrap(bakedModel);
         DiscoveerableSkinManager.getInstance().put(itemModel, model);
     }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.api.client;
 
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
+import moe.plushie.armourers_workshop.api.core.math.IVector3d;
 import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 
 public interface IGraphicsContext {
@@ -42,9 +43,24 @@ public interface IGraphicsContext {
     /**
      * Translate the current graphics state's transformation matrix (the CTM) by `(tx, ty, tz)`.
      */
-    default void translateCTM(IVector3f translation) {
-        translateCTM(translation.x(), translation.y(), translation.z());
+    default void translateCTM(double x, double y, double z) {
+        ctm().translate(x, y, z);
     }
+
+    /**
+     * Translate the current graphics state's transformation matrix (the CTM) by `(tx, ty, tz)`.
+     */
+    default void translateCTM(IVector3f translation) {
+        ctm().translate(translation);
+    }
+
+    /**
+     * Translate the current graphics state's transformation matrix (the CTM) by `(tx, ty, tz)`.
+     */
+    default void translateCTM(IVector3d translation) {
+        ctm().translate(translation);
+    }
+
 
     /**
      * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
@@ -56,8 +72,22 @@ public interface IGraphicsContext {
     /**
      * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
      */
+    default void scaleCTM(double x, double y, double z) {
+        ctm().scale(x, y, z);
+    }
+
+    /**
+     * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
+     */
     default void scaleCTM(IVector3f scalar) {
-        scaleCTM(scalar.x(), scalar.y(), scalar.z());
+        ctm().scale(scalar);
+    }
+
+    /**
+     * Scale the current graphics state's transformation matrix (the CTM) by `(sx, sy, sz)`.
+     */
+    default void scaleCTM(IVector3d scalar) {
+        ctm().scale(scalar);
     }
 
     /**

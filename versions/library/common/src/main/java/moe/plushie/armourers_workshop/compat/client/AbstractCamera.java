@@ -1,15 +1,18 @@
 package moe.plushie.armourers_workshop.compat.client;
 
+import moe.plushie.armourers_workshop.api.client.ICamera;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 
-public class AbstractCamera {
+public class AbstractCamera extends AbstractCameraImpl implements ICamera {
 
-    private final Camera camera;
+    protected final Camera camera;
 
-    private AbstractCamera(Camera camera) {
+    protected AbstractCamera(Camera camera) {
         this.camera = camera;
     }
 
@@ -17,8 +20,13 @@ public class AbstractCamera {
         return new AbstractCamera(camera);
     }
 
-    public OpenQuaternionf lookAt(OpenVector3f pos) {
-        var forward = position().subtracting(pos);
+    public static AbstractCamera getMainCamera() {
+        var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        return wrap(camera);
+    }
+
+    public OpenQuaternionf lookAt(OpenVector3d pos) {
+        var forward = new OpenVector3f(position().subtracting(pos));
         var length = forward.dot(forward);
         if (length < 1e-6f) {
             return OpenQuaternionf.identity();
@@ -30,12 +38,32 @@ public class AbstractCamera {
         return OpenQuaternionf.fromUnnormalizedMatrix(right.x, right.y, right.z, up.x, up.y, up.z, forward.x, forward.y, forward.z);
     }
 
-    public OpenVector3f position() {
-        var pos = camera.getPosition();
-        return new OpenVector3f(pos.x(), pos.y(), pos.z());
+    @Override
+    public OpenVector3d position() {
+        var pos = getPosition();
+        return new OpenVector3d(pos.x(), pos.y(), pos.z());
     }
 
+    @Override
     public OpenQuaternionf rotation() {
-        return OpenQuaternionf.fromEulerAnglesYXZ(180 - camera.getYRot(), -camera.getXRot(), 0, true);
+        return OpenQuaternionf.fromEulerAnglesYXZ(180 - getYRot(), -getXRot(), 0, true);
+    }
+
+    @Override
+    public OpenQuaternionf orientation() {
+//        var quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
+//        return new OpenQuaternionf(quat.x, quat.y, quat.z, quat.w);
+
+//        var quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
+//        return new OpenQuaternionf(quat.i(), quat.j(), quat.k(), quat.r());
+
+        //        var quat = minecraft.getEntityRenderDispatcher().cameraOrientation();
+
+        return OpenQuaternionf.ONE;
+    }
+
+    @Override
+    protected Camera getCamera() {
+        return camera;
     }
 }

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.builder;
 import moe.plushie.armourers_workshop.api.client.IBlockTintSource;
 import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public class AbstractBlockTintSourceBuilder<T extends IBlockTintSource> {
 
@@ -13,7 +13,7 @@ public class AbstractBlockTintSourceBuilder<T extends IBlockTintSource> {
         this.codec = codec;
     }
 
-    public IBlockTintSourceType<T> build(OpenResourceLocation registryName) {
+    public IBlockTintSourceType<T> build(OpenResourceKey registryName) {
         return () -> codec;
     }
 }

@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.Self;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 @Extension
 public class Constructor {
 

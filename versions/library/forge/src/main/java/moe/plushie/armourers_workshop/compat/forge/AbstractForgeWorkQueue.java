@@ -5,7 +5,7 @@ import net.minecraft.util.thread.BlockableEventLoop;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.util.LogicalSidedProvider;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractForgeWorkQueue {
 
     public static BlockableEventLoop<?> get(LogicalSide side) {

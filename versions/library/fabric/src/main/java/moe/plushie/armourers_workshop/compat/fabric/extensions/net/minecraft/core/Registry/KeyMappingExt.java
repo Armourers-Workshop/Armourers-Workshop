@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Extension
 public class KeyMappingExt {
 

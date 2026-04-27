@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 
-@Available("[1.18, 1.21)")
+@Available("[18, 21)")
 public class AbstractForgeItemTooltipEventImpl {
 
     public static CGRect compute(RenderTooltipEvent.Pre event) {

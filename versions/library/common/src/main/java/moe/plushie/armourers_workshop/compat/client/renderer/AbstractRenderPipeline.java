@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 
 import java.util.HashMap;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implements IBufferSource {
 

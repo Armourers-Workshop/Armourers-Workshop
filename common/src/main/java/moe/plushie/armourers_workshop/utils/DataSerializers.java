@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
@@ -249,7 +249,7 @@ public class DataSerializers {
                 }
             }
             var wardrobe = SkinWardrobe.of(entity);
-            var serverProfile = ModEntityProfiles.getProfile(OpenResourceLocation.parse(buffer.readUtf()));
+            var serverProfile = ModEntityProfiles.getProfile(OpenResourceKey.parse(buffer.readUtf()));
             if (wardrobe != null && serverProfile != null) {
                 // we need to maintain consistency of the entity profile,
                 // some strange mods(e.g.: taterzens) deliberately make the

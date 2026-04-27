@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractFabricServerNetworking {
 
     public static void registerQueryReceiver(ConnectionPayloadHandler payloadHandler) {

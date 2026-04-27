@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.compat.core.menu;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractContainerSlot extends AbstractContainerSlotImpl {
 
     public AbstractContainerSlot(Container container, int i, int j, int k) {
@@ -34,7 +33,7 @@ public class AbstractContainerSlot extends AbstractContainerSlotImpl {
         return super.mayPickup(player);
     }
 
-    protected OpenResourceLocation abi$noItemIcon() {
+    protected OpenResourceKey abi$noItemIcon() {
         return null;
     }
 
@@ -75,11 +74,7 @@ public class AbstractContainerSlot extends AbstractContainerSlotImpl {
     }
 
     @Override
-    public final ResourceLocation noItemIcon() {
-        var location = abi$noItemIcon();
-        if (location != null) {
-            return location.get();
-        }
-        return null;
+    public final OpenResourceKey noItemIcon() {
+        return abi$noItemIcon();
     }
 }

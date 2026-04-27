@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureProperties;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -28,12 +28,12 @@ public class SmartTexture extends ReferenceCounted {
 
     private static final DataContainer.Key<SmartTexture> KEY = DataContainer.key("SmartTexture");
 
-    private final OpenResourceLocation location;
+    private final OpenResourceKey location;
 
     private final SkinTextureProperties properties;
     private final TextureAnimationController animationController;
 
-    private final Map<OpenResourceLocation, ByteBuf> textureBuffers;
+    private final Map<OpenResourceKey, ByteBuf> textureBuffers;
 
     private final Set<IRenderType> binding = new HashSet<>();
 
@@ -73,7 +73,7 @@ public class SmartTexture extends ReferenceCounted {
         });
     }
 
-    public OpenResourceLocation location() {
+    public OpenResourceKey location() {
         return location;
     }
 
@@ -106,16 +106,16 @@ public class SmartTexture extends ReferenceCounted {
         }
     }
 
-    private Map<OpenResourceLocation, ByteBuf> resolveTextureBuffers(OpenResourceLocation location, SkinTextureData provider) {
-        var path = FileUtils.removeExtension(location.path());
+    private Map<OpenResourceKey, ByteBuf> resolveTextureBuffers(OpenResourceKey key, SkinTextureData provider) {
+        var path = FileUtils.removeExtension(key.path());
         var builder = new TextureBufferBuilder(provider.properties());
-        builder.addData(location, provider);
+        builder.addData(key, provider);
         for (var variant : provider.variants()) {
             if (variant.properties().isNormal()) {
-                builder.addData(location.withPath(path + "_n.png"), variant);
+                builder.addData(key.withPath(path + "_n.png"), variant);
             }
             if (variant.properties().isSpecular()) {
-                builder.addData(location.withPath(path + "_s.png"), variant);
+                builder.addData(key.withPath(path + "_s.png"), variant);
             }
         }
         return builder.build();
@@ -123,7 +123,7 @@ public class SmartTexture extends ReferenceCounted {
 
     private static class TextureBufferBuilder {
 
-        private final Map<OpenResourceLocation, ByteBuf> buffers = new LinkedHashMap<>();
+        private final Map<OpenResourceKey, ByteBuf> buffers = new LinkedHashMap<>();
 
         private final SkinTextureProperties parentProperties;
 
@@ -131,12 +131,12 @@ public class SmartTexture extends ReferenceCounted {
             this.parentProperties = parentProperties;
         }
 
-        public void addData(OpenResourceLocation location, SkinTextureData provider) {
-            buffers.put(location, provider.buffer());
-            addMeta(location, provider.properties());
+        public void addData(OpenResourceKey key, SkinTextureData provider) {
+            buffers.put(key, provider.buffer());
+            addMeta(key, provider.properties());
         }
 
-        private void addMeta(OpenResourceLocation location, SkinTextureProperties properties) {
+        private void addMeta(OpenResourceKey key, SkinTextureProperties properties) {
             var isBlurFilter = properties.isBlurFilter() || parentProperties.isBlurFilter();
             var isClampToEdge = properties.isClampToEdge() || parentProperties.isClampToEdge();
             if (!isBlurFilter && !isClampToEdge) {
@@ -146,10 +146,10 @@ public class SmartTexture extends ReferenceCounted {
             var blur = String.valueOf(isBlurFilter);
             var clamp = String.valueOf(isClampToEdge);
             var meta = String.format("{\"texture\":{\"blur\":%s,\"clamp\":%s}}", blur, clamp);
-            buffers.put(location.withPath(location.path() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
+            buffers.put(key.withPath(key.path() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
         }
 
-        public Map<OpenResourceLocation, ByteBuf> build() {
+        public Map<OpenResourceKey, ByteBuf> build() {
             return buffers;
         }
     }

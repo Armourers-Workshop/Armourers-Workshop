@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.tag.TagRegistry;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Extension
 public class TagKeyExt {
 

@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractDataSerializerContext {
 
     private final Object context;

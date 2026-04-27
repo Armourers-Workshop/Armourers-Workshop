@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.init.event.common.RegisterEntityAttributes
 import moe.plushie.armourers_workshop.init.platform.fabric.EventManagerImpl;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricRegisterEntityAttributesEvent {
 
     public static IEventHandler<RegisterEntityAttributesEvent> registryFactory() {

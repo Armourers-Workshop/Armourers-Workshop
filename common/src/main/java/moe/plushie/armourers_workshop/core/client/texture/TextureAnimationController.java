@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureAnimation;
@@ -33,7 +33,7 @@ public class TextureAnimationController {
 
     public static TextureAnimationController of(IRenderType renderType) {
         // is default?
-        if (renderType == SkinRenderType.BLOCK_FACE_SOLID || renderType == SkinRenderType.BLOCK_FACE_LIGHTING || renderType == SkinRenderType.BLOCK_FACE_TRANSLUCENT || renderType == SkinRenderType.BLOCK_FACE_LIGHTING_TRANSLUCENT) {
+        if (renderType == SkinRenderTypes.BLOCK_FACE_SOLID || renderType == SkinRenderTypes.BLOCK_FACE_LIGHTING || renderType == SkinRenderTypes.BLOCK_FACE_TRANSLUCENT || renderType == SkinRenderTypes.BLOCK_FACE_LIGHTING_TRANSLUCENT) {
             return DEFAULT;
         }
         // is custom?

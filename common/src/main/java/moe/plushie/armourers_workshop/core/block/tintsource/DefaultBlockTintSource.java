@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +20,7 @@ public class DefaultBlockTintSource implements IBlockTintSource {
     }
 
     @Override
-    public int calculate(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos) {
+    public int calculate(BlockState blockState, @Nullable BlockGetter level, @Nullable BlockPos blockPos) {
         // AbstractBlock
         if (blockState.getBlock() instanceof AbstractBlock handler) {
             return handler.getModelTintColor(blockState, level, blockPos, layerIndex);

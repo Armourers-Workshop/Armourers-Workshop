@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.api.common.IUseOnContext;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractBlockItem extends AbstractBlockItemImpl implements AbstractItemHandler {
 
     public AbstractBlockItem(Block block, Properties properties) {
@@ -63,7 +63,7 @@ public class AbstractBlockItem extends AbstractBlockItemImpl implements Abstract
         return super.updateCustomBlockEntityTag(pos, level, player, itemStack, blockState);
     }
 
-    protected void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    protected void abi$appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
     }
 
     protected void abi$appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
@@ -146,7 +146,7 @@ public class AbstractBlockItem extends AbstractBlockItemImpl implements Abstract
     }
 
     @Override
-    public final void appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    public final void appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
         abi$appendModelProperties(builder);
     }
 

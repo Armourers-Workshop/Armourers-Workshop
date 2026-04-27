@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.Direction;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractDirection {
 
     private static final FastMapper<OpenDirection, Direction> MAPPER = FastMapper.builder(OpenDirection.NORTH, Direction.NORTH, it -> {

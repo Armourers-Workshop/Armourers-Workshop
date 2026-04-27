@@ -4,10 +4,11 @@ import groovy.json.JsonSlurper
 
 buildscript {
     repositories {
+        maven { url "https://repo.repsy.io/mvn/sagesse/core/" }
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath "com.github.hexomod:MacroPreprocessor:0.9"
+        classpath "com.github.hexomod:MacroPreprocessor:1.0.1-homebaked"
     }
 }
 
@@ -26,7 +27,7 @@ static def parseVersion(version, undefined) {
     // remove all limiter if needs.
     version = version.replaceAll("[()\\[\\]]", "")
     def (major, minor, patch) = version.tokenize('-')[0].tokenize('.')
-    return "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int + value
+    return "${major}${(minor ?: '').padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int + value
 }
 
 static def parseVersionFromSource(file) {
@@ -53,7 +54,7 @@ static def parseVersionFromConfig(file) {
 }
 
 
-// we needs convert the version to number, for example: 1.16.5 => 11605.
+// we needs convert the version to number, for example: 16.5 => 160500.
 def minecraft_version = project.rootDir.getName()
 def minecraft_version_number = parseVersion(minecraft_version, 0)
 def minecraft_old_version = parseVersionFromConfig(file("../../gradle.properties"))
@@ -107,7 +108,7 @@ def transformRecipeData = { contents, version ->
                 it = [item: it]
             }
         }
-        if (version >= 12102) {
+        if (version >= 210200) {
             if (it.tag != null) {
                 return "#${it.tag}"
             }
@@ -122,7 +123,7 @@ def transformRecipeData = { contents, version ->
         var id = it.id ?: it.item
         it.remove("id")
         it.remove("item")
-        if (version >= 12002) {
+        if (version >= 200200) {
             return [id: id] + it
         } else {
             return [item: id] + it
@@ -196,9 +197,9 @@ tasks.register("switchCoreSource") {
                     if (minecraft_version_number < range[0] || minecraft_version_number > range[1]) {
                         // disable the file
                         def ver = "${range[0]}"
-                        def suffix = ver.replaceAll(/(\d)(\d{2})(\d+)/, /$2/) // jmc18
+                        def suffix = ver.replaceAll(/(\d{2})(\d{2})(\d+)/, /$1/) // jmc18
                         if (!versions.add(suffix)) {
-                            suffix = ver.replaceAll(/(\d)(\d{2})0*(\d*)/, /$2$3/) // jmc18x
+                            suffix = ver.replaceAll(/(\d{2})(\d{2})0*(\d*)/, /$1$2/) // jmc18x
                         }
                         pending.put(it[1] as File, new File("${path}.tj${suffix}"))
                     } else {
@@ -239,14 +240,31 @@ tasks.register("applyCoreResources") {
     dependsOn "applyCoreSources"
 
     doLast {
-        renameDataPack(12100, "tags/items", "tags/item")
-        renameDataPack(12100, "tags/blocks", "tags/block")
-        renameDataPack(12100, "loot_tables", "loot_table")
-        renameDataPack(12100, "recipes", "recipe") {
+        renameDataPack(210000, "tags/items", "tags/item")
+        renameDataPack(210000, "tags/blocks", "tags/block")
+        renameDataPack(210000, "loot_tables", "loot_table")
+        renameDataPack(210000, "recipes", "recipe") {
             def oldValue = it.getText("UTF-8")
             def newValue = transformRecipeData(oldValue, minecraft_version_number)
             if (newValue != oldValue) {
                 it.setText(newValue, "UTF-8")
+            }
+        }
+    }
+}
+
+tasks.register("applyCoreAccessWideners") {
+    doLast {
+        def rootPath = new File(rootDir, "../..")
+        fileTree(rootPath).matching { include "**/*.accesswidener" }.forEach {
+            var namespace = "named"
+            if (minecraft_version_number >= 260000) {
+                namespace = "official"
+            }
+            var contents = it.getText("UTF-8")
+            var newContents = contents.replaceFirst(/(accessWidener\s+.+?\s+)(named|official)/, /$1${namespace}/)
+            if (newContents != contents) {
+                it.write(newContents, "UTF-8")
             }
         }
     }
@@ -296,4 +314,4 @@ tasks.register("applyRunConfigurations") {
     }
 }
 
-defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreResources", "applyCoreConfigurations", "applyRunConfigurations")
+defaultTasks("switchCoreSource", "applyCoreSources", "applyCoreResources", "applyCoreAccessWideners", "applyCoreConfigurations", "applyRunConfigurations")

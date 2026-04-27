@@ -11,7 +11,7 @@ import com.apple.library.uikit.UIWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import moe.plushie.armourers_workshop.init.ModTextures;
@@ -126,7 +126,7 @@ public class ToastWindow extends UIWindow {
         return duration;
     }
 
-    private OpenResourceLocation defaultTexture() {
+    private OpenResourceKey defaultTexture() {
         return ModTextures.TOASTS;
     }
 
@@ -160,7 +160,7 @@ public class ToastWindow extends UIWindow {
 
         public CustomTexture(String id, CompoundTag tag) {
             int[] offset = {0, 0};
-            var builder = UIImage.of(OpenResourceLocation.parse(id));
+            var builder = UIImage.of(OpenResourceKey.parse(id));
             apply(tag, "UV", 2, it -> builder.uv(it[0], it[1]));
             apply(tag, "Fixed", 2, it -> builder.fixed(it[0], it[1]));
             apply(tag, "Resizable", 2, it -> builder.resizable(it[0], it[1]));

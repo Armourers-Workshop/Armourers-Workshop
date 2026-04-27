@@ -1,0 +1,57 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[26, )")
+public class Finder {
+
+    public static <T> TagKey<T> findTag(@ThisClass Class<?> clazz, ResourceKey<? extends Registry<T>> registry, OpenResourceKey key) {
+        return TagKey.create(registry, key.get());
+    }
+
+    public static <T> OpenResourceKey findKey(@ThisClass Class<?> clazz, Registry<T> registry, T value) {
+        var key = registry.getKey(value);
+        if (key != null) {
+            return AbstractResourceKey.wrap(key);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static <T> Holder<T> findValue(@ThisClass Class<?> clazz, ResourceKey<? extends Registry<T>> registry, OpenResourceKey key) {
+        var value = findRegistry(registry).flatMap(it -> it.get(key.get()));
+        return value.orElse(null);
+    }
+
+    private static <T> Optional<Registry<T>> findRegistry(ResourceKey<? extends Registry<T>> registry) {
+        // find registry access on the server.
+        var server = EnvironmentManager.getServer();
+        if (server != null) {
+            return server.registryAccess().lookup(registry);
+        }
+        // find registry access on the client.
+        return EnvironmentExecutor.callOnClient(() -> () -> {
+            var connection = Minecraft.getInstance().getConnection();
+            if (connection != null) {
+                return connection.registryAccess().lookup(registry).orElse(null);
+            }
+            return null;
+        });
+    }
+}

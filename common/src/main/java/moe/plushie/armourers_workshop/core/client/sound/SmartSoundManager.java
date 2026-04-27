@@ -63,7 +63,7 @@ public class SmartSoundManager {
         var name = sound.name();
         var location = sound.location();
         var id = location.withPath(location.path().replaceAll("^sounds/(.+)\\.(\\w+)$", "$1"));
-        getSoundManager().aw2$register(location.get(), AbstractSimpleSound.create(id.get(), name));
+        getSoundManager().aw2$register(location, AbstractSimpleSound.create(id, name));
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Sound '{}'", location);
         }
@@ -71,7 +71,7 @@ public class SmartSoundManager {
 
     protected void releaseSound(SmartSound sound) {
         var location = sound.location();
-        getSoundManager().aw2$unregister(location.get());
+        getSoundManager().aw2$unregister(location);
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Unregistering Sound '{}'", location);
         }

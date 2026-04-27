@@ -11,7 +11,7 @@ import manifold.ext.rt.api.This;
 import manifold.ext.rt.api.ThisClass;
 
 @Extension
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class Constructor {
 
     public static CompoundTag save(@This ItemStack itemStack, Object registryAccess, CompoundTag tag) {

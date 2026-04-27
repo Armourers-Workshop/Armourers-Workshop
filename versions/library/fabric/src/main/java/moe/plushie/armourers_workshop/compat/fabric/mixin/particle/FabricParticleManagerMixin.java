@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 @Mixin(ParticleEngine.class)
 public class FabricParticleManagerMixin implements AbstractParticleManagerImpl {
 

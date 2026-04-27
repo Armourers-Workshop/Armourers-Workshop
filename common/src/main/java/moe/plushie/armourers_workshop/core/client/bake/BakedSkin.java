@@ -6,8 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanUse;
-import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
-import moe.plushie.armourers_workshop.core.client.animation.AnimationController;
+import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
@@ -25,6 +24,9 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
+import moe.plushie.armourers_workshop.core.skin.animation.runtime.SkinAnimationLinker;
+import moe.plushie.armourers_workshop.core.skin.animation.core.SkinAnimationTransform;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTransform;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.part.wings.WingPartTransform;
@@ -58,7 +60,7 @@ public class BakedSkin {
     private final Range<Integer> useTickRange;
     private final List<BakedSkinPart> skinParts;
 
-    private final List<AnimationController> animationControllers;
+    private final List<SkinAnimation> animations;
 
     private final ColorDescriptor colorDescriptor;
     private final SkinUsedCounter usedCounter;
@@ -75,7 +77,7 @@ public class BakedSkin {
         this.identifier = identifier;
         this.skin = skin;
         this.type = type;
-        this.animationControllers = resolveAnimationControllers(bakedParts, skin.animations(), skin.properties());
+        this.animations = resolveAnimations(bakedParts, skin.animations(), skin.properties());
         this.skinParts = BakedSkinPartCombiner.apply(bakedParts); // depends `resolveAnimationControllers`
         this.paintScheme = paintScheme;
         this.colorDescriptor = colorDescriptor;
@@ -139,8 +141,8 @@ public class BakedSkin {
         return skin.properties();
     }
 
-    public List<AnimationController> animationControllers() {
-        return animationControllers;
+    public List<SkinAnimation> animations() {
+        return animations;
     }
 
     public SkinPaintScheme paintScheme() {
@@ -222,7 +224,7 @@ public class BakedSkin {
         });
         // search all animated transform, we need to reset it before setup.
         Collections.eachTree(skinParts, BakedSkinPart::children, part -> part.transform().children().forEach(transform -> {
-            if (transform instanceof AnimatedTransform animatedTransform) {
+            if (transform instanceof SkinAnimationTransform animatedTransform) {
                 animationHandler.lowest((renderState, skin, armature, context) -> animatedTransform.reset());
             }
         }));
@@ -239,7 +241,7 @@ public class BakedSkin {
         // search all backpack part, and then attach a backpack part transform.
         Collections.filter(skinParts, it -> it.type() == SkinPartTypes.ITEM_BACKPACK).forEach(it -> {
             var backpackTransform = new BakedBackpackPartTransform();
-            it.transform().insertChild(backpackTransform, 0);
+            it.transform().insertChild(0, backpackTransform);
             animationHandler.highest((renderState, skin, armature, context) -> backpackTransform.setup(renderState));
         });
     }
@@ -279,12 +281,12 @@ public class BakedSkin {
         return BakedItemTransform.create(skinParts, itemTransforms, skin.type());
     }
 
-    private List<AnimationController> resolveAnimationControllers(List<BakedSkinPart> skinParts, Collection<SkinAnimation> animations, SkinProperties properties) {
+    private List<SkinAnimation> resolveAnimations(List<BakedSkinPart> skinParts, Collection<SkinAnimationData> animations, SkinProperties properties) {
         // create animation controller by animation.
-        var animationControllers = new ArrayList<AnimationController>();
         if (animations.isEmpty()) {
-            return animationControllers;
+            return Collections.emptyList();
         }
+        // search the all transform by teh part tree.
         var namedParts = new HashMap<String, SkinPartTransform>();
         Collections.eachTree(skinParts, BakedSkinPart::children, part -> {
             var partName = part.name();
@@ -293,12 +295,12 @@ public class BakedSkin {
             }
             namedParts.put(partName, part.transform());
         });
-        animations.forEach(animation -> {
-            var controller = new AnimationController(animation, namedParts);
-            animationControllers.add(controller);
-        });
-        animationControllers.removeIf(AnimationController::isEmpty);
-        return animationControllers;
+        // compile the all animations with the animation engine.
+        var linker = new SkinAnimationLinker(namedParts);
+        var results = Collections.compactMap(animations, AnimationEngine::compile);
+        results.removeIf(SkinAnimation::isEmpty);
+        results.forEach(linker::link);
+        return results;
     }
 
     @Override

@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -55,7 +54,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements Abstract
     }
 
     @Override
-    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos, int layerIndex) {
+    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockGetter level, @Nullable BlockPos blockPos, int layerIndex) {
         if (level == null || blockPos == null || layerIndex != 1) {
             return 0xffffffff;
         }

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl
 import moe.plushie.armourers_workshop.init.event.client.ClientPlayerEvent;
 import net.minecraft.world.entity.player.Player;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeClientPlayerEvent {
 
     public static IEventHandler<ClientPlayerEvent.LoggingIn> loggingInFactory() {

@@ -3,14 +3,14 @@ package moe.plushie.armourers_workshop.compat.builder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.item.DisplayItemProvider;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.function.Function;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractItemBuilder<T extends Item> {
 
     protected final Function<Item.Properties, T> factory;
@@ -30,7 +30,7 @@ public class AbstractItemBuilder<T extends Item> {
         this.updaters.add(updater);
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var value = create(registryName);
         if (group != null) {
             DisplayItemProvider.addItem(group, value);
@@ -38,7 +38,7 @@ public class AbstractItemBuilder<T extends Item> {
         return value;
     }
 
-    protected T create(OpenResourceLocation registryName) {
+    protected T create(OpenResourceKey registryName) {
         var properties = new Item.Properties();
         for (var updater : updaters) {
             properties = updater.apply(properties);

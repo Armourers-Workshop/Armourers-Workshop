@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 
 import java.nio.ByteBuffer;
 
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
 
     private final BufferBuilder bufferBuilder;

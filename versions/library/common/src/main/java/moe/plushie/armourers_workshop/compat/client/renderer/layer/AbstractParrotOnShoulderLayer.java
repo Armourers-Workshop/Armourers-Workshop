@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.client.ClientAttachmentHandler;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractParrotOnShoulderLayer {
 

@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public abstract class AbstractLivingEntityImpl extends LivingEntity {
 
     public AbstractLivingEntityImpl(EntityType<? extends LivingEntity> entityType, Level level) {
@@ -34,11 +34,11 @@ public abstract class AbstractLivingEntityImpl extends LivingEntity {
     }
 
     public OpenInteractionResult interactAt(Player player, Vec3 pos, OpenInteractionHand hand, Object context) {
-        return AbstractInteractionResult.wrap(super.interactAt(player, pos, AbstractInteractionHand.unwrap(hand)));
+        return AbstractInteractionResult.wrap(super.interact(player, AbstractInteractionHand.unwrap(hand), pos));
     }
 
     @Override
-    public final InteractionResult interactAt(Player player, Vec3 vec3, InteractionHand hand) {
+    public final InteractionResult interact(Player player, InteractionHand hand, Vec3 vec3) {
         return AbstractInteractionResult.unwrap(interactAt(player, vec3, AbstractInteractionHand.wrap(hand), null));
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractLivingEntityImpl extends LivingEntity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+    public final boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
         return hurt(serverLevel, damageSource, f);
     }
 

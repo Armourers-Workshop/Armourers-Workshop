@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.builder.client.gui.armourer.guide.GuideRen
 import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRenderer;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -140,7 +140,7 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
 
         protected final HashMap<IRenderType, Supplier<IRenderType>> overrides = new HashMap<>();
 
-        protected OpenResourceLocation texture;
+        protected OpenResourceKey texture;
         protected IGraphicsContext context;
 
         @Override
@@ -153,15 +153,15 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
             return context.ctm();
         }
 
-        public void setTexture(OpenResourceLocation texture) {
+        public void setTexture(OpenResourceKey texture) {
             if (Objects.equals(this.texture, texture)) {
                 return;
             }
             this.texture = texture;
             this.overrides.clear();
-            this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, () -> entityCutoutNoCull(texture));
-            this.overrides.put(SkinRenderType.PLAYER_CUTOUT, () -> entityCutoutNoCull(texture));
-            this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, () -> entityTranslucentCull(texture));
+            this.overrides.put(SkinRenderTypes.PLAYER_CUTOUT_NO_CULL, () -> entityCutoutNoCull(texture));
+            this.overrides.put(SkinRenderTypes.PLAYER_CUTOUT, () -> entityCutoutNoCull(texture));
+            this.overrides.put(SkinRenderTypes.PLAYER_TRANSLUCENT, () -> entityTranslucentCull(texture));
         }
 
         public void setContext(IGraphicsContext context) {
@@ -179,12 +179,12 @@ public class ArmourerBlockRenderer<T extends ArmourerBlockEntity, S extends Armo
             return element;
         }
 
-        protected IRenderType entityCutoutNoCull(OpenResourceLocation texture) {
-            return REUSABLE_TYPES.computeIfAbsent("entity-cutout-no-cull-" + texture, it -> SkinRenderType.entityCutoutNoCull(texture));
+        protected IRenderType entityCutoutNoCull(OpenResourceKey texture) {
+            return REUSABLE_TYPES.computeIfAbsent("entity-cutout-no-cull-" + texture, it -> SkinRenderTypes.entityCutoutNoCull(texture));
         }
 
-        protected IRenderType entityTranslucentCull(OpenResourceLocation texture) {
-            return REUSABLE_TYPES.computeIfAbsent("entity-translucent-cull-" + texture, it -> SkinRenderType.entityTranslucentCull(texture));
+        protected IRenderType entityTranslucentCull(OpenResourceKey texture) {
+            return REUSABLE_TYPES.computeIfAbsent("entity-translucent-cull-" + texture, it -> SkinRenderTypes.entityTranslucentCull(texture));
         }
     }
 }

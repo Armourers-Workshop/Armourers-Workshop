@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.FolderPackResources;
@@ -19,14 +19,14 @@ import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 public abstract class AbstractPackResourcesImpl implements PackResources {
 
     public static boolean isModResources(PackResources resources) {
         return !(resources instanceof FilePackResources || resources instanceof FolderPackResources);
     }
 
-    public abstract Supplier<InputStream> getResource(PackType packType, OpenResourceLocation location);
+    public abstract Supplier<InputStream> getResource(PackType packType, OpenResourceKey key);
 
     @Override
     public final InputStream getRootResource(String path) throws IOException {
@@ -35,7 +35,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
 
     @Override
     public final InputStream getResource(PackType packType, ResourceLocation location) throws IOException {
-        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
+        var supplier = getResource(packType, AbstractResourceKey.wrap(location));
         if (supplier != null) {
             return supplier.get();
         }
@@ -49,7 +49,7 @@ public abstract class AbstractPackResourcesImpl implements PackResources {
 
     @Override
     public boolean hasResource(PackType packType, ResourceLocation location) {
-        var supplier = getResource(packType, AbstractResourceLocation.wrap(location));
+        var supplier = getResource(packType, AbstractResourceKey.wrap(location));
         return supplier != null;
     }
 

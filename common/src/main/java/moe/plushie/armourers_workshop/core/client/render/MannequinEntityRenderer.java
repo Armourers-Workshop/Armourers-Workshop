@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderSt
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.Colors;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModTextures;
 
@@ -63,7 +63,7 @@ public class MannequinEntityRenderer extends AbstractHumanoidEntityRenderer<Mann
     }
 
     @Override
-    protected OpenResourceLocation abi$getTextureLocation(MannequinRenderState renderState) {
+    protected OpenResourceKey abi$getTextureLocation(MannequinRenderState renderState) {
         if (renderState.entityTexture() != null) {
             return renderState.entityTexture().body().texture();
         }

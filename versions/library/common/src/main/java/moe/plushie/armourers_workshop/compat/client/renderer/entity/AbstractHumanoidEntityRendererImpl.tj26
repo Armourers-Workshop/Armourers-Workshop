@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractHumanoi
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.entity.AgeableMobRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
@@ -18,7 +17,7 @@ import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractHumanoidEntityRendererImpl<T extends LivingEntity, S extends HumanoidRenderState, M extends HumanoidModel<S>, A extends HumanoidModel<S>> extends AbstractLivingEntityRendererImpl<T, S, M> {
 
@@ -46,9 +45,9 @@ public abstract class AbstractHumanoidEntityRendererImpl<T extends LivingEntity,
     public static EntityRendererProvider.Context getEmptyContext() {
         var minecraft = Minecraft.getInstance();
         return new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(),
-                minecraft.getItemModelResolver(),
+                minecraft.blockModelResolver,
+                minecraft.itemModelResolver,
                 minecraft.getMapRenderer(),
-                minecraft.getBlockRenderer(),
                 minecraft.getResourceManager(),
                 minecraft.getEntityModels(),
                 minecraft.getEntityRenderDispatcher().equipmentAssets,

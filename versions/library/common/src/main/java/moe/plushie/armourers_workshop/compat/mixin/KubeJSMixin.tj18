@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.18, 1.19)")
+@Available("[18, 19)")
 @Conditional("kubejs")
 @Pseudo
 @Mixin(targets = "dev.latvian.mods.kubejs.entity.EntityJS")

@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class EatingStatusExt {
 
     public static boolean isEating(@This LivingEntity entity) {

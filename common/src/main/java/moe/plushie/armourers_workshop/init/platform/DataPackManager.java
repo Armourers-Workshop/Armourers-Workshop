@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.DataPackBuilder;
 import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ public class DataPackManager {
         return INSTANCES.get(packType);
     }
 
-    public static void register(DataPackType packType, String path, Function<OpenResourceLocation, DataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
+    public static void register(DataPackType packType, String path, Function<OpenResourceKey, DataPackBuilder> provider, Runnable willLoadHandler, Runnable didLoadHandler, int order) {
         var loader = byType(packType);
         if (loader != null) {
             loader.addTask(path, provider, willLoadHandler, didLoadHandler, order);

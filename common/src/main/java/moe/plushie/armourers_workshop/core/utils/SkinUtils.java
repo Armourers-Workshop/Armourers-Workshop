@@ -15,12 +15,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -78,7 +74,7 @@ public final class SkinUtils {
         }
         return consumer.andThen(entity -> {
             // only allow of the boat
-            if (!(entity instanceof Boat || entity instanceof AbstractMinecart)) {
+            if (!(entity.isBoat() || entity.isMinecart())) {
                 return;
             }
             var wardrobe = SkinWardrobe.of(entity);
@@ -91,7 +87,7 @@ public final class SkinUtils {
 
     public static <T extends Entity> Consumer<ItemStack> appendSkinIntoItemStack(Consumer<ItemStack> consumer, T entity) {
         // only allow of the boat
-        if (!(entity instanceof Boat || entity instanceof AbstractMinecart)) {
+        if (!(entity.isBoat() || entity.isMinecart())) {
             return consumer;
         }
         var wardrobe = SkinWardrobe.of(entity);
@@ -126,11 +122,11 @@ public final class SkinUtils {
             return;
         }
         var owner = projectile.getOwner();
-        if (entity instanceof ThrownTrident) {
+        if (entity.isThrownTrident()) {
             copySkin(owner, entity, SkinSlotType.TRIDENT, 0, SkinSlotType.ANY, 0);
             return;
         }
-        if (entity instanceof AbstractArrow) {
+        if (entity.isArrow()) {
             copySkin(owner, entity, SkinSlotType.BOW, 0, SkinSlotType.ANY, 0);
             return;
         }

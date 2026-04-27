@@ -17,7 +17,7 @@ import org.joml.Vector4f;
 
 import java.nio.FloatBuffer;
 
-@Available("[1.20, )")
+@Available("[20, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractPoseStackImpl {
 

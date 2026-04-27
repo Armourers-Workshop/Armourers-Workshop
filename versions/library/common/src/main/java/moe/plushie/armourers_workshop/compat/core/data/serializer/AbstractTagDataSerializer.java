@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractTagDataSerializer extends AbstractDataSerializerImpl<Tag> {
 
     protected final CompoundTag tag;

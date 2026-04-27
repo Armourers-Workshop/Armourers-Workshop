@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.builder;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Optional;
@@ -17,5 +17,5 @@ public abstract class AbstractBlockEntityCapabilityBuilder<T> {
         this.factory = factory;
     }
 
-    public abstract IBlockEntityCapability<T> build(OpenResourceLocation registryName);
+    public abstract IBlockEntityCapability<T> build(OpenResourceKey registryName);
 }

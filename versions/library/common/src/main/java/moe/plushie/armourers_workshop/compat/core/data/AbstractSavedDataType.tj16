@@ -5,7 +5,7 @@ import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractSavedDataType<T extends AbstractSavedData> {
 
     private final String id;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricConfigSpec extends AbstractConfigSpec {
 
     public AbstractFabricConfigSpec(Type type, HashMap<String, Value<Object>> values) {

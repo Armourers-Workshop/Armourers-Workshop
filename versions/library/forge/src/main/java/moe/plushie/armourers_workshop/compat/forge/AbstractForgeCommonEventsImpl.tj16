@@ -23,7 +23,7 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeCommonEventsImpl {
 
     public static final auto FML_CONFIG = AbstractForgeEventBus.create(ModConfig.ModConfigEvent.class);

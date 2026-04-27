@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractTooltipContext implements ITooltipContext {
 
     public final Item.TooltipContext context;

@@ -4,7 +4,7 @@ import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.impl.event.InputMouseEvent;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractMouseEvent implements InputMouseEvent {
 
     public final double mouseX;

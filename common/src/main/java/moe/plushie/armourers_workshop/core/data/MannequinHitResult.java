@@ -22,10 +22,10 @@ public class MannequinHitResult extends BlockHitResult {
     }
 
     public static MannequinHitResult test(Player player, OpenVector3d origin, OpenVector3d target, BlockPos pos) {
-        return test(player, new Vec3(origin.x, origin.y, origin.z), new Vec3(target.x, target.y, target.z), pos);
+        return test(player, origin, new Vec3(target.x, target.y, target.z), pos);
     }
 
-    public static MannequinHitResult test(Player player, Vec3 origin, Vec3 target, BlockPos pos) {
+    public static MannequinHitResult test(Player player, OpenVector3d origin, Vec3 target, BlockPos pos) {
         var level = player.level();
         var itemStack = player.getMainHandItem();
         var scale = MannequinItem.getScale(itemStack);

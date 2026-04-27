@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.math;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.math.IMatrix3f;
 import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
+import moe.plushie.armourers_workshop.api.core.math.IVector3d;
 import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 import moe.plushie.armourers_workshop.api.core.math.IVector3i;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -44,11 +45,15 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
         this((float) x, (float) y, (float) z);
     }
 
+    public OpenVector3f(IVector3i pos) {
+        this(pos.x(), pos.y(), pos.z());
+    }
+
     public OpenVector3f(IVector3f pos) {
         this(pos.x(), pos.y(), pos.z());
     }
 
-    public OpenVector3f(IVector3i pos) {
+    public OpenVector3f(IVector3d pos) {
         this(pos.x(), pos.y(), pos.z());
     }
 
@@ -107,45 +112,45 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
 
 
     public void add(float tx, float ty, float tz) {
-        x += tx;
-        y += ty;
-        z += tz;
+        this.x += tx;
+        this.y += ty;
+        this.z += tz;
     }
 
     public void add(OpenVector3f pos) {
-        x += pos.x;
-        y += pos.y;
-        z += pos.z;
+        this.x += pos.x;
+        this.y += pos.y;
+        this.z += pos.z;
     }
 
     public void subtract(float tx, float ty, float tz) {
-        x -= tx;
-        y -= ty;
-        z -= tz;
+        this.x -= tx;
+        this.y -= ty;
+        this.z -= tz;
     }
 
     public void subtract(OpenVector3f pos) {
-        x -= pos.x;
-        y -= pos.y;
-        z -= pos.z;
+        this.x -= pos.x;
+        this.y -= pos.y;
+        this.z -= pos.z;
     }
 
     public void scale(float scale) {
-        x *= scale;
-        y *= scale;
-        z *= scale;
+        this.x *= scale;
+        this.y *= scale;
+        this.z *= scale;
     }
 
     public void scale(float sx, float sy, float sz) {
-        x *= sx;
-        y *= sy;
-        z *= sz;
+        this.x *= sx;
+        this.y *= sy;
+        this.z *= sz;
     }
 
     public void scale(OpenVector3f pos) {
-        x *= pos.x;
-        y *= pos.y;
-        z *= pos.z;
+        this.x *= pos.x;
+        this.y *= pos.y;
+        this.z *= pos.z;
     }
 
     public void transform(IMatrix3f mat) {
@@ -177,25 +182,25 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
     }
 
     public void cross(OpenVector3f pos) {
-        float ax = x;
-        float ay = y;
-        float az = z;
-        float bx = pos.x();
-        float by = pos.y();
-        float bz = pos.z();
+        var ax = x;
+        var ay = y;
+        var az = z;
+        var bx = pos.x();
+        var by = pos.y();
+        var bz = pos.z();
         this.x = ay * bz - az * by;
         this.y = az * bx - ax * bz;
         this.z = ax * by - ay * bx;
     }
 
     public void clamp(float minValue, float maxValue) {
-        x = OpenMath.clamp(x, minValue, maxValue);
-        y = OpenMath.clamp(y, minValue, maxValue);
-        z = OpenMath.clamp(z, minValue, maxValue);
+        this.x = OpenMath.clamp(x, minValue, maxValue);
+        this.y = OpenMath.clamp(y, minValue, maxValue);
+        this.z = OpenMath.clamp(z, minValue, maxValue);
     }
 
     public void lerp(OpenVector3f pos, float f) {
-        float f1 = 1.0F - f;
+        var f1 = 1.0F - f;
         this.x = x * f1 + pos.x * f;
         this.y = y * f1 + pos.y * f;
         this.z = z * f1 + pos.z * f;
@@ -223,10 +228,14 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
         return distanceToSquared(pos.x, pos.y, pos.z);
     }
 
+    public float distanceTo(float tx, float ty, float tz) {
+        return OpenMath.sqrt(distanceToSquared(tx, ty, tz));
+    }
+
     public float distanceToSquared(float tx, float ty, float tz) {
-        float dx = x - tx;
-        float dy = y - ty;
-        float dz = z - tz;
+        var dx = x - tx;
+        var dy = y - ty;
+        var dz = z - tz;
         return OpenMath.fma(dx, dx, OpenMath.fma(dy, dy, dz * dz));
     }
 
@@ -326,11 +335,11 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
 
     @Override
     public int compareTo(OpenVector3f v) {
-        int dy = Float.compare(y(), v.y());
+        var dy = Float.compare(y(), v.y());
         if (dy != 0) {
             return dy;
         }
-        int dz = Float.compare(z(), v.z());
+        var dz = Float.compare(z(), v.z());
         if (dz != 0) {
             return dz;
         }
@@ -351,7 +360,7 @@ public class OpenVector3f implements Comparable<OpenVector3f>, IVector3f {
 
     @Override
     public String toString() {
-        return OpenMath.format("(%f %f %f)", x, y, z);
+        return OpenMath.format("(%.8f %.8f %.8f)", x, y, z);
     }
 }
 

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl
 import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
 import net.minecraft.world.inventory.InventoryMenu;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeRegisterTextureEvent {
 
     public static IEventHandler<RegisterTextureEvent> registryFactory() {

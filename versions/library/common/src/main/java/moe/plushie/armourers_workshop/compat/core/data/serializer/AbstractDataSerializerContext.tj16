@@ -4,7 +4,7 @@ import com.mojang.serialization.DynamicOps;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import org.jetbrains.annotations.Nullable;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractDataSerializerContext {
 
     private final Object context;

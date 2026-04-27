@@ -59,7 +59,7 @@ public class PlayerSkinDownloader {
 
     public void downloadSkin(String url, IResultHandler<PlayerSkin> handler) {
         var identifier = Objects.md5(url);
-        var location = ModConstants.key("skins/" + identifier);
+        var textureIdentifier = ModConstants.key("skins/" + identifier);
         var outputFile = new File(EnvironmentManager.getRootDirectory() + "/skin-textures/" + identifier.substring(0, 2) + "/" + identifier);
         downloadSkin(url, outputFile, (it, exception) -> {
             try {
@@ -71,13 +71,13 @@ public class PlayerSkinDownloader {
                 var image = decoder.decode(new FileInputStream(it));
                 var semaphore = new Semaphore(0);
                 RenderSystem.recordRenderCall(() -> {
-                    var texture = new ImageTexture(location.path(), image);
-                    Minecraft.getInstance().getTextureManager().register(location, texture);
+                    var texture = new ImageTexture(textureIdentifier.path(), image);
+                    Minecraft.getInstance().getTextureManager().register(textureIdentifier, texture);
                     semaphore.release();
                 });
                 semaphore.acquire();
                 // build a skin object.
-                var body = new PlayerSkinPart(location, url);
+                var body = new PlayerSkinPart(textureIdentifier, url);
                 var descriptor = PlayerSkinDescriptor.fromURL(url);
                 var result = new PlayerSkin(descriptor, body, null, null, PlayerSkinModel.WIDE);
                 handler.accept(result);

@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.20, )")
+@Available("[20, )")
 public class ABI {
 
     public static void sendSuccess(@This CommandSourceStack sourceStack, Component text, boolean bl) {

@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
 @Extension
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class Fix16 {
 
     public static void assertOnRenderThread(@ThisClass Class<?> clazz) {

@@ -1,16 +1,20 @@
 package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.systems.RenderSystem;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Extension
 public class ShaderTextureExt {
 
-    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, OpenResourceLocation texture) {
+    public static OpenResourceKey getShaderTexture(@ThisClass Class<?> clazz, int i) {
+        return null;
+    }
+
+    public static void setShaderTexture(@ThisClass Class<?> clazz, int i, OpenResourceKey texture) {
 //        if (!isOnRenderThread()) {
 //            recordRenderCall(() -> _setShaderTexture(i, resourceLocation));
 //        } else {

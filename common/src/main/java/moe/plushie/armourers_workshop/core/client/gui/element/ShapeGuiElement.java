@@ -5,7 +5,7 @@ import com.apple.library.coregraphics.CGGraphicsElement;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.utils.Colors;
@@ -47,8 +47,8 @@ public abstract class ShapeGuiElement implements CGGraphicsElement {
         @Override
         public void prepare(CGGraphicsContext context) {
             this.renderType = switch (context.blendMode()) {
-                case DIFFERENCE -> SkinRenderType.GUI_REVERSED_COLOR;
-                default -> SkinRenderType.GUI_COLOR;
+                case DIFFERENCE -> SkinRenderTypes.GUI_REVERSED_COLOR;
+                default -> SkinRenderTypes.GUI_COLOR;
             };
         }
 
@@ -111,7 +111,7 @@ public abstract class ShapeGuiElement implements CGGraphicsElement {
 
         private void renderSolidLine(float hl, IPoseStack poseStack, IBufferSource bufferSource) {
             var entry = poseStack.last();
-            var buffer = bufferSource.getBuffer(SkinRenderType.GUI_COLOR);
+            var buffer = bufferSource.getBuffer(SkinRenderTypes.GUI_COLOR);
 
             var r = Colors.getRed(color);
             var g = Colors.getGreen(color);
@@ -147,7 +147,7 @@ public abstract class ShapeGuiElement implements CGGraphicsElement {
 
         private void renderDebugLine(IPoseStack poseStack, IBufferSource bufferSource) {
             var entry = poseStack.last();
-            var builder = bufferSource.getBuffer(SkinRenderType.line());
+            var builder = bufferSource.getBuffer(SkinRenderTypes.line());
 
             var r = Colors.getRed(color);
             var g = Colors.getGreen(color);

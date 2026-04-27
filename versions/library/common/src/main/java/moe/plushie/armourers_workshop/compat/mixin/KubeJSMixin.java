@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Available("[1.19, )")
+@Available("[19, )")
 @Conditional("kubejs")
 @Mixin(Entity.class)
 public class KubeJSMixin {

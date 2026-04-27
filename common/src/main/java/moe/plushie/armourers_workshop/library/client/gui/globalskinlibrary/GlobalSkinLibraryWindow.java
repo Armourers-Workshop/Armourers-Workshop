@@ -7,6 +7,7 @@ import com.apple.library.foundation.NSString;
 import com.apple.library.uikit.UIColor;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UILabelDelegate;
+import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
 import moe.plushie.armourers_workshop.compat.core.AbstractOpenURLEvent;
 import moe.plushie.armourers_workshop.core.client.gui.widget.MenuWindow;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -31,7 +32,6 @@ import moe.plushie.armourers_workshop.library.data.impl.SearchOrderType;
 import moe.plushie.armourers_workshop.library.data.impl.ServerSkin;
 import moe.plushie.armourers_workshop.library.data.impl.ServerUser;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
-import net.minecraft.Util;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
 
@@ -218,7 +218,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
         public void labelWillClickAttributes(UILabel label, Map<String, ?> attributes) {
             // process open url event.
             if (attributes.get("ClickEvent") instanceof AbstractOpenURLEvent event) {
-                Util.getPlatform().openUri(event.uri());
+                AbstractPlatform.openUri(event.uri());
             }
         }
 

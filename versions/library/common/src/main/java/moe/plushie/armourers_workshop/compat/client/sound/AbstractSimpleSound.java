@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.compat.client.sound;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractSimpleSound {
 
-    private final ResourceLocation id;
+    private final OpenResourceKey id;
     private final String name;
 
     private final float volume = 1.0f;
@@ -14,16 +14,16 @@ public class AbstractSimpleSound {
     private final int weight = 1; // must > 0
     private final int attenuationDistance = 16;
 
-    public AbstractSimpleSound(ResourceLocation id, String name) {
+    public AbstractSimpleSound(OpenResourceKey id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public static AbstractSimpleSound create(ResourceLocation id, String name) {
+    public static AbstractSimpleSound create(OpenResourceKey id, String name) {
         return new AbstractSimpleSound(id, name);
     }
 
-    public ResourceLocation id() {
+    public OpenResourceKey id() {
         return id;
     }
 

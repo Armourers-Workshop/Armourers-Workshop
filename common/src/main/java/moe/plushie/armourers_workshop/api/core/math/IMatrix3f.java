@@ -21,4 +21,16 @@ public interface IMatrix3f {
     void invert();
 
     void transpose();
+
+    default void scale(double x, double y, double z) {
+        scale((float) x, (float) y, (float) z);
+    }
+
+    default void scale(IVector3f vector) {
+        scale(vector.x(), vector.y(), vector.z());
+    }
+
+    default void scale(IVector3d vector) {
+        scale(vector.x(), vector.y(), vector.z());
+    }
 }

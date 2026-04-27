@@ -17,7 +17,7 @@ import org.thinkingstudio.ryoamiclights.api.DynamicLightHandler;
 import org.thinkingstudio.ryoamiclights.api.DynamicLightHandlers;
 import org.thinkingstudio.ryoamiclights.api.item.ItemLightSources;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class ForgeRyoamicLightsMixin {
 
     @Conditional("ryoamiclights")

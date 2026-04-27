@@ -20,7 +20,7 @@ public class TypedRegistry<T> implements TypedProvider<T> {
     private final TypedProvider<T> provider;
 
     private final ArrayList<TypedHolder<? extends T>> holders = new ArrayList<>();
-    private final HashMap<OpenResourceLocation, TypedHolder<? extends T>> idToValue = new HashMap<>();
+    private final HashMap<OpenResourceKey, TypedHolder<? extends T>> idToValue = new HashMap<>();
 
     public TypedRegistry(String name, TypedProvider<T> provider) {
         this.name = name;
@@ -34,12 +34,12 @@ public class TypedRegistry<T> implements TypedProvider<T> {
      * @param supplier A factory for the new entry, it should return a new instance every time it is called.
      * @return A RegistryObject that will be updated with when the entries in the registry change.
      */
-    public <I extends T> TypedHolder<I> register(String name, Function<OpenResourceLocation, ? extends I> supplier) {
+    public <I extends T> TypedHolder<I> register(String name, Function<OpenResourceKey, ? extends I> supplier) {
         return register(ModConstants.key(name), supplier);
     }
 
     @Override
-    public <I extends T> TypedHolder<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+    public <I extends T> TypedHolder<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
         Supplier<I> object = provider.register(registryName, supplier);
         TypedHolder<I> entry = TypedHolder.of(registryName, object);
         holders.add(entry);
@@ -53,7 +53,7 @@ public class TypedRegistry<T> implements TypedProvider<T> {
     }
 
     @Override
-    public T getValue(OpenResourceLocation registryName) {
+    public T getValue(OpenResourceKey registryName) {
         var holder = idToValue.get(registryName);
         if (holder != null) {
             return holder.get();
@@ -62,7 +62,7 @@ public class TypedRegistry<T> implements TypedProvider<T> {
     }
 
     @Override
-    public OpenResourceLocation getKey(T value) {
+    public OpenResourceKey getKey(T value) {
         for (var holder : holders) {
             if (holder.get() == value) {
                 return holder.registryName();
@@ -75,12 +75,12 @@ public class TypedRegistry<T> implements TypedProvider<T> {
         return holders;
     }
 
-    public Set<Map.Entry<OpenResourceLocation, TypedHolder<? extends T>>> entitySet() {
+    public Set<Map.Entry<OpenResourceKey, TypedHolder<? extends T>>> entitySet() {
         return idToValue.entrySet();
     }
 
     public IDataCodec<T> codec() {
-        return OpenResourceLocation.CODEC.flatXmap(key -> {
+        return OpenResourceKey.CODEC.flatXmap(key -> {
             var value = getValue(key);
             if (value == null) {
                 return DataResult.error(() -> "Unknown element id: " + key);

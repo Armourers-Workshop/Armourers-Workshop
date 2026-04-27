@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +33,7 @@ public class CapabilityStorage {
         this.capabilities = capabilities;
     }
 
-    public static <T> void registerCapability(OpenResourceLocation registryName, IEntityCapability<T> capabilityType, Function<Entity, Optional<T>> provider) {
+    public static <T> void registerCapability(OpenResourceKey registryName, IEntityCapability<T> capabilityType, Function<Entity, Optional<T>> provider) {
         ENTRIES.add(new Entry<>(registryName, capabilityType, provider));
     }
 
@@ -124,11 +124,11 @@ public class CapabilityStorage {
 
     private static class Entry<T> {
 
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
         private final IEntityCapability<T> capabilityType;
         private final Function<Entity, Optional<T>> provider;
 
-        public Entry(OpenResourceLocation registryName, IEntityCapability<T> capabilityType, Function<Entity, Optional<T>> provider) {
+        public Entry(OpenResourceKey registryName, IEntityCapability<T> capabilityType, Function<Entity, Optional<T>> provider) {
             this.registryName = registryName;
             this.capabilityType = capabilityType;
             this.provider = provider;

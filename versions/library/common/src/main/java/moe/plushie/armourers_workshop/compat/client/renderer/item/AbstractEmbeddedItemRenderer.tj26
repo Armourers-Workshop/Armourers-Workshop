@@ -4,32 +4,33 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
 import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractItemStackRenderState;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.client.render.EmbeddedItemStackRenderer;
 import moe.plushie.armourers_workshop.core.client.render.model.EmbeddedItemModel;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.model.ItemTransform;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.resources.model.cuboid.ItemTransform;
+import net.minecraft.client.resources.model.cuboid.ItemTransforms;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEmbeddedItemRenderer implements SpecialModelRenderer<ItemStack>, ItemModel {
 
@@ -87,7 +88,7 @@ public class AbstractEmbeddedItemRenderer implements SpecialModelRenderer<ItemSt
     }
 
     @Override
-    public void update(ItemStackRenderState renderState, ItemStack itemStack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel clientLevel, @Nullable ItemOwner itemOwner, int i) {
+    public final void update(ItemStackRenderState renderState, ItemStack itemStack, ItemModelResolver modelResolver, ItemDisplayContext displayContext, @Nullable ClientLevel clientLevel, @Nullable ItemOwner itemOwner, int i) {
         renderState.appendModelIdentityElement(this);
         var renderLayer = renderState.newLayer();
         if (itemStack.hasFoil()) {
@@ -99,27 +100,27 @@ public class AbstractEmbeddedItemRenderer implements SpecialModelRenderer<ItemSt
         renderLayer.setupSpecialModel(this, extractArgument(itemStack));
         renderLayer.setUsesBlockLight(true);
         //renderLayer.setParticleIcon(particleIcon);
-        renderLayer.setTransform(EMPTY_ITEM_TRANSFORMS.getTransform(displayContext));
+        renderLayer.setItemTransform(EMPTY_ITEM_TRANSFORMS.getTransform(displayContext));
 
         // extract the original item stack state into temp render state for render it later.
         modelResolver.updateForTopItem(originRenderState, itemStack, displayContext, clientLevel, itemOwner, i);
     }
 
     @Override
-    public void submit(@Nullable ItemStack itemStack, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, int j, boolean bl, int k) {
-        var count = EmbeddedItemStackRenderer.render(itemModel, i, j, AbstractItemDisplayContext.wrap(displayContext), AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector));
+    public final void submit(@Nullable ItemStack argument, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
+        var count = EmbeddedItemStackRenderer.render(itemModel, lightCoords, overlayCoords, OpenItemDisplayContext.NONE, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector));
         if (count != 0 && !ModDebugger.itemOverride) {
             return;
         }
-        originRenderState.submit(poseStack, submitNodeCollector, i, j, k);
+        originRenderState.submit(poseStack, submitNodeCollector, lightCoords, overlayCoords, outlineColor);
     }
 
     @Override
-    public void getExtents(Set<Vector3f> set) {
+    public final void getExtents(Consumer<Vector3fc> output) {
     }
 
     @Override
-    public ItemStack extractArgument(ItemStack itemStack) {
+    public final ItemStack extractArgument(ItemStack itemStack) {
         return itemStack;
     }
 

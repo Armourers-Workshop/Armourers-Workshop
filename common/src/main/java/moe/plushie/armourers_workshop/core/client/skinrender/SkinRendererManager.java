@@ -55,7 +55,7 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.NamedClass;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
@@ -413,15 +413,15 @@ public class SkinRendererManager {
             it.put("epicfight:armature", EPIC_FIGHT);
         });
 
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
 
-        public TransformerLoaderImpl(OpenResourceLocation location) {
-            var path = FileUtils.getRegistryName(location.path(), "skin/transformers/");
-            this.registryName = location.withPath(path);
+        public TransformerLoaderImpl(OpenResourceKey key) {
+            var path = FileUtils.getRegistryName(key.path(), "skin/transformers/");
+            this.registryName = key.withPath(path);
         }
 
         @Override
-        public void append(IODataObject object, OpenResourceLocation file) {
+        public void append(IODataObject object, OpenResourceKey file) {
             var type = object.get("type").stringValue();
             var manager = MANAGERS.get(type);
             if (manager != null) {

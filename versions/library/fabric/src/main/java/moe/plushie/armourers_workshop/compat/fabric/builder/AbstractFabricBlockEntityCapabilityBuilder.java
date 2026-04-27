@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
 import moe.plushie.armourers_workshop.compat.builder.AbstractBlockEntityCapabilityBuilder;
 import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @SuppressWarnings("SameParameterValue")
 public class AbstractFabricBlockEntityCapabilityBuilder<T> extends AbstractBlockEntityCapabilityBuilder<T> {
 
@@ -26,7 +26,7 @@ public class AbstractFabricBlockEntityCapabilityBuilder<T> extends AbstractBlock
     }
 
     @Override
-    public IBlockEntityCapability<T> build(OpenResourceLocation registryName) {
+    public IBlockEntityCapability<T> build(OpenResourceKey registryName) {
         if (registryName.equals(ModConstants.key("item"))) {
             return Objects.unsafeCast(createSidedCapability(ItemStorage.SIDED));
         }

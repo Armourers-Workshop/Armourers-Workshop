@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 @Mixin(AbstractBlockEntity.class)
 public abstract class ForgeBlockEntityHandlerMixin implements AbstractForgeBlockEntity {
 

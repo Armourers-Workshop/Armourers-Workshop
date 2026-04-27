@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResourceLoader;
 import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -11,13 +11,13 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractForgeResourceLoader implements PreparableReloadListener {
 
-    private final OpenResourceLocation name;
+    private final OpenResourceKey name;
     private final IResourceLoader impl;
 
-    public AbstractForgeResourceLoader(OpenResourceLocation name, IResourceLoader impl) {
+    public AbstractForgeResourceLoader(OpenResourceKey name, IResourceLoader impl) {
         this.name = name;
         this.impl = impl;
     }

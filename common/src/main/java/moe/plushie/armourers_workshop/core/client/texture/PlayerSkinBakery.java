@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedPlayerSkinPart;
 import moe.plushie.armourers_workshop.core.data.LoadableHashMap;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TrackableResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
 
@@ -21,7 +21,7 @@ public class PlayerSkinBakery {
     private static PlayerSkinBakery BAKERY;
 
     private final LoadableHashMap<PlayerSkin, BakedPlayerSkin> skins = new LoadableHashMap<>(this::bakeSkin);
-    private final LoadableHashMap<OpenResourceLocation, BufferedImage> images = new LoadableHashMap<>(this::bakeImage);
+    private final LoadableHashMap<OpenResourceKey, BufferedImage> images = new LoadableHashMap<>(this::bakeImage);
 
     private final AbstractImageTextureDownloader textureDownloader = new AbstractImageTextureDownloader();
 
@@ -67,8 +67,8 @@ public class PlayerSkinBakery {
         });
     }
 
-    private void bakeImage(OpenResourceLocation location, LoadableHashMap.Entry<BufferedImage> task) {
-        var handler = new TrackableResultHandler<>("download GPU texture ", location, task);
-        textureDownloader.download(location, handler);
+    private void bakeImage(OpenResourceKey key, LoadableHashMap.Entry<BufferedImage> task) {
+        var handler = new TrackableResultHandler<>("download GPU texture ", key, task);
+        textureDownloader.download(key, handler);
     }
 }

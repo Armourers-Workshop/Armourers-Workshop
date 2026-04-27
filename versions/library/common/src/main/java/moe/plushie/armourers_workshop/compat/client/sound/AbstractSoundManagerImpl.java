@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.compat.client.sound;
 
-import net.minecraft.resources.ResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public interface AbstractSoundManagerImpl {
 
-    void aw2$register(ResourceLocation relocation, AbstractSimpleSound sound);
+    void aw2$register(OpenResourceKey relocation, AbstractSimpleSound sound);
 
-    void aw2$unregister(ResourceLocation relocation);
+    void aw2$unregister(OpenResourceKey relocation);
 }

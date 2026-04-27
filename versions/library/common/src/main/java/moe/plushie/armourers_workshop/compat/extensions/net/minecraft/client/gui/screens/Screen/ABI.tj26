@@ -1,0 +1,29 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.client.gui.screens.Screen;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractGuiGraphicsRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Available("[26, )")
+@Extension
+public class ABI {
+
+    public static void init(@This Screen screen, Minecraft minecraft, int width, int height) {
+        screen.init(width, height);
+    }
+
+    public static void resize(@This Screen screen, Minecraft minecraft, int width, int height) {
+        screen.resize(width, height);
+    }
+
+    public static void render(@This Screen screen, CGGraphicsContext context, int mouseX, int mouseY, float partialTick) {
+        AbstractGuiGraphicsRenderer.unwrap(context, "overlay", graphics -> {
+            screen.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        });
+    }
+}

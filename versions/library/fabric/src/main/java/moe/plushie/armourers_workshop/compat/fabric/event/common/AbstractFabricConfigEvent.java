@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.init.event.common.LauncherConfigSetupEvent;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigEvents;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractFabricConfigEvent {
 
     public static IEventHandler<LauncherConfigSetupEvent> registryFactory() {

@@ -16,6 +16,7 @@ import com.apple.library.uikit.UITextFieldDelegate;
 import com.apple.library.uikit.UIView;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
+import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.gui.notification.UserNotificationCenter;
 import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
@@ -43,7 +44,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.menu.SkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.SaveSkinPacket;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -362,7 +362,7 @@ public class SkinLibraryWindow extends MenuWindow<SkinLibraryMenu> implements IS
     }
 
     private void openFolder(UIControl sender) {
-        Util.getPlatform().openFile(EnvironmentManager.getSkinLibraryDirectory());
+        AbstractPlatform.openFile(EnvironmentManager.getSkinLibraryDirectory());
     }
 
     private void backFolder(UIControl sender) {

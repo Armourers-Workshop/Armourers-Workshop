@@ -1,24 +1,24 @@
 package moe.plushie.armourers_workshop.core.skin.texture;
 
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerSkinPart {
 
-    private final OpenResourceLocation texture;
+    private final OpenResourceKey texture;
     private final String url;
 
-    public PlayerSkinPart(OpenResourceLocation texture) {
+    public PlayerSkinPart(OpenResourceKey texture) {
         this(texture, null);
     }
 
-    public PlayerSkinPart(OpenResourceLocation texture, String url) {
+    public PlayerSkinPart(OpenResourceKey texture, String url) {
         this.texture = texture;
         this.url = url;
     }
 
-    public OpenResourceLocation texture() {
+    public OpenResourceKey texture() {
         return texture;
     }
 

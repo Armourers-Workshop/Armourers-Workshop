@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.resources.ResourceLocation;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 @Extension
 public class Constructor {
 
@@ -17,9 +17,9 @@ public class Constructor {
         return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 
-    public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceLocation location, String variant) {
-        var namespace = location.namespace();
-        var path = location.path();
+    public static ModelResourceLocation create(@ThisClass Class<?> clazz, IResourceKey key, String variant) {
+        var namespace = key.namespace();
+        var path = key.path();
         switch (EnvironmentManager.getPlatformType()) {
             case FABRIC -> {
                 // in 1.21 fabric only allows adding fabric_resources models.

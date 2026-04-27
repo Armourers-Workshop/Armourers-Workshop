@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.ModLog;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ import java.util.function.Function;
 public class Armatures {
 
     private static final LinkedHashMap<SkinType, Armature> LINKED_ARMATURES = new LinkedHashMap<>();
-    private static final LinkedHashMap<OpenResourceLocation, Armature> NAMED_ARMATURES = new LinkedHashMap<>();
+    private static final LinkedHashMap<OpenResourceKey, Armature> NAMED_ARMATURES = new LinkedHashMap<>();
 
     public static final Armature HUMANOID = Builder.named("humanoid");
     public static final Armature HORSE = Builder.named("horse");
@@ -33,7 +33,7 @@ public class Armatures {
     public static final Armature HAND = Builder.named("hand");
 
     @Nullable
-    public static Armature byName(OpenResourceLocation registryName) {
+    public static Armature byName(OpenResourceKey registryName) {
         return NAMED_ARMATURES.get(registryName);
     }
 

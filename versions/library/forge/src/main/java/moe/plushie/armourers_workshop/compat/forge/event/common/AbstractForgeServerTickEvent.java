@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl;
 import moe.plushie.armourers_workshop.init.event.common.ServerTickEvent;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeServerTickEvent {
 
     public static IEventHandler<ServerTickEvent.Pre> preTickFactory() {

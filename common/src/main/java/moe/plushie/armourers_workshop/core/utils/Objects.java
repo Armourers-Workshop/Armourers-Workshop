@@ -59,6 +59,10 @@ public class Objects {
         return java.util.Objects.equals(a, b);
     }
 
+    public static boolean isNull(Object obj) {
+        return obj == null;
+    }
+
     public static boolean nonNull(Object obj) {
         return obj != null;
     }

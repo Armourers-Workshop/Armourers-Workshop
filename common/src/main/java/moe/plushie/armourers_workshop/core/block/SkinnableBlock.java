@@ -159,7 +159,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
                 if (level.isClientSide()) {
                     return OpenInteractionResult.CONSUME;
                 }
-                var seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+                var seatPos = blockEntity.getSeatPos().adding(0.5f, 0.5f, 0.5f);
                 var seatEntity = getSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
                     return OpenInteractionResult.FAIL; // it is using
@@ -300,7 +300,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     public void killSeatEntities(Level level, BlockPos blockPos) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
-            var seatPos = blockEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+            var seatPos = blockEntity.getSeatPos().adding(0.5f, 0.5f, 0.5f);
             killSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
         }
     }

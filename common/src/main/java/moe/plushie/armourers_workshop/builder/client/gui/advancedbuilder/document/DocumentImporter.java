@@ -9,8 +9,7 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationKeyframe;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -27,7 +26,6 @@ import net.minecraft.client.Minecraft;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -203,18 +201,18 @@ public class DocumentImporter {
         return results;
     }
 
-    private List<SkinAnimation> resolveMappedAnimations(List<SkinAnimation> animations) {
-        var results = new ArrayList<SkinAnimation>();
+    private List<SkinAnimationData> resolveMappedAnimations(List<SkinAnimationData> animations) {
+        var results = new ArrayList<SkinAnimationData>();
         for (var animation : animations) {
-            var keyframes = new LinkedHashMap<String, List<SkinAnimationKeyframe>>();
-            animation.keyframes().forEach((key, value) -> {
-                var node = partMapper.resolve(key, SkinPartTypes.ADVANCED);
-                keyframes.put(node.name(), value);
-            });
+            var animators = new ArrayList<SkinAnimationData.Animator>();
+            for (var animator : animation.animators()) {
+                var node = partMapper.resolve(animator.bone(), SkinPartTypes.ADVANCED);
+                animators.add(new SkinAnimationData.Animator(node.name(), animator.options(), animator.keyframes()));
+            }
             var name = animation.name();
             var duration = animation.duration();
             var loop = animation.loop();
-            results.add(new SkinAnimation(name, duration, loop, keyframes));
+            results.add(new SkinAnimationData(name, duration, loop, animators));
         }
         return results;
     }

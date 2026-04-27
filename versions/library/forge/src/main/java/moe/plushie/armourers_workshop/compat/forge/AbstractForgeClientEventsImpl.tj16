@@ -14,7 +14,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeClientEventsImpl {
 
     public static final auto PLAYER_LOGIN = AbstractForgeEventBus.create(ClientPlayerNetworkEvent.LoggedInEvent.class);

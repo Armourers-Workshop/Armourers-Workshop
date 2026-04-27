@@ -24,7 +24,7 @@ import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
 import net.minecraft.client.renderer.entity.layers.StrayClothingLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractClientNamedClass extends NamedClass {
 

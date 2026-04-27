@@ -1,35 +1,36 @@
-accessWidener   v1  named
+accessWidener v2 named
 
 accessible method net/minecraft/world/item/context/UseOnContext <init> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/phys/BlockHitResult;)V
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 accessible method net/minecraft/client/renderer/LevelRenderer shouldShowEntityOutlines ()Z
 
-##if MC >= 12106
+##if MC >= 260000
+### accessible field net/minecraft/client/Minecraft blockModelResolver Lnet/minecraft/client/renderer/block/BlockModelResolver;
+### accessible field net/minecraft/client/Minecraft itemModelResolver Lnet/minecraft/client/renderer/item/ItemModelResolver;
+### accessible field net/minecraft/client/renderer/item/CuboidItemModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
 ### accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher equipmentAssets Lnet/minecraft/client/resources/model/EquipmentAssetManager;
-### accessible field net/minecraft/client/renderer/item/BlockModelWrapper properties Lnet/minecraft/client/renderer/item/ModelRenderProperties;
-### accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecraft/client/gui/render/state/GuiRenderState;
-### accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+### accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
 ##endif
 
-##if MC >= 12110
+##if MC >= 211000
 ### accessible method net/minecraft/world/level/storage/TagValueOutput <init> (Lnet/minecraft/util/ProblemReporter;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/nbt/CompoundTag;)V
 ##endif
 
 # fix manifold compile issue, because fabric modify the access permissions.
-##if MC >= 12102
+##if MC >= 210200
 ### accessible method net/minecraft/world/entity/player/Player hurtArmor (Lnet/minecraft/world/damagesource/DamageSource;F)V
 ### accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/minecraft/world/damagesource/DamageSource;F)V
-##elseif MC >= 11900
+##elseif MC >= 190000
 accessible method net/minecraft/world/entity/player/Player hurtArmor (Lnet/minecraft/world/damagesource/DamageSource;F)V
 accessible method net/minecraft/world/entity/player/Player hurtHelmet (Lnet/minecraft/world/damagesource/DamageSource;F)V
 accessible method net/minecraft/world/entity/player/Player hurtCurrentlyUsedShield (F)V
 ##endif
 
-##if MC >= 12100 && MC < 12600
+##if MC >= 210000 && MC < 260000
 accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fetchGameProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 ##endif
 
-##if MC >= 12100
+##if MC >= 210000
 extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByAnything (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V
 extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;)V
 ##else
@@ -37,7 +38,7 @@ extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlaye
 ### extendable method net/minecraft/world/entity/decoration/ArmorStand brokenByPlayer (Lnet/minecraft/world/damagesource/DamageSource;)V
 ##endif
 
-##if MC >= 12000
+##if MC >= 200000
 accessible method net/minecraft/world/entity/Entity setLevel (Lnet/minecraft/world/level/Level;)V
 ##endif
 
@@ -47,24 +48,23 @@ accessible field net/minecraft/client/renderer/entity/LivingEntityRenderer layer
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher playerRenderers Ljava/util/Map;
 
-##if MC < 12600
+##if MC < 260000
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer innerModel Lnet/minecraft/client/model/HumanoidModel;
 accessible field net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer outerModel Lnet/minecraft/client/model/HumanoidModel;
 ##endif
 
-##if MC >= 12106
-### accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
-### accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder <init> ()V
-##elseif MC >= 11800
+##if MC >= 210600
+### accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+##elseif MC >= 180000
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 ##endif
 
-##if MC < 12102
+##if MC < 210200
 accessible field net/minecraft/client/model/AgeableListModel scaleHead Z
 accessible field net/minecraft/client/model/AgeableListModel bodyYOffset F
 accessible field net/minecraft/client/model/AgeableListModel babyHeadScale F
 accessible field net/minecraft/client/model/AgeableListModel babyBodyScale F
-##if MC >= 11800
+##if MC >= 180000
 accessible field net/minecraft/client/model/AgeableListModel babyYHeadOffset F
 accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ##else
@@ -73,7 +73,7 @@ accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ##endif
 ##endif
 
-##if MC < 12000
+##if MC < 200000
 ### accessible field com/mojang/math/Matrix3f m00 F
 ### accessible field com/mojang/math/Matrix3f m01 F
 ### accessible field com/mojang/math/Matrix3f m02 F
@@ -102,10 +102,10 @@ accessible field net/minecraft/client/model/AgeableListModel babyZHeadOffset F
 ##endif
 
 
-##if MC >= 11800
+##if MC >= 180000
 accessible field net/minecraft/client/gui/screens/inventory/tooltip/ClientTextTooltip text Lnet/minecraft/util/FormattedCharSequence;
 ##endif
 
-##if MC < 12000
+##if MC < 200000
 ### accessible field net/minecraft/client/Minecraft fps I
 ##endif

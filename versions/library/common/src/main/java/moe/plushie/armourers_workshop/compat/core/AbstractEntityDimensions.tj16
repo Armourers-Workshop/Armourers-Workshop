@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.core;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.world.entity.EntityDimensions;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractEntityDimensions extends EntityDimensions {
 
     public final float eyeHeight;

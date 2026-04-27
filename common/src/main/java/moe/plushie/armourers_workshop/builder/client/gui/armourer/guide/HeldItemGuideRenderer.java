@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -38,9 +38,9 @@ public class HeldItemGuideRenderer extends AbstractGuideRenderer {
         float f = 1 / 16f;
         context.saveGraphicsState();
         context.rotateCTM(OpenVector3f.XP.rotationDegrees(-90));
-        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         context.translateCTM(0, -0.001f * f, 0);
-        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderType.PLAYER_TRANSLUCENT));
+        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderTypes.PLAYER_TRANSLUCENT));
         context.restoreGraphicsState();
     }
 }

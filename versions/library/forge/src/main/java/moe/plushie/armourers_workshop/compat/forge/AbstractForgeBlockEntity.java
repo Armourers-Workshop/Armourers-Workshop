@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.extensions.IBlockEntityExtension;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public interface AbstractForgeBlockEntity extends IBlockEntityExtension {
 
     static <T extends BlockEntity> T create(BlockEntityType<T> entityType, BlockGetter level, BlockPos blockPos, BlockState blockState) {

@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.runtime.bind.ContextBindi
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.function.Function;
 import moe.plushie.armourers_workshop.core.skin.molang.thirdparty.bind.ExecutionContextImpl;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.init.ModConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,11 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestMolangCase {
 
-    private ExecutionContextImpl context = new ExecutionContextImpl(new StaticVariableStorage());
+    private ExecutionContextImpl context;
     
     private MolangVirtualMachine vm = new MolangVirtualMachine(Collections.immutableMap(it -> {
         it.put("test", new TestBinding());
     }));
+
+    @BeforeEach
+    public void setUp() {
+        context = new ExecutionContextImpl(new StaticVariableStorage());
+    }
 
     @Test
     public void testBasic() throws Exception {
@@ -120,13 +125,13 @@ public class TestMolangCase {
 
         evaluate("v.x = 0; loop(10, { v.x = v.x + 1; }); return v.x;", 10);
         evaluate("v.x = 0; loop(10, { (v.x > 5) ? continue; v.x = v.x + 1; }); return v.x;", 6);
-        //assertEvaluate("v.x = 0; loop(10, { (v.x > 5) ? return v.x; v.x = v.x + 1; });", 6);
+        //evaluate("v.x = 0; loop(10, { (v.x > 5) ? return v.x; v.x = v.x + 1; });", 6);
         evaluate("v.x = 0; loop(10, { loop(10, { v.x = v.x + 1; (v.x > 5) ? break; }); }); return v.x;", 15);
 
         evaluate("v.x = 0; for_each(t.pig, test.array_value, { v.x = v.x + 1; }); return v.x;", 3);
         evaluate("v.x = 0; for_each(t.pig, test.array_value, { (t.pig == 'my_array_2') ? break; v.x = v.x + 1; }); return v.x;", 1);
         evaluate("v.x = 0; for_each(t.pig, test.array_value, { (t.pig == 'my_array_2') ? continue; v.x = v.x + 1; }); return v.x;", 2);
-        //assertEvaluate("v.x = 0; for_each(t.pig, test.array_value, { (t.pig == 'my_array_2') ? return t.pig; v.x = v.x + 1; });", "my_array_2");
+        //evaluate("v.x = 0; for_each(t.pig, test.array_value, { (t.pig == 'my_array_2') ? return t.pig; v.x = v.x + 1; });", "my_array_2");
 
         evaluate("v.x = 1; v.y = 1; loop(10, { t.x = v.x + v.y; v.x = v.y; v.y = t.x; }); return v.x;", 89);
 

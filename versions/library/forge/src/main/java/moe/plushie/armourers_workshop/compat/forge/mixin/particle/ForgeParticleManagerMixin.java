@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Predicate;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 @Mixin(ParticleEngine.class)
 public class ForgeParticleManagerMixin implements AbstractParticleManagerImpl {
 

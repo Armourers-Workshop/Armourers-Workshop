@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin({LayerDefinition.class})
 @Implements(@Interface(iface = IAssociatedContainer.class, prefix = "aw2$"))
 public abstract class ModelDataAttachMixin {

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.core.client.render.model.LinkedModel;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModLog;
 import net.minecraft.world.entity.EntityType;
 
@@ -16,28 +16,28 @@ import java.util.function.Function;
 
 public abstract class ArmatureTransformerManager {
 
-    private final HashMap<OpenResourceLocation, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
+    private final HashMap<OpenResourceKey, ArmatureTransformerBuilder> pendingBuilders = new HashMap<>();
 
-    private final HashMap<OpenResourceLocation, ArmatureTransformerBuilder> namedBuilders = new HashMap<>();
+    private final HashMap<OpenResourceKey, ArmatureTransformerBuilder> namedBuilders = new HashMap<>();
     private final HashMap<IRegistryHolder<?>, ArrayList<ArmatureTransformerBuilder>> entityBuilders = new HashMap<>();
     private final HashMap<Class<?>, ArrayList<ArmatureTransformerBuilder>> modelBuilders = new HashMap<>();
 
     private int version = 0;
 
-    protected abstract ArmatureTransformerBuilder createBuilder(OpenResourceLocation name);
+    protected abstract ArmatureTransformerBuilder createBuilder(OpenResourceKey name);
 
     public void clear() {
         pendingBuilders.clear();
     }
 
-    public void append(OpenResourceLocation registryName, IODataObject object) {
+    public void append(OpenResourceKey registryName, IODataObject object) {
         var builder = createBuilder(registryName);
         pendingBuilders.put(registryName, builder);
         builder.load(object);
     }
 
     public void freeze() {
-        var builders1 = new HashMap<OpenResourceLocation, ArmatureTransformerBuilder>();
+        var builders1 = new HashMap<OpenResourceKey, ArmatureTransformerBuilder>();
         pendingBuilders.forEach((name, builder) -> {
             var chain = new ArrayList<ArmatureTransformerBuilder>();
             var nextBuilder = builder;

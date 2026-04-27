@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractFriendlyByteBuf;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.client.Minecraft;
@@ -26,12 +26,12 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.function.Supplier;
 
-@Available("[1.18, 1.21)")
+@Available("[18, 21)")
 public class AbstractForgeNetwork {
 
     public static class Dispatcher extends NetworkManager.Dispatcher {
 
-        public Dispatcher(OpenResourceLocation channelName, String channelVersion) {
+        public Dispatcher(OpenResourceKey channelName, String channelVersion) {
             super(channelName, channelVersion);
         }
 
@@ -109,7 +109,7 @@ public class AbstractForgeNetwork {
         }
 
         @Override
-        public Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf) {
+        public Distributor add(OpenResourceKey channel, IFriendlyByteBuf buf) {
             var direction = target.getDirection();
             var packet1 = direction.buildPacket(Pair.of((FriendlyByteBuf) buf.asByteBuf(), 0), channel.get()).getThis();
             return new Distributor(target, packet1);

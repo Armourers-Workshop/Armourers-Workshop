@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedbuilder.guide;
 
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanHeld;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.serializer.document.SkinDocument;
@@ -30,8 +30,8 @@ public class AdvancedItemGuideRenderer extends AdvancedAbstractGuideRenderer {
 
         applyOffset(context);
 
-        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, 0xffffffff, SkinRenderType.PLAYER_CUTOUT));
-        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderType.PLAYER_TRANSLUCENT));
+        context.draw(ModelPartElement.newInstance(armSolid, lightmap, overlay, 0xffffffff, SkinRenderTypes.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(armTransparent, lightmap, overlay, 0xbfffffff, SkinRenderTypes.PLAYER_TRANSLUCENT));
 
         context.restoreGraphicsState();
     }

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractTransformModel<T extends LivingEntity, S extends EntityRenderState> extends AbstractHumanoidModelImpl<T, HumanoidRenderState> {
 
     private static final OpenFieldTransformer FIELD_TRANSFORMER = new OpenFieldTransformer() {

@@ -229,6 +229,18 @@ public class OpenMath {
         return fma(position, wrapDegrees(n - a), a);
     }
 
+    /// Generates a value from a given Catmull-Rom spline range with Centripetal parameterization (alpha=0.5)
+    ///
+    /// Per standard implementation, this generates a spline curve over control points p1-p2, with p0 and p3
+    /// acting as curve anchors.
+    /// We then apply the delta to determine the point on the generated spline to return.
+    ///
+    /// @see <a href="https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline">Wikipedia</a>
+    public static float catmullrom(float t, float p0, float p1, float p2, float p3) {
+        return 0.5f * (2.0f * p1 + (p2 - p0) * t +
+                (2.0f * p0 - 5.0f * p1 + 4.0f * p2 - p3) * t * t +
+                (3.0f * p1 - p0 - 3.0f * p2 + p3) * t * t * t);
+    }
 
     public static float toDegrees(float a) {
         return (float) Math.toDegrees(a);

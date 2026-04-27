@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.IdentityHashMap;
 import java.util.List;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractFabricTooltipComponent {
 

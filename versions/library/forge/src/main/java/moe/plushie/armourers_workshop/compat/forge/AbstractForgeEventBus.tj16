@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeEventBus {
 
     private static final FastMapper<IEventHandler.Priority, EventPriority> CONVERTER = FastMapper.builder(IEventHandler.Priority.NORMAL, EventPriority.NORMAL, it -> {

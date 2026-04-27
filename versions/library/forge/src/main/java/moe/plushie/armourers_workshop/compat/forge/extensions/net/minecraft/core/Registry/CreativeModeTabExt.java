@@ -8,7 +8,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.20, )")
+@Available("[20, )")
 @Extension
 public class CreativeModeTabExt {
 

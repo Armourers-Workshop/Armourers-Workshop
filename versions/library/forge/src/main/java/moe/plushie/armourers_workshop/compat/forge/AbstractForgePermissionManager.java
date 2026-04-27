@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.core.permission.BlockPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.PlayerPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.TargetPermissionContext;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.PermissionNodeBuilderImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +25,7 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
 import java.util.ArrayList;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public abstract class AbstractForgePermissionManager {
 
     private static final ArrayList<PermissionNode<?>> PENDING = makeRegisterQueue();
@@ -37,7 +37,7 @@ public abstract class AbstractForgePermissionManager {
     private static final PermissionDynamicContextKey<BlockState> BLOCK_STATE = new PermissionDynamicContextKey<>(BlockState.class, "block_state", Object::toString);
     private static final PermissionDynamicContextKey<Direction> FACING = new PermissionDynamicContextKey<>(Direction.class, "facing", Direction::getSerializedName);
 
-    public static IPermissionNode makeNode(OpenResourceLocation registryName, int level) {
+    public static IPermissionNode makeNode(OpenResourceKey registryName, int level) {
         var node = new PermissionNode<>(registryName.get(), PermissionTypes.BOOLEAN, (player, uuid, contexts) -> true, TARGET, PLAYER, BLOCK_POS, BLOCK_STATE, FACING);
         var nodeImpl = new PermissionNodeBuilderImpl.NodeImpl(registryName) {
 

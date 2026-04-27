@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.compat.client.renderer.rendertype.AbstractRenderType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractRenderAttachment {
 
@@ -47,6 +48,6 @@ public class AbstractRenderAttachment {
     }
 
     private static LazyValue<IRenderType> normal(Supplier<RenderType> supplier) {
-        return LazyValue.of(() -> Objects.flatMap(supplier.get(), AbstractRenderType::of));
+        return LazyValue.of(() -> Objects.flatMap(supplier.get(), AbstractRenderType::wrap));
     }
 }

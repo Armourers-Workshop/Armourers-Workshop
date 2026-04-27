@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.attachment;
 
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModLog;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -36,7 +36,7 @@ public class SkinAttachmentTypes {
 
     private static SkinAttachmentType register(String name) {
         var attachmentType = new SkinAttachmentType();
-        attachmentType.setRegistryName(OpenResourceLocation.create("armourers", name));
+        attachmentType.setRegistryName(OpenResourceKey.create("armourers", name));
         if (ALL_ATTACHMENT_TYPES.containsKey(attachmentType.registryName().toString())) {
             ModLog.warn("A mod tried to register a attachment type with an id that is in use.");
             return attachmentType;

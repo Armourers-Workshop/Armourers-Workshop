@@ -9,17 +9,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.gui.element.ClipGuiElement;
 import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.joml.Matrix3x2f;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
 
@@ -27,14 +27,14 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
     private final int height;
 
     private final CGGraphicsState state;
-    private final GuiGraphics graphics;
+    private final GuiGraphicsExtractor graphics;
 
     private final ArrayList<Entry> lazyEntries = new ArrayList<>();
     private final ArrayList<Entry> offscreenEntries = new ArrayList<>();
 
     private final ArrayList<AbstractComposeGuiGraphicsState> pipelines = new ArrayList<>();
 
-    private AbstractGuiGraphicsRenderer(GuiGraphics graphics, float width, float height) {
+    private AbstractGuiGraphicsRenderer(GuiGraphicsExtractor graphics, float width, float height) {
         this.state = new CGGraphicsState(AbstractPoseStack.wrap(new PoseStack()));
         this.graphics = graphics;
         this.width = (int) width;
@@ -42,7 +42,7 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
 
     }
 
-    public static void wrap(GuiGraphics graphics, float width, float height, float mouseX, float mouseY, float partialTick, Consumer<CGGraphicsContext> action) {
+    public static void wrap(GuiGraphicsExtractor graphics, float width, float height, float mouseX, float mouseY, float partialTick, Consumer<CGGraphicsContext> action) {
         var param = new CGGraphicsParameters(width, height, mouseX, mouseY, partialTick, graphics);
         var renderer = new AbstractGuiGraphicsRenderer(graphics, width, height);
         var context = new CGGraphicsContext(renderer.state, param, renderer);
@@ -51,8 +51,8 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
         context.draw(StateGuiElement.endComposeLayer("main"));
     }
 
-    public static void unwrap(CGGraphicsContext context, String name, Consumer<GuiGraphics> action) {
-        var graphics = (GuiGraphics) context.param().context();
+    public static void unwrap(CGGraphicsContext context, String name, Consumer<GuiGraphicsExtractor> action) {
+        var graphics = (GuiGraphicsExtractor) context.param().context();
         context.draw(StateGuiElement.beginComposeLayer(name));
         action.accept(graphics);
         context.draw(StateGuiElement.endComposeLayer(name));
@@ -110,7 +110,7 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
 
     private void addPipeline(String name, int zIndex) {
         var pipeline = new AbstractComposeGuiGraphicsState(name, new Matrix3x2f(graphics.pose()), 0, 0, width, height, 1.0f, zIndex);
-        graphics.guiRenderState.submitPicturesInPictureState(pipeline);
+        graphics.guiRenderState.addPicturesInPictureState(pipeline);
         pipelines.add(pipeline);
     }
 

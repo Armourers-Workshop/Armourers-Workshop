@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Mixin(PoseStack.class)
 public abstract class PoseStackMixin {
 

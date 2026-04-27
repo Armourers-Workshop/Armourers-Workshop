@@ -14,27 +14,27 @@ import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(ArrowRenderer.class)
 public class ArrowRendererMixin<T extends AbstractArrow, S extends ArrowRenderState, I extends net.minecraft.client.renderer.entity.state.ArrowRenderState> implements IEntityModel.Provider<S> {
 
     @Unique
     private final SinglePlaceholderModel<S> aw2$transformModel = new SinglePlaceholderModel<>();
 
-    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/projectile/AbstractArrow;Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;F)V", at = @At(value = "TAIL"))
+    @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;F)V", at = @At(value = "TAIL"))
     public void aw2$renderSetup(T entity, I renderState, float f, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Setup.class, AbstractRenderEntityEvent.setup(entity, renderState, f, Objects.unsafeCast(this)));
     }
 
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/Identifier;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
     public void aw2$renderPre(I renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Pre.class, AbstractRenderEntityEvent.pre(renderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack, submitNodeCollector, cameraRenderState, EntityRenderer.class.cast(this)));
         if (!aw2$transformModel.root.isVisible()) {
@@ -43,7 +43,7 @@ public class ArrowRendererMixin<T extends AbstractArrow, S extends ArrowRenderSt
         }
     }
 
-    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "TAIL"))
+    @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/ArrowRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "TAIL"))
     public void aw2$renderPost(I renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
         EventManager.post(RenderEntityEvent.Post.class, AbstractRenderEntityEvent.post(renderState, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack, submitNodeCollector, cameraRenderState, EntityRenderer.class.cast(this)));
     }

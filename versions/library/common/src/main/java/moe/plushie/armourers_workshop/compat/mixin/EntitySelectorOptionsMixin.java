@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Predicate;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(EntitySelectorOptions.class)
 public abstract class EntitySelectorOptionsMixin {
 

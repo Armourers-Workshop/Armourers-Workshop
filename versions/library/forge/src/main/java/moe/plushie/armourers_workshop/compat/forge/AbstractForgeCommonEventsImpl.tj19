@@ -23,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public class AbstractForgeCommonEventsImpl {
 
     public static final auto FML_CONFIG = AbstractForgeEventBus.create(ModConfigEvent.class);

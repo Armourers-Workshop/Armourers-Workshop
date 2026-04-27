@@ -14,7 +14,7 @@ import java.util.Optional;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @Extension
 public class BlockRendererExt {
 

@@ -3,31 +3,30 @@ package moe.plushie.armourers_workshop.core.client.bake;
 import moe.plushie.armourers_workshop.api.armature.IJointTransform;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform;
-import moe.plushie.armourers_workshop.core.client.animation.AnimatedOutputMode;
-import moe.plushie.armourers_workshop.core.client.animation.AnimatedOutputPoint;
-import moe.plushie.armourers_workshop.core.client.animation.AnimatedTransform;
 import moe.plushie.armourers_workshop.core.client.render.plugin.EpicFightEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.render.state.EntityRenderState;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
+import moe.plushie.armourers_workshop.core.skin.animation.core.SkinAnimationPose;
+import moe.plushie.armourers_workshop.core.skin.animation.core.SkinAnimationTransform;
 import moe.plushie.armourers_workshop.core.skin.part.other.PartitionPartType;
 import org.jetbrains.annotations.Nullable;
 
 public class BakedAdapterJointTransform implements ITransform, IJointTransform {
 
     private final BakedSkinPart part;
-    private final AnimatedOutputPoint output;
+
     private final boolean isPartitionPart;
 
     private final OpenPoseStack tester = new OpenPoseStack();
+    private final SkinAnimationPose output = new SkinAnimationPose();
 
     public BakedAdapterJointTransform(BakedSkinPart part) {
         this.part = part;
         this.isPartitionPart = part.type() instanceof PartitionPartType;
-        this.output = new AnimatedOutputPoint(null, AnimatedOutputMode.MAIN);
         // the part is controlled by the adapter.
-        var transform = AnimatedTransform.of(part.transform());
+        var transform = SkinAnimationTransform.of(part.transform());
         if (transform != null) {
             transform.setController(output);
         }
@@ -37,7 +36,7 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
         // find the joint transform without joint modifier.
         var transform = armature.transformByJoint(armature.jointByPart(part));
         if (transform == null) {
-            output.clear();
+            output.reset();
             return;
         }
         if (renderState != null && renderState.renderPlugin() instanceof EpicFightEntityRenderPlugin) {
@@ -49,7 +48,7 @@ public class BakedAdapterJointTransform implements ITransform, IJointTransform {
 
     private void setupVanilla(IJointTransform transform, IPoseStack poseStack) {
         if (isPartitionPart) {
-            output.clear();
+            output.reset();
             return;
         }
         tester.setIdentity();

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screens.Screen;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.20, )")
+@Available("[20, 26)")
 @Extension
 public class ABI {
 

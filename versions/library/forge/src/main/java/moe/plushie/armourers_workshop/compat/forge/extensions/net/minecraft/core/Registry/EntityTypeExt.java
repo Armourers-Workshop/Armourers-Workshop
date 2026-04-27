@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Extension
 public class EntityTypeExt {
 

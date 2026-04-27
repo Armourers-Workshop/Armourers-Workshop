@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -117,7 +117,7 @@ public enum SkinSlotType {
         return DYE.index() + i;
     }
 
-    public OpenResourceLocation icon() {
+    public OpenResourceKey icon() {
         return ModConstants.key("item/slot/" + serializedName);
     }
 

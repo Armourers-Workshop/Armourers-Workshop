@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(AvatarRenderer.class)
 public class FabricPlayerRendererMixin {
 
     @Inject(method = "renderRightHand", at = @At("HEAD"), cancellable = true)
-    public void aw2$renderRightHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, boolean bl, CallbackInfo ci) {
+    public void aw2$renderRightHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation identifier, boolean bl, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (!RenderSpecificArmEvents.ARM.invoker().render(player, i, OpenInteractionHand.MAIN_HAND, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector))) {
             ci.cancel();
@@ -27,7 +27,7 @@ public class FabricPlayerRendererMixin {
     }
 
     @Inject(method = "renderLeftHand", at = @At("HEAD"), cancellable = true)
-    public void aw2$renderLeftHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation resourceLocation, boolean bl, CallbackInfo ci) {
+    public void aw2$renderLeftHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation identifier, boolean bl, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (!RenderSpecificArmEvents.ARM.invoker().render(player, i, OpenInteractionHand.OFF_HAND, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector))) {
             ci.cancel();

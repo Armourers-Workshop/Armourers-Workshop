@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.world.entity.Entity;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEntityGuiElement extends EntityGuiElement implements AbstractEntityGuiElementImpl {
 

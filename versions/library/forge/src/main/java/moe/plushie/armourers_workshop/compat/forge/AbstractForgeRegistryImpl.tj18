@@ -9,7 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-@Available("[1.18, 1.19)")
+@Available("[18, 19)")
 public abstract class AbstractForgeRegistryImpl {
 
     public static <T> TypedProvider<T> from(ResourceKey<Registry<T>> registryKey) {

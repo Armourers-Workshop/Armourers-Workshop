@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinDecoder;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.BufferUtils;
@@ -13,16 +13,16 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractImageTextureDownloader {
 
-    public void download(OpenResourceLocation location, IResultHandler<BufferedImage> handler) {
+    public void download(OpenResourceKey key, IResultHandler<BufferedImage> handler) {
         RenderSystem.safeCall(() -> {
             try {
-                var texture = Minecraft.getInstance().getTextureManager().getTexture(location.get(), null);
+                var texture = Minecraft.getInstance().getTextureManager().getTexture(key.get(), null);
                 if (texture == null) {
-                    throw new IllegalAccessException("can't found texture " + location);
+                    throw new IllegalAccessException("can't found texture " + key);
                 }
                 texture.bind();
                 var image = downloadTexture();

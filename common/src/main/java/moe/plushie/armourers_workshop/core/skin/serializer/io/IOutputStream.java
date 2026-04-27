@@ -100,8 +100,8 @@ public interface IOutputStream {
             outputStream().writeShort(0);
             return;
         }
-        byte[] bytes = v.getBytes(StandardCharsets.UTF_8);
-        int size = bytes.length;
+        var bytes = v.getBytes(StandardCharsets.UTF_8);
+        var size = bytes.length;
         if (size > 65535) {
             throw new IOException("String is over the max length allowed.");
         }
@@ -110,12 +110,12 @@ public interface IOutputStream {
     }
 
     default void writeString(String v, int len) throws IOException {
-        byte[] bytes = v.getBytes(StandardCharsets.UTF_8);
+        var bytes = v.getBytes(StandardCharsets.UTF_8);
         outputStream().write(bytes, 0, len);
     }
 
     default void writeVarInt(int i) throws IOException {
-        DataOutputStream outputStream = outputStream();
+        var outputStream = outputStream();
         while (true) {
             if ((i & 0xFFFFFF80) == 0) {
                 outputStream.writeByte(i);
@@ -127,7 +127,7 @@ public interface IOutputStream {
     }
 
     default void writeFloatArray(float[] values) throws IOException {
-        for (float value : values) {
+        for (var value : values) {
             writeFloat(value);
         }
     }
@@ -177,7 +177,7 @@ public interface IOutputStream {
             return;
         }
         // 1 is empty string.
-        int len = v.length();
+        var len = v.length();
         writeVarInt(len + 1);
         writeString(v, len);
     }

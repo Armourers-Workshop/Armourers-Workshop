@@ -60,18 +60,18 @@ public class SmartTextureManager {
     }
 
     protected void uploadTexture(SmartTexture texture) {
-        var location = texture.location();
-        getTextureManager().register(location, AbstractSimpleTexture.create(location));
+        var key = texture.location();
+        getTextureManager().register(key, AbstractSimpleTexture.create(key));
         if (ModConfig.Client.enableResourceDebug) {
-            ModLog.debug("Registering Texture '{}'", location);
+            ModLog.debug("Registering Texture '{}'", key);
         }
     }
 
     protected void releaseTexture(SmartTexture texture) {
-        var location = texture.location();
-        getTextureManager().release(location);
+        var key = texture.location();
+        getTextureManager().release(key);
         if (ModConfig.Client.enableResourceDebug) {
-            ModLog.debug("Unregistering Texture '{}'", location);
+            ModLog.debug("Unregistering Texture '{}'", key);
         }
     }
 }

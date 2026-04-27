@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -40,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @SuppressWarnings({"deprecation", "NullableProblems"})
 public class AbstractBlock extends AbstractBlockImpl {
 
@@ -268,7 +267,7 @@ public class AbstractBlock extends AbstractBlockImpl {
         super.appendHoverText(itemStack, tooltips, context);
     }
 
-    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos, int layerIndex) {
+    protected int abi$getModelTintColor(BlockState blockState, @Nullable BlockGetter level, @Nullable BlockPos blockPos, int layerIndex) {
         return 0xffffffff;
     }
 
@@ -586,7 +585,7 @@ public class AbstractBlock extends AbstractBlockImpl {
         return abi$onAttack(level, blockPos, blockState, direction, player, hand);
     }
 
-    public final int getModelTintColor(BlockState blockState, @Nullable BlockAndTintGetter level, @Nullable BlockPos blockPos, int layerIndex) {
+    public final int getModelTintColor(BlockState blockState, @Nullable BlockGetter level, @Nullable BlockPos blockPos, int layerIndex) {
         return abi$getModelTintColor(blockState, level, blockPos, layerIndex);
     }
 }

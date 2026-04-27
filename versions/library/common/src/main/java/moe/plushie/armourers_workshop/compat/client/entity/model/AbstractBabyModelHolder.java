@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.client.model.IModelPartPose;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractBabyModelHolder extends AbstractBabyModelHolderImpl implements IModelPart, IModelPartPose, IModelBabyPose {
 
     private final float headScale;

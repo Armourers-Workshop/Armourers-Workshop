@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 
 import java.util.function.Function;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractDataCodec {
 
     public static <A, E> Codec<E> dispatch(Codec<A> that, String key, Function<? super E, ? extends A> type, Function<? super A, ? extends IDataMapCodec<? extends E>> targetCodec) {

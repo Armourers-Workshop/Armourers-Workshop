@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IRandomSource;
 
 import java.util.Random;
 
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 public class AbstractRandomSource implements IRandomSource {
 
     private final Random random;

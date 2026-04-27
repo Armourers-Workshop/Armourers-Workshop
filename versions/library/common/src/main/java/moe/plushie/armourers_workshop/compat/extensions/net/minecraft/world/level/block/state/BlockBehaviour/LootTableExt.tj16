@@ -7,7 +7,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, 1.19)")
+@Available("[16, 19)")
 public class LootTableExt {
 
     @Extension

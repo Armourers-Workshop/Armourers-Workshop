@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.core.client.gui.element.ItemGuiElement;
 import net.minecraft.world.item.ItemStack;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemGuiElement extends ItemGuiElement implements AbstractItemGuiElementImpl {
 

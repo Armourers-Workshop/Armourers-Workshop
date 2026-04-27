@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 @Conditional("sophisticatedbackpacks")
 @Pseudo
 @Mixin(BackpackLayerRenderer.class)

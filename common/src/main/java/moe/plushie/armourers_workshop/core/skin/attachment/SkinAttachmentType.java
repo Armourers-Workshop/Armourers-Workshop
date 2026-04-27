@@ -1,20 +1,20 @@
 package moe.plushie.armourers_workshop.core.skin.attachment;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryEntry;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.Objects;
 
 public class SkinAttachmentType implements IRegistryEntry {
 
-    private OpenResourceLocation registryName;
+    private OpenResourceKey registryName;
 
-    public void setRegistryName(OpenResourceLocation registryName) {
+    public void setRegistryName(OpenResourceKey registryName) {
         this.registryName = registryName;
     }
 
     @Override
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 

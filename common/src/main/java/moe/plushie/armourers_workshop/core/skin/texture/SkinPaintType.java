@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.texture;
 
 import moe.plushie.armourers_workshop.api.skin.texture.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public class SkinPaintType implements ISkinPaintType {
 
@@ -9,7 +9,7 @@ public class SkinPaintType implements ISkinPaintType {
     private final int index;
 
     private SkinDyeType dyeType;
-    private OpenResourceLocation registryName;
+    private OpenResourceKey registryName;
     private SkinTexturePos texturePos = SkinTexturePos.DEFAULT;
 
     public SkinPaintType(int index, int id) {
@@ -17,12 +17,12 @@ public class SkinPaintType implements ISkinPaintType {
         this.index = index;
     }
 
-    public void setRegistryName(OpenResourceLocation registryName) {
+    public void setRegistryName(OpenResourceKey registryName) {
         this.registryName = registryName;
     }
 
     @Override
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 

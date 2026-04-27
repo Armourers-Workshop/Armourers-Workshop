@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.ClientAsset;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractPlayerSkinResolver {
 
     public void resolve(OpenGameProfile profile, IResultHandler<PlayerSkin> handler) {
@@ -24,9 +24,9 @@ public class AbstractPlayerSkinResolver {
                 handler.abort(new RuntimeException("missing result"));
                 return;
             }
-            var body = Objects.flatMap(skin.body(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it.texturePath()), it instanceof ClientAsset.DownloadedTexture it2 ? it2.url() : null));
-            var cape = Objects.flatMap(skin.cape(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it.texturePath())));
-            var elytra = Objects.flatMap(skin.elytra(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it.texturePath())));
+            var body = Objects.flatMap(skin.body(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it.texturePath()), it instanceof ClientAsset.DownloadedTexture it2 ? it2.url() : null));
+            var cape = Objects.flatMap(skin.cape(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it.texturePath())));
+            var elytra = Objects.flatMap(skin.elytra(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it.texturePath())));
             var model = switch (skin.model()) {
                 case WIDE -> PlayerSkinModel.WIDE;
                 case SLIM -> PlayerSkinModel.SLIM;

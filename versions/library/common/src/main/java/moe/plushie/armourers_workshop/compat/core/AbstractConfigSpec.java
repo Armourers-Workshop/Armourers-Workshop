@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractConfigSpec implements IConfigSpec {
 
     private Object spec;

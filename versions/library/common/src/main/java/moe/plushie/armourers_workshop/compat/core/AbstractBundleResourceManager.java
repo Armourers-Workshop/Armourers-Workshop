@@ -10,7 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.ArrayList;
 
-@Available("[1.18, )")
+@Available("[18, )")
 public class AbstractBundleResourceManager extends AbstractResourceManager {
 
     public AbstractBundleResourceManager(IResourceManager resourceManager) {

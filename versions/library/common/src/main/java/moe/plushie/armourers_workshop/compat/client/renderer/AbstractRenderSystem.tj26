@@ -2,10 +2,9 @@ package moe.plushie.armourers_workshop.compat.client.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractRenderSystem extends RenderSystem {
 
     public static void recordRenderCall(Runnable task) {

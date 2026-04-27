@@ -20,7 +20,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRenderer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("epicfight")
 @Pseudo
 @Mixin(PatchedLivingEntityRenderer.class)

@@ -12,13 +12,13 @@ import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGr
 import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.renderer.state.ParticleGroupRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.ParticleGroupRenderState;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractParticleGroupRenderState implements ParticleGroupRenderState, SceneGraphicsRenderer {
 

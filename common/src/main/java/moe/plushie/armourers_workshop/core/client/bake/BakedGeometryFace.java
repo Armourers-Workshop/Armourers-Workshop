@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.client.IRenderType;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.api.core.math.ITransform3f;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.texture.PlayerSkinBakery;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorDescriptor;
@@ -213,7 +213,7 @@ public class BakedGeometryFace {
         if (parent != null) {
             return resolveRenderType(parent, face.type());
         }
-        return SkinRenderType.geometry(face.type());
+        return SkinRenderTypes.geometry(face.type());
     }
 
     private Collection<IRenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
@@ -234,8 +234,8 @@ public class BakedGeometryFace {
 
     private IRenderType resolveRenderType(SkinTextureData provider, SkinGeometryType geometryType) {
         return SmartTextureManager.getInstance().register(provider).create(it -> {
-            var location = it.location();
-            return SkinRenderType.geometry(geometryType, location, it.isTranslucent(), it.isEmissive());
+            var key = it.location();
+            return SkinRenderTypes.geometry(geometryType, key, it.isTranslucent(), it.isEmissive());
         });
     }
 

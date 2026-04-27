@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 
 import java.util.Collection;
@@ -21,12 +21,12 @@ public class EntityProfile implements IDataSerializable.Immutable {
 
     public static final IDataCodec<EntityProfile> CODEC = ExtraCodecs.serializable(EntityProfile::new);
 
-    private final OpenResourceLocation registryName;
-    private final List<OpenResourceLocation> transformers;
+    private final OpenResourceKey registryName;
+    private final List<OpenResourceKey> transformers;
     private final SupportMap supports;
     private final boolean locked;
 
-    public EntityProfile(OpenResourceLocation registryName, List<OpenResourceLocation> transformers, Map<SkinSlotType, String> supports, boolean locked) {
+    public EntityProfile(OpenResourceKey registryName, List<OpenResourceKey> transformers, Map<SkinSlotType, String> supports, boolean locked) {
         this.registryName = registryName;
         this.supports = new SupportMap(supports);
         this.transformers = transformers;
@@ -71,11 +71,11 @@ public class EntityProfile implements IDataSerializable.Immutable {
         return supports.slots();
     }
 
-    public List<OpenResourceLocation> transformers() {
+    public List<OpenResourceKey> transformers() {
         return transformers;
     }
 
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 
@@ -102,9 +102,9 @@ public class EntityProfile implements IDataSerializable.Immutable {
 
     private static class CodingKeys {
 
-        public static final IDataSerializerKey<OpenResourceLocation> NAME = IDataSerializerKey.create("Name", OpenResourceLocation.CODEC, null);
+        public static final IDataSerializerKey<OpenResourceKey> NAME = IDataSerializerKey.create("Name", OpenResourceKey.CODEC, null);
         public static final IDataSerializerKey<Boolean> LOCKED = IDataSerializerKey.create("Locked", IDataCodec.BOOL, false);
-        public static final IDataSerializerKey<List<OpenResourceLocation>> TRANSFORMERS = IDataSerializerKey.create("Transformers", OpenResourceLocation.CODEC.listOf(), Collections.emptyList());
+        public static final IDataSerializerKey<List<OpenResourceKey>> TRANSFORMERS = IDataSerializerKey.create("Transformers", OpenResourceKey.CODEC.listOf(), Collections.emptyList());
 
         public static final IDataSerializerKey<SupportMap> SLOTS = IDataSerializerKey.create("Slots", SupportMap.CODEC, new SupportMap(new HashMap<>()));
 

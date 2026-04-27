@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.UnaryOperator;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class ComponentizationFixMixin {
 
     @Mixin(targets = "net.minecraft.util.datafix.fixes.ItemStackComponentizationFix$ItemStackData")

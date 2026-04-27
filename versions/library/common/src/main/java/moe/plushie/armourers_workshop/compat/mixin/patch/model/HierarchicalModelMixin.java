@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 @Mixin(HierarchicalModel.class)
 public abstract class HierarchicalModelMixin implements AbstractModelCollector {
 

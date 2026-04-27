@@ -9,24 +9,24 @@ import java.util.function.Supplier;
 
 public interface TypedProvider<T> {
 
-    default <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+    default <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
         throw new AssertionError();
     }
 
     @Nullable
-    default OpenResourceLocation getKey(T object) {
+    default OpenResourceKey getKey(T object) {
         return null;
     }
 
     @Nullable
-    default T getValue(OpenResourceLocation registryName) {
+    default T getValue(OpenResourceKey registryName) {
         return null;
     }
 
-    static <T> TypedProvider<T> factory(Function<OpenResourceLocation, T> factory) {
+    static <T> TypedProvider<T> factory(Function<OpenResourceKey, T> factory) {
         return new TypedProvider<T>() {
             @Override
-            public <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> provider) {
+            public <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> provider) {
                 T value = factory.apply(registryName);
                 // noinspection unchecked
                 return () -> (I) value;
@@ -34,10 +34,10 @@ public interface TypedProvider<T> {
         };
     }
 
-    static <T> TypedProvider<T> factory(BiFunction<OpenResourceLocation, Supplier<? extends T>, Supplier<? extends T>> provider) {
+    static <T> TypedProvider<T> factory(BiFunction<OpenResourceKey, Supplier<? extends T>, Supplier<? extends T>> provider) {
         return new TypedProvider<T>() {
             @Override
-            public <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+            public <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
                 Supplier<? extends T> value = provider.apply(registryName, () -> supplier.apply(registryName));
                 // noinspection unchecked
                 return (Supplier<I>) value;
@@ -48,17 +48,17 @@ public interface TypedProvider<T> {
     static <T> TypedProvider<T> passthrough() {
         return new TypedProvider<T>() {
             @Override
-            public <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+            public <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
                 I value = supplier.apply(registryName);
                 return () -> value;
             }
         };
     }
 
-    static <T> TypedProvider<T> passthrough(BiConsumer<OpenResourceLocation, T> consumer) {
+    static <T> TypedProvider<T> passthrough(BiConsumer<OpenResourceKey, T> consumer) {
         return new TypedProvider<T>() {
             @Override
-            public <I extends T> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+            public <I extends T> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
                 I value = supplier.apply(registryName);
                 consumer.accept(registryName, value);
                 return () -> value;
@@ -70,7 +70,7 @@ public interface TypedProvider<T> {
         return new TypedProvider<>() {
 
             @Override
-            public <I extends R> Supplier<I> register(OpenResourceLocation registryName, Function<OpenResourceLocation, ? extends I> supplier) {
+            public <I extends R> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
                 Object[] reference = new Object[1];
                 TypedProvider.this.register(registryName, it -> {
                     var value = supplier.apply(it);

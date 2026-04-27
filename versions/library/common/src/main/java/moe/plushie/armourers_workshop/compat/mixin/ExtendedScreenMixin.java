@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @Mixin(Minecraft.class)
 public class ExtendedScreenMixin {
 

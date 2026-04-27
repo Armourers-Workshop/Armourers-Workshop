@@ -1,15 +1,11 @@
 package moe.plushie.armourers_workshop.core.data;
 
-
 import moe.plushie.armourers_workshop.core.data.action.EntityAction;
 import moe.plushie.armourers_workshop.core.data.action.EntityActionSet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
 public class EntityAnimationState extends EntityActionSet {
@@ -66,9 +62,9 @@ public class EntityAnimationState extends EntityActionSet {
             set(EntityAction.RIDING_BOOST, isWalk && isSprinting);
             set(EntityAction.RIDING_UP, transitingMode == TransitingMode.UP);
             set(EntityAction.RIDING_DOWN, transitingMode == TransitingMode.DOWN);
-            set(EntityAction.RIDING_BOAT, isBoat(vehicle));
-            set(EntityAction.RIDING_PIG, isPig(vehicle));
-            set(EntityAction.RIDING_HORSE, isHorse(vehicle));
+            set(EntityAction.RIDING_BOAT, vehicle.isBoat());
+            set(EntityAction.RIDING_PIG, vehicle.isPig());
+            set(EntityAction.RIDING_HORSE, vehicle.isHorse());
             if (transitingMode != null && entity.getPose() != Pose.CROUCHING) {
                 transitingVehicle = null;
                 transitingMode = null;
@@ -122,18 +118,6 @@ public class EntityAnimationState extends EntityActionSet {
             return true;
         }
         return entity.isFallFlying();
-    }
-
-    private boolean isBoat(Entity entity) {
-        return entity instanceof Boat;
-    }
-
-    private boolean isPig(Entity entity) {
-        return entity instanceof Pig;
-    }
-
-    private boolean isHorse(Entity entity) {
-        return entity instanceof AbstractHorse;
     }
 
     public enum TransitingMode {

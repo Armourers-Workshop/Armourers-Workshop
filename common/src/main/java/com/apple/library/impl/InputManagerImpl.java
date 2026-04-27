@@ -2,13 +2,14 @@ package com.apple.library.impl;
 
 import com.apple.library.impl.event.InputKeyEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
+import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.glfw.GLFW;
 
 public class InputManagerImpl {
 
-    public static final boolean ON_OSX = AbstractKeyEvent.ON_OSX;
+    public static final boolean ON_OSX = AbstractPlatform.ON_OSX;
 
     public static boolean hasControlDown() {
         if (InputManagerImpl.ON_OSX) {

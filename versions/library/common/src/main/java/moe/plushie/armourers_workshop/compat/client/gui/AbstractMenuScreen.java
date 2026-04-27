@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractCharacterEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractContainerInput;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseButtonEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseEvent;
@@ -13,8 +14,10 @@ import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseWheel
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractMenuScreen<T extends AbstractContainerMenu> extends AbstractMenuScreenImpl<T> {
 
@@ -85,6 +88,10 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         return super.hasClickedOutside(event.mouseX, event.mouseY, x, y, event.button);
     }
 
+    public void slotClicked(Slot slot, int slotId, int buttonNum, AbstractContainerInput input) {
+        super.slotClicked(slot, slotId, buttonNum, AbstractContainerInput.unwrap(input));
+    }
+
     @Override
     public final boolean keyPressed(int key, int i, int j) {
         return keyPressed(new AbstractKeyEvent(key, i, j));
@@ -123,6 +130,11 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public final boolean hasClickedOutside(double mouseX, double mouseY, int x, int y, int button) {
         return hasClickedOutside(x, y, new AbstractMouseButtonEvent(mouseX, mouseY, button));
+    }
+
+    @Override
+    public final void slotClicked(Slot slot, int i, int j, ClickType clickType) {
+        slotClicked(slot, i, j, AbstractContainerInput.wrap(clickType));
     }
 }
 

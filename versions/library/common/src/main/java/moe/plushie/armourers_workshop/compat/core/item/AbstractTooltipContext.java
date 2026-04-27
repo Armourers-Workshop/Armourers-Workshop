@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractTooltipContext implements ITooltipContext {
 
     public final Item.TooltipContext context;

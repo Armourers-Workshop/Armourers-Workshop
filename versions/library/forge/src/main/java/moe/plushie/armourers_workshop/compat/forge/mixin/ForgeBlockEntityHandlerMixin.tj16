@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Mixin(AbstractBlockEntity.class)
 public abstract class ForgeBlockEntityHandlerMixin extends BlockEntity {
 

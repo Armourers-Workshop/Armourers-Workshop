@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
 import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.compat.builder.AbstractKeyMappingBuilder;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeKeyMapping;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public class AbstractForgeKeyMappingBuilder<T extends IKeyMapping> extends AbstractKeyMappingBuilder<T> {
 
@@ -13,7 +13,7 @@ public class AbstractForgeKeyMappingBuilder<T extends IKeyMapping> extends Abstr
     }
 
     @Override
-    protected IKeyMapping create(OpenResourceLocation registryName) {
+    protected IKeyMapping create(OpenResourceKey registryName) {
         return new AbstractForgeKeyMapping(registryName, key, modifiers, category);
     }
 }

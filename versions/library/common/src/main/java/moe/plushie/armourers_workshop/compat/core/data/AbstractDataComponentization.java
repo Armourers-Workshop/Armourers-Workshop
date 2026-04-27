@@ -15,7 +15,7 @@ import net.minecraft.util.datafix.fixes.References;
 
 import java.util.HashMap;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractDataComponentization {
 
     public static void init(DataFixerBuilder builder, Schema schema) {

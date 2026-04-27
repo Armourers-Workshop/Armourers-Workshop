@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.init.event.client.RenderSpecificHandEvent;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractFabricRenderSpecificHandEvent {
 
     public static IEventHandler<RenderSpecificHandEvent> armFactory() {

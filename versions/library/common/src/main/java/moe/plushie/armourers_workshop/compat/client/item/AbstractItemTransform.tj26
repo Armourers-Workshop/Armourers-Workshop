@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.compat.client.item;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
-import net.minecraft.client.renderer.block.model.ItemTransform;
+import net.minecraft.client.resources.model.cuboid.ItemTransform;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractItemTransform {
 
     public static OpenItemTransform wrap(ItemTransform transform) {

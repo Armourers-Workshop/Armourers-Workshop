@@ -6,10 +6,12 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractCharacterEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractContainerInput;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseButtonEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseWheelEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -17,8 +19,10 @@ import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.Slot;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractMenuScreen<T extends AbstractContainerMenu> extends AbstractMenuScreenImpl<T> {
 
@@ -57,6 +61,15 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
         height = (int) size.height;
     }
 
+    public void resize(Minecraft minecraft, int width, int height) {
+        super.resize(width, height);
+    }
+
+    @Override
+    public final void resize(int width, int height) {
+        resize(Minecraft.getInstance(), width, height);
+    }
+
     public boolean keyPressed(AbstractKeyEvent event) {
         return super.keyPressed(event.event);
     }
@@ -87,6 +100,10 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
 
     public boolean hasClickedOutside(int x, int y, AbstractMouseButtonEvent event) {
         return super.hasClickedOutside(event.mouseX, event.mouseY, x, y);
+    }
+
+    public void slotClicked(Slot slot, int slotId, int buttonNum, AbstractContainerInput input) {
+        super.slotClicked(slot, slotId, buttonNum, AbstractContainerInput.unwrap(input));
     }
 
     @Override
@@ -127,6 +144,11 @@ public class AbstractMenuScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public final boolean hasClickedOutside(double mouseX, double mouseY, int x, int y) {
         return hasClickedOutside(x, y, new AbstractMouseButtonEvent(new MouseButtonEvent(mouseX, mouseY, new MouseButtonInfo(0, 0))));
+    }
+
+    @Override
+    public final void slotClicked(Slot slot, int slotId, int buttonNum, ContainerInput input) {
+        slotClicked(slot, slotId, buttonNum, AbstractContainerInput.wrap(input));
     }
 }
 

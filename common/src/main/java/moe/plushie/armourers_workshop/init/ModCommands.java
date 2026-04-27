@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -42,8 +41,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -218,7 +215,7 @@ public class ModCommands {
             }
             var paintColor = ColorArgumentType.getColor(context, "color");
             for (var entity : EntityArgument.getEntities(context, "entities")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+                var wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe == null) {
                     continue;
                 }

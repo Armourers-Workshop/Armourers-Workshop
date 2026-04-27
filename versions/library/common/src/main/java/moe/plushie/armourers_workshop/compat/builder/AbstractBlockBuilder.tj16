@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterial;
 import moe.plushie.armourers_workshop.compat.api.AbstractBlockMaterialColor;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.material.MaterialColor;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-@Available("[1.16, 1.20)")
+@Available("[16, 20)")
 public class AbstractBlockBuilder<T extends Block> {
 
     private static final FastMapper<AbstractBlockMaterial, Material> MATERIALS = FastMapper.builder(it -> {
@@ -41,7 +41,7 @@ public class AbstractBlockBuilder<T extends Block> {
         this.updaters.add(updater);
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var properties = BlockBehaviour.Properties.of(MATERIALS.getValue(material), MATERIAL_COLORS.getValue(materialColor));
         for (var updater : updaters) {
             properties = updater.apply(properties);

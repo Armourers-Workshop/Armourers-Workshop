@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.data.action.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModArgumentTypes;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModBlockTags;
@@ -80,7 +80,7 @@ public class ArmourersWorkshop {
         });
     }
 
-    public static OpenResourceLocation getItemIcon(SkinType skinType) {
+    public static OpenResourceKey getItemIcon(SkinType skinType) {
         if (skinType == SkinTypes.UNKNOWN || skinType.registryName() == null) {
             return null;
         }

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.builder.AbstractBlockEntityCapabili
 import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeEventBus;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeBlockEntityCapabilityBuilder<T> extends AbstractBlockEntityCapabilityBuilder<T> {
 
     public AbstractForgeBlockEntityCapabilityBuilder(Class<T> type, Function<Entity, Optional<T>> factory) {
@@ -25,7 +25,7 @@ public class AbstractForgeBlockEntityCapabilityBuilder<T> extends AbstractBlockE
     }
 
     @Override
-    public IBlockEntityCapability<T> build(OpenResourceLocation registryName) {
+    public IBlockEntityCapability<T> build(OpenResourceKey registryName) {
         if (registryName.equals(ModConstants.key("item"))) {
             return Objects.unsafeCast(createSidedCapability(AbstractForgeBlockEntityCapabilityBuilderImpl.BLOCK_ITEM_HANDLER));
         }

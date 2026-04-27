@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 
 import java.util.Collection;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractTextGuiElement extends TextGuiElement implements AbstractTextGuiElementImpl {
 

@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.18, 1.26)")
+@Available("[18, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractHumanoidArmourModelImpl<T extends LivingEntity> extends HumanoidModel<T> {
 

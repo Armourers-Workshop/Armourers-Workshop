@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.data.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public final class SkinTypes {
 
         public SkinType build(String name) {
             var type = factory.apply(this, name);
-            type.setRegistryName(OpenResourceLocation.create("armourers", name));
+            type.setRegistryName(OpenResourceKey.create("armourers", name));
             if (type.parts().isEmpty()) {
                 ModLog.warn("A mod tried to register a skin type no skin type parts.");
                 return type;

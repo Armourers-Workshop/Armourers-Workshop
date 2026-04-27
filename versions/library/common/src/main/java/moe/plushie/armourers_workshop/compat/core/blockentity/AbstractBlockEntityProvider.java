@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Available("[1.18, )")
+@Available("[18, )")
 public interface AbstractBlockEntityProvider extends EntityBlock {
 
     BlockEntity abi$createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState);

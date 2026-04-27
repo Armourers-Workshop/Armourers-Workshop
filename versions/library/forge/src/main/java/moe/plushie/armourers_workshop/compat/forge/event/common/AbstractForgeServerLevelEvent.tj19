@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.init.event.common.ServerLevelTickEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.TickEvent;
 
-@Available("[1.19, 1.21)")
+@Available("[19, 21)")
 public class AbstractForgeServerLevelEvent {
 
     public static IEventHandler<ServerLevelTickEvent.Pre> preTickFactory() {

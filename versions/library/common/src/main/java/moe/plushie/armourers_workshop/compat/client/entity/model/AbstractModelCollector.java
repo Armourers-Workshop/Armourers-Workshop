@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public interface AbstractModelCollector {
 
     void aw2$collect(Builder builder);

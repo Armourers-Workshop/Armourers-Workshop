@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractItemImpl extends Item {
 
     public AbstractItemImpl(Properties properties) {

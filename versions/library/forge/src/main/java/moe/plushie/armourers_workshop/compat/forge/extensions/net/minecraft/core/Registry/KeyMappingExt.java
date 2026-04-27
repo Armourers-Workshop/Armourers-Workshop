@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.19, )")
+@Available("[19, )")
 @Extension
 public class KeyMappingExt {
 

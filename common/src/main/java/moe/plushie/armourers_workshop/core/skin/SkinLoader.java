@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenCipher;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModContext;
@@ -640,7 +640,7 @@ public class SkinLoader {
             if (path.isEmpty()) {
                 throw new FileNotFoundException(identifier);
             }
-            var file = OpenResourceLocation.parse(path);
+            var file = OpenResourceKey.parse(path);
             var resourceManager = EnvironmentManager.getClientResourceManager();
             if (resourceManager.hasResource(file)) {
                 return resourceManager.readResource(file).inputStream();

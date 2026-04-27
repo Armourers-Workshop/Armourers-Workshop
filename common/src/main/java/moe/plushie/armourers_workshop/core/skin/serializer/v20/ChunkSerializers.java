@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.SkinPreviewData;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimation;
+import moe.plushie.armourers_workshop.core.skin.animation.SkinAnimationData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -254,17 +254,17 @@ public class ChunkSerializers {
         }
     });
 
-    public static final ChunkSerializer<List<SkinAnimation>, Void> SKIN_ANIMATION_DATA = register(new ChunkSerializer<>(ChunkType.ANIMATION_DATA, null) {
+    public static final ChunkSerializer<List<SkinAnimationData>, Void> SKIN_ANIMATION_DATA = register(new ChunkSerializer<>(ChunkType.ANIMATION_DATA, null) {
 
         @Override
-        public List<SkinAnimation> read(ChunkDataInputStream stream, Void obj) throws IOException {
+        public List<SkinAnimationData> read(ChunkDataInputStream stream, Void obj) throws IOException {
             var animationData = new ChunkAnimationData(new ArrayList<>());
             animationData.readFromStream(stream);
             return animationData.animations();
         }
 
         @Override
-        public void write(List<SkinAnimation> value, Void obj, ChunkDataOutputStream stream) throws IOException {
+        public void write(List<SkinAnimationData> value, Void obj, ChunkDataOutputStream stream) throws IOException {
             var animationData = new ChunkAnimationData(value);
             animationData.writeToStream(stream);
         }

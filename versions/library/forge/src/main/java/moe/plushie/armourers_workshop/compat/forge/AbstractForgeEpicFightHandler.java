@@ -20,7 +20,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 public class AbstractForgeEpicFightHandler extends AbstractForgeEpicFightHandlerImpl {
 
     private static final FloatBuffer AW_MAT_BUFFER4 = MatrixUtils.createFloatBuffer(16);

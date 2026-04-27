@@ -13,7 +13,7 @@ import net.minecraft.world.item.Item;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 @Extension
 public class ItemRendererExt {
 

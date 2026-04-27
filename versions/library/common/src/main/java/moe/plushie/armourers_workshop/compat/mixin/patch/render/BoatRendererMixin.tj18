@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.HashMap;
 import java.util.Map;
 
-@Available("[1.18, 1.20)")
+@Available("[18, 20)")
 @Mixin(BoatRenderer.class)
 public class BoatRendererMixin<T extends Boat, S extends BoatRenderState> implements IEntityModel.Provider<S> {
 

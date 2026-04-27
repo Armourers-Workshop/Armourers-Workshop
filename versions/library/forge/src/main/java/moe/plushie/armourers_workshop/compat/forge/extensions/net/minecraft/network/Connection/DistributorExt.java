@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
 
-@Available("[1.21, )")
+@Available("[21, )")
 @Extension
 public class DistributorExt {
 

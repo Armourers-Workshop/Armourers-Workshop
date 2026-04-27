@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.event.common.EntityEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractForgeEntityEvent {
 
     public static IEventHandler<EntityEvent.ReloadSize> reloadSizeFactory() {

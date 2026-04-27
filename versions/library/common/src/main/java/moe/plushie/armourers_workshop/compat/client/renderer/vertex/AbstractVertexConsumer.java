@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractVertexConsumer implements IVertexConsumer {
 
     protected VertexConsumer parent;

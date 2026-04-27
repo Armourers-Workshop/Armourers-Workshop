@@ -2,18 +2,18 @@ package moe.plushie.armourers_workshop.compat.client.item;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.render.model.SkinItemProperty;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractItemProperties {
 
-    public static SkinItemProperty getProperty(OpenResourceLocation location) {
-        var location1 = location.get();
+    public static SkinItemProperty getProperty(OpenResourceKey key) {
+        var key1 = key.get();
         return (itemStack, entity, level, flags, displayContext) -> {
-            var property = ItemProperties.getProperty(itemStack.getItem(), location1);
+            var property = ItemProperties.getProperty(itemStack.getItem(), key1);
             if (property != null) {
                 return property.call(itemStack, (ClientLevel) level, (LivingEntity) entity, flags);
             }

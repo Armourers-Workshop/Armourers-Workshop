@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.core.data;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IDataSerializable;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public abstract class AbstractSavedData extends AbstractSavedDataImpl implements IDataSerializable.Mutable {
 
     protected void abi$setDirty() {

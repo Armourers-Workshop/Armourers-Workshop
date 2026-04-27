@@ -10,13 +10,13 @@ import com.apple.library.uikit.UIImage;
 import com.apple.library.uikit.UIImageView;
 import com.apple.library.uikit.UILabel;
 import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFile;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.ModTextures;
-import net.minecraft.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -134,7 +134,7 @@ public class FileProviderDialog extends ConfirmDialog {
     }
 
     private void openFolder(UIControl sender) {
-        Util.getPlatform().openFile(rootPath);
+        AbstractPlatform.openFile(rootPath);
     }
 
     public File selectedFile() {

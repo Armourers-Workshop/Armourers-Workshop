@@ -20,9 +20,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @Conditional("travelersbackpack")
 @Pseudo
 @Mixin(BackpackLayer.class)
@@ -40,13 +41,13 @@ public class FabricTravelersBackpackRendererMixin {
         // because the superclass of EntityComponentInitializer is an unknown type,
         // this leads we can't direct using the ComponentUtils api.
         // so we can only call it through reflection.
-        Method[] methods = {null};
-        Function<Player, ItemStack> getWearingBackpack = (player) -> {
+        var methods = new AtomicReference<Method>();
+        var getWearingBackpack = (Function<Player, ItemStack>) (player) -> {
             try {
-                if (methods[0] == null) {
-                    methods[0] = ComponentUtils.class.getDeclaredMethod("getWearingBackpack", Player.class);
+                if (methods.get() == null) {
+                    methods.set(ComponentUtils.class.getDeclaredMethod("getWearingBackpack", Player.class));
                 }
-                return (ItemStack) methods[0].invoke(ComponentUtils.class, player);
+                return (ItemStack) methods.get().invoke(ComponentUtils.class, player);
             } catch (Exception e) {
                 return ItemStack.EMPTY;
             }

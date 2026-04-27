@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("optifine")
 @Pseudo
 @Mixin(targets = "net.optifine.shaders.Shaders")

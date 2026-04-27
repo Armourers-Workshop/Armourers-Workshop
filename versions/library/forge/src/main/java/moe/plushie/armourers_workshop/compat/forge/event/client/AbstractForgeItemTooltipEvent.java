@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractForgeItemTooltipEvent extends AbstractForgeItemTooltipEventImpl {
 
     public static IEventHandler<ItemTooltipEvent.Gather> gatherFactory() {

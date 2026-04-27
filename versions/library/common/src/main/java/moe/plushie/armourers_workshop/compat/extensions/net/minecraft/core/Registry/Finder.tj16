@@ -1,0 +1,28 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.core.Registry;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.core.Registry;
+import org.jetbrains.annotations.Nullable;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Extension
+@Available("[16, 18)")
+public class Finder {
+
+    public static <T> OpenResourceKey findKey(@ThisClass Class<?> clazz, Registry<T> registry, T value) {
+        var key = registry.getKey(value);
+        if (key != null) {
+            return AbstractResourceKey.wrap(key);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static <T> T findValue(@ThisClass Class<?> clazz, Registry<T> registry, OpenResourceKey key) {
+        return registry.getOptional(key.get()).orElse(null);
+    }
+}

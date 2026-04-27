@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Available("[1.20, )")
+@Available("[20, )")
 @Conditional("iris || oculus")
 @Pseudo
 @Mixin(targets = "net.irisshaders.iris.pipeline.programs.ExtendedShader")

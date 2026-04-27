@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,15 +37,15 @@ public class ModConstants {
     public static final String BLOCK_BOUNDING_BOX = blockEntityType("bounding-box");
     public static final String BLOCK_SKIN_CUBE = blockEntityType("skin-cube");
 
-    public static OpenResourceLocation key(String path) {
-        return OpenResourceLocation.create(ModConstants.MOD_ID, path);
+    public static OpenResourceKey key(String path) {
+        return OpenResourceKey.create(ModConstants.MOD_ID, path);
     }
 
-    public static Collection<OpenResourceLocation> entityTypes() {
+    public static Collection<OpenResourceKey> entityTypes() {
         return ENTITY_TYPES.stream().map(ModConstants::key).collect(Collectors.toList());
     }
 
-    public static Collection<OpenResourceLocation> blockEntityTypes() {
+    public static Collection<OpenResourceKey> blockEntityTypes() {
         return BLOCK_ENTITY_TYPES.stream().map(ModConstants::key).collect(Collectors.toList());
     }
 

@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.level.Level;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.level.Level;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[26, )")
+public class ABI {
+
+    public static int moonPhase(@This Level level) {
+        return 0;
+    }
+
+    public static int dayTime(@This Level level) {
+        return 0;
+    }
+}

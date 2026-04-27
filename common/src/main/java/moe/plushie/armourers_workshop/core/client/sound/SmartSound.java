@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundProperties;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
@@ -28,9 +28,9 @@ public class SmartSound extends ReferenceCounted {
 
     private final String name;
 
-    private final OpenResourceLocation location;
+    private final OpenResourceKey location;
     private final SkinSoundProperties properties;
-    private final Map<OpenResourceLocation, ByteBuf> soundBuffers;
+    private final Map<OpenResourceKey, ByteBuf> soundBuffers;
 
     private final Set<SoundEvent> binding = new HashSet<>();
 
@@ -73,7 +73,7 @@ public class SmartSound extends ReferenceCounted {
         return name;
     }
 
-    public OpenResourceLocation location() {
+    public OpenResourceKey location() {
         return location;
     }
 
@@ -85,9 +85,9 @@ public class SmartSound extends ReferenceCounted {
         }
     }
 
-    private Map<OpenResourceLocation, ByteBuf> resolveSoundBuffers(OpenResourceLocation location, ISkinSoundProvider provider) {
-        var results = new LinkedHashMap<OpenResourceLocation, ByteBuf>();
-        results.put(location, provider.buffer());
+    private Map<OpenResourceKey, ByteBuf> resolveSoundBuffers(OpenResourceKey key, ISkinSoundProvider provider) {
+        var results = new LinkedHashMap<OpenResourceKey, ByteBuf>();
+        results.put(key, provider.buffer());
         return results;
     }
 }

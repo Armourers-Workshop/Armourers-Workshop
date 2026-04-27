@@ -7,31 +7,31 @@ import java.util.function.Supplier;
 public class TypedHolder<T> implements IRegistryHolder<T> {
 
     private final Supplier<T> value;
-    private final OpenResourceLocation registryName;
+    private final OpenResourceKey registryName;
 
-    public TypedHolder(OpenResourceLocation registryName, Supplier<T> value) {
+    public TypedHolder(OpenResourceKey registryName, Supplier<T> value) {
         this.value = value;
         this.registryName = registryName;
     }
 
-    public static <T> TypedHolder<T> of(OpenResourceLocation registryName, Supplier<T> value) {
+    public static <T> TypedHolder<T> of(OpenResourceKey registryName, Supplier<T> value) {
         return new TypedHolder<>(registryName, value);
     }
 
-    public static <T extends S, S> TypedHolder<T> cast(OpenResourceLocation registryName, Supplier<S> value) {
+    public static <T extends S, S> TypedHolder<T> cast(OpenResourceKey registryName, Supplier<S> value) {
         return new TypedHolder<>(registryName, Objects.unsafeCast(value));
     }
 
-    public static <T> TypedHolder<T> ofValue(OpenResourceLocation registryName, T value) {
+    public static <T> TypedHolder<T> ofValue(OpenResourceKey registryName, T value) {
         return of(registryName, () -> value);
     }
 
-    public static <T extends S, S> TypedHolder<T> castValue(OpenResourceLocation registryName, S value) {
+    public static <T extends S, S> TypedHolder<T> castValue(OpenResourceKey registryName, S value) {
         return cast(registryName, () -> value);
     }
 
     @Override
-    public OpenResourceLocation registryName() {
+    public OpenResourceKey registryName() {
         return registryName;
     }
 

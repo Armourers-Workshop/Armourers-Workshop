@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.core.math.IModelViewStack;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.joml.Matrix4fStack;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractModelViewStackImpl implements IModelViewStack {
 
     private final Matrix4fStack stack = RenderSystem.getModelViewStack();

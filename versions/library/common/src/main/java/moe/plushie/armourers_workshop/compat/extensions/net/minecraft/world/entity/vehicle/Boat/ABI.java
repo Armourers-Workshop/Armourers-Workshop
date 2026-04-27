@@ -6,7 +6,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
-@Available("[1.20, 1.26)")
+@Available("[20, 26)")
 @Extension
 public class ABI {
 

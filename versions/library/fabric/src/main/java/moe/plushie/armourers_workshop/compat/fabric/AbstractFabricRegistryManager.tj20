@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.compat.fabric;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -17,52 +17,52 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@Available("[1.20, 1.21)")
+@Available("[20, 21)")
 public class AbstractFabricRegistryManager extends AbstractRegistryManager {
 
     public static final AbstractFabricRegistryManager INSTANCE = new AbstractFabricRegistryManager();
 
     @Override
-    protected ResourceLocation getItemKey0(Item item) {
-        return BuiltInRegistries.ITEM.getKey(item);
+    protected OpenResourceKey getItemKey0(Item item) {
+        return Registry.findKey(BuiltInRegistries.ITEM, item);
     }
 
     @Override
-    protected ResourceLocation getBlockKey0(Block block) {
-        return BuiltInRegistries.BLOCK.getKey(block);
+    protected OpenResourceKey getBlockKey0(Block block) {
+        return Registry.findKey(BuiltInRegistries.BLOCK, block);
     }
 
     @Override
-    protected Predicate<ItemStack> getItemTag0(ResourceLocation key) {
-        var tag = TagKey.create(Registries.ITEM, key);
+    protected Predicate<ItemStack> getItemTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registries.ITEM, key);
         return itemStack -> itemStack.is(tag);
     }
 
     @Override
-    protected Predicate<BlockState> getBlockTag0(ResourceLocation key) {
-        var tag = TagKey.create(Registries.BLOCK, key);
+    protected Predicate<BlockState> getBlockTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registries.BLOCK, key);
         return blockState -> blockState.is(tag);
     }
 
     @Override
-    protected Predicate<Biome> getBiomeTag0(ResourceLocation key) {
-        var tag = TagKey.create(Registries.BIOME, key);
+    protected Predicate<Biome> getBiomeTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registries.BIOME, key);
         return info -> info.getLevel().getBiome(info.getBlockPos()).is(tag);
     }
 
     @Override
-    protected Item getItem0(ResourceLocation key) {
-        return BuiltInRegistries.ITEM.get(key);
+    protected Item getItem0(OpenResourceKey key) {
+        return Registry.findValue(BuiltInRegistries.ITEM, key);
     }
 
     @Override
-    protected Block getBlock0(ResourceLocation key) {
-        return BuiltInRegistries.BLOCK.get(key);
+    protected Block getBlock0(OpenResourceKey key) {
+        return Registry.findValue(BuiltInRegistries.BLOCK, key);
     }
 
     @Override
-    protected Function<ItemStack, Integer> getEnchantment0(ResourceLocation key) {
-        var enchantment = BuiltInRegistries.ENCHANTMENT.get(key);
+    protected Function<ItemStack, Integer> getEnchantment0(OpenResourceKey key) {
+        var enchantment = Registry.findValue(BuiltInRegistries.ENCHANTMENT, key);
         if (enchantment != null) {
             return itemStack -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
         }
@@ -70,8 +70,8 @@ public class AbstractFabricRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
-    protected Function<LivingEntity, MobEffectInstance> getEffect0(ResourceLocation key) {
-        var effect = BuiltInRegistries.MOB_EFFECT.get(key);
+    protected Function<LivingEntity, MobEffectInstance> getEffect0(OpenResourceKey key) {
+        var effect = Registry.findValue(BuiltInRegistries.MOB_EFFECT, key);
         if (effect != null) {
             return entity -> entity.getEffect(effect);
         }
@@ -79,8 +79,8 @@ public class AbstractFabricRegistryManager extends AbstractRegistryManager {
     }
 
     @Override
-    protected Function<LivingEntity, Double> getAttribute0(ResourceLocation key) {
-        var attribute = BuiltInRegistries.ATTRIBUTE.get(key);
+    protected Function<LivingEntity, Double> getAttribute0(OpenResourceKey key) {
+        var attribute = Registry.findValue(BuiltInRegistries.ATTRIBUTE, key);
         if (attribute != null) {
             return entity -> entity.getAttributeValue(attribute);
         }

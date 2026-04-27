@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.permission.BlockPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.PlayerPermissionContext;
 import moe.plushie.armourers_workshop.core.permission.TargetPermissionContext;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.PermissionNodeBuilderImpl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -19,10 +19,10 @@ import net.minecraftforge.server.permission.context.IContext;
 import net.minecraftforge.server.permission.context.PlayerContext;
 import net.minecraftforge.server.permission.context.TargetContext;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractForgePermissionManager {
 
-    public static IPermissionNode makeNode(OpenResourceLocation registryName, int level) {
+    public static IPermissionNode makeNode(OpenResourceKey registryName, int level) {
         var nodeImpl = new PermissionNodeBuilderImpl.NodeImpl(registryName) {
 
             @Override

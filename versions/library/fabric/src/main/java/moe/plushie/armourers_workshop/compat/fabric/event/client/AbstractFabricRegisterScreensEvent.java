@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractFabricRegisterScreensEvent {
 
     public static IEventHandler<RegisterScreensEvent> registryFactory() {

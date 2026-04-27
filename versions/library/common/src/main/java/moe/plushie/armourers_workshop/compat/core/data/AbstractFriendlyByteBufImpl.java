@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public abstract class AbstractFriendlyByteBufImpl implements IFriendlyByteBuf {
 
     protected final RegistryFriendlyByteBuf source;

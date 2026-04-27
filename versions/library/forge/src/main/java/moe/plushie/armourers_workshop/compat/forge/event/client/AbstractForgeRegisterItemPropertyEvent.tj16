@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.forge.AbstractForgeCommonEventsImpl
 import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractForgeRegisterItemPropertyEvent {
 
     public static IEventHandler<RegisterItemPropertyEvent> propertyFactory() {

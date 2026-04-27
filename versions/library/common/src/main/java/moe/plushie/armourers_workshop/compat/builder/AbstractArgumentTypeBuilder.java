@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.builder;
 import moe.plushie.armourers_workshop.api.common.IArgumentSerializer;
 import moe.plushie.armourers_workshop.api.common.IArgumentType;
 import moe.plushie.armourers_workshop.compat.core.AbstractArgumentTypeInfo;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public abstract class AbstractArgumentTypeBuilder<T extends IArgumentType<?>> {
 
@@ -13,11 +13,11 @@ public abstract class AbstractArgumentTypeBuilder<T extends IArgumentType<?>> {
         this.serializer = serializer;
     }
 
-    public T build(OpenResourceLocation registryName) {
+    public T build(OpenResourceKey registryName) {
         var info = new AbstractArgumentTypeInfo<>(serializer.type(), serializer);
         register(registryName, info);
         return null; // only register.
     }
 
-    protected abstract void register(OpenResourceLocation registryName, AbstractArgumentTypeInfo<T> info);
+    protected abstract void register(OpenResourceKey registryName, AbstractArgumentTypeInfo<T> info);
 }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.guide;
 
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ModelPartElement;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
@@ -24,9 +24,9 @@ public class HeadGuideRenderer extends AbstractGuideRenderer {
     }
 
     public void render(GuideDataProvider provider, int lightmap, int overlay, IGraphicsContext context) {
-        context.draw(ModelPartElement.newInstance(head, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT));
+        context.draw(ModelPartElement.newInstance(head, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT));
         if (provider.shouldRenderOverlay(SkinProperty.OVERRIDE_OVERLAY_HAT)) {
-            context.draw(ModelPartElement.newInstance(hat, lightmap, overlay, SkinRenderType.PLAYER_CUTOUT_NO_CULL));
+            context.draw(ModelPartElement.newInstance(hat, lightmap, overlay, SkinRenderTypes.PLAYER_CUTOUT_NO_CULL));
         }
     }
 }

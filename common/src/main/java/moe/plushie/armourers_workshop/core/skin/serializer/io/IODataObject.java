@@ -15,7 +15,7 @@ public interface IODataObject {
     }
 
     default Type type() {
-        JsonElement object = jsonValue();
+        var object = jsonValue();
         if (object == null || object.isJsonNull()) {
             return Type.NULL;
         }

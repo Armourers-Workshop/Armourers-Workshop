@@ -13,11 +13,11 @@ import moe.plushie.armourers_workshop.core.client.render.state.BlockEntityRender
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> extends AbstractBlockEntityRendererImpl<T, AbstractBlockEntityRenderState> implements IBlockEntityRenderer<T, S> {
 

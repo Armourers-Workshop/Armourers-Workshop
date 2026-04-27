@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IContextKey;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractLootContextParams {
 
     public static final IContextKey<Entity> THIS_ENTITY = wrap(LootContextParams.THIS_ENTITY);
@@ -39,15 +39,15 @@ public class AbstractLootContextParams {
     private static class Proxy<T> implements IContextKey<T> {
 
         private final LootContextParam<T> impl;
-        private final OpenResourceLocation registryName;
+        private final OpenResourceKey registryName;
 
         private Proxy(LootContextParam<T> impl) {
             this.impl = impl;
-            this.registryName = AbstractResourceLocation.wrap(impl.getName());
+            this.registryName = AbstractResourceKey.wrap(impl.getName());
         }
 
         @Override
-        public OpenResourceLocation registryName() {
+        public OpenResourceKey registryName() {
             return registryName;
         }
     }

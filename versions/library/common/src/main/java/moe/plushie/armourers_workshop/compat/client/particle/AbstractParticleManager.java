@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 
 import java.util.ArrayList;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractParticleManager {
 

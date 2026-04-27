@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 
 import java.util.ArrayList;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractRenderPipelineImpl implements IBufferSource {
 

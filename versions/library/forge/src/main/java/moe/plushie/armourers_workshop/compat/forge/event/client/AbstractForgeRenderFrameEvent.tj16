@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.event.TickEvent;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractForgeRenderFrameEvent {
 
     public static IEventHandler<RenderFrameEvent.Pre> preFactory() {

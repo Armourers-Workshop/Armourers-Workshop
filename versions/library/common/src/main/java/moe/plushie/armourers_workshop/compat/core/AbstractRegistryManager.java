@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compat.core;
 
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -100,34 +100,35 @@ public abstract class AbstractRegistryManager {
         return value.map(it -> it.apply(itemStack)).orElse(null);
     }
 
-    private static <T> Optional<T> parse(String name, BiFunction<AbstractRegistryManager, ResourceLocation, T> factory) {
-        var key = ResourceLocation.tryParse(name);
-        if (key != null) {
+    private static <T> Optional<T> parse(String name, BiFunction<AbstractRegistryManager, OpenResourceKey, T> factory) {
+        try {
+            var key = OpenResourceKey.parse(name);
             return Optional.ofNullable(factory.apply(EnvironmentManager.getRegistryManager(), key));
+        } catch (Exception ignored) {
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
-    protected abstract ResourceLocation getItemKey0(Item item);
+    protected abstract OpenResourceKey getItemKey0(Item item);
 
-    protected abstract ResourceLocation getBlockKey0(Block block);
+    protected abstract OpenResourceKey getBlockKey0(Block block);
 
 
-    protected abstract Predicate<ItemStack> getItemTag0(ResourceLocation key);
+    protected abstract Predicate<ItemStack> getItemTag0(OpenResourceKey key);
 
-    protected abstract Predicate<BlockState> getBlockTag0(ResourceLocation key);
+    protected abstract Predicate<BlockState> getBlockTag0(OpenResourceKey key);
 
-    protected abstract Predicate<Biome> getBiomeTag0(ResourceLocation key);
+    protected abstract Predicate<Biome> getBiomeTag0(OpenResourceKey key);
 
-    protected abstract Item getItem0(ResourceLocation key);
+    protected abstract Item getItem0(OpenResourceKey key);
 
-    protected abstract Block getBlock0(ResourceLocation key);
+    protected abstract Block getBlock0(OpenResourceKey key);
 
-    protected abstract Function<ItemStack, Integer> getEnchantment0(ResourceLocation key);
+    protected abstract Function<ItemStack, Integer> getEnchantment0(OpenResourceKey key);
 
-    protected abstract Function<LivingEntity, MobEffectInstance> getEffect0(ResourceLocation key);
+    protected abstract Function<LivingEntity, MobEffectInstance> getEffect0(OpenResourceKey key);
 
-    protected abstract Function<LivingEntity, Double> getAttribute0(ResourceLocation key);
+    protected abstract Function<LivingEntity, Double> getAttribute0(OpenResourceKey key);
 
 
     public interface Biome {

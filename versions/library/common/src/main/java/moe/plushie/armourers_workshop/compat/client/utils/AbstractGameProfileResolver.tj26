@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.world.item.component.ResolvableProfile;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractGameProfileResolver {
 
     public void resolve(OpenGameProfile profile, IResultHandler<OpenGameProfile> handler) {

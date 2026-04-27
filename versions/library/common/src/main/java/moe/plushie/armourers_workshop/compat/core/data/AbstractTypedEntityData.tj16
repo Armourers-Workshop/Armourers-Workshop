@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.TypedEntityData;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import net.minecraft.nbt.CompoundTag;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractTypedEntityData<T> extends TypedEntityData<T> {
 
     protected final CompoundTag impl;

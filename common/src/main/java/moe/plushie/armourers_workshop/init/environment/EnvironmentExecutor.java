@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.environment;
 
+import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
-import net.minecraft.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class EnvironmentExecutor {
     }
 
     public static void runOnBackground(Supplier<Runnable> handler) {
-        Util.backgroundExecutor().execute(handler.get());
+        AbstractPlatform.backgroundExecutor().execute(handler.get());
     }
 
     private static class Manager {

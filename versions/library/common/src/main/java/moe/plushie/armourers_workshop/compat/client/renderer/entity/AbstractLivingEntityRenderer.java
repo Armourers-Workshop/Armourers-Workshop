@@ -15,14 +15,14 @@ import moe.plushie.armourers_workshop.core.client.render.state.LivingEntityRende
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
-@Available("[1.16, 1.26)")
+@Available("[16, 26)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<T>> extends AbstractLivingEntityRendererImpl<T, S, M> implements IEntityRenderer<T, S> {
 
@@ -38,7 +38,7 @@ public abstract class AbstractLivingEntityRenderer<T extends LivingEntity, S ext
         context.draw(AbstractGraphicsRenderer.invoke(super::render));
     }
 
-    protected abstract OpenResourceLocation abi$getTextureLocation(S state);
+    protected abstract OpenResourceKey abi$getTextureLocation(S state);
 
     protected float abi$getEntityScale(S state) {
         return 1.0f;

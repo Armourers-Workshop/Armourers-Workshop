@@ -6,7 +6,7 @@ import net.minecraft.core.registries.Registries;
 
 import manifold.ext.rt.api.auto;
 
-@Available("[1.20, 1.21)")
+@Available("[20, 21)")
 public class BuiltInRegistriesExt {
 
     public static final auto ITEM = BuiltInRegistries.ITEM;

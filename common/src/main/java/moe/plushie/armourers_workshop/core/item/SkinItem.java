@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.network.chat.Component;
@@ -70,7 +70,7 @@ public class SkinItem extends FlavouredBlockItem {
     }
 
     @Override
-    protected void abi$appendModelProperties(BiConsumer<OpenResourceLocation, IItemModelProperty> builder) {
+    protected void abi$appendModelProperties(BiConsumer<OpenResourceKey, IItemModelProperty> builder) {
         builder.accept(ModConstants.key("loading"), (itemStack, level, entity, id) -> {
             var descriptor = SkinDescriptor.of(itemStack);
             var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.INVENTORY.get(descriptor));

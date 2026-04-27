@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.texture;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IResultHandler;
 import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
@@ -12,14 +12,14 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import net.minecraft.client.Minecraft;
 
-@Available("[1.21, 1.26)")
+@Available("[21, 26)")
 public class AbstractPlayerSkinResolver {
 
     public void resolve(OpenGameProfile profile, IResultHandler<PlayerSkin> handler) {
         Minecraft.getInstance().getSkinManager().getOrLoad(AbstractGameProfile.unwrap(profile)).thenAcceptAsync(skin -> {
-            var body = Objects.flatMap(skin.texture(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it), skin.textureUrl()));
-            var cape = Objects.flatMap(skin.capeTexture(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it)));
-            var elytra = Objects.flatMap(skin.elytraTexture(), it -> new PlayerSkinPart(AbstractResourceLocation.wrap(it)));
+            var body = Objects.flatMap(skin.texture(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it), skin.textureUrl()));
+            var cape = Objects.flatMap(skin.capeTexture(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it)));
+            var elytra = Objects.flatMap(skin.elytraTexture(), it -> new PlayerSkinPart(AbstractResourceKey.wrap(it)));
             var model = switch (skin.model()) {
                 case WIDE -> PlayerSkinModel.WIDE;
                 case SLIM -> PlayerSkinModel.SLIM;

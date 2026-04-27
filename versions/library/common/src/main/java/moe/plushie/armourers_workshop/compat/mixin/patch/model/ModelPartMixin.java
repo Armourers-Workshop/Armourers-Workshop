@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Map;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Mixin(ModelPart.class)
 public class ModelPartMixin implements AbstractModelCollector {
 

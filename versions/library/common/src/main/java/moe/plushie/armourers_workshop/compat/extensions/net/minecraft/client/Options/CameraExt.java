@@ -8,7 +8,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.19, )")
+@Available("[19, )")
 public class CameraExt {
 
     public static float getCameraFOV(@This Options options) {

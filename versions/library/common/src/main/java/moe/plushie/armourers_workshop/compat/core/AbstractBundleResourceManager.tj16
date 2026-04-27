@@ -8,7 +8,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public class AbstractBundleResourceManager extends AbstractResourceManager {
 
     public AbstractBundleResourceManager(IResourceManager resourceManager) {

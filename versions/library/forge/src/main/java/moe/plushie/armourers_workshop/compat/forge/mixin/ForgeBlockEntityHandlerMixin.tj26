@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(AbstractBlockEntity.class)
 public abstract class ForgeBlockEntityHandlerMixin implements AbstractForgeBlockEntity {
 

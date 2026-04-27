@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.utils.FastMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.minecraft.world.item.ItemDisplayContext;
 
-@Available("[1.20, )")
+@Available("[20, )")
 public class AbstractItemDisplayContext {
 
     private static final FastMapper<OpenItemDisplayContext, ItemDisplayContext> MAPPER = FastMapper.builder(OpenItemDisplayContext.NONE, ItemDisplayContext.NONE, builder -> {

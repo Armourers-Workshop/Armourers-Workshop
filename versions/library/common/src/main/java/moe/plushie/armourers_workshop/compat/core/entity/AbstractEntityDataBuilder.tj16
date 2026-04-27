@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractEntityDataBuilder implements IEntityDataBuilder {
 
     private final SynchedEntityData impl;

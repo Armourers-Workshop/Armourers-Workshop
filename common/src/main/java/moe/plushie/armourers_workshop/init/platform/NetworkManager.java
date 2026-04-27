@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.CustomReplyPacket;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.PacketSplitter;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.server.level.ServerPlayer;
@@ -73,7 +73,7 @@ public abstract class NetworkManager {
         sendToServer(message);
     }
 
-    public abstract Dispatcher createDispatcher(OpenResourceLocation registryName, String version);
+    public abstract Dispatcher createDispatcher(OpenResourceKey registryName, String version);
 
     public abstract Distributors createDistributors();
 
@@ -81,10 +81,10 @@ public abstract class NetworkManager {
 
         protected final UUID clientUUID = UUID.randomUUID();
         protected final String channelVersion;
-        protected final OpenResourceLocation channelName;
+        protected final OpenResourceKey channelName;
         protected final PacketSplitter splitter;
 
-        public Dispatcher(OpenResourceLocation channelName, String channelVersion) {
+        public Dispatcher(OpenResourceKey channelName, String channelVersion) {
             this.channelName = channelName;
             this.channelVersion = channelVersion;
             this.splitter = new PacketSplitter();
@@ -126,7 +126,7 @@ public abstract class NetworkManager {
 
     public interface Distributor {
 
-        Distributor add(OpenResourceLocation channel, IFriendlyByteBuf buf);
+        Distributor add(OpenResourceKey channel, IFriendlyByteBuf buf);
 
         void execute();
 

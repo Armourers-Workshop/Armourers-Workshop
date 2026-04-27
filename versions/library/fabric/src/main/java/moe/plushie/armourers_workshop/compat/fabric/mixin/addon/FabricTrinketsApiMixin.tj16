@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 
 import java.util.ArrayList;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("trinkets")
 @Pseudo
 @Mixin(TrinketsApi.class)

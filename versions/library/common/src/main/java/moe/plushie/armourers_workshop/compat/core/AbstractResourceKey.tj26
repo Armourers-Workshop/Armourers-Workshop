@@ -1,0 +1,24 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.resources.Identifier;
+
+import java.util.function.Supplier;
+
+@Available("[26, )")
+public interface AbstractResourceKey extends Supplier<Identifier> {
+
+    static OpenResourceKey wrap(Identifier identifier) {
+        return OpenResourceKey.create(identifier.getNamespace(), identifier.getPath());
+    }
+
+    String namespace();
+
+    String path();
+
+    @Override
+    default Identifier get() {
+        return Identifier.fromNamespaceAndPath(namespace(), path());
+    }
+}

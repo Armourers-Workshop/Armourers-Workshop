@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.compat.client.texture;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceLocation;
+import moe.plushie.armourers_workshop.compat.core.AbstractResourceKey;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.client.player.AbstractClientPlayer;
 
 import java.util.IdentityHashMap;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractPlayerSkin {
 
     private static final IdentityHashMap<Object, PlayerSkin> CACHES = new IdentityHashMap<>();
@@ -21,9 +21,9 @@ public class AbstractPlayerSkin {
         if (result != null) {
             return result;
         }
-        var body = Objects.flatMap(skin.body(), it -> AbstractResourceLocation.wrap(it.texturePath()));
-        var cape = Objects.flatMap(skin.cape(), it -> AbstractResourceLocation.wrap(it.texturePath()));
-        var elytra = Objects.flatMap(skin.elytra(), it -> AbstractResourceLocation.wrap(it.texturePath()));
+        var body = Objects.flatMap(skin.body(), it -> AbstractResourceKey.wrap(it.texturePath()));
+        var cape = Objects.flatMap(skin.cape(), it -> AbstractResourceKey.wrap(it.texturePath()));
+        var elytra = Objects.flatMap(skin.elytra(), it -> AbstractResourceKey.wrap(it.texturePath()));
         var model = switch (skin.model()) {
             case SLIM -> PlayerSkinModel.SLIM;
             case WIDE -> PlayerSkinModel.WIDE;

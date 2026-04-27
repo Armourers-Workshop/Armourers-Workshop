@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public class AbstractForgeEntityTypeBuilder<T extends Entity> extends AbstractEntityTypeBuilder<T> {
 
     public AbstractForgeEntityTypeBuilder(IEntityType.Serializer<T> serializer, MobCategory category) {

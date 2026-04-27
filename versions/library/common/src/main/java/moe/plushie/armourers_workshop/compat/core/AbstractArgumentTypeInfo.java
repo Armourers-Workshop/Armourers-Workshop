@@ -9,7 +9,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
 
-@Available("[1.19, )")
+@Available("[19, )")
 public class AbstractArgumentTypeInfo<A extends IArgumentType<?>> implements ArgumentTypeInfo<A, AbstractArgumentTypeInfo.Template<A>> {
 
     private final Class<A> type;

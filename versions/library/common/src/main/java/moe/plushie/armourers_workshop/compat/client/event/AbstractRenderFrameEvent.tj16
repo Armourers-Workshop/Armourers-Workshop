@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 
 @SuppressWarnings("JavaExistingMethodCanBeUsed")
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractRenderFrameEvent {
 
     public static RenderFrameEvent.Pre pre(float partialTick, boolean isPaused) {

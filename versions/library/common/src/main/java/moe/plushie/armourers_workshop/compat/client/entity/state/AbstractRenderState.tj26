@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.HashMap;
 import java.util.List;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractRenderState {
 
     private static final Storage STORAGE = new Storage();

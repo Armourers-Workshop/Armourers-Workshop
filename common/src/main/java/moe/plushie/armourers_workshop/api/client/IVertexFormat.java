@@ -31,7 +31,6 @@ public interface IVertexFormat extends Supplier<VertexFormat> {
 
     enum Mode {
         LINES,
-        LINE_STRIP,
         DEBUG_LINES,
         DEBUG_LINE_STRIP,
         TRIANGLES,

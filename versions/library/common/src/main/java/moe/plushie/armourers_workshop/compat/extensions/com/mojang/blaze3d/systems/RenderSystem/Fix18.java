@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 
 import manifold.ext.rt.api.Extension;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Extension
 public class Fix18 {
 

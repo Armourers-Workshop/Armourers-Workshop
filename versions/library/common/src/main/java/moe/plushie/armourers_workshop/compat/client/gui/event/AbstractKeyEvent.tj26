@@ -3,14 +3,11 @@ package moe.plushie.armourers_workshop.compat.client.gui.event;
 import com.apple.library.impl.event.InputKeyEvent;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.KeyEvent;
 
-@Available("[1.26, )")
+@Available("[26, )")
 public class AbstractKeyEvent implements InputKeyEvent {
-
-    public static final boolean ON_OSX = Util.getPlatform() == Util.OS.OSX;
 
     public final KeyEvent event;
 

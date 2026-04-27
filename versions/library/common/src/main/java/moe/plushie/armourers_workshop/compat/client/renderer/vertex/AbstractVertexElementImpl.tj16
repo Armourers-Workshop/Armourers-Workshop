@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.renderer.vertex;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexElement;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractVertexElementImpl implements IVertexElement {
 
     @Override

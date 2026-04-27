@@ -228,6 +228,8 @@ public class BlockBenchPackReader {
         object.at("name", it -> builder.name(it.stringValue()));
         object.at("uuid", it -> builder.uuid(it.stringValue()));
         object.at("type", it -> builder.type(it.stringValue()));
+        object.at("rotation_global", it -> builder.rotationGlobal(it.boolValue()));
+        object.at("quaternion_interpolation", it -> builder.quaternionInterpolation(it.boolValue()));
         object.each("keyframes", fo -> {
             var fb = new BlockBenchKeyframe.Builder();
             fo.at("uuid", it -> fb.uuid(it.stringValue()));

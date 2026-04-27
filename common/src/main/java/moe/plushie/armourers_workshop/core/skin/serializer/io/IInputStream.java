@@ -53,9 +53,9 @@ public interface IInputStream {
 
     default void read(FloatBuffer buffer) throws IOException {
         var stream = inputStream();
-        int position = buffer.position();
-        int limit = buffer.limit();
-        for (int index = position; index < limit; ++index) {
+        var position = buffer.position();
+        var limit = buffer.limit();
+        for (var index = position; index < limit; ++index) {
             buffer.put(index, stream.readFloat());
         }
     }
@@ -64,7 +64,7 @@ public interface IInputStream {
         // we can't directly create a big buffers, it's easy to be hacked.
         var inputStream = inputStream();
         var buffers = new ArrayList<byte[]>();
-        int remaining = limit;
+        var remaining = limit;
         while (remaining > 0) {
             var bytes = new byte[Math.min(remaining, 16384)]; // 16k
             inputStream.readFully(bytes);
@@ -106,9 +106,9 @@ public interface IInputStream {
         if (usedBytes == 4) {
             return readInt();
         }
-        int value = 0;
-        for (int i = 0; i < usedBytes; i++) {
-            int ch = readByte() & 0xff;
+        var value = 0;
+        for (var i = 0; i < usedBytes; i++) {
+            var ch = readByte() & 0xff;
             value = (value << 8) | ch;
         }
         return value;
@@ -119,7 +119,7 @@ public interface IInputStream {
     }
 
     default String readString() throws IOException {
-        int size = inputStream().readUnsignedShort();
+        var size = inputStream().readUnsignedShort();
         return readString(size);
     }
 
@@ -127,7 +127,7 @@ public interface IInputStream {
         if (len <= 0) {
             return "";
         }
-        byte[] bytes = new byte[len];
+        var bytes = new byte[len];
         inputStream().readFully(bytes, 0, len);
         return new String(bytes, StandardCharsets.UTF_8);
     }
@@ -150,7 +150,7 @@ public interface IInputStream {
 
     default float[] readFloatArray(int count) throws IOException {
         var results = new float[count];
-        for (int i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++) {
             results[i] = readFloat();
         }
         return results;
@@ -188,39 +188,39 @@ public interface IInputStream {
 
     default OpenVector3i readVector3i() throws IOException {
         var stream = inputStream();
-        int x = stream.readInt();
-        int y = stream.readInt();
-        int z = stream.readInt();
+        var x = stream.readInt();
+        var y = stream.readInt();
+        var z = stream.readInt();
         return new OpenVector3i(x, y, z);
     }
 
     default OpenVector3f readVector3f() throws IOException {
         var stream = inputStream();
-        float x = stream.readFloat();
-        float y = stream.readFloat();
-        float z = stream.readFloat();
+        var x = stream.readFloat();
+        var y = stream.readFloat();
+        var z = stream.readFloat();
         return new OpenVector3f(x, y, z);
     }
 
     default OpenRectangle3i readRectangle3i() throws IOException {
         var stream = inputStream();
-        int x = stream.readInt();
-        int y = stream.readInt();
-        int z = stream.readInt();
-        int width = stream.readInt();
-        int height = stream.readInt();
-        int depth = stream.readInt();
+        var x = stream.readInt();
+        var y = stream.readInt();
+        var z = stream.readInt();
+        var width = stream.readInt();
+        var height = stream.readInt();
+        var depth = stream.readInt();
         return new OpenRectangle3i(x, y, z, width, height, depth);
     }
 
     default OpenRectangle3f readRectangle3f() throws IOException {
         var stream = inputStream();
-        float x = stream.readFloat();
-        float y = stream.readFloat();
-        float z = stream.readFloat();
-        float width = stream.readFloat();
-        float height = stream.readFloat();
-        float depth = stream.readFloat();
+        var x = stream.readFloat();
+        var y = stream.readFloat();
+        var z = stream.readFloat();
+        var width = stream.readFloat();
+        var height = stream.readFloat();
+        var depth = stream.readFloat();
         return new OpenRectangle3f(x, y, z, width, height, depth);
     }
 

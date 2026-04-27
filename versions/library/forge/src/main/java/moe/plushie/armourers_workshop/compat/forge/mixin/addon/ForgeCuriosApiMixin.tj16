@@ -12,7 +12,7 @@ import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.Objects;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 @Conditional("curios")
 @Pseudo
 @Mixin(CuriosApi.class)

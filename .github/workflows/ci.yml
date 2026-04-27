@@ -7,42 +7,36 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ '1.16.5', '1.18.2', '1.19.2', '1.20.1', '1.21.1', '1.26.1' ]
-
-    runs-on: ubuntu-latest
+        version: [ '16.5', '18.2', '19.2', '20.1', '21.1' ]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '25'
 
-      - name: Setup release version
-        id: release-version
-        run: |
-          version=$(echo ${{ github.event.release.tag_name }} | cut -d'v' -f2)
-          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Setup environment
+        id: setup-env
+        run: ./scripts/setup.sh "${{ github.event.release.tag_name }}" "${{ matrix.version }}" >> "$GITHUB_OUTPUT"
 
-      - name: Setup gradle from cache
+      - name: Setup cache
         uses: actions/cache/restore@v4
         with:
-          key: build-cache-${{ matrix.version }}
-          path: |
-            .gradle
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+          key: ${{ steps.setup-env.outputs.cache_key }}
+          path: ${{ steps.setup-env.outputs.cache_path }}
 
-      - name: Remove game test
+      - name: Clean test resources
         run: rm -rf "versions/gametest"
 
       - name: Switch to ${{ matrix.version }}
-        run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} -p "versions/${{ matrix.version }}"
+        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} -p "versions/${{ matrix.version }}"
 
       - name: Build Project
-        run: ./gradlew -Pversion=${{ steps.release-version.outputs.version }} build
+        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} build
         env:
           AW_SIGN_ALIAS: ${{ secrets.AW_SIGN_ALIAS }}
           AW_SIGN_KEY_PASS: ${{ secrets.AW_SIGN_KEY_PASS }}
@@ -52,14 +46,14 @@ jobs:
       - name: Upload Fabric Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-          version: fabric-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
+          version: fabric-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
           version-type: beta
           #version-type: release
 
           files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
 
-          game-versions: ${{ matrix.version }}
+          game-versions: ${{ steps.setup-env.outputs.game_version }}
 
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -76,13 +70,13 @@ jobs:
       - name: Upload Forge Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
-          version: forge-${{ matrix.version }}-${{ steps.release-version.outputs.version }}
+          name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
+          version: forge-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
           version-type: beta
 
           files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
 
-          game-versions: ${{ matrix.version }}
+          game-versions: ${{ steps.setup-env.outputs.game_version }}
 
           github-token: ${{ secrets.GITHUB_TOKEN }}
 

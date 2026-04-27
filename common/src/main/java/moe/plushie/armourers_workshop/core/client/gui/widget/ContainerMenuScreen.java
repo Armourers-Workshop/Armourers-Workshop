@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuScreen;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractCharacterEvent;
+import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractContainerInput;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractKeyEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseButtonEvent;
 import moe.plushie.armourers_workshop.compat.client.gui.event.AbstractMouseEvent;
@@ -16,7 +17,6 @@ import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
@@ -110,8 +110,8 @@ public class ContainerMenuScreen<M extends AbstractContainerMenu, W extends UIWi
     }
 
     @Override
-    public void slotClicked(Slot slot, int slotIndex, int j, ClickType clickType) {
-        super.slotClicked(slot, slotIndex, j, clickType);
+    public void slotClicked(Slot slot, int slotId, int buttonNum, AbstractContainerInput input) {
+        super.slotClicked(slot, slotId, buttonNum, input);
         menuWindow.menuDidChange();
     }
 

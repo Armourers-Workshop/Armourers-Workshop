@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-@Available("[1.18, 1.20)")
+@Available("[18, 20)")
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractMenuScreenImpl<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 

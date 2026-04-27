@@ -9,7 +9,7 @@ import net.minecraft.client.model.EntityModel;
 
 import java.util.function.Function;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractBabyModelHolderImpl {
 
     private final EntityModel<?> entityModel;

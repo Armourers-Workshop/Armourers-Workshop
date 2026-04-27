@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.compat.core.AbstractDeltaTracker;
 import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import net.minecraft.client.DeltaTracker;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractRenderFrameEvent {
 
     public static RenderFrameEvent.Pre pre(DeltaTracker deltaTracker) {

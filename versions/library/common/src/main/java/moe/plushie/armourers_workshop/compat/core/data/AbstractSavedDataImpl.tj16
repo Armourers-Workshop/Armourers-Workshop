@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 
-@Available("[1.16, 1.18)")
+@Available("[16, 18)")
 public abstract class AbstractSavedDataImpl extends SavedData implements IDataSerializable.Mutable {
 
     private String id;

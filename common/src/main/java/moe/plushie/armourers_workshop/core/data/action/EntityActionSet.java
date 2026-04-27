@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 
 public class EntityActionSet {
 
+    public static final EntityActionSet IDLE = new EntityActionSet();
+
     protected final BitSet flags = new BitSet(EntityAction.values().length);
 
     public void set(EntityAction action, boolean value) {

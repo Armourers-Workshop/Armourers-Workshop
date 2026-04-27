@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLocation;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
 
 public interface IContextKey<T> {
 
-    IResourceLocation registryName();
+    IResourceKey registryName();
 }

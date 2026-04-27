@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Available("[1.16, 1.21)")
+@Available("[16, 21)")
 public class AbstractItemImpl extends Item {
 
     public AbstractItemImpl(Properties properties) {

@@ -15,11 +15,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-@Available("[1.18, )")
+@Available("[18, )")
 @Conditional("trinkets")
 @Pseudo
 @Mixin(TrinketsApi.class)
@@ -29,13 +30,13 @@ public class FabricTrinketsApiMixin {
         // because the superclass of TrinketComponent is an unknown type,
         // this leads we can't direct using the TrinketComponent api.
         // so we can only call it through reflection.
-        Method[] methods = {null};
-        BiFunction<Object, Predicate<ItemStack>, List<Tuple<SlotReference, ItemStack>>> getEquipped = (component, filter) -> {
+        var methods = new AtomicReference<Method>();
+        var getEquipped = (BiFunction<Object, Predicate<ItemStack>, List<Tuple<SlotReference, ItemStack>>>) (component, filter) -> {
             try {
-                if (methods[0] == null) {
-                    methods[0] = TrinketComponent.class.getDeclaredMethod("getEquipped", Predicate.class);
+                if (methods.get() == null) {
+                    methods.set(TrinketComponent.class.getDeclaredMethod("getEquipped", Predicate.class));
                 }
-                Object results = methods[0].invoke(component, filter);
+                var results = methods.get().invoke(component, filter);
                 return Objects.unsafeCast(results);
             } catch (Exception e) {
                 return null;

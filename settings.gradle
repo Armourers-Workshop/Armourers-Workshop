@@ -1,5 +1,3 @@
-// https://linkie.shedaniel.dev/mappings
-// https://linkie.shedaniel.dev/dependencies
 pluginManagement {
     repositories {
         maven { url "https://maven.fabricmc.net/" }

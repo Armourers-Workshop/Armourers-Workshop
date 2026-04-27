@@ -10,7 +10,7 @@ import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 
 @Extension
-@Available("[1.16, )")
+@Available("[16, )")
 public class HeldItemExt {
 
     public static ItemStack getItemInHand(@This LivingEntity entity, OpenInteractionHand hand) {

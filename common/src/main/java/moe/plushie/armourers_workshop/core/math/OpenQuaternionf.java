@@ -187,9 +187,9 @@ public class OpenQuaternionf implements IQuaternionf {
     }
 
     public static OpenQuaternionf fromUnnormalizedMatrix(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
-        float lenX = OpenMath.invsqrt(m00 * m00 + m01 * m01 + m02 * m02);
-        float lenY = OpenMath.invsqrt(m10 * m10 + m11 * m11 + m12 * m12);
-        float lenZ = OpenMath.invsqrt(m20 * m20 + m21 * m21 + m22 * m22);
+        var lenX = OpenMath.invsqrt(m00 * m00 + m01 * m01 + m02 * m02);
+        var lenY = OpenMath.invsqrt(m10 * m10 + m11 * m11 + m12 * m12);
+        var lenZ = OpenMath.invsqrt(m20 * m20 + m21 * m21 + m22 * m22);
         m00 *= lenX;
         m01 *= lenX;
         m02 *= lenX;
@@ -223,30 +223,30 @@ public class OpenQuaternionf implements IQuaternionf {
     }
 
     public OpenVector3f eulerAnglesXYZ() {
-        float tx = OpenMath.atan2(x * w - y * z, 0.5f - x * x - y * y);
-        float ty = OpenMath.safeAsin(2.0f * (x * z + y * w));
-        float tz = OpenMath.atan2(z * w - x * y, 0.5f - y * y - z * z);
+        var tx = OpenMath.atan2(x * w - y * z, 0.5f - x * x - y * y);
+        var ty = OpenMath.safeAsin(2.0f * (x * z + y * w));
+        var tz = OpenMath.atan2(z * w - x * y, 0.5f - y * y - z * z);
         return new OpenVector3f(tx, ty, tz);
     }
 
     public OpenVector3f eulerAnglesZYX() {
-        float tx = OpenMath.atan2(y * z + w * x, 0.5f - x * x + y * y);
-        float ty = OpenMath.safeAsin(-2.0f * (x * z - w * y));
-        float tz = OpenMath.atan2(x * y + w * z, 0.5f - y * y - z * z);
+        var tx = OpenMath.atan2(y * z + w * x, 0.5f - x * x + y * y);
+        var ty = OpenMath.safeAsin(-2.0f * (x * z - w * y));
+        var tz = OpenMath.atan2(x * y + w * z, 0.5f - y * y - z * z);
         return new OpenVector3f(tx, ty, tz);
     }
 
     public OpenVector3f eulerAnglesZXY() {
-        float tx = OpenMath.safeAsin(2.0f * (w * x + y * z));
-        float ty = OpenMath.atan2(w * y - x * z, 0.5f - y * y - x * x);
-        float tz = OpenMath.atan2(w * z - x * y, 0.5f - z * z - x * x);
+        var tx = OpenMath.safeAsin(2.0f * (w * x + y * z));
+        var ty = OpenMath.atan2(w * y - x * z, 0.5f - y * y - x * x);
+        var tz = OpenMath.atan2(w * z - x * y, 0.5f - z * z - x * x);
         return new OpenVector3f(tx, ty, tz);
     }
 
     public OpenVector3f eulerAnglesYXZ() {
-        float tx = OpenMath.safeAsin(-2.0f * (y * z - w * x));
-        float ty = OpenMath.atan2(x * z + y * w, 0.5f - y * y - x * x);
-        float tz = OpenMath.atan2(y * x + w * z, 0.5f - x * x - z * z);
+        var tx = OpenMath.safeAsin(-2.0f * (y * z - w * x));
+        var ty = OpenMath.atan2(x * z + y * w, 0.5f - y * y - x * x);
+        var tz = OpenMath.atan2(y * x + w * z, 0.5f - x * x - z * z);
         return new OpenVector3f(tx, ty, tz);
     }
 
@@ -303,14 +303,14 @@ public class OpenQuaternionf implements IQuaternionf {
     }
 
     public OpenQuaternionf multiply(OpenQuaternionf other) {
-        float f = x;
-        float g = y;
-        float h = z;
-        float i = w;
-        float j = other.x;
-        float k = other.y;
-        float l = other.z;
-        float m = other.w;
+        var f = x;
+        var g = y;
+        var h = z;
+        var i = w;
+        var j = other.x;
+        var k = other.y;
+        var l = other.z;
+        var m = other.w;
         this.x = i * j + f * m + g * l - h * k;
         this.y = i * k - f * l + g * m + h * j;
         this.z = i * l + f * k - g * j + h * m;

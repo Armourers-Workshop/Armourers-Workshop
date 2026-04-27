@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.concurrent.CompletableFuture;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractFabricClientNetworking {
 
     public static void registerLoginReceiver(ResourceLocation name, LoginPayloadHandler payloadHandler) {

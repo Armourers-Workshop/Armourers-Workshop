@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-@Available("[1.16, )")
+@Available("[16, )")
 public abstract class AbstractEntitySelectorParser {
 
     private static boolean IS_INITIALED = false;

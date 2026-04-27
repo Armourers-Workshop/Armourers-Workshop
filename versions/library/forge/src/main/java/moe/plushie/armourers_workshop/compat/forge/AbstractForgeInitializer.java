@@ -10,7 +10,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 
-@Available("[1.21, )")
+@Available("[21, )")
 @Mod(ModConstants.MOD_ID)
 public class AbstractForgeInitializer {
 

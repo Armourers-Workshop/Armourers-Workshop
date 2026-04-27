@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 import moe.plushie.armourers_workshop.compat.client.particle.AbstractParticleRenderer;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
-import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ParticleElement;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
 import moe.plushie.armourers_workshop.core.math.OpenSize2f;
+import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
@@ -29,7 +30,7 @@ import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.particle.math.ParticleCameraFacing;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
-import moe.plushie.armourers_workshop.core.utils.OpenResourceLocation;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConstants;
 
@@ -163,13 +164,13 @@ public class SmartParticle extends ReferenceCounted {
         private IRenderType resolveRenderType(SkinTextureData textureData, boolean isEmissive) {
             // this is a builtin particle texture.
             if (textureData.name().startsWith(ModConstants.MOD_ID)) {
-                var location = OpenResourceLocation.parse(textureData.name() + ".png");
-                return SkinRenderType.particle(location, isEmissive, true);
+                var key = OpenResourceKey.parse(textureData.name() + ".png");
+                return SkinRenderTypes.particle(key, isEmissive, true);
             }
             // this is a custom particle texture.
             return SmartTextureManager.getInstance().register(textureData).create(it -> {
-                var location = it.location();
-                return SkinRenderType.particle(location, isEmissive, true);
+                var key = it.location();
+                return SkinRenderTypes.particle(key, isEmissive, true);
             });
         }
 
@@ -182,9 +183,9 @@ public class SmartParticle extends ReferenceCounted {
                     tmp.setZ(0);
                     yield tmp;
                 }
-                case LOOKAT_XYZ -> camera.lookAt(pos);
+                case LOOKAT_XYZ -> camera.lookAt(new OpenVector3d(pos));
                 case LOOKAT_Y -> {
-                    var tmp = pos.copy();
+                    var tmp = new OpenVector3d(pos);
                     tmp.setY(camera.position().y());
                     yield camera.lookAt(tmp);
                 }

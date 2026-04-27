@@ -10,13 +10,13 @@ import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
 import net.minecraft.client.Camera;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.state.ParticlesRenderState;
+import net.minecraft.client.renderer.state.level.ParticlesRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Available("[1.26, )")
+@Available("[26, )")
 @Mixin(ParticleEngine.class)
 public class FabricParticleManagerMixin implements AbstractParticleManagerImpl {
 

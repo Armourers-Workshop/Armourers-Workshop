@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.init.platform.EventManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
-@Available("[1.16, )")
+@Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractShaderContext implements ShaderContext {
 

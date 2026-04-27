@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.OutlineBufferSource;
 
-@Available("[1.21, )")
+@Available("[21, )")
 public class AbstractBufferSourceImpl {
 
     public static MultiBufferSource immediateSource(int size) {

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
-@Available("[1.21, )")
+@Available("[21, 26)")
 @OnlyIn(Dist.CLIENT)
 public class AbstractWrappedScreenImpl extends Screen {
 
