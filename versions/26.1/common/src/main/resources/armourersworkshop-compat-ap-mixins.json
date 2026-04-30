@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "client/gui/PictureInPictureRendererMixin",
+    "client/other/GlStateManagerMixin",
+    "client/gui/GuiGraphicsMixin",
+    "client/renderer/BlockEntityRenderStateMixin",
+    "client/renderer/EntityRenderStateMixin",
+    "client/model/ModelMixin",
+    "client/model/ModelDataAttachMixin",
+    "client/model/EntityModelSetMixin"
+  ],
+  "mixins": [
+    "core/other/VehicleEntityPlaceMixin",
+    "core/other/VehicleEntityBreakMixin",
+    "core/other/ComponentizationFixMixin$ItemFixer",
+    "core/other/ComponentizationFixMixin$EntityFixer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

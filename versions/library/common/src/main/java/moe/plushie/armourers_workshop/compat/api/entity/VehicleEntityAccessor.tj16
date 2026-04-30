@@ -1,0 +1,8 @@
+package moe.plushie.armourers_workshop.compat.api.entity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+
+@Available("[16, 21)")
+public interface VehicleEntityAccessor extends EntityAccessor {
+    // nop
+}

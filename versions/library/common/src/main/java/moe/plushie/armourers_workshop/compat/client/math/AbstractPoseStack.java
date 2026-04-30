@@ -10,9 +10,12 @@ import moe.plushie.armourers_workshop.api.core.math.IQuaternionf;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
+import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 
 @OnlyIn(Dist.CLIENT)
 public class AbstractPoseStack extends AbstractPoseStackImpl implements IPoseStack {
+
+    private static final ObjectPool<OpenPoseStack> REUSABLE_QUEUE = ObjectPool.create(OpenPoseStack::new);
 
     private final PoseStack stack;
 

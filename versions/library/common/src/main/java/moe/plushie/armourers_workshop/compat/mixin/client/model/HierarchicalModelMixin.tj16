@@ -1,0 +1,11 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.model;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.model.EntityModel;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[16, 18)")
+@Mixin(EntityModel.class)
+public abstract class HierarchicalModelMixin {
+    // nop
+}

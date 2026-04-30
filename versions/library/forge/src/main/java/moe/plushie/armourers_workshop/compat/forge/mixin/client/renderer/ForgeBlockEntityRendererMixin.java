@@ -1,0 +1,25 @@
+package moe.plushie.armourers_workshop.compat.forge.mixin.client.renderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.renderer.blockentity.AbstractBlockEntityRendererImpl;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeBlockEntity;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[21, 26)")
+@Mixin(AbstractBlockEntityRendererImpl.class)
+public abstract class ForgeBlockEntityRendererMixin<T extends BlockEntity> implements BlockEntityRenderer<T> {
+
+    @Override
+    public AABB getRenderBoundingBox(T blockEntity) {
+        if (blockEntity instanceof AbstractForgeBlockEntity blockEntity1) {
+            var result = blockEntity1.getRenderBoundingBox();
+            if (result != null) {
+                return result;
+            }
+        }
+        return BlockEntityRenderer.super.getRenderBoundingBox(blockEntity);
+    }
+}

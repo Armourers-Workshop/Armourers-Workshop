@@ -8,11 +8,11 @@ import moe.plushie.armourers_workshop.core.data.BlockEntityAnimationState;
 import moe.plushie.armourers_workshop.core.data.EntityAnimationState;
 import moe.plushie.armourers_workshop.core.data.action.EntityActionSet;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.animation.runtime.SkinAnimationPlayer;
+import moe.plushie.armourers_workshop.core.skin.animation.runtime.SkinAnimationManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class AnimationManager extends SkinAnimationPlayer<SkinDescriptor, BakedSkin> {
+public class AnimationManager extends SkinAnimationManager<SkinDescriptor, BakedSkin> {
 
     public static final AnimationManager NONE = new AnimationManager(null);
 

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
-import net.minecraft.world.entity.player.Player;
+import moe.plushie.armourers_workshop.compat.api.entity.PlayerAccessor;
 
 public class PlayerRenderState extends LivingEntityRenderState {
 
@@ -10,8 +10,8 @@ public class PlayerRenderState extends LivingEntityRenderState {
         return isFishing;
     }
 
-    public static void extract(Player entity, PlayerRenderState renderState) {
-        renderState.isFlying = entity.getAbilities().flying;
-        renderState.isFishing = entity.fishing != null;
+    public static void extract(PlayerAccessor entity, PlayerRenderState renderState) {
+        renderState.isFlying = entity.aw2$isFlying();
+        renderState.isFishing = entity.aw2$isFishing();
     }
 }

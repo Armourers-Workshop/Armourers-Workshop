@@ -1,0 +1,24 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.shader;
+
+import com.google.common.collect.ImmutableSet;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+@Available("[16, 18)")
+@Conditional("iris || oculus")
+@Pseudo
+@Mixin(targets = "net.coderbot.iris.gl.program.ProgramBuilder")
+public class ShaderIrisMixin {
+
+    @ModifyVariable(method = "begin", at = @At(value = "HEAD"), argsOnly = true, remap = false, name = "arg1")
+    private static String aw2$applyVertexSource(String source, String name, String vertexSource, String geometrySource, String fragmentSource, ImmutableSet<Integer> reservedTextureUnits) {
+        AbstractClientHooks.createShaders();
+        return new ShaderPreprocessor("iris", 1).process(source);
+    }
+}

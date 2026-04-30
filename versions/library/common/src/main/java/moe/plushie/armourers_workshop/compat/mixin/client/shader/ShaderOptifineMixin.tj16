@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.shader;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+
+@Available("[16, 18)")
+@Conditional("optifine")
+@Pseudo
+@Mixin(targets = "net.optifine.shaders.Shaders")
+public class ShaderOptifineMixin {
+
+    @ModifyArg(method = "createVertShader", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/ARBShaderObjects;glShaderSourceARB(ILjava/lang/CharSequence;)V"), remap = false)
+    private static CharSequence aw2$createVertShader(int shader, CharSequence value) {
+        AbstractClientHooks.createShaders();
+        return new ShaderPreprocessor("optifine", 1).process((String) value);
+    }
+}

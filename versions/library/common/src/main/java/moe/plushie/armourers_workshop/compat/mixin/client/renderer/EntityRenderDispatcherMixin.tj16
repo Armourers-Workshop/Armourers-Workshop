@@ -1,0 +1,10 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.renderer;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[16, 18)")
+@Mixin(EntityRenderDispatcher.class)
+public class EntityRenderDispatcherMixin {
+}

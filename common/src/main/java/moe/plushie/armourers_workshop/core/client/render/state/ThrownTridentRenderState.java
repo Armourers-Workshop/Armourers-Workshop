@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
-import net.minecraft.world.entity.projectile.ThrownTrident;
+import moe.plushie.armourers_workshop.compat.api.entity.ThrownTridentAccessor;
 
 public class ThrownTridentRenderState extends ArrowRenderState {
 
-    public static void extract(ThrownTrident entity, ThrownTridentRenderState renderState) {
+    public static void extract(ThrownTridentAccessor entity, ThrownTridentRenderState renderState) {
     }
 }

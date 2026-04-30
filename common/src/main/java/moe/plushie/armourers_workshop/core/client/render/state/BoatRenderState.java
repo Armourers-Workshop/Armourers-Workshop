@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
-import net.minecraft.world.entity.vehicle.Boat;
+import moe.plushie.armourers_workshop.compat.api.entity.BoatAccessor;
 
 public class BoatRenderState extends EntityRenderState {
 
@@ -10,7 +10,7 @@ public class BoatRenderState extends EntityRenderState {
         return variant;
     }
 
-    public static void extract(Boat entity, BoatRenderState renderState) {
-        renderState.variant = entity.variant();
+    public static void extract(BoatAccessor entity, BoatRenderState renderState) {
+        renderState.variant = entity.aw2$variant();
     }
 }

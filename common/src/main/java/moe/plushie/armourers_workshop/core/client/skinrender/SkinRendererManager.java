@@ -11,6 +11,15 @@ import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.render.state.AdvancedBuilderRenderState;
 import moe.plushie.armourers_workshop.builder.client.render.state.ArmourerRenderState;
 import moe.plushie.armourers_workshop.builder.client.render.state.SkinCubeRenderState;
+import moe.plushie.armourers_workshop.compat.api.blockentity.BlockEntityAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.ArrowAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.BoatAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.EntityAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.FishingHookAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.LivingEntityAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.MinecartAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.PlayerAccessor;
+import moe.plushie.armourers_workshop.compat.api.entity.ThrownTridentAccessor;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientNamedClass;
 import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractModelHolder;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
@@ -63,16 +72,7 @@ import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlock
 import moe.plushie.armourers_workshop.library.client.render.GlobalSkinLibraryRenderState;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.FishingHook;
-import net.minecraft.world.entity.projectile.ThrownTrident;
-import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.entity.vehicle.Minecart;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -352,23 +352,23 @@ public class SkinRendererManager {
         }
 
         private static void registerEntityStates() {
-            registerEntityState(Entity.class, EntityRenderState::new, EntityRenderState::extract);
-            registerEntityState(LivingEntity.class, LivingEntityRenderState::new, LivingEntityRenderState::extract);
+            registerEntityState(EntityAccessor.class, EntityRenderState::new, EntityRenderState::extract);
+            registerEntityState(LivingEntityAccessor.class, LivingEntityRenderState::new, LivingEntityRenderState::extract);
 
-            registerEntityState(Boat.class, BoatRenderState::new, BoatRenderState::extract);
-            registerEntityState(Minecart.class, MinecartRenderState::new, MinecartRenderState::extract);
+            registerEntityState(BoatAccessor.class, BoatRenderState::new, BoatRenderState::extract);
+            registerEntityState(MinecartAccessor.class, MinecartRenderState::new, MinecartRenderState::extract);
 
-            registerEntityState(AbstractArrow.class, ArrowRenderState::new, ArrowRenderState::extract);
-            registerEntityState(FishingHook.class, FishingHookRenderState::new, FishingHookRenderState::extract);
-            registerEntityState(ThrownTrident.class, ThrownTridentRenderState::new, ThrownTridentRenderState::extract);
+            registerEntityState(ArrowAccessor.class, ArrowRenderState::new, ArrowRenderState::extract);
+            registerEntityState(FishingHookAccessor.class, FishingHookRenderState::new, FishingHookRenderState::extract);
+            registerEntityState(ThrownTridentAccessor.class, ThrownTridentRenderState::new, ThrownTridentRenderState::extract);
 
-            registerEntityState(Player.class, PlayerRenderState::new, PlayerRenderState::extract);
+            registerEntityState(PlayerAccessor.class, PlayerRenderState::new, PlayerRenderState::extract);
 
             registerEntityState(MannequinEntity.class, MannequinRenderState::new, MannequinRenderState::extract);
         }
 
         private static void registerBlockEntityStates() {
-            registerBlockEntityState(BlockEntity.class, BlockEntityRenderState::new, BlockEntityRenderState::extract);
+            registerBlockEntityState(BlockEntityAccessor.class, BlockEntityRenderState::new, BlockEntityRenderState::extract);
 
             registerBlockEntityState(SkinnableBlockEntity.class, SkinnableRenderState::new, SkinnableRenderState::extract);
             registerBlockEntityState(GlobalSkinLibraryBlockEntity.class, GlobalSkinLibraryRenderState::new, GlobalSkinLibraryRenderState::extract);
@@ -397,11 +397,11 @@ public class SkinRendererManager {
             }
         }
 
-        public static <T extends Entity, S extends EntityRenderState> void registerEntityState(Class<T> entityClass, Supplier<S> stateFactory, BiConsumer<T, S> extractHandler) {
+        public static <T extends EntityAccessor, S extends EntityRenderState> void registerEntityState(Class<T> entityClass, Supplier<S> stateFactory, BiConsumer<T, S> extractHandler) {
             RenderStateManager.register(entityClass, stateFactory, extractHandler);
         }
 
-        public static <T extends BlockEntity, S extends BlockEntityRenderState> void registerBlockEntityState(Class<T> entityClass, Supplier<S> stateFactory, BiConsumer<T, S> extractHandler) {
+        public static <T extends BlockEntityAccessor, S extends BlockEntityRenderState> void registerBlockEntityState(Class<T> entityClass, Supplier<S> stateFactory, BiConsumer<T, S> extractHandler) {
             RenderStateManager.register(entityClass, stateFactory, extractHandler);
         }
     }

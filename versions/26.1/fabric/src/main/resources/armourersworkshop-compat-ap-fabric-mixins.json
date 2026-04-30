@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.fabric.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "addon/FabricAccessoriesApiMixin"
+  ],
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

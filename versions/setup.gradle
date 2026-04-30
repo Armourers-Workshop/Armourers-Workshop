@@ -308,7 +308,8 @@ tasks.register("applyRunConfigurations") {
             def target = file("../../${it}/run/server.properties")
             if (target.exists()) {
                 def contents = target.getText("UTF-8")
-                target.setText(contents.replaceAll("(level-name)=(.+)", "\$1=world-${minecraft_version_number}"), "UTF-8")
+                def prefix = minecraft_version_number.toString().substring(0, 2)
+                target.setText(contents.replaceAll("(level-name)=(.+)", "\$1=world-${prefix}"), "UTF-8")
             }
         }
     }

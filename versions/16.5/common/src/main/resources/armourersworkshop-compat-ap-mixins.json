@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "client/other/GlStateManagerMixin",
+    "client/bugfix/WindowIconMixin"
+  ],
+  "mixins": [
+    "core/other/ServerGameMixin",
+    "core/other/VehicleEntityPlaceMixin$ServerLevelPatch",
+    "core/other/VehicleEntityPlaceMixin$BoatPatch",
+    "core/other/VehicleEntityPlaceMixin$MinecartPatch",
+    "core/other/VehicleEntityPlaceMixin$MinecartDispensePatch",
+    "core/other/VehicleEntityBreakMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

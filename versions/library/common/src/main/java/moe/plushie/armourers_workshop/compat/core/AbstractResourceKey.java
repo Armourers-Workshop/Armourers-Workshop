@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
-@Available("[16, 26)")
+@Available("[21, 26)")
 public interface AbstractResourceKey extends Supplier<ResourceLocation> {
 
     static OpenResourceKey wrap(ResourceLocation location) {
@@ -19,6 +19,6 @@ public interface AbstractResourceKey extends Supplier<ResourceLocation> {
 
     @Override
     default ResourceLocation get() {
-        return ResourceLocation.create(namespace(), path());
+        return ResourceLocation.fromNamespaceAndPath(namespace(), path());
     }
 }

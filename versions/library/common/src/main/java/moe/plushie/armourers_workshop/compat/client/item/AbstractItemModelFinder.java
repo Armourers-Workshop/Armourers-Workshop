@@ -18,8 +18,8 @@ import java.util.HashSet;
 @Available("[16, 26)")
 public class AbstractItemModelFinder {
 
-    private static final ResourceLocation MARKER_ID = ResourceLocation.withDefaultNamespace("skin/generated");
-    private static final ResourceLocation ITEM_ID = ResourceLocation.withDefaultNamespace("item/generated");
+    private static final ResourceLocation MARKER_ID = OpenResourceKey.withDefaultNamespace("skin/generated").get();
+    private static final ResourceLocation ITEM_ID = OpenResourceKey.withDefaultNamespace("item/generated").get();
 
     private static final HashSet<BlockModel> MARK_MODELS = new HashSet<>();
 

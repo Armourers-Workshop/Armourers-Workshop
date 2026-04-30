@@ -1,0 +1,13 @@
+package moe.plushie.armourers_workshop.compat.api.entity;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+
+@Available("[16, )")
+public interface ArrowAccessor extends ProjectileAccessor {
+
+    @Override
+    default AbstractArrow aw2$self() {
+        return (AbstractArrow) this;
+    }
+}

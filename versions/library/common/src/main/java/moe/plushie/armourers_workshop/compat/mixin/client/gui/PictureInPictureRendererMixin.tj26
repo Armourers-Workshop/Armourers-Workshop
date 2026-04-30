@@ -1,0 +1,26 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.gui;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.gui.renderer.AbstractComposeGuiGraphicsRenderer;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.renderer.Projection;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Available("[26, )")
+@Mixin(PictureInPictureRenderer.class)
+public class PictureInPictureRendererMixin {
+
+    @WrapOperation(method = "prepareTexturesAndProjection", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Projection;setupOrtho(FFFFZ)V"))
+    private void aw2$setupOrtho(Projection instance, float zNear, float zFar, float width, float height, boolean invertY, Operation<Void> original) {
+        var pipelineRenderer = Objects.safeCast(this, AbstractComposeGuiGraphicsRenderer.class);
+        if (pipelineRenderer != null) {
+            zNear = pipelineRenderer.getNear();
+            zFar = pipelineRenderer.getFar();
+        }
+        original.call(instance, zNear, zFar, width, height, invertY);
+    }
+}

@@ -67,31 +67,23 @@ public class SkinPartElement implements IGraphicsElement {
 
     @Override
     public void prepare(IGraphicsContext context) {
-        // debug render without vbo.
+        // submit skin vertex without vbo when debug render mode.
         if (ModDebugger.withoutVBO) {
             submitWithoutVBO(context);
             return;
         }
-        // save ctm.
-        var ms = AbstractModelViewStack.getInstance();
-        var src = context.ctm().last();
-        var dest = new OpenPoseStack.Pose();
-        // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
-        dest.setProperties(src.properties());
-        dest.pose().set(ms.last());
-        dest.pose().multiply(src.pose());
-        dest.normal().set(src.normal());
         // submit skin vertex into graphics.
-        var collector = new Collector(COMPILER, PIPELINE);
-        submitWithVBO(dest, collector);
-        collector.submit(context);
+        submitWithVBO(context);
     }
 
-    private void submitWithVBO(OpenPoseStack.Pose pose, Collector collector) {
-        collector.draw(part, skin, scheme, lightmap, overlay, pose, false, outlineColor, renderPriority);
+    private void submitWithVBO(IGraphicsContext context) {
+        var collector = Collector.newInstance(COMPILER, PIPELINE);
+        collector.prepare(context);
+        collector.draw(part, skin, scheme, lightmap, overlay, false, outlineColor, renderPriority);
         if (shouldRenderOutline()) {
-            collector.draw(part, skin, scheme, lightmap, overlay, pose, true, outlineColor, renderPriority);
+            collector.draw(part, skin, scheme, lightmap, overlay, true, outlineColor, renderPriority);
         }
+        collector.submit(context);
     }
 
     private void submitWithoutVBO(IGraphicsContext context) {
@@ -137,17 +129,34 @@ public class SkinPartElement implements IGraphicsElement {
 
     private static class Collector {
 
-        private final ConcurrentBufferCompiler compiler;
-        private final ConcurrentRenderingPipeline pipeline;
+        private static final ObjectPool<Collector> POOL = ObjectPool.create(Collector::new);
 
+        private ConcurrentBufferCompiler compiler;
+        private ConcurrentRenderingPipeline pipeline;
+
+        private final OpenPoseStack.Pose pose = new OpenPoseStack.Pose();
         private final HashSet<IRenderType> usingTypes = new HashSet<>();
 
-        public Collector(ConcurrentBufferCompiler compiler, ConcurrentRenderingPipeline pipeline) {
-            this.compiler = compiler;
-            this.pipeline = pipeline;
+        public static Collector newInstance(ConcurrentBufferCompiler compiler, ConcurrentRenderingPipeline pipeline) {
+            var collector = POOL.alloc();
+            collector.compiler = compiler;
+            collector.pipeline = pipeline;
+            return collector;
         }
 
-        public void draw(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, int lightmap, int overlay, OpenPoseStack.Pose pose, boolean isOutline, int outlineColor, float renderPriority) {
+        public void prepare(IGraphicsContext context) {
+            var ms = AbstractModelViewStack.getInstance();
+            var src = context.ctm().last();
+            // https://web.archive.org/web/20240125142900/http://www.songho.ca/opengl/gl_normaltransform.html
+            pose.setProperties(src.properties());
+            pose.pose().set(ms.last());
+            pose.pose().multiply(src.pose());
+            pose.normal().set(src.normal());
+            // reset the using types.
+            usingTypes.clear();
+        }
+
+        public void draw(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, int lightmap, int overlay, boolean isOutline, int outlineColor, float renderPriority) {
             // we need compile the skin part, but not render when part invisible.
             var group = compiler.compile(part, skin, scheme, isOutline);
             if (group == null || group.isEmpty() || !part.isVisible()) {

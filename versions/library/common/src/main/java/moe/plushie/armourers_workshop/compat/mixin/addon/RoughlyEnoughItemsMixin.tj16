@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.mixin.addon;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.compat.client.entity.state.AbstractItemStackRenderState;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+@Available("[16, 18)")
+@Conditional("roughlyenoughitems")
+@Pseudo
+@Mixin(targets = "me.shedaniel.rei.plugin.client.entry.ItemEntryDefinition$ItemEntryRenderer")
+public class RoughlyEnoughItemsMixin {
+
+    // https://github.com/shedaniel/RoughlyEnoughItems/blob/6.x/runtime/src/main/java/me/shedaniel/rei/plugin/client/entry/ItemEntryDefinition.java#L233
+    @Redirect(method = "getExtraData", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;getModel(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/client/resources/model/BakedModel;", remap = true), remap = false)
+    private BakedModel aw2$getModel(ItemRenderer instance, ItemStack itemStack, Level level, LivingEntity livingEntity) {
+        AbstractItemStackRenderState.startRenderGuiItem(itemStack);
+        var bakedModel = instance.getModel(itemStack, level, livingEntity);
+        AbstractItemStackRenderState.endRenderGuiItem(itemStack);
+        return bakedModel;
+    }
+}

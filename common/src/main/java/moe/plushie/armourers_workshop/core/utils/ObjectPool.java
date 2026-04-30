@@ -9,13 +9,13 @@ import java.util.function.Supplier;
 
 public class ObjectPool<T> {
 
-    private final Supplier<T> creator;
+    private final Supplier<T> factory;
     private final Deque<T> reusable;
     private final AutoreleasePool<Page> autoreleasePool;
 
-    protected ObjectPool(Supplier<T> creator, boolean isConcurrent) {
+    protected ObjectPool(Supplier<T> factory, boolean isConcurrent) {
         this.autoreleasePool = new AutoreleasePool<>(Page::new);
-        this.creator = creator;
+        this.factory = factory;
         if (isConcurrent) {
             this.reusable = new ConcurrentLinkedDeque<>();
         } else {
@@ -23,12 +23,12 @@ public class ObjectPool<T> {
         }
     }
 
-    public static <T> ObjectPool<T> create(Supplier<T> creator) {
-        return create(creator, false);
+    public static <T> ObjectPool<T> create(Supplier<T> factory) {
+        return new ObjectPool<>(factory, false);
     }
 
-    public static <T> ObjectPool<T> create(Supplier<T> creator, boolean isConcurrent) {
-        return new ObjectPool<>(creator, isConcurrent);
+    public static <T> ObjectPool<T> create(Supplier<T> factory, boolean isConcurrent) {
+        return new ObjectPool<>(factory, isConcurrent);
     }
 
     protected void recycle(List<T> objects, List<T> rollback) {
@@ -51,7 +51,7 @@ public class ObjectPool<T> {
         var page = autoreleasePool.get();
         var value = reusable.poll();
         if (value == null) {
-            value = creator.get();
+            value = factory.get();
         }
         page.track(value);
         return value;

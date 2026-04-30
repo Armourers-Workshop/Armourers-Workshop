@@ -21,8 +21,6 @@ import java.nio.FloatBuffer;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractPoseStackImpl {
 
-    protected static final ObjectPool<OpenPoseStack> REUSABLE_QUEUE = ObjectPool.create(OpenPoseStack::new);
-
     private static final Matrix3f CONVERTER_MAT3 = new Matrix3f();
     private static final Matrix4f CONVERTER_MAT4 = new Matrix4f();
 

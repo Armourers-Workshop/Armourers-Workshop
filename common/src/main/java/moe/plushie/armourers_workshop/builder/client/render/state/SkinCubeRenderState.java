@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.builder.client.render.state;
 
+import moe.plushie.armourers_workshop.core.blockentity.UpdatableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.render.state.BlockEntityRenderState;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.paint.IBlockPaintable;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class SkinCubeRenderState extends BlockEntityRenderState {
 
@@ -21,7 +21,7 @@ public class SkinCubeRenderState extends BlockEntityRenderState {
         return markerTotal;
     }
 
-    public static <T extends BlockEntity & IBlockPaintable> void extract(T entity, SkinCubeRenderState renderState) {
+    public static <T extends UpdatableBlockEntity & IBlockPaintable> void extract(T entity, SkinCubeRenderState renderState) {
         // extract the side color into colors.
         var markers = 0;
         for (var direction : OpenDirection.values()) {

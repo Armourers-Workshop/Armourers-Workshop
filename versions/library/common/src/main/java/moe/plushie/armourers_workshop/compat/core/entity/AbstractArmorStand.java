@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compat.core.entity;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IEntityDataBuilder;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.compat.api.entity.LivingEntityAccessor;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 @Available("[16, )")
-public class AbstractArmorStand extends AbstractArmorStandImpl implements AbstractEntityHandler {
+public class AbstractArmorStand extends AbstractArmorStandImpl implements AbstractEntityHandler, LivingEntityAccessor {
 
     public AbstractArmorStand(EntityType<? extends ArmorStand> entityType, Level level) {
         super(entityType, level);

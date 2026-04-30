@@ -1,0 +1,42 @@
+package moe.plushie.armourers_workshop.compat.forge.mixin.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.SerializationContext;
+import moe.plushie.armourers_workshop.core.utils.TagSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[18, 21)")
+@Mixin(AbstractBlockEntity.class)
+public abstract class ForgeBlockEntityHandlerMixin extends BlockEntity {
+
+    private ForgeBlockEntityHandlerMixin() {
+        super(null, null, null);
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        var blockEntity = AbstractBlockEntity.class.cast(this);
+        var result = blockEntity.getVisibleBox(blockEntity.getBlockState());
+        if (result != null) {
+            return result;
+        }
+        return super.getRenderBoundingBox();
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        var blockEntity = AbstractBlockEntity.class.cast(this);
+        var dataPacket = blockEntity.getUpdateDataPacket();
+        if (dataPacket != null) {
+            var tag = Objects.requireNonNullElseGet(pkt.getTag(), CompoundTag::new);
+            dataPacket.handle(new TagSerializer(tag, SerializationContext.from(blockEntity)));
+        }
+    }
+}

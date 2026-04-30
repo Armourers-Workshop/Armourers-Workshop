@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
 import moe.plushie.armourers_workshop.api.client.state.IBlockEntityRenderState;
+import moe.plushie.armourers_workshop.compat.api.blockentity.BlockEntityAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class BlockEntityRenderState extends RenderState implements IBlockEntityRenderState {
 
@@ -12,7 +12,7 @@ public class BlockEntityRenderState extends RenderState implements IBlockEntityR
         return blockPos;
     }
 
-    public static void extract(BlockEntity entity, BlockEntityRenderState renderState) {
-        renderState.blockPos = entity.getBlockPos();
+    public static void extract(BlockEntityAccessor entity, BlockEntityRenderState renderState) {
+        renderState.blockPos = entity.aw2$getBlockPos();
     }
 }

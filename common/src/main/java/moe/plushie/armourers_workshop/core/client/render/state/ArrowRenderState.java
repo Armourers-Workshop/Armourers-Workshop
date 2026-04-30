@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import moe.plushie.armourers_workshop.compat.api.entity.ArrowAccessor;
 
 public class ArrowRenderState extends EntityRenderState {
 
-    public static void extract(AbstractArrow entity, ArrowRenderState renderState) {
+    public static void extract(ArrowAccessor entity, ArrowRenderState renderState) {
 
     }
 }

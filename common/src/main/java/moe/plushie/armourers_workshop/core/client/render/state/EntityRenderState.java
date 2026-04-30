@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
 import moe.plushie.armourers_workshop.api.client.state.IEntityRenderState;
+import moe.plushie.armourers_workshop.compat.api.entity.EntityAccessor;
 import moe.plushie.armourers_workshop.core.client.bake.BakedArmature;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
@@ -12,7 +13,6 @@ import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentPose;
 import moe.plushie.armourers_workshop.core.skin.attachment.SkinAttachmentType;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkin;
 import moe.plushie.armourers_workshop.core.utils.OpenEquipmentSlot;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.HashMap;
@@ -147,23 +147,23 @@ public class EntityRenderState extends RenderState implements IEntityRenderState
         return shouldRenderInGUI;
     }
 
-    public static void extract(Entity entity, EntityRenderState renderState) {
-        var renderData = EntityRenderData.of(entity);
+    public static void extract(EntityAccessor entity, EntityRenderState renderState) {
+        var renderData = EntityRenderData.of(entity.aw2$self());
         //
-        renderState.id = entity.getId();
-        renderState.type = entity.getType();
-        renderState.outlineColor = entity.getOutlineColor();
-        renderState.x = entity.getX();
-        renderState.y = entity.getY();
-        renderState.z = entity.getZ();
-        renderState.xo = entity.xOld;
-        renderState.yo = entity.yOld;
-        renderState.zo = entity.zOld;
+        renderState.id = entity.aw2$id();
+        renderState.type = entity.aw2$type();
+        renderState.outlineColor = entity.aw2$self().getOutlineColor();
+        renderState.x = entity.aw2$x();
+        renderState.y = entity.aw2$y();
+        renderState.z = entity.aw2$z();
+        renderState.xo = entity.aw2$xOld();
+        renderState.yo = entity.aw2$yOld();
+        renderState.zo = entity.aw2$zOld();
         renderState.isFlying = false;
         renderState.isFallFlying = false;
         renderState.isBaby = false;
-        renderState.isInvisible = entity.isInvisible();
-        renderState.entityTexture = PlayerSkinLoader.getInstance().loadSkin(entity);
+        renderState.isInvisible = entity.aw2$isInvisible();
+        renderState.entityTexture = PlayerSkinLoader.getInstance().loadSkin(entity.aw2$self());
         renderState.animationManager = renderData.animationManager();
         renderState.attachmentManager = renderData.attachmentManager();
         //

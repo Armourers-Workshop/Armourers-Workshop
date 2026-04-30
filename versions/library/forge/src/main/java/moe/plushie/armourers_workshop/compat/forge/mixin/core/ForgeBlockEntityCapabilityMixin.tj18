@@ -1,0 +1,44 @@
+package moe.plushie.armourers_workshop.compat.forge.mixin.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
+import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntity;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgeBlockEntityCapability;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Available("[18, 21)")
+@Mixin(AbstractBlockEntity.class)
+public abstract class ForgeBlockEntityCapabilityMixin extends BlockEntity {
+
+    private ForgeBlockEntityCapabilityMixin() {
+        super(null, null, null);
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction arg) {
+        var blockEntity1 = AbstractBlockEntity.class.cast(this);
+        var capability1 = AbstractForgeBlockEntityCapability.wrap(capability);
+        var result = blockEntity1.getCapability(capability1, AbstractDirection.wrap(arg));
+        if (result != null) {
+            return LazyOptional.of(() -> result);
+        }
+        return LazyOptional.empty();
+    }
+
+    // replace the implementation with calling super.getCapability
+    @Inject(method = "abi$getCapability", at = @At("HEAD"), cancellable = true, remap = false)
+    private <T> void aw2$super$getCapability(IBlockEntityCapability<T> capability, OpenDirection dir, CallbackInfoReturnable<T> cir) {
+        var capability1 = AbstractForgeBlockEntityCapability.unwrap(capability);
+        var result = super.getCapability(capability1, AbstractDirection.unwrap(dir));
+        cir.setReturnValue(result.resolve().orElse(null));
+    }
+}

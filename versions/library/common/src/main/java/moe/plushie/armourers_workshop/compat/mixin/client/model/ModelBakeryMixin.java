@@ -1,0 +1,52 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.model;
+
+import com.mojang.datafixers.util.Either;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.item.AbstractItemModelFinder;
+import net.minecraft.client.renderer.block.model.BlockElement;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+@Available("[21, 26)")
+public class ModelBakeryMixin {
+
+    @Mixin(BlockModel.class)
+    public static class ModelPatch {
+
+        @Shadow
+        protected ResourceLocation parentLocation;
+
+        @Inject(method = "<init>", at = @At("TAIL"))
+        private void aw2$init(ResourceLocation parent, List<BlockElement> elements, Map<String, Either<Material, String>> textureMap, @Nullable Boolean hasAmbientOcclusion, @Nullable BlockModel.GuiLight guiLight, ItemTransforms itemTransforms, List<ItemOverride> overrides, CallbackInfo ci) {
+            parentLocation = AbstractItemModelFinder.resolve(BlockModel.class.cast(this), parentLocation);
+        }
+
+        @Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Z)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("RETURN"))
+        private void aw2$bake(ModelBaker modelBaker, BlockModel blockModel, Function<Material, TextureAtlasSprite> textureMap, ModelState modelState, boolean bl, CallbackInfoReturnable<BakedModel> cir) {
+            AbstractItemModelFinder.accept(BlockModel.class.cast(this), cir.getReturnValue());
+        }
+    }
+
+    @Mixin(ModelBakery.class)
+    public static class BakeryPatch {
+    }
+}

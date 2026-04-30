@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.forge.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "client/renderer/ForgeBlockEntityRendererMixin",
+    "client/other/ForgeKeyMappingMixin",
+    "addon/ForgeAccessoriesApiMixin"
+  ],
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

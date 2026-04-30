@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.compat.forge.mixin",
+  "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "addon/ForgeAccessoriesApiMixin",
+    "client/renderer/ForgeItemRendererMixin",
+    "client/renderer/ForgeEpicFightRendererMixin",
+    "client/renderer/ForgeEpicFightFirstPersonRendererMixin",
+    "client/renderer/ForgeEpicFightShieldRendererMixin",
+    "client/renderer/ForgeTacZeroItemRenderMixin",
+    "client/dynamiclight/ForgeRyoamicLightsMixin$ItemLightHandler",
+    "client/dynamiclight/ForgeRyoamicLightsMixin$EntityLightHandler",
+    "client/dynamiclight/ForgeRyoamicLightsMixin$BlockEntityLightHandler",
+    "client/dynamiclight/ForgeLambDynamicLightsMixin$ItemLightHandler",
+    "client/dynamiclight/ForgeLambDynamicLightsMixin$EntityLightHandler",
+    "client/dynamiclight/ForgeLambDynamicLightsMixin$BlockEntityLightHandler",
+    "client/dynamiclight/ForgeSodiumDynamicLightsMixin$ItemLightHandler",
+    "client/dynamiclight/ForgeSodiumDynamicLightsMixin$EntityLightHandler",
+    "client/dynamiclight/ForgeSodiumDynamicLightsMixin$BlockEntityLightHandler",
+    "client/backpack/ForgeMrcrayfishBackpackRendererMixin",
+    "client/backpack/ForgeTravelersBackpackRendererMixin",
+    "client/backpack/ForgeSophisticatedBackpackRendererMixin"
+  ],
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

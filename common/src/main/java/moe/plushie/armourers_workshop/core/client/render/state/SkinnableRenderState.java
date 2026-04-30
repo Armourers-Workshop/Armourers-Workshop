@@ -19,7 +19,7 @@ public class SkinnableRenderState extends BlockEntityRenderState {
     }
 
     public static void extract(SkinnableBlockEntity entity, SkinnableRenderState renderState) {
-        var blockState = entity.getBlockState();
+        var blockState = entity.aw2$getBlockState();
         var renderData = BlockEntityRenderData.of(entity);
         if (renderData == null) {
             return;

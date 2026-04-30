@@ -1,0 +1,11 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.shader;
+
+import com.mojang.blaze3d.shaders.ProgramManager;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[16, 18)")
+@Mixin(ProgramManager.class)
+public abstract class ShaderVanillaMixin {
+    // nop
+}

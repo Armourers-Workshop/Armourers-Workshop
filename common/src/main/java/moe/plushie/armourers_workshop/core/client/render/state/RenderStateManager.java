@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.render.state;
 
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
 import java.util.ArrayList;
@@ -39,21 +40,39 @@ public class RenderStateManager<T, S extends RenderState> {
 
     public static <T, S extends RenderState> RenderStateManager<T, S> create(T entity) {
         return Objects.unsafeCast(EXTRACTORS.computeIfAbsent(entity.getClass(), clazz -> {
-            ArrayList<Entry<?, ?>> selected = new ArrayList<>();
-            while (clazz != null && clazz != Object.class) {
-                var entry = ENTITIES.get(clazz);
+            var selectedEntries = new ArrayList<Entry<?, ?>>();
+            for (var selectedClass : getHierarchy(clazz)) {
+                var entry = ENTITIES.get(selectedClass);
                 if (entry != null) {
-                    selected.add(entry);
+                    selectedEntries.add(entry);
                 }
-                clazz = clazz.getSuperclass();
             }
-            return new RenderStateManager<>(selected);
+            return new RenderStateManager<>(selectedEntries);
         }));
     }
 
     public static <T, S extends RenderState> void register(Class<T> entityClass, Supplier<S> stateFactory, BiConsumer<T, S> extractHandler) {
         var entry = new Entry<>(entityClass, stateFactory, extractHandler);
         ENTITIES.put(entityClass, entry);
+    }
+
+    private static ArrayList<Class<?>> getHierarchy(Class<?> clazz) {
+        var inherited = new ArrayList<Class<?>>();
+        var interfaces = new ArrayList<Class<?>>();
+        while (clazz != null && clazz != Object.class) {
+            // search all interfaces.
+            var pending = Collections.newList(clazz.getInterfaces());
+            for (var i = 0; i < pending.size(); ++i) {
+                var it = pending.get(i);
+                interfaces.remove(it);
+                interfaces.add(it);
+                pending.addAll(i + 1, Collections.newList(it.getInterfaces()));
+            }
+            inherited.add(clazz);
+            clazz = clazz.getSuperclass();
+        }
+        inherited.addAll(interfaces);
+        return inherited;
     }
 
     private static class Entry<T, S> {

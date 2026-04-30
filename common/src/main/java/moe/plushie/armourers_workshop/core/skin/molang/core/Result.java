@@ -27,7 +27,7 @@ public class Result implements BooleanSupplier, DoubleSupplier {
 
     private final Object referenceValue;
 
-    public Result(Type type, double doubleValue, String stringValue, List<Result> arrayValue, Map<Name, Result> structValue, Object referenceValue) {
+    private Result(Type type, double doubleValue, String stringValue, List<Result> arrayValue, Map<Name, Result> structValue, Object referenceValue) {
         this.type = type;
         this.doubleValue = doubleValue;
         this.stringValue = stringValue;

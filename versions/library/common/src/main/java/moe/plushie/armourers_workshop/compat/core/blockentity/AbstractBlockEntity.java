@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IBlockEntity;
 import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
+import moe.plushie.armourers_workshop.compat.api.blockentity.BlockEntityAccessor;
 import moe.plushie.armourers_workshop.core.network.BlockEntityDataPacket;
 import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @Available("[16, )")
-public abstract class AbstractBlockEntity extends AbstractBlockEntityImpl implements IBlockEntity {
+public abstract class AbstractBlockEntity extends AbstractBlockEntityImpl implements IBlockEntity, BlockEntityAccessor {
 
     public AbstractBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
