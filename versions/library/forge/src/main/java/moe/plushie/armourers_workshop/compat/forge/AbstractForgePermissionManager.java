@@ -46,10 +46,10 @@ public abstract class AbstractForgePermissionManager {
                 if (!hasPermissionAPI()) {
                     return true;
                 }
-                if (player instanceof ServerPlayer) {
-                    return PermissionAPI.getPermission((ServerPlayer) player, node, makeContexts(context));
+                if (player instanceof ServerPlayer serverPlayer) {
+                    return PermissionAPI.getPermission(serverPlayer, node, makeContexts(context));
                 }
-                return false;
+                return true;
             }
 
             @Override
