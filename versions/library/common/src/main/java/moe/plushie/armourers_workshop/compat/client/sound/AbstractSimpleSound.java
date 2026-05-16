@@ -9,18 +9,21 @@ public class AbstractSimpleSound {
     private final OpenResourceKey id;
     private final String name;
 
-    private final float volume = 1.0f;
-    private final float pitch = 1.0f;
+    private final float volume;
+    private final float pitch;
     private final int weight = 1; // must > 0
-    private final int attenuationDistance = 16;
+    private final int attenuationDistance;
 
-    public AbstractSimpleSound(OpenResourceKey id, String name) {
+    public AbstractSimpleSound(OpenResourceKey id, String name, float volume, float pitch, int attenuationDistance) {
         this.id = id;
         this.name = name;
+        this.volume = volume;
+        this.pitch = pitch;
+        this.attenuationDistance = attenuationDistance;
     }
 
-    public static AbstractSimpleSound create(OpenResourceKey id, String name) {
-        return new AbstractSimpleSound(id, name);
+    public static AbstractSimpleSound create(OpenResourceKey id, String name, float volume, float pitch, int attenuationDistance) {
+        return new AbstractSimpleSound(id, name, volume, pitch, attenuationDistance);
     }
 
     public OpenResourceKey id() {

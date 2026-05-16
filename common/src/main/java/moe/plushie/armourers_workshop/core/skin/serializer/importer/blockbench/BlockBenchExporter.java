@@ -801,7 +801,7 @@ public class BlockBenchExporter {
                 if (name == null || !name.contains("|")) {
                     return SkinSoundProperties.EMPTY;
                 }
-                // mod_id:sound_name|volume|pitch
+                // mod_id:sound_name|volume|pitch|attenuation_distance
                 var parts = name.split("\\|");
                 var properties = new SkinSoundProperties();
                 try {
@@ -811,8 +811,11 @@ public class BlockBenchExporter {
                     if (parts.length > 2) {
                         properties.setPitch(Float.parseFloat(parts[2]));
                     }
+                    if (parts.length > 3) {
+                        properties.setAttenuationDistance(Float.parseFloat(parts[3]));
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ModLog.warn("can't parse sound properties of: '{}'", name, e);
                 }
                 return properties;
             }

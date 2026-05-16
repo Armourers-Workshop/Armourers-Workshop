@@ -17,6 +17,7 @@ public class SkinSoundProperties implements ISkinSoundProperties {
 
     private static final SkinProperty<Float> VOLUME = SkinProperty.normal("Volume", 1.0f);
     private static final SkinProperty<Float> PITCH = SkinProperty.normal("Pitch", 1.0f);
+    private static final SkinProperty<Float> ATTENUATION_DISTANCE = SkinProperty.normal("AttenuationDistance", 16.0f);
 
     private int flags = 0;
     private final SkinProperties storage = new SkinProperties();
@@ -65,6 +66,15 @@ public class SkinSoundProperties implements ISkinSoundProperties {
     @Override
     public float pitch() {
         return storage.get(PITCH);
+    }
+
+    public void setAttenuationDistance(float distance) {
+        storage.put(ATTENUATION_DISTANCE, distance);
+    }
+
+    @Override
+    public float attenuationDistance() {
+        return storage.get(ATTENUATION_DISTANCE);
     }
 
     public SkinSoundProperties copy() {

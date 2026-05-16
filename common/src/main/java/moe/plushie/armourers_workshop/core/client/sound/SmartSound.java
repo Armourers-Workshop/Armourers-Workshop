@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.skin.sound.ISkinSoundProvider;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundData;
 import moe.plushie.armourers_workshop.core.skin.sound.SkinSoundProperties;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
@@ -75,6 +76,18 @@ public class SmartSound extends ReferenceCounted {
 
     public OpenResourceKey location() {
         return location;
+    }
+
+    public float volume() {
+        return properties.volume();
+    }
+
+    public float pitch() {
+        return properties.pitch();
+    }
+
+    public int attenuationDistance() {
+        return OpenMath.roundi(properties.attenuationDistance());
     }
 
     protected void unbind() {

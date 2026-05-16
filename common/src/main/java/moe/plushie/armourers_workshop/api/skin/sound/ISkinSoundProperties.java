@@ -5,4 +5,6 @@ public interface ISkinSoundProperties {
     float volume();
 
     float pitch();
+
+    float attenuationDistance();
 }

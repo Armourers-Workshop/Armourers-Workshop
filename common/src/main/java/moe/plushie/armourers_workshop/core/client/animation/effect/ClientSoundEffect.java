@@ -72,11 +72,11 @@ public class ClientSoundEffect implements ScheduledExpression<Runnable> {
 
     private SoundInstance createSoundInstance(ExecutionContext context) {
         // this current entity is block entity?
-        if (context instanceof BlockEntitySelectorImpl<?> entity) {
+        if (context.entity() instanceof BlockEntitySelectorImpl<?> entity) {
             return SoundInstance.forBlockEntity(sound, entity.entity(), volume, pitch);
         }
         // the current entity is entity?
-        if (context instanceof EntitySelectorImpl<?> entity) {
+        if (context.entity() instanceof EntitySelectorImpl<?> entity) {
             return SoundInstance.forEntity(sound, entity.entity(), volume, pitch);
         }
         // the fallback is gui sounds, maybe?
