@@ -87,6 +87,14 @@ public abstract class SkinAnimationManager<K, V> {
     }
 
     /**
+     * Clear all animation info.
+     */
+    public void clear() {
+        load(Collections.emptyMap());
+        active(Collections.emptyMap());
+    }
+
+    /**
      * Maps an existing animation action identifier to a new identifier across all items.
      *
      * @param from the original action identifier to be remapped

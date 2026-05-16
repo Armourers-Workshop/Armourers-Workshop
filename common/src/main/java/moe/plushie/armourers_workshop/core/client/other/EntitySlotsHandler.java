@@ -91,6 +91,11 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         this.overriddenManager = new SkinOverriddenManager();
     }
 
+    protected void clear(T source) {
+        invalidateAll();
+        animationManager.clear();
+    }
+
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
         tickSlots(source, wardrobe);
         animationManager.tick(source, TickUtils.animationTick());

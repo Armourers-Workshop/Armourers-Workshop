@@ -13,14 +13,25 @@ public class EntityRenderData extends EntitySlotsHandler<Entity> {
     }
 
     public static EntityRenderData of(Entity entity) {
+        return of(entity, true);
+    }
+
+    public static EntityRenderData of(Entity entity, boolean lazy) {
         if (entity != null) {
-            return DataContainer.of(entity, KEY);
+            if (lazy) {
+                return DataContainer.of(entity, KEY);
+            }
+            return DataContainer.get(entity, KEY);
         }
         return null;
     }
 
     public void tick(Entity entity) {
         tick(entity, SkinWardrobe.of(entity));
+    }
+
+    public void remove(Entity entity) {
+        clear(entity);
     }
 }
 

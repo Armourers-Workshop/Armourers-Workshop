@@ -12,13 +12,24 @@ public class BlockEntityRenderData extends EntitySlotsHandler<BlockEntity> {
     }
 
     public static BlockEntityRenderData of(BlockEntity entity) {
+        return of(entity, true);
+    }
+
+    public static BlockEntityRenderData of(BlockEntity entity, boolean lazy) {
         if (entity != null) {
-            return DataContainer.of(entity, KEY);
+            if (lazy) {
+                return DataContainer.of(entity, KEY);
+            }
+            return DataContainer.get(entity, KEY);
         }
         return null;
     }
 
     public void tick(BlockEntity blockEntity) {
         tick(blockEntity, null);
+    }
+
+    public void remove(BlockEntity blockEntity) {
+        clear(blockEntity);
     }
 }

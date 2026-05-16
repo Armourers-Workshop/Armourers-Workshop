@@ -53,7 +53,7 @@ public class AbstractVehicleUpdater extends AbstractVehicleUpdaterImpl {
     }
 
     private void apply(Entity entity, float partialTick) {
-        var renderData = EntityRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity, false);
         if (renderData == null) {
             return;
         }

@@ -48,7 +48,11 @@
     "client/other/PoseStackMixin",
     "client/other/RenderTypeMixin",
 
-    "client/other/ClientLevelTickerMixin" ,
+    "client/other/ClientLevelTickerMixin",
+
+    "client/other/ClientEntityRemovalMixin",
+    "client/other/ClientBlockEntityRemovalMixin",
+
     "client/other/DynamicLightsOptifineMixin",
 
     "client/other/CameraMixin",

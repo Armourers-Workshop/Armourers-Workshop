@@ -20,7 +20,7 @@ public class ClientWardrobeHandler {
     }
 
     private static void tick(Entity entity) {
-        var renderData = EntityRenderData.of(entity);
+        var renderData = EntityRenderData.of(entity, false);
         if (renderData != null) {
             renderData.tick(entity);
         }
