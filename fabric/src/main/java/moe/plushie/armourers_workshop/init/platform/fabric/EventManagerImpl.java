@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricClientEvents;
 import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricCommonEvents;
+import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricEventDispatcher;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
 
@@ -15,6 +16,7 @@ public class EventManagerImpl extends EventManager {
     protected void init() {
         AbstractFabricCommonEvents.init();
         EnvironmentExecutor.runOnClient(() -> AbstractFabricClientEvents::init);
+        AbstractFabricEventDispatcher.init();
     }
 
     public static <E> IEventHandler<E> factory(Supplier<E> factory) {

@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.core.client.shader;
 
+import moe.plushie.armourers_workshop.api.client.IMeshData;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 
 public interface ShaderVertexObject {
 
-    ShaderVertexBuffer.Slice slice();
+    boolean isEmissive();
+
+    boolean isTranslucent();
+
+    boolean isOutline();
 
     int overlay();
 
@@ -16,17 +20,11 @@ public interface ShaderVertexObject {
 
     float polygonOffset();
 
+    IMeshData data();
+
     OpenPoseStack.Pose pose();
 
-    IVertexFormat format();
-
     IRenderType type();
-
-    boolean isEmissive();
-
-    boolean isTranslucent();
-
-    boolean isOutline();
 
     void retain();
 

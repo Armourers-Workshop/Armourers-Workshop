@@ -12,7 +12,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricConfigTracker {
+
     public static final FabricConfigTracker INSTANCE = new FabricConfigTracker();
+
     private final ConcurrentHashMap<String, FabricConfig> fileMap;
     private final EnumMap<FabricConfig.Type, Set<FabricConfig>> configSets;
     private final ConcurrentHashMap<String, Map<FabricConfig.Type, FabricConfig>> configsByMod;

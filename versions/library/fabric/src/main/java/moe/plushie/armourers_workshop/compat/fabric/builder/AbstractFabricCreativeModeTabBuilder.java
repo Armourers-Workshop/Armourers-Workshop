@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@Available("[20, )")
+@Available("[20, 26)")
 public class AbstractFabricCreativeModeTabBuilder<T extends CreativeModeTab> extends AbstractCreativeModeTabBuilder<T> {
 
     @Override

@@ -1,0 +1,49 @@
+package moe.plushie.armourers_workshop.compat.client.platform.opnegl;
+
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.core.utils.FastMapper;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+
+@Available("[26, )")
+public class AbstractGLVertexBufferImpl {
+
+    private static final FastMapper<VertexFormatElement.Type, Integer> TYPE_MAPPER = FastMapper.builder(VertexFormatElement.Type.FLOAT, GL20.GL_FLOAT, it -> {
+        it.put(VertexFormatElement.Type.FLOAT, GL20.GL_FLOAT);
+        it.put(VertexFormatElement.Type.UBYTE, GL20.GL_UNSIGNED_BYTE);
+        it.put(VertexFormatElement.Type.BYTE, GL20.GL_BYTE);
+        it.put(VertexFormatElement.Type.USHORT, GL20.GL_UNSIGNED_SHORT);
+        it.put(VertexFormatElement.Type.SHORT, GL20.GL_SHORT);
+        it.put(VertexFormatElement.Type.UINT, GL20.GL_UNSIGNED_INT);
+        it.put(VertexFormatElement.Type.INT, GL20.GL_INT);
+    });
+
+    public static void setupBufferState(IVertexFormat format, long address) {
+        var stride = format.byteSize();
+        var elements = format.get().getElements();
+        for (int index = 0; index < elements.size(); ++index) {
+            var element = elements.get(index);
+            var offset = format.get().getOffset(element);
+            GL20.glEnableVertexAttribArray(index);
+            setupVertexAttribute(index, element, stride, address + offset);
+        }
+    }
+
+    public static void clearBufferState(IVertexFormat format) {
+        var elements = format.get().getElements();
+        for (int index = 0; index < elements.size(); ++index) {
+            GL20.glDisableVertexAttribArray(index);
+        }
+    }
+
+    private static void setupVertexAttribute(int index, VertexFormatElement element, int stride, long pointer) {
+        var type = TYPE_MAPPER.getValue(element.type());
+        if (type != GL20.GL_FLOAT && !element.normalized()) {
+            GL30.glVertexAttribIPointer(index, element.count(), type, stride, pointer);
+        } else {
+            GL20.glVertexAttribPointer(index, element.count(), type, element.normalized(), stride, pointer);
+        }
+    }
+}

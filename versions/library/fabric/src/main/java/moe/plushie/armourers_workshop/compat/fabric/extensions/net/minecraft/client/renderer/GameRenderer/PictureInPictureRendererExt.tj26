@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.client.renderer.GameRenderer;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
@@ -16,6 +16,6 @@ import manifold.ext.rt.api.ThisClass;
 public class PictureInPictureRendererExt {
 
     public static <T extends PictureInPictureRenderState> void registerPictureInPictureRendererFA(@ThisClass Class<?> clazz, Class<T> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<T>> factory) {
-        SpecialGuiElementRegistry.register(context -> factory.apply(context.vertexConsumers()));
+        PictureInPictureRendererRegistry.register(context -> factory.apply(context.bufferSource()));
     }
 }

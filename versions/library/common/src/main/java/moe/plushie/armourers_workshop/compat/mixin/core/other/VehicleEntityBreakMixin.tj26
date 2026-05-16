@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class VehicleEntityBreakMixin {
 
-    // TODO: NO IMPL - 1.26
+    // TODO: NO IMPL - 26.1
 //    @Inject(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "HEAD"))
 //    public void aw2$spawnAtLocation(ItemStack itemStack, float f, CallbackInfoReturnable<ItemEntity> cir) {
 //        var result = SkinUtils.appendSkinIntoItemStack(Objects::hash, Entity.class.cast(this));

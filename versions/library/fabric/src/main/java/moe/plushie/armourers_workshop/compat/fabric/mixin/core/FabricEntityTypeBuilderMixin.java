@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.mixin.core;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.types.Type;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import net.minecraft.Util;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@Available("[16, 26)")
 @Mixin(EntityType.Builder.class)
 public class FabricEntityTypeBuilderMixin implements IAssociatedContainer {
 

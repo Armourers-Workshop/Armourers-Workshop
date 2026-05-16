@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.api.entity;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.world.entity.vehicle.Boat;
 
-@Available("[20, )")
+@Available("[20, 26)")
 public interface BoatAccessor extends VehicleEntityAccessor {
 
     @Override

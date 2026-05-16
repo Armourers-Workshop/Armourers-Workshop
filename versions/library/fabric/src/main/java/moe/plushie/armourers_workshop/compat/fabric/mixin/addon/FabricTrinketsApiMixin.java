@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-@Available("[18, )")
+@Available("[18, 26)")
 @Conditional("trinkets")
 @Pseudo
 @Mixin(TrinketsApi.class)

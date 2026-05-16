@@ -4,8 +4,6 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "addon/RoughlyEnoughItemsMixin",
-
     "client/gui/ExtendedScreenMixin",
     "client/gui/InventoryScreenMixin",
 
@@ -46,7 +44,10 @@
     "client/shader/ShaderIrisMixin",
 
     "client/other/PoseStackMixin",
+
     "client/other/RenderTypeMixin",
+
+    "client/other/ClientDataAttachMixin",
 
     "client/other/ClientLevelTickerMixin",
 
@@ -60,8 +61,6 @@
     "client/other/FallbackResourceManagerMixin"
   ],
   "mixins": [
-    "addon/KubeJSMixin",
-
     "core/accessor/EntityAccessorMixin",
     "core/accessor/LivingEntityAccessorMixin",
     "core/accessor/PlayerAccessorMixin",
@@ -73,6 +72,8 @@
     "core/accessor/BoatAccessorMixin",
     "core/accessor/MinecartAccessorMixin",
     "core/accessor/BlockEntityAccessorMixin",
+
+    "core/other/CommonDataAttachMixin",
 
     "core/other/EntitySelectorOptionsMixin",
 

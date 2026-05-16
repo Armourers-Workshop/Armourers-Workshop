@@ -10,7 +10,7 @@ public class AbstractItemProperties {
     public static SkinItemProperty getProperty(OpenResourceKey key) {
         var key1 = key.get();
         return (itemStack, entity, level, flags, displayContext) -> {
-            // TODO: NO IMPL - 1.26
+            // TODO: NO IMPL - 26.1
 //            var property = ItemProperties.getProperty(itemStack, location1);
 //            if (property != null) {
 //                return property.call(itemStack, (ClientLevel) level, (LivingEntity) entity, flags);

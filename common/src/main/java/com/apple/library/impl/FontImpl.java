@@ -52,12 +52,12 @@ public abstract class FontImpl {
     }
 
     public Style _getStyleByWidth(FormattedCharSequence value, float width) {
-        return font.getSplitter().componentStyleAtWidth(value, _f2i(width));
+        return font.componentStyleAtWidth(value, _f2i(width));
     }
 
     public <T> List<T> _splitLines(String value, float maxWidth, boolean bl, SliceTransform<T> transformer) {
         var results = new ArrayList<T>();
-        font.getSplitter().splitLines(value, _f2i(maxWidth), Style.EMPTY, bl, (style, bi, ei) -> {
+        font.splitLines(value, _f2i(maxWidth), Style.EMPTY, bl, (style, bi, ei) -> {
             results.add(transformer.accept(value.substring(bi, ei), bi, ei));
         });
         return results;

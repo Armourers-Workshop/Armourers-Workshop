@@ -5,15 +5,13 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-
-import java.nio.ByteBuffer;
+import moe.plushie.armourers_workshop.core.client.buffer.MeshData;
 
 @Available("[21, )")
 public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
 
     private final ByteBufferBuilder buffers;
+
     private BufferBuilder bufferBuilder;
 
     public AbstractBufferBuilder(int size) {
@@ -33,36 +31,17 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
     public void begin(IRenderType renderType) {
         var renderType1 = renderType.get();
         var builder = new BufferBuilder(buffers, renderType1.mode(), renderType1.format());
-        parent = builder;
-        bufferBuilder = builder;
+        this.parent = builder;
+        this.bufferBuilder = builder;
     }
 
     @Override
-    public IRenderedBuffer end() {
-        var meshData = bufferBuilder.buildOrThrow();
-        var format = AbstractVertexFormat.wrap(meshData.drawState().format());
-        return new IRenderedBuffer() {
-
-            @Override
-            public IVertexFormat format() {
-                return format;
-            }
-
-            @Override
-            public ByteBuffer vertexBuffer() {
-                return meshData.vertexBuffer();
-            }
-
-            @Override
-            public int vertexCount() {
-                return meshData.drawState().vertexCount();
-            }
-
-            @Override
-            public void release() {
-                meshData.close();
-            }
-        };
+    public MeshData end() {
+        try (var data = bufferBuilder.buildOrThrow()) {
+            var state = data.drawState();
+            var format = AbstractVertexFormat.create(state.format(), state.mode());
+            return new MeshData(data.vertexBuffer().duplicate(), state.vertexCount(), format);
+        }
     }
 
     public BufferBuilder bufferBuilder() {

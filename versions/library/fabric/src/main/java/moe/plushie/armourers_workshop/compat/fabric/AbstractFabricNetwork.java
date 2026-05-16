@@ -17,9 +17,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.LoginPacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -57,22 +55,23 @@ public class AbstractFabricNetwork {
         public void register() {
             Proxy.TYPE = new CustomPacketPayload.Type<>(channelName.get());
 
-            PayloadTypeRegistry.playC2S().register(Proxy.TYPE, Proxy.CODEC);
-            PayloadTypeRegistry.playS2C().register(Proxy.TYPE, Proxy.CODEC);
+            AbstractFabricPayloadRegistry.serverboundPlay().register(Proxy.TYPE, Proxy.CODEC);
+            AbstractFabricPayloadRegistry.clientboundPlay().register(Proxy.TYPE, Proxy.CODEC);
 
             AbstractFabricServerNetworking.registerQueryReceiver(this::onServerQueryEvent);
-            AbstractFabricServerNetworking.registerLoginReceiver(channelName.get(), this::onServerLoginEvent);
+
+            AbstractFabricServerNetworking.registerLoginReceiver(channelName, this::onServerLoginEvent);
             AbstractFabricServerNetworking.registerPlayReceiver(Proxy.TYPE, this::onServerPlayEvent);
 
             EnvironmentExecutor.runOnClient(() -> () -> {
-                AbstractFabricClientNetworking.registerLoginReceiver(channelName.get(), this::onClientLoginEvent);
+                AbstractFabricClientNetworking.registerLoginReceiver(channelName, this::onClientLoginEvent);
                 AbstractFabricClientNetworking.registerPlayReceiver(Proxy.TYPE, this::onClientEvent);
             });
         }
 
         public void onServerQueryEvent(MinecraftServer server, ServerLoginPacketListenerImpl handler, ServerLoginNetworking.LoginSynchronizer synchronizer, LoginPacketSender sender) {
             if (ModConfig.Common.enableProtocolCheck) {
-                sender.sendPacket(channelName.get(), PacketByteBufs.empty());
+                sender.sendPacket(channelName.get(), new FriendlyByteBuf(Unpooled.buffer()));
             }
         }
 

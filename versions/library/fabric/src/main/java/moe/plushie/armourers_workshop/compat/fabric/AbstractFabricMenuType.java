@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-@Available("[21, )")
+@Available("[21, 26)")
 public class AbstractFabricMenuType<C extends AbstractContainerMenu> extends AbstractMenuType<C> {
 
     private final MenuType<C> type;

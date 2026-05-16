@@ -1,6 +1,9 @@
 package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.world.entity.player.Player;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.FastMapper;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 
 import manifold.ext.rt.api.Extension;
@@ -10,9 +13,18 @@ import manifold.ext.rt.api.This;
 @Available("[26, )")
 public class PermissionExt {
 
+    private static final FastMapper<Integer, Permission> MAPPER = FastMapper.builder(0, null, it -> {
+        it.put(1, Permissions.COMMANDS_MODERATOR);
+        it.put(2, Permissions.COMMANDS_GAMEMASTER);
+        it.put(3, Permissions.COMMANDS_ADMIN);
+        it.put(4, Permissions.COMMANDS_OWNER);
+    });
+
     public static boolean hasPermissions(@This Player player, int level) {
-        // TODO: NO IMPL 26.1
-        //player.permissions().hasPermission(level);
+        var permission = MAPPER.getValue(level);
+        if (permission != null) {
+            return player.permissions().hasPermission(permission);
+        }
         return false;
     }
 }

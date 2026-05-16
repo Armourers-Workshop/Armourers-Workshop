@@ -4,11 +4,14 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "addon/RoughlyEnoughItemsMixin",
     "client/renderer/GameRendererMixin",
     "client/other/GlStateManagerMixin",
     "client/gui/GuiGraphicsMixin"
   ],
   "mixins": [
+    "addon/KubeJSMixin",
+    "core/datafix/V1460Mixin",
     "core/other/VehicleEntityPlaceMixin$ServerLevelPatch",
     "core/other/VehicleEntityPlaceMixin$BoatPatch",
     "core/other/VehicleEntityPlaceMixin$MinecartPatch",

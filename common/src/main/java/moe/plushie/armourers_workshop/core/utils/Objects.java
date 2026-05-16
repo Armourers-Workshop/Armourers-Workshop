@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -49,6 +50,12 @@ public class Objects {
             return value;
         }
         return defaultValue;
+    }
+
+    public static <S> void ifPresent(S src, Consumer<@NotNull S> consumer) {
+        if (src != null) {
+            consumer.accept(src);
+        }
     }
 
     public static int hash(Object... values) {

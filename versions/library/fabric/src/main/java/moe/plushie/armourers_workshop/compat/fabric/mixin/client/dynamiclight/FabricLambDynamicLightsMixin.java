@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Available("[20, )")
+@Available("[20, 26)")
 public class FabricLambDynamicLightsMixin {
 
     @Conditional("lambdynlights")

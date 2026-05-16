@@ -1,0 +1,37 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.attachment;
+
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[26, )")
+public class ParrotOnShoulderLayerMixin {
+
+    @Mixin(ParrotOnShoulderLayer.class)
+    public static class LayerPatch {
+
+        // TODO: NO IMPL 26.1 - @SAGESSE
+//        // we can't inject `ifPresent` by the `lambda$render$1` directly, because optifine will patch it, it will cause our mixin to fail.
+//
+//        @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At("HEAD"))
+//        private void aw2$renderOnShoulderPre(PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int i, Player player, float f, float g, float h, float j, boolean bl, CallbackInfo ci) {
+//            AbstractParrotOnShoulderLayer.push(poseStackIn, bufferSourceIn, i, player, bl);
+//        }
+//
+//        @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At("TAIL"))
+//        private void aw2$renderOnShoulderPost(PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int i, Player player, float f, float g, float h, float j, boolean bl, CallbackInfo ci) {
+//            AbstractParrotOnShoulderLayer.pop();
+//        }
+    }
+
+    @Mixin(ParrotOnShoulderLayer.class)
+    public static class ModelPatch {
+
+        // TODO: NO IMPL 26.1 - @SAGESSE
+//        @Inject(method = "renderOnShoulder", at = @At("HEAD"))
+//        private void aw2$renderOnShoulder(PoseStack poseStackIn, VertexConsumer vertexConsumer, int i, int j, float f, float g, float h, float k, int l, CallbackInfo ci) {
+//            AbstractParrotOnShoulderLayer.apply(poseStackIn);
+//        }
+    }
+}

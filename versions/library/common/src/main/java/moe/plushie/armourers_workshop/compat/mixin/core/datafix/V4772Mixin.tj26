@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.compat.mixin.core.datafix;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.util.filefix.access.FileRelation;
+import net.minecraft.util.filefix.fixes.DimensionStorageFileFix;
+import net.minecraft.util.filefix.operations.FileFixOperations;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
+
+@Available("[26, )")
+@Mixin(DimensionStorageFileFix.class)
+public class V4772Mixin {
+
+    @Inject(method = "makeFixer", at = @At("TAIL"))
+    private void aw2$makeFixer(CallbackInfo ci) {
+        var fixer = DimensionStorageFileFix.class.cast(this);
+        fixer.addFileFixOperation(FileFixOperations.applyInFolders(FileRelation.DATA, List.of(FileFixOperations.move("ArmourersWorkshop.dat", "armourers_workshop/capabilities.dat"), FileFixOperations.move("HolidayTracker.dat", "armourers_workshop/holiday_tracker.dat"))));
+    }
+}

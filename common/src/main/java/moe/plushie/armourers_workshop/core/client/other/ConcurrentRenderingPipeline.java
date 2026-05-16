@@ -1,24 +1,29 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.client.IMeshData;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.core.client.shader.Shader;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexBuffer;
+import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderDevice;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexObject;
+import moe.plushie.armourers_workshop.core.client.texture.ColorModulator;
+import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
+import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.client.texture.TextureAnimationController;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import moe.plushie.armourers_workshop.core.utils.ObjectPool;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
+import moe.plushie.armourers_workshop.core.utils.TickUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
-import java.util.function.Consumer;
+import java.util.List;
 
 public class ConcurrentRenderingPipeline {
+
+    private final AbstractRenderDevice device = AbstractRenderDevice.current();
 
     private final ArrayList<Group> sortedGroups = new ArrayList<>();
     private final IdentityHashMap<IRenderType, Group> unsortedGroups = new IdentityHashMap<>();
@@ -32,22 +37,66 @@ public class ConcurrentRenderingPipeline {
         return unsortedGroups.get(renderType);
     }
 
-    public void render(Shader shader, IRenderType renderType) {
+    public void beginTransaction() {
+        device.beginTransaction();
+    }
+
+    public void flush(IRenderType renderType) {
+        // find the pending render group.
         var group = unsortedGroups.get(renderType);
-        if (group.isEmpty()) {
+        if (group == null || group.isEmpty()) {
             return;
         }
-        shader.setupRenderState(group);
-        group.forEach(object -> shader.render(object, group));
-        shader.clearRenderState(group);
+        device.beginGroup();
+        device.setPolygonOffset(0.0f, -50.0f);
+
+        // apply changes of texture animation.
+        device.setTextureMatrix(group.getTextureMatrix(TickUtils.animationTick()));
+
+        for (var object : group.objects()) {
+            var pose = object.pose();
+            var result = object.data();
+
+            // we need fast update the uniforms,
+            // so we're never using from vanilla uniforms.
+            device.setMatrixFlags(pose.properties() | 0x01);
+            device.setColorModulator(ColorModulator.getColor(object.outlineColor()));
+            device.setObjectViewMatrix(pose.pose());
+            device.setObjectNormalMatrix(pose.normal());
+            device.setOverlayTextureMatrix(OverlayTexture.getTextureMatrix(object.overlay()));
+            device.setLightmapTextureMatrix(LightmapTexture.getTextureMatrix(object.lightmap(), object.isEmissive()));
+
+            // https://web.archive.org/web/20201010072314/https://sites.google.com/site/threejstuts/home/polygon_offset
+            // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
+            // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
+            // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
+            device.setPolygonOffset(0.0f, -50.0f + object.polygonOffset() * -1f);
+
+            // submit draw into renderer.
+            device.draw(result);
+        }
+
+        device.setPolygonOffset(0.0f, 0.0f);
+        device.endGroup();
 
         // clear after the rendering.
         group.clear();
     }
 
+    public void endTransaction() {
+        device.endTransaction();
+    }
+
     public void clear() {
         sortedGroups.clear();
         unsortedGroups.clear();
+    }
+
+    public void clear(IRenderType renderType) {
+        var group = unsortedGroups.get(renderType);
+        if (group != null) {
+            group.clear();
+        }
     }
 
     public int passCount() {
@@ -119,23 +168,23 @@ public class ConcurrentRenderingPipeline {
             objects.add(object);
         }
 
-        public void forEach(Consumer<ShaderVertexObject> consumer) {
-            objects.forEach(consumer);
-        }
-
         public void clear() {
             objects.forEach(ShaderVertexObject::release);
             objects.clear();
         }
 
-        @Override
-        public OpenMatrix4f getTextureMatrix(double animationTime) {
-            return animationController.getTextureMatrix(animationTime);
+        public List<? extends ShaderVertexObject> objects() {
+            return objects;
         }
 
         @Override
         public IRenderType renderType() {
             return renderType;
+        }
+
+        @Override
+        public OpenMatrix4f getTextureMatrix(double animationTime) {
+            return animationController.getTextureMatrix(animationTime);
         }
 
         @Override
@@ -147,7 +196,7 @@ public class ConcurrentRenderingPipeline {
         public int vertexCount() {
             var vertexTotal = 0;
             for (var object : objects) {
-                vertexTotal += object.slice().count();
+                vertexTotal += object.data().vertexCount();
             }
             return vertexTotal;
         }
@@ -192,8 +241,8 @@ public class ConcurrentRenderingPipeline {
         }
 
         @Override
-        public ShaderVertexBuffer.Slice slice() {
-            return compiledTask.slice;
+        public IMeshData data() {
+            return compiledTask.data;
         }
 
         @Override
@@ -204,14 +253,6 @@ public class ConcurrentRenderingPipeline {
         @Override
         public OpenPoseStack.Pose pose() {
             return pose;
-        }
-
-        @Override
-        public IVertexFormat format() {
-            if (compiledTask.format != null) {
-                return compiledTask.format;
-            }
-            return compiledTask.renderType.format();
         }
 
         @Override

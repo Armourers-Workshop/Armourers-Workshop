@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataStorage;
 import moe.plushie.armourers_workshop.core.holiday.ChristmasSeasonHandler;
 import moe.plushie.armourers_workshop.core.holiday.HalloweenSeasonHandler;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
@@ -71,7 +72,7 @@ public final class ModHolidays {
             if (holiday1.handler() == null) {
                 continue;
             }
-            var storage = server.overworld().getDataStorage().computeIfAbsent(HolidayTracker.TYPE);
+            var storage = AbstractSavedDataStorage.of(server).computeIfAbsent(HolidayTracker.TYPE);
             if (storage.has(player, holiday1)) {
                 continue; // the gift is already give to player in this year.
             }

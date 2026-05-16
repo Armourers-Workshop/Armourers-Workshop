@@ -1,0 +1,18 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.attachment;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[26, )")
+@Mixin(ItemInHandLayer.class)
+public class ItemInHandLayerMixin {
+
+    // TODO: NO IMPL 26.1 - @SAGESSE
+//    @Redirect(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+//    private void aw$translateToHand(ItemInHandRenderer renderer, LivingEntity livingEntity, ItemStack itemStackIn, ItemDisplayContext itemDisplayContext, boolean bl, PoseStack poseStackIn, MultiBufferSource bufferSourceIn, int i) {
+//        ClientAttachmentHandler.onRenderHand(livingEntity, itemStackIn, AbstractItemDisplayContext.wrap(itemDisplayContext), poseStackIn, bufferSourceIn, itemStack -> {
+//            renderer.renderItem(livingEntity, itemStack, itemDisplayContext, bl, poseStackIn, bufferSourceIn, i);
+//        });
+//    }
+}

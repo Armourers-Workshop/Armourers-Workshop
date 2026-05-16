@@ -13,7 +13,7 @@ public class AnimationModifier {
     public static void applyLimitLimbs(@This LivingEntity entity) {
         if (entity.walkAnimation.speed() > 0.25f) {
             entity.walkAnimation.setSpeed(0.25f);
-            // TODO: NO IMPL - 1.26
+            // TODO: NO IMPL - 26.1
             entity.walkAnimation.update(0, 1, 1); // keep position and set speedOld
             entity.walkAnimation.setSpeed(0.25f);
         }

@@ -4,6 +4,8 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "addon/FabricReplayMixin",
+    "addon/FabricTrinketsApiMixin",
     "addon/FabricAccessoriesApiMixin",
     "client/dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",
     "client/dynamiclight/FabricRyoamicLightsMixin$EntityLightHandler",

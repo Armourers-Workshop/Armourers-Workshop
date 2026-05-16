@@ -1,13 +1,14 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
+import moe.plushie.armourers_workshop.api.client.IMeshData;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderBuffer;
+import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderDevice;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.buffer.BufferBuilder;
 import moe.plushie.armourers_workshop.core.client.buffer.OutlineBufferBuilder;
-import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexBuffer;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTexture;
@@ -96,8 +97,7 @@ public class ConcurrentBufferCompiler {
                     faces.forEach(face -> face.render(part, scheme, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, poseStack1, builder));
                     poseStack1.popPose();
                 });
-                var renderedBuffer = builder.end();
-                var compiledTask = new Pass(builder.renderType(), renderedBuffer, part.renderPolygonOffset(), part.type(), pendingTask);
+                var compiledTask = new Pass(builder.renderType(), builder.end(), part.renderPolygonOffset(), part.type(), pendingTask);
                 usingTypes.add(renderType);
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
@@ -111,26 +111,22 @@ public class ConcurrentBufferCompiler {
     }
 
     private void link(ArrayList<Group> cachedTasks, ArrayList<Pass> buildingTasks) {
-        var totalRenderedBytes = 0;
-        var byteBuffers = new ArrayList<ByteBuffer>();
-
+        // collect the bytes and the count used bytes.
+        var totalBytes = 0;
+        var pendingBuffers = new ArrayList<ByteBuffer>();
         for (var compiledTask : buildingTasks) {
-            var renderedBuffer = compiledTask.bufferBuilder;
-            var format = renderedBuffer.format();
-            var byteBuffer = renderedBuffer.vertexBuffer().duplicate();
-            compiledTask.vertexCount = renderedBuffer.vertexCount();
-            compiledTask.vertexOffset = totalRenderedBytes;
-            compiledTask.bufferBuilder = null;
-            compiledTask.format = format;
-            byteBuffers.add(byteBuffer);
-            totalRenderedBytes += byteBuffer.remaining();
-            renderedBuffer.release();
+            var data = compiledTask.data;
+            var bytes = data.bytes().duplicate();
+            compiledTask.data = null;
+            compiledTask.offset = totalBytes;
+            pendingBuffers.add(bytes);
+            totalBytes += compiledTask.byteCount;
+            data.release();
         }
 
-        var mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
-        for (var byteBuffer : byteBuffers) {
-            mergedByteBuffer.put(byteBuffer);
-        }
+        // merge all buffers into a bigger buffer.
+        var mergedByteBuffer = ByteBuffer.allocateDirect(totalBytes);
+        pendingBuffers.forEach(mergedByteBuffer::put);
         mergedByteBuffer.rewind();
 
         // upload only be called in the render thread !!!
@@ -138,10 +134,10 @@ public class ConcurrentBufferCompiler {
     }
 
     private void upload(ByteBuffer byteBuffer, ArrayList<Group> cachedTasks) {
-        var vertexBuffer = ShaderVertexBuffer.newInstance();
-        vertexBuffer.upload(byteBuffer);
+        var device = AbstractRenderDevice.current();
+        var mergedBuffer = device.createBuffer(byteBuffer);
         for (var cachedTask : cachedTasks) {
-            cachedTask.buffer = vertexBuffer;
+            cachedTask.mergedBuffer = mergedBuffer;
             cachedTask.retain();
         }
     }
@@ -173,7 +169,7 @@ public class ConcurrentBufferCompiler {
         private ArrayList<Pass> mergedTasks;
         private ArrayList<ReferenceCounted> usingTypes;
 
-        private ShaderVertexBuffer buffer;
+        private AbstractRenderBuffer mergedBuffer;
 
         private boolean isComplied = false;
 
@@ -190,8 +186,8 @@ public class ConcurrentBufferCompiler {
             if (mergedTasks == null || usingTypes == null) {
                 return; // is released or not init.
             }
-            this.buffer.retain();
-            this.mergedTasks.forEach(it -> it.upload(buffer));
+            this.mergedBuffer.retain();
+            this.mergedTasks.forEach(it -> it.open(mergedBuffer));
             this.usingTypes.forEach(ReferenceCounted::retain);
             this.isComplied = true;
         }
@@ -199,13 +195,13 @@ public class ConcurrentBufferCompiler {
         @Override
         protected void dispose() {
             RenderSystem.assertOnRenderThread();
-            if (buffer == null || mergedTasks == null || usingTypes == null) {
+            if (mergedBuffer == null || mergedTasks == null || usingTypes == null) {
                 return; // is release
             }
             this.isComplied = false;
             this.usingTypes.forEach(ReferenceCounted::release);
             this.mergedTasks.forEach(Pass::close);
-            this.buffer.release();
+            this.mergedBuffer.release();
         }
 
         public List<Pass> passes() {
@@ -234,40 +230,45 @@ public class ConcurrentBufferCompiler {
         final boolean isOutline;
 
         final float polygonOffset;
+
         final SkinPartType partType;
+
+        final IVertexFormat format;
         final IRenderType renderType;
 
-        int vertexCount;
-        int vertexOffset;
+        final int byteCount;
+        final int vertexCount;
 
-        IRenderedBuffer bufferBuilder;
-        IVertexFormat format;
-
-        ShaderVertexBuffer.Slice slice;
+        int offset;
+        IMeshData data;
 
         boolean isCompiled = false;
 
-        Pass(IRenderType renderType, IRenderedBuffer bufferBuilder, float polygonOffset, SkinPartType partType, Group group) {
+        Pass(IRenderType renderType, IMeshData data, float polygonOffset, SkinPartType partType, Group group) {
+            this.renderType = renderType;
+            this.format = data.format();
+            this.data = data;
+            this.offset = 0;
+            this.byteCount = data.bytes().remaining();
+            this.vertexCount = data.vertexCount();
             this.group = group;
             this.partType = partType;
-            this.renderType = renderType;
-            this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
             this.isEmissive = renderType.isEmissive();
             this.isTranslucent = renderType.isTranslucent();
             this.isOutline = group.isOutline();
         }
 
-        public void upload(ShaderVertexBuffer buffer) {
-            this.slice = buffer.slice(vertexOffset, vertexCount, renderType.mode(), format);
-            this.slice.retain();
+        public void open(AbstractRenderBuffer buffer) {
+            this.data = buffer.slice(offset, vertexCount, format);
+            this.data.retain();
             this.isCompiled = true;
         }
 
         public void close() {
             this.isCompiled = false;
-            this.slice.release();
-            this.slice = null;
+            this.data.release();
+            this.data = null;
         }
 
         public void retain() {

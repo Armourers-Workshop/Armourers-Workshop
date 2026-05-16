@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
-import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
@@ -16,14 +15,10 @@ import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
@@ -44,12 +39,13 @@ public class CommonProxyImpl implements ModInitializer {
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);
 
-        UseBlockCallback.EVENT.register(this::onUseItemFirst);
-        EntitySleepEvents.ALLOW_BED.register(this::onAllowBed);
-        EntitySleepEvents.STOP_SLEEPING.register(this::onStopSleep);
         EntityLifecycleEvents.ALLOW_CLIMBING.register(this::onAllowClimbing);
 
-        AttackBlockCallback.EVENT.register(this::onBlockBreakPre);
+        EntityLifecycleEvents.ALLOW_BED.register(this::onAllowBed);
+        EntityLifecycleEvents.STOP_SLEEPING.register(this::onStopSleep);
+
+        EntityLifecycleEvents.USE_BLOCK.register(this::onUseItemFirst);
+        EntityLifecycleEvents.ATTACK_BLOCK.register(this::onBlockBreakPre);
 
         EnvironmentExecutor.didInit(EnvironmentType.COMMON);
 
@@ -62,15 +58,15 @@ public class CommonProxyImpl implements ModInitializer {
         EnvironmentExecutor.didSetup(EnvironmentType.COMMON);
     }
 
-    public InteractionResult onUseItemFirst(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
+    public OpenInteractionResult onUseItemFirst(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player.isSpectator()) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var itemStack = player.getItemInHand(hand);
         if (itemStack.getItem() instanceof AbstractItemHandler handler) {
-            return AbstractInteractionResult.unwrap(handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult)));
+            return handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult));
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 
     public OpenInteractionResult onAllowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState) {
@@ -83,11 +79,11 @@ public class CommonProxyImpl implements ModInitializer {
         return OpenInteractionResult.PASS;
     }
 
-    public InteractionResult onAllowBed(LivingEntity entity, BlockPos sleepingPos, BlockState blockState, boolean vanillaResult) {
+    public OpenInteractionResult onAllowBed(LivingEntity entity, BlockPos sleepingPos, BlockState blockState, boolean vanillaResult) {
         if (blockState.getBlock() instanceof AbstractBlock block && block.isBed(blockState, entity.level(), sleepingPos, entity)) {
-            return InteractionResult.SUCCESS;
+            return OpenInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return OpenInteractionResult.PASS;
     }
 
     public void onStopSleep(LivingEntity entity, BlockPos sleepingPos) {
@@ -98,21 +94,21 @@ public class CommonProxyImpl implements ModInitializer {
         }
     }
 
-    public InteractionResult onBlockBreakPre(Player player, Level level, InteractionHand hand, BlockPos pos, Direction direction) {
+    public OpenInteractionResult onBlockBreakPre(Player player, Level level, InteractionHand hand, BlockPos pos, Direction direction) {
         if (player.isSpectator()) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var blockState = level.getBlockState(pos);
         if (!(blockState.getBlock() instanceof AbstractBlock block)) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
         var result = block.attackBlock(level, pos, blockState, direction, player, AbstractInteractionHand.wrap(hand));
         if (result == OpenInteractionResult.CONSUME) {
-            return InteractionResult.FAIL;
+            return OpenInteractionResult.FAIL;
         }
         if (result == OpenInteractionResult.SUCCESS) {
-            return InteractionResult.PASS;
+            return OpenInteractionResult.PASS;
         }
-        return AbstractInteractionResult.unwrap(result);
+        return result;
     }
 }

@@ -1,0 +1,26 @@
+package moe.plushie.armourers_workshop.compat.client.platform.opnegl;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+
+@Available("[16, 18)")
+public class AbstractGLVertexBufferImpl {
+
+    public static void setupBufferState(IVertexFormat format, long address) {
+        var stride = format.byteSize();
+        var elements = format.get().getElements();
+        for (int index = 0; index < elements.size(); ++index) {
+            var element = elements.get(index);
+            element.setupBufferState(address, stride);
+            address += element.getByteSize();
+        }
+    }
+
+    public static void clearBufferState(IVertexFormat format) {
+        var elements = format.get().getElements();
+        for (int index = 0; index < elements.size(); ++index) {
+            var element = elements.get(index);
+            element.clearBufferState();
+        }
+    }
+}

@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
 
-@Available("[21, )")
+@Available("[18, )")
 public abstract class AbstractVertexFormatImpl implements IVertexFormat {
 
     protected static final FastMapper<Mode, VertexFormat.Mode> MODE_MAPPER = FastMapper.builder(Mode.LINES, VertexFormat.Mode.LINES, it -> {
@@ -18,7 +18,7 @@ public abstract class AbstractVertexFormatImpl implements IVertexFormat {
         it.put(Mode.QUADS, VertexFormat.Mode.QUADS);
     });
 
-    public static Mode wrap(VertexFormat.Mode mode) {
-        return MODE_MAPPER.getKey(mode);
+    public static AbstractVertexFormat create(VertexFormat format, VertexFormat.Mode mode) {
+        return new AbstractVertexFormat(format, MODE_MAPPER.getKey(mode));
     }
 }

@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedData;
+import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataStorage;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractSavedDataType;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
 import moe.plushie.armourers_workshop.core.utils.OpenClock;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 public class ModContext extends AbstractSavedData {
 
-    public static final AbstractSavedDataType<ModContext> TYPE = AbstractSavedDataType.create(ModContext::new, "ArmourersWorkshop");
+    public static final AbstractSavedDataType<ModContext> TYPE = AbstractSavedDataType.create(ModContext::new, "ArmourersWorkshop", "capabilities");
 
     private static final OpenClock CLOCK = new OpenClock();
     private static ModContext CURRENT;
@@ -33,7 +34,7 @@ public class ModContext extends AbstractSavedData {
     }
 
     public static void init(MinecraftServer server) {
-        CURRENT = server.overworld().getDataStorage().computeIfAbsent(TYPE);
+        CURRENT = AbstractSavedDataStorage.of(server).computeIfAbsent(TYPE);
     }
 
     public static void init(UUID t0, UUID t1) {

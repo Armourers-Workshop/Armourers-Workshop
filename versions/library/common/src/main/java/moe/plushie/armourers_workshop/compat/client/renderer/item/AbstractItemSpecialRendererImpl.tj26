@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.client.ISpecialModelRenderer;
 import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemSpecialRendererImpl {
 
-    public static MapCodec<? extends SpecialModelRenderer.Unbaked> getCodec(ISpecialModelRendererType<?> type) {
+    public static MapCodec<? extends SpecialModelRenderer.Unbaked<?>> getCodec(ISpecialModelRendererType<?> type) {
         return Wrapper.wrap(type.codec().mapCodec());
     }
 
@@ -60,7 +61,7 @@ public abstract class AbstractItemSpecialRendererImpl {
             return source.extractArgument(itemStack);
         }
 
-        public static class Unbaked<T extends ISpecialModelRenderer<?>> implements SpecialModelRenderer.Unbaked {
+        public static class Unbaked<T extends ISpecialModelRenderer<?>> implements SpecialModelRenderer.Unbaked<Object> {
 
             private final T source;
             private final MapCodec<T> codec;
@@ -72,15 +73,15 @@ public abstract class AbstractItemSpecialRendererImpl {
 
             @Nullable
             @Override
-            public SpecialModelRenderer<?> bake(BakingContext bakingContext) {
+            public SpecialModelRenderer<Object> bake(BakingContext bakingContext) {
                 if (source instanceof AbstractSpecialModelRenderer<?> renderer) {
-                    return new Wrapper<>(renderer);
+                    return new Wrapper<>(Objects.unsafeCast(renderer));
                 }
                 return null;
             }
 
             @Override
-            public MapCodec<Unbaked<T>> type() {
+            public MapCodec<? extends SpecialModelRenderer.Unbaked<Object>> type() {
                 return wrap(codec);
             }
         }

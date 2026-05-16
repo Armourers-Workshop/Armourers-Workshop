@@ -40,7 +40,7 @@ public class AbstractEntityRendererElement extends SpecialRenderElement implemen
 
         var renderState = entityRenderer.createRenderState(entity, partialTick);
         renderState.lightCoords = lightmap;
-        renderState.hitboxesRenderState = null;
+        //renderState.hitboxesRenderState = null;
         renderState.shadowPieces.clear();
         renderState.outlineColor = 0;
 

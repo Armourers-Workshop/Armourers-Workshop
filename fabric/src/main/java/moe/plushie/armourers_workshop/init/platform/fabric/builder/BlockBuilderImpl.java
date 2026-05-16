@@ -127,12 +127,6 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     }
 
     @Override
-    public IBlockBuilder<T> hasPostProcess(BlockBehaviour.StatePredicate state) {
-        this.builder.apply(it -> it.hasPostProcess(state));
-        return this;
-    }
-
-    @Override
     public IBlockBuilder<T> emissiveRendering(BlockBehaviour.StatePredicate state) {
         this.builder.apply(it -> it.emissiveRendering(state));
         return this;

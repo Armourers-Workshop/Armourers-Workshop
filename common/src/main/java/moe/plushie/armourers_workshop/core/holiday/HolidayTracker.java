@@ -16,7 +16,7 @@ import java.util.List;
 
 public class HolidayTracker extends AbstractSavedData {
 
-    public static final AbstractSavedDataType<HolidayTracker> TYPE = AbstractSavedDataType.create(HolidayTracker::new, "HolidayTracker");
+    public static final AbstractSavedDataType<HolidayTracker> TYPE = AbstractSavedDataType.create(HolidayTracker::new, "HolidayTracker", "holiday-tracker");
 
     private final Calendar calendar = Calendar.getInstance();
     private final HashSet<String> logs = new HashSet<>();

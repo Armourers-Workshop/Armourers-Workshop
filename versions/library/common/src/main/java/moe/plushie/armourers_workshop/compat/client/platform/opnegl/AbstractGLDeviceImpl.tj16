@@ -1,0 +1,120 @@
+package moe.plushie.armourers_workshop.compat.client.platform.opnegl;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
+import moe.plushie.armourers_workshop.core.utils.MatrixUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import org.lwjgl.opengl.GL15;
+
+import java.nio.FloatBuffer;
+
+@Available("[16, 18)")
+@OnlyIn(Dist.CLIENT)
+public class AbstractGLDeviceImpl extends AbstractGLDevice {
+
+    private final FloatBuffer buffer = MatrixUtils.createFloatBuffer(16);
+
+    @Override
+    public void beginTransaction() {
+        // save custom matrices.
+        super.beginTransaction();
+        // save lightmap texture matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE2);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPushMatrix();
+        // save overlay texture 1 matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE1);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPushMatrix();
+        // save main texture matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPushMatrix();
+        // save model view
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+        GL15.glPushMatrix();
+        // enable rescale normal.
+        RenderSystem.enableRescaleNormal();
+    }
+
+    @Override
+    public void endTransaction() {
+        // disable rescale normal.
+        RenderSystem.disableRescaleNormal();
+        // restore lightmap texture matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE2);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPopMatrix();
+        // restore overlay texture matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE1);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPopMatrix();
+        // restore main texture matrix.
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        GL15.glPopMatrix();
+        // restore model view
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+        GL15.glPopMatrix();
+        // restore custom matrices.
+        super.endTransaction();
+    }
+
+    @Override
+    public void setObjectViewMatrix(OpenMatrix4f matrix) {
+        super.setObjectViewMatrix(matrix);
+        // set model view matrix into OpenGL.
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+        uploadMatrix(matrix);
+    }
+
+    @Override
+    public void setTextureMatrix(OpenMatrix4f matrix) {
+        super.setTextureMatrix(matrix);
+        // set main texture matrix into OpenGL.
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        uploadMatrix(matrix);
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+    }
+
+    @Override
+    public void setOverlayTextureMatrix(OpenMatrix4f matrix) {
+        super.setOverlayTextureMatrix(matrix);
+        // reference from OverlayTexture.<init>
+        var scale = 1 / 15f;
+        var mat = OpenMatrix4f.createScaleMatrix(scale, scale, scale);
+        mat.multiply(matrix);
+        // set overlay texture matrix into OpenGL.
+        GL15.glActiveTexture(GL15.GL_TEXTURE1);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        uploadMatrix(mat);
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+    }
+
+    @Override
+    public void setLightmapTextureMatrix(OpenMatrix4f matrix) {
+        super.setLightmapTextureMatrix(matrix);
+        // reference from LightTexture.turnOnLightLayer
+        var scale = 1 / 256f;
+        var mat = OpenMatrix4f.createScaleMatrix(scale, scale, scale);
+        mat.translate(8f, 8f, 8f);
+        mat.multiply(matrix);
+        // set lightmap texture matrix into OpenGL.
+        GL15.glActiveTexture(GL15.GL_TEXTURE2);
+        GL15.glMatrixMode(GL15.GL_TEXTURE);
+        uploadMatrix(mat);
+        GL15.glActiveTexture(GL15.GL_TEXTURE0);
+        GL15.glMatrixMode(GL15.GL_MODELVIEW);
+    }
+
+    private void uploadMatrix(OpenMatrix4f matrix) {
+        matrix.store(buffer);
+        buffer.rewind();
+        GL15.glLoadMatrixf(buffer);
+    }
+}

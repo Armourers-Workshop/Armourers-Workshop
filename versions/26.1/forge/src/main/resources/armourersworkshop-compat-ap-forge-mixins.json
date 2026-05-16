@@ -4,9 +4,10 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "addon/ForgeReplayMixin",
+    "addon/ForgeCuriosApiMixin",
     "client/renderer/ForgeBlockEntityRendererMixin",
-    "client/other/ForgeKeyMappingMixin",
-    "addon/ForgeAccessoriesApiMixin"
+    "client/other/ForgeKeyMappingMixin"
   ],
   "mixins": [],
   "injectors": {

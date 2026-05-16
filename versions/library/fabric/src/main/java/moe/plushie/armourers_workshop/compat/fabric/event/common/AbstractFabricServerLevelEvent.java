@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.init.event.common.ServerLevelTickEvent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
-@Available("[16, )")
+@Available("[16, 26)")
 public class AbstractFabricServerLevelEvent {
 
     public static IEventHandler<ServerLevelTickEvent.Pre> preTickFactory() {

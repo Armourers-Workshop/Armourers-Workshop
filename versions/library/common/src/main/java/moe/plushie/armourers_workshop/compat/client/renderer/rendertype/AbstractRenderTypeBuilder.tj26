@@ -1,0 +1,312 @@
+package moe.plushie.armourers_workshop.compat.client.renderer.rendertype;
+
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.platform.PolygonMode;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.core.IResourceKey;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractVertexFormat;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.other.SkinVertexFormat;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import moe.plushie.armourers_workshop.core.utils.Collections;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.OutputTarget;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+@Available("[26, )")
+public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
+
+    public static SkinRenderType create(RenderType renderType) {
+        return DataContainer.of(renderType, Wrapper::new);
+    }
+
+    public static SkinRenderType.Builder create(SkinVertexFormat format) {
+        var provider = Provider.INSTANCES.get(format);
+        if (provider != null) {
+            return provider.get();
+        }
+        throw new RuntimeException("can't supported render mode");
+    }
+
+    private static class Wrapper extends SkinRenderType {
+
+        private final RenderType impl;
+
+        private Wrapper(RenderType renderType) {
+            this.format = AbstractVertexFormat.create(renderType.format(), renderType.mode());
+            this.outline = renderType.outline().map(AbstractRenderType::wrap);
+            this.isOutline = renderType.isOutline();
+            this.name = renderType.toString().replaceAll("RenderType\\[(.+?):CompositeState.+$", "$1");
+            this.bufferSize = renderType.bufferSize();
+            this.impl = renderType;
+        }
+
+        @Override
+        public RenderType get() {
+            return impl;
+        }
+    }
+
+    private static class Provider {
+
+        private static final Map<SkinVertexFormat, Supplier<Builder>> INSTANCES = Collections.immutableMap(it -> {
+
+            it.put(SkinVertexFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.DEBUG_LINES, RenderPipelines.GUI));
+            it.put(SkinVertexFormat.LINE_STRIP, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.DEBUG_LINE_STRIP, RenderPipelines.GUI));
+
+            it.put(SkinVertexFormat.BLIT_MASK, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, RenderPipelines.GUI));
+            it.put(SkinVertexFormat.BLIT_TEXTURED, () -> _builder(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS, RenderPipelines.GUI_TEXTURED));
+
+            it.put(SkinVertexFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, RenderPipelines.GUI));
+            it.put(SkinVertexFormat.GUI_TEXTURED, () -> _builder(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS, RenderPipelines.GUI_TEXTURED));
+
+            it.put(SkinVertexFormat.BLOCK, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SOLID));
+            it.put(SkinVertexFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT));
+
+            it.put(SkinVertexFormat.ENTITY_CUTOUT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT));
+            it.put(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT_DISSOLVE)); // TODO: ENTITY_CUTOUT_NO_CULL
+            it.put(SkinVertexFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT));
+            it.put(SkinVertexFormat.ENTITY_ALPHA, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SHADOW));
+
+            it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.TRANSLUCENT_PARTICLE).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_PARTICLE_CUTOUT_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.TRANSLUCENT_PARTICLE).overlay().lightmap().emissive());
+
+            it.put(SkinVertexFormat.SKIN_BLOCK_FACE_SOLID, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SOLID).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_BLOCK_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SOLID).overlay().lightmap().emissive());
+            it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_BLOCK_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap().emissive());
+
+            it.put(SkinVertexFormat.SKIN_CUBE_FACE_SOLID, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap().emissive());
+            it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap().emissive());
+
+            it.put(SkinVertexFormat.SKIN_MESH_FACE_SOLID, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_CUTOUT).overlay().lightmap().emissive());
+            it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap());
+            it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap().emissive());
+        });
+
+        private static RenderPipeline.Snippet _snippet(RenderPipeline pipeline) {
+            return new RenderPipeline.Snippet(
+                    Optional.of(pipeline.getVertexShader()),
+                    Optional.of(pipeline.getFragmentShader()),
+                    Optional.of(pipeline.getShaderDefines()),
+                    Optional.of(pipeline.getSamplers()),
+                    Optional.of(pipeline.getUniforms()),
+                    Optional.of(pipeline.getColorTargetState()),
+                    Optional.ofNullable(pipeline.getDepthStencilState()),
+                    Optional.of(pipeline.getPolygonMode()),
+                    Optional.of(pipeline.isCull()),
+                    Optional.of(pipeline.getVertexFormat()),
+                    Optional.of(pipeline.getVertexFormatMode())
+            );
+        }
+
+        private static Builder _builder(VertexFormat format, VertexFormat.Mode mode, RenderPipeline pipeline) {
+            var snippet = _snippet(pipeline);
+            return new Builder(RenderPipeline.builder(snippet).withVertexFormat(format, mode));
+        }
+
+        private static class Builder extends AbstractRenderTypeBuilder {
+
+            private boolean isOutline = false;
+            private boolean affectsCrumbling = false;
+            private boolean sortOnUpload = false;
+            private boolean useLightmap = false;
+            private boolean useOverlay = false;
+
+            private Identifier usedTexture;
+            private OutputTarget outputTarget = OutputTarget.MAIN_TARGET;
+            private Optional<BlendFunction> blendFunction = Optional.empty();
+            private CompareOp depthTest = CompareOp.LESS_THAN_OR_EQUAL;
+            private boolean writeDepth = true;
+            private int writeMask = ColorTargetState.WRITE_ALL;
+            private float depthBiasScaleFactor = 0.0f;
+            private float depthBiasConstant = 0.0f;
+
+            private final RenderPipeline.Builder pipelineBuilder;
+
+            private Builder(RenderPipeline.Builder pipelineBuilder) {
+                this.pipelineBuilder = pipelineBuilder;
+                this.setupDefault();
+            }
+
+            private void setupDefault() {
+                pipelineBuilder.withCull(false);
+            }
+
+            @Override
+            public Builder texture(IResourceKey texture, boolean blur, boolean mipmap) {
+                usedTexture = texture.get();
+                super.texture(texture, blur, mipmap);
+                return this;
+            }
+
+            @Override
+            public Builder target(SkinRenderType.Target target) {
+                outputTarget = switch (target) {
+                    case MAIN, TRANSLUCENT -> OutputTarget.MAIN_TARGET;
+                    case OUTLINE -> OutputTarget.OUTLINE_TARGET;
+                    case CLOUDS, WEATHER -> OutputTarget.WEATHER_TARGET;
+                    case PARTICLES, ITEM_ENTITY -> OutputTarget.ITEM_ENTITY_TARGET;
+                };
+                return this;
+            }
+
+            @Override
+            public Builder blend(SkinRenderType.BlendMode mode) {
+                blendFunction = switch (mode) {
+                    case NONE -> Optional.empty();
+                    case NORMAL -> Optional.empty();
+                    case LIGHTNING -> Optional.of(BlendFunction.LIGHTNING);
+                    case GLINT -> Optional.of(BlendFunction.GLINT);
+                    case OVERLAY -> Optional.of(BlendFunction.OVERLAY);
+                    case TRANSLUCENT -> Optional.of(BlendFunction.TRANSLUCENT);
+                    case TRANSLUCENT_PREMULTIPLIED_ALPHA -> Optional.of(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA);
+                    case ADDITIVE -> Optional.of(BlendFunction.ADDITIVE);
+                    case INVERT -> Optional.of(BlendFunction.INVERT);
+                };
+                super.blend(mode);
+                return this;
+            }
+
+            @Override
+            public Builder colorWrite(boolean writeColor, boolean writeAlpha) {
+                var writeMask = ColorTargetState.WRITE_NONE;
+                if (writeColor) {
+                    writeMask |= ColorTargetState.WRITE_COLOR;
+                }
+                if (writeAlpha) {
+                    writeMask |= ColorTargetState.WRITE_ALPHA;
+                }
+                this.writeMask = writeMask;
+                return this;
+            }
+
+            @Override
+            public Builder depthWrite(boolean writeDepth) {
+                this.writeDepth = writeDepth;
+                return this;
+            }
+
+            @Override
+            public Builder depthTest(SkinRenderType.DepthTestMode mode) {
+                depthTest = switch (mode) {
+                    case NO_DEPTH_TEST -> CompareOp.ALWAYS_PASS;
+                    case EQUAL_DEPTH_TEST -> CompareOp.EQUAL;
+                    case LEQUAL_DEPTH_TEST -> CompareOp.LESS_THAN_OR_EQUAL;
+                    case LESS_DEPTH_TEST -> CompareOp.LESS_THAN;
+                    case GREATER_DEPTH_TEST -> CompareOp.GREATER_THAN;
+                };
+                return this;
+            }
+
+            @Override
+            public Builder polygonMode(SkinRenderType.PolygonMode mode) {
+                pipelineBuilder.withPolygonMode(switch (mode) {
+                    case FILL -> PolygonMode.FILL;
+                    case WIREFRAME -> PolygonMode.WIREFRAME;
+                });
+                return this;
+            }
+
+            @Override
+            public Builder polygonOffset(float factor, float units) {
+                depthBiasScaleFactor = factor;
+                depthBiasConstant = units;
+                return this;
+            }
+
+            @Override
+            public Builder stroke(float width) {
+                pipelineBuilder.withPolygonMode(PolygonMode.WIREFRAME);
+                return this;
+            }
+
+            @Override
+            public Builder cull() {
+                pipelineBuilder.withCull(true);
+                return this;
+            }
+
+            @Override
+            public Builder lightmap() {
+                useLightmap = true;
+                return this;
+            }
+
+            @Override
+            public Builder emissive() {
+                super.emissive();
+                pipelineBuilder.withShaderDefine("EMISSIVE").withShaderDefine("NO_CARDINAL_LIGHTING");
+                return this;
+            }
+
+            @Override
+            public Builder overlay() {
+                useOverlay = true;
+                return this;
+            }
+
+            @Override
+            public Builder outline() {
+                isOutline = true;
+                return this;
+            }
+
+            @Override
+            public Builder crumbling() {
+                affectsCrumbling = true;
+                return this;
+            }
+
+            @Override
+            public Builder sortOnUpload() {
+                sortOnUpload = true;
+                return this;
+            }
+
+            @Override
+            protected SkinRenderType create(String registryName) {
+                var pipeline = pipelineBuilder
+                        .withLocation(Identifier.parse(registryName.replace(":rendertype/", ":pipeline/")))
+                        .withColorTargetState(new ColorTargetState(blendFunction, writeMask))
+                        .withDepthStencilState(new DepthStencilState(depthTest, writeDepth, depthBiasScaleFactor, depthBiasConstant))
+                        .build();
+                var setupBuilder = RenderSetup.builder(pipeline)
+                        .bufferSize(256)
+                        .setOutputTarget(outputTarget)
+                        .setOutline(isOutline ? RenderSetup.OutlineProperty.IS_OUTLINE : RenderSetup.OutlineProperty.NONE);
+                if (usedTexture != null) {
+                    setupBuilder.withTexture("Sampler0", usedTexture);
+                }
+                if (useLightmap) {
+                    setupBuilder.useLightmap();
+                }
+                if (useOverlay) {
+                    setupBuilder.useOverlay();
+                }
+                if (affectsCrumbling) {
+                    setupBuilder.affectsCrumbling();
+                }
+                if (sortOnUpload) {
+                    setupBuilder.sortOnUpload();
+                }
+                return AbstractRenderType.wrap(RenderType.create(registryName, setupBuilder.createRenderSetup()));
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Available("[16, )")
+@Available("[16, 26)")
 public class AbstractForgeRegistry<T> extends AbstractForgeRegistryImpl implements TypedProvider<T> {
 
     private final Function<T, ResourceLocation> keyProvider;

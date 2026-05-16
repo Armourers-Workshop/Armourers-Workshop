@@ -16,7 +16,7 @@ import manifold.ext.rt.api.This;
 public class OptionalAPI {
 
     public static boolean contains(@This CompoundTag tag, String key, int type) {
-        // TODO: NO IMPL - 1.26
+        // TODO: NO IMPL - 26.1
         return tag.contains(key);
     }
 

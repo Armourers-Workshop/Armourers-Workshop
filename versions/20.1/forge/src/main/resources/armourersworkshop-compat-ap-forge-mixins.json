@@ -4,6 +4,8 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "addon/ForgeReplayMixin",
+    "addon/ForgeCuriosApiMixin",
     "addon/ForgeAccessoriesApiMixin",
     "client/renderer/ForgeItemRendererMixin",
     "client/renderer/ForgeEpicFightRendererMixin",

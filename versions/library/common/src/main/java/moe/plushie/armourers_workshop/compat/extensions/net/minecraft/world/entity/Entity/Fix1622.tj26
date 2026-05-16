@@ -11,7 +11,7 @@ import manifold.ext.rt.api.This;
 public class Fix1622 {
 
     public static float walkDist(@This Entity entity) {
-        // TODO: NO IMPL - 1.26
+        // TODO: NO IMPL - 26.1
         return 0;
     }
 
@@ -20,7 +20,7 @@ public class Fix1622 {
     }
 
     public static boolean isInWaterRainOrBubble(@This Entity entity) {
-        // TODO: NO IMPL - 1.26
+        // TODO: NO IMPL - 26.1
         return false;
     }
 }

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.vertex;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
 import moe.plushie.armourers_workshop.core.utils.FastMapper;
@@ -18,7 +19,7 @@ public abstract class AbstractVertexFormatImpl implements IVertexFormat {
         it.put(Mode.QUADS, GL11.GL_QUADS);
     });
 
-    public static IVertexFormat.Mode wrap(int mode) {
-        return MODE_MAPPER.getKey(mode);
+    public static AbstractVertexFormat create(VertexFormat format, int mode) {
+        return new AbstractVertexFormat(format, MODE_MAPPER.getKey(mode));
     }
 }

@@ -12,6 +12,11 @@ accessible method net/minecraft/client/renderer/LevelRenderer shouldShowEntityOu
 ### accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
 ##endif
 
+##if MC >= 260000
+### mutable field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I
+### mutable field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
+##endif
+
 ##if MC >= 211000
 ### accessible method net/minecraft/world/level/storage/TagValueOutput <init> (Lnet/minecraft/util/ProblemReporter;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/nbt/CompoundTag;)V
 ##endif

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.compat.core.data;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.SerializationContext;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
 import net.minecraft.core.HolderLookup;
@@ -23,8 +24,8 @@ public class AbstractSavedDataType<T extends AbstractSavedData> {
         this.factory = new SavedData.Factory<>(factory, deserializer, DataFixTypes.SAVED_DATA_FORCED_CHUNKS);
     }
 
-    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
-        return new AbstractSavedDataType<>(id, factory, (tag, provider1) -> {
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String name, String id) {
+        return new AbstractSavedDataType<>(name, factory, (tag, provider1) -> {
             T value = factory.get();
             value.deserialize(new TagSerializer(tag, SerializationContext.from(provider1)));
             return value;

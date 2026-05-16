@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.api.entity;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 
-@Available("[16, )")
+@Available("[16, 26)")
 public interface ArrowAccessor extends ProjectileAccessor {
 
     @Override

@@ -4,5 +4,5 @@ public interface IBufferBuilder extends IVertexConsumer {
 
     void begin(IRenderType renderType);
 
-    IRenderedBuffer end();
+    IMeshData end();
 }

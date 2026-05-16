@@ -366,9 +366,10 @@ public abstract class ShapeElement implements IGraphicsElement {
 
         @Override
         public void render(IPoseStack.Pose pose, IVertexConsumer builder) {
-            var mode = renderType.mode();
             var normal = new float[3];
             var position = new float[4];
+
+            var format = renderType.format();
 
             var u1 = OverlayTexture.getU(overlay);
             var v1 = OverlayTexture.getV(overlay);
@@ -398,7 +399,7 @@ public abstract class ShapeElement implements IGraphicsElement {
                 normal[2] = polygon.normalZ;
                 pose.transformNormal(normal);
 
-                for (var vertex : polygon.vertices(mode)) {
+                for (var vertex : polygon.vertices(format)) {
                     var u0 = u + s * vertex.uScale;
                     var v0 = v + t * vertex.vScale;
 
@@ -503,8 +504,8 @@ public abstract class ShapeElement implements IGraphicsElement {
                 }
             }
 
-            public Iterable<Vertex> vertices(IVertexFormat.Mode mode) {
-                return new Adapter(vertices, 0, mode);
+            public Iterable<Vertex> vertices(IVertexFormat format) {
+                return new Adapter(vertices, 0, format);
             }
 
             public void setColor(int color) {
@@ -546,10 +547,10 @@ public abstract class ShapeElement implements IGraphicsElement {
             private final int[] indexes;
             private final Vertex[] vertices;
 
-            protected Adapter(Vertex[] vertices, int index, IVertexFormat.Mode mode) {
+            protected Adapter(Vertex[] vertices, int index, IVertexFormat format) {
                 this.index = index;
                 this.vertices = vertices;
-                this.indexes = switch (mode) {
+                this.indexes = switch (format.mode()) {
                     case DEBUG_LINES, DEBUG_LINE_STRIP -> QUAD_TO_LINE;
                     case QUADS, LINES -> QUAD_TO_QUAD;
                     default -> QUAD_TO_TRIANGLE;

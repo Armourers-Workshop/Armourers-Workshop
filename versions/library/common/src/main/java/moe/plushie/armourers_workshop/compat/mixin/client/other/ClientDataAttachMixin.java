@@ -1,0 +1,38 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.other;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+import moe.plushie.armourers_workshop.core.data.DataContainer;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.sounds.SoundEvent;
+import org.spongepowered.asm.mixin.Implements;
+import org.spongepowered.asm.mixin.Interface;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+
+@Available("[16, 26)")
+@Mixin({Model.class, ModelPart.class, EntityRenderer.class, PoseStack.class, PoseStack.Pose.class, RenderType.class, SoundEvent.class})
+@Implements(@Interface(iface = IAssociatedContainer.class, prefix = "aw2$"))
+public abstract class ClientDataAttachMixin {
+
+    @Unique
+    private IAssociatedContainer aw2$associatedContainer;
+
+    public <T> T aw2$getAssociatedObject(IAssociatedContainer.Key<T> key) {
+        if (aw2$associatedContainer != null) {
+            return aw2$associatedContainer.getAssociatedObject(key);
+        }
+        return key.defaultValue();
+    }
+
+    public <T> void aw2$setAssociatedObject(IAssociatedContainer.Key<T> key, T value) {
+        if (aw2$associatedContainer == null) {
+            aw2$associatedContainer = new DataContainer.Builtin();
+        }
+        aw2$associatedContainer.setAssociatedObject(key, value);
+    }
+}

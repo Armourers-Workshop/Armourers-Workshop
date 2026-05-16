@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.compat.client.renderer.rendertype.AbstractRenderType;
+import moe.plushie.armourers_workshop.compat.client.renderer.rendertype.AbstractRenderTypeBuilder;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
-public abstract class SkinRenderTypes implements IRenderType {
+public abstract class SkinRenderTypes extends SkinRenderType {
 
     public static final IRenderType BLIT_COLOR = _builder(SkinVertexFormat.BLIT_MASK).build("blit_color");
     public static final IRenderType BLIT_MASK = _builder(SkinVertexFormat.BLIT_MASK).colorWrite(false).depthWrite(false).build("blit_mask");
@@ -63,9 +63,9 @@ public abstract class SkinRenderTypes implements IRenderType {
     }
 
     public static IRenderType geometry(SkinGeometryType type, OpenResourceKey texture, boolean isTranslucent, boolean isEmissive) {
-        var builder = GeometryFaceBuilder.search(type, isTranslucent, isEmissive);
-        if (builder != null) {
-            return builder.build(texture);
+        var template = Template.search(type, isTranslucent, isEmissive);
+        if (template != null) {
+            return template.create(texture);
         }
         return geometry(type);
     }
@@ -169,32 +169,32 @@ public abstract class SkinRenderTypes implements IRenderType {
     }
 
     private static Builder _builder(SkinVertexFormat format) {
-        return AbstractRenderType.builder(format);
+        return AbstractRenderTypeBuilder.create(format);
     }
 
-    private static class GeometryFaceBuilder {
+    private static class Template {
 
-        private static final List<GeometryFaceBuilder> BUILDERS = Collections.immutableList(it -> {
+        private static final List<Template> TEMPLATES = Collections.immutableList(it -> {
 
-            it.add(new GeometryFaceBuilder("aw_cube_face_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_face_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, false));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
+            it.add(new Template("aw_cube_face_solid", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, false));
+            it.add(new Template("aw_cube_face_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, false));
+            it.add(new Template("aw_cube_face_translucent", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, false));
+            it.add(new Template("aw_cube_face_translucent_emissive", SkinGeometryTypes.CUBE, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
 
-            it.add(new GeometryFaceBuilder("aw_cube_face_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_face_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, true));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_cube_face_translucent_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
+            it.add(new Template("aw_cube_face_solid_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_SOLID, false, false, true));
+            it.add(new Template("aw_cube_face_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_EMISSIVE, false, true, true));
+            it.add(new Template("aw_cube_face_translucent_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT, true, false, true));
+            it.add(new Template("aw_cube_face_translucent_emissive_cull", SkinGeometryTypes.CUBE_CULL, SkinVertexFormat.SKIN_CUBE_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
 
-            it.add(new GeometryFaceBuilder("aw_mesh_face_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
+            it.add(new Template("aw_mesh_face_solid", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, false));
+            it.add(new Template("aw_mesh_face_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, false));
+            it.add(new Template("aw_mesh_face_translucent", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, false));
+            it.add(new Template("aw_mesh_face_translucent_emissive", SkinGeometryTypes.MESH, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, false));
 
-            it.add(new GeometryFaceBuilder("aw_mesh_face_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
-            it.add(new GeometryFaceBuilder("aw_mesh_face_translucent_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
+            it.add(new Template("aw_mesh_face_solid_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_SOLID, false, false, true));
+            it.add(new Template("aw_mesh_face_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_EMISSIVE, false, true, true));
+            it.add(new Template("aw_mesh_face_translucent_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT, true, false, true));
+            it.add(new Template("aw_mesh_face_translucent_emissive_cull", SkinGeometryTypes.MESH_CULL, SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, true, true, true));
         });
 
         private final String name;
@@ -204,7 +204,7 @@ public abstract class SkinRenderTypes implements IRenderType {
         private final boolean isEmissive;
         private final boolean isCull;
 
-        public GeometryFaceBuilder(String name, SkinGeometryType type, SkinVertexFormat format, boolean isTranslucent, boolean isEmissive, boolean isCull) {
+        public Template(String name, SkinGeometryType type, SkinVertexFormat format, boolean isTranslucent, boolean isEmissive, boolean isCull) {
             this.name = name;
             this.type = type;
             this.format = format;
@@ -213,16 +213,16 @@ public abstract class SkinRenderTypes implements IRenderType {
             this.isCull = isCull;
         }
 
-        public static GeometryFaceBuilder search(SkinGeometryType type, boolean isTranslucent, boolean isEmissive) {
-            for (var it : BUILDERS) {
-                if (type.equals(it.type) && isTranslucent == it.isTranslucent && isEmissive == it.isEmissive) {
-                    return it;
+        public static Template search(SkinGeometryType type, boolean isTranslucent, boolean isEmissive) {
+            for (var template : TEMPLATES) {
+                if (type.equals(template.type) && isTranslucent == template.isTranslucent && isEmissive == template.isEmissive) {
+                    return template;
                 }
             }
             return null;
         }
 
-        public IRenderType build(OpenResourceKey texture) {
+        public IRenderType create(OpenResourceKey texture) {
             return _customGeometry(name, format, texture, isTranslucent, isEmissive, isCull);
         }
     }

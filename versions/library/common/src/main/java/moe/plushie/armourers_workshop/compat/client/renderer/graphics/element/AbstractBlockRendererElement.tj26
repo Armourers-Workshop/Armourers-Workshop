@@ -6,7 +6,10 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderable;
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -15,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class AbstractBlockRendererElement extends SpecialRenderElement implements AbstractGraphicsRenderable {
 
     private final BlockState blockState;
+    private final BlockModelRenderState renderState = new BlockModelRenderState();
     private final int lightmap;
     private final int overlay;
 
@@ -22,6 +26,7 @@ public class AbstractBlockRendererElement extends SpecialRenderElement implement
         this.blockState = blockState;
         this.lightmap = lightmap;
         this.overlay = overlay;
+        Minecraft.getInstance().blockModelResolver.update(renderState, blockState, BlockDisplayContext.create());
     }
 
     public static AbstractBlockRendererElement newInstance(BlockState blockState, int lightmap, int overlay) {
@@ -30,6 +35,6 @@ public class AbstractBlockRendererElement extends SpecialRenderElement implement
 
     @Override
     public void render(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
-        submitNodeCollector.submitBlock(poseStack, blockState, lightmap, overlay, 0);
+        renderState.submit(poseStack, submitNodeCollector, lightmap, overlay, 0);
     }
 }

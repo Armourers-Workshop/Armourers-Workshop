@@ -32,6 +32,21 @@ public class AbstractHumanoidModelImpl<T extends LivingEntity, S extends Humanoi
         this.jacket = body.getChild("jacket");
     }
 
+    public void setAllVisible(boolean visible) {
+        this.head.visible = visible;
+        this.hat.visible = visible;
+        this.body.visible = visible;
+        this.rightArm.visible = visible;
+        this.leftArm.visible = visible;
+        this.rightLeg.visible = visible;
+        this.leftLeg.visible = visible;
+        this.leftSleeve.visible = visible;
+        this.rightSleeve.visible = visible;
+        this.leftPants.visible = visible;
+        this.rightPants.visible = visible;
+        this.jacket.visible = visible;
+    }
+
     public static Context getEmptyContext() {
         return Context.create(AbstractHumanoidEntityRenderer.getEmptyContext(), ModelLayers.PLAYER);
     }

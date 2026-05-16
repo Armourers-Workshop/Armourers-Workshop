@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin.addon;
 
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Available("[16, )")
 @Conditional("replaymod")
 @Pseudo
 @Mixin(targets = "com.replaymod.replay.ReplayHandler")

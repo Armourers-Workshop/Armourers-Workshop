@@ -5,7 +5,14 @@ import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;
 import moe.plushie.armourers_workshop.api.client.IItemTintSourceType;
 import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
+import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
+
+import com.mojang.serialization.MapCodec;
+
+import java.lang.reflect.Field;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
@@ -14,13 +21,27 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class TintSourceExt {
 
+    // TODO: NO IMPL 26.1 - @SAGESSE
+    private static final ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>> ITEM_TINT_SOURCES = itemTintSources();
+
     public static TypedProvider<IItemTintSourceType<?>> createItemTintSourceRegistryFA(@ThisClass Class<?> clazz) {
         return TypedProvider.passthrough((registryName, value) -> {
-            ItemTintSources.ID_MAPPER.put(registryName.get(), AbstractItemTintSource.getCodec(value));
+            ITEM_TINT_SOURCES.put(registryName.get(), AbstractItemTintSource.getCodec(value));
         });
     }
 
     public static TypedProvider<IBlockTintSourceType<?>> createBlockTintSourceRegistryFA(@ThisClass Class<?> clazz) {
         return TypedProvider.passthrough();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>> itemTintSources() {
+        try {
+            Field field = ItemTintSources.class.getDeclaredField("ID_MAPPER");
+            field.setAccessible(true);
+            return (ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>>) field.get(null);
+        } catch (ReflectiveOperationException exception) {
+            throw new ExceptionInInitializerError(exception);
+        }
     }
 }

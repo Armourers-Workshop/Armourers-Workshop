@@ -11,8 +11,8 @@ import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.neoforged.neoforge.client.CustomBlockOutlineRenderer;
 
 import java.util.ArrayList;

@@ -194,7 +194,7 @@ public class AbstractRenderState {
         }
 
         protected void activate() {
-            // TODO: NO IMPL - 1.26
+            // TODO: NO IMPL - 26.1
 //            if (renderState.isLimitLimbs() && entity instanceof LivingEntity livingEntity) {
 //                livingEntity.applyLimitLimbs();
 //            }

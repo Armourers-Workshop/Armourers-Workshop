@@ -1,0 +1,17 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.attachment;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.world.entity.Entity;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Available("[26, )")
+@Mixin(EntityRenderer.class)
+public class EntityNameLayerMixin<T extends Entity> {
+
+    // TODO: NO IMPL 26.1 - @SAGESSE
+//    @Inject(method = "renderNameTag", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(DDD)V", shift = At.Shift.AFTER))
+//    private void aw$translateToName(T entity, Component component, PoseStack poseStackIn, MultiBufferSource multiBufferSourceIn, int i, float f, CallbackInfo ci) {
+//        ClientAttachmentHandler.onRenderName(entity, component, poseStackIn, multiBufferSourceIn);
+//    }
+}

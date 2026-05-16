@@ -101,7 +101,7 @@ public class AbstractBlockImpl extends Block {
         return playerWillDestroy(blockState, level, blockPos, player, null);
     }
 
-    // TODO: NO IMPL - 1.26
+    // TODO: NO IMPL - 26.1
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) { return blockState; }
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {}
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {}

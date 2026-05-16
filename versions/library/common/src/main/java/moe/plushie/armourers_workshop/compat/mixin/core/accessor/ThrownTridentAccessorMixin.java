@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.compat.api.entity.ThrownTridentAccessor;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[16, )")
+@Available("[16, 26)")
 @Mixin(ThrownTrident.class)
 public abstract class ThrownTridentAccessorMixin implements ThrownTridentAccessor {
 }

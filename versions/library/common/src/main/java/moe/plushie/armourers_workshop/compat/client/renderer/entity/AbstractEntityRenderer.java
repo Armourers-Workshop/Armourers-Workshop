@@ -60,7 +60,7 @@ public abstract class AbstractEntityRenderer<T extends Entity, S extends EntityR
 
     @Override
     public final ResourceLocation getTextureLocation(T entity) {
-        // TODO: 1.26
+        // TODO: 26.1
         return null; // check not support get the texture?
     }
 }

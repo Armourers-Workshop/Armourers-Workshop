@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.client.AbstractCamera;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -15,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class AbstractFabricRenderHighlightEvent {
 
     public static IEventHandler<RenderHighlightEvent.Block> blockFactory() {
-        return (priority, receiveCancelled, subscriber) -> WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, outlineRenderState) -> {
+        return (priority, receiveCancelled, subscriber) -> LevelRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, outlineRenderState) -> {
             subscriber.accept(new RenderHighlightEvent.Block() {
 
                 @Override
@@ -39,7 +39,7 @@ public class AbstractFabricRenderHighlightEvent {
 
                 @Override
                 public IGraphicsContext context() {
-                    return AbstractGraphicsRenderer.wrap(context.matrices(), context.commandQueue());
+                    return AbstractGraphicsRenderer.wrap(context.poseStack(), context.submitNodeCollector());
                 }
             });
             return true;

@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificA
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FabricPlayerRendererMixin {
 
     @Inject(method = "renderRightHand", at = @At("HEAD"), cancellable = true)
-    public void aw2$renderRightHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation identifier, boolean bl, CallbackInfo ci) {
+    public void aw2$renderRightHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, Identifier identifier, boolean bl, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (!RenderSpecificArmEvents.ARM.invoker().render(player, i, OpenInteractionHand.MAIN_HAND, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector))) {
             ci.cancel();
@@ -27,7 +27,7 @@ public class FabricPlayerRendererMixin {
     }
 
     @Inject(method = "renderLeftHand", at = @At("HEAD"), cancellable = true)
-    public void aw2$renderLeftHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, ResourceLocation identifier, boolean bl, CallbackInfo ci) {
+    public void aw2$renderLeftHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, Identifier identifier, boolean bl, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (!RenderSpecificArmEvents.ARM.invoker().render(player, i, OpenInteractionHand.OFF_HAND, AbstractGraphicsRenderer.wrap(poseStack, submitNodeCollector))) {
             ci.cancel();

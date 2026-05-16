@@ -2,13 +2,8 @@
   "required": true,
   "package": "moe.plushie.armourers_workshop.init.mixin",
   "compatibilityLevel": "JAVA_16",
-  "client": [
-    "ClientDataAttachMixin"
-  ],
-  "mixins": [
-    "DataFixMixin",
-    "CommonDataAttachMixin"
-  ],
+  "client": [],
+  "mixins": [],
   "injectors": {
     "defaultRequire": 1
   },

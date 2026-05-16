@@ -1,0 +1,30 @@
+package moe.plushie.armourers_workshop.compat.extensions.net.minecraft.commands.CommandSourceStack;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.FastMapper;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.Permissions;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.This;
+
+@Extension
+@Available("[26, )")
+public class Fix26 {
+
+    private static final FastMapper<Integer, Permission> MAPPER = FastMapper.builder(0, null, it -> {
+        it.put(1, Permissions.COMMANDS_MODERATOR);
+        it.put(2, Permissions.COMMANDS_GAMEMASTER);
+        it.put(3, Permissions.COMMANDS_ADMIN);
+        it.put(4, Permissions.COMMANDS_OWNER);
+    });
+
+    public static boolean hasPermission(@This CommandSourceStack sourceStack, int level) {
+        var permission = MAPPER.getValue(level);
+        if (permission != null) {
+            return sourceStack.permissions().hasPermission(permission);
+        }
+        return false;
+    }
+}

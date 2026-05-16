@@ -1,0 +1,20 @@
+package moe.plushie.armourers_workshop.compat.client.platform.opnegl;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Dist;
+import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
+
+@Available("[26, )")
+@OnlyIn(Dist.CLIENT)
+public class AbstractGLDeviceImpl extends AbstractGLDevice {
+
+    @Override
+    public void beginTransaction() {
+        super.beginTransaction();
+    }
+
+    @Override
+    public void endTransaction() {
+        super.endTransaction();
+    }
+}

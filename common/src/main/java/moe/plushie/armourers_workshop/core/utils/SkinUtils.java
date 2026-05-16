@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.api.skin.part.features.ICanOverride;
+import moe.plushie.armourers_workshop.compat.core.AbstractGameRules;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +52,7 @@ public final class SkinUtils {
         if (keep == 2) {
             return false;
         }
-        return level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+        return level.getGameRules().get(AbstractGameRules.KEEP_INVENTORY);
     }
 
     public static void dropAllIfNeeded(ServerLevel level, Player player) {

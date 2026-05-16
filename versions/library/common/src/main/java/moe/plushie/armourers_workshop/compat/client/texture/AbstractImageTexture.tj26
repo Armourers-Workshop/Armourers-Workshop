@@ -32,8 +32,8 @@ public class AbstractImageTexture extends AbstractTexture {
         this.pixels = new NativeImage(width, height, bl);
         var gpuDevice = RenderSystem.getDevice();
         this.texture = gpuDevice.createTexture(name, 5, TextureFormat.RGBA8, width, height, 1, 1);
-        this.texture.setTextureFilter(FilterMode.NEAREST, false);
         this.textureView = gpuDevice.createTextureView(this.texture);
+        this.sampler = RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST);
     }
 
     protected void upload() {

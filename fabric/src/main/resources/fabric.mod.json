@@ -28,7 +28,7 @@
     "armourersworkshop-fabric-mixins.json"
   ],
   "depends": {
-    "fabric": "${required_fabric_api_version}",
+    "fabric-api": "${required_fabric_api_version}",
     "fabricloader": ">=${required_fabric_loader_version}",
     "minecraft": ">=${required_minecraft_version}"
   }

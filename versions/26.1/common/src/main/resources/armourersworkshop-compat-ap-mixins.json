@@ -4,6 +4,7 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "addon/RoughlyEnoughItemsMixin",
     "client/gui/PictureInPictureRendererMixin",
     "client/other/GlStateManagerMixin",
     "client/gui/GuiGraphicsMixin",
@@ -14,6 +15,9 @@
     "client/model/EntityModelSetMixin"
   ],
   "mixins": [
+    "addon/KubeJSMixin",
+    "core/datafix/V1460Mixin",
+    "core/datafix/V4772Mixin",
     "core/other/VehicleEntityPlaceMixin",
     "core/other/VehicleEntityBreakMixin",
     "core/other/ComponentizationFixMixin$ItemFixer",

@@ -21,8 +21,8 @@ public class AbstractSavedDataType<T extends AbstractSavedData> {
         this.deserializer = deserializer;
     }
 
-    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
-        return new AbstractSavedDataType<>(id, factory, (tag) -> {
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String name, String id) {
+        return new AbstractSavedDataType<>(name, factory, (tag) -> {
             T value = factory.get();
             value.deserialize(new TagSerializer(tag));
             return value;

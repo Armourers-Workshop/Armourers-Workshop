@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @Mixin(EntityType.class)
 public class VehicleEntityPlaceMixin {
 
-    // TODO: NO IMPL - 1.26
+    // TODO: NO IMPL - 26.1
 //    @Inject(method = "appendCustomEntityStackConfig", at = @At("RETURN"), cancellable = true)
 //    private static <T extends Entity> void aw2$appendCustomEntityStackConfig(Consumer<T> consumer, ServerLevel serverLevel, ItemStack itemStack, Player player, CallbackInfoReturnable<Consumer<T>> cir) {
 //        var oldResult = cir.getReturnValue();

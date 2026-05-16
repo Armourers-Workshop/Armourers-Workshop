@@ -4,10 +4,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IBufferBuilder;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
-import moe.plushie.armourers_workshop.api.client.IRenderedBuffer;
-import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-
-import java.nio.ByteBuffer;
+import moe.plushie.armourers_workshop.core.client.buffer.MeshData;
 
 @Available("[19, 20)")
 public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBufferBuilder {
@@ -35,32 +32,15 @@ public class AbstractBufferBuilder extends AbstractVertexConsumer implements IBu
     }
 
     @Override
-    public IRenderedBuffer end() {
-        var buffer = bufferBuilder.end();
-        var state = buffer.drawState();
-        var format = AbstractVertexFormat.wrap(state.format());
-        return new IRenderedBuffer() {
-
-            @Override
-            public IVertexFormat format() {
-                return format;
-            }
-
-            @Override
-            public ByteBuffer vertexBuffer() {
-                return buffer.vertexBuffer();
-            }
-
-            @Override
-            public int vertexCount() {
-                return state.vertexCount();
-            }
-
-            @Override
-            public void release() {
-                buffer.release();
-            }
-        };
+    public MeshData end() {
+        var data = bufferBuilder.end();
+        try {
+            var state = data.drawState();
+            var format = AbstractVertexFormat.create(state.format(), state.mode());
+            return new MeshData(data.vertexBuffer().duplicate(), state.vertexCount(), format);
+        } finally {
+            data.release();
+        }
     }
 
     public BufferBuilder bufferBuilder() {

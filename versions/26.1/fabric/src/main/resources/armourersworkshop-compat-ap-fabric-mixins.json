@@ -4,7 +4,7 @@
   "plugin": "moe.plushie.armourers_workshop.init.ModValidator",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "addon/FabricAccessoriesApiMixin"
+    "addon/FabricReplayMixin"
   ],
   "mixins": [],
   "injectors": {

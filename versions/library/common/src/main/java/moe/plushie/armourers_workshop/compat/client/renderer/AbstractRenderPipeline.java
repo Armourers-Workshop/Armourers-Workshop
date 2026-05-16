@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
 import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
 import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferBuilder;
 import moe.plushie.armourers_workshop.core.client.other.SceneBufferBuilder;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
@@ -28,7 +29,7 @@ public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implement
 
     /// Get a render pipeline from the render group.
     public static AbstractRenderPipeline of(IRenderType renderType) {
-        var attachmentType = AbstractRenderAttachment.find(renderType.group());
+        var attachmentType = AbstractRenderAttachment.find(((SkinRenderType) renderType).group());
         if (attachmentType == null) {
             return null;
         }
@@ -66,7 +67,7 @@ public class AbstractRenderPipeline extends AbstractRenderPipelineImpl implement
         if (bufferBuilder != null) {
             return bufferBuilder;
         }
-        bufferBuilder = new SceneBufferBuilder(renderType.bufferSize());
+        bufferBuilder = new SceneBufferBuilder(((SkinRenderType) renderType).bufferSize());
         bufferBuilder.begin(renderType);
         startedBuilders.put(renderType, bufferBuilder);
         return bufferBuilder;

@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.cli
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 
 import java.util.function.Function;
 

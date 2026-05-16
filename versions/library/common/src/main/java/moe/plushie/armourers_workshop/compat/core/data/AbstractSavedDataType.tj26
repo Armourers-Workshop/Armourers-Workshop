@@ -3,8 +3,9 @@ package moe.plushie.armourers_workshop.compat.core.data;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TagSerializer;
-import net.minecraft.resources.Identifier;
+import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.storage.SavedDataStorage;
@@ -14,14 +15,16 @@ import java.util.function.Supplier;
 @Available("[26, )")
 public class AbstractSavedDataType<T extends AbstractSavedData> {
 
+    private final OpenResourceKey id;
     private final SavedDataType<T> type;
 
-    public AbstractSavedDataType(String id, Supplier<T> factory, IDataCodec<T> codec) {
-        this.type = new SavedDataType<>(Identifier.parse(id), factory, codec.codec(), DataFixTypes.SAVED_DATA_FORCED_CHUNKS);
+    public AbstractSavedDataType(OpenResourceKey id, Supplier<T> factory, IDataCodec<T> codec) {
+        this.id = id;
+        this.type = new SavedDataType<>(id.withPath(id.path().replace('-', '_')).get(), factory, codec.codec(), DataFixTypes.SAVED_DATA_FORCED_CHUNKS);
     }
 
-    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
-        return new AbstractSavedDataType<>(id, factory, ExtraCodecs.COMPOUND_TAG.xmap(tag -> {
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String name, String id) {
+        return new AbstractSavedDataType<>(ModConstants.key(id), factory, ExtraCodecs.COMPOUND_TAG.xmap(tag -> {
             var serializer = new TagSerializer(tag);
             var instance = factory.get();
             instance.deserialize(serializer);

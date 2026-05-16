@@ -12,7 +12,7 @@ import manifold.ext.rt.api.This;
 public class CarriedProvider {
 
     public static void setCarried(@This Inventory inventory, ItemStack itemStack) {
-        // TODO: NO IMPL - 1.26
+        // TODO: NO IMPL - 26.1
 //        inventory.setPickedItem(itemStack);
     }
 }

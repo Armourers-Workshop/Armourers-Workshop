@@ -1,0 +1,11 @@
+package moe.plushie.armourers_workshop.compat.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
+
+@Available("[26, )")
+public class AbstractGameRules {
+
+    public static final GameRule<Boolean> KEEP_INVENTORY = GameRules.KEEP_INVENTORY;
+}

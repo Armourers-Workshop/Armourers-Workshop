@@ -1,40 +1,34 @@
 package moe.plushie.armourers_workshop.compat.client.renderer.vertex;
 
 import com.mojang.blaze3d.vertex.VertexFormat;
-import moe.plushie.armourers_workshop.api.client.IVertexFormat;
+import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class AbstractVertexFormat extends AbstractVertexFormatImpl implements IVertexFormat {
+@Available("[16, )")
+public class AbstractVertexFormat extends AbstractVertexFormatImpl {
 
-    private static final HashMap<VertexFormat, AbstractVertexFormat> CACHED = new HashMap<>();
+    private final VertexFormat format;
+    private final Mode mode;
 
-    private final VertexFormat impl;
-    private final List<AbstractVertexElement> elements;
-
-    private AbstractVertexFormat(VertexFormat impl) {
-        this.impl = impl;
-        this.elements = Collections.compactMap(impl.getElements(), AbstractVertexElement::wrap);
+    public AbstractVertexFormat(VertexFormat format, Mode mode) {
+        this.format = format;
+        this.mode = mode;
     }
 
-    public static AbstractVertexFormat wrap(VertexFormat format) {
-        return CACHED.computeIfAbsent(format, AbstractVertexFormat::new);
+    @Override
+    public Mode mode() {
+        return mode;
     }
 
     @Override
     public int byteSize() {
-        return impl.getVertexSize();
-    }
-
-    @Override
-    public List<AbstractVertexElement> elements() {
-        return elements;
+        return format.getVertexSize();
     }
 
     @Override
     public VertexFormat get() {
-        return impl;
+        return format;
     }
 }

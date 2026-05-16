@@ -45,8 +45,6 @@ public interface IBlockBuilder<T extends Block> extends IRegistryBuilder<T> {
 
     IBlockBuilder<T> isViewBlocking(BlockBehaviour.StatePredicate statePredicate);
 
-    IBlockBuilder<T> hasPostProcess(BlockBehaviour.StatePredicate statePredicate);
-
     IBlockBuilder<T> emissiveRendering(BlockBehaviour.StatePredicate statePredicate);
 
     IBlockBuilder<T> requiresCorrectToolForDrops();

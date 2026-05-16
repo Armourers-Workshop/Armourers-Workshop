@@ -20,8 +20,8 @@ public class AbstractSavedDataType<T extends AbstractSavedData> {
         };
     }
 
-    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String id) {
-        return new AbstractSavedDataType<>(id, factory);
+    public static <T extends AbstractSavedData> AbstractSavedDataType<T> create(Supplier<T> factory, String name, String id) {
+        return new AbstractSavedDataType<>(name, factory);
     }
 
     public T computeIfAbsent(DimensionDataStorage storage) {

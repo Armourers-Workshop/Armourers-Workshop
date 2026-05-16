@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.co
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
 import manifold.ext.rt.api.Extension;
@@ -15,7 +15,7 @@ public class EntityDataSerializerExt {
     public static TypedProvider<EntityDataSerializer<?>> createEntityDataSerializerRegistryFA(@ThisClass Class<?> clazz) {
         return TypedProvider.passthrough((registryName, value) -> {
             // register to real item.
-            FabricTrackedDataRegistry.register(registryName.get(), value);
+            FabricEntityDataRegistry.register(registryName.get(), value);
         });
     }
 }

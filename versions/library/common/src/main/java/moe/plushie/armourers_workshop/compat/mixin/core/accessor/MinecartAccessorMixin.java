@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.compat.api.entity.MinecartAccessor;
 import net.minecraft.world.entity.vehicle.Minecart;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Available("[16, )")
+@Available("[16, 26)")
 @Mixin(Minecart.class)
 public abstract class MinecartAccessorMixin implements MinecartAccessor {
 }

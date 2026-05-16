@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.client.other.ConcurrentBufferCompiler
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingContext;
 import moe.plushie.armourers_workshop.core.client.other.ConcurrentRenderingPipeline;
 import moe.plushie.armourers_workshop.core.client.other.SceneBufferBuilder;
-import moe.plushie.armourers_workshop.core.client.shader.Shader;
+import moe.plushie.armourers_workshop.core.client.other.SceneGraphicsContext;
 import moe.plushie.armourers_workshop.core.client.shader.ShaderVertexGroup;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTexture;
 import moe.plushie.armourers_workshop.core.math.OpenPoseStack;
@@ -70,6 +70,14 @@ public class SkinPartElement implements IGraphicsElement {
         // submit skin vertex without vbo when debug render mode.
         if (ModDebugger.withoutVBO) {
             submitWithoutVBO(context);
+            return;
+        }
+        // submit skin vertex without async vbo when debug render mode.
+        if (ModDebugger.withoutAsyncVBO) {
+            var tesselator = SceneGraphicsContext.tesselator();
+            tesselator.ctm().last().set(context.ctm().last());
+            submitWithVBO(tesselator);
+            tesselator.flush();
             return;
         }
         // submit skin vertex into graphics.
@@ -188,8 +196,6 @@ public class SkinPartElement implements IGraphicsElement {
         private final IRenderType renderType;
         private final ConcurrentRenderingPipeline pipeline;
 
-        private final Shader shader = new Shader();
-
         private Object lastContext;
 
         protected Channel(IRenderType renderType, ConcurrentRenderingPipeline pipeline) {
@@ -209,12 +215,17 @@ public class SkinPartElement implements IGraphicsElement {
 
         @Override
         public void setupRenderState() {
-            // ..
-            shader.setupRenderState();
+            // open a render transaction of the pipeline.
+            pipeline.beginTransaction();
 
             // we let the vanilla's rendering system normal call rendering once,
             // and then insert our the rendering content in end stage.
-            RenderSystem.setDrawElementsCallback(this::callout);
+            RenderSystem.setDrawElementsCallback(() -> {
+                // allow the next render task.
+                reset();
+                // flush the pipeline pass of the render type.
+                pipeline.flush(renderType);
+            });
         }
 
         @Override
@@ -222,13 +233,12 @@ public class SkinPartElement implements IGraphicsElement {
             // the draw callback is completed, clear it.
             RenderSystem.setDrawElementsCallback(null);
 
-            // ..
-            shader.clearRenderState();
+            // end a render transaction of the device.
+            pipeline.endTransaction();
         }
 
-        protected void callout() {
+        public void reset() {
             lastContext = null;
-            pipeline.render(shader, renderType);
         }
 
         @Override

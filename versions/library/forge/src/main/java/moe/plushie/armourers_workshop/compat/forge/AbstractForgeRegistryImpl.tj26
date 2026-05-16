@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.compat.forge;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
-import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
