@@ -15,43 +15,55 @@ jobs:
         version: [ '16.5', '18.2', '19.2', '20.1', '21.1', '26.1' ]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
 
       - name: Setup environment
         id: setup-env
-        run: ./scripts/setup.sh "${{ github.sha }}" "${{ matrix.version }}" >> "$GITHUB_OUTPUT"
+        run: ./scripts/setup.sh "3.0.0-build.${{ github.run_number }}" "${{ matrix.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Setup cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ steps.setup-env.outputs.cache_key }}
           path: ${{ steps.setup-env.outputs.cache_path }}
 
       - name: Switch to ${{ matrix.version }}
-        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} -p "versions/${{ matrix.version }}"
+        run: ./gradlew -Pversion="${{ steps.setup-env.outputs.version }}" -p "versions/${{ matrix.version }}"
 
       - name: Build Project
-        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} build
+        run: ./gradlew -Pversion="${{ steps.setup-env.outputs.version }}" build
 
       # this is a bug in the java 25 bug, it can be removed java 27 is released.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: ${{ matrix.version == '16.5' }}
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Run server test
-        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} runServerTest
+        run: ./gradlew -Pversion="${{ steps.setup-env.outputs.version }}" runServerTest
+
+      - name: Upload fabric artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          path: fabric/build/libs/${{ steps.setup-env.outputs.fabric_archives_name }}.jar
+          archive: false
+
+      - name: Upload forge artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          path: forge/build/libs/${{ steps.setup-env.outputs.forge_archives_name }}.jar
+          archive: false
 
   init:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
@@ -62,7 +74,7 @@ jobs:
 
       - name: Setup cache
         id: setup-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: ${{ steps.setup-env.outputs.cache_key }}
           path: ${{ steps.setup-env.outputs.cache_path }}
