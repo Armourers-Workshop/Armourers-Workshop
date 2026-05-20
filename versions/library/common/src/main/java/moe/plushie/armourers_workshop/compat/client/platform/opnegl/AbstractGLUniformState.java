@@ -25,7 +25,7 @@ public class AbstractGLUniformState {
     public final Storage<OpenMatrix4f> modelViewMatrix = new Storage<>(null);
     public final Storage<OpenVector4f> colorModulator = new Storage<>(OpenVector4f.ONE);
 
-    public final Int2ObjectOpenHashMap<List<AbstractGLUniform>> values = new Int2ObjectOpenHashMap<>();
+    public final Int2ObjectOpenHashMap<List<AbstractGLUniform<?>>> values = new Int2ObjectOpenHashMap<>();
 
     public void pushMatrices() {
         objectNormalMatrix.save();
@@ -63,7 +63,7 @@ public class AbstractGLUniformState {
         values.clear();
     }
 
-    protected List<AbstractGLUniform> get(int program) {
+    protected List<AbstractGLUniform<?>> get(int program) {
         var uniforms = values.get(program);
         if (uniforms != null) {
             return uniforms;

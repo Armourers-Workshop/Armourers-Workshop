@@ -4,6 +4,8 @@ import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
+import java.nio.FloatBuffer;
+
 @SuppressWarnings("unused")
 public class OpenVector4f {
 
@@ -31,6 +33,14 @@ public class OpenVector4f {
 
     public OpenVector4f(OpenVector4f pos) {
         this(pos.x, pos.y, pos.z, pos.w);
+    }
+
+    public OpenVector4f(FloatBuffer buffer) {
+        this(buffer.get(0), buffer.get(1), buffer.get(2), buffer.get(3));
+    }
+
+    public void set(OpenVector4f pos) {
+        set(pos.x, pos.y, pos.z, pos.w);
     }
 
     public void set(float x, float y, float z, float w) {

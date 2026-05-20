@@ -8,7 +8,8 @@
     "client/renderer/GameRendererMixin",
     "client/other/GlStateManagerMixin",
     "client/gui/GuiGraphicsMixin",
-    "client/bugfix/MergeRenderingMixin"
+    "client/bugfix/MergeRenderingMixin",
+    "client/shader/ShaderVeilMixin"
   ],
   "mixins": [
     "addon/KubeJSMixin",
