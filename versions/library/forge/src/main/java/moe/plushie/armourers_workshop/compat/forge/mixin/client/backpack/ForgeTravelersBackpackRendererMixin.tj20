@@ -34,6 +34,6 @@ public class ForgeTravelersBackpackRendererMixin {
     }
 
     static {
-        SlotManager.registerArmorSlot(Player.class, CapabilityUtils::getWearingBackpack);
+        SlotManager.registerArmorSlot(Player.class, "travelersbackpack", CapabilityUtils::getWearingBackpack);
     }
 }

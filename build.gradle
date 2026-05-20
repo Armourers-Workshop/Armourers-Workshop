@@ -60,7 +60,7 @@ allprojects {
     }
 
     base {
-        archivesName = "${uname}-${project.name}-${project.minecraft_version}"
+        archivesName = "${uname}-${project.name}-${project.minecraft_api_version}"
     }
 
     repositories {

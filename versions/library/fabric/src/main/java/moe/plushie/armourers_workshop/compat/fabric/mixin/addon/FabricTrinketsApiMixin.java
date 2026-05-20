@@ -42,7 +42,7 @@ public class FabricTrinketsApiMixin {
                 return null;
             }
         };
-        SlotManager.registerArmorSlots(LivingEntity.class, entity -> {
+        SlotManager.registerArmorSlots(LivingEntity.class, "trinkets", entity -> {
             Object component = TrinketsApi.getTrinketComponent(entity).orElse(null);
             if (component != null) {
                 var items = getEquipped.apply(component, Objects::nonNull);

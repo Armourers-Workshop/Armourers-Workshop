@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class FabricTrinketsApiMixin {
 
     static {
-        SlotManager.registerArmorSlots(Player.class, entity -> {
+        SlotManager.registerArmorSlots(Player.class, "trinkets", entity -> {
             var container = TrinketsApi.getTrinketsInventory(entity);
             int size = container.getContainerSize();
             var itemStacks = new ArrayList<ItemStack>(size);

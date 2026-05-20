@@ -52,6 +52,6 @@ public class FabricTravelersBackpackRendererMixin {
                 return ItemStack.EMPTY;
             }
         };
-        SlotManager.registerArmorSlot(Player.class, getWearingBackpack);
+        SlotManager.registerArmorSlot(Player.class, "travelersbackpack", getWearingBackpack);
     }
 }

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ '16.5', '18.2', '19.2', '20.1', '21.1' ]
+        version: [ '16.5', '18.2', '19.2', '20.1', '21.1', '26.1' ]
 
     steps:
       - uses: actions/checkout@v4
@@ -46,12 +46,12 @@ jobs:
       - name: Upload Fabric Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          name: armourersworkshop-fabric-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
-          version: fabric-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
+          name: armourersworkshop-fabric-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}
+          version: fabric-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}
           version-type: beta
           #version-type: release
 
-          files: fabric/build/libs/!(*-@(dev-shadow|sources|javadoc|)).jar
+          files: fabric/build/libs/armourersworkshop-fabric-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}.jar
 
           game-versions: ${{ steps.setup-env.outputs.game_version }}
 
@@ -70,11 +70,11 @@ jobs:
       - name: Upload Forge Files
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          name: armourersworkshop-forge-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
-          version: forge-${{ matrix.version }}-${{ steps.setup-env.outputs.release_version }}
+          name: armourersworkshop-forge-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}
+          version: forge-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}
           version-type: beta
 
-          files: forge/build/libs/!(*-@(dev-shadow|sources|javadoc)).jar
+          files: forge/build/libs/armourersworkshop-forge-${{ steps.setup-env.outputs.game_version }}-${{ steps.setup-env.outputs.release_version }}.jar
 
           game-versions: ${{ steps.setup-env.outputs.game_version }}
 

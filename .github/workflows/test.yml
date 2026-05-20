@@ -12,18 +12,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ '16.5', '18.2', '19.2', '20.1', '21.1' ]
+        version: [ '16.5', '18.2', '19.2', '20.1', '21.1', '26.1' ]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '25'
 
       - name: Setup environment
         id: setup-env
-        run: ./scripts/setup.sh >> "$GITHUB_OUTPUT"
+        run: ./scripts/setup.sh "${{ github.sha }}" "${{ matrix.version }}" >> "$GITHUB_OUTPUT"
 
       - name: Setup cache
         uses: actions/cache/restore@v4
@@ -32,13 +32,20 @@ jobs:
           path: ${{ steps.setup-env.outputs.cache_path }}
 
       - name: Switch to ${{ matrix.version }}
-        run: ./gradlew -p "versions/${{ matrix.version }}"
+        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} -p "versions/${{ matrix.version }}"
 
-      - name: Build project
-        run: ./gradlew build
+      - name: Build Project
+        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} build
+
+      # this is a bug in the java 25 bug, it can be removed java 27 is released.
+      - uses: actions/setup-java@v4
+        if: ${{ matrix.version == '16.5' }}
+        with:
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Run server test
-        run: ./gradlew runServerTest
+        run: ./gradlew -Pversion=${{ steps.setup-env.outputs.release_version }} runServerTest
 
   init:
     runs-on: ubuntu-latest

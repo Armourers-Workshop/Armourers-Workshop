@@ -19,7 +19,7 @@ import java.util.Objects;
 public class ForgeCuriosApiMixin {
 
     static {
-        SlotManager.registerArmorSlots(LivingEntity.class, entity -> Collections.compactMap(CuriosApi.getCuriosInventory(entity).map(it -> it.findCurios(Objects::nonNull)).orElse(Collections.emptyList()), it -> {
+        SlotManager.registerArmorSlots(LivingEntity.class, "curios", entity -> Collections.compactMap(CuriosApi.getCuriosInventory(entity).map(it -> it.findCurios(Objects::nonNull)).orElse(Collections.emptyList()), it -> {
             if (it.slotContext().visible()) {
                 return it.stack();
             }

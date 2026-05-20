@@ -19,12 +19,18 @@ public class SlotManager {
         return PROVIDERS;
     }
 
-    public static <T extends Entity> void registerHandSlot(Class<T> entityClass, Function<T, ItemStack> provider) {
-        registerHandSlots(entityClass, it -> Collections.singleton(provider.apply(it)));
+    public static <T extends Entity> void registerHandSlot(Class<T> entityClass, String source, Function<T, ItemStack> provider) {
+        registerHandSlots(entityClass, source, it -> Collections.singleton(provider.apply(it)));
     }
 
-    public static <T extends Entity> void registerHandSlots(Class<T> entityClass, Function<T, ? extends Collection<ItemStack>> provider) {
+    public static <T extends Entity> void registerHandSlots(Class<T> entityClass, String source, Function<T, ? extends Collection<ItemStack>> provider) {
         register(new SlotManager.Provider() {
+
+            @Override
+            public String source() {
+                return source;
+            }
+
             @Override
             public Iterable<ItemStack> getHandSlots(Entity entity) {
                 if (entityClass.isInstance(entity)) {
@@ -35,12 +41,18 @@ public class SlotManager {
         });
     }
 
-    public static <T extends Entity> void registerArmorSlot(Class<T> entityClass, Function<T, ItemStack> provider) {
-        registerArmorSlots(entityClass, it -> Collections.singleton(provider.apply(it)));
+    public static <T extends Entity> void registerArmorSlot(Class<T> entityClass, String source, Function<T, ItemStack> provider) {
+        registerArmorSlots(entityClass, source, it -> Collections.singleton(provider.apply(it)));
     }
 
-    public static <T extends Entity> void registerArmorSlots(Class<T> entityClass, Function<T, ? extends Collection<ItemStack>> provider) {
+    public static <T extends Entity> void registerArmorSlots(Class<T> entityClass, String source, Function<T, ? extends Collection<ItemStack>> provider) {
         register(new SlotManager.Provider() {
+
+            @Override
+            public String source() {
+                return source;
+            }
+
             @Override
             public Iterable<ItemStack> getArmorSlots(Entity entity) {
                 if (entityClass.isInstance(entity)) {
@@ -56,6 +68,10 @@ public class SlotManager {
     }
 
     public interface Provider {
+
+        default String source() {
+            return null;
+        }
 
         default Iterable<ItemStack> getArmorSlots(Entity entity) {
             return null;

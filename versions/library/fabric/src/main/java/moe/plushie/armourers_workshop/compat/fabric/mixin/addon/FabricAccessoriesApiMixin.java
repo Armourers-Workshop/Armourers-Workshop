@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 public class FabricAccessoriesApiMixin {
 
     static {
-        SlotManager.registerArmorSlots(LivingEntity.class, entity -> Collections.compactMap(AccessoriesCapability.getOptionally(entity).map(AccessoriesCapability::getAllEquipped).orElse(Collections.emptyList()), it -> {
+        SlotManager.registerArmorSlots(LivingEntity.class, "accessories", entity -> Collections.compactMap(AccessoriesCapability.getOptionally(entity).map(AccessoriesCapability::getAllEquipped).orElse(Collections.emptyList()), it -> {
             var itemStack = it.stack();
             if (itemStack.isEmpty()) {
                 return ItemStack.EMPTY;
