@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,16 +21,16 @@ public abstract class AbstractCreativeModeTabBuilder<T extends CreativeModeTab> 
     }
 
     public T build(OpenResourceKey registryName) {
-        var reference = new CreativeModeTab[1];
+        var reference = new AtomicReference<CreativeModeTab>();
         var tab = create(registryName, displayItems -> {
-            var tab1 = reference[0];
+            var tab1 = reference.get();
             for (var item : DisplayItemProvider.getItem(tab1)) {
                 if (item instanceof AbstractItemHandler handler) {
                     handler.fill(displayItems, tab1);
                 }
             }
         });
-        reference[0] = tab;
+        reference.set(tab);
         return Objects.unsafeCast(tab);
     }
 

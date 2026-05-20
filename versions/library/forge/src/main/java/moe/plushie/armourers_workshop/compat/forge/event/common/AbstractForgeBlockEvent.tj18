@@ -56,8 +56,8 @@ public class AbstractForgeBlockEvent {
         });
     }
 
-    public static IEventHandler<BlockEvent.Break> breakFactory() {
-        return AbstractForgeCommonEventsImpl.BLOCK_BREAK.map(event -> new BlockEvent.Break() {
+    public static IEventHandler<BlockEvent.Destroy> destroyFactory() {
+        return AbstractForgeCommonEventsImpl.BLOCK_DESTROY.map(event -> new BlockEvent.Destroy() {
 
             @Override
             public Entity entity() {

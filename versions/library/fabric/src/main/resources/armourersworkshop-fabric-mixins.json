@@ -1,0 +1,34 @@
+{
+  "required": true,
+  "plugin": "moe.plushie.armourers_workshop.api.annotation.Resolver",
+  "package": "moe.plushie.armourers_workshop.compat.fabric.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "client/gui/FabricItemTooltipMixin",
+
+    "client/renderer/FabricPlayerRendererMixin",
+
+    "client/renderer/FabricClientScreenRenderMixin",
+    "client/renderer/FabricClientFrameRenderMixin",
+
+    "client/particle/FabricParticleManagerMixin",
+
+    "client/other/FabricClientPlayerLifecycleMixin",
+    "client/other/FabricBlockEntityUpdatePacketMixin",
+
+    "client/other/FabricMinecraftMixin",
+    "client/other/FabricEntityHandlerMixin"
+  ],
+  "mixins": [
+    "core/FabricBlockItemMixin",
+    "core/FabricEntityMixin",
+    "core/FabricLivingEntityMixin",
+    "core/FabricEntityTrackerMixin",
+    "core/FabricHopperBlockEntityMixin",
+    "core/FabricEntitySizeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

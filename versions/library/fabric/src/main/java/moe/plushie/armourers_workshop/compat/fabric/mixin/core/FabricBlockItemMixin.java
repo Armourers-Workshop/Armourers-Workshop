@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
+import moe.plushie.armourers_workshop.compat.fabric.core.event.AbstractFabricBlockEventImpl;
+import moe.plushie.armourers_workshop.init.event.common.BlockEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,8 +20,9 @@ public class FabricBlockItemMixin {
 
     @Inject(method = "place", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BlockItem;placeBlock(Lnet/minecraft/world/item/context/BlockPlaceContext;Lnet/minecraft/world/level/block/state/BlockState;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
     private void aw2$placeBlock(BlockPlaceContext blockPlaceContext, CallbackInfoReturnable<InteractionResult> cir, BlockPlaceContext blockPlaceContext2, BlockState blockState) {
-        if (!PlayerBlockPlaceEvents.BEFORE.invoker().place(blockPlaceContext2, blockState)) {
-            cir.setReturnValue(InteractionResult.FAIL);
-        }
+        var player = blockPlaceContext2.getPlayer();
+        var level = blockPlaceContext2.getLevel();
+        var blockPos = blockPlaceContext2.getClickedPos();
+        EventManager.post(BlockEvent.Place.class, AbstractFabricBlockEventImpl.place(level, player, blockPos, blockState));
     }
 }

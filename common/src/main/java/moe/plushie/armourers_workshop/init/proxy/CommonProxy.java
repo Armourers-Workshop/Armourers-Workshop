@@ -165,6 +165,6 @@ public class CommonProxy {
         });
 
         EventBus.register(BlockEvent.Place.class, BlockUtils::snapshot);
-        EventBus.register(BlockEvent.Break.class, BlockUtils::snapshot);
+        EventBus.register(BlockEvent.Destroy.class, BlockUtils::snapshot);
     }
 }

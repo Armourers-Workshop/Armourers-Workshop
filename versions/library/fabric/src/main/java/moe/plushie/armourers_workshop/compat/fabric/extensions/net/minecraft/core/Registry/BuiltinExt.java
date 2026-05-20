@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.co
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricRegistry;
+import moe.plushie.armourers_workshop.compat.fabric.core.AbstractFabricRegistry;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;

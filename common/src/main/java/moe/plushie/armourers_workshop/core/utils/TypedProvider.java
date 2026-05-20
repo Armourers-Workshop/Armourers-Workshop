@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.utils;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -71,14 +72,13 @@ public interface TypedProvider<T> {
 
             @Override
             public <I extends R> Supplier<I> register(OpenResourceKey registryName, Function<OpenResourceKey, ? extends I> supplier) {
-                Object[] reference = new Object[1];
+                var reference = new AtomicReference<I>();
                 TypedProvider.this.register(registryName, it -> {
                     var value = supplier.apply(it);
-                    reference[0] = value; // create may be delayed.
+                    reference.set(value); // create may be delayed.
                     return transform.apply(value);
                 });
-                // noinspection unchecked
-                return () -> (I) reference[0];
+                return reference::get;
             }
         };
     }

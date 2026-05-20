@@ -54,7 +54,7 @@ public class AbstractForgeCommonEvents extends AbstractForgeCommonEventsImpl {
 
         EventManager.post(ServerLevelAddEntityEvent.class, AbstractForgeServerLevelEvent.addEntityFactory());
 
-        EventManager.post(BlockEvent.Break.class, AbstractForgeBlockEvent.breakFactory());
+        EventManager.post(BlockEvent.Destroy.class, AbstractForgeBlockEvent.destroyFactory());
         EventManager.post(BlockEvent.Place.class, AbstractForgeBlockEvent.placeFactory());
 
         EventManager.post(PlayerEvent.LoggingIn.class, AbstractForgePlayerEvent.loggingInFactory());

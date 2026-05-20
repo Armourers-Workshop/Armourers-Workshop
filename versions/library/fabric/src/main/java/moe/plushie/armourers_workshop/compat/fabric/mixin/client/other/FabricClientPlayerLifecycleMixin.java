@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin.client.other;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientPlayerLifecycleEvents;
+import moe.plushie.armourers_workshop.compat.fabric.client.event.AbstractFabricClientPlayerEventImpl;
+import moe.plushie.armourers_workshop.init.event.client.ClientPlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
@@ -26,7 +28,7 @@ public class FabricClientPlayerLifecycleMixin {
     public void aw2$respawnPost(ClientboundRespawnPacket packet, CallbackInfo ci) {
         var oldPlayer = aw2$respawnOldPlayer;
         var newPlayer = Minecraft.getInstance().player;
-        ClientPlayerLifecycleEvents.CLONE.invoker().accept(oldPlayer, newPlayer);
+        EventManager.post(ClientPlayerEvent.Clone.class, AbstractFabricClientPlayerEventImpl.clone(oldPlayer, newPlayer));
         aw2$respawnOldPlayer = null;
     }
 }

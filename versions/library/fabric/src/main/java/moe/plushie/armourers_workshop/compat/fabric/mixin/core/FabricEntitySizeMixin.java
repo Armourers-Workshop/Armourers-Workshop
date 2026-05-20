@@ -1,12 +1,15 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
+import moe.plushie.armourers_workshop.init.event.common.EntityEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Available("[16, )")
 @Mixin(Entity.class)
@@ -15,6 +18,23 @@ public abstract class FabricEntitySizeMixin {
     @ModifyVariable(method = "refreshDimensions", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/Entity;getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;"), ordinal = 1)
     private EntityDimensions aw2$refreshDimensions(EntityDimensions dimensions) {
         var entity = Entity.class.cast(this);
-        return EntityLifecycleEvents.SIZE.invoker().resize(entity, entity.getPose(), dimensions, dimensions);
+        var outputSize = new AtomicReference<>(dimensions);
+        EventManager.post(EntityEvent.ReloadSize.class, new EntityEvent.ReloadSize() {
+            @Override
+            public Entity entity() {
+                return entity;
+            }
+
+            @Override
+            public void setSize(EntityDimensions size) {
+                outputSize.set(size);
+            }
+
+            @Override
+            public EntityDimensions size() {
+                return outputSize.get();
+            }
+        });
+        return outputSize.get();
     }
 }

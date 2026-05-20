@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.core.Registry;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricRegistry;
+import moe.plushie.armourers_workshop.compat.fabric.core.AbstractFabricRegistry;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import net.minecraft.world.item.CreativeModeTab;
 

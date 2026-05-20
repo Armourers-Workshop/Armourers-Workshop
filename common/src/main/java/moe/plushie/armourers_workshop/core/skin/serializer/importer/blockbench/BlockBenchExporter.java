@@ -66,6 +66,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class BlockBenchExporter {
@@ -205,7 +206,7 @@ public class BlockBenchExporter {
         var options = new SkinGeometryOptions();
         var faces = new ArrayList<SkinMeshFace>();
         var transform = OpenTransform3f.create(mesh.origin, mesh.rotation, OpenVector3f.ONE, OpenVector3f.ZERO, OpenVector3f.ZERO);
-        var defaultTexturePos = new SkinTexturePos[1];
+        var defaultTexturePos = new AtomicReference<SkinTexturePos>();
         var sequence = new AtomicInteger();
         mesh.faces.stream().sorted(Comparator.comparingInt(it -> it.vertices.size())).forEachOrdered(it -> {
             // ignore all not use texture face.
@@ -224,10 +225,10 @@ public class BlockBenchExporter {
                 TextureResolution.applyBoundary(texturePos.provider(), textureCoords.x(), textureCoords.y());
             });
             faces.add(new SkinMeshFace(faceId, type, options, transform, texturePos, vertices));
-            defaultTexturePos[0] = texturePos;
+            defaultTexturePos.set(texturePos);
         });
         options.setRenderOrder(exportRenderOrder(mesh.renderOrder));
-        return new SkinGeometrySetV2.Mesh(type, options, transform, defaultTexturePos[0], faces);
+        return new SkinGeometrySetV2.Mesh(type, options, transform, defaultTexturePos.get(), faces);
     }
 
     protected OpenItemTransforms exportItemTransforms(Map<String, BlockBenchDisplay> transforms) {

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.compat.fabric.mixin.client.renderer;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderMode;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.ClientScreenRenderEvents;
+import moe.plushie.armourers_workshop.init.event.client.RenderScreenEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,12 +18,12 @@ public class FabricClientScreenRenderMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/render/GuiRenderer;render(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", shift = At.Shift.BEFORE))
     private void aw2$renderPre(DeltaTracker deltaTracker, boolean bl, CallbackInfo ci) {
         SkinRenderMode.push(SkinRenderMode.GUI);
-        ClientScreenRenderEvents.START.invoker().onStart(Minecraft.getInstance());
+        EventManager.post(RenderScreenEvent.Pre.class, () -> null);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/render/GuiRenderer;render(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", shift = At.Shift.AFTER))
     private void aw2$renderPost(DeltaTracker deltaTracker, boolean bl, CallbackInfo ci) {
-        ClientScreenRenderEvents.END.invoker().onEnd(Minecraft.getInstance());
+        EventManager.post(RenderScreenEvent.Post.class, () -> null);
         SkinRenderMode.pop();
     }
 }

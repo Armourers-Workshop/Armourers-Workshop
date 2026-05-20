@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.fabric.builder;
 import moe.plushie.armourers_workshop.api.client.key.IKeyCategory;
 import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.compat.builder.AbstractKeyMappingBuilder;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricKeyMapping;
+import moe.plushie.armourers_workshop.compat.fabric.client.AbstractFabricKeyMapping;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
 public class AbstractFabricKeyMappingBuilder<T extends IKeyMapping> extends AbstractKeyMappingBuilder<T> {

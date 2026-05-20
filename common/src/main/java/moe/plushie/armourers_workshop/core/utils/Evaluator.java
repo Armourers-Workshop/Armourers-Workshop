@@ -48,7 +48,7 @@ public class Evaluator {
         return result;
     }
 
-    protected static class Parser {
+    private static class Parser {
 
         private final List<Token> tokens;
         private final Function<String, Optional<Version>> resolver;
@@ -139,7 +139,7 @@ public class Evaluator {
         }
     }
 
-    protected static class Tokenizer {
+    private static class Tokenizer {
 
         private static final LinkedHashMap<Object, Kind> TEMPLATE = new LinkedHashMap<>();
 
@@ -207,7 +207,7 @@ public class Evaluator {
         }
     }
 
-    protected static class Token {
+    private static class Token {
 
         public static final Token END = new Token(Kind.EOF, null);
 
@@ -249,7 +249,7 @@ public class Evaluator {
         }
     }
 
-    protected enum Kind {
+    private enum Kind {
         IDENTIFIER, // mod id, mod version
 
         EQ,         // ==

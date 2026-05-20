@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.compat.fabric.mixin.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityLifecycleEvents;
+import moe.plushie.armourers_workshop.init.event.common.PlayerEvent;
+import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -24,6 +25,16 @@ public class FabricEntityTrackerMixin {
     private void aw2$startTracking(ServerPlayer player, CallbackInfo ci) {
         // the fabric start tracking event is too early, it will callback before the vanilla handler,
         // so we need a new start tracking callback after the vanilla handler completed.
-        EntityLifecycleEvents.DID_START_TRACKING.invoker().onStartTracking(this.entity, player);
+        EventManager.post(PlayerEvent.StartTracking.class, new PlayerEvent.StartTracking() {
+            @Override
+            public Entity target() {
+                return entity;
+            }
+
+            @Override
+            public ServerPlayer player() {
+                return player;
+            }
+        });
     }
 }

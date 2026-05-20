@@ -292,16 +292,27 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     public void brokenByAnything(Level level, BlockPos blockPos, BlockState blockState, @Nullable Player player) {
         if (dropItems(level, blockPos, player)) {
-            killSeatEntities(level, blockPos);
+            if (level instanceof ServerLevel serverLevel) {
+                killSeatEntities(serverLevel, blockPos);
+            }
             forEach(level, blockPos, target -> level.setBlock(target, Blocks.AIR.defaultBlockState(), 35));
         }
     }
 
-    public void killSeatEntities(Level level, BlockPos blockPos) {
+    protected void killSeatEntities(ServerLevel level, BlockPos blockPos) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             var seatPos = blockEntity.getSeatPos().adding(0.5f, 0.5f, 0.5f);
-            killSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
+            killSeatEntity(level, blockEntity.getParentPos(), seatPos);
+        }
+    }
+
+    protected void killSeatEntity(ServerLevel level, BlockPos blockPos, OpenVector3d pos) {
+        var searchRect = new AABB(pos.x(), pos.y(), pos.z(), pos.x() + 1, pos.y() + 1, pos.z() + 1);
+        for (var entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+            if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
+                entity.kill(level);
+            }
         }
     }
 
@@ -353,14 +364,5 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
         entity.setBlockPos(blockPos);
         level.addFreshEntity(entity);
         return entity;
-    }
-
-    private void killSeatEntity(ServerLevel level, BlockPos blockPos, OpenVector3d pos) {
-        var searchRect = new AABB(pos.x(), pos.y(), pos.z(), pos.x() + 1, pos.y() + 1, pos.z() + 1);
-        for (var entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
-            if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
-                entity.kill(level);
-            }
-        }
     }
 }

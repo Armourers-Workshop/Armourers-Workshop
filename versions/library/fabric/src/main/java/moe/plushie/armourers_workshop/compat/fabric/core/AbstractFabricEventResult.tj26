@@ -1,0 +1,19 @@
+package moe.plushie.armourers_workshop.compat.fabric.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import net.fabricmc.fabric.api.util.EventResult;
+
+@Available("[26, )")
+public class AbstractFabricEventResult {
+
+    public static EventResult wrap(OpenInteractionResult result) {
+        if (result == OpenInteractionResult.SUCCESS) {
+            return EventResult.ALLOW;
+        }
+        if (result == OpenInteractionResult.FAIL) {
+            return EventResult.DENY;
+        }
+        return EventResult.PASS;
+    }
+}

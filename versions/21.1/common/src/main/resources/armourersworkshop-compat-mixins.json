@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "plugin": "moe.plushie.armourers_workshop.api.annotation.Resolver",
+  "package": "moe.plushie.armourers_workshop.compat.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "addon/RoughlyEnoughItemsMixin",
+    "client/renderer/GameRendererMixin",
+    "client/other/GlStateManagerMixin",
+    "client/gui/GuiGraphicsMixin",
+    "client/bugfix/MergeRenderingMixin",
+    "client/shader/ShaderVeilMixin"
+  ],
+  "mixins": [
+    "addon/KubeJSMixin",
+    "core/datafix/V1460Mixin",
+    "core/other/VehicleEntityPlaceMixin",
+    "core/other/VehicleEntityBreakMixin",
+    "core/other/ComponentizationFixMixin$ItemFixer",
+    "core/other/ComponentizationFixMixin$EntityFixer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

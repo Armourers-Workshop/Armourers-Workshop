@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "plugin": "moe.plushie.armourers_workshop.api.annotation.Resolver",
+  "package": "moe.plushie.armourers_workshop.compat.fabric.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "addon/FabricReplayMixin",
+    "addon/FabricTrinketsApiMixin",
+    "client/dynamiclight/FabricRyoamicLightsMixin$ItemLightHandler",
+    "client/dynamiclight/FabricRyoamicLightsMixin$EntityLightHandler",
+    "client/dynamiclight/FabricRyoamicLightsMixin$BlockEntityLightHandler",
+    "client/dynamiclight/FabricLambDynamicLightsMixin$ItemLightHandler",
+    "client/dynamiclight/FabricLambDynamicLightsMixin$EntityLightHandler",
+    "client/dynamiclight/FabricLambDynamicLightsMixin$BlockEntityLightHandler",
+    "client/backpack/FabricTravelersBackpackRendererMixin"
+  ],
+  "mixins": [
+    "core/FabricEntityTypeBuilderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

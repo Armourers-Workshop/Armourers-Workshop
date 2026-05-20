@@ -20,9 +20,9 @@ public interface BlockEvent {
 
     IBlockSnapshot snapshot();
 
-    interface Break extends BlockEvent {
+    interface Place extends BlockEvent {
     }
 
-    interface Place extends BlockEvent {
+    interface Destroy extends BlockEvent {
     }
 }

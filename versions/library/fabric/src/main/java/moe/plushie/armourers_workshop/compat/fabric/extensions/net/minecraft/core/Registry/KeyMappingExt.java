@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.co
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricKeyMapping;
+import moe.plushie.armourers_workshop.compat.fabric.client.AbstractFabricKeyMapping;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 

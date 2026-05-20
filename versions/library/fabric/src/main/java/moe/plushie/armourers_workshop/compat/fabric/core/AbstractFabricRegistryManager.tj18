@@ -1,0 +1,87 @@
+package moe.plushie.armourers_workshop.compat.fabric.core;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import net.minecraft.core.Registry;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+@Available("[18, 20)")
+public class AbstractFabricRegistryManager extends AbstractRegistryManager {
+
+    public static final AbstractFabricRegistryManager INSTANCE = new AbstractFabricRegistryManager();
+
+    @Override
+    protected OpenResourceKey getItemKey0(Item item) {
+        return Registry.findKey(Registry.ITEM, item);
+    }
+
+    @Override
+    protected OpenResourceKey getBlockKey0(Block block) {
+        return Registry.findKey(Registry.BLOCK, block);
+    }
+
+    @Override
+    protected Predicate<ItemStack> getItemTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registry.ITEM_REGISTRY, key);
+        return itemStack -> itemStack.is(tag);
+    }
+
+    @Override
+    protected Predicate<BlockState> getBlockTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registry.BLOCK_REGISTRY, key);
+        return blockState -> blockState.is(tag);
+    }
+
+    @Override
+    protected Predicate<Biome> getBiomeTag0(OpenResourceKey key) {
+        var tag = Registry.findTag(Registry.BIOME_REGISTRY, key);
+        return info -> info.getLevel().getBiome(info.getBlockPos()).is(tag);
+    }
+
+    @Override
+    protected Item getItem0(OpenResourceKey key) {
+        return Registry.findValue(Registry.ITEM, key);
+    }
+
+    @Override
+    protected Block getBlock0(OpenResourceKey key) {
+        return Registry.findValue(Registry.BLOCK, key);
+    }
+
+    @Override
+    protected Function<ItemStack, Integer> getEnchantment0(OpenResourceKey key) {
+        var enchantment = Registry.findValue(Registry.ENCHANTMENT, key);
+        if (enchantment != null) {
+            return itemStack -> EnchantmentHelper.getItemEnchantmentLevel(enchantment, itemStack);
+        }
+        return null;
+    }
+
+    @Override
+    protected Function<LivingEntity, MobEffectInstance> getEffect0(OpenResourceKey key) {
+        var effect = Registry.findValue(Registry.MOB_EFFECT, key);
+        if (effect != null) {
+            return entity -> entity.getEffect(effect);
+        }
+        return null;
+    }
+
+    @Override
+    protected Function<LivingEntity, Double> getAttribute0(OpenResourceKey key) {
+        var attribute = Registry.findValue(Registry.ATTRIBUTE, key);
+        if (attribute != null) {
+            return entity -> entity.getAttributeValue(attribute);
+        }
+        return null;
+    }
+}

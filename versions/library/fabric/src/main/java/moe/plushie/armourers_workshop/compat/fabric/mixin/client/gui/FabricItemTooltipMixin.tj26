@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.fabric.mixin.client.gui;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.event.AbstractRenderItemTooltipEvent;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricTooltipComponent;
+import moe.plushie.armourers_workshop.compat.fabric.client.AbstractFabricTooltipComponent;
 import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
 import moe.plushie.armourers_workshop.init.platform.EventManager;
 import net.minecraft.client.gui.Font;

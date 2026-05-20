@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricRegistryManager;
+import moe.plushie.armourers_workshop.compat.fabric.core.AbstractFabricRegistryManager;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.PlatformManager;

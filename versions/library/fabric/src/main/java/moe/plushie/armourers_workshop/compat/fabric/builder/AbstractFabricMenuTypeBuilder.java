@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IMenuSerializer;
 import moe.plushie.armourers_workshop.api.common.IMenuType;
 import moe.plushie.armourers_workshop.compat.builder.AbstractMenuTypeBuilder;
-import moe.plushie.armourers_workshop.compat.fabric.AbstractFabricMenuType;
+import moe.plushie.armourers_workshop.compat.fabric.core.AbstractFabricMenuType;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 

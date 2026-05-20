@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "plugin": "moe.plushie.armourers_workshop.api.annotation.Resolver",
+  "package": "moe.plushie.armourers_workshop.compat.forge.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "client": [
+    "client/renderer/ForgeClientScreenRenderMixin",
+
+    "client/particle/ForgeParticleManagerMixin"
+  ],
+  "mixins": [
+    "core/ForgeBlockHandlerMixin",
+    "core/ForgeItemHandlerMixin",
+    "core/ForgeEntityHandlerMixin",
+    "core/ForgeBlockEntityHandlerMixin",
+    "core/ForgeBlockEntityCapabilityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
