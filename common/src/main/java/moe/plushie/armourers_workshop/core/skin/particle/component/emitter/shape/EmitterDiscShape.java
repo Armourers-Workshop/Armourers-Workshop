@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
@@ -79,17 +79,17 @@ public class EmitterDiscShape implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var offsetX = generator.compile(this.x, 0.0);
-        var offsetY = generator.compile(this.y, 0.0);
-        var offsetZ = generator.compile(this.z, 0.0);
-        var radius = generator.compile(this.radius, 0.0);
-        var normalX = generator.compile(this.planeNormalX, 0.0);
-        var normalY = generator.compile(this.planeNormalY, 1.0);
-        var normalZ = generator.compile(this.planeNormalZ, 0.0);
-        var direction = this.direction.compile(generator);
+    public void compile(SkinParticleCompiler compiler) {
+        var offsetX = compiler.compile(this.x, 0.0);
+        var offsetY = compiler.compile(this.y, 0.0);
+        var offsetZ = compiler.compile(this.z, 0.0);
+        var radius = compiler.compile(this.radius, 0.0);
+        var normalX = compiler.compile(this.planeNormalX, 0.0);
+        var normalY = compiler.compile(this.planeNormalY, 1.0);
+        var normalZ = compiler.compile(this.planeNormalZ, 0.0);
+        var direction = this.direction.compile(compiler);
         var surface = this.surface;
-        generator.instance().prepare((emitter, particle, context) -> {
+        compiler.instance().prepare((emitter, particle, context) -> {
             var cx = (float) offsetX.compute(context);
             var cy = (float) offsetY.compute(context);
             var cz = (float) offsetZ.compute(context);

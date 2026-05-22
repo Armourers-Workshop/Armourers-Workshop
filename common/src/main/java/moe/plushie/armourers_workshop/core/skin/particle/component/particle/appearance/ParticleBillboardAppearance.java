@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.core.math.OpenRectangle2f;
 import moe.plushie.armourers_workshop.core.math.OpenSize2f;
 import moe.plushie.armourers_workshop.core.math.OpenSize2i;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.ParticleCameraFacing;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
@@ -144,17 +144,17 @@ public class ParticleBillboardAppearance implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var width = generator.compile(this.width, 0.0);
-        var height = generator.compile(this.height, 0.0);
-        var textureCoordsX = generator.compile(this.textureCoordsX, 0.0);
-        var textureCoordsY = generator.compile(this.textureCoordsY, 0.0);
-        var textureCoordsWidth = generator.compile(this.textureCoordsWidth, 0.0);
-        var textureCoordsHeight = generator.compile(this.textureCoordsHeight, 0.0);
-        var maxFrame = generator.compile(this.maxFrame, 0);
-        var stepX = generator.compile(this.stepX, 0);
-        var stepY = generator.compile(this.stepY, 0);
-        generator.instance().render((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var width = compiler.compile(this.width, 0.0);
+        var height = compiler.compile(this.height, 0.0);
+        var textureCoordsX = compiler.compile(this.textureCoordsX, 0.0);
+        var textureCoordsY = compiler.compile(this.textureCoordsY, 0.0);
+        var textureCoordsWidth = compiler.compile(this.textureCoordsWidth, 0.0);
+        var textureCoordsHeight = compiler.compile(this.textureCoordsHeight, 0.0);
+        var maxFrame = compiler.compile(this.maxFrame, 0);
+        var stepX = compiler.compile(this.stepX, 0);
+        var stepY = compiler.compile(this.stepY, 0);
+        compiler.instance().render((emitter, particle, context) -> {
             // calculate texture uvs.
             var w = width.compute(context);
             var h = height.compute(context);
@@ -186,8 +186,8 @@ public class ParticleBillboardAppearance implements SkinParticleComponent {
                 v += stepY.compute(context) * index;
             }
             // submit a element into render pipeline.
-            var pos = particle.position();
-            var rotation = particle.rotation();
+            var pos = particle.localPosition();
+            var rotation = particle.localRotation();
             var size = new OpenSize2f(w * 2.25, h * 2.25);
             var textureBox = new OpenRectangle2f(u / n, v / m, s / n, t / m);
             particle.pipeline().submit(pos, rotation, size, textureBox, cameraFacing);

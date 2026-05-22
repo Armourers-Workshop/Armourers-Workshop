@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.thirdparty.function;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
@@ -25,9 +26,9 @@ public class ModVersionFunction extends Function {
     @Override
     public Result evaluate(final ExecutionContext context) {
         var modId = this.modId.evaluate(context);
-        var version = EnvironmentManager.getModVersion(modId.getAsString());
+        var version = EnvironmentManager.getModVersion(modId.stringValue());
         if (version != null) {
-            return Result.valueOf(version.toString());
+            return ComputedResult.valueOf(version.toString());
         }
         return Result.NULL;
     }

@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.common.ITooltipContext;
 import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
 import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
-import moe.plushie.armourers_workshop.compat.core.block.AbstractBlockImpl;
+import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.network.chat.Component;
@@ -74,7 +74,7 @@ public class AbstractBlockItemImpl extends BlockItem {
         var tooltips = new ArrayList<Component>();
         appendHoverText(itemStack, tooltips, context);
         // in 1.21.6+, the block item never call append block hover text, we need to add it manually.
-        if (getBlock() instanceof AbstractBlockImpl block) {
+        if (getBlock() instanceof AbstractBlock block) {
             block.appendHoverText(itemStack, tooltips, context);
         }
         tooltips.forEach(consumer);

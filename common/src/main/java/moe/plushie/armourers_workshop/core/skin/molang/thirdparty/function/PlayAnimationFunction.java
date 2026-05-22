@@ -26,7 +26,7 @@ public class PlayAnimationFunction extends Function {
         if (target == null) {
             return 0; // can't found target.
         }
-        var name = this.name.evaluate(context).getAsString();
+        var name = this.name.evaluate(context).stringValue();
         if (name.isEmpty()) {
             return 0;
         }

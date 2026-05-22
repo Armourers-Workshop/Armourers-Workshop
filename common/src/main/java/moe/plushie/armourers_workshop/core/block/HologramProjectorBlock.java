@@ -4,11 +4,13 @@ import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntit
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.core.utils.OpenOrientation;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModMenuTypes;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements AbstractBlockEntityProvider {
 
@@ -36,7 +39,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
     }
 
     @Override
-    protected void abi$neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
+    protected void abi$neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean movedByPiston) {
         var blockEntity = getBlockEntity(level, blockPos);
         if (blockEntity != null) {
             blockEntity.updateBlockStates();

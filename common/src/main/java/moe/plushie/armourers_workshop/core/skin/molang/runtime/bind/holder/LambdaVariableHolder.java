@@ -22,13 +22,13 @@ public class LambdaVariableHolder extends ConstantHolder {
         this.impl = impl;
     }
 
-    public static void push() {
+    public static void beginCaching() {
         CACHED_SEED += 2;
         CACHED_STACK.push(CACHED_VERSION);
         CACHED_VERSION = CACHED_SEED;
     }
 
-    public static void pop() {
+    public static void endCaching() {
         if (CACHED_STACK.isEmpty()) {
             CACHED_VERSION = 0;
             return; // the push/pop calls no match!!!

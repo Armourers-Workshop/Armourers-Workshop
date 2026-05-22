@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.runtime.function;
 
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Optimizable;
@@ -32,7 +33,7 @@ public abstract class Function implements Expression, Optimizable {
 
     @Override
     public Result evaluate(final ExecutionContext context) {
-        return Result.valueOf(compute(context));
+        return ComputedResult.valueOf(compute(context));
     }
 
     @Override

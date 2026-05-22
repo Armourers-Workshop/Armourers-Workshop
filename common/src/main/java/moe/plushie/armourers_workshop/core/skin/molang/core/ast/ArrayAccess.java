@@ -29,7 +29,7 @@ public final class ArrayAccess implements Expression, Optimizable, Assignable {
     @Override
     public Result assign(Result value, ExecutionContext context) {
         var result = receiver.evaluate(context);
-        var idx = index.evaluate(context).getAsInt();
+        var idx = index.evaluate(context).intValue();
         result.set(idx, value);
         return value;
     }
@@ -37,7 +37,7 @@ public final class ArrayAccess implements Expression, Optimizable, Assignable {
     @Override
     public Result assign(Function<Result, Result> operator, ExecutionContext context) {
         var result = receiver.evaluate(context);
-        var idx = index.evaluate(context).getAsInt();
+        var idx = index.evaluate(context).intValue();
         var value = operator.apply(result.get(idx));
         result.set(idx, value);
         return value;
@@ -46,7 +46,7 @@ public final class ArrayAccess implements Expression, Optimizable, Assignable {
     @Override
     public Result evaluate(final ExecutionContext context) {
         var result = receiver.evaluate(context);
-        var idx = index.evaluate(context).getAsInt();
+        var idx = index.evaluate(context).intValue();
         return result.get(idx);
     }
 

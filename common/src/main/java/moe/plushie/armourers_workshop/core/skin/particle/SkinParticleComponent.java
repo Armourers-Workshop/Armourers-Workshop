@@ -8,7 +8,7 @@ public interface SkinParticleComponent {
 
     void writeToStream(IOutputStream stream) throws IOException;
 
-    void compile(SkinParticleGenerator generator);
+    void compile(SkinParticleCompiler compiler);
 
     default int priority() {
         return 0;

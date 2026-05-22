@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.math;
 
 import moe.plushie.armourers_workshop.api.core.math.IMatrix4f;
 import moe.plushie.armourers_workshop.api.core.math.IRectangle3f;
+import moe.plushie.armourers_workshop.api.core.math.IVector3f;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 
 import java.util.ArrayList;
@@ -83,6 +84,10 @@ public class OpenAxisAlignedBoundingBox {
 
     public boolean intersects(OpenRay ray) {
         return ray.intersects(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    public OpenAxisAlignedBoundingBox offset(IVector3f delta) {
+        return offset(delta.x(), delta.y(), delta.z());
     }
 
     public OpenAxisAlignedBoundingBox offset(float x, float y, float z) {

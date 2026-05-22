@@ -1037,8 +1037,8 @@ public class BedrockComponent {
             OpenExpression enabled;
 
             float collisionDrag = 0.0f;
-            float collisionRadius = 0.01f;
-            float coefficientOfRestitution = 1.0f;
+            float collisionRadius = 0.0f;
+            float coefficientOfRestitution = 0.0f;
 
             boolean expireOnContact = false;
 

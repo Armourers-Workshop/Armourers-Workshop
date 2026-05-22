@@ -4,12 +4,12 @@ import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import moe.plushie.armourers_workshop.compat.core.blockentity.AbstractBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.utils.Constants;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.ModBlockEntityTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +48,7 @@ public class BoundingBoxBlock extends AbstractBlock implements AbstractBlockEnti
     }
 
     @Override
-    protected OpenInteractionResult abi$onAttack(Level level, BlockPos blockPos, BlockState blockState, Direction direction, Player player, OpenInteractionHand hand) {
+    protected OpenInteractionResult abi$onAttack(Level level, BlockPos blockPos, BlockState blockState, OpenDirection direction, Player player, OpenInteractionHand hand) {
         //
         if (level.getBlockEntity(blockPos) instanceof BoundingBoxBlockEntity blockEntity && blockEntity.isValid() && blockEntity.hasColors()) {
             blockEntity.clearArmourerTextureColors();

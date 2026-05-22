@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenEntitySpawnReason;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
@@ -190,7 +191,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    protected ItemStack abi$getCloneItemStack(BlockState blockState, LevelReader blockGetter, BlockPos blockPos) {
+    protected ItemStack abi$getCloneItemStack(BlockState blockState, LevelReader blockGetter, BlockPos blockPos, boolean includeData) {
         var blockEntity = getParentBlockEntity(blockGetter, blockPos);
         if (blockEntity != null) {
             return blockEntity.getSkin().asItemStack();
@@ -227,7 +228,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    protected int abi$getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction dir) {
+    protected int abi$getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, OpenDirection dir) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getAnalogOutputSignal(dir);
@@ -241,7 +242,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    protected int abi$getSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
+    protected int abi$getSignal(BlockState state, BlockGetter level, BlockPos blockPos, OpenDirection direction) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getSignal(direction);
@@ -250,7 +251,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
     }
 
     @Override
-    protected int abi$getDirectSignal(BlockState state, BlockGetter level, BlockPos blockPos, Direction direction) {
+    protected int abi$getDirectSignal(BlockState state, BlockGetter level, BlockPos blockPos, OpenDirection direction) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             return blockEntity.getDirectSignal(direction);

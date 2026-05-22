@@ -179,7 +179,7 @@ public class Compiler {
                 var expr = parseCompoundExpression(lexer, Unary.Operator.ARITHMETICAL_NEGATION.precedence());
                 // this should be a negative value.
                 if (expr instanceof Constant constant) {
-                    yield new Constant(-constant.value().getAsDouble());
+                    yield new Constant(-constant.value().doubleValue());
                 }
                 yield new Unary(Unary.Operator.ARITHMETICAL_NEGATION, expr);
             }

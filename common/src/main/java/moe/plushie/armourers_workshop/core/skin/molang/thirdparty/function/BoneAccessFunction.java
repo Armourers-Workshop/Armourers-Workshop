@@ -41,7 +41,7 @@ public class BoneAccessFunction extends EntityFunction {
 
     @Override
     public Result evaluate(EntitySelector entity, ExecutionContext context) {
-        var name = this.name.evaluate(context).getAsString();
+        var name = this.name.evaluate(context).stringValue();
 //        var bone = context.entity().geoInstance().getAnimationProcessor().getBone(str);
 //        if (bone == null) {
 //            return null;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
@@ -42,15 +42,15 @@ public class ParticleKillInPlaneLifetime implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
+    public void compile(SkinParticleCompiler compiler) {
         // the particles that cross this plane expire.
         // the plane is relative to the emitter, but oriented in world space.
-        generator.instance().tick((emitter, particle, context) -> {
+        compiler.instance().tick((emitter, particle, context) -> {
             if (particle.isDead()) {
                 return;
             }
-            var p0 = particle.positionAt(0.0f);
-            var p1 = particle.positionAt(1.0f);
+            var p0 = particle.localPosition(0.0f);
+            var p1 = particle.localPosition(1.0f);
             var prev = a * p0.x() + b * p0.y() + c * p0.z() + d;
             var now = a * p1.x() + b * p1.y() + c * p1.y() + d;
             if ((prev > 0 && now < 0) || (prev < 0 && now > 0)) {

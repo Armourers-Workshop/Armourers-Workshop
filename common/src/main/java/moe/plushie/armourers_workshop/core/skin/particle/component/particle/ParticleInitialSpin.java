@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -38,10 +38,10 @@ public class ParticleInitialSpin implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var rotation = generator.compile(this.rotation, 0.0);
-        var rotationRate = generator.compile(this.rotationRate, 0.0);
-        generator.instance().prepare((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var rotation = compiler.compile(this.rotation, 0.0);
+        var rotationRate = compiler.compile(this.rotationRate, 0.0);
+        compiler.instance().prepare((emitter, particle, context) -> {
             var rot = (float) rotation.compute(context);
             var velocity = (float) rotationRate.compute(context);
             particle.setRotationInitial(rot);

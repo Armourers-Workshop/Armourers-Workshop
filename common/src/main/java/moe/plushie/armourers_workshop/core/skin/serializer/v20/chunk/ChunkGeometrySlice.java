@@ -132,12 +132,12 @@ public class ChunkGeometrySlice implements OpenSliceAccessor.Provider<SkinGeomet
     }
 
     public OpenRectangle3f getRectangle3f(int offset) {
-        float x = getFloat(offset);
-        float y = getFloat(offset + 4);
-        float z = getFloat(offset + 8);
-        float width = getFloat(offset + 12);
-        float height = getFloat(offset + 16);
-        float depth = getFloat(offset + 20);
+        var x = getFloat(offset);
+        var y = getFloat(offset + 4);
+        var z = getFloat(offset + 8);
+        var width = getFloat(offset + 12);
+        var height = getFloat(offset + 16);
+        var depth = getFloat(offset + 20);
         return new OpenRectangle3f(x, y, z, width, height, depth);
     }
 

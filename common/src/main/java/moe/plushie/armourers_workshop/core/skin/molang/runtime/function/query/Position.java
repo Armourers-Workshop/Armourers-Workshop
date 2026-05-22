@@ -18,7 +18,7 @@ public class Position extends EntityFunction {
 
     @Override
     public double compute(final EntitySelector entity, final ExecutionContext context) {
-        var axis = this.axis.evaluate(context).getAsInt();
+        var axis = this.axis.evaluate(context).intValue();
         var partialTick = entity.partialTick();
         return switch (axis) {
             case 0 -> entity.getX(partialTick);

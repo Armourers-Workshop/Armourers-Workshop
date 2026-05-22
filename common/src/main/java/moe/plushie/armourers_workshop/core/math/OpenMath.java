@@ -197,10 +197,10 @@ public class OpenMath {
     }
 
     public static OpenVector3f lerp(float position, OpenVector3f a, OpenVector3f b) {
-        if (position == 0.0f) {
+        if (position <= 0.0f) {
             return a;
         }
-        if (position == 1.0f) {
+        if (position >= 1.0f) {
             return b;
         }
         var x = lerp(position, a.x, b.x);

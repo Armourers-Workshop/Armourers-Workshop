@@ -57,7 +57,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements AbstractBl
     }
 
     @Override
-    protected boolean abi$skipRendering(BlockState state, BlockState state1, Direction dir) {
+    protected boolean abi$skipRendering(BlockState state, BlockState state1, OpenDirection dir) {
         // the same block can be omitted
         return state.getBlock() == state1.getBlock();
     }

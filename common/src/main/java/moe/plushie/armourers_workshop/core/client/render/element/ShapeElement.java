@@ -18,6 +18,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
+import moe.plushie.armourers_workshop.core.math.OpenAxisAlignedBoundingBox;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintTypes;
@@ -30,7 +31,9 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("unsed")
 public abstract class ShapeElement implements IGraphicsElement {
@@ -196,10 +199,26 @@ public abstract class ShapeElement implements IGraphicsElement {
     }
 
     public static ShapeElement stroke(IVoxelShape shape, int color) {
-        return stroke(shape.bounds(), color);
+        return stroke(shape, LightmapTexture.DEFAULT, OverlayTexture.NO_OVERLAY, color, SkinRenderTypes.line());
+    }
+
+    public static ShapeElement stroke(IVoxelShape shape, int lightmap, int overlay, int color, IRenderType renderType) {
+        var lines = Lines.newInstance(lightmap, overlay, color, SkinRenderTypes.line());
+        shape.visit(lines::add);
+        return lines;
     }
 
     public static ShapeElement stroke(AABB boundingBox, int color) {
+        var minX = boundingBox.minX;
+        var minY = boundingBox.minY;
+        var minZ = boundingBox.minZ;
+        var maxX = boundingBox.maxX;
+        var maxY = boundingBox.maxY;
+        var maxZ = boundingBox.maxZ;
+        return stroke(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ, color);
+    }
+
+    public static ShapeElement stroke(OpenAxisAlignedBoundingBox boundingBox, int color) {
         var minX = boundingBox.minX;
         var minY = boundingBox.minY;
         var minZ = boundingBox.minZ;
@@ -235,7 +254,7 @@ public abstract class ShapeElement implements IGraphicsElement {
         return cube;
     }
 
-    protected static abstract class Base extends ShapeElement implements IGraphicsRenderable {
+    private static abstract class Base extends ShapeElement implements IGraphicsRenderable {
 
         protected float u = 0.0f;
         protected float v = 0.0f;
@@ -321,7 +340,7 @@ public abstract class ShapeElement implements IGraphicsElement {
      * <a href="https://web..org/web/20250920105830/https://learnopengl.com/Getting-started/Coordinate-Systems">Coordinate-Systems</a>
      **/
     @SuppressWarnings("SuspiciousNameCombination")
-    protected static class Cube extends ShapeElement implements IGraphicsRenderable {
+    private static class Cube extends ShapeElement implements IGraphicsRenderable {
 
         private static final ObjectPool<Cube> POOL = ObjectPool.create(Cube::new);
 
@@ -592,7 +611,7 @@ public abstract class ShapeElement implements IGraphicsElement {
      *       p0 +--------------------+ p3
      * </pre>
      **/
-    protected static class Cone extends Base {
+    private static class Cone extends Base {
 
         private static final ObjectPool<Cone> POOL = ObjectPool.create(Cone::new);
 
@@ -666,7 +685,13 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class Line extends Base {
+    /**
+     * A line of the render element.
+     * <pre>
+     *       p0 +--------------------+ p1
+     * </pre>
+     */
+    private static class Line extends Base {
 
         private static final ObjectPool<Line> POOL = ObjectPool.create(Line::new);
 
@@ -694,7 +719,52 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class Arrow extends ShapeElement {
+    /**
+     * Multip line of the render element.
+     * <pre>
+     *                   p2
+     *                    |
+     *                    |
+     *                    |
+     *       p0 +---------+---------+ p1
+     *                    |
+     *                    |
+     *                    |
+     *                   p3
+     * </pre>
+     */
+    private static class Lines extends Base {
+
+        private static final ObjectPool<Lines> POOL = ObjectPool.create(Lines::new);
+
+        private List<OpenVector3f> vertices;
+
+        public static Lines newInstance(int lightmap, int overlay, int color, IRenderType renderType) {
+            var that = POOL.alloc();
+            that.color = color;
+            that.lightmap = lightmap;
+            that.overlay = overlay;
+            that.renderType = renderType;
+            that.vertices = new ArrayList<>();
+            return that;
+        }
+
+        public void add(float x0, float y0, float z0, float x1, float y1, float z1) {
+            add(new OpenVector3f(x0, y0, z0), new OpenVector3f(x1, y1, z1));
+        }
+
+        public void add(OpenVector3f p0, OpenVector3f p1) {
+            vertices.add(p0);
+            vertices.add(p1);
+        }
+
+        @Override
+        protected OpenVector3f[] vertices() {
+            return vertices.toArray(new OpenVector3f[0]);
+        }
+    }
+
+    private static class Arrow extends ShapeElement {
 
         private static final ObjectPool<Arrow> POOL = ObjectPool.create(Arrow::new);
 
@@ -741,7 +811,7 @@ public abstract class ShapeElement implements IGraphicsElement {
         }
     }
 
-    protected static class Armature extends ShapeElement {
+    private static class Armature extends ShapeElement {
 
         private static final ObjectPool<Armature> POOL = ObjectPool.create(Armature::new);
 

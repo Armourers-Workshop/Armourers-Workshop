@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -41,15 +41,15 @@ public class ParticleExpressLifetime implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
+    public void compile(SkinParticleCompiler compiler) {
         // when the duration not provided, we will use -1s(infinity)
-        var duration = generator.compile(this.duration, -1.0);
-        var expiration = generator.compile(this.expiration, 0.0);
-        generator.instance().prepare((emitter, particle, context) -> {
+        var duration = compiler.compile(this.duration, -1.0);
+        var expiration = compiler.compile(this.expiration, 0.0);
+        compiler.instance().prepare((emitter, particle, context) -> {
             var time = duration.compute(context);
             particle.setDuration(time);
         });
-        generator.instance().tick((emitter, particle, context) -> {
+        compiler.instance().tick((emitter, particle, context) -> {
             if (expiration.test(context)) {
                 particle.kill();
             }

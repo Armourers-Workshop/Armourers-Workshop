@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.particle.math;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticle;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -17,7 +17,7 @@ public abstract class EmitterShapeDirection {
 
     public abstract void writeToStream(IOutputStream stream) throws IOException;
 
-    public abstract Compiled compile(SkinParticleGenerator generator);
+    public abstract Compiled compile(SkinParticleCompiler compiler);
 
     public boolean isCustom() {
         return this instanceof Custom;
@@ -71,10 +71,10 @@ public abstract class EmitterShapeDirection {
         }
 
         @Override
-        public Compiled compile(SkinParticleGenerator generator) {
+        public Compiled compile(SkinParticleCompiler compiler) {
             var factor = this.factor;
             return (particle, x, y, z, context) -> {
-                var speed = particle.position().copy();
+                var speed = particle.localPosition().copy();
                 speed.subtract(x, y, z);
                 if (speed.length() <= 0.0) {
                     speed.set(0, 0, 0);
@@ -114,10 +114,10 @@ public abstract class EmitterShapeDirection {
         }
 
         @Override
-        public Compiled compile(SkinParticleGenerator generator) {
-            var speedX = generator.compile(this.x, 0.0);
-            var speedY = generator.compile(this.y, 0.0);
-            var speedZ = generator.compile(this.z, 0.0);
+        public Compiled compile(SkinParticleCompiler compiler) {
+            var speedX = compiler.compile(this.x, 0.0);
+            var speedY = compiler.compile(this.y, 0.0);
+            var speedZ = compiler.compile(this.z, 0.0);
             return (particle, x, y, z, context) -> {
                 var tx = (float) speedX.compute(context);
                 var ty = (float) speedY.compute(context);

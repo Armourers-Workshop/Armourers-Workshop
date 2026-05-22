@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -30,9 +30,9 @@ public class ParticleInitialSpeed implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var speed = generator.compile(this.speed, 1.0);
-        generator.instance().prepare((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var speed = compiler.compile(this.speed, 1.0);
+        compiler.instance().prepare((emitter, particle, context) -> {
             var scale = (float) speed.compute(context);
             particle.setSpeed(particle.speed().scaling(scale));
         });

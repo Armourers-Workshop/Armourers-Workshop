@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.runtime.function;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
@@ -17,7 +18,7 @@ public abstract class LivingEntityFunction extends Function {
     public abstract double compute(final LivingEntitySelector entity, final ExecutionContext context);
 
     public Result evaluate(final LivingEntitySelector entity, final ExecutionContext context) {
-        return Result.valueOf(compute(entity, context));
+        return ComputedResult.valueOf(compute(entity, context));
     }
 
     @Override

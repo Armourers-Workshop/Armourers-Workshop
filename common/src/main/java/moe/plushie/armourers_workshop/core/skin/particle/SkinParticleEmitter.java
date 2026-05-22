@@ -21,6 +21,9 @@ public interface SkinParticleEmitter {
     /// The alive time.
     double time();
 
+    /// Each tick delta time.
+    float deltaTime();
+
     /// The duration time.
     double duration();
 
@@ -33,23 +36,32 @@ public interface SkinParticleEmitter {
     /// The all alive particles.
     List<? extends SkinParticle> particles();
 
-    /// The amount of all spawned (alive + died) particles.
-    int spawnedParticles();
-
     /// The emitter current local position.
-    OpenVector3f position();
+    OpenVector3f localPosition();
 
     /// The emitter local position at the partial ticks.
-    OpenVector3f positionAt(float partialTick);
+    OpenVector3f localPosition(float partialTick);
+
+    /// The emitter current global position.
+    OpenVector3f globalPosition();
+
+    /// The emitter global position at the partial ticks.
+    OpenVector3f globalPosition(float partialTick);
 
     /// The emitter current local rotation.
-    OpenQuaternionf rotation();
+    OpenQuaternionf localRotation();
 
     /// The emitter local rotation at the partial ticks.
-    OpenQuaternionf rotationAt(float partialTick);
+    OpenQuaternionf localRotation(float partialTick);
+
+    /// The emitter current global rotation.
+    OpenQuaternionf globalRotation();
+
+    /// The emitter global rotation at the partial ticks.
+    OpenQuaternionf globalRotationAt(float partialTick);
 
     /// The emitter attached entity size.
-    OpenSize3f size();
+    OpenVector3f size();
 
     /// The emitter attached entity level.
     LevelAccessor level();

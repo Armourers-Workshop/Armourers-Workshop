@@ -31,10 +31,14 @@ public class QueryBinding extends ContextBinding {
         variable("time_stamp", LevelSelector::timestamp);
         variable("moon_phase", LevelSelector::moonPhase);
 
-        variable("eye_target_x_rotation", EntitySelector::eyeYaw);
-        variable("eye_target_y_rotation", EntitySelector::eyePitch);
-        variable("head_x_rotation", EntitySelector::headYaw);
-        variable("head_y_rotation", EntitySelector::headPitch);
+        variable("eye_pitch_rotation", EntitySelector::eyePitch);
+        variable("eye_yaw_rotation", EntitySelector::eyeYaw);
+        variable("head_pitch_rotation", EntitySelector::headPitch);
+        variable("head_yaw_rotation", EntitySelector::headYaw);
+        variable("eye_target_x_rotation", EntitySelector::eyePitch);
+        variable("eye_target_y_rotation", EntitySelector::eyeYaw);
+        variable("head_x_rotation", EntitySelector::headPitch);
+        variable("head_y_rotation", EntitySelector::headYaw);
 
         variable("yaw_speed", EntitySelector::yawSpeed);
         variable("ground_speed", EntitySelector::groundSpeed);

@@ -32,6 +32,7 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
 
     private int tintColor = -1;
 
+    private float rotation = 0.0f;
     private float rotationInitial = 0.0f;
     private float rotationVelocity = 0.0f;
     private float rotationAcceleration = 0.0f;
@@ -59,7 +60,7 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
     private EntityPose localPose = EntityPose.ZERO;
     private EntityPose localPoseOld = EntityPose.ZERO;
 
-    private EntityPose initialGlobalPose;
+    private EntityPose initialGlobalPose = EntityPose.ZERO;
 
     private final LazyVariableStorage entityStorage;
     private final ExecutionContext executionContext;
@@ -86,10 +87,11 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
         entityStorage.setVariable(PARTICLE_RANDOM_3, Result.valueOf(Math.random()));
         entityStorage.setVariable(PARTICLE_RANDOM_4, Result.valueOf(Math.random()));
 
-        localPose = EntityPose.ZERO;
+        initialGlobalPose = emitter.globalPose();
         localPoseOld = EntityPose.ZERO;
-        initialGlobalPose = EntityPose.of(emitter.globalPosition(), emitter.globalRotation());
+        localPose = EntityPose.ZERO;
 
+        rotation = 0.0f;
         rotationInitial = 0.0f;
         rotationVelocity = 0.0f;
         rotationAcceleration = 0.0f;
@@ -118,6 +120,8 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
 
         // notify the particle prepare event.
         instance.prepare(emitter, this, executionContext);
+
+        rotation = rotationInitial;
 
 //            if (particle.relativePosition && !particle.relativeRotation)
 //            {
@@ -167,45 +171,24 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
 
         localPoseOld = localPose;
 
-//            this.setupMatrix(emitter);
 
         if (!isManualMode()) {
-            float rotationAcceleration = this.rotationAcceleration / 20F - this.rotationDrag * this.rotationVelocity;
-            this.rotationVelocity += rotationAcceleration / 20F;
-            var localRotation = rotationInitial + rotationVelocity * (float) time();
+            var deltaTime = emitter.deltaTime();
 
-//                /* Position */
-            var xx = -(drag + dragFactor);
-            var tx1 = speed.x * xx;
-            var ty1 = speed.y * xx;
-            var tz1 = speed.z * xx;
+            // rotation:
+            var angularAcceleration = rotationAcceleration - rotationDrag * rotationVelocity;
+            rotationVelocity += angularAcceleration * deltaTime;
+            rotation += rotationVelocity * deltaTime;
 
-//                this.acceleration.add(vec);
-//                this.acceleration.scale(1 / 20F);
-            acceleration.add(tx1, ty1, tz1);
-            acceleration.scale(1 / 20f);
-//                this.speed.add(this.acceleration);
+            // position:
+            var dragAcceleration = speed.scaling(-(drag + dragFactor));
+            acceleration.set(acceleration.adding(dragAcceleration).scaling(deltaTime));
             speed.add(acceleration);
 
-//                vec.set(this.speed);
-//                vec.x *= this.accelerationFactor.x;
-//                vec.y *= this.accelerationFactor.y;
-//                vec.z *= this.accelerationFactor.z;
-            var tx = speed.x * accelerationFactor.x;
-            var ty = speed.y * accelerationFactor.y;
-            var tz = speed.z * accelerationFactor.z;
-//
-//                if (this.relativePosition || this.relativeRotation)
-//                {
-//                    this.matrix.transform(vec);
-//                }
-//
-//                this.position.x += vec.x / 20F;
-//                this.position.y += vec.y / 20F;
-//                this.position.z += vec.z / 20F;
-            var localPosition = localPose.position().adding(tx / 20f, ty / 20f, tz / 20.f);
+            var displacement = speed.scaling(accelerationFactor).scaling(deltaTime);
+            var position = localPose.position().adding(displacement);
 
-            localPose = EntityPose.of(localPosition, OpenVector3f.ZP.rotationDegrees(localRotation));
+            localPose = EntityPose.of(position, OpenVector3f.ZP.rotationDegrees(rotation));
         }
 
         if (duration >= 0 && time() >= duration) {
@@ -244,6 +227,21 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
     }
 
     @Override
+    public void freeze() {
+        var position = globalPosition(1.0f);
+        var rotation = globalRotation(1.0f);
+        var positionOld = globalPosition(0.0f);
+        var rotationOld = globalRotation(0.0f);
+
+        initialGlobalPose = EntityPose.ZERO;
+        localPoseOld = EntityPose.of(positionOld, rotationOld);
+        localPose = EntityPose.of(position, rotation);
+
+        relativePositionMode = false;
+        relativeRotationMode = false;
+    }
+
+    @Override
     public boolean isDead() {
         return isDead || emitter.isRemoved();
     }
@@ -264,23 +262,62 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
     }
 
     @Override
-    public OpenVector3f position() {
-        return positionAt(partialTick());
+    public OpenVector3f localPosition() {
+        return localPosition(partialTick());
     }
 
     @Override
-    public OpenVector3f positionAt(float partialTick) {
+    public OpenVector3f localPosition(float partialTick) {
         return OpenMath.lerp(partialTick, localPoseOld.position(), localPose.position());
     }
 
     @Override
-    public OpenQuaternionf rotation() {
-        return rotationAt(partialTick());
+    public OpenVector3f globalPosition() {
+        return globalPosition(partialTick());
     }
 
     @Override
-    public OpenQuaternionf rotationAt(float partialTick) {
+    public OpenVector3f globalPosition(float partialTick) {
+        var position = globalPositionFromParent(partialTick).copy();
+        position.transform(globalRotationFromParent(partialTick));
+        position.add(localPosition(partialTick));
+        return position;
+    }
+
+    @Override
+    public OpenQuaternionf localRotation() {
+        return localRotation(partialTick());
+    }
+
+    @Override
+    public OpenQuaternionf localRotation(float partialTick) {
         return OpenMath.lerp(partialTick, localPoseOld.rotation(), localPose.rotation());
+    }
+
+    @Override
+    public OpenQuaternionf globalRotation() {
+        return globalRotation(partialTick());
+    }
+
+    @Override
+    public OpenQuaternionf globalRotation(float partialTick) {
+        var rotation = globalRotationFromParent(partialTick).copy();
+        rotation.multiply(localRotation(partialTick));
+        return rotation;
+    }
+
+    private OpenVector3f globalPositionFromParent(float partialTick) {
+        if (relativePositionMode) {
+            return emitter.globalPosition(partialTick);
+        }
+        return initialGlobalPose.position();
+    }
+
+    private OpenQuaternionf globalRotationFromParent(float partialTick) {
+        if (relativeRotationMode) {
+            return emitter.globalRotationAt(partialTick);
+        }
+        return initialGlobalPose.rotation();
     }
 
     @Override
@@ -288,8 +325,14 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
         return speed;
     }
 
+    @Override
     public float motionDrag() {
         return drag;
+    }
+
+    @Override
+    public float motionDragFactor() {
+        return dragFactor;
     }
 
     @Override
@@ -365,6 +408,11 @@ public class SmartParticleInstance implements SkinParticle, VariableStorage {
     @Override
     public void setMotionDrag(float motionDrag) {
         this.drag = motionDrag;
+    }
+
+    @Override
+    public void setMotionDragFactor(float motionDragFactor) {
+        this.dragFactor = motionDragFactor;
     }
 
     @Override

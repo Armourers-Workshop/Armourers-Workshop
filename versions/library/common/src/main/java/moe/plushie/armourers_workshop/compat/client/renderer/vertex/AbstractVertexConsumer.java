@@ -3,11 +3,14 @@ package moe.plushie.armourers_workshop.compat.client.renderer.vertex;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.client.IVertexConsumer;
+import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 
 @Available("[21, )")
 public class AbstractVertexConsumer implements IVertexConsumer {
 
     protected VertexConsumer parent;
+
+    private final float[] sharedBuffer = new float[4];
 
     protected AbstractVertexConsumer(VertexConsumer parent) {
         this.parent = parent;
@@ -61,5 +64,24 @@ public class AbstractVertexConsumer implements IVertexConsumer {
     @Override
     public void vertex(float x, float y, float z, int color, float u, float v, int overlay, int light, float nx, float ny, float nz) {
         parent.addVertex(x, y, z, color, u, v, overlay, light, nx, ny, nz);
+    }
+
+    @Override
+    public IVertexConsumer vertex(IPoseStack.Pose pose, float x, float y, float z) {
+        sharedBuffer[0] = x;
+        sharedBuffer[1] = y;
+        sharedBuffer[2] = z;
+        sharedBuffer[3] = 1;
+        pose.transformPose(sharedBuffer);
+        return vertex(sharedBuffer[0], sharedBuffer[1], sharedBuffer[2]);
+    }
+
+    @Override
+    public IVertexConsumer normal(IPoseStack.Pose pose, float x, float y, float z) {
+        sharedBuffer[0] = x;
+        sharedBuffer[1] = y;
+        sharedBuffer[2] = z;
+        pose.transformNormal(sharedBuffer);
+        return normal(sharedBuffer[0], sharedBuffer[1], sharedBuffer[2]);
     }
 }

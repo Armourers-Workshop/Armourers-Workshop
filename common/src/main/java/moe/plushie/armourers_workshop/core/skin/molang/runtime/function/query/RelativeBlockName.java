@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.runtime.function.query;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
@@ -28,9 +29,9 @@ public class RelativeBlockName extends EntityFunction {
 
     @Override
     public Result evaluate(EntitySelector entity, ExecutionContext context) {
-        var offsetX = this.offsetX.evaluate(context).getAsInt();
-        var offsetY = this.offsetY.evaluate(context).getAsInt();
-        var offsetZ = this.offsetZ.evaluate(context).getAsInt();
+        var offsetX = this.offsetX.evaluate(context).intValue();
+        var offsetY = this.offsetY.evaluate(context).intValue();
+        var offsetZ = this.offsetZ.evaluate(context).intValue();
         // query limit
         if (Math.abs(offsetX) > 8 || Math.abs(offsetY) > 8 || Math.abs(offsetZ) > 8) {
             return Result.NULL; // too far
@@ -39,6 +40,6 @@ public class RelativeBlockName extends EntityFunction {
         if (block == null) {
             return Result.NULL; // can't found.
         }
-        return Result.valueOf(block.id());
+        return ComputedResult.valueOf(block.id());
     }
 }

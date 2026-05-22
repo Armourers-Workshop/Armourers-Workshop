@@ -381,7 +381,7 @@ public class BedrockExporter {
             return OpenPrimitive.of(value.expression());
         }
         if (expr != null) {
-            return OpenPrimitive.of(expr.evaluate(OptimizeContext.DEFAULT).getAsInt());
+            return OpenPrimitive.of(expr.evaluate(OptimizeContext.DEFAULT).intValue());
         }
         return OpenPrimitive.NULL;
     }

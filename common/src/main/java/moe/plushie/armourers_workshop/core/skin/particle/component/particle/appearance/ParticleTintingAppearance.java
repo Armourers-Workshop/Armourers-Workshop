@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.particle.component.particle.app
 
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.Colors;
@@ -47,8 +47,8 @@ public class ParticleTintingAppearance implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        color.compile(generator);
+    public void compile(SkinParticleCompiler compiler) {
+        color.compile(compiler);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ParticleTintingAppearance implements SkinParticleComponent {
 
         void writeToStream(IOutputStream stream) throws IOException;
 
-        void compile(SkinParticleGenerator generator);
+        void compile(SkinParticleCompiler compiler);
     }
 
     /**
@@ -122,12 +122,12 @@ public class ParticleTintingAppearance implements SkinParticleComponent {
         }
 
         @Override
-        public void compile(SkinParticleGenerator generator) {
-            var red = generator.compile(this.red, 1.0);
-            var green = generator.compile(this.green, 1.0);
-            var blue = generator.compile(this.blue, 1.0);
-            var alpha = generator.compile(this.alpha, 1.0);
-            generator.instance().render((emitter, particle, context) -> {
+        public void compile(SkinParticleCompiler compiler) {
+            var red = compiler.compile(this.red, 1.0);
+            var green = compiler.compile(this.green, 1.0);
+            var blue = compiler.compile(this.blue, 1.0);
+            var alpha = compiler.compile(this.alpha, 1.0);
+            compiler.instance().render((emitter, particle, context) -> {
                 var r = (float) red.compute(context);
                 var g = (float) green.compute(context);
                 var b = (float) blue.compute(context);
@@ -184,11 +184,11 @@ public class ParticleTintingAppearance implements SkinParticleComponent {
         }
 
         @Override
-        public void compile(SkinParticleGenerator generator) {
-            var interpolation = generator.compile(this.interpolation, 1.0);
+        public void compile(SkinParticleCompiler compiler) {
+            var interpolation = compiler.compile(this.interpolation, 1.0);
             var stops = ColorStop.create(this.gradientValues);
             var length = stops.size();
-            generator.instance().render((emitter, particle, context) -> {
+            compiler.instance().render((emitter, particle, context) -> {
                 // we will use last item when factor not matched.
                 var left = stops.get(0);
                 var right = stops.get(length - 1);

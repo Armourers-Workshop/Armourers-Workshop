@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.shape;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
@@ -47,13 +47,13 @@ public class EmitterCustomShape implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
+    public void compile(SkinParticleCompiler compiler) {
         // TODO: NO IMPL - PARTICLE
-//        var x = generator.compile(this.x, 0.0);
-//        var y = generator.compile(this.y, 0.0);
-//        var z = generator.compile(this.z, 0.0);
-//        var direction = this.direction.compile(generator);
-//        generator.instance().prepare((emitter, particle, context) -> {
+//        var x = compiler.compile(this.x, 0.0);
+//        var y = compiler.compile(this.y, 0.0);
+//        var z = compiler.compile(this.z, 0.0);
+//        var direction = this.direction.compile(compiler);
+//        compiler.instance().prepare((emitter, particle, context) -> {
 //            var cx = (float) x.compute(context);
 //            var cy = (float) y.compute(context);
 //            var cz = (float) z.compute(context);

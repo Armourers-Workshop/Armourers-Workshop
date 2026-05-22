@@ -41,6 +41,8 @@ public class ModDebugger {
     public static boolean skinParticleOrigin = false;
     public static boolean skinParticleBounds = false;
 
+    public static boolean skinParticleCollision = false;
+
     public static boolean targetBounds = false;
 
     public static boolean boundingBox = false;

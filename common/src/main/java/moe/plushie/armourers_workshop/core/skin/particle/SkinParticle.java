@@ -9,6 +9,7 @@ public interface SkinParticle {
 
     void kill();
 
+    void freeze();
 
     default boolean isAlive() {
         return !isDead();
@@ -26,21 +27,36 @@ public interface SkinParticle {
     double duration();
 
     /// The particle current local position.
-    OpenVector3f position();
+    OpenVector3f localPosition();
 
     /// The particle local position at the partial ticks.
-    OpenVector3f positionAt(float partialTick);
+    OpenVector3f localPosition(float partialTick);
+
+    /// The particle current global position.
+    OpenVector3f globalPosition();
+
+    /// The particle global position at the partial ticks.
+    OpenVector3f globalPosition(float partialTick);
 
     /// The particle current local rotation.
-    OpenQuaternionf rotation();
+    OpenQuaternionf localRotation();
 
     /// The particle local rotation at the partial ticks.
-    OpenQuaternionf rotationAt(float partialTick);
+    OpenQuaternionf localRotation(float partialTick);
+
+    /// The particle global local rotation.
+    OpenQuaternionf globalRotation();
+
+    /// The particle global rotation at the partial ticks.
+    OpenQuaternionf globalRotation(float partialTick);
+
 
     OpenVector3f speed();
 
 
     float motionDrag();
+
+    float motionDragFactor();
 
     OpenVector3f motionAcceleration();
 
@@ -80,6 +96,8 @@ public interface SkinParticle {
 
 
     void setMotionDrag(float motionDrag);
+
+    void setMotionDragFactor(float motionDragFactor);
 
     void setMotionAcceleration(OpenVector3f motionAcceleration);
 

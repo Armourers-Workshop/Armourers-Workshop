@@ -26,7 +26,7 @@ public final class Loop extends Function {
 
     @Override
     public double compute(final ExecutionContext context) {
-        return evaluate(context).getAsDouble();
+        return evaluate(context).doubleValue();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.motion;
 
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -76,29 +76,23 @@ public class ParticleDynamicMotion implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var motionAccelerationX = generator.compile(this.motionAccelerationX, 0.0);
-        var motionAccelerationY = generator.compile(this.motionAccelerationY, 0.0);
-        var motionAccelerationZ = generator.compile(this.motionAccelerationZ, 0.0);
-        var motionDragCoefficient = generator.compile(this.motionDragCoefficient, 0.0);
-        var rotationAcceleration = generator.compile(this.rotationAcceleration, 0.0);
-        var rotationDragCoefficient = generator.compile(this.rotationDragCoefficient, 0.0);
-        generator.instance().tick((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var motionAccelerationX = compiler.compile(this.motionAccelerationX, 0.0);
+        var motionAccelerationY = compiler.compile(this.motionAccelerationY, 0.0);
+        var motionAccelerationZ = compiler.compile(this.motionAccelerationZ, 0.0);
+        var motionDragCoefficient = compiler.compile(this.motionDragCoefficient, 0.0);
+        var rotationAcceleration = compiler.compile(this.rotationAcceleration, 0.0);
+        var rotationDragCoefficient = compiler.compile(this.rotationDragCoefficient, 0.0);
+        compiler.instance().tick((emitter, particle, context) -> {
             var ax = (float) motionAccelerationX.compute(context);
             var ay = (float) motionAccelerationY.compute(context);
             var az = (float) motionAccelerationZ.compute(context);
             var td = (float) motionDragCoefficient.compute(context);
             var ra = (float) rotationAcceleration.compute(context);
             var rd = (float) rotationDragCoefficient.compute(context);
-
-            var acceleration = particle.motionAcceleration().copy();
-            acceleration.add(ax, ay, az);
-            particle.setMotionAcceleration(acceleration);
+            particle.setMotionAcceleration(particle.motionAcceleration().adding(ax, ay, az));
             particle.setMotionDrag(td);
-
-            var rotationAcc = particle.rotationAcceleration();
-            rotationAcc += ra / 20.0f;
-            particle.setRotationAcceleration(rotationAcc);
+            particle.setRotationAcceleration(particle.rotationAcceleration() + ra);
             particle.setRotationDrag(rd);
         });
     }

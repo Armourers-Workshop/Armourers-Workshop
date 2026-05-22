@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -39,10 +39,10 @@ public class EmitterExpressionLifetime implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var activation = generator.compile(this.activation, 0.0);
-        var expiration = generator.compile(this.expiration, 0.0);
-        generator.emitter().tick((emitter, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var activation = compiler.compile(this.activation, 0.0);
+        var expiration = compiler.compile(this.expiration, 0.0);
+        compiler.emitter().tick((emitter, context) -> {
             // stop emit when activation expression result is true.
             if (activation.test(context)) {
                 emitter.start();

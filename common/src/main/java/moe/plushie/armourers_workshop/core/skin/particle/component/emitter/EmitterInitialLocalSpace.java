@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 
@@ -50,8 +50,8 @@ public class EmitterInitialLocalSpace implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        generator.instance().prepare((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        compiler.instance().prepare((emitter, particle, context) -> {
             particle.setRelativeMode(position, rotation, velocity);
         });
     }

@@ -26,7 +26,7 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleData;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.ParticleCameraFacing;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
@@ -110,7 +110,7 @@ public class SmartParticle extends ReferenceCounted {
 
             // em.globalPos = bone.globalPos + bone.globalRot * em.localPos
             // em.globalRot = bone.globalRot * em.localRot
-            this.emitterGlobalPosition = emitter.globalPositionAt(partialTick);
+            this.emitterGlobalPosition = emitter.globalPosition(partialTick);
             this.emitterGlobalRotation = emitter.globalRotationAt(partialTick);
         }
 
@@ -121,8 +121,9 @@ public class SmartParticle extends ReferenceCounted {
             var globalRotation = Objects.compactMap(initialGlobalRotation, emitterGlobalRotation);
 
             // particle.globalPos = emitter.globalPos + emitter.globalRot * particle.localPos
-            var pos = globalPosition.copy();
-            pos.add(position.transforming(globalRotation));
+            var pos = position.copy();
+            pos.transform(globalRotation);
+            pos.add(globalPosition);
 
             // particle.globalRot = emitter.globalRot * camera.lookAt(particle.globalPos) * particle.localRot
             var quat = globalRotation.copy();
@@ -194,7 +195,7 @@ public class SmartParticle extends ReferenceCounted {
         }
     }
 
-    private static class Generator implements SkinParticleGenerator {
+    private static class Generator implements SkinParticleCompiler {
 
         private final ParticleEmitterUpdater.Builder emitter = new ParticleEmitterUpdater.Builder();
         private final ParticleInstanceUpdater.Builder instance = new ParticleInstanceUpdater.Builder();

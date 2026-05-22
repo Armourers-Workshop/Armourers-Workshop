@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.motion;
 
 import moe.plushie.armourers_workshop.core.math.OpenAxisAlignedBoundingBox;
+import moe.plushie.armourers_workshop.core.math.OpenVoxelShape;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
 
 import java.io.IOException;
@@ -83,63 +85,61 @@ public class ParticleCollisionMotion implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
+    public void compile(SkinParticleCompiler compiler) {
         var radius = this.collisionRadius;
-        var enabled = generator.compile(this.enabled, 1.0);
+        var enabled = compiler.compile(this.enabled, 1.0);
         var bounciness = this.coefficientOfRestitution;
         var collissionDrag = this.collisionDrag;
         var expireOnImpact = this.expireOnContact;
-        generator.instance().tick((emitter, particle, context) -> {
-            // the collision motion is enable?
+        compiler.instance().tick((emitter, particle, context) -> {
+            // the collision motion is enabled?
             if (particle.isDead() || particle.isManualMode() || !enabled.test(context)) {
                 return;
             }
-            var previous = particle.positionAt(0.0f);
-            var current = particle.positionAt(1.0f);
 
-            var deltaX = current.x - previous.x;
-            var deltaY = current.y - previous.y;
-            var deltaZ = current.z - previous.z;
+            var begin = particle.globalPosition(0.0f);
+            var end = particle.globalPosition(1.0f);
+
+            var deltaX = end.x - begin.x;
+            var deltaY = end.y - begin.y;
+            var deltaZ = end.z - begin.z;
             if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10 || Math.abs(deltaZ) > 10) {
-                return; // too far
+                return; // too far.
             }
 
             var level = particle.level();
-//            if (!level.isLoaded(new BlockPos((int) current.x, (int) current.y, (int) current.z))) {
-//                return;
-//            }
-
-            var targetBox = OpenAxisAlignedBoundingBox.sphere(current, radius);
-            var selectedBlocks = level.getCollisionBlocks(targetBox.expand(-deltaX, -deltaY, -deltaZ));
-            var clipBox = targetBox.copy();
-
-            // y-axis
-            for (var target : selectedBlocks) {
-                if (clipBox.intersects(target)) {
-                    clipBox.minY = Math.max(clipBox.minY, target.minY);
-                    clipBox.maxY = Math.min(clipBox.maxY, target.maxY);
-                }
-            }
-            // x-axis
-            for (var target : selectedBlocks) {
-                if (clipBox.intersects(target)) {
-                    clipBox.minX = Math.max(clipBox.minX, target.minX);
-                    clipBox.maxX = Math.min(clipBox.maxX, target.maxX);
-                }
-            }
-            // z-axis
-            for (var target : selectedBlocks) {
-                if (clipBox.intersects(target)) {
-                    clipBox.minZ = Math.max(clipBox.minZ, target.minZ);
-                    clipBox.maxZ = Math.min(clipBox.maxZ, target.maxZ);
-                }
+            if (!level.isLoaded(begin)) {
+                return; // chunk not loaded.
             }
 
-            var tx = clipBox.midX() - targetBox.midX();
-            var ty = clipBox.midY() - targetBox.midY();
-            var tz = clipBox.midZ() - targetBox.midZ();
-            if (tx == 0 && ty == 0 && tz == 0) {
-                return; // not any changes.
+            var clipBox = OpenAxisAlignedBoundingBox.sphere(begin, radius);
+            var selectedBlocks = Collections.compactMap(level.getCollisionBlocks(clipBox.expand(deltaX, deltaY, deltaZ)), OpenVoxelShape::aabb);
+
+            var tx = deltaX;
+            var ty = deltaY;
+            var tz = deltaZ;
+
+            // Resolve each axis from the last valid particle box.
+            for (var target : selectedBlocks) {
+                ty = clipY(clipBox, target, ty);
+            }
+            clipBox = clipBox.offset(0.0f, ty, 0.0f);
+
+            for (var target : selectedBlocks) {
+                tx = clipX(clipBox, target, tx);
+            }
+            clipBox = clipBox.offset(tx, 0.0f, 0.0f);
+
+            for (var target : selectedBlocks) {
+                tz = clipZ(clipBox, target, tz);
+            }
+            clipBox = clipBox.offset(0.0f, 0.0f, tz);
+
+            var collidedX = tx != deltaX;
+            var collidedY = ty != deltaY;
+            var collidedZ = tz != deltaZ;
+            if (!collidedX && !collidedY && !collidedZ) {
+                return;
             }
 
             if (expireOnImpact) {
@@ -147,66 +147,64 @@ public class ParticleCollisionMotion implements SkinParticleComponent {
                 return;
             }
 
-            var now = particle.position();
             var accelerationFactor = particle.accelerationFactor().copy();
 
-            accelerationFactor.x *= -bounciness;
-            accelerationFactor.y *= -bounciness;
-            accelerationFactor.z *= -bounciness;
-//                now.x += cx2 - cx1; // origX < x ? r : -r;
-//                now.y += cy2 - cy1; //d0 < y ? r : -r;
-//                now.z += cz2 - cz1; // origZ < z ? r : -r;
+            if (collidedX) {
+                accelerationFactor.x *= -bounciness;
+            }
+            if (collidedY) {
+                accelerationFactor.y *= -bounciness;
+            }
+            if (collidedZ) {
+                accelerationFactor.z *= -bounciness;
+            }
 
-            particle.setPosition(now.x - tx, now.y - ty, now.z - tz);
+            // Collision boxes are in world space. Detach before storing the clipped world position.
+            particle.freeze();
+
+            particle.setPosition(clipBox.midX(), clipBox.midY(), clipBox.midZ());
+            particle.setMotionDragFactor(particle.motionDragFactor() + collissionDrag);
             particle.setAccelerationFactor(accelerationFactor);
-            //particle.dragFactor += collissionDrag;
-
-
-//            var resolvedBox = targetBox.copy();
-//            for (var blockBox : LevelAccessor.getCollisionBlocks(level, targetBox.expand(deltaX, deltaY, deltaZ))) {
-//                resolvedBox.subtract(blockBox);
-//            }
-
-//            // have diff?
-//            if (targetBox.equals(clipBox)) {
-//                return;
-//            }
-//
-//            if (expireOnImpact) {
-//                particle.kill();
-//                return;
-//            }
-//
-//            if (particle.relativePosition) {
-//                particle.relativePosition = false;
-//                particle.prevPosition.set(prev);
-//            }
-//
-
-//            var now = new OpenVector3f(clipBox.minX() + radius, clipBox.minY() + radius, clipBox.minZ() + radius);
-//            var accelerationFactor = particle.getAccelerationFactor().copy();
-////            now.set(aabb.getXMin() + radius, aabb.getYMin() + radius, aabb.getZMin() + radius);
-//
-//            if (targetBox.minX() != clipBox.minX()) {
-//                accelerationFactor.x *= -bounciness;
-////                now.x += cx2 - cx1; // origX < x ? r : -r;
-//            }
-//
-//            if (targetBox.minY() != clipBox.minY()) {
-//                accelerationFactor.y *= -bounciness;
-////                now.y += cy2 - cy1; //d0 < y ? r : -r;
-//            }
-//
-//            if (targetBox.minZ() != clipBox.minZ()) {
-//                accelerationFactor.z *= -bounciness;
-////                now.z += cz2 - cz1; // origZ < z ? r : -r;
-//            }
-//
-//            var t = emitter.globalToLocal(now);
-//            particle.setPosition(t.x, t.y, t.z);
-//            particle.setAccelerationFactor(accelerationFactor);
-//            particle.dragFactor += collissionDrag;
         });
+    }
+
+    private static float clipX(OpenAxisAlignedBoundingBox box, OpenAxisAlignedBoundingBox target, float offset) {
+        if (box.maxY <= target.minY || box.minY >= target.maxY || box.maxZ <= target.minZ || box.minZ >= target.maxZ) {
+            return offset;
+        }
+        if (offset > 0.0f && box.maxX <= target.minX) {
+            return Math.min(offset, target.minX - box.maxX);
+        }
+        if (offset < 0.0f && box.minX >= target.maxX) {
+            return Math.max(offset, target.maxX - box.minX);
+        }
+        return offset;
+    }
+
+    private static float clipY(OpenAxisAlignedBoundingBox box, OpenAxisAlignedBoundingBox target, float offset) {
+        if (box.maxX <= target.minX || box.minX >= target.maxX || box.maxZ <= target.minZ || box.minZ >= target.maxZ) {
+            return offset;
+        }
+        if (offset > 0.0f && box.maxY <= target.minY) {
+            return Math.min(offset, target.minY - box.maxY);
+        }
+        if (offset < 0.0f && box.minY >= target.maxY) {
+            return Math.max(offset, target.maxY - box.minY);
+        }
+        return offset;
+    }
+
+    private static float clipZ(OpenAxisAlignedBoundingBox box, OpenAxisAlignedBoundingBox target, float offset) {
+        if (box.maxX <= target.minX || box.minX >= target.maxX || box.maxY <= target.minY || box.minY >= target.maxY) {
+            return offset;
+        }
+        if (offset > 0.0f && box.maxZ <= target.minZ) {
+            return Math.min(offset, target.minZ - box.maxZ);
+        }
+        if (offset < 0.0f && box.minZ >= target.maxZ) {
+            return Math.max(offset, target.maxZ - box.minZ);
+        }
+        return offset;
     }
 
     @Override

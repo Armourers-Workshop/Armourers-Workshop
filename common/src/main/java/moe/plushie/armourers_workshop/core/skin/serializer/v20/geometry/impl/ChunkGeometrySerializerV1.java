@@ -69,9 +69,9 @@ public class ChunkGeometrySerializerV1 extends ChunkGeometrySerializer {
         @Override
         public OpenRectangle3f boundingBox() {
             if (slice.once(0)) {
-                float x = slice.getByte(0);
-                float y = slice.getByte(1);
-                float z = slice.getByte(2);
+                var x = slice.getByte(0);
+                var y = slice.getByte(1);
+                var z = slice.getByte(2);
                 boundingBox = new OpenRectangle3f(x, y, z, 1, 1, 1);
             }
             return boundingBox;

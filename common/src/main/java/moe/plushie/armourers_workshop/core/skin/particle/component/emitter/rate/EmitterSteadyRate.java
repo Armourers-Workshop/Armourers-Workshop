@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.rate;
 
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -38,19 +38,18 @@ public class EmitterSteadyRate implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var spawnRate = generator.compile(this.spawnRate, 1.0);
-        var maxParticles = generator.compile(this.maxParticles, 50.0);
-        generator.emitter().render((emitter, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var spawnRate = compiler.compile(this.spawnRate, 1.0);
+        var maxParticles = compiler.compile(this.maxParticles, 50.0);
+        compiler.emitter().render((emitter, context) -> {
             if (!emitter.isRunning()) {
                 return;
             }
-            // target particles = current time * rate(particles/sec)
             var rate = spawnRate.compute(context);
             var maxSize = maxParticles.compute(context);
-            var targetSize = Math.ceil(rate * emitter.time());
             // create up to a specified size of particles.
-            var size = emitter.spawnedParticles();
+            var size = emitter.particles().size();
+            var targetSize = size + rate * emitter.deltaTime();
             for (var i = size; i < targetSize && i < maxSize; i++) {
                 emitter.spawn();
             }

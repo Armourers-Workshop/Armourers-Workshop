@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.client.particle;
 import com.google.common.collect.ImmutableList;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleEmitter;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ParticleEmitterUpdater {
         }
     }
 
-    public static class Builder implements SkinParticleGenerator.Emitter {
+    public static class Builder implements SkinParticleCompiler.EmitterFactory {
 
         private final ArrayList<Event> prepare = new ArrayList<>();
         private final ArrayList<Event> tick = new ArrayList<>();

@@ -1,0 +1,54 @@
+package moe.plushie.armourers_workshop.compat.core.block;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.common.ILootBuilder;
+import moe.plushie.armourers_workshop.api.common.IRandomSource;
+import moe.plushie.armourers_workshop.compat.core.AbstractLootParamsBuilder;
+import moe.plushie.armourers_workshop.compat.core.AbstractRandomSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+
+import java.util.List;
+
+@Available("[19, 20)")
+public abstract class AbstractBlockImplB extends AbstractBlockBehaviour {
+
+    public AbstractBlockImplB(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, IRandomSource source) {
+        super.randomTick(blockState, serverLevel, blockPos, AbstractRandomSource.unwrap(source));
+    }
+
+    @Override
+    public final void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource source) {
+        randomTick(blockState, serverLevel, blockPos, AbstractRandomSource.wrap(source));
+    }
+
+    @Override
+    protected void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, IRandomSource source) {
+        super.tick(blockState, serverLevel, blockPos, AbstractRandomSource.unwrap(source));
+    }
+
+    @Override
+    public final void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource source) {
+        tick(blockState, serverLevel, blockPos, AbstractRandomSource.wrap(source));
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, ILootBuilder context) {
+        return super.getDrops(blockState, AbstractLootParamsBuilder.unwrap(context));
+    }
+
+    @Override
+    public final List<ItemStack> getDrops(BlockState blockState, LootContext.Builder builder) {
+        return getDrops(blockState, null, null, AbstractLootParamsBuilder.wrap(builder));
+    }
+}

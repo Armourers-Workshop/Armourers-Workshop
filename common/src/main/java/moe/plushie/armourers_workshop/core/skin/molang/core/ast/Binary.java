@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core.ast;
 
 import moe.plushie.armourers_workshop.core.skin.molang.core.Assignable;
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Optimizable;
@@ -72,10 +73,10 @@ public final class Binary implements Expression, Optimizable {
         AND("&&", 1800, logical((lhs, rhs) -> lhs.getAsBoolean() && rhs.getAsBoolean())),
         OR("||", 1600, logical((lhs, rhs) -> lhs.getAsBoolean() || rhs.getAsBoolean())),
 
-        LT("<", 2200, compare((lhs, rhs) -> lhs.getAsDouble() < rhs.getAsDouble())),
-        LTE("<=", 2200, compare((lhs, rhs) -> lhs.getAsDouble() <= rhs.getAsDouble())),
-        GT(">", 2200, compare((lhs, rhs) -> lhs.getAsDouble() > rhs.getAsDouble())),
-        GTE(">=", 2200, compare((lhs, rhs) -> lhs.getAsDouble() >= rhs.getAsDouble())),
+        LT("<", 2200, compare((lhs, rhs) -> lhs.doubleValue() < rhs.doubleValue())),
+        LTE("<=", 2200, compare((lhs, rhs) -> lhs.doubleValue() <= rhs.doubleValue())),
+        GT(">", 2200, compare((lhs, rhs) -> lhs.doubleValue() > rhs.doubleValue())),
+        GTE(">=", 2200, compare((lhs, rhs) -> lhs.doubleValue() >= rhs.doubleValue())),
 
         ADD("+", 2400, arithmetic(MathHelper::add)),
         SUB("-", 2400, arithmetic(MathHelper::sub)),
@@ -87,7 +88,7 @@ public final class Binary implements Expression, Optimizable {
         ARROW("->", 3000, (context, lhs, rhs) -> {
             var result = lhs.evaluate(context);
             if (result.isValid()) {
-                return rhs.evaluate(context.fork(result.getAsReference()));
+                return rhs.evaluate(context.fork(result.referenceValue()));
             }
             return Result.NULL;
         }),
@@ -159,14 +160,14 @@ public final class Binary implements Expression, Optimizable {
         private static Evaluator compare(BiFunction<Result, Result, Boolean> evaluator) {
             return (context, lhs, rhs) -> {
                 var result = evaluator.apply(lhs.evaluate(context), rhs.evaluate(context));
-                return Result.valueOf(result);
+                return ComputedResult.valueOf(result);
             };
         }
 
         private static Evaluator logical(BiFunction<BooleanSupplier, BooleanSupplier, Boolean> evaluator) {
             return (context, lhs, rhs) -> {
                 var result = evaluator.apply(() -> lhs.test(context), () -> rhs.test(context));
-                return Result.valueOf(result);
+                return ComputedResult.valueOf(result);
             };
         }
 

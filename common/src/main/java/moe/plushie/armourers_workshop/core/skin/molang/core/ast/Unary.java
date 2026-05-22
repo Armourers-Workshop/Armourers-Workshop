@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.core.ast;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Optimizable;
@@ -55,8 +56,8 @@ public final class Unary implements Expression, Optimizable {
     }
 
     public enum Operator {
-        LOGICAL_NEGATION("!", 2800, (context, expr) -> Result.valueOf(!expr.test(context))),
-        ARITHMETICAL_NEGATION("-", 2800, (context, expr) -> Result.valueOf(-expr.compute(context))),
+        LOGICAL_NEGATION("!", 2800, (context, expr) -> ComputedResult.valueOf(!expr.test(context))),
+        ARITHMETICAL_NEGATION("-", 2800, (context, expr) -> ComputedResult.valueOf(-expr.compute(context))),
         ARITHMETICAL_PLUS("+", 2800, null);
 
         private final String symbol;

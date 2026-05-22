@@ -23,7 +23,7 @@ public class BiomeHasAnyTag extends EntityFunction {
             return 0;
         }
         for (var tag : this.tags) {
-            if (biome.hasTag(tag.evaluate(context).getAsString())) {
+            if (biome.hasTag(tag.evaluate(context).stringValue())) {
                 return 1;
             }
         }

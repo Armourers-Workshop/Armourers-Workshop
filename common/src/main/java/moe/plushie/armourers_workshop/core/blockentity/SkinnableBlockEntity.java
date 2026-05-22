@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntityCapability;
 import moe.plushie.armourers_workshop.api.common.ITickable;
 import moe.plushie.armourers_workshop.api.core.IDataSerializer;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.SimpleContainer;
@@ -254,16 +255,16 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         return getParent();
     }
 
-    public int getAnalogOutputSignal(Direction dir) {
-        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getAnalogOutputSignal(level, pos, dir)).orElse(0);
+    public int getAnalogOutputSignal(OpenDirection dir) {
+        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getAnalogOutputSignal(level, pos, AbstractDirection.unwrap(dir))).orElse(0);
     }
 
-    public int getSignal(Direction dir) {
-        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getSignal(level, pos, dir)).orElse(0);
+    public int getSignal(OpenDirection dir) {
+        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getSignal(level, pos, AbstractDirection.unwrap(dir))).orElse(0);
     }
 
-    public int getDirectSignal(Direction dir) {
-        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getDirectSignal(level, pos, dir)).orElse(0);
+    public int getDirectSignal(OpenDirection dir) {
+        return getLinkedValueFromParent((level, pos) -> level.getBlockState(pos).getDirectSignal(level, pos, AbstractDirection.unwrap(dir))).orElse(0);
     }
 
     public Collection<BlockPos> getRefers() {

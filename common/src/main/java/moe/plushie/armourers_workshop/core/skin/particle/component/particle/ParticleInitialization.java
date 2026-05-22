@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -33,13 +33,13 @@ public class ParticleInitialization implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var update = generator.compile(this.update, 0.0);
-        var render = generator.compile(this.render, 0.0);
-        generator.instance().tick((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var update = compiler.compile(this.update, 0.0);
+        var render = compiler.compile(this.render, 0.0);
+        compiler.instance().tick((emitter, particle, context) -> {
             update.evaluate(context);
         });
-        generator.instance().render((emitter, particle, context) -> {
+        compiler.instance().render((emitter, particle, context) -> {
             render.evaluate(context);
         });
     }

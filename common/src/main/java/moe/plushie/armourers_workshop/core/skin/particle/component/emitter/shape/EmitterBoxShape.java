@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.shap
 
 import moe.plushie.armourers_workshop.core.math.OpenMath;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.EmitterShapeDirection;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
@@ -70,16 +70,16 @@ public class EmitterBoxShape implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var x = generator.compile(this.x, 0.0);
-        var y = generator.compile(this.y, 0.0);
-        var z = generator.compile(this.z, 0.0);
-        var width = generator.compile(this.width, 0.0);
-        var height = generator.compile(this.height, 0.0);
-        var depth = generator.compile(this.depth, 0.0);
-        var direction = this.direction.compile(generator);
+    public void compile(SkinParticleCompiler compiler) {
+        var x = compiler.compile(this.x, 0.0);
+        var y = compiler.compile(this.y, 0.0);
+        var z = compiler.compile(this.z, 0.0);
+        var width = compiler.compile(this.width, 0.0);
+        var height = compiler.compile(this.height, 0.0);
+        var depth = compiler.compile(this.depth, 0.0);
+        var direction = this.direction.compile(compiler);
         var surface = this.surface;
-        generator.instance().prepare((emitter, particle, context) -> {
+        compiler.instance().prepare((emitter, particle, context) -> {
             var cx = (float) x.compute(context);
             var cy = (float) y.compute(context);
             var cz = (float) z.compute(context);

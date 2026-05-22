@@ -66,9 +66,9 @@ public class PlayerSelectorImpl<T extends Player> extends LivingEntitySelectorIm
         return 0;
     }
 
-//    double getElytraYaw(); // x
+//    double getElytraYaw(); // y
 //
-//    double getElytraPitch(); // y
+//    double getElytraPitch(); // x
 //
 //    double getElytraRoll(); // z
 //

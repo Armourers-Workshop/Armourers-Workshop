@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ast.Constant;
 import moe.plushie.armourers_workshop.core.skin.molang.runtime.Compiler;
@@ -56,10 +57,12 @@ public class MolangVirtualMachine {
 
 
     public void beginVariableCaching() {
-        LambdaVariableHolder.push();
+        LambdaVariableHolder.beginCaching();
+        ComputedResult.beginCaching();
     }
 
     public void endVariableCaching() {
-        LambdaVariableHolder.pop();
+        ComputedResult.endCaching();
+        LambdaVariableHolder.endCaching();
     }
 }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.lifetime;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.Collections;
@@ -42,11 +42,11 @@ public class ParticleOnlyInBlocksLifetime implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
+    public void compile(SkinParticleCompiler compiler) {
         // the blocks outside which the particle expires.
-        var blocks = Collections.compactMap(this.blocks, generator.registry()::getBlock);
-        generator.instance().tick((emitter, particle, context) -> {
-            if (particle.isAlive() && !blocks.contains(particle.level().getBlock(particle.position()))) {
+        var blocks = Collections.compactMap(this.blocks, compiler.registry()::getBlock);
+        compiler.instance().tick((emitter, particle, context) -> {
+            if (particle.isAlive() && !blocks.contains(particle.level().getBlock(particle.globalPosition()))) {
                 particle.kill();
             }
         });

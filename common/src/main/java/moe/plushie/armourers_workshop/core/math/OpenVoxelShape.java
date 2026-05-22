@@ -44,6 +44,41 @@ public class OpenVoxelShape implements IVoxelShape, Iterable<OpenVector4f> {
         return shape;
     }
 
+    public static OpenVoxelShape box(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+        return box(new OpenRectangle3f(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ));
+    }
+
+    public static OpenVoxelShape box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+        return box(new OpenRectangle3f(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ));
+    }
+
+    @Override
+    public void visit(LineConsumer consumer) {
+        var box = bounds();
+
+        var minX = box.minX();
+        var minY = box.minY();
+        var minZ = box.minZ();
+        var maxX = box.maxX();
+        var maxY = box.maxY();
+        var maxZ = box.maxZ();
+
+        consumer.accept(minX, minY, minZ, maxX, minY, minZ);
+        consumer.accept(maxX, minY, minZ, maxX, minY, maxZ);
+        consumer.accept(maxX, minY, maxZ, minX, minY, maxZ);
+        consumer.accept(minX, minY, maxZ, minX, minY, minZ);
+
+        consumer.accept(minX, maxY, minZ, maxX, maxY, minZ);
+        consumer.accept(maxX, maxY, minZ, maxX, maxY, maxZ);
+        consumer.accept(maxX, maxY, maxZ, minX, maxY, maxZ);
+        consumer.accept(minX, maxY, maxZ, minX, maxY, minZ);
+
+        consumer.accept(minX, minY, minZ, minX, maxY, minZ);
+        consumer.accept(maxX, minY, minZ, maxX, maxY, minZ);
+        consumer.accept(maxX, minY, maxZ, maxX, maxY, maxZ);
+        consumer.accept(minX, minY, maxZ, minX, maxY, maxZ);
+    }
+
     public OpenAxisAlignedBoundingBox aabb() {
         if (aabb != null) {
             return aabb;

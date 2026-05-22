@@ -25,9 +25,9 @@ public class RelativeBlockHasAnyTag extends EntityFunction {
 
     @Override
     public double compute(final EntitySelector entity, final ExecutionContext context) {
-        var offsetX = this.offsetX.evaluate(context).getAsInt();
-        var offsetY = this.offsetY.evaluate(context).getAsInt();
-        var offsetZ = this.offsetZ.evaluate(context).getAsInt();
+        var offsetX = this.offsetX.evaluate(context).intValue();
+        var offsetY = this.offsetY.evaluate(context).intValue();
+        var offsetZ = this.offsetZ.evaluate(context).intValue();
         // query limit
         if (Math.abs(offsetX) > 8 || Math.abs(offsetY) > 8 || Math.abs(offsetZ) > 8) {
             return 0; // too far
@@ -39,7 +39,7 @@ public class RelativeBlockHasAnyTag extends EntityFunction {
         }
 
         for (var tag : this.tags) {
-            if (block.hasTag(tag.evaluate(context).getAsString())) {
+            if (block.hasTag(tag.evaluate(context).stringValue())) {
                 return 1;
             }
         }

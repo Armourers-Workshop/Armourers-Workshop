@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.lifetime;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -30,9 +30,9 @@ public class EmitterOnceLifetime implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var activeTime = generator.compile(this.activeTime, 10.0);
-        generator.emitter().tick((emitter, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var activeTime = compiler.compile(this.activeTime, 10.0);
+        compiler.emitter().tick((emitter, context) -> {
             var active = activeTime.compute(context);
             var time = emitter.time();
             if (time >= active) {

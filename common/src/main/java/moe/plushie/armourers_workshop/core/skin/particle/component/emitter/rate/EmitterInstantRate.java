@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.emitter.rate;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -31,10 +31,10 @@ public class EmitterInstantRate implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var particles = generator.compile(this.particles, 10.0);
-        generator.emitter().tick((emitter, context) -> {
-            int count = particles.evaluate(context).getAsInt();
+    public void compile(SkinParticleCompiler compiler) {
+        var particles = compiler.compile(this.particles, 10.0);
+        compiler.emitter().tick((emitter, context) -> {
+            int count = particles.evaluate(context).intValue();
             var time = emitter.time();
             if (!emitter.isRunning() || Double.compare(time, 0.0) == 0) {
                 return;

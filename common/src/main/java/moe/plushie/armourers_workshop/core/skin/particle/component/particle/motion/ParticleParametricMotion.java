@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.particle.component.particle.motion;
 
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleGenerator;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IInputStream;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOutputStream;
 import moe.plushie.armourers_workshop.core.utils.OpenPrimitive;
@@ -66,15 +66,15 @@ public class ParticleParametricMotion implements SkinParticleComponent {
     }
 
     @Override
-    public void compile(SkinParticleGenerator generator) {
-        var relativePositionX = generator.compile(this.relativePositionX, 0.0);
-        var relativePositionY = generator.compile(this.relativePositionY, 0.0);
-        var relativePositionZ = generator.compile(this.relativePositionZ, 0.0);
-        var directionX = generator.compile(this.directionX, 0.0);
-        var directionY = generator.compile(this.directionY, 0.0);
-        var directionZ = generator.compile(this.directionZ, 0.0);
-        var rotation = generator.compile(this.rotation, 0.0);
-        generator.instance().prepare((emitter, particle, context) -> {
+    public void compile(SkinParticleCompiler compiler) {
+        var relativePositionX = compiler.compile(this.relativePositionX, 0.0);
+        var relativePositionY = compiler.compile(this.relativePositionY, 0.0);
+        var relativePositionZ = compiler.compile(this.relativePositionZ, 0.0);
+        var directionX = compiler.compile(this.directionX, 0.0);
+        var directionY = compiler.compile(this.directionY, 0.0);
+        var directionZ = compiler.compile(this.directionZ, 0.0);
+        var rotation = compiler.compile(this.rotation, 0.0);
+        compiler.instance().prepare((emitter, particle, context) -> {
             // TODO: NO IMPL @SAGESSE
 //            Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
 //
@@ -87,7 +87,7 @@ public class ParticleParametricMotion implements SkinParticleComponent {
 //        particle.position.z = particle.initialPosition.z + position.z;
 //        particle.rotation = (float) this.rotation.get();
         });
-        generator.instance().tick((emitter, particle, context) -> {
+        compiler.instance().tick((emitter, particle, context) -> {
             // TODO: NO IMPL @SAGESSE
 //            Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
 //

@@ -1,119 +1,144 @@
 package moe.plushie.armourers_workshop.compat.core.block;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.annotation.Patch;
-import moe.plushie.armourers_workshop.api.common.ILootBuilder;
-import moe.plushie.armourers_workshop.api.common.IRandomSource;
-import moe.plushie.armourers_workshop.api.common.ITooltipContext;
-import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
-import moe.plushie.armourers_workshop.compat.core.AbstractInteractionResult;
-import moe.plushie.armourers_workshop.compat.core.AbstractLootParamsBuilder;
-import moe.plushie.armourers_workshop.compat.core.AbstractRandomSource;
-import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
-import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
+import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
+import moe.plushie.armourers_workshop.core.utils.OpenOrientation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import java.util.List;
-import java.util.function.BiConsumer;
+import org.jspecify.annotations.Nullable;
 
 @Available("[26, )")
-public class AbstractBlockImpl extends Block {
+@SuppressWarnings("NullableProblems")
+public class AbstractBlockImpl extends AbstractBlockImplA {
 
-    public AbstractBlockImpl(Properties properties) {
+    protected AbstractBlockImpl(Properties properties) {
         super(properties);
     }
 
-    public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, IRandomSource source) {
-        super.randomTick(blockState, serverLevel, blockPos, AbstractRandomSource.unwrap(source));
+    @Override
+    protected BlockState updateShape(BlockState blockState, OpenDirection direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2, Object context) {
+        return updateShape(blockState, AbstractDirection.unwrap(direction), blockState2, levelAccessor, blockPos, blockPos2);
+    }
+
+    public final BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        // TODO: NO IMPL - 26.1
+        return blockState;
     }
 
     @Override
-    public final void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource source) {
-        randomTick(blockState, serverLevel, blockPos, AbstractRandomSource.wrap(source));
-    }
-
-    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, IRandomSource source) {
-        super.tick(blockState, serverLevel, blockPos, AbstractRandomSource.unwrap(source));
+    protected boolean skipRendering(BlockState blockState, BlockState blockState2, OpenDirection direction, Object context) {
+        return super.skipRendering(blockState, blockState2, AbstractDirection.unwrap(direction));
     }
 
     @Override
-    public final void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource source) {
-        tick(blockState, serverLevel, blockPos, AbstractRandomSource.wrap(source));
-    }
-
-    public List<ItemStack> getDrops(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, ILootBuilder context) {
-        return super.getDrops(blockState, AbstractLootParamsBuilder.unwrap(context));
+    public final boolean skipRendering(BlockState blockState, BlockState blockState2, Direction direction) {
+        return skipRendering(blockState, blockState2, AbstractDirection.wrap(direction), null);
     }
 
     @Override
-    public final List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
-        return getDrops(blockState, null, null, AbstractLootParamsBuilder.wrap(builder));
+    protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl, Object context) {
+        super.neighborChanged(blockState, level, blockPos, block, null, bl);
     }
 
-    public OpenInteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult, Object context) {
-        // If user is rewritten, forward it.
-        if (blockState.getBlock() != this) {
-            return AbstractInteractionResult.wrap(blockState.useWithoutItem(level, player, blockHitResult.withPosition(blockPos)));
-        }
-        return AbstractInteractionResult.wrap(super.useWithoutItem(blockState, level, blockPos, player, blockHitResult));
+    protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable OpenOrientation orientation, boolean movedByPiston) {
+        neighborChanged(blockState, level, blockPos, block, (BlockPos) null, movedByPiston, null);
     }
 
     @Override
-    protected final InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        return AbstractInteractionResult.unwrap(useWithoutItem(blockState, level, blockPos, player, OpenInteractionHand.MAIN_HAND, blockHitResult, null));
-    }
-
-    public OpenInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, OpenInteractionHand interactionHand, BlockHitResult blockHitResult, Object context) {
-        return AbstractInteractionResult.wrap(super.useItemOn(itemStack, blockState, level, blockPos, player, AbstractInteractionHand.unwrap(interactionHand), blockHitResult));
+    public final void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+        neighborChanged(blockState, level, blockPos, block, (OpenOrientation) null, movedByPiston);
     }
 
     @Override
-    public final InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return AbstractInteractionResult.unwrap(useItemOn(itemStack, blockState, level, blockPos, player, AbstractInteractionHand.wrap(interactionHand), blockHitResult, null));
-    }
-
-    public BlockState playerWillDestroy(BlockState blockState, Level level, BlockPos blockPos, Player player, Object context) {
-        return super.playerWillDestroy(level, blockPos, blockState, player);
+    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl, Object context) {
+        // TODO: NO IMPL 26.1
+        //super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     @Override
-    public final BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        return playerWillDestroy(blockState, level, blockPos, player, null);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        onRemove(state, level, pos, null, false, null);
     }
 
-    // TODO: NO IMPL - 26.1
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) { return blockState; }
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {}
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {}
-    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {}
-    public VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {return Shapes.empty(); }
-    public int getLightBlock(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) { return 0; }
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) { }
-    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) { return false; }
-    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) { return ItemStack.EMPTY; }
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Object context) {
+        return super.getOcclusionShape(blockState);
+    }
 
-    @Patch("called in the AbstractBlockItemImpl")
-    public void appendHoverText(ItemStack itemStack, List<Component> tooltips, ITooltipContext context) {
-        // nope
+    @Override
+    protected VoxelShape getOcclusionShape(BlockState blockState) {
+        return getOcclusionShape(blockState, null, null, null);
+    }
+
+    @Override
+    protected void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, Object context) {
+        // TODO: NO IMPL 26.1
+        // super.entityInside(blockState, level, blockPos, entity, InsideBlockEffectApplier.NOOP, false);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+        entityInside(state, level, pos, entity, null);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Object context) {
+        return super.propagatesSkylightDown(blockState);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state) {
+        return propagatesSkylightDown(state, null, null, null);
+    }
+
+    @Override
+    protected int getLightBlock(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Object context) {
+        return super.getLightDampening(blockState);
+    }
+
+    @Override
+    protected final int getLightDampening(BlockState state) {
+        return getLightBlock(state, null, null, null);
+    }
+
+    @Override
+    protected int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, OpenDirection direction, Object context) {
+        return super.getSignal(blockState, blockGetter, blockPos, AbstractDirection.unwrap(direction));
+    }
+
+    @Override
+    public final int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
+        return getSignal(blockState, blockGetter, blockPos, AbstractDirection.wrap(direction), null);
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, OpenDirection direction, Object context) {
+        return super.getDirectSignal(blockState, blockGetter, blockPos, AbstractDirection.unwrap(direction));
+    }
+
+    @Override
+    public final int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
+        return getDirectSignal(blockState, blockGetter, blockPos, AbstractDirection.wrap(direction), null);
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, OpenDirection direction, Object context) {
+        return super.getAnalogOutputSignal(blockState, level, blockPos, AbstractDirection.unwrap(direction));
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+        return getAnalogOutputSignal(blockState, level, blockPos, AbstractDirection.wrap(direction), null);
     }
 }

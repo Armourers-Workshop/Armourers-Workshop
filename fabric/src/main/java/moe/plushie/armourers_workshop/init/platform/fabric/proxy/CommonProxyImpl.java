@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init.platform.fabric.proxy;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.event.EventBus;
-import moe.plushie.armourers_workshop.compat.core.AbstractDirection;
 import moe.plushie.armourers_workshop.compat.core.AbstractInteractionHand;
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
@@ -84,7 +83,7 @@ public class CommonProxyImpl implements ModInitializer {
             if (!(blockState.getBlock() instanceof AbstractBlock block)) {
                 return;
             }
-            var result = block.attackBlock(level, pos, blockState, AbstractDirection.unwrap(event.direction()), player, event.hand());
+            var result = block.attackBlock(level, pos, blockState, event.direction(), player, event.hand());
             if (result == OpenInteractionResult.CONSUME) {
                 event.setResult(OpenInteractionResult.FAIL);
                 return;

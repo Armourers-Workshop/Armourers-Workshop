@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.compat.forge;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenDirection;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionHand;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -29,7 +29,7 @@ public interface AbstractForgeBlock extends IBlockExtension {
     @Override
     default boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         var block = (AbstractBlock) Objects.unsafeCast(this);
-        var result = block.attackBlock(level, pos, state, Direction.NORTH, player, OpenInteractionHand.MAIN_HAND);
+        var result = block.attackBlock(level, pos, state, OpenDirection.NORTH, player, OpenInteractionHand.MAIN_HAND);
         if (result == OpenInteractionResult.PASS) {
             return IBlockExtension.super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         }

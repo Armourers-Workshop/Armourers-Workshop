@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.molang.runtime;
 
+import moe.plushie.armourers_workshop.core.skin.molang.core.ComputedResult;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Result;
 
 public final class MathHelper {
@@ -58,36 +59,36 @@ public final class MathHelper {
 
 
     public static Result add(final Result a, final Result b) {
-        return Result.valueOf(a.getAsDouble() + b.getAsDouble());
+        return ComputedResult.valueOf(a.doubleValue() + b.doubleValue());
     }
 
     public static Result sub(final Result a, final Result b) {
-        return Result.valueOf(a.getAsDouble() - b.getAsDouble());
+        return ComputedResult.valueOf(a.doubleValue() - b.doubleValue());
     }
 
     public static Result mul(final Result a, final Result b) {
-        return Result.valueOf(a.getAsDouble() * b.getAsDouble());
+        return ComputedResult.valueOf(a.doubleValue() * b.doubleValue());
     }
 
     public static Result div(final Result a, final Result b) {
         // molang allows division by zero, which is always equal to 0
-        double divisor = b.getAsDouble();
+        double divisor = b.doubleValue();
         if (divisor != 0.0) {
-            return Result.valueOf(a.getAsDouble() / divisor);
+            return ComputedResult.valueOf(a.doubleValue() / divisor);
         }
         return Result.ZERO;
     }
 
     public static Result mod(final Result a, final Result b) {
         // molang allows division by zero, which is always equal to 0
-        double divisor = b.getAsDouble();
+        double divisor = b.doubleValue();
         if (divisor != 0.0) {
-            return Result.valueOf(a.getAsDouble() % divisor);
+            return ComputedResult.valueOf(a.doubleValue() % divisor);
         }
         return Result.ZERO;
     }
 
     public static Result pow(final Result a, final Result b) {
-        return Result.valueOf(Math.pow(a.getAsDouble(), b.getAsDouble()));
+        return ComputedResult.valueOf(Math.pow(a.doubleValue(), b.doubleValue()));
     }
 }

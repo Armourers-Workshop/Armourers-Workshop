@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.geometry.collection;
 
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
-import moe.plushie.armourers_workshop.core.math.OpenVector3i;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometrySet;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryType;
 import moe.plushie.armourers_workshop.core.skin.geometry.SkinGeometryTypes;
@@ -208,17 +207,16 @@ public class SkinGeometrySetV1 extends SkinGeometrySet<SkinCube> {
 
         @Override
         public void setBoundingBox(OpenRectangle3f boundingBox) {
-            var blockPos = new OpenVector3i(boundingBox.x(), boundingBox.y(), boundingBox.z());
-            setX((byte) blockPos.x());
-            setY((byte) blockPos.y());
-            setZ((byte) blockPos.z());
+            setX((byte) boundingBox.x());
+            setY((byte) boundingBox.y());
+            setZ((byte) boundingBox.z());
         }
 
         @Override
         public OpenRectangle3f boundingBox() {
-            float x = x();
-            float y = y();
-            float z = z();
+            var x = x();
+            var y = y();
+            var z = z();
             return new OpenRectangle3f(x, y, z, 1, 1, 1);
         }
 

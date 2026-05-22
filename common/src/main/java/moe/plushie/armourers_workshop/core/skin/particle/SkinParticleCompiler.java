@@ -4,20 +4,20 @@ import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IOExpressionCompiler;
 import net.minecraft.world.level.block.Block;
 
-public interface SkinParticleGenerator extends IOExpressionCompiler {
-
-    Emitter emitter();
-
-    Instance instance();
+public interface SkinParticleCompiler extends IOExpressionCompiler {
 
     Registry registry();
+
+    EmitterFactory emitter();
+
+    InstanceFactory instance();
 
     interface Registry {
 
         Block getBlock(String registryName);
     }
 
-    interface Emitter {
+    interface EmitterFactory {
 
         void prepare(Event event);
 
@@ -30,7 +30,7 @@ public interface SkinParticleGenerator extends IOExpressionCompiler {
         }
     }
 
-    interface Instance {
+    interface InstanceFactory {
 
         void prepare(Event event);
 

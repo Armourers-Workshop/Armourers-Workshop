@@ -28,7 +28,7 @@ public interface Expression {
      * @return The evaluates result
      */
     default boolean test(final ExecutionContext context) {
-        return evaluate(context).getAsBoolean();
+        return evaluate(context).booleanValue();
     }
 
     /**
@@ -38,7 +38,7 @@ public interface Expression {
      * @return The evaluates result
      */
     default double compute(final ExecutionContext context) {
-        return evaluate(context).getAsDouble();
+        return evaluate(context).doubleValue();
     }
 
     /**

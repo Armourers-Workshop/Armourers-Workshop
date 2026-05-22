@@ -48,8 +48,16 @@ public class AnimationEngine {
         if (manager == AnimationManager.NONE) {
             return;
         }
-        VM.beginVariableCaching();
+        beginVariableCaching();
         manager.process(skin, context.animationTick(), context.partialTick());
+        endVariableCaching();
+    }
+
+    public static void beginVariableCaching() {
+        VM.beginVariableCaching();
+    }
+
+    public static void endVariableCaching() {
         VM.endVariableCaching();
     }
 }

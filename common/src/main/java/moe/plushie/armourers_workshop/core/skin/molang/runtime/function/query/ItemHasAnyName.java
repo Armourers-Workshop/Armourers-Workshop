@@ -21,13 +21,13 @@ public class ItemHasAnyName extends LivingEntityFunction {
 
     @Override
     public double compute(final LivingEntitySelector entity, final ExecutionContext context) {
-        var item = entity.equipmentBySlot(this.slot.evaluate(context).getAsString());
+        var item = entity.equipmentBySlot(this.slot.evaluate(context).stringValue());
         if (item == null) {
             return 0; // can't found item.
         }
         var actualId = item.id();
         for (var name : this.names) {
-            var id = name.evaluate(context).getAsString();
+            var id = name.evaluate(context).stringValue();
             if (!id.isEmpty() && !id.contains(":")) {
                 id = "minecraft:" + id;
             }

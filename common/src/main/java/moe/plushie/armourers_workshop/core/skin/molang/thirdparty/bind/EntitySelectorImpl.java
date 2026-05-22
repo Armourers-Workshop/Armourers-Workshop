@@ -57,12 +57,12 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
 
     @Override
     public double getEyeYaw(float partialTick) {
-        return entity.getViewXRot(partialTick);
+        return entity.getViewYRot(partialTick);
     }
 
     @Override
     public double getEyePitch(float partialTick) {
-        return entity.getViewYRot(partialTick);
+        return entity.getViewXRot(partialTick);
     }
 
     @Override
@@ -220,9 +220,9 @@ public class EntitySelectorImpl<T extends Entity> implements EntitySelector, Var
     @Override
     public BlockSelector relativeBlock(int offsetX, int offsetY, int offsetZ) {
         var level = entity.level();
-        double x = entity.getX() + offsetX;
-        double y = entity.getX() + offsetX;
-        double z = entity.getX() + offsetX;
+        var x = entity.getX() + offsetX;
+        var y = entity.getX() + offsetX;
+        var z = entity.getX() + offsetX;
         var blockState = level.getBlockState(new BlockPos((int) x, (int) y, (int) z));
         return blockSelector.apply(blockState);
     }
