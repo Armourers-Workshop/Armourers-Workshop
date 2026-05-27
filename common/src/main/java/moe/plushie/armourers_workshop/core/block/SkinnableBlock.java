@@ -292,16 +292,22 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements A
 
     public void brokenByAnything(Level level, BlockPos blockPos, BlockState blockState, @Nullable Player player) {
         if (dropItems(level, blockPos, player)) {
-            killSeatEntities(level, blockPos);
-            forEach(level, blockPos, target -> level.setBlock(target, Blocks.AIR.defaultBlockState(), 35));
+            if (level instanceof ServerLevel serverLevel) {
+                killSeatEntities(serverLevel, blockPos);
+            }
+            forEach(level, blockPos, target ->
+                    level.setBlock(target, Blocks.AIR.defaultBlockState(), 35)
+            );
         }
     }
 
-    public void killSeatEntities(Level level, BlockPos blockPos) {
+    public void killSeatEntities(ServerLevel level, BlockPos blockPos) {
         var blockEntity = getParentBlockEntity(level, blockPos);
         if (blockEntity != null) {
             var seatPos = blockEntity.getSeatPos().adding(0.5f, 0.5f, 0.5f);
-            killSeatEntity((ServerLevel) level, blockEntity.getParentPos(), seatPos);
+            if (level instanceof ServerLevel serverLevel) {
+                killSeatEntity(serverLevel, blockEntity.getParentPos(), seatPos);
+            }
         }
     }
 
