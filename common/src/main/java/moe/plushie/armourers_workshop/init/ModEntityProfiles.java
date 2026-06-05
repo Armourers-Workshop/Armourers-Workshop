@@ -85,6 +85,12 @@ public class ModEntityProfiles {
         return CUSTOM_ENTITIES;
     }
 
+    public static EntityProfile getEmptyProfile() {
+        var builder = new SimpleBuilder(ModConstants.key("builtin/empty"));
+        builder.isLocked = true;
+        return builder.build();
+    }
+
     private static class SimpleLoader implements DataPackBuilder {
 
         private static final Map<OpenResourceKey, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();

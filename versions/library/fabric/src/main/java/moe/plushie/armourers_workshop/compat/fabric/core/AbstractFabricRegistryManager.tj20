@@ -7,11 +7,13 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
@@ -30,6 +32,16 @@ public class AbstractFabricRegistryManager extends AbstractRegistryManager {
     @Override
     protected OpenResourceKey getBlockKey0(Block block) {
         return Registry.findKey(BuiltInRegistries.BLOCK, block);
+    }
+
+    @Override
+    protected OpenResourceKey getEntityTypeKey0(EntityType<?> entityType) {
+        return Registry.findKey(BuiltInRegistries.ENTITY_TYPE, entityType);
+    }
+
+    @Override
+    protected OpenResourceKey getBlockEntityTypeKey0(BlockEntityType<?> entityType) {
+        return Registry.findKey(BuiltInRegistries.BLOCK_ENTITY_TYPE, entityType);
     }
 
     @Override

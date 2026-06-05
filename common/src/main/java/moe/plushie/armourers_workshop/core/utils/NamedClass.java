@@ -6,7 +6,7 @@ public class NamedClass {
 
     private static final HashMap<String, Class<?>> CLASSES = new HashMap<>();
 
-    public static Class<?> get(String name) {
+    public static Class<?> forName(String name) {
         return CLASSES.get(name);
     }
 

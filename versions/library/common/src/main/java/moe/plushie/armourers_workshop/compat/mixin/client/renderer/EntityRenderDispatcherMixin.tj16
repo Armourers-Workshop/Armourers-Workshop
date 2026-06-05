@@ -1,10 +1,21 @@
 package moe.plushie.armourers_workshop.compat.mixin.client.renderer;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[16, 18)")
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void aw2$init(CallbackInfo ci) {
+        EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> AbstractClientHooks::reloadResources);
+    }
 }

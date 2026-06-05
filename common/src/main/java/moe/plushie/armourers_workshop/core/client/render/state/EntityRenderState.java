@@ -140,7 +140,7 @@ public class EntityRenderState extends RenderState implements IEntityRenderState
     }
 
     public boolean shouldRenderEquipment(OpenEquipmentSlot equipment) {
-        return shouldRenderEquipmentSlots.getOrDefault(equipment, false);
+        return shouldRenderEquipmentSlots.getOrDefault(equipment, true);
     }
 
     public boolean shouldRenderInGUI() {

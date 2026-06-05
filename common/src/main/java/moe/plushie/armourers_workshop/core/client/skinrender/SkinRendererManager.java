@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.ILivingEntityRenderer;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.builder.blockentity.AdvancedBuilderBlockEntity;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -22,6 +23,8 @@ import moe.plushie.armourers_workshop.compat.api.entity.PlayerAccessor;
 import moe.plushie.armourers_workshop.compat.api.entity.ThrownTridentAccessor;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientNamedClass;
 import moe.plushie.armourers_workshop.compat.client.entity.model.AbstractModelHolder;
+import moe.plushie.armourers_workshop.compat.client.renderer.entity.AbstractEntityRenderDispatcher;
+import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.armature.ArmatureSerializers;
 import moe.plushie.armourers_workshop.core.armature.ArmatureTransformerManager;
 import moe.plushie.armourers_workshop.core.armature.core.DefaultArmatureTransformerManager;
@@ -71,10 +74,12 @@ import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.client.render.GlobalSkinLibraryRenderState;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.EntityType;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -92,77 +97,98 @@ public class SkinRendererManager {
     }
 
     public static void reload() {
-        ProfileLoader.reload();
+        // nop
     }
 
     private static class ProfileLoader {
 
-        private static final Map<IRegistryHolder<?>, EntityProfile> ENTITIES = new LinkedHashMap<>();
+        private static final ProfileLoader INSTANCE = new ProfileLoader();
 
-        private static boolean IS_READY = false;
+        private final Map<IRegistryHolder<?>, EntityProfile> registeredProfiles = new LinkedHashMap<>();
+        private final Map<EntityType<?>, Map<String, IEntityRenderer<?, ?>>> registeredEntityRenderers = new LinkedHashMap<>();
+
+        private final List<Pair<EntityType<?>, IEntityRenderer<?, ?>>> forceEntityRenderers = new ArrayList<>();
+
+        private boolean isReady = false;
 
         public static void init() {
-            ModEntityProfiles.addListener(ProfileLoader::profileDidChange);
+            ModEntityProfiles.addListener(INSTANCE::profileDidChange);
+            AbstractEntityRenderDispatcher.addListener(INSTANCE::rendererDidChange);
         }
 
-        public static void reload() {
-            var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-            if (entityRenderManager == null) {
-                // call again later!!!
-                RenderSystem.recordRenderCall(SkinRendererManager::reload);
-                return;
-            }
-            RenderSystem.recordRenderCall(() -> {
-                // execute the pending tasks.
-                IS_READY = false;
-                ENTITIES.forEach(ProfileLoader::update);
-                IS_READY = true;
-            });
-        }
-
-        public static void update(IRegistryHolder<?> entityType, EntityProfile entityProfile) {
+        private void update(IRegistryHolder<?> entityType, EntityProfile entityProfile) {
             // we can get the entity type?
             if (!(entityType.get() instanceof EntityType<?> resolvedEntityType)) {
                 return;
             }
-            var entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-            if (entityRenderManager == null) {
-                return;
-            }
-            // Add our own custom armor layer to the various player renderers.
-            if (resolvedEntityType == EntityType.PLAYER) {
-                for (var renderer : entityRenderManager.playerRenderers.values()) {
-                    if (renderer != null) {
-                        var rendererContext = EntityRendererContext.of((IEntityRenderer<?, ?>) renderer);
-                        rendererContext.setEntityType(resolvedEntityType);
-                        rendererContext.setEntityProfile(entityProfile);
-                    }
-                }
-            }
-            // Add our own custom armor layer to everything that has an armor layer
-            var renderer = entityRenderManager.renderers.get(resolvedEntityType);
-            if (renderer != null) {
-                var rendererContext = EntityRendererContext.of((IEntityRenderer<?, ?>) renderer);
-                rendererContext.setEntityType(resolvedEntityType);
-                rendererContext.setEntityProfile(entityProfile);
+            // add our own custom armor layer to target entity renderer.
+            var entityRenderers = registeredEntityRenderers.get(resolvedEntityType);
+            if (entityRenderers != null) {
+                entityRenderers.forEach((key, entityRenderer) -> update(resolvedEntityType, entityProfile, entityRenderer));
             }
         }
 
-        public static void profileDidChange(IRegistryHolder<?> entityType, EntityProfile entityProfile) {
+        private void update(EntityType<?> entityType, EntityProfile entityProfile, IEntityRenderer<?, ?> entityRenderer) {
+            var rendererContext = EntityRendererContext.of(entityRenderer);
+            rendererContext.setEntityType(entityType);
+            rendererContext.setEntityProfile(entityProfile);
+        }
+
+        private void profileDidChange(IRegistryHolder<?> entityType, EntityProfile entityProfile) {
             if (entityProfile != null) {
-                if (ENTITIES.containsKey(entityType)) {
+                if (registeredProfiles.containsKey(entityType)) {
                     ModLog.debug("Update Entity Renderer '{}'", entityType.registryName());
                 } else {
                     ModLog.debug("Attach Entity Renderer '{}'", entityType.registryName());
                 }
-                ENTITIES.put(entityType, entityProfile);
+                registeredProfiles.put(entityType, entityProfile);
             } else {
                 ModLog.debug("Detach Entity Renderer '{}'", entityType.registryName());
-                ENTITIES.remove(entityType);
+                registeredProfiles.remove(entityType);
             }
-            if (IS_READY) {
+            if (isReady) {
                 RenderSystem.safeCall(() -> update(entityType, entityProfile));
             }
+        }
+
+        private void rendererDidChange(Map<EntityType<?>, Map<String, IEntityRenderer<?, ?>>> newValue) {
+            //var horseArmorType = NamedClass.forName("minecraft:layer/horse_armor");
+            var armourType = NamedClass.forName("minecraft:layer/humanoid_armor");
+            // reset all
+            forceEntityRenderers.clear();
+            registeredEntityRenderers.clear();
+            // put the new entity renderers.
+            registeredEntityRenderers.putAll(newValue);
+            registeredEntityRenderers.forEach((entityType, renderers) -> renderers.forEach((model, renderer) -> {
+                // ..
+                if (armourType != null && findLayer(renderer, armourType)) {
+                    ModLog.debug("Detect Entity Renderer '{}'", AbstractRegistryManager.getEntityTypeKey(entityType));
+                    forceEntityRenderers.add(Pair.of(entityType, renderer));
+                }
+            }));
+            // reload all entity renderers.
+            RenderSystem.recordRenderCall(() -> {
+                // execute the pending tasks.
+                isReady = false;
+                registeredProfiles.forEach(this::update);
+                forceEntityRenderers.stream().filter(it -> !findProfile(it.getLeft())).forEach(it -> {
+                    ModLog.debug("Attach Entity Renderer (Auto) '{}'", AbstractRegistryManager.getEntityTypeKey(it.getKey()));
+                    update(it.getLeft(), ModEntityProfiles.getEmptyProfile(), it.getRight());
+                });
+                isReady = true;
+            });
+        }
+
+        private boolean findProfile(EntityType<?> entityType) {
+            return registeredProfiles.keySet().stream().anyMatch(it -> it.get() == entityType);
+        }
+
+        private boolean findLayer(IEntityRenderer<?, ?> renderer, Class<?> layerClass) {
+            // layer only in the living entity renderers.
+            if (!(renderer instanceof ILivingEntityRenderer<?, ?, ?> entityRenderer)) {
+                return false;
+            }
+            return entityRenderer.abi$getLayers().stream().anyMatch(layerClass::isInstance);
         }
     }
 
@@ -388,7 +414,7 @@ public class SkinRendererManager {
         }
 
         public static void registerModel(String registryName, Consumer<Map<String, String>> provider) {
-            var clazz = NamedClass.get(registryName);
+            var clazz = NamedClass.forName(registryName);
             if (clazz != null) {
                 var mapper = new LinkedHashMap<String, String>();
                 provider.accept(mapper);

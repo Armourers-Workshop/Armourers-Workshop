@@ -85,7 +85,7 @@ public class AbstractModelHolder {
             var values = new HashMap<String, Map<String, String>>();
             AbstractModelCollectorImpl.apply(values);
             values.forEach((key, value) -> {
-                var clazz = NamedClass.get(key);
+                var clazz = NamedClass.forName(key);
                 if (clazz != null) {
                     builder.put(clazz, value);
                 }

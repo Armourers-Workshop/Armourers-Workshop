@@ -193,7 +193,7 @@ public abstract class DefaultLayerArmaturePlugin extends ArmaturePlugin {
         }
 
         public void register(String name, Function<IEntityModel<?>, BooleanSupplier> testFactory) {
-            register(NamedClass.get(name), testFactory);
+            register(NamedClass.forName(name), testFactory);
         }
 
         public void register(Class<?> clazz, Function<IEntityModel<?>, BooleanSupplier> testFactory) {

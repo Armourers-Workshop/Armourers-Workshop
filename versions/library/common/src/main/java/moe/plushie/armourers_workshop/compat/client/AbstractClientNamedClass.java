@@ -21,6 +21,8 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.ZombieVillagerModel;
 import net.minecraft.client.renderer.entity.layers.DrownedOuterLayer;
+import net.minecraft.client.renderer.entity.layers.HorseArmorLayer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.SkeletonClothingLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 
@@ -32,6 +34,8 @@ public class AbstractClientNamedClass extends NamedClass {
         define("minecraft:layer/villager_profession", VillagerProfessionLayer.class);
         define("minecraft:layer/drowned_outer", DrownedOuterLayer.class);
         define("minecraft:layer/stray_clothing", SkeletonClothingLayer.class);
+        define("minecraft:layer/humanoid_armor", HumanoidArmorLayer.class);
+        define("minecraft:layer/horse_armor", HorseArmorLayer.class);
     }
 
     public static void registerModelClasses() {

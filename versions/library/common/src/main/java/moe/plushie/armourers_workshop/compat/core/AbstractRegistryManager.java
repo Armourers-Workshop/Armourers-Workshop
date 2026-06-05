@@ -4,11 +4,13 @@ import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +25,9 @@ public abstract class AbstractRegistryManager {
 
     private static final Map<Item, String> ITEM_NAMES = new ConcurrentHashMap<>();
     private static final Map<Block, String> BLOCK_NAMES = new ConcurrentHashMap<>();
+
+    private static final Map<EntityType<?>, String> ENTITY_TYPE_NAMES = new ConcurrentHashMap<>();
+    private static final Map<BlockEntityType<?>, String> BLOCK_ENTITY_TYPE_NAMES = new ConcurrentHashMap<>();
 
     private static final Map<String, Optional<Item>> NAMED_ITEMS = new ConcurrentHashMap<>();
     private static final Map<String, Optional<Block>> NAMED_BLOCKS = new ConcurrentHashMap<>();
@@ -42,6 +47,14 @@ public abstract class AbstractRegistryManager {
 
     public static String getBlockKey(Block block) {
         return BLOCK_NAMES.computeIfAbsent(block, it -> EnvironmentManager.getRegistryManager().getBlockKey0(it).toString());
+    }
+
+    public static String getEntityTypeKey(EntityType<?> entityType) {
+        return ENTITY_TYPE_NAMES.computeIfAbsent(entityType, it -> EnvironmentManager.getRegistryManager().getEntityTypeKey0(it).toString());
+    }
+
+    public static String getBlockEntityTypeKey(BlockEntityType<?> entityType) {
+        return BLOCK_ENTITY_TYPE_NAMES.computeIfAbsent(entityType, it -> EnvironmentManager.getRegistryManager().getBlockEntityTypeKey0(it).toString());
     }
 
 
@@ -112,6 +125,10 @@ public abstract class AbstractRegistryManager {
     protected abstract OpenResourceKey getItemKey0(Item item);
 
     protected abstract OpenResourceKey getBlockKey0(Block block);
+
+    protected abstract OpenResourceKey getEntityTypeKey0(EntityType<?> entityType);
+
+    protected abstract OpenResourceKey getBlockEntityTypeKey0(BlockEntityType<?> entityType);
 
 
     protected abstract Predicate<ItemStack> getItemTag0(OpenResourceKey key);
