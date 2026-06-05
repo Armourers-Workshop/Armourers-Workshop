@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,13 +24,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
-public class SkinExporterWavefrontObj implements SkinExporter {
+public class SkinExporterWavefrontObj extends SkinExporter {
 
     private static final String CRLF = "\n";
 
     private int faceIndex;
-    private HashMap<Integer, Integer> colors;
 
     @Override
     public Collection<String> extensions() {
@@ -40,7 +39,6 @@ public class SkinExporterWavefrontObj implements SkinExporter {
 
     @Override
     public void exportSkin(Skin skin, File filePath, String filename, float scale) throws Exception {
-        this.colors = new HashMap<>();
         this.faceIndex = 0;
 
         var outputFile = new File(filePath, filename + ".obj");
@@ -48,8 +46,8 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         var os = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
 
         var tasks = new ArrayList<Task>();
+        var colors = new LinkedHashSet<Integer>();
 
-        int colorIndex = 0;
         int totalFaces = 0;
         for (var skinPart : skin.parts()) {
             var task = new Task(skin, skinPart);
@@ -57,25 +55,15 @@ public class SkinExporterWavefrontObj implements SkinExporter {
                 if (!face.isVisible()) {
                     continue;
                 }
-                int color = face.color().argb() | 0xff000000;
-                if (!colors.containsKey(color)) {
-                    colors.put(color, colorIndex++);
-                }
+                colors.add(face.color().argb() | 0xff000000);
             }
             tasks.add(task);
             totalFaces += task.cubeFaces.size();
         }
         ModLog.debug("create task with {} total faces.", totalFaces);
 
-        var textureTotalSize = colors.size();
-        var textureSize = 0;
-        while (textureSize * textureSize < textureTotalSize * 4) {
-            textureSize = getNextPowerOf2(textureSize + 1);
-        }
-        ModLog.debug("create {}x{} texture of {}", textureSize, textureSize, textureTotalSize);
-
-        var textureBuilder = new TextureBuilder(textureSize, textureSize);
-        colors.forEach((color, index) -> textureBuilder.setColor(index, color));
+        var textureImage = new TextureImage(filename, colors);
+        ModLog.debug("create {}x{} texture of {}", textureImage.width(), textureImage.height(), colors.size());
 
         os.write("# WavefrontObj" + CRLF);
         os.write("# This file was exported from the Minecraft mod Armourer's Workshop" + CRLF);
@@ -95,18 +83,18 @@ public class SkinExporterWavefrontObj implements SkinExporter {
             poseStack.translate(pos.x(), pos.y(), pos.z());
             // apply the marker rotation and offset.
             transform.apply(poseStack);
-            exportPart(poseStack, task.cubeFaces, part, task.skin, os, textureBuilder, partIndex++);
+            exportPart(poseStack, task.cubeFaces, part, task.skin, os, textureImage, partIndex++);
         }
 
         os.flush();
         fos.flush();
 
-        ImageIO.write(textureBuilder.build(), "png", new File(filePath, filename + ".png"));
+        ImageIO.write(textureImage.image(), "png", new File(filePath, filename + ".png"));
 
         createMtlFile(filePath, filename);
     }
 
-    private void exportPart(OpenPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
+    private void exportPart(OpenPoseStack poseStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureImage texture, int partIndex) throws IOException {
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
         var faces = new HashMap<SkinGeometryType, ArrayList<SkinCubeFace>>();
@@ -124,7 +112,7 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         }
     }
 
-    private void exportLayer(OpenPoseStack poseStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
+    private void exportLayer(OpenPoseStack poseStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureImage texture, String layer, int partIndex) throws IOException {
         ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.type(), faces.size());
 
         os.write("o " + partIndex + "-" + skinPart.type().registryName().path() + "-" + layer + CRLF);
@@ -148,17 +136,20 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         }
 
         // TODO: add adv skin support.
-        var scale = 1.0 / texture.width;
+        var widthScale = 1.0 / texture.width();
+        var heightScale = 1.0 / texture.height();
         for (var face : faces) {
-            int index = colors.getOrDefault(face.color().argb() | 0xff000000, 0);
+            var pos = texture.get(face.color().argb() | 0xff000000);
 
-            var ix = texture.x(index) + 0.5;
-            var iy = texture.y(index) + 0.5;
+            var x0 = pos.x();
+            var y0 = texture.height() - pos.y() - 1;
+            var x1 = x0 + 1;
+            var y1 = y0 + 1;
 
-            writeTexture(os, (ix + 1) * scale, iy * scale);
-            writeTexture(os, (ix + 1) * scale, (iy + 1) * scale);
-            writeTexture(os, ix * scale, (iy + 1) * scale);
-            writeTexture(os, ix * scale, iy * scale);
+            writeTexture(os, (x1 - 0.02f) * widthScale, (y0 + 0.02f) * heightScale);
+            writeTexture(os, (x1 - 0.02f) * widthScale, (y1 - 0.02f) * heightScale);
+            writeTexture(os, (x0 + 0.02f) * widthScale, (y1 - 0.02f) * heightScale);
+            writeTexture(os, (x0 + 0.02f) * widthScale, (y0 + 0.02f) * heightScale);
         }
 
         for (var face : faces) {
@@ -211,16 +202,12 @@ public class SkinExporterWavefrontObj implements SkinExporter {
         os.flush();
     }
 
-    private int getNextPowerOf2(int value) {
-        return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
-    }
-
     private String f2s(float value) {
-        return SkinExportManager.FLOAT_FORMAT.format(value);
+        return FLOAT_FORMAT.format(value);
     }
 
     private String f2s(double value) {
-        return SkinExportManager.DOUBLE_FORMAT.format(value);
+        return DOUBLE_FORMAT.format(value);
     }
 
     private static class Task {
@@ -234,40 +221,6 @@ public class SkinExporterWavefrontObj implements SkinExporter {
             this.skin = skin;
             this.skinPart = skinPart;
             this.cubeFaces = Collections.collect(SkinCubeFaceCuller.cullFaces(geometries, bounds), SkinCubeFace.class);
-        }
-    }
-
-    private static class TextureBuilder {
-
-        private final int width;
-        private final int height;
-        private final BufferedImage image;
-
-        public TextureBuilder(int width, int height) {
-            this.width = width;
-            this.height = height;
-            this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        }
-
-        public void setColor(int index, int color) {
-            var ix = x(index);
-            var iy = height - 1 - y(index);
-            image.setRGB(ix, iy, color);
-            image.setRGB(ix + 1, iy, color);
-            image.setRGB(ix, iy - 1, color);
-            image.setRGB(ix + 1, iy - 1, color);
-        }
-
-        public int x(int index) {
-            return (index % (width / 2)) * 2;
-        }
-
-        public int y(int index) {
-            return (index / (width / 2)) * 2;
-        }
-
-        public BufferedImage build() {
-            return image;
         }
     }
 }

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.data.action;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;

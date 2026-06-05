@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.client.particle;
 
+import it.unimi.dsi.fastutil.floats.Float2ObjectMap;
 import it.unimi.dsi.fastutil.floats.Float2ObjectOpenHashMap;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
@@ -84,7 +85,7 @@ public class SmartParticleEmitter implements SkinParticleEmitter, VariableStorag
     private final ArrayList<OpenAxisAlignedBoundingBox> searchedBoxes = new ArrayList<>();
     private final ArrayList<OpenVoxelShape> collidingShapes = new ArrayList<>();
 
-    private final Float2ObjectOpenHashMap<EntityPose> cachedGlobalPoses = new Float2ObjectOpenHashMap<>();
+    private final Float2ObjectMap<EntityPose> cachedGlobalPoses = new Float2ObjectOpenHashMap<>();
 
     public SmartParticleEmitter(ParticleEmitterUpdater emitter, ParticleInstanceUpdater instance, AbstractParticleRenderer renderer, ExecutionContext context) {
         this.entity = EntityAccessorImpl.of(context);
@@ -312,8 +313,8 @@ public class SmartParticleEmitter implements SkinParticleEmitter, VariableStorag
 
     public EntityPose globalPose(float partialTick) {
         return cachedGlobalPoses.computeIfAbsent(partialTick, it -> {
-            var globalPose = EntityPose.lerp(it, this.globalPoseOld, this.globalPose);
-            var localPose = EntityPose.lerp(it, this.localPoseOld, this.localPose);
+            var globalPose = EntityPose.lerp(partialTick, this.globalPoseOld, this.globalPose);
+            var localPose = EntityPose.lerp(partialTick, this.localPoseOld, this.localPose);
             return globalPose.transforming(localPose);
         });
     }

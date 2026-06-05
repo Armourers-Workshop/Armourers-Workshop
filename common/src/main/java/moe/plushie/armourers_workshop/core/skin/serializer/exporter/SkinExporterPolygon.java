@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class SkinExporterPolygon implements SkinExporter {
+public class SkinExporterPolygon extends SkinExporter {
 
     private static final String CRLF = "\n";
 
@@ -124,7 +124,7 @@ public class SkinExporterPolygon implements SkinExporter {
     }
 
     private String f2s(float value) {
-        return SkinExportManager.FLOAT_FORMAT.format(value);
+        return FLOAT_FORMAT.format(value);
     }
 
     private static class Task {
