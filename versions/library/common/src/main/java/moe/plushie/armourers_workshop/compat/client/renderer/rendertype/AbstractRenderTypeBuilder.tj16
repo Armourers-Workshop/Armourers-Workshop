@@ -82,7 +82,7 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             it.put(SkinVertexFormat.BLIT_TEXTURED, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
             it.put(SkinVertexFormat.GUI_COLOR, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_QUADS, builder -> builder.setTransparencyState(DEFAULT_TRANSPARENCY)));
-            it.put(SkinVertexFormat.GUI_TEXTURED, () -> _builder(DefaultVertexFormat.POSITION_TEX, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));
+            it.put(SkinVertexFormat.GUI_TEXTURED, () -> _builder(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setTextureState(EMPTY_TEXTURE)));
 
             it.put(SkinVertexFormat.BLOCK, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));
             it.put(SkinVertexFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, builder -> builder.setAlphaState(DEFAULT_ALPHA).setDiffuseLightingState(DIFFUSE_LIGHTING)));

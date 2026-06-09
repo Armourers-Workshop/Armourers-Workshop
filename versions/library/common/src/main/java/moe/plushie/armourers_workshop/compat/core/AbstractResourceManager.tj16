@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResource;
-import moe.plushie.armourers_workshop.api.core.IResourceKey;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.core.utils.OpenResource;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 @Available("[16, 19)")
-public class AbstractResourceManager implements IResourceManager {
+public class AbstractResourceManager implements OpenResourceManager {
 
     private final ResourceManager resourceManager;
 
@@ -25,22 +25,22 @@ public class AbstractResourceManager implements IResourceManager {
         return new AbstractResourceManager(resourceManager);
     }
 
-    public static ResourceManager unwrap(IResourceManager resourceManager) {
+    public static ResourceManager unwrap(OpenResourceManager resourceManager) {
         return ((AbstractResourceManager) resourceManager).resourceManager;
     }
 
     @Override
-    public boolean hasResource(IResourceKey key) {
+    public boolean hasResource(OpenResourceKey key) {
         return resourceManager.hasResource(key.get());
     }
 
     @Override
-    public IResource readResource(IResourceKey key) throws IOException {
+    public OpenResource readResource(OpenResourceKey key) throws IOException {
         return wrap(key, resourceManager.getResource(key.get()));
     }
 
     @Override
-    public void readResources(IResourceKey target, Predicate<String> validator, BiConsumer<IResourceKey, IResource> consumer) {
+    public void listResources(OpenResourceKey target, Predicate<String> validator, BiConsumer<OpenResourceKey, OpenResource> consumer) {
         for (var key : resourceManager.listResources(target.path(), validator)) {
             try {
                 if (!key.getNamespace().equals(target.namespace())) {
@@ -60,8 +60,8 @@ public class AbstractResourceManager implements IResourceManager {
         }
     }
 
-    private IResource wrap(IResourceKey name, Resource resource) {
-        return new IResource() {
+    private OpenResource wrap(OpenResourceKey name, Resource resource) {
+        return new OpenResource() {
             @Override
             public String name() {
                 return name.toString();

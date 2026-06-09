@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.event.common;
 
 import moe.plushie.armourers_workshop.core.data.DataPackType;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,6 +10,8 @@ public interface DataPackEvent {
     interface Reloading extends DataPackEvent {
 
         DataPackType type();
+
+        OpenResourceManager resourceManager();
     }
 
     /**

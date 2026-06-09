@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.compat.forge.event.client;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
-import moe.plushie.armourers_workshop.compat.forge.AbstractForgeResourceLoader;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgePreparableReloadListener;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -16,10 +16,10 @@ public class AbstractForgeRegisterClientDataPackEvent {
     public static IEventHandler<RegisterClientDataPackEvent> registryFactory() {
         return (priority, receiveCancelled, subscriber) -> {
             EnvironmentExecutor.willSetup(EnvironmentType.CLIENT, () -> () -> {
-                subscriber.accept(loader -> {
+                subscriber.accept(listener -> {
                     var name = ModConstants.key("custom-client-data-pack");
-                    var resourceLoader = new AbstractForgeResourceLoader(name, loader);
-                    ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(resourceLoader);
+                    var listener1 = new AbstractForgePreparableReloadListener(name, listener);
+                    ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener(listener1);
                 });
             });
         };

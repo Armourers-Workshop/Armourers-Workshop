@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager
 import moe.plushie.armourers_workshop.core.client.other.PreloadableSkinManager;
 import moe.plushie.armourers_workshop.core.client.particle.SmartParticleManager;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
+import moe.plushie.armourers_workshop.core.client.render.model.SkinItemModelManager;
 import moe.plushie.armourers_workshop.core.client.render.plugin.FallbackEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.render.plugin.LivingEntityRenderPlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -40,7 +41,6 @@ import moe.plushie.armourers_workshop.init.ModKeyBindings;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.event.client.ClientPlayerEvent;
 import moe.plushie.armourers_workshop.init.event.client.ItemTooltipEvent;
-import moe.plushie.armourers_workshop.init.event.client.RegisterClientDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.client.RegisterItemPropertyEvent;
 import moe.plushie.armourers_workshop.init.event.client.RegisterTextureEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderEntityEvent;
@@ -48,7 +48,6 @@ import moe.plushie.armourers_workshop.init.event.client.RenderFrameEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderHighlightEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderLivingEntityEvent;
 import moe.plushie.armourers_workshop.init.event.client.RenderSpecificHandEvent;
-import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import moe.plushie.armourers_workshop.init.platform.ClientResourceManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
@@ -70,8 +69,9 @@ public class ClientProxy {
         ModItemTintSources.init();
         ModBlockTintSources.init();
         ModItemRenderers.init();
-        ClientWardrobeHandler.init();
+        SkinItemModelManager.init();
         SkinRendererManager.init();
+        ClientWardrobeHandler.init();
         ClientResourceManager.init();
 
         MinecraftAuth.init(new MinecraftAuth.UserProvider() {
@@ -95,11 +95,11 @@ public class ClientProxy {
         register();
     }
 
-    private static void register() {
-        EventBus.register(RegisterClientDataPackEvent.class, event -> {
-            event.register(DataPackManager.byType(DataPackType.CLIENT_RESOURCES));
-        });
+    private static void setup() {
+        DataPackManager.addReloadListener(DataPackType.CLIENT_RESOURCES, DiscoveerableSkinManager.getInstance()::reload);
+    }
 
+    private static void register() {
         // register custom item property.
         EventBus.register(RegisterItemPropertyEvent.class, event -> Registries.ITEMS.forEach(it -> {
             var item = it.get();
@@ -214,7 +214,5 @@ public class ClientProxy {
 
         EventBus.register(ItemTooltipEvent.Gather.class, ItemTooltipManager::gatherSkinTooltip);
         EventBus.register(ItemTooltipEvent.Render.class, ItemTooltipManager::renderSkinTooltip);
-
-        EventBus.register(DataPackEvent.Reloading.class, DiscoveerableSkinManager.getInstance()::reload);
     }
 }

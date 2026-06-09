@@ -6,15 +6,11 @@ import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import net.minecraft.client.Minecraft;
 
 @OnlyIn(Dist.CLIENT)
-public class AbstractClientResourceManager extends AbstractResourceManager {
+public class AbstractClientResourceManager {
 
-    private static final AbstractClientResourceManager INSTANCE = new AbstractClientResourceManager();
+    private static final AbstractResourceManager INSTANCE = AbstractResourceManager.wrap(Minecraft.getInstance().getResourceManager());
 
-    public AbstractClientResourceManager() {
-        super(Minecraft.getInstance().getResourceManager());
-    }
-
-    public static AbstractClientResourceManager getInstance() {
+    public static AbstractResourceManager getInstance() {
         return INSTANCE;
     }
 }

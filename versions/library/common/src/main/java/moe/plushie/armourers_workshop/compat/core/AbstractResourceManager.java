@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResource;
-import moe.plushie.armourers_workshop.api.core.IResourceKey;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
+import moe.plushie.armourers_workshop.core.utils.OpenResource;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 @Available("[19, )")
-public class AbstractResourceManager implements IResourceManager {
+public class AbstractResourceManager implements OpenResourceManager {
 
     private final ResourceManager resourceManager;
 
@@ -26,17 +26,17 @@ public class AbstractResourceManager implements IResourceManager {
         return new AbstractResourceManager(resourceManager);
     }
 
-    public static ResourceManager unwrap(IResourceManager resourceManager) {
+    public static ResourceManager unwrap(OpenResourceManager resourceManager) {
         return ((AbstractResourceManager) resourceManager).resourceManager;
     }
 
     @Override
-    public boolean hasResource(IResourceKey key) {
+    public boolean hasResource(OpenResourceKey key) {
         return resourceManager.getResource(key.get()).isPresent();
     }
 
     @Override
-    public IResource readResource(IResourceKey key) throws IOException {
+    public OpenResource readResource(OpenResourceKey key) throws IOException {
         var resource = resourceManager.getResource(key.get());
         if (resource.isPresent()) {
             return wrap(key, resource.get());
@@ -45,7 +45,7 @@ public class AbstractResourceManager implements IResourceManager {
     }
 
     @Override
-    public void readResources(IResourceKey target, Predicate<String> validator, BiConsumer<IResourceKey, IResource> consumer) {
+    public void listResources(OpenResourceKey target, Predicate<String> validator, BiConsumer<OpenResourceKey, OpenResource> consumer) {
         resourceManager.listResources(target.path(), rl -> validator.test(rl.getPath())).forEach((key, resource) -> {
             try {
                 try {
@@ -63,8 +63,8 @@ public class AbstractResourceManager implements IResourceManager {
         });
     }
 
-    private IResource wrap(IResourceKey name, Resource resource) {
-        return new IResource() {
+    private OpenResource wrap(OpenResourceKey name, Resource resource) {
+        return new OpenResource() {
             @Override
             public String name() {
                 return name.toString();

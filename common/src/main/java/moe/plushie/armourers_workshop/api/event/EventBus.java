@@ -10,6 +10,10 @@ public final class EventBus {
         EventManager.listen(eventClass, eventHandler);
     }
 
+    public static <E> void post(Class<E> eventClass, E event) {
+        EventManager.post(eventClass, event);
+    }
+
     public static void init() {
     }
 }

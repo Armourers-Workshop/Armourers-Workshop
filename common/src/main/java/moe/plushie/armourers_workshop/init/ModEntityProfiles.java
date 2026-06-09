@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.compat.builder.AbstractEntityTypeBuilder;
-import moe.plushie.armourers_workshop.core.data.DataPackBuilder;
+import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
-import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -37,8 +37,8 @@ public class ModEntityProfiles {
     private static final Map<IRegistryHolder<?>, EntityProfile> SERVER_ENTITIES = new LinkedHashMap<>();
 
     public static void init() {
-        DataPackManager.register(DataPackType.SERVER_DATA, "skin/profiles", SimpleLoader::custom, null, SimpleLoader::freezeCustom, 1);
-        DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/profiles", SimpleLoader::builtin, null, SimpleLoader::freezeBuiltin, 1);
+        DataPackManager.register(DataPackType.SERVER_DATA, SimpleLoader::custom);
+        DataPackManager.register(DataPackType.BUNDLED_DATA, SimpleLoader::builtin);
     }
 
     public static void addListener(BiConsumer<IRegistryHolder<?>, EntityProfile> changeHandler) {
@@ -91,27 +91,89 @@ public class ModEntityProfiles {
         return builder.build();
     }
 
-    private static class SimpleLoader implements DataPackBuilder {
+    private static abstract class SimpleLoader implements DataPackLoader {
 
         private static final Map<OpenResourceKey, SimpleBuilder> CUSTOM_PROFILE_BUILDERS = new LinkedHashMap<>();
         private static final Map<OpenResourceKey, SimpleBuilder> BUILTIN_PROFILE_BUILDERS = new LinkedHashMap<>();
 
-        private final SimpleBuilder builder;
+        public static SimpleLoader custom() {
+            return new SimpleLoader() {
 
-        public SimpleLoader(SimpleBuilder builder) {
-            this.builder = builder;
+                @Override
+                public void load(OpenResourceKey key, IODataObject object) {
+                    // create a custom builder and the load from object.
+                    load(key, object, CUSTOM_PROFILE_BUILDERS.computeIfAbsent(key, SimpleBuilder::new));
+                }
+
+                @Override
+                public void end(OpenResourceManager resourceManager) {
+                    // regenerate all entity profile.
+                    var newEntities = new LinkedHashMap<IRegistryHolder<?>, EntityProfile>();
+                    CUSTOM_ENTITIES.clear();
+                    CUSTOM_PROFILE_BUILDERS.forEach((key, builder) -> {
+                        var profile = builder.build();
+                        builder.entities.forEach(entityType -> newEntities.put(entityType, profile));
+                    });
+                    CUSTOM_PROFILE_BUILDERS.clear();
+                    // only use when custom profile changed.
+                    var usedProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
+                    newEntities.forEach((entityType, profile) -> {
+                        var oldProfile = BUILTIN_ENTITIES.get(entityType);
+                        if (oldProfile != null && EntityProfile.same(oldProfile, profile)) {
+                            return; // not any change.
+                        }
+                        CUSTOM_ENTITIES.put(entityType, profile);
+                        usedProfiles.put(profile.registryName(), profile);
+                    });
+                    // apply the patch
+                    difference(CUSTOM_PROFILES, usedProfiles, (registryName, entityProfile) -> {
+                        CUSTOM_PROFILES.remove(registryName);
+                        ModLog.debug("Unregistering Entity Profile '{}'", registryName);
+                    }, (registryName, entityProfile) -> {
+                        ModLog.debug("Registering Entity Profile '{}'", registryName);
+                        CUSTOM_PROFILES.put(registryName, entityProfile);
+                    }, null);
+                    // freeze all data.
+                    freeze();
+                }
+            };
         }
 
-        public static SimpleLoader builtin(OpenResourceKey registryName) {
-            return new SimpleLoader(BUILTIN_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::builtin));
+        public static SimpleLoader builtin() {
+            return new SimpleLoader() {
+
+                @Override
+                public void load(OpenResourceKey key, IODataObject object) {
+                    // create a built-in builder and the load from object.
+                    load(key, object, BUILTIN_PROFILE_BUILDERS.computeIfAbsent(key, it -> new SimpleBuilder(it.withPath("builtin/" + it.path()))));
+                }
+
+                @Override
+                public void end(OpenResourceManager resourceManager) {
+                    // regenerate all entity profile.
+                    var newProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
+                    BUILTIN_ENTITIES.clear();
+                    BUILTIN_PROFILE_BUILDERS.forEach((key, builder) -> {
+                        var profile = builder.build();
+                        newProfiles.put(builder.registryName, profile);
+                        builder.entities.forEach(entityType -> BUILTIN_ENTITIES.put(entityType, profile));
+                    });
+                    BUILTIN_PROFILE_BUILDERS.clear();
+                    // apply the patch
+                    difference(BUILTIN_PROFILES, newProfiles, (registryName, entityProfile) -> {
+                        BUILTIN_PROFILES.remove(registryName);
+                        ModLog.debug("Unregistering Entity Profile '{}'", registryName);
+                    }, (registryName, entityProfile) -> {
+                        ModLog.debug("Registering Entity Profile '{}'", registryName);
+                        BUILTIN_PROFILES.put(registryName, entityProfile);
+                    }, null);
+                    // freeze all data.
+                    freeze();
+                }
+            };
         }
 
-        public static SimpleLoader custom(OpenResourceKey registryName) {
-            return new SimpleLoader(CUSTOM_PROFILE_BUILDERS.computeIfAbsent(registryName, SimpleBuilder::custom));
-        }
-
-        @Override
-        public void append(IODataObject object, OpenResourceKey key) {
+        public void load(OpenResourceKey key, IODataObject object, SimpleBuilder builder) {
             if (object.get("replace").boolValue()) {
                 builder.isLocked = false;
                 builder.supports.clear();
@@ -137,61 +199,13 @@ public class ModEntityProfiles {
         }
 
         @Override
-        public void build() {
-            // ignore.
+        public float priority() {
+            return 1000;
         }
 
-        private static void freezeCustom() {
-            // regenerate all entity profile.
-            var newEntities = new LinkedHashMap<IRegistryHolder<?>, EntityProfile>();
-            CUSTOM_ENTITIES.clear();
-            CUSTOM_PROFILE_BUILDERS.forEach((key, builder) -> {
-                var profile = builder.build();
-                builder.entities.forEach(entityType -> newEntities.put(entityType, profile));
-            });
-            CUSTOM_PROFILE_BUILDERS.clear();
-            // only use when custom profile changed.
-            var usedProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
-            newEntities.forEach((entityType, profile) -> {
-                var oldProfile = BUILTIN_ENTITIES.get(entityType);
-                if (oldProfile != null && EntityProfile.same(oldProfile, profile)) {
-                    return; // not any change.
-                }
-                CUSTOM_ENTITIES.put(entityType, profile);
-                usedProfiles.put(profile.registryName(), profile);
-            });
-            // apply the patch
-            difference(CUSTOM_PROFILES, usedProfiles, (registryName, entityProfile) -> {
-                CUSTOM_PROFILES.remove(registryName);
-                ModLog.debug("Unregistering Entity Profile '{}'", registryName);
-            }, (registryName, entityProfile) -> {
-                ModLog.debug("Registering Entity Profile '{}'", registryName);
-                CUSTOM_PROFILES.put(registryName, entityProfile);
-            }, null);
-            // freeze all data.
-            freeze();
-        }
-
-        private static void freezeBuiltin() {
-            // regenerate all entity profile.
-            var newProfiles = new LinkedHashMap<OpenResourceKey, EntityProfile>();
-            BUILTIN_ENTITIES.clear();
-            BUILTIN_PROFILE_BUILDERS.forEach((key, builder) -> {
-                var profile = builder.build();
-                newProfiles.put(builder.registryName, profile);
-                builder.entities.forEach(entityType -> BUILTIN_ENTITIES.put(entityType, profile));
-            });
-            BUILTIN_PROFILE_BUILDERS.clear();
-            // apply the patch
-            difference(BUILTIN_PROFILES, newProfiles, (registryName, entityProfile) -> {
-                BUILTIN_PROFILES.remove(registryName);
-                ModLog.debug("Unregistering Entity Profile '{}'", registryName);
-            }, (registryName, entityProfile) -> {
-                ModLog.debug("Registering Entity Profile '{}'", registryName);
-                BUILTIN_PROFILES.put(registryName, entityProfile);
-            }, null);
-            // freeze all data.
-            freeze();
+        @Override
+        public String target() {
+            return "skin/profiles";
         }
 
         private static void freeze() {
@@ -247,16 +261,6 @@ public class ModEntityProfiles {
 
         public SimpleBuilder(OpenResourceKey registryName) {
             this.registryName = registryName;
-        }
-
-        public static SimpleBuilder builtin(OpenResourceKey key) {
-            var path = FileUtils.getRegistryName(key.path(), "skin/profiles/");
-            return new SimpleBuilder(key.withPath("builtin/" + path));
-        }
-
-        public static SimpleBuilder custom(OpenResourceKey key) {
-            var path = FileUtils.getRegistryName(key.path(), "skin/profiles/");
-            return new SimpleBuilder(key.withPath(path));
         }
 
         public EntityProfile build() {

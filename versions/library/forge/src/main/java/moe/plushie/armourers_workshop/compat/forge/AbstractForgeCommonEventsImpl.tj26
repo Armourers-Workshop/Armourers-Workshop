@@ -15,6 +15,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
@@ -46,7 +47,7 @@ public class AbstractForgeCommonEventsImpl {
 
     public static final auto SERVER_LEVEL_ADD_ENTITY = AbstractForgeEventBus.create(EntityJoinLevelEvent.class);
 
-    public static final auto BLOCK_DESTROY = AbstractForgeEventBus.create(BlockEvent.BreakEvent.class);
+    public static final auto BLOCK_DESTROY = AbstractForgeEventBus.create(BreakBlockEvent.class);
     public static final auto BLOCK_PLACE = AbstractForgeEventBus.create(BlockEvent.EntityPlaceEvent.class);
 
     public static final auto PLAYER_DEATH = AbstractForgeEventBus.create(LivingDropsEvent.class);

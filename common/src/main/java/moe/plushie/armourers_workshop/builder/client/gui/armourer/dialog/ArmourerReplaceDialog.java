@@ -177,7 +177,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         addSubview(button);
     }
 
-    static class PickerContainer extends ContainerMenu {
+    private static class PickerContainer extends ContainerMenu {
 
         private final Container inventory;
 

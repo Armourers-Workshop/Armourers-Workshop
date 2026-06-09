@@ -11,9 +11,9 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
-import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;
 import net.minecraft.client.gui.GuiGraphics;
@@ -55,7 +55,7 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
     @Override
     public void render(CGGraphicsElement element) {
         // apply the flush into gui graphics.
-        if (element instanceof StateGuiElement.Flush) {
+        if (element instanceof StateGuiElement.Flush || element instanceof StateGuiElement.ComposeLayer) {
             graphics.flush();
             return;
         }

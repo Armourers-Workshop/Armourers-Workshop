@@ -61,11 +61,11 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
     @Override
     public void render(CGGraphicsElement element) {
         // we don't need to submit the transparency layer info to graphics.
-        if (element instanceof StateGuiElement.BeginTransparencyLayer || element instanceof StateGuiElement.EndTransparencyLayer) {
+        if (element instanceof StateGuiElement.TransparencyLayer) {
             return;
         }
         // before the draw layer, we need to attach some operations.
-        if (element instanceof StateGuiElement.BeginComposeLayer composeLayer) {
+        if (element instanceof StateGuiElement.ComposeLayer.Begin composeLayer) {
             switch (composeLayer.name()) {
                 case "main" -> beginBatch();
                 case "container" -> addPipeline("background", 0);
@@ -75,7 +75,7 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
             return;
         }
         // after the draw layer, we need to attach some operations.
-        if (element instanceof StateGuiElement.EndComposeLayer composeLayer) {
+        if (element instanceof StateGuiElement.ComposeLayer.End composeLayer) {
             // submit all changes before end layer to ensure that all elements are flushed.
             submitAllChanges();
             switch (composeLayer.name()) {

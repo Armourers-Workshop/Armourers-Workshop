@@ -7,24 +7,24 @@ import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 @SuppressWarnings("unused")
 public abstract class StateGuiElement implements CGGraphicsElement {
 
-    public static StateGuiElement beginTransparencyLayer() {
-        return BeginTransparencyLayer.INSTANCE;
-    }
-
-    public static StateGuiElement endTransparencyLayer() {
-        return EndTransparencyLayer.INSTANCE;
+    public static StateGuiElement flush() {
+        return Flush.INSTANCE;
     }
 
     public static StateGuiElement beginComposeLayer(String name) {
-        return new BeginComposeLayer(name);
+        return new ComposeLayer.Begin(name);
     }
 
     public static StateGuiElement endComposeLayer(String name) {
-        return new EndComposeLayer(name);
+        return new ComposeLayer.End(name);
     }
 
-    public static StateGuiElement flush() {
-        return Flush.INSTANCE;
+    public static StateGuiElement beginTransparencyLayer() {
+        return TransparencyLayer.Begin.INSTANCE;
+    }
+
+    public static StateGuiElement endTransparencyLayer() {
+        return TransparencyLayer.End.INSTANCE;
     }
 
     @Override
@@ -36,37 +36,41 @@ public abstract class StateGuiElement implements CGGraphicsElement {
         private static final Flush INSTANCE = new Flush();
     }
 
-    public static class BeginTransparencyLayer extends StateGuiElement {
-        private static final BeginTransparencyLayer INSTANCE = new BeginTransparencyLayer();
-    }
-
-    public static class EndTransparencyLayer extends StateGuiElement {
-        private static final EndTransparencyLayer INSTANCE = new EndTransparencyLayer();
-    }
-
-    public static class BeginComposeLayer extends StateGuiElement {
+    public static class ComposeLayer extends StateGuiElement {
 
         private final String name;
 
-        public BeginComposeLayer(String name) {
+        protected ComposeLayer(String name) {
             this.name = name;
         }
 
         public String name() {
             return name;
         }
-    }
 
-    public static class EndComposeLayer extends StateGuiElement {
+        public static class Begin extends ComposeLayer {
 
-        private final String name;
-
-        public EndComposeLayer(String name) {
-            this.name = name;
+            protected Begin(String name) {
+                super(name);
+            }
         }
 
-        public String name() {
-            return name;
+        public static class End extends ComposeLayer {
+
+            protected End(String name) {
+                super(name);
+            }
+        }
+    }
+
+    public static class TransparencyLayer extends StateGuiElement {
+
+        public static class Begin extends TransparencyLayer {
+            private static final Begin INSTANCE = new Begin();
+        }
+
+        public static class End extends TransparencyLayer {
+            private static final End INSTANCE = new End();
         }
     }
 }

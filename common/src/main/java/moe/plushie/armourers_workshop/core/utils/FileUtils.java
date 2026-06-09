@@ -104,7 +104,7 @@ public class FileUtils {
     }
 
 
-    public static String getRegistryName(final String path, final String rootPath) {
+    public static String removeParentPath(final String path, final String rootPath) {
         if (path.startsWith(rootPath)) {
             return path.substring(rootPath.length());
         }

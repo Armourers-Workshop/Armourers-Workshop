@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.compat.client.item;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.event.EventBus;
 import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel;
 import moe.plushie.armourers_workshop.core.client.other.DiscoveerableSkinManager;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
-import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
+import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -47,10 +46,6 @@ public class AbstractItemModelFinder {
     }
 
     static {
-        EventBus.register(DataPackEvent.Reloading.class, event -> {
-            if (event.type() == DataPackType.CLIENT_RESOURCES) {
-                MARK_MODELS.clear();
-            }
-        });
+        DataPackManager.addReloadListener(DataPackType.CLIENT_RESOURCES, (it) -> MARK_MODELS.clear());
     }
 }

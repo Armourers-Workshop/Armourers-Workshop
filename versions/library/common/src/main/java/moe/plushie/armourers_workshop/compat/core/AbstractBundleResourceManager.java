@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.compat.core;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractPackResources;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
@@ -11,10 +11,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import java.util.ArrayList;
 
 @Available("[18, )")
-public class AbstractBundleResourceManager extends AbstractResourceManager {
+public class AbstractBundleResourceManager {
 
-    public AbstractBundleResourceManager(IResourceManager resourceManager) {
-        super(remake(unwrap(resourceManager)));
+    public static OpenResourceManager wrap(OpenResourceManager resourceManager) {
+        return AbstractResourceManager.wrap(remake(AbstractResourceManager.unwrap(resourceManager)));
     }
 
     private static ResourceManager remake(ResourceManager resourceManager) {

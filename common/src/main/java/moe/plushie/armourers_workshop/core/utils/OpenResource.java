@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.api.core;
+package moe.plushie.armourers_workshop.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface IResource {
+public interface OpenResource {
 
     String name();
 

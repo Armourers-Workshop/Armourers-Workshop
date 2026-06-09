@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
-import moe.plushie.armourers_workshop.api.core.IResource;
 import moe.plushie.armourers_workshop.compat.core.data.serializer.AbstractJsonDataSerializer;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +51,7 @@ public class JsonSerializer extends AbstractJsonDataSerializer {
     }
 
     @Nullable
-    public static IODataObject readFromResource(IResource resource) {
+    public static IODataObject readFromResource(OpenResource resource) {
         try {
             return readFromStream(resource.inputStream());
         } catch (IOException exception) {

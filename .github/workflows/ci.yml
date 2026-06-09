@@ -52,6 +52,7 @@ jobs:
           #version-type: release
 
           files: fabric/build/libs/${{ steps.setup-env.outputs.fabric_archives_name }}.jar
+          loaders: ${{ steps.setup-env.outputs.fabric_archives_loader }}
 
           game-versions: ${{ steps.setup-env.outputs.game_version }}
 
@@ -73,8 +74,10 @@ jobs:
           name: ${{ steps.setup-env.outputs.forge_archives_name }}
           version: ${{ steps.setup-env.outputs.forge_archives_version }}
           version-type: beta
+          #version-type: release
 
           files: forge/build/libs/${{ steps.setup-env.outputs.forge_archives_name }}.jar
+          loaders: ${{ steps.setup-env.outputs.forge_archives_loader }}
 
           game-versions: ${{ steps.setup-env.outputs.game_version }}
 

@@ -12,10 +12,10 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IBufferSource;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.client.IGraphicsElement;
-import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
-import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.gui.AbstractMenuScreenImpl;
+import moe.plushie.armourers_workshop.compat.client.math.AbstractPoseStack;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
+import moe.plushie.armourers_workshop.compat.client.renderer.vertex.AbstractBufferSource;
 import moe.plushie.armourers_workshop.core.client.gui.element.StateGuiElement;
 import moe.plushie.armourers_workshop.core.utils.LazyValue;
 
@@ -43,7 +43,6 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
         context.draw(StateGuiElement.beginComposeLayer("main"));
         action.accept(context);
         context.draw(StateGuiElement.endComposeLayer("main"));
-        context.flush();
     }
 
     public static void unwrap(CGGraphicsContext context, String name, BiConsumer<AbstractMenuScreenImpl<?>, PoseStack> action) {
@@ -56,7 +55,7 @@ public class AbstractGuiGraphicsRenderer implements CGGraphicsRenderer {
     @Override
     public void render(CGGraphicsElement element) {
         // apply the flush into gui graphics.
-        if (element instanceof StateGuiElement.Flush) {
+        if (element instanceof StateGuiElement.Flush || element instanceof StateGuiElement.ComposeLayer) {
             bufferSource.endBatch();
             return;
         }

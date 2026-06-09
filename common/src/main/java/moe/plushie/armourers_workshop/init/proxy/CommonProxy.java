@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
-import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -24,7 +23,6 @@ import moe.plushie.armourers_workshop.init.event.common.EntityEvent;
 import moe.plushie.armourers_workshop.init.event.common.PlayerEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterCommandsEvent;
 import moe.plushie.armourers_workshop.init.event.common.RegisterEntityAttributesEvent;
-import moe.plushie.armourers_workshop.init.event.common.RegisterServerDataPackEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelAddEntityEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerLevelTickEvent;
 import moe.plushie.armourers_workshop.init.event.common.ServerStartedEvent;
@@ -53,15 +51,13 @@ public class CommonProxy {
         var library = GlobalSkinLibrary.getInstance();
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER, library::downloadSkin);
         SkinLoader.getInstance().register(DataDomain.GLOBAL_SERVER_PREVIEW, library::downloadPreviewSkin);
+        DataPackManager.init();
         ReplayManager.init();
     }
 
     private static void register() {
 
         EventBus.register(RegisterCommandsEvent.class, ModCommands::init);
-        EventBus.register(RegisterServerDataPackEvent.class, event -> {
-            event.register(DataPackManager.byType(DataPackType.SERVER_DATA));
-        });
 
         EventBus.register(RegisterEntityAttributesEvent.class, event -> {
             event.register(ModEntityTypes.MANNEQUIN.get().get(), MannequinEntity.createLivingAttributes());

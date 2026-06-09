@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.compat.forge.event.client;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.registry.IEventHandler;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
-import moe.plushie.armourers_workshop.compat.forge.AbstractForgeResourceLoader;
+import moe.plushie.armourers_workshop.compat.forge.AbstractForgePreparableReloadListener;
 import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.init.event.client.RegisterClientDataPackEvent;
 
@@ -13,7 +13,7 @@ public class AbstractForgeRegisterClientDataPackEvent {
     public static IEventHandler<RegisterClientDataPackEvent> registryFactory() {
         return AbstractForgeClientEventsImpl.DATA_PACK_REGISTRY.map(event -> loader -> {
             var name = ModConstants.key("custom-client-data-pack");
-            event.addListener(name.get(), new AbstractForgeResourceLoader(name, loader));
+            event.addListener(name.get(), new AbstractForgePreparableReloadListener(name, loader));
         });
     }
 }

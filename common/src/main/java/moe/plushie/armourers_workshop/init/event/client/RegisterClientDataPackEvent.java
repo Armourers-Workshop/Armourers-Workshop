@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.event.client;
 
-import moe.plushie.armourers_workshop.api.core.IResourceLoader;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 
 public interface RegisterClientDataPackEvent {
 
-    void register(IResourceLoader loader);
+    void register(OpenResourceManager.PreparableReloadListener reloadListener);
 }

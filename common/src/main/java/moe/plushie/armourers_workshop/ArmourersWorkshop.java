@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.core.armature.Armatures;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.data.action.EntityActions;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
@@ -30,7 +31,6 @@ import moe.plushie.armourers_workshop.init.ModSoundEvents;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.RendererManager;
 import moe.plushie.armourers_workshop.init.proxy.ClientProxy;
 import moe.plushie.armourers_workshop.init.proxy.CommonProxy;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -76,7 +76,7 @@ public class ArmourersWorkshop {
         EnvironmentExecutor.didSetup(EnvironmentType.CLIENT, () -> () -> {
             // setup skin renderer manager.
             RenderSystem.init();
-            RendererManager.init();
+            SkinRendererManager.reload();
         });
     }
 

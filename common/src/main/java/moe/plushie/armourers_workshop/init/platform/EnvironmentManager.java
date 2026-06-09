@@ -4,10 +4,10 @@ import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientResourceManager;
 import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
 import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
-import moe.plushie.armourers_workshop.compat.core.AbstractResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Version;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
@@ -95,7 +95,7 @@ public class EnvironmentManager {
         return EnvironmentExecutor.callOnClient(() -> () -> Minecraft.getInstance()).orElse(null);
     }
 
-    public static AbstractResourceManager getClientResourceManager() {
+    public static OpenResourceManager getClientResourceManager() {
         return EnvironmentExecutor.callOnClient(() -> AbstractClientResourceManager::getInstance).orElse(null);
     }
 }

@@ -4,39 +4,43 @@ import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IEntityRenderer;
+import moe.plushie.armourers_workshop.core.data.DataPackType;
+import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @Available("[16, )")
 @OnlyIn(Dist.CLIENT)
 public class AbstractEntityRenderDispatcher {
 
+    private static final Set<String> FLAGS = new HashSet<>();
     private static final List<Consumer<Map<EntityType<?>, Map<String, IEntityRenderer<?, ?>>>>> LISTENERS = new ArrayList<>();
 
     public static void addListener(Consumer<Map<EntityType<?>, Map<String, IEntityRenderer<?, ?>>>> listener) {
         LISTENERS.add(listener);
     }
 
-    @SuppressWarnings("ConstantValue")
     public static void reload() {
-        var dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        if (dispatcher == null) {
-            // if called in a mixin, it will be obtained before the dispatcher is initialized.
-            RenderSystem.recordRenderCall(AbstractEntityRenderDispatcher::reload);
-            return;
-        }
-        apply(dispatcher);
+        FLAGS.add("entity renders is changed");
+        RenderSystem.safeCall(AbstractEntityRenderDispatcher::apply);
     }
 
-    private static void apply(EntityRenderDispatcher dispatcher) {
+    private static void apply() {
+        var dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        if (FLAGS.size() < 2) {
+            return; // we only apply when data pack and entity renders are changed.
+        }
+        ModLog.debug("Reloading entity renderers");
         var builder = new Builder();
         // collect the player entity renderers.
         dispatcher.playerRenderers.forEach((key, value) -> {
@@ -48,6 +52,14 @@ public class AbstractEntityRenderDispatcher {
         });
         // notify the listeners.
         LISTENERS.forEach(listener -> listener.accept(builder.build()));
+        FLAGS.clear();
+    }
+
+    static {
+        DataPackManager.addReloadListener(DataPackType.CLIENT_RESOURCES, (it) -> {
+            FLAGS.add("data pack is changed");
+            RenderSystem.safeCall(AbstractEntityRenderDispatcher::apply);
+        });
     }
 
     private static class Builder {

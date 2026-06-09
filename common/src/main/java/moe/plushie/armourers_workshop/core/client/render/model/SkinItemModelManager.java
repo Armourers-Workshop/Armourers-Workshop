@@ -1,19 +1,20 @@
 package moe.plushie.armourers_workshop.core.client.render.model;
 
-import moe.plushie.armourers_workshop.api.core.IResourceManager;
 import moe.plushie.armourers_workshop.api.core.math.IPoseStack;
 import moe.plushie.armourers_workshop.compat.client.item.AbstractItemProperties;
+import moe.plushie.armourers_workshop.core.data.DataPackLoader;
+import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.FileUtils;
-import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.init.ModConstants;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.DataPackManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -49,10 +50,8 @@ public class SkinItemModelManager {
     }
 
     public static void init() {
-        var loader = new SimpleLoader();
-        loader.load(INSTANCE);
+        DataPackManager.register(DataPackType.CLIENT_RESOURCES, SimpleLoader::new);
     }
-
 
     public SkinItemModel getModel(SkinType skinType) {
         return typedItemModels.computeIfAbsent(skinType, it -> {
@@ -100,46 +99,52 @@ public class SkinItemModelManager {
         };
     }
 
-    private static class SimpleLoader {
-
-        private final IResourceManager resourceManager = EnvironmentManager.getClientResourceManager();
+    private static class SimpleLoader implements DataPackLoader {
 
         private final Map<OpenResourceKey, SimpleBuilder> builders = new LinkedHashMap<>();
         private final Map<OpenResourceKey, SkinItemModel> models = new LinkedHashMap<>();
 
-        public void load(SkinItemModelManager modelManager) {
-            resourceManager.readResources(ModConstants.key("models/skin"), s -> s.endsWith(".json"), (key, resource) -> {
-                var object = JsonSerializer.readFromResource(resource);
-                if (object == null) {
-                    return;
-                }
-                var path = FileUtils.getRegistryName(key.path(), "models/");
-                var key1 = key.withPath(FileUtils.removeExtension(path));
-                var builder = builders.computeIfAbsent(OpenResourceKey.of(key1), SimpleBuilder::new);
-                object.get("parent").ifPresent(it -> {
-                    var name = OpenResourceKey.parse(it.stringValue());
-                    builder.parent = builders.computeIfAbsent(name, SimpleBuilder::new);
-                });
-                object.get("display").entrySet().forEach(entry -> {
-                    var name = entry.getKey();
-                    var value = entry.getValue();
-                    var translation = parseVector3f(value.get("translation"), OpenVector3f.ZERO);
-                    var rotation = parseVector3f(value.get("rotation"), OpenVector3f.ZERO);
-                    var scale = parseVector3f(value.get("scale"), OpenVector3f.ONE);
-                    builder.addTransform(name, new SimpleTransform(translation, rotation, scale));
-                });
-                object.get("overrides").allValues().forEach(it -> {
-                    var model = it.get("model").stringValue();
-                    var predicate = new ArrayList<Pair<OpenResourceKey, Number>>();
-                    it.get("predicate").entrySet().forEach(entry -> {
-                        // the value only is double.
-                        var name = ModConstants.key(entry.getKey());
-                        var value = entry.getValue().numberValue();
-                        predicate.add(Pair.of(name, value));
-                    });
-                    builder.addOverride(model, predicate);
-                });
+        @Override
+        public void begin(OpenResourceManager resourceManager) {
+            builders.clear();
+            models.clear();
+        }
+
+        @Override
+        public void load(OpenResourceKey key, IODataObject object) {
+            var key1 = key.withPath("skin/" + key.path());
+            var builder = builders.computeIfAbsent(key1, SimpleBuilder::new);
+            object.get("parent").ifPresent(it -> {
+                var name = OpenResourceKey.parse(it.stringValue());
+                builder.parent = builders.computeIfAbsent(name, SimpleBuilder::new);
             });
+            object.get("display").entrySet().forEach(entry -> {
+                var name = entry.getKey();
+                var value = entry.getValue();
+                var translation = parseVector3f(value.get("translation"), OpenVector3f.ZERO);
+                var rotation = parseVector3f(value.get("rotation"), OpenVector3f.ZERO);
+                var scale = parseVector3f(value.get("scale"), OpenVector3f.ONE);
+                builder.addTransform(name, new SimpleTransform(translation, rotation, scale));
+            });
+            object.get("overrides").allValues().forEach(it -> {
+                var model = it.get("model").stringValue();
+                var predicate = new ArrayList<Pair<OpenResourceKey, Number>>();
+                it.get("predicate").entrySet().forEach(entry -> {
+                    // the value only is double.
+                    var name = ModConstants.key(entry.getKey());
+                    var value = entry.getValue().numberValue();
+                    predicate.add(Pair.of(name, value));
+                });
+                builder.addOverride(model, predicate);
+            });
+        }
+
+        @Override
+        public void end(OpenResourceManager resourceManager) {
+            // only init once.
+            if (!INSTANCE.namedItemModels.isEmpty()) {
+                return;
+            }
             // resolve the parent depends.
             var references = new IdentityHashMap<SkinItemOverride, OpenResourceKey>();
             builders.forEach((name, builder) -> {
@@ -152,10 +157,16 @@ public class SkinItemModelManager {
             if (missingModel == null) {
                 throw new RuntimeException("Can't find missing model, some think wrong!");
             }
-            modelManager.namedItemModels.putAll(models);
-            modelManager.missingModel = missingModel;
+            INSTANCE.namedItemModels.putAll(models);
+            INSTANCE.missingModel = missingModel;
         }
 
+        @Override
+        public String target() {
+            return "models/skin";
+        }
+
+        //
         private OpenVector3f parseVector3f(IODataObject value, OpenVector3f defaultValue) {
             if (value.isNull()) {
                 return defaultValue;

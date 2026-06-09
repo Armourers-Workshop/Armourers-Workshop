@@ -59,15 +59,15 @@ import moe.plushie.armourers_workshop.core.client.skinrender.plugin.FishingModel
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.MinecartModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.TridentModelArmaturePlugin;
 import moe.plushie.armourers_workshop.core.client.skinrender.plugin.VillagerModelArmaturePlugin;
-import moe.plushie.armourers_workshop.core.data.DataPackBuilder;
+import moe.plushie.armourers_workshop.core.data.DataPackLoader;
 import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.NamedClass;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.DataPackManager;
@@ -162,12 +162,12 @@ public class SkinRendererManager {
             registeredEntityRenderers.forEach((entityType, renderers) -> renderers.forEach((model, renderer) -> {
                 // ..
                 if (armourType != null && findLayer(renderer, armourType)) {
-                    ModLog.debug("Detect Entity Renderer '{}'", AbstractRegistryManager.getEntityTypeKey(entityType));
+                    ModLog.debug("Discover Entity Renderer '{}'", AbstractRegistryManager.getEntityTypeKey(entityType));
                     forceEntityRenderers.add(Pair.of(entityType, renderer));
                 }
             }));
             // reload all entity renderers.
-            RenderSystem.recordRenderCall(() -> {
+            RenderSystem.safeCall(() -> {
                 // execute the pending tasks.
                 isReady = false;
                 registeredProfiles.forEach(this::update);
@@ -201,7 +201,7 @@ public class SkinRendererManager {
             registerModels();
             registerEntityStates();
             registerBlockEntityStates();
-            DataPackManager.register(DataPackType.BUNDLED_DATA, "skin/transformers", TransformerLoaderImpl::new, TransformerLoaderImpl::clean, TransformerLoaderImpl::freeze, 0);
+            DataPackManager.register(DataPackType.BUNDLED_DATA, TransformerLoaderImpl::new);
         }
 
         private static void registerClasses() {
@@ -432,39 +432,35 @@ public class SkinRendererManager {
         }
     }
 
-    private static class TransformerLoaderImpl implements DataPackBuilder {
+    private static class TransformerLoaderImpl implements DataPackLoader {
 
         private static final Map<String, ArmatureTransformerManager> MANAGERS = Collections.immutableMap(it -> {
             it.put("armourers_workshop:armature", DEFAULT);
             it.put("epicfight:armature", EPIC_FIGHT);
         });
 
-        private final OpenResourceKey registryName;
-
-        public TransformerLoaderImpl(OpenResourceKey key) {
-            var path = FileUtils.getRegistryName(key.path(), "skin/transformers/");
-            this.registryName = key.withPath(path);
+        @Override
+        public void begin(OpenResourceManager resourceManager) {
+            MANAGERS.values().forEach(ArmatureTransformerManager::clear);
         }
 
         @Override
-        public void append(IODataObject object, OpenResourceKey file) {
+        public void load(OpenResourceKey key, IODataObject object) {
             var type = object.get("type").stringValue();
             var manager = MANAGERS.get(type);
             if (manager != null) {
-                manager.append(registryName, object);
+                manager.append(key, object);
             }
         }
 
         @Override
-        public void build() {
-        }
-
-        public static void clean() {
-            MANAGERS.values().forEach(ArmatureTransformerManager::clear);
-        }
-
-        public static void freeze() {
+        public void end(OpenResourceManager resourceManager) {
             MANAGERS.values().forEach(ArmatureTransformerManager::freeze);
+        }
+
+        @Override
+        public String target() {
+            return "skin/transformers";
         }
     }
 }

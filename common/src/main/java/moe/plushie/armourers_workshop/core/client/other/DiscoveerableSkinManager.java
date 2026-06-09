@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModel
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.core.data.DataPackType;
 import moe.plushie.armourers_workshop.core.data.ticket.TicketManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -14,9 +13,9 @@ import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
+import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.event.common.DataPackEvent;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 
 import java.util.HashMap;
@@ -68,13 +67,10 @@ public class DiscoveerableSkinManager {
         return SkinDescriptor.EMPTY;
     }
 
-    public void reload(DataPackEvent.Reloading event) {
-        // when resource pack did changes, we need to clear invalid resource.
-        if (event.type() == DataPackType.CLIENT_RESOURCES) {
-            ModLog.debug("Reloading resource pack skins");
-            entries.clear();
-            bakedModels.clear();
-        }
+    public void reload(OpenResourceManager resourceManager) {
+        ModLog.debug("Reloading resource pack skins");
+        entries.clear();
+        bakedModels.clear();
     }
 
     private static class Entry {

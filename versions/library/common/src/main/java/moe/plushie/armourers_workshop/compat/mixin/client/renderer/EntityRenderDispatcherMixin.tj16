@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void aw2$init(CallbackInfo ci) {
+    private void aw2$reloadResources(CallbackInfo ci) {
         EnvironmentExecutor.didInit(EnvironmentType.CLIENT, () -> AbstractClientHooks::reloadResources);
     }
 }
