@@ -9,13 +9,14 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.network.UpdateContextPacket;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 
 import java.util.ArrayList;
 
 public class ModConfigSpec {
 
-    public static final IConfigSpec CLIENT = EnvironmentManager.getClientConfigSpec();
-    public static final IConfigSpec COMMON = EnvironmentManager.getCommonConfigSpec();
+    public static final IConfigSpec CLIENT = Platform.get().config().client();
+    public static final IConfigSpec COMMON = Platform.get().config().common();
 
     public abstract static class Client extends ModConfig.Client implements IConfigBuilder {
 

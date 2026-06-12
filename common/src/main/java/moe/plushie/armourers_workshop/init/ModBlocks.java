@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
 import net.minecraft.world.level.block.Block;
@@ -54,7 +54,7 @@ public class ModBlocks {
     }
 
     private static IBlockBuilder<Block> create(Function<BlockBehaviour.Properties, Block> supplier, AbstractBlockMaterial material, AbstractBlockMaterialColor materialColor) {
-        return BuilderManager.getInstance().createBlockBuilder(supplier, material, materialColor).strength(1.5f, 6.f);
+        return Platform.get().common().builder().block(supplier, material, materialColor).strength(1.5f, 6.f);
     }
 
     private static IBlockBuilder<Block> normal(Function<BlockBehaviour.Properties, Block> supplier) {

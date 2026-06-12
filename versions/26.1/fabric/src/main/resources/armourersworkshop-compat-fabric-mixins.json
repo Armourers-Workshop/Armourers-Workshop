@@ -4,7 +4,8 @@
   "package": "moe.plushie.armourers_workshop.compat.fabric.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "addon/FabricReplayMixin"
+    "addon/FabricReplayMixin",
+    "addon/FabricTrinketsApiMixin"
   ],
   "mixins": [],
   "injectors": {

@@ -2,9 +2,8 @@ package moe.plushie.armourers_workshop.compat.client.item.tintsource;
 
 import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.client.IItemTintSource;
-import moe.plushie.armourers_workshop.api.client.IItemTintSourceType;
-import net.minecraft.client.color.item.ItemTintSource;
+import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSource;
+import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSourceType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractItemTintSourceImpl {
 
 
-    public static <T extends IItemTintSource> MapCodec<? extends ItemTintSource> getCodec(IItemTintSourceType<T> type) {
+    public static <T extends ItemTintSource> MapCodec<? extends net.minecraft.client.color.item.ItemTintSource> getCodec(ItemTintSourceType<T> type) {
         return Wrapper.wrap(type.codec().mapCodec());
     }
 
-    private static class Wrapper<T extends IItemTintSource> implements ItemTintSource {
+    private static class Wrapper<T extends ItemTintSource> implements net.minecraft.client.color.item.ItemTintSource {
 
         private final T source;
         private final MapCodec<T> codec;
@@ -28,7 +27,7 @@ public abstract class AbstractItemTintSourceImpl {
             this.codec = codec;
         }
 
-        public static <T extends IItemTintSource> MapCodec<Wrapper<T>> wrap(MapCodec<T> codec) {
+        public static <T extends ItemTintSource> MapCodec<Wrapper<T>> wrap(MapCodec<T> codec) {
             return codec.xmap(it -> new Wrapper<>(it, codec), it -> it.source);
         }
 

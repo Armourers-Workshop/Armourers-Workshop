@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.blockentity.SkinningTableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.render.HologramProjectorBlockRenderer;
 import moe.plushie.armourers_workshop.core.client.render.SkinnableBlockRenderer;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.client.render.GlobalSkinLibraryBlockRenderer;
@@ -49,7 +49,7 @@ public final class ModBlockEntityTypes {
     private static final IRegistryHolder<IBlockEntityType<SkinCubeBlockEntity>> SKIN_CUBE_SR = legacy(SKIN_CUBE).of(ModBlocks.SKIN_CUBE).of(ModBlocks.SKIN_CUBE_GLASS).of(ModBlocks.SKIN_CUBE_GLASS_GLOWING).of(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-sr");
 
     private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> normal(IBlockEntityType.Serializer<T> supplier) {
-        return BuilderManager.getInstance().createBlockEntityTypeBuilder(supplier);
+        return Platform.get().common().builder().blockEntityType(supplier);
     }
 
     private static <T extends BlockEntity> IBlockEntityTypeBuilder<T> legacy(IRegistryHolder<IBlockEntityType<T>> entityType) {

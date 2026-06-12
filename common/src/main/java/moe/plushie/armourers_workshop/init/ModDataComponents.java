@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintColor;
 import moe.plushie.armourers_workshop.core.utils.ExtraCodecs;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.init.registry.Registries;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -40,7 +40,7 @@ public class ModDataComponents {
     public static final IRegistryHolder<IDataComponentType<CompoundTag>> TOOL_OPTIONS = normal(ExtraCodecs.COMPOUND_TAG).tag("Options").build("tool_options");
 
     private static <T> IDataComponentTypeBuilder<T> normal(IDataCodec<T> codec) {
-        return BuilderManager.getInstance().createDataComponentTypeBuilder(codec);
+        return Platform.get().common().builder().dataComponentType(codec);
     }
 
     public static void init() {

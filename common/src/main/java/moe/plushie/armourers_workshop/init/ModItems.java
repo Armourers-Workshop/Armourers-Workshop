@@ -26,7 +26,7 @@ import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.item.SkinUnlockItem;
 import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
 import moe.plushie.armourers_workshop.core.menu.SkinSlotType;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -124,7 +124,7 @@ public class ModItems {
         }
 
         private IItemBuilder<Item> _create(Function<Item.Properties, Item> factory) {
-            return BuilderManager.getInstance().createItemBuilder(factory);
+            return Platform.get().common().builder().item(factory);
         }
 
         private <T> IItemBuilder<Item> _create(BiFunction<T, Item.Properties, Item> factory, Supplier<T> supplier) {

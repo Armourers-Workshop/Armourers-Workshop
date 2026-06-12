@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.init.command.ColorArgumentType;
 import moe.plushie.armourers_workshop.init.command.ColorSchemeArgumentType;
 import moe.plushie.armourers_workshop.init.command.FileArgumentType;
 import moe.plushie.armourers_workshop.init.command.ListArgumentType;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 
 @SuppressWarnings("unused")
 public class ModArgumentTypes {
@@ -19,7 +19,7 @@ public class ModArgumentTypes {
     public static IRegistryHolder<ColorArgumentType> COLOR = normal(ColorArgumentType.TYPE).build("color");
 
     private static <T extends IArgumentType<?>> IArgumentTypeBuilder<T> normal(IArgumentSerializer<T> serializer) {
-        return BuilderManager.getInstance().createArgumentTypeBuilder(serializer);
+        return Platform.get().common().builder().argumentType(serializer);
     }
 
     public static void init() {

@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -549,7 +549,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         public Builder comment(String comment) {
             if (comment == null || comment.isEmpty()) {
                 comment = "No comment";
-                if (EnvironmentManager.isDevelopment()) {
+                if (Platform.get().isDevelopment()) {
                     ModLog.error("Null comment for config option {}, this is invalid and may be disallowed in the future.",
                             DOT_JOINER.join(this.currentPath));
                 }
@@ -561,7 +561,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         public Builder comment(String... comment) {
             if (comment == null || comment.length < 1 || (comment.length == 1 && comment[0].isEmpty())) {
                 comment = new String[]{"No comment"};
-                if (EnvironmentManager.isDevelopment()) {
+                if (Platform.get().isDevelopment()) {
                     ModLog.error("Null comment for config option {}, this is invalid and may be disallowed in the future.",
                             DOT_JOINER.join(this.currentPath));
                 }

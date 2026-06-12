@@ -26,7 +26,7 @@ import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeOpMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinnableMenu;
 import moe.plushie.armourers_workshop.core.menu.SkinningTableMenu;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.library.client.gui.globalskinlibrary.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.skinlibrary.SkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.menu.CreativeSkinLibraryMenu;
@@ -58,12 +58,12 @@ public class ModMenuTypes {
     public static final IRegistryHolder<IMenuType<AdvancedBuilderMenu>> ADVANCED_SKIN_BUILDER = block(AdvancedBuilderMenu::new, ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedBuilderWindow::new).build("advanced-skin-builder");
 
     private static <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> normal(IMenuProvider<T, V> factory, IMenuSerializer<V> serializer) {
-        return BuilderManager.getInstance().createMenuTypeBuilder(factory, serializer);
+        return Platform.get().common().builder().menuType(factory, serializer);
     }
 
     private static <T extends AbstractContainerMenu> IMenuTypeBuilder<T> block(IBlockMenuProvider<T, ? super IGlobalPos> factory, IRegistryHolder<Block> block) {
         IMenuProvider<T, IGlobalPos> factory1 = (menuType, containerId, inventory, object) -> factory.createMenu(menuType, block.get(), containerId, inventory, object);
-        return BuilderManager.getInstance().createMenuTypeBuilder(factory1, DataSerializers.GLOBAL_POS);
+        return Platform.get().common().builder().menuType(factory1, DataSerializers.GLOBAL_POS);
     }
 
     public static void init() {

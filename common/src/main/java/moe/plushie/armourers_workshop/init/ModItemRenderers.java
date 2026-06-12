@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.registry.ISpecialModelRendererBuilder;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
 import moe.plushie.armourers_workshop.core.client.render.MannequinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.init.platform.ClientBuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
@@ -21,7 +21,7 @@ public class ModItemRenderers {
     public static final IRegistryHolder<ISpecialModelRendererType<MannequinItemRenderer>> MANNEQUIN = create(MannequinItemRenderer.MAP_CODEC).build("mannequin");
 
     private static <T extends ISpecialModelRenderer<?>> ISpecialModelRendererBuilder<T> create(IDataMapCodec<T> codec) {
-        return ClientBuilderManager.getInstance().createSpecialModelRendererBuilder(codec);
+        return Platform.get().client().builder().specialModelRenderer(codec);
     }
 
     public static void init() {

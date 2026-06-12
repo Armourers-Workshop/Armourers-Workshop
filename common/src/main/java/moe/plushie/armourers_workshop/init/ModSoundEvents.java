@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.ISoundEventBuilder;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.sounds.SoundEvent;
 
 @SuppressWarnings({"unused"})
@@ -20,6 +20,6 @@ public class ModSoundEvents {
     }
 
     private static <T extends SoundEvent> ISoundEventBuilder<T> normal() {
-        return BuilderManager.getInstance().createSoundEventBuilder();
+        return Platform.get().common().builder().soundEvent();
     }
 }

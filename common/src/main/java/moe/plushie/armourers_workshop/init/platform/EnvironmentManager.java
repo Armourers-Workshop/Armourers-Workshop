@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import moe.plushie.armourers_workshop.api.config.IConfigSpec;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientResourceManager;
 import moe.plushie.armourers_workshop.compat.client.utils.AbstractGameProfile;
-import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.utils.Constants;
 import moe.plushie.armourers_workshop.core.utils.OpenDistributionType;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceManager;
 import moe.plushie.armourers_workshop.core.utils.Version;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -22,18 +19,8 @@ import java.util.concurrent.Executor;
 
 public class EnvironmentManager {
 
-    private static final PlatformManager PLATFORM = PlatformLoader.load(PlatformManager.class);
-
-    public static EnvironmentPlatformType getPlatformType() {
-        return PLATFORM.getPlatformType();
-    }
-
-    public static EnvironmentType getEnvironmentType() {
-        return PLATFORM.getEnvironmentType();
-    }
-
     public static File getRootDirectory() {
-        return new File(PLATFORM.getGameDir().toFile(), "armourers_workshop");
+        return new File(Platform.get().gameDir().toFile(), "armourers_workshop");
     }
 
     public static File getSkinLibraryDirectory() {
@@ -49,7 +36,7 @@ public class EnvironmentManager {
     }
 
     public static MinecraftServer getServer() {
-        return PLATFORM.getServer();
+        return Platform.get().currentServer();
     }
 
     public static OpenDistributionType getDistributionType(MinecraftServer server) {
@@ -63,7 +50,7 @@ public class EnvironmentManager {
     }
 
     public static boolean isDedicatedServer() {
-        return getEnvironmentType() == EnvironmentType.SERVER;
+        return Platform.get().environmentType() == EnvironmentType.SERVER;
     }
 
     @Nullable
@@ -71,21 +58,6 @@ public class EnvironmentManager {
         return VersionResolver.getVersion(modId).orElse(null);
     }
 
-    public static boolean isDevelopment() {
-        return PLATFORM.isDevelopment();
-    }
-
-    public static IConfigSpec getClientConfigSpec() {
-        return PLATFORM.getClientConfig();
-    }
-
-    public static IConfigSpec getCommonConfigSpec() {
-        return PLATFORM.getCommonConfig();
-    }
-
-    public static AbstractRegistryManager getRegistryManager() {
-        return PLATFORM.getRegistryManager();
-    }
 
     public static OpenGameProfile getClientUser() {
         return EnvironmentExecutor.callOnClient(() -> () -> AbstractGameProfile.wrap(Minecraft.getInstance().getUser().getGameProfile())).orElse(null);

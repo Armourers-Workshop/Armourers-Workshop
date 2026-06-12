@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.OpenGameProfile;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -79,7 +80,7 @@ public class ModContributors {
 
     @Nullable
     public static Contributor getCurrentContributor() {
-        if (EnvironmentManager.isDevelopment()) {
+        if (Platform.get().isDevelopment()) {
             return dev;
         }
         return of(EnvironmentManager.getClientUser());

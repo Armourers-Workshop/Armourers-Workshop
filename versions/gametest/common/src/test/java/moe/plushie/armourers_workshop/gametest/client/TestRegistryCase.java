@@ -111,5 +111,29 @@ public class TestRegistryCase {
         assertPrintLog("Attach Entity Renderer 'minecraft:witch'");
         assertPrintLog("Attach Entity Renderer 'minecraft:wandering_trader'");
         assertPrintLog("Attach Entity Renderer 'minecraft:iron_golem'");
+
+    }
+
+    @Test
+    public void testAutoEntityRendererRegisters() {
+
+        assertPrintLog("Discover Entity Renderer 'minecraft:zombie'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:zombie_villager'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:giant'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:wither_skeleton'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:husk'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:skeleton'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:stray'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:drowned'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:piglin'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:piglin_brute'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:zombified_piglin'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:player'");
+        assertPrintLog("Discover Entity Renderer 'minecraft:armor_stand'");
+
+        assertPrintLog("Discover Entity Renderer 'armourers_workshop:mannequin'");
+
+        assertPrintLog("Attach Entity Renderer (Auto) 'minecraft:giant'");
+        assertPrintLog("Attach Entity Renderer (Auto) 'minecraft:armor_stand'");
     }
 }

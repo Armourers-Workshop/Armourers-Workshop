@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.item.Item;
 
 @SuppressWarnings("unused")
@@ -26,7 +26,7 @@ public class ModItemTags {
     public static final IRegistryHolder<ITagKey<Item>> HORSE_ARMORS = skinnable("horse_armors");
 
     private static IRegistryHolder<ITagKey<Item>> skinnable(String name) {
-        return BuilderManager.getInstance().createItemTagBuilder().build("skinnable/" + name);
+        return Platform.get().common().builder().itemTag().build("skinnable/" + name);
     }
 
     public static void init() {

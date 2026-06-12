@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.environment;
 
-import moe.plushie.armourers_workshop.compat.core.AbstractPlatform;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +11,11 @@ import java.util.function.Supplier;
 
 public class EnvironmentExecutor {
 
-    private static final Manager WILL_INIT = new Manager();
-    private static final Manager DID_INIT = new Manager();
+    private static final EventDispatcher WILL_INIT = new EventDispatcher();
+    private static final EventDispatcher DID_INIT = new EventDispatcher();
 
-    private static final Manager WILL_SETUP = new Manager();
-    private static final Manager DID_SETUP = new Manager();
+    private static final EventDispatcher WILL_SETUP = new EventDispatcher();
+    private static final EventDispatcher DID_SETUP = new EventDispatcher();
 
     public static void willInit(EnvironmentType type) {
         WILL_INIT.run(type);
@@ -57,14 +56,14 @@ public class EnvironmentExecutor {
     }
 
     public static <T> T call(Supplier<Supplier<T>> clientSupplier, Supplier<Supplier<T>> serverSupplier) {
-        if (EnvironmentManager.getEnvironmentType() == EnvironmentType.CLIENT) {
+        if (Platform.get().environmentType() == EnvironmentType.CLIENT) {
             return clientSupplier.get().get();
         }
         return serverSupplier.get().get();
     }
 
     public static <T> Optional<T> callOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {
-        if (EnvironmentManager.getEnvironmentType() == envType) {
+        if (Platform.get().environmentType() == envType) {
             return Optional.ofNullable(supplier.get().get());
         }
         return Optional.empty();
@@ -75,7 +74,7 @@ public class EnvironmentExecutor {
     }
 
     public static void run(Supplier<Runnable> clientSupplier, Supplier<Runnable> serverSupplier) {
-        if (EnvironmentManager.getEnvironmentType() == EnvironmentType.CLIENT) {
+        if (Platform.get().environmentType() == EnvironmentType.CLIENT) {
             clientSupplier.get().run();
         } else {
             serverSupplier.get().run();
@@ -83,7 +82,7 @@ public class EnvironmentExecutor {
     }
 
     public static void runOn(EnvironmentType envType, Supplier<Runnable> supplier) {
-        if (EnvironmentManager.getEnvironmentType() == envType) {
+        if (Platform.get().environmentType() == envType) {
             supplier.get().run();
         }
     }
@@ -93,10 +92,10 @@ public class EnvironmentExecutor {
     }
 
     public static void runOnBackground(Supplier<Runnable> handler) {
-        AbstractPlatform.backgroundExecutor().execute(handler.get());
+        Platform.get().backgroundExecutor().execute(handler.get());
     }
 
-    private static class Manager {
+    private static class EventDispatcher {
 
         private final HashSet<EnvironmentType> status = new HashSet<>();
         private final HashMap<EnvironmentType, ArrayList<Supplier<Runnable>>> tasks = new HashMap<>();

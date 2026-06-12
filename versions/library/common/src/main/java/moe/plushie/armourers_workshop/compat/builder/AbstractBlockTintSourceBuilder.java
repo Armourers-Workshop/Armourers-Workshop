@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.compat.builder;
 
-import moe.plushie.armourers_workshop.api.client.IBlockTintSource;
-import moe.plushie.armourers_workshop.api.client.IBlockTintSourceType;
+import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSource;
+import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSourceType;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 
-public class AbstractBlockTintSourceBuilder<T extends IBlockTintSource> {
+public class AbstractBlockTintSourceBuilder<T extends BlockTintSource> {
 
     private final IDataMapCodec<T> codec;
 
@@ -13,7 +13,7 @@ public class AbstractBlockTintSourceBuilder<T extends IBlockTintSource> {
         this.codec = codec;
     }
 
-    public IBlockTintSourceType<T> build(OpenResourceKey registryName) {
+    public BlockTintSourceType<T> build(OpenResourceKey registryName) {
         return () -> codec;
     }
 }

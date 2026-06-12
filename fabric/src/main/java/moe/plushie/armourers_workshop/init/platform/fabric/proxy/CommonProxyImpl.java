@@ -8,9 +8,6 @@ import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
 import moe.plushie.armourers_workshop.core.utils.OpenInteractionResult;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.event.common.ServerStartingEvent;
-import moe.plushie.armourers_workshop.init.event.common.ServerStoppedEvent;
-import moe.plushie.armourers_workshop.init.platform.fabric.PlatformManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.platform.fabric.config.FabricConfigTracker;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.common.FabricEntityEvent;
@@ -24,10 +21,6 @@ public class CommonProxyImpl implements ModInitializer {
     @Override
     public void onInitialize() {
         ArmourersWorkshop.init();
-
-        // prioritize handle.
-        EventBus.register(ServerStartingEvent.class, event -> PlatformManagerImpl.attach(event.server()));
-        EventBus.register(ServerStoppedEvent.class, event -> PlatformManagerImpl.detach(event.server()));
 
         EnvironmentExecutor.willInit(EnvironmentType.COMMON);
         EnvironmentExecutor.willSetup(EnvironmentType.COMMON);

@@ -1,51 +1,32 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.api.config.IConfigSpec;
-import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeEnvironment;
-import moe.plushie.armourers_workshop.compat.forge.AbstractForgeRegistryManager;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentPlatformType;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.PlatformManager;
+import moe.plushie.armourers_workshop.init.platform.PlatformType;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
-import net.minecraft.server.MinecraftServer;
+import moe.plushie.armourers_workshop.init.platform.forge.runtime.ClientPlatformImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.runtime.CommonPlatformImpl;
 
 import java.nio.file.Path;
 
-@SuppressWarnings("unused")
 public class PlatformManagerImpl extends PlatformManager {
 
-    private static MinecraftServer CURRENT_SERVER;
-
-    public static void attach(MinecraftServer server) {
-        CURRENT_SERVER = server;
-    }
-
-    public static void detach(MinecraftServer server) {
-        CURRENT_SERVER = null;
+    public PlatformManagerImpl() {
+        super(() -> CommonPlatformImpl::new, () -> ClientPlatformImpl::new);
     }
 
     @Override
-    public EnvironmentPlatformType getPlatformType() {
-        return EnvironmentPlatformType.FORGE;
+    public PlatformType platformType() {
+        return PlatformType.FORGE;
     }
 
     @Override
-    public EnvironmentType getEnvironmentType() {
+    public EnvironmentType environmentType() {
         if (AbstractForgeEnvironment.getDist().isDedicatedServer()) {
             return EnvironmentType.SERVER;
         }
         return EnvironmentType.CLIENT;
-    }
-
-    @Override
-    public MinecraftServer getServer() {
-        return CURRENT_SERVER;
-    }
-
-    @Override
-    public Path getGameDir() {
-        return AbstractForgeEnvironment.getGameDir();
     }
 
     @Override
@@ -54,17 +35,12 @@ public class PlatformManagerImpl extends PlatformManager {
     }
 
     @Override
-    public IConfigSpec getClientConfig() {
-        return ConfigBuilderImpl.createClientSpec();
+    public Path gameDir() {
+        return AbstractForgeEnvironment.getGameDir();
     }
 
     @Override
-    public IConfigSpec getCommonConfig() {
-        return ConfigBuilderImpl.createCommonSpec();
-    }
-
-    @Override
-    public AbstractRegistryManager getRegistryManager() {
-        return AbstractForgeRegistryManager.INSTANCE;
+    public ConfigBuilderImpl config() {
+        return new ConfigBuilderImpl();
     }
 }

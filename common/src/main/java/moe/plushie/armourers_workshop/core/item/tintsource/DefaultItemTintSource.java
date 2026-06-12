@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.item.tintsource;
 
-import moe.plushie.armourers_workshop.api.client.IItemTintSource;
+import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSource;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.compat.core.item.AbstractItemHandler;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class DefaultItemTintSource implements IItemTintSource {
+public class DefaultItemTintSource implements ItemTintSource {
 
     public static final IDataMapCodec<DefaultItemTintSource> MAP_CODEC = IDataMapCodec.create(it -> it.group(IDataCodec.INT.fieldOf("index").forGetter(DefaultItemTintSource::layerIndex)).apply(it, DefaultItemTintSource::new));
 

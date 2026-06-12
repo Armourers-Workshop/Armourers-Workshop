@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IEntityCapability;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IRegistryBuilder;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Optional;
@@ -21,11 +21,11 @@ public class ModCapabilities {
     public static final IRegistryHolder<IBlockEntityCapability<Object>> BLOCK_ENTITY_ENERGY = blockEntity(Object.class, null).build("energy");
 
     private static <T> IRegistryBuilder<IEntityCapability<T>> entity(Class<T> type, Function<Entity, Optional<T>> provider) {
-        return BuilderManager.getInstance().createEntityCapabilityBuilder(type, provider);
+        return Platform.get().common().builder().entityCapability(type, provider);
     }
 
     private static <T> IRegistryBuilder<IBlockEntityCapability<T>> blockEntity(Class<T> type, Function<Entity, Optional<T>> provider) {
-        return BuilderManager.getInstance().createBlockEntityCapabilityBuilder(type, provider);
+        return Platform.get().common().builder().blockEntityCapability(type, provider);
     }
 
     public static void init() {

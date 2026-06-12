@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.core.IResourceKey;
 import moe.plushie.armourers_workshop.api.permission.IPermissionNode;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public abstract class Permission {
     }
 
     private IPermissionNode makeNode(String path) {
-        return BuilderManager.getInstance().createPermissionBuilder().level(0).build(path);
+        return Platform.get().common().builder().permission().level(0).build(path);
     }
 
     public String name() {

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +10,7 @@ public class ModLog {
 
     public static void debug(String message, Object... params) {
         // in the development mode, highlight from our debug log.
-        if (EnvironmentManager.isDevelopment()) {
+        if (Platform.get().isDevelopment()) {
             LOGGER.info(message, params);
             return;
         }

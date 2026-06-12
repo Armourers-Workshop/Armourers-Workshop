@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.init.platform;
 
 public abstract class PlatformLoader {
 
-    public static final String NAME = detect();
+    private static final String NAME = detect();
 
     public static <T> T load(Class<T> clazz) {
         try {
@@ -15,7 +15,10 @@ public abstract class PlatformLoader {
     }
 
     private static String resolve(Class<?> clazz, String platform) {
-        return clazz.getName().replaceFirst("^(.+)\\.(.+?)$", String.format("$1.%s.$2Impl", platform));
+        var name = clazz.getName();
+        name = name.replace(".platform.", ".platform." + platform + ".");
+        name = name.replaceFirst("^(.+)\\.([^$]+?)(\\$.+?)?$", "$1.$2Impl$3");
+        return name;
     }
 
     private static String detect() {

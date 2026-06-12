@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IEntitySerializerBuilder;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinModel;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,7 +21,7 @@ public class ModEntitySerializers {
     public static final IRegistryHolder<EntityDataSerializer<PlayerSkinModel>> PLAYER_TEXTURE_MODEL = normal(DataSerializers.PLAYER_TEXTURE_MODEL).build("player_texture_model");
 
     private static <T> IEntitySerializerBuilder<T> normal(IEntityDataSerializer<T> serializer) {
-        return BuilderManager.getInstance().createEntitySerializerBuilder(serializer);
+        return Platform.get().common().builder().entitySerializer(serializer);
     }
 
     public static void init() {

@@ -2,19 +2,19 @@ package moe.plushie.armourers_workshop.compat.client;
 
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataSerializerKey;
-import moe.plushie.armourers_workshop.compat.client.block.model.AbstractBlockModels;
-import moe.plushie.armourers_workshop.compat.client.block.model.AbstractBlockModel;
 import moe.plushie.armourers_workshop.compat.client.block.tintsource.AbstractBlockTintSource;
-import moe.plushie.armourers_workshop.compat.client.block.tintsource.AbstractBlockTintSources;
-import moe.plushie.armourers_workshop.compat.client.item.model.AbstractBlockModelWrapper;
-import moe.plushie.armourers_workshop.compat.client.item.model.AbstractItemModels;
-import moe.plushie.armourers_workshop.compat.client.item.model.AbstractSpecialModelWrapper;
 import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
-import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSources;
 import moe.plushie.armourers_workshop.compat.client.renderer.block.AbstractBlockSpecialRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractItemSpecialRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderers;
+import moe.plushie.armourers_workshop.core.client.block.model.BlockModelWrapper;
+import moe.plushie.armourers_workshop.core.client.block.model.BlockModels;
+import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSources;
+import moe.plushie.armourers_workshop.core.client.item.model.ItemModelWrapper;
+import moe.plushie.armourers_workshop.core.client.item.model.ItemModels;
+import moe.plushie.armourers_workshop.core.client.item.model.SpecialModelWrapper;
+import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSources;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.TypedHolder;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
@@ -28,35 +28,35 @@ public abstract class AbstractClientRegistry extends AbstractClientRegistryImpl 
 
     @Override
     protected void init() {
-        AbstractItemTintSources.init();
-        AbstractBlockTintSources.init();
-        AbstractItemModels.init();
-        AbstractBlockModels.init();
+        ItemTintSources.init();
+        BlockTintSources.init();
+        ItemModels.init();
+        BlockModels.init();
         AbstractSpecialModelRenderers.init();
     }
 
     @Override
     protected void load() {
         // scan all item model settings.
-        loadAssetModel("items", Registries.ITEMS, AbstractItemModels.CODEC, (item, itemModel) -> {
+        loadAssetModel("items", Registries.ITEMS, ItemModels.CODEC, (item, itemModel) -> {
             // register item tint source.
-            if (itemModel instanceof AbstractBlockModelWrapper.Unbaked wrapper && wrapper.hasCustomTint()) {
-                registerItemTintSource(item, new AbstractItemTintSource(wrapper.tints()));
+            if (itemModel instanceof ItemModelWrapper.Unbaked itemModel1 && itemModel1.hasCustomTint()) {
+                registerItemTintSource(item, new AbstractItemTintSource(itemModel1.tints()));
             }
             // register item renderer.
-            if (itemModel instanceof AbstractSpecialModelWrapper.Unbaked wrapper && wrapper.specialModel() instanceof AbstractSpecialModelRenderer<?> modelRenderer) {
-                registerItemSpecialRenderer(item, new AbstractItemSpecialRenderer(wrapper.base(), modelRenderer));
+            if (itemModel instanceof SpecialModelWrapper.Unbaked itemModel1 && itemModel1.specialModel() instanceof AbstractSpecialModelRenderer<?> modelRenderer) {
+                registerItemSpecialRenderer(item, new AbstractItemSpecialRenderer(itemModel1.base(), modelRenderer));
             }
         });
         // scan all block model settings.
-        loadAssetModel("blocks", Registries.BLOCKS, AbstractBlockModels.CODEC, (block, blockModel) -> {
+        loadAssetModel("blocks", Registries.BLOCKS, BlockModels.CODEC, (block, blockModel) -> {
             // setup block tint source.
-            if (blockModel instanceof AbstractBlockModel.Unbaked wrapper && wrapper.hasCustomTint()) {
-                registerBlockTintSource(block, new AbstractBlockTintSource(wrapper.tints()));
+            if (blockModel instanceof BlockModelWrapper.Unbaked blockModel1 && blockModel1.hasCustomTint()) {
+                registerBlockTintSource(block, new AbstractBlockTintSource(blockModel1.tints()));
             }
             // setup block render type.
-            if (blockModel instanceof AbstractBlockModel.Unbaked wrapper) {
-                registerBlockSpecialRenderer(block, new AbstractBlockSpecialRenderer(wrapper.renderType()));
+            if (blockModel instanceof BlockModelWrapper.Unbaked blockModel1) {
+                registerBlockSpecialRenderer(block, new AbstractBlockSpecialRenderer(blockModel1.renderType()));
             }
         });
     }

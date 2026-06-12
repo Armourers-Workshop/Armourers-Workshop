@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyMapping;
 import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.api.registry.IKeyMappingBuilder;
 import moe.plushie.armourers_workshop.init.client.ClientMenuHandler;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import moe.plushie.armourers_workshop.utils.OpenKeyModifier;
 
 @OnlyIn(Dist.CLIENT)
@@ -26,7 +26,7 @@ public class ModKeyBindings {
         private final IRegistryHolder<IKeyCategory> category;
 
         KeyBuilder(String category) {
-            this.category = BuilderManager.getInstance().createKeyCategoryBuilder().build(category);
+            this.category = Platform.get().common().builder().keyCategory().build(category);
         }
 
         IKeyMappingBuilder<IKeyMapping> cmd(String key) {
@@ -34,7 +34,7 @@ public class ModKeyBindings {
         }
 
         IKeyMappingBuilder<IKeyMapping> normal(String key) {
-            return BuilderManager.getInstance().createKeyMappingBuilder(key, category.get());
+            return Platform.get().common().builder().keyMapping(key, category.get());
         }
     }
 }

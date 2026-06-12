@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer
 import moe.plushie.armourers_workshop.core.client.render.SeatEntityRenderer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
-import moe.plushie.armourers_workshop.init.platform.BuilderManager;
+import moe.plushie.armourers_workshop.init.platform.Platform;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 
@@ -18,7 +18,7 @@ public final class ModEntityTypes {
     public static final IRegistryHolder<IEntityType<SeatEntity>> SEAT = normal(SeatEntity::new).fixed(0.0f, 0.0f).noSummon().bind(() -> SeatEntityRenderer::new).build(ModConstants.ENTITY_SEAT);
 
     private static <T extends Entity> IEntityTypeBuilder<T> normal(IEntityType.Serializer<T> entityFactory) {
-        return BuilderManager.getInstance().createEntityTypeBuilder(entityFactory, MobCategory.MISC);
+        return Platform.get().common().builder().entityType(entityFactory, MobCategory.MISC);
     }
 
     public static void init() {

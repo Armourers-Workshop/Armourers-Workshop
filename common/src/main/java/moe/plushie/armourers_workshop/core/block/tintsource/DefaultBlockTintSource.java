@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.block.tintsource;
 
-import moe.plushie.armourers_workshop.api.client.IBlockTintSource;
+import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSource;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.compat.core.block.AbstractBlock;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class DefaultBlockTintSource implements IBlockTintSource {
+public class DefaultBlockTintSource implements BlockTintSource {
 
     public static final IDataMapCodec<DefaultBlockTintSource> MAP_CODEC = IDataMapCodec.create(it -> it.group(IDataCodec.INT.fieldOf("index").forGetter(DefaultBlockTintSource::layerIndex)).apply(it, DefaultBlockTintSource::new));
 
