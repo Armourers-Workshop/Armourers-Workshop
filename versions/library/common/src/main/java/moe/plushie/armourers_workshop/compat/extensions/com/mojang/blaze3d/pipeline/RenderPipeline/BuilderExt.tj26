@@ -1,0 +1,37 @@
+package moe.plushie.armourers_workshop.compat.extensions.com.mojang.blaze3d.pipeline.RenderPipeline;
+
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+
+import java.util.Optional;
+
+import manifold.ext.rt.api.Extension;
+import manifold.ext.rt.api.ThisClass;
+
+@Available("[26, )")
+@Extension
+public class BuilderExt {
+
+    public static RenderPipeline.Builder builder(@ThisClass Class<?> clazz, RenderPipeline pipeline) {
+        // copy the pipeline config to snippet.
+        var snippet = new RenderPipeline.Snippet(
+                Optional.of(pipeline.getVertexShader()),
+                Optional.of(pipeline.getFragmentShader()),
+                Optional.of(pipeline.getShaderDefines()),
+                Optional.of(pipeline.getSamplers()),
+                Optional.of(pipeline.getUniforms()),
+                Optional.of(pipeline.getColorTargetState()),
+                Optional.ofNullable(pipeline.getDepthStencilState()),
+                Optional.of(pipeline.getPolygonMode()),
+                Optional.of(pipeline.isCull()),
+                Optional.of(pipeline.getVertexFormat()),
+                Optional.of(pipeline.getVertexFormatMode())
+        );
+        var builder = RenderPipeline.builder(snippet);
+        if (builder instanceof IAssociatedContainer container) {
+            container.setAssociatedObject(null, pipeline);
+        }
+        return builder;
+    }
+}

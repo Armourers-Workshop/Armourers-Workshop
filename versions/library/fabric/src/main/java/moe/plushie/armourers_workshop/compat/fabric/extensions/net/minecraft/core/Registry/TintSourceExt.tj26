@@ -32,6 +32,6 @@ public class TintSourceExt {
     }
 
     private static ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>> itemTintSources() {
-        return Reflect.forObject(ItemTintSources.class).get("ID_MAPPER");
+        return Reflect.of(ItemTintSources.class).get("ID_MAPPER");
     }
 }

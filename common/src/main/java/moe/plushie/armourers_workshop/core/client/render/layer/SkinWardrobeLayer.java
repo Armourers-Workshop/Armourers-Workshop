@@ -29,7 +29,7 @@ public class SkinWardrobeLayer<T extends Entity, S extends EntityRenderState, M 
     @Override
     protected void abi$render(S renderState, int lightmap, int overlay, float netHeadYaw, float headPitch, IGraphicsContext context) {
         // respect invisibility potions etc.
-        if (renderState.isInvisible()) {
+        if (renderState == null || renderState.isInvisible()) {
             return;
         }
         var model = renderState.armors();

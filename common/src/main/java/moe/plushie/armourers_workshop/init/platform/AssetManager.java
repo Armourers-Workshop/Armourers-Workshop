@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.core.client.item.model.ItemModelWrapper;
 import moe.plushie.armourers_workshop.core.client.item.model.ItemModels;
 import moe.plushie.armourers_workshop.core.client.item.model.SpecialModelWrapper;
 import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSources;
-import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderers;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.TypedHolder;
@@ -44,8 +43,8 @@ public class AssetManager {
                 api.registerItemTintSource(item, new AbstractItemTintSource(itemModel1.tints()));
             }
             // register item renderer.
-            if (itemModel instanceof SpecialModelWrapper.Unbaked itemModel1 && itemModel1.specialModel() instanceof SpecialModelRenderer<?> modelRenderer) {
-                api.registerItemSpecialRenderer(item, new AbstractItemSpecialRenderer(itemModel1.base(), modelRenderer));
+            if (itemModel instanceof SpecialModelWrapper.Unbaked itemModel1) {
+                api.registerItemSpecialRenderer(item, new AbstractItemSpecialRenderer(itemModel1.base(), itemModel1.specialModel()));
             }
         });
         // scan all block model settings.

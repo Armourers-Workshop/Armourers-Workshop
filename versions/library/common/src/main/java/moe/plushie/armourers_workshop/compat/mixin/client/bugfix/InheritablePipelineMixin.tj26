@@ -1,0 +1,41 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.bugfix;
+
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.api.data.IAssociatedContainer;
+import moe.plushie.armourers_workshop.core.utils.Reflect;
+import org.jspecify.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Available("[26, )")
+@Conditional("iris || oculus")
+@Mixin(RenderPipeline.Builder.class)
+public class InheritablePipelineMixin implements IAssociatedContainer {
+
+    @Unique
+    private RenderPipeline aw2$pipelineToCopy;
+
+    @Unique
+    @Override
+    public <T> void setAssociatedObject(Key<T> key, @Nullable T value) {
+        aw2$pipelineToCopy = (RenderPipeline) value;
+    }
+
+    @Unique
+    @Override
+    public <T> T getAssociatedObject(Key<T> key) {
+        return null;
+    }
+
+    @Inject(method = "build", at = @At("RETURN"))
+    private void aw2$build(CallbackInfoReturnable<RenderPipeline> cir) {
+        if (aw2$pipelineToCopy != null) {
+            Reflect.forName("net.irisshaders.iris.pipeline.IrisPipelines").invoke("copyPipeline", aw2$pipelineToCopy, cir.getReturnValue());
+        }
+    }
+}

@@ -26,6 +26,9 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
 
     protected static <T extends Entity, S extends EntityRenderState, P extends EntityRenderPlugin<T, S>> void _prepare(Class<?> clazz, RenderEntityEvent.Setup<T, S> event, Consumer<P> handler, Function<EntityRendererContext, P> factory) {
         var renderState = event.renderState();
+        if (renderState == null) {
+            return; // we can't support this rendering.
+        }
         // noinspection unchecked
         var renderPlugin = (P) renderState.renderPlugin();
         var rendererContext = EntityRendererContext.of(event.entityRenderer());
@@ -45,6 +48,9 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
 
     protected static <T extends Entity, S extends EntityRenderState, P extends EntityRenderPlugin<T, S>> void _activate(Class<?> clazz, RenderEntityEvent.Pre<T, S> event, Consumer<P> handler) {
         var renderState = event.renderState();
+        if (renderState == null) {
+            return; // we can't support this rendering.
+        }
         // noinspection unchecked
         var renderPlugin = (P) renderState.renderPlugin();
         if (clazz.isInstance(renderPlugin)) {
@@ -58,6 +64,9 @@ public abstract class EntityRenderPlugin<T extends Entity, S extends EntityRende
 
     protected static <T extends Entity, S extends EntityRenderState, P extends EntityRenderPlugin<T, S>> void _deactivate(Class<?> clazz, RenderEntityEvent.Post<T, S> event, Consumer<P> handler) {
         var renderState = event.renderState();
+        if (renderState == null) {
+            return; // we can't support this rendering.
+        }
         // noinspection unchecked
         var renderPlugin = (P) renderState.renderPlugin();
         if (clazz.isInstance(renderPlugin)) {

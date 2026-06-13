@@ -1,0 +1,29 @@
+package moe.plushie.armourers_workshop.compat.mixin.client.shader;
+
+import moe.plushie.armourers_workshop.api.annotation.Available;
+import moe.plushie.armourers_workshop.api.annotation.Conditional;
+import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
+import moe.plushie.armourers_workshop.core.client.shader.ShaderPreprocessor;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+@Available("[26, )")
+@Conditional("iris || oculus")
+@Pseudo
+@Mixin(targets = "net.irisshaders.iris.pipeline.programs.ShaderCreator")
+public class ShaderIrisMixin {
+
+    // ordinal 0 = name
+    // ordinal 1 = vertex
+    // ordinal 2 = geometry
+    // ordinal 3 = tessControl
+    // ordinal 4 = tessEval
+    // ordinal 5 = fragment
+    @ModifyVariable(method = "link", at = @At("HEAD"), argsOnly = true, ordinal = 1, remap = false)
+    private static String aw2$createIrisVertexShader(String vertex) {
+        AbstractClientHooks.createShaders();
+        return new ShaderPreprocessor("iris", 3).process(vertex);
+    }
+}
