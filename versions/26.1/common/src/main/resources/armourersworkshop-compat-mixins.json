@@ -12,7 +12,8 @@
     "client/renderer/EntityRenderStateMixin",
     "client/model/ModelMixin",
     "client/model/ModelDataAttachMixin",
-    "client/model/EntityModelSetMixin"
+    "client/model/EntityModelSetMixin",
+    "client/bugfix/InheritablePipelineMixin"
   ],
   "mixins": [
     "addon/KubeJSMixin",

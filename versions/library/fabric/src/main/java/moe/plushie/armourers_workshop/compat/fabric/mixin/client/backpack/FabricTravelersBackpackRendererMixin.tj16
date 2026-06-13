@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.annotation.Conditional;
 import moe.plushie.armourers_workshop.core.client.other.EntityRenderData;
 import moe.plushie.armourers_workshop.core.data.SlotManager;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.Reflect;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +18,6 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 @Available("[16, 20)")
 @Conditional("travelersbackpack")
@@ -37,20 +34,15 @@ public class FabricTravelersBackpackRendererMixin {
     }
 
     static {
-        // because the superclass of EntityComponentInitializer is an unknown type,
-        // this leads we can't direct using the ComponentUtils api.
-        // so we can only call it through reflection.
-        var methods = new AtomicReference<Method>();
-        var getWearingBackpack = (Function<Player, ItemStack>) (player) -> {
-            try {
-                if (methods.get() == null) {
-                    methods.set(ComponentUtils.class.getDeclaredMethod("getWearingBackpack", Player.class));
-                }
-                return (ItemStack) methods.get().invoke(ComponentUtils.class, player);
-            } catch (Exception e) {
-                return ItemStack.EMPTY;
+        SlotManager.registerArmorSlot(Player.class, "travelersbackpack", (player) -> {
+            // because the superclass of EntityComponentInitializer is an unknown type,
+            // this leads we can't direct using the ComponentUtils api.
+            // so we can only call it through reflection.
+            ItemStack result = Reflect.of(ComponentUtils.class).invoke("getWearingBackpack", player);
+            if (result != null) {
+                return result;
             }
-        };
-        SlotManager.registerArmorSlot(Player.class, "travelersbackpack", getWearingBackpack);
+            return ItemStack.EMPTY;
+        });
     }
 }

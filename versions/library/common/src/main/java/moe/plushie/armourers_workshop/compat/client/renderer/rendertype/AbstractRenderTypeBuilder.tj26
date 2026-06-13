@@ -61,7 +61,7 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
 
     private static class Provider {
 
-        private static final Map<SkinVertexFormat, Supplier<Builder>> INSTANCES = Collections.immutableMap(it -> {
+        private static final Map<SkinVertexFormat, Supplier<SkinRenderType.Builder>> INSTANCES = Collections.immutableMap(it -> {
 
             it.put(SkinVertexFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.DEBUG_LINES, RenderPipelines.GUI));
             it.put(SkinVertexFormat.LINE_STRIP, () -> _builder(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.DEBUG_LINE_STRIP, RenderPipelines.GUI));
@@ -99,25 +99,8 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             it.put(SkinVertexFormat.SKIN_MESH_FACE_TRANSLUCENT_EMISSIVE, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.TRIANGLES, RenderPipelines.ENTITY_TRANSLUCENT).overlay().lightmap().emissive());
         });
 
-        private static RenderPipeline.Snippet _snippet(RenderPipeline pipeline) {
-            return new RenderPipeline.Snippet(
-                    Optional.of(pipeline.getVertexShader()),
-                    Optional.of(pipeline.getFragmentShader()),
-                    Optional.of(pipeline.getShaderDefines()),
-                    Optional.of(pipeline.getSamplers()),
-                    Optional.of(pipeline.getUniforms()),
-                    Optional.of(pipeline.getColorTargetState()),
-                    Optional.ofNullable(pipeline.getDepthStencilState()),
-                    Optional.of(pipeline.getPolygonMode()),
-                    Optional.of(pipeline.isCull()),
-                    Optional.of(pipeline.getVertexFormat()),
-                    Optional.of(pipeline.getVertexFormatMode())
-            );
-        }
-
         private static Builder _builder(VertexFormat format, VertexFormat.Mode mode, RenderPipeline pipeline) {
-            var snippet = _snippet(pipeline);
-            return new Builder(RenderPipeline.builder(snippet).withVertexFormat(format, mode));
+            return new Builder(format, mode, pipeline);
         }
 
         private static class Builder extends AbstractRenderTypeBuilder {
@@ -137,10 +120,12 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             private float depthBiasScaleFactor = 0.0f;
             private float depthBiasConstant = 0.0f;
 
+            private final RenderPipeline parent;
             private final RenderPipeline.Builder pipelineBuilder;
 
-            private Builder(RenderPipeline.Builder pipelineBuilder) {
-                this.pipelineBuilder = pipelineBuilder;
+            private Builder(VertexFormat format, VertexFormat.Mode mode, RenderPipeline parent) {
+                this.parent = parent;
+                this.pipelineBuilder = RenderPipeline.builder(parent).withVertexFormat(format, mode);
                 this.setupDefault();
             }
 
@@ -281,15 +266,11 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
 
             @Override
             protected SkinRenderType create(String registryName) {
-                var pipeline = pipelineBuilder
-                        .withLocation(Identifier.parse(registryName.replace(":rendertype/", ":pipeline/")))
-                        .withColorTargetState(new ColorTargetState(blendFunction, writeMask))
-                        .withDepthStencilState(new DepthStencilState(depthTest, writeDepth, depthBiasScaleFactor, depthBiasConstant))
-                        .build();
-                var setupBuilder = RenderSetup.builder(pipeline)
-                        .bufferSize(256)
-                        .setOutputTarget(outputTarget)
-                        .setOutline(isOutline ? RenderSetup.OutlineProperty.IS_OUTLINE : RenderSetup.OutlineProperty.NONE);
+                var pipeline = createPipeline(registryName);
+                var setupBuilder = RenderSetup.builder(pipeline);
+                setupBuilder.bufferSize(256);
+                setupBuilder.setOutputTarget(outputTarget);
+                setupBuilder.setOutline(isOutline ? RenderSetup.OutlineProperty.IS_OUTLINE : RenderSetup.OutlineProperty.NONE);
                 if (usedTexture != null) {
                     setupBuilder.withTexture("Sampler0", usedTexture);
                 }
@@ -306,6 +287,14 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
                     setupBuilder.sortOnUpload();
                 }
                 return AbstractRenderType.wrap(RenderType.create(registryName, setupBuilder.createRenderSetup()));
+            }
+
+            private RenderPipeline createPipeline(String registryName) {
+                return pipelineBuilder
+                        .withLocation(Identifier.parse(registryName.replace(":rendertype/", ":pipeline/")))
+                        .withColorTargetState(new ColorTargetState(blendFunction, writeMask))
+                        .withDepthStencilState(new DepthStencilState(depthTest, writeDepth, depthBiasScaleFactor, depthBiasConstant))
+                        .build();
             }
         }
     }

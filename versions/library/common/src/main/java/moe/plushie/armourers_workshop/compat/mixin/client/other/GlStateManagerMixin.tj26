@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.compat.mixin.client.other;
 
-import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.systems.RenderPass;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.compat.client.AbstractClientHooks;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Available("[26, )")
-@Mixin(GlStateManager.class)
+@Mixin(RenderPass.class)
 public class GlStateManagerMixin {
 
-    @Inject(method = "_drawElements", at = @At("RETURN"), remap = false)
-    private static void aw2$drawElements(int i, int j, int k, long l, CallbackInfo ci) {
+    @Inject(method = "drawIndexed", at = @At("RETURN"), remap = false)
+    private static void aw2$drawElements(CallbackInfo ci) {
         AbstractClientHooks.drawElements();
     }
 }

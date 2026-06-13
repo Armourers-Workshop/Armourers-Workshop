@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop.compat.fabric.extensions.net.minecraft.core.Registry;
 
+import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSourceType;
 import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSourceType;
+import moe.plushie.armourers_workshop.core.utils.Reflect;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
-
-import com.mojang.serialization.MapCodec;
-
-import java.lang.reflect.Field;
 
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.ThisClass;
@@ -33,14 +31,7 @@ public class TintSourceExt {
         return TypedProvider.passthrough();
     }
 
-    @SuppressWarnings("unchecked")
     private static ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>> itemTintSources() {
-        try {
-            Field field = ItemTintSources.class.getDeclaredField("ID_MAPPER");
-            field.setAccessible(true);
-            return (ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends ItemTintSource>>) field.get(null);
-        } catch (ReflectiveOperationException exception) {
-            throw new ExceptionInInitializerError(exception);
-        }
+        return Reflect.forObject(ItemTintSources.class).get("ID_MAPPER");
     }
 }
