@@ -74,7 +74,7 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             RenderSystem.defaultBlendFunc();
         }, RenderSystem::disableBlend);
 
-        private static final Map<SkinVertexFormat, Supplier<Builder>> INSTANCES = Collections.immutableMap(it -> {
+        private static final Map<SkinVertexFormat, Supplier<SkinRenderType.Builder>> INSTANCES = Collections.immutableMap(it -> {
             it.put(SkinVertexFormat.LINE, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINES, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
             it.put(SkinVertexFormat.LINE_STRIP, () -> _builder(DefaultVertexFormat.POSITION_COLOR, GL11.GL_LINE_STRIP, builder -> builder.setAlphaState(DEFAULT_ALPHA)));
 
@@ -243,44 +243,50 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             }
 
             @Override
-            public Builder cull() {
-                stateBuilder.setCullState(CULL);
+            public Builder cull(boolean flag) {
+                if (flag) {
+                    stateBuilder.setCullState(CULL);
+                } else {
+                    stateBuilder.setCullState(NO_CULL);
+                }
                 return this;
             }
 
             @Override
-            public Builder lightmap() {
-                stateBuilder.setLightmapState(LIGHTMAP);
+            public Builder lightmap(boolean flag) {
+                if (flag) {
+                    stateBuilder.setLightmapState(LIGHTMAP);
+                } else {
+                    stateBuilder.setLightmapState(NO_LIGHTMAP);
+                }
                 return this;
             }
 
             @Override
-            public Builder emissive() {
-                super.emissive();
+            public Builder overlay(boolean flag) {
+                if (flag) {
+                    stateBuilder.setOverlayState(OVERLAY);
+                } else {
+                    stateBuilder.setOverlayState(NO_OVERLAY);
+                }
                 return this;
             }
 
             @Override
-            public Builder overlay() {
-                stateBuilder.setOverlayState(OVERLAY);
+            public Builder outline(boolean flag) {
+                isOutline = flag;
                 return this;
             }
 
             @Override
-            public Builder outline() {
-                isOutline = true;
+            public Builder crumbling(boolean flag) {
+                affectsCrumbling = flag;
                 return this;
             }
 
             @Override
-            public Builder crumbling() {
-                affectsCrumbling = true;
-                return this;
-            }
-
-            @Override
-            public Builder sortOnUpload() {
-                sortOnUpload = true;
+            public Builder sortOnUpload(boolean flag) {
+                sortOnUpload = flag;
                 return this;
             }
 

@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.runtime;
 
+import moe.plushie.armourers_workshop.compat.fabric.client.AbstractFabricClientPlatform;
 import moe.plushie.armourers_workshop.init.platform.runtime.ClientBuilderFactory;
 import moe.plushie.armourers_workshop.init.platform.runtime.ClientEventAccessor;
 import moe.plushie.armourers_workshop.init.platform.runtime.ClientPlatform;
 import moe.plushie.armourers_workshop.init.platform.runtime.ClientRegistryFactory;
 
-public class ClientPlatformImpl implements ClientPlatform {
+public class ClientPlatformImpl extends AbstractFabricClientPlatform implements ClientPlatform {
 
     private final ClientBuilderFactoryImpl builder = new ClientBuilderFactoryImpl();
     private final ClientRegistryFactoryImpl registry = new ClientRegistryFactoryImpl();

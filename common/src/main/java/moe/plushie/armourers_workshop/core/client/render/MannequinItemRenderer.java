@@ -4,10 +4,10 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
 import moe.plushie.armourers_workshop.core.client.render.element.SpecialRenderElement;
 import moe.plushie.armourers_workshop.core.client.render.state.MannequinRenderState;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenQuaternionf;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
-public class MannequinItemRenderer extends AbstractSpecialModelRenderer<ItemStack> {
+public class MannequinItemRenderer extends SpecialModelRenderer<ItemStack> {
 
     public static final IDataMapCodec<MannequinItemRenderer> MAP_CODEC = IDataMapCodec.unit(MannequinItemRenderer::new);
 

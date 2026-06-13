@@ -205,6 +205,10 @@ public abstract class SkinRenderType implements IRenderType, IAssociatedContaine
 
 
         public Builder cull() {
+            return cull(true);
+        }
+
+        public Builder cull(boolean flag) {
             return this;
         }
 
@@ -232,27 +236,51 @@ public abstract class SkinRenderType implements IRenderType, IAssociatedContaine
 
 
         public Builder lightmap() {
+            return lightmap(true);
+        }
+
+        public Builder lightmap(boolean flag) {
             return this;
         }
 
         public Builder overlay() {
+            return overlay(true);
+        }
+
+        public Builder overlay(boolean flag) {
             return this;
         }
 
         public Builder emissive() {
-            updater.add(t -> t.isEmissive = true);
+            return emissive(true);
+        }
+
+        public Builder emissive(boolean flag) {
+            updater.add(t -> t.isEmissive = flag);
             return this;
         }
 
         public Builder outline() {
+            return outline(true);
+        }
+
+        public Builder outline(boolean flag) {
             return this;
         }
 
         public Builder crumbling() {
+            return crumbling(true);
+        }
+
+        public Builder crumbling(boolean flag) {
             return this;
         }
 
         public Builder sortOnUpload() {
+            return sortOnUpload(true);
+        }
+
+        public Builder sortOnUpload(boolean flag) {
             return this;
         }
 

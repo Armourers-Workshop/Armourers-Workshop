@@ -40,7 +40,6 @@ public class AbstractImageTextureDownloader {
             .withFragmentShader("core/blit_screen")
             .withSampler("InSampler")
             .withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.ONE, DestFactor.ZERO)))
-            .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
             .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
             .build();
 

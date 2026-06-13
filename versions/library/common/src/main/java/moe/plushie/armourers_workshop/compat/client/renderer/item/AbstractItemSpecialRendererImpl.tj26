@@ -5,15 +5,13 @@ import com.mojang.serialization.MapCodec;
 import moe.plushie.armourers_workshop.api.annotation.Available;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.api.client.ISpecialModelRenderer;
-import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRendererType;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
@@ -24,25 +22,25 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemSpecialRendererImpl {
 
-    public static MapCodec<? extends SpecialModelRenderer.Unbaked<?>> getCodec(ISpecialModelRendererType<?> type) {
+    public static MapCodec<? extends net.minecraft.client.renderer.special.SpecialModelRenderer.Unbaked<?>> getCodec(SpecialModelRendererType<?> type) {
         return Wrapper.wrap(type.codec().mapCodec());
     }
 
-    public abstract AbstractSpecialModelRenderer<?> renderer();
+    public abstract SpecialModelRenderer<?> renderer();
 
-    public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
+    public net.minecraft.client.renderer.special.SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
         return new Wrapper<>(renderer());
     }
 
-    private static class Wrapper<T> implements SpecialModelRenderer<T> {
+    private static class Wrapper<T> implements net.minecraft.client.renderer.special.SpecialModelRenderer<T> {
 
-        private final AbstractSpecialModelRenderer<T> source;
+        private final SpecialModelRenderer<T> source;
 
-        private Wrapper(AbstractSpecialModelRenderer<T> source) {
+        private Wrapper(SpecialModelRenderer<T> source) {
             this.source = source;
         }
 
-        public static <T extends ISpecialModelRenderer<?>> MapCodec<Unbaked<T>> wrap(MapCodec<T> codec) {
+        public static <T extends SpecialModelRenderer<?>> MapCodec<Unbaked<T>> wrap(MapCodec<T> codec) {
             return codec.xmap(it -> new Unbaked<>(it, codec), it -> it.source);
         }
 
@@ -61,7 +59,7 @@ public abstract class AbstractItemSpecialRendererImpl {
             return source.extractArgument(itemStack);
         }
 
-        public static class Unbaked<T extends ISpecialModelRenderer<?>> implements SpecialModelRenderer.Unbaked<Object> {
+        public static class Unbaked<T extends SpecialModelRenderer<?>> implements net.minecraft.client.renderer.special.SpecialModelRenderer.Unbaked<Object> {
 
             private final T source;
             private final MapCodec<T> codec;
@@ -73,15 +71,15 @@ public abstract class AbstractItemSpecialRendererImpl {
 
             @Nullable
             @Override
-            public SpecialModelRenderer<Object> bake(BakingContext bakingContext) {
-                if (source instanceof AbstractSpecialModelRenderer<?> renderer) {
+            public net.minecraft.client.renderer.special.SpecialModelRenderer<Object> bake(BakingContext bakingContext) {
+                if (source instanceof SpecialModelRenderer<?> renderer) {
                     return new Wrapper<>(Objects.unsafeCast(renderer));
                 }
                 return null;
             }
 
             @Override
-            public MapCodec<? extends SpecialModelRenderer.Unbaked<Object>> type() {
+            public MapCodec<? extends net.minecraft.client.renderer.special.SpecialModelRenderer.Unbaked<Object>> type() {
                 return wrap(codec);
             }
         }

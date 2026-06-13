@@ -1,16 +1,16 @@
-package moe.plushie.armourers_workshop.compat.client.renderer.model;
+package moe.plushie.armourers_workshop.core.client.special;
 
-import moe.plushie.armourers_workshop.api.client.ISpecialModelRenderer;
 import moe.plushie.armourers_workshop.api.core.IDataCodec;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.utils.LateBoundIdMapper;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.registry.ClientRegistries;
 
-public class AbstractSpecialModelRenderers {
+public class SpecialModelRenderers {
 
-    private static final LateBoundIdMapper<OpenResourceKey, IDataMapCodec<? extends ISpecialModelRenderer<?>>> ID_MAPPER = new LateBoundIdMapper<>();
-    public static final IDataCodec<ISpecialModelRenderer<?>> CODEC = ID_MAPPER.codec(OpenResourceKey.CODEC).dispatch(it -> null, e -> e);
+    private static final LateBoundIdMapper<OpenResourceKey, IDataMapCodec<? extends SpecialModelRenderer<?>>> ID_MAPPER = new LateBoundIdMapper<>();
+    public static final IDataCodec<SpecialModelRenderer<?>> CODEC = ID_MAPPER.codec(OpenResourceKey.CODEC).dispatch(it -> null, e -> e);
 
     public static void init() {
         // add all custom item.

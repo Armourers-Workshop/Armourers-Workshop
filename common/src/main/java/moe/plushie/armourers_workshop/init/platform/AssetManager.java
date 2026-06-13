@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.compat.client.block.tintsource.AbstractBlo
 import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
 import moe.plushie.armourers_workshop.compat.client.renderer.block.AbstractBlockSpecialRenderer;
 import moe.plushie.armourers_workshop.compat.client.renderer.item.AbstractItemSpecialRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderers;
 import moe.plushie.armourers_workshop.core.client.block.model.BlockModelWrapper;
 import moe.plushie.armourers_workshop.core.client.block.model.BlockModels;
 import moe.plushie.armourers_workshop.core.client.block.tintsource.BlockTintSources;
@@ -15,6 +13,8 @@ import moe.plushie.armourers_workshop.core.client.item.model.ItemModelWrapper;
 import moe.plushie.armourers_workshop.core.client.item.model.ItemModels;
 import moe.plushie.armourers_workshop.core.client.item.model.SpecialModelWrapper;
 import moe.plushie.armourers_workshop.core.client.item.tintsource.ItemTintSources;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderers;
 import moe.plushie.armourers_workshop.core.utils.JsonSerializer;
 import moe.plushie.armourers_workshop.core.utils.TypedHolder;
 import moe.plushie.armourers_workshop.core.utils.TypedRegistry;
@@ -31,7 +31,7 @@ public class AssetManager {
         BlockTintSources.init();
         ItemModels.init();
         BlockModels.init();
-        AbstractSpecialModelRenderers.init();
+        SpecialModelRenderers.init();
         // start load client assets.
         loadAssets(Platform.get().client().eventAccessor());
     }
@@ -44,7 +44,7 @@ public class AssetManager {
                 api.registerItemTintSource(item, new AbstractItemTintSource(itemModel1.tints()));
             }
             // register item renderer.
-            if (itemModel instanceof SpecialModelWrapper.Unbaked itemModel1 && itemModel1.specialModel() instanceof AbstractSpecialModelRenderer<?> modelRenderer) {
+            if (itemModel instanceof SpecialModelWrapper.Unbaked itemModel1 && itemModel1.specialModel() instanceof SpecialModelRenderer<?> modelRenderer) {
                 api.registerItemSpecialRenderer(item, new AbstractItemSpecialRenderer(itemModel1.base(), modelRenderer));
             }
         });

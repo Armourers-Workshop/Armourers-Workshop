@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.compat.client.item.AbstractItemDisplayContext;
 import moe.plushie.armourers_workshop.compat.client.renderer.graphics.AbstractGraphicsRenderer;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractItemSpecialRendererImpl {
 
-    public abstract AbstractSpecialModelRenderer<?> renderer();
+    public abstract SpecialModelRenderer<?> renderer();
 
     public BlockEntityWithoutLevelRenderer bake(Object context) {
         return new Wrapper<>(renderer());
@@ -25,9 +25,9 @@ public abstract class AbstractItemSpecialRendererImpl {
 
     private static class Wrapper<T> extends BlockEntityWithoutLevelRenderer {
 
-        private final AbstractSpecialModelRenderer<T> source;
+        private final SpecialModelRenderer<T> source;
 
-        public Wrapper(AbstractSpecialModelRenderer<T> source) {
+        public Wrapper(SpecialModelRenderer<T> source) {
             super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
             this.source = source;
         }

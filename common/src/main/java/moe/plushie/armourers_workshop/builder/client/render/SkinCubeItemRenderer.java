@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IGraphicsContext;
 import moe.plushie.armourers_workshop.api.core.IDataMapCodec;
 import moe.plushie.armourers_workshop.builder.item.SkinCubeItem;
-import moe.plushie.armourers_workshop.compat.client.renderer.model.AbstractSpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ShapeElement;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.math.OpenRectangle3f;
 import moe.plushie.armourers_workshop.core.utils.Colors;
@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import net.minecraft.world.item.ItemStack;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinCubeItemRenderer extends AbstractSpecialModelRenderer<ItemStack> {
+public class SkinCubeItemRenderer extends SpecialModelRenderer<ItemStack> {
 
     public static final IDataMapCodec<SkinCubeItemRenderer> MAP_CODEC = IDataMapCodec.unit(SkinCubeItemRenderer::new);
 

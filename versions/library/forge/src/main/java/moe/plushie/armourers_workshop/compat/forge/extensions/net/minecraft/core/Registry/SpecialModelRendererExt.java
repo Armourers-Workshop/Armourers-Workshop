@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.compat.forge.extensions.net.minecraft.core.Registry;
 
 import moe.plushie.armourers_workshop.api.annotation.Available;
-import moe.plushie.armourers_workshop.api.client.ISpecialModelRendererType;
+import moe.plushie.armourers_workshop.core.client.special.SpecialModelRendererType;
 import moe.plushie.armourers_workshop.core.utils.TypedProvider;
 
 import manifold.ext.rt.api.Extension;
@@ -11,7 +11,7 @@ import manifold.ext.rt.api.ThisClass;
 @Extension
 public class SpecialModelRendererExt {
 
-    public static TypedProvider<ISpecialModelRendererType<?>> createSpecialModelRendererRegistryFO(@ThisClass Class<?> clazz) {
+    public static TypedProvider<SpecialModelRendererType<?>> createSpecialModelRendererRegistryFO(@ThisClass Class<?> clazz) {
         return TypedProvider.passthrough();
     }
 }

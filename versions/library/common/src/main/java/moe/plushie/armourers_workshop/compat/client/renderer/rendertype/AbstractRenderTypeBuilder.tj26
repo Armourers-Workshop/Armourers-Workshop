@@ -76,7 +76,7 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             it.put(SkinVertexFormat.BLOCK_CUTOUT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT));
 
             it.put(SkinVertexFormat.ENTITY_CUTOUT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT));
-            it.put(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT_DISSOLVE)); // TODO: ENTITY_CUTOUT_NO_CULL
+            it.put(SkinVertexFormat.ENTITY_CUTOUT_NO_CULL, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_CUTOUT).cull(false));
             it.put(SkinVertexFormat.ENTITY_TRANSLUCENT, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_TRANSLUCENT));
             it.put(SkinVertexFormat.ENTITY_ALPHA, () -> _builder(DefaultVertexFormat.ENTITY, VertexFormat.Mode.QUADS, RenderPipelines.ENTITY_SHADOW));
 
@@ -237,45 +237,45 @@ public abstract class AbstractRenderTypeBuilder extends SkinRenderType.Builder {
             }
 
             @Override
-            public Builder cull() {
-                pipelineBuilder.withCull(true);
+            public Builder cull(boolean flag) {
+                pipelineBuilder.withCull(flag);
                 return this;
             }
 
             @Override
-            public Builder lightmap() {
-                useLightmap = true;
+            public Builder lightmap(boolean flag) {
+                useLightmap = flag;
                 return this;
             }
 
             @Override
-            public Builder emissive() {
-                super.emissive();
+            public Builder emissive(boolean flag) {
+                super.emissive(flag);
                 pipelineBuilder.withShaderDefine("EMISSIVE").withShaderDefine("NO_CARDINAL_LIGHTING");
                 return this;
             }
 
             @Override
-            public Builder overlay() {
-                useOverlay = true;
+            public Builder overlay(boolean flag) {
+                useOverlay = flag;
                 return this;
             }
 
             @Override
-            public Builder outline() {
-                isOutline = true;
+            public Builder outline(boolean flag) {
+                isOutline = flag;
                 return this;
             }
 
             @Override
-            public Builder crumbling() {
-                affectsCrumbling = true;
+            public Builder crumbling(boolean flag) {
+                affectsCrumbling = flag;
                 return this;
             }
 
             @Override
-            public Builder sortOnUpload() {
-                sortOnUpload = true;
+            public Builder sortOnUpload(boolean flag) {
+                sortOnUpload = flag;
                 return this;
             }
 
