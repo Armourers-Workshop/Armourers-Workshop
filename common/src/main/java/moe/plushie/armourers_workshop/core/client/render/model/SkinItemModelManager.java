@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.serializer.io.IODataObject;
 import moe.plushie.armourers_workshop.core.utils.Collections;
-import moe.plushie.armourers_workshop.core.utils.FileUtils;
 import moe.plushie.armourers_workshop.core.utils.OpenItemDisplayContext;
 import moe.plushie.armourers_workshop.core.utils.OpenItemTransform;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
@@ -63,6 +62,18 @@ public class SkinItemModelManager {
     @Nullable
     public SkinItemProperty getProperty(OpenResourceKey id) {
         return namedItemProperties.get(id);
+    }
+
+    private void apply(Map<OpenResourceKey, SkinItemModel> models) {
+        // setup the missing item model.
+        missingModel = models.get(ModConstants.key("skin/unknown"));
+        if (missingModel == null) {
+            throw new RuntimeException("Can't find missing model, some think wrong!");
+        }
+        // reset the registered models.
+        namedItemModels.clear();
+        namedItemModels.putAll(models);
+        typedItemModels.clear();
     }
 
     private static SkinItemProperty vanilla(String id) {
@@ -141,8 +152,8 @@ public class SkinItemModelManager {
 
         @Override
         public void end(OpenResourceManager resourceManager) {
-            // only init once.
-            if (!INSTANCE.namedItemModels.isEmpty()) {
+            // ignore when the load fails.
+            if (builders.isEmpty()) {
                 return;
             }
             // resolve the parent depends.
@@ -152,13 +163,8 @@ public class SkinItemModelManager {
                 models.put(name, itemModel);
             });
             references.forEach((override, reference) -> override.setModel(models.get(reference)));
-            // setup the missing item model.
-            var missingModel = models.get(ModConstants.key("skin/unknown"));
-            if (missingModel == null) {
-                throw new RuntimeException("Can't find missing model, some think wrong!");
-            }
-            INSTANCE.namedItemModels.putAll(models);
-            INSTANCE.missingModel = missingModel;
+            // apply the models changes into item model manager.
+            SkinItemModelManager.getInstance().apply(models);
         }
 
         @Override
@@ -166,7 +172,6 @@ public class SkinItemModelManager {
             return "models/skin";
         }
 
-        //
         private OpenVector3f parseVector3f(IODataObject value, OpenVector3f defaultValue) {
             if (value.isNull()) {
                 return defaultValue;

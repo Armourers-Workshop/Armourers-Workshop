@@ -36,7 +36,7 @@ public class AbstractForgeCapability<T> implements IEntityCapability<T> {
         this.factory = factory;
         this.capability = EntityCapability.createVoid(registryName.get(), type);
         this.attachmentType = REGISTRY.register(registryName, key -> AttachmentType.serializable(this::create).build());
-        // register into all entity.
+        // register into all entities.
         AbstractForgeEventBus.observer(RegisterCapabilitiesEvent.class, event -> {
             for (var entityType : BuiltInRegistries.ENTITY_TYPE) {
                 event.registerEntity(capability, entityType, (entity, context) -> entity.getData(attachmentType).value());

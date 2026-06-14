@@ -25,5 +25,9 @@ public class AbstractBlockTintSource {
         }
         return -1;
     }
+
+    public BlockTintSource[] tintSources() {
+        return sources;
+    }
 }
 

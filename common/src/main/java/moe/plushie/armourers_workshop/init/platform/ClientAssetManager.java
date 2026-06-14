@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.init.registry.Registries;
 
 import java.util.function.BiConsumer;
 
-public class AssetManager {
+public class ClientAssetManager {
 
     public static void init() {
         // registry client model attachments.
@@ -63,7 +63,7 @@ public class AssetManager {
     /// load an asset model by the registry
     private static <T, M> void loadAssetModel(String type, TypedRegistry<T> registry, IDataCodec<M> codec, BiConsumer<TypedHolder<? extends T>, M> consumer) {
         var modelKey = IDataSerializerKey.create("model", codec);
-        var classLoader = AssetManager.class.getClassLoader();
+        var classLoader = ClientAssetManager.class.getClassLoader();
         registry.forEach(holder -> {
             var registryName = holder.registryName();
             var path = String.format("assets/%s/%s/%s.json", registryName.namespace(), type, registryName.path());

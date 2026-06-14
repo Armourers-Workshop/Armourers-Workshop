@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.core.IRegistryHolder;
 import moe.plushie.armourers_workshop.compat.client.block.tintsource.AbstractBlockTintSource;
 import moe.plushie.armourers_workshop.compat.client.item.tintsource.AbstractItemTintSource;
 import moe.plushie.armourers_workshop.compat.forge.AbstractForgeClientEventsImpl;
+import moe.plushie.armourers_workshop.core.utils.Collections;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
-import java.util.List;
 import java.util.Set;
 
 import manifold.ext.rt.api.Extension;
@@ -24,19 +24,20 @@ import manifold.ext.rt.api.ThisClass;
 public class TintSourceExt {
 
     public static void registerItemTintSourceFO(@ThisClass Class<?> clazz, IRegistryHolder<? extends Item> item, AbstractItemTintSource source) {
-        // vanilla will be automatically registered by assets/<mod id>/items/<item id>.json
+        // the vanilla will be automatically registered by assets/<mod id>/items/<item id>.json
     }
 
     public static void registerBlockTintSourceFO(@ThisClass Class<?> clazz, IRegistryHolder<? extends Block> block, AbstractBlockTintSource source) {
-        AbstractForgeClientEventsImpl.BLOCK_COLOR_REGISTRY.listen(event -> event.register(List.of(new BlockTintSource() {
+        // the vanilla will call tint source directly by corresponding tint index, so we must expand it.
+        AbstractForgeClientEventsImpl.BLOCK_COLOR_REGISTRY.listen(event -> event.register(Collections.compactMap(source.tintSources(), target -> new BlockTintSource() {
             @Override
             public int color(BlockState blockState) {
-                return source.calculate(blockState, null, null, 0);
+                return target.calculate(blockState, null, null);
             }
 
             @Override
             public int colorInWorld(BlockState blockState, BlockAndTintGetter level, BlockPos blockPos) {
-                return source.calculate(blockState, level, blockPos, 0);
+                return target.calculate(blockState, level, blockPos);
             }
 
             @Override
