@@ -23,10 +23,14 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"SameParameterValue"})
 public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implements UITextFieldDelegate {
+
+    private static final List<PlayerSkinModel> ALL_MODELS = Collections.newList(PlayerSkinModel.WIDE, PlayerSkinModel.SLIM);
+    private static final List<PlayerSkinDescriptor.Source> ALL_SOURCES = Collections.newList(PlayerSkinDescriptor.Source.values());
 
     private final SkinWardrobe wardrobe;
     private final HashMap<PlayerSkinDescriptor.Source, String> defaultValues = new HashMap<>();
@@ -51,8 +55,8 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
     private void setup() {
         setupTextField();
         confirmView = addCommonButton(83, 90, 100, 20, "set", this::submit);
-        sourceComboView = addComboBox(83, 27, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
-        modelComboView = addComboBox(168, 27, 80, 14, "textureModel", lastTextureModel, this::applyTextureModel);
+        sourceComboView = addComboBox(83, 27, 80, 14, "textureSource", lastTextureSource, ALL_SOURCES, this::applyTextureSource);
+        modelComboView = addComboBox(168, 27, 80, 14, "textureModel", lastTextureModel, ALL_MODELS, this::applyTextureModel);
     }
 
     public void setupTextField() {
@@ -128,17 +132,16 @@ public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implemen
         return true;
     }
 
-    private <T extends Enum<T>> UIComboBox addComboBox(float x, float y, float width, float height, String key, T defaultValue, Consumer<T> applier) {
-        var values = Collections.newList(defaultValue.getClass().getEnumConstants());
+    private <T extends Enum<T>> UIComboBox addComboBox(float x, float y, float width, float height, String key, T defaultValue, List<T> allValues, Consumer<T> applier) {
         var comboView = new UIComboBox(new CGRect(x, y, width, height));
-        comboView.setSelectedIndex(values.indexOf(defaultValue));
-        comboView.reloadData(Collections.compactMap(values, value -> {
+        comboView.setSelectedIndex(allValues.indexOf(defaultValue));
+        comboView.reloadData(Collections.compactMap(allValues, value -> {
             var name = value.name().toLowerCase();
             return new UIComboItem(getDisplayText(key + "." + name));
         }));
         comboView.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {
             var newValue = ((UIComboBox) e).selectedIndex();
-            applier.accept(Objects.unsafeCast(values.get(newValue)));
+            applier.accept(Objects.unsafeCast(allValues.get(newValue)));
         });
         addSubview(comboView);
         return comboView;

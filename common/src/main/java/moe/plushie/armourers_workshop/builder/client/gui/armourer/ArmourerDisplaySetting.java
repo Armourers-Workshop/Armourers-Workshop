@@ -24,10 +24,14 @@ import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"SameParameterValue"})
 public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITextFieldDelegate {
+
+    private static final List<PlayerSkinModel> ALL_MODELS = Collections.newList(PlayerSkinModel.WIDE, PlayerSkinModel.SLIM);
+    private static final List<PlayerSkinDescriptor.Source> ALL_SOURCES = Collections.newList(PlayerSkinDescriptor.Source.values());
 
     protected final ArmourerBlockEntity blockEntity;
     private final HashMap<PlayerSkinDescriptor.Source, String> defaultValues = new HashMap<>();
@@ -80,8 +84,8 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         addLabel(10, 20, 160, 10, "label.textureModel");
         addLabel(10, 50, 160, 10, "label.textureSource");
 
-        sourceComboView = addComboBox(10, 60, 80, 14, "textureSource", lastTextureSource, this::applyTextureSource);
-        modelComboView = addComboBox(10, 30, 80, 14, "textureModel", lastTextureModel, this::applyTextureModel);
+        sourceComboView = addComboBox(10, 60, 80, 14, "textureSource", lastTextureSource, ALL_SOURCES, this::applyTextureSource);
+        modelComboView = addComboBox(10, 30, 80, 14, "textureModel", lastTextureModel, ALL_MODELS, this::applyTextureModel);
 
         reloadStatus();
     }
@@ -188,11 +192,10 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         NetworkManager.sendToServer(UpdateArmourerPacket.Field.FLAGS.buildPacket(blockEntity, flags));
     }
 
-    private <T extends Enum<T>> UIComboBox addComboBox(float x, float y, float width, float height, String key, T defaultValue, Consumer<T> applier) {
-        var values = Collections.newList(defaultValue.getClass().getEnumConstants());
+    private <T extends Enum<T>> UIComboBox addComboBox(float x, float y, float width, float height, String key, T defaultValue, List<T> allValues, Consumer<T> applier) {
         var comboView = new UIComboBox(new CGRect(x, y, width, height));
-        comboView.setSelectedIndex(values.indexOf(defaultValue));
-        comboView.reloadData(Collections.compactMap(values, value -> {
+        comboView.setSelectedIndex(allValues.indexOf(defaultValue));
+        comboView.reloadData(Collections.compactMap(allValues, value -> {
             var name = value.name().toLowerCase();
             if (name.contains("_")) {
                 return null;
@@ -201,7 +204,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting implements UITex
         }));
         comboView.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {
             var newValue = ((UIComboBox) e).selectedIndex();
-            applier.accept(Objects.unsafeCast(values.get(newValue)));
+            applier.accept(Objects.unsafeCast(allValues.get(newValue)));
         });
         addSubview(comboView);
         return comboView;
