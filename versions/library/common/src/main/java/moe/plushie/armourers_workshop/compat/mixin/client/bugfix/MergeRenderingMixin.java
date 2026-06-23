@@ -17,6 +17,6 @@ public class MergeRenderingMixin {
 
     @Inject(method = "endBatch", at = @At("HEAD"), remap = false)
     private void aw2$endBatchPre(CallbackInfo ci) {
-        Reflect.forName("net.irisshaders.iris.vertices.ImmediateState").set("mergeRendering", true);
+        Reflect.forName("net.irisshaders.iris.vertices.ImmediateState").set("mergeRendering", false);
     }
 }
