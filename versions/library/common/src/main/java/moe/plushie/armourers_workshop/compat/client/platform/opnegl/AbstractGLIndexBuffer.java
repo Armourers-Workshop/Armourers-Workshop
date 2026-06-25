@@ -44,10 +44,10 @@ public class AbstractGLIndexBuffer {
         if (total <= size) {
             return;
         }
-        total = OpenMath.roundToward(total * 2, indexStride);
-        ModLog.debug("growing index buffer {} => {}.", size, total);
+        total = OpenMath.roundToward(total * 2, 256);
+        ModLog.debug("Growing index buffer from {} to {}.", size, total);
         var indexType = Type.least(total);
-        var bufferSize = OpenMath.roundToward(total * indexType.bytes, 4);
+        var bufferSize = OpenMath.roundToward(total * indexType.bytes * indexStride, 4);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, bufferSize, GL15.GL_DYNAMIC_DRAW);
         var buffer = GL15.glMapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, GL15.GL_WRITE_ONLY);
         if (buffer == null) {
@@ -55,8 +55,8 @@ public class AbstractGLIndexBuffer {
         }
         type = indexType;
         var builder = indexType.builder(buffer);
-        for (int k = 0; k < total; k += indexStride) {
-            generator.accept(builder, k * vertexStride / indexStride);
+        for (var k = 0; k < total; k += vertexStride) {
+            generator.accept(builder, k);
         }
         GL15.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
         size = total;

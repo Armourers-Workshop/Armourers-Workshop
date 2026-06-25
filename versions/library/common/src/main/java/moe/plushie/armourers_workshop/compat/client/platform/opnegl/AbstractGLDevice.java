@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IMeshData;
 import moe.plushie.armourers_workshop.compat.client.math.AbstractModelViewStack;
-import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderBuffer;
 import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderDevice;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
@@ -162,7 +161,7 @@ public class AbstractGLDevice implements AbstractRenderDevice {
 
 
     @Override
-    public AbstractRenderBuffer createBuffer(ByteBuffer bytes) {
+    public AbstractGLVertexBuffer createVertexBuffer(ByteBuffer bytes) {
         return new AbstractGLVertexBuffer(bytes);
     }
 }

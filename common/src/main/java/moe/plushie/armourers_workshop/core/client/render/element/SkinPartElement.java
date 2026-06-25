@@ -165,7 +165,7 @@ public class SkinPartElement implements IGraphicsElement {
         }
 
         public void draw(BakedSkinPart part, BakedSkin skin, SkinPaintScheme scheme, int lightmap, int overlay, boolean isOutline, int outlineColor, float renderPriority) {
-            // we need compile the skin part, but not render when part invisible.
+            // we need to compile the skin part, but not render when part invisible.
             var group = compiler.compile(part, skin, scheme, isOutline);
             if (group == null || group.isEmpty() || !part.isVisible()) {
                 return;

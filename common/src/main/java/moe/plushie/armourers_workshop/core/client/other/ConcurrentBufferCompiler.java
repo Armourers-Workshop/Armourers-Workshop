@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import moe.plushie.armourers_workshop.api.client.IMeshData;
 import moe.plushie.armourers_workshop.api.client.IRenderType;
+import moe.plushie.armourers_workshop.api.client.IVertexBuffer;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderBuffer;
 import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderDevice;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -135,7 +135,7 @@ public class ConcurrentBufferCompiler {
 
     private void upload(ByteBuffer byteBuffer, ArrayList<Group> cachedTasks) {
         var device = AbstractRenderDevice.current();
-        var mergedBuffer = device.createBuffer(byteBuffer);
+        var mergedBuffer = device.createVertexBuffer(byteBuffer);
         for (var cachedTask : cachedTasks) {
             cachedTask.mergedBuffer = mergedBuffer;
             cachedTask.retain();
@@ -169,7 +169,7 @@ public class ConcurrentBufferCompiler {
         private ArrayList<Pass> mergedTasks;
         private ArrayList<ReferenceCounted> usingTypes;
 
-        private AbstractRenderBuffer mergedBuffer;
+        private IVertexBuffer mergedBuffer;
 
         private boolean isComplied = false;
 
@@ -259,7 +259,7 @@ public class ConcurrentBufferCompiler {
             this.isOutline = group.isOutline();
         }
 
-        public void open(AbstractRenderBuffer buffer) {
+        public void open(IVertexBuffer buffer) {
             this.data = buffer.slice(offset, vertexCount, format);
             this.data.retain();
             this.isCompiled = true;

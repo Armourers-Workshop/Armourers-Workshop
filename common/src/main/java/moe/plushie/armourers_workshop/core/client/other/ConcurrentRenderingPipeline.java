@@ -29,8 +29,7 @@ public class ConcurrentRenderingPipeline {
     private final IdentityHashMap<IRenderType, Group> unsortedGroups = new IdentityHashMap<>();
 
     public void submit(ConcurrentBufferCompiler.Pass compiledTask, int lightmap, int overlay, int outlineColor, float renderPriority, OpenPoseStack.Pose pose) {
-        var pass = Pass.newInstance(compiledTask, lightmap, overlay, outlineColor, renderPriority, pose);
-        addPass(pass);
+        addPass(Pass.newInstance(compiledTask, lightmap, overlay, outlineColor, renderPriority, pose));
     }
 
     public ShaderVertexGroup find(IRenderType renderType) {

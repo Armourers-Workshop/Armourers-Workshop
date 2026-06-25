@@ -170,5 +170,11 @@ public class OpenPoseStack implements IPoseStack {
         public int properties() {
             return properties;
         }
+
+        public Pose copy() {
+            var result = new Pose();
+            result.set(this);
+            return result;
+        }
     }
 }

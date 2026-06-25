@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.compat.client.platform;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IMeshData;
+import moe.plushie.armourers_workshop.api.client.IVertexBuffer;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix3f;
 import moe.plushie.armourers_workshop.core.math.OpenMatrix4f;
 import moe.plushie.armourers_workshop.core.math.OpenVector4f;
@@ -56,7 +57,7 @@ public interface AbstractRenderDevice {
      * Creates a new render buffer using the provided byte data.
      *
      * @param bytes the byte buffer containing the data to initialize the render buffer
-     * @return an instance of {@code AbstractRenderBuffer} initialized with the provided data
+     * @return an instance of {@code IVertexBuffer} initialized with the provided data
      */
-    AbstractRenderBuffer createBuffer(ByteBuffer bytes);
+    IVertexBuffer createVertexBuffer(ByteBuffer bytes);
 }

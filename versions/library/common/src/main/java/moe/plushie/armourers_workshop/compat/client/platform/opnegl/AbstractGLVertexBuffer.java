@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.compat.client.platform.opnegl;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
 import moe.plushie.armourers_workshop.api.client.IMeshData;
+import moe.plushie.armourers_workshop.api.client.IVertexBuffer;
 import moe.plushie.armourers_workshop.api.client.IVertexFormat;
-import moe.plushie.armourers_workshop.compat.client.platform.AbstractRenderBuffer;
 import moe.plushie.armourers_workshop.core.client.buffer.MeshData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL30;
 import java.nio.ByteBuffer;
 
 @OnlyIn(Dist.CLIENT)
-public class AbstractGLVertexBuffer extends ReferenceCounted implements AbstractRenderBuffer {
+public class AbstractGLVertexBuffer extends ReferenceCounted implements IVertexBuffer {
 
     private static final AbstractGLIndexBuffer INDEXER = new AbstractGLIndexBuffer(4, 6, (builder, index) -> {
         builder.accept(index);
@@ -92,7 +92,7 @@ public class AbstractGLVertexBuffer extends ReferenceCounted implements Abstract
 
         private AbstractGLIndexBuffer indexer = INDEXER;
 
-        private int vaoId;
+        private int vaoId = -1;
 
         private Reference(int offset, int vertexCount, IVertexFormat format) {
             super(null, vertexCount, format);
