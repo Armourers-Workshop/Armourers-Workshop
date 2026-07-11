@@ -22,7 +22,7 @@ public interface ISkinTexturePos {
     }
 
     @Nullable
-    default ISkinTextureProvider provider() {
+    default ISkinTextureData data() {
         return null;
     }
 }

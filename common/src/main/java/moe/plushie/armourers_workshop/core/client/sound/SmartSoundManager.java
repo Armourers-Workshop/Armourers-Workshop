@@ -28,7 +28,7 @@ public class SmartSoundManager {
 
     public static void stop() {
         // release all registered sounds.
-        INSTANCE.sounds.values().forEach(SmartSound::unbind);
+        INSTANCE.sounds.values().forEach(SmartSound::close);
         INSTANCE.sounds.clear();
     }
 
@@ -46,11 +46,11 @@ public class SmartSoundManager {
         }
     }
 
-    public SmartSound register(SkinSoundData provider) {
-        var sound = sounds.get(provider);
+    public SmartSound register(SkinSoundData soundData) {
+        var sound = sounds.get(soundData);
         if (sound == null) {
-            sound = new SmartSound(provider);
-            sounds.put(provider, sound);
+            sound = new SmartSound(soundData);
+            sounds.put(soundData, sound);
         }
         return sound;
     }

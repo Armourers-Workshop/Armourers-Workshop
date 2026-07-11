@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.init.ModConstants;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,15 +34,15 @@ public class SmartTexture extends ReferenceCounted {
     private final SkinTextureProperties properties;
     private final TextureAnimationController animationController;
 
-    private final Map<OpenResourceKey, ByteBuf> textureBuffers;
+    private final Map<OpenResourceKey, ByteBuf> buffers;
 
     private final Set<IRenderType> binding = new HashSet<>();
 
-    public SmartTexture(SkinTextureData provider) {
-        this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + "." + provider.extension());
-        this.properties = provider.properties();
-        this.textureBuffers = resolveTextureBuffers(location, provider);
-        this.animationController = new TextureAnimationController(provider.animation());
+    protected SmartTexture(SkinTextureData textureData) {
+        this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + "." + textureData.extension());
+        this.properties = textureData.properties();
+        this.buffers = resolveTextureBuffers(location, textureData);
+        this.animationController = new TextureAnimationController(textureData.animation());
     }
 
     @Nullable
@@ -60,7 +61,7 @@ public class SmartTexture extends ReferenceCounted {
     @Override
     protected void init() {
         RenderSystem.safeCall(() -> {
-            textureBuffers.forEach(SmartResourceManager.getInstance()::register);
+            buffers.forEach(SmartResourceManager.getInstance()::register);
             SmartTextureManager.getInstance().uploadTexture(this);
         });
     }
@@ -69,7 +70,20 @@ public class SmartTexture extends ReferenceCounted {
     protected void dispose() {
         RenderSystem.safeCall(() -> {
             SmartTextureManager.getInstance().releaseTexture(this);
-            textureBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+            buffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+        });
+    }
+
+    protected void close() {
+        binding.forEach(value -> DataContainer.set(value, KEY, null));
+        RenderSystem.safeCall(() -> {
+            // when unbind the object, we must ensure that all resources release.
+            while (refCnt() > 0) {
+                release();
+            }
+            // release all byte buffers.
+            buffers.values().forEach(ByteBuf::release);
+            buffers.clear();
         });
     }
 
@@ -98,19 +112,11 @@ public class SmartTexture extends ReferenceCounted {
         return location.toString();
     }
 
-    protected void unbind() {
-        binding.forEach(value -> DataContainer.set(value, KEY, null));
-        // when unbind the object, we must ensure that all resources release.
-        while (refCnt() > 0) {
-            release();
-        }
-    }
-
-    private Map<OpenResourceKey, ByteBuf> resolveTextureBuffers(OpenResourceKey key, SkinTextureData provider) {
+    private Map<OpenResourceKey, ByteBuf> resolveTextureBuffers(OpenResourceKey key, SkinTextureData textureData) {
         var path = FileUtils.removeExtension(key.path());
-        var builder = new TextureBufferBuilder(provider.properties());
-        builder.addData(key, provider);
-        for (var variant : provider.variants()) {
+        var builder = new TextureBufferBuilder(textureData.properties());
+        builder.addData(key, textureData);
+        for (var variant : textureData.variants()) {
             if (variant.properties().isNormal()) {
                 builder.addData(key.withPath(path + "_n.png"), variant);
             }
@@ -131,9 +137,9 @@ public class SmartTexture extends ReferenceCounted {
             this.parentProperties = parentProperties;
         }
 
-        public void addData(OpenResourceKey key, SkinTextureData provider) {
-            buffers.put(key, provider.buffer());
-            addMeta(key, provider.properties());
+        public void addData(OpenResourceKey key, SkinTextureData textureData) {
+            buffers.put(key, Unpooled.wrappedBuffer(textureData.bytes()));
+            addMeta(key, textureData.properties());
         }
 
         private void addMeta(OpenResourceKey key, SkinTextureProperties properties) {
@@ -146,7 +152,7 @@ public class SmartTexture extends ReferenceCounted {
             var blur = String.valueOf(isBlurFilter);
             var clamp = String.valueOf(isClampToEdge);
             var meta = String.format("{\"texture\":{\"blur\":%s,\"clamp\":%s}}", blur, clamp);
-            buffers.put(key.withPath(key.path() + ".mcmeta"), Unpooled.wrappedBuffer(meta.getBytes()));
+            buffers.put(key.withPath(key.path() + ".mcmeta"), Unpooled.copiedBuffer(meta, StandardCharsets.UTF_8));
         }
 
         public Map<OpenResourceKey, ByteBuf> build() {

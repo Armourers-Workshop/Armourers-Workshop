@@ -73,9 +73,9 @@ public class ChunkPaletteData implements ChunkVariable {
     }
 
 
-    public ChunkTextureData.TextureRef writeTexture(OpenVector2f uv, SkinTextureData provider) {
+    public ChunkTextureData.TextureRef writeTexture(OpenVector2f uv, SkinTextureData textureData) {
         // texture + black(0x000000) + 0(used bytes)
-        return _mutableSectionAt(SkinPaintTypes.TEXTURE, 0).putTexture(uv, provider);
+        return _mutableSectionAt(SkinPaintTypes.TEXTURE, 0).putTexture(uv, textureData);
     }
 
     public ChunkTextureData.TextureRef readTexture(OpenVector2f uv) {

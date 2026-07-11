@@ -142,10 +142,9 @@ public class SkinDocumentExporter {
                 builder.transform(part.transform());
                 builder.geometries(part.geometries());
                 builder.markers(loadSkinMarkers(node));
-                builder.properties(part.properties());
-                var newPart = builder.build();
-                part.children().forEach(newPart::addPart);
-                allParts.add(newPart);
+                builder.children(part.children());
+                builder.properties(part.properties().copy());
+                allParts.add(builder.build());
                 continue;
             }
             // create a new part.
@@ -154,17 +153,15 @@ public class SkinDocumentExporter {
                 builder.name(node.name());
             }
             builder.transform(transform);
-
             builder.markers(loadSkinMarkers(node));
+            if (using != null) {
+                builder.children(using);
+            }
+            builder.children(parts);
             builder.properties(SkinProperties.EMPTY);
             builder.blobs(null);
 
-            var part = builder.build();
-            if (using != null) {
-                using.forEach(part::addPart);
-            }
-            parts.forEach(part::addPart);
-            allParts.add(part);
+            allParts.add(builder.build());
         }
         return allParts;
     }

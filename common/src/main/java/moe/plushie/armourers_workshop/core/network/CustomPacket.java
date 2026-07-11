@@ -34,6 +34,9 @@ public class CustomPacket {
     public void encode(final IFriendlyByteBuf buffer) {
     }
 
+    public void dispose() {
+    }
+
     public int packetId() {
         return ENCODERS.getOrDefault(getClass(), -1);
     }

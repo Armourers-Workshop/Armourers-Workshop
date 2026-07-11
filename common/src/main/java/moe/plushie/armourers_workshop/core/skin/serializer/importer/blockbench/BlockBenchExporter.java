@@ -222,7 +222,7 @@ public class BlockBenchExporter {
                 var normal = it2.normal;
                 var textureCoords = it2.textureCoords;
                 vertices.add(new SkinGeometryVertex(vertexId, position, normal, textureCoords));
-                TextureResolution.applyBoundary(texturePos.provider(), textureCoords.x(), textureCoords.y());
+                TextureResolution.applyBoundary(texturePos.data(), textureCoords.x(), textureCoords.y());
             });
             faces.add(new SkinMeshFace(faceId, type, options, transform, texturePos, vertices));
             defaultTexturePos.set(texturePos);
@@ -778,23 +778,24 @@ public class BlockBenchExporter {
                 // mod_id:sound_id|volume|pitch
                 if (effect != null && effect.contains(":")) {
                     var properties = resolveSoundProperties(effect);
-                    var soundProvider = new SkinSoundData(null, Unpooled.EMPTY_BUFFER, properties);
-                    return new SkinAnimationData.Point.Sound(effect, soundProvider);
+                    var soundData = new SkinSoundData(null, properties);
+                    return new SkinAnimationData.Point.Sound(effect, soundData);
                 }
-                var soundBytes = resolveSoundData(filePath);
-                if (soundBytes == null) {
+                var buffer = resolveSoundData(filePath);
+                if (buffer == null) {
                     ModLog.warn("can't load data of: '{}', file: '{}'", effect, filePath);
                     return null;
                 }
                 // file_name|volume|pitch
                 var fileName = FileUtils.getBaseName(filePath);
                 var properties = resolveSoundProperties(effect);
-                var soundProvider = new SkinSoundData(null, soundBytes, properties);
+                var soundData = new SkinSoundData(null, properties);
+                soundData.load(buffer);
                 // must provide a name.
                 if (effect == null || effect.isEmpty()) {
                     effect = fileName;
                 }
-                return new SkinAnimationData.Point.Sound(effect, soundProvider);
+                return new SkinAnimationData.Point.Sound(effect, soundData);
             }
 
             private SkinSoundProperties resolveSoundProperties(String name) {
@@ -983,7 +984,7 @@ public class BlockBenchExporter {
             for (var dir : OpenDirection.values()) {
                 var pos = skyBox.getTexture(dir);
                 if (pos != null) {
-                    TextureResolution.applyBoundary(pos.provider(), pos.u(), pos.v());
+                    TextureResolution.applyBoundary(pos.data(), pos.u(), pos.v());
                 }
             }
             return skyBox;

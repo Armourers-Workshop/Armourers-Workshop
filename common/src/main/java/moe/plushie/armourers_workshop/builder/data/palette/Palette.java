@@ -66,8 +66,7 @@ public class Palette {
         return name.hashCode();
     }
 
-    @Override
-    protected Palette clone() {
-        return new Palette(name, locked, colors.clone());
+    public Palette copy() {
+        return new Palette(name, locked, Arrays.copyOf(colors, colors.length));
     }
 }

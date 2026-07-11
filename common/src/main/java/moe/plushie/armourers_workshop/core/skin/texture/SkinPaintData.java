@@ -41,8 +41,7 @@ public class SkinPaintData {
         return paintData;
     }
 
-    @Override
-    public SkinPaintData clone() {
+    public SkinPaintData copy() {
         var paintData = new SkinPaintData(width, height);
         System.arraycopy(bytes, 0, paintData.bytes, 0, bytes.length);
         return paintData;

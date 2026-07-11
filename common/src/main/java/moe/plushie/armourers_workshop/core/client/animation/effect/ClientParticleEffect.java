@@ -23,7 +23,7 @@ public class ClientParticleEffect implements ScheduledExpression<Runnable> {
     public ClientParticleEffect(SkinAnimationData.Point.Particle particle) {
         this.effect = particle.effect();
         this.locator = particle.locator();
-        this.particle = SmartParticleManager.getInstance().register(particle.provider());
+        this.particle = SmartParticleManager.getInstance().register(particle.data());
     }
 
     @Override

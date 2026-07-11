@@ -62,10 +62,10 @@ public class SkinTextureBox implements ISkinTextureBox {
                 continue;
             }
             box.putTextureRect(dir, new OpenRectangle2f(key.u(), key.v(), key.width(), key.height()));
-            if (key.provider() == defaultTexture) {
+            if (key.data() == defaultTexture) {
                 continue;
             }
-            box.putTextureProvider(dir, key.provider());
+            box.putTextureProvider(dir, key.data());
         }
         return box;
     }
@@ -147,8 +147,8 @@ public class SkinTextureBox implements ISkinTextureBox {
 
         protected final OpenVector2f parent;
 
-        public Entry(float u, float v, float width, float height, SkinTextureData provider, OpenVector2f parent) {
-            super(u, v, width, height, provider);
+        public Entry(float u, float v, float width, float height, SkinTextureData textureData, OpenVector2f parent) {
+            super(u, v, width, height, textureData);
             this.parent = parent;
         }
 

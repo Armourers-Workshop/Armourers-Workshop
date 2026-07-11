@@ -28,7 +28,7 @@ public class SmartTextureManager {
 
     public static void stop() {
         // release all registered textures.
-        INSTANCE.textures.values().forEach(SmartTexture::unbind);
+        INSTANCE.textures.values().forEach(SmartTexture::close);
         INSTANCE.textures.clear();
     }
 
@@ -46,11 +46,11 @@ public class SmartTextureManager {
         }
     }
 
-    public SmartTexture register(SkinTextureData provider) {
-        var texture = textures.get(provider);
+    public SmartTexture register(SkinTextureData textureData) {
+        var texture = textures.get(textureData);
         if (texture == null) {
-            texture = new SmartTexture(provider);
-            textures.put(provider, texture);
+            texture = new SmartTexture(textureData);
+            textures.put(textureData, texture);
         }
         return texture;
     }

@@ -173,7 +173,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
         protected OpenVector2f parseTextureCoords(OpenVector2f uv) {
             var ref = palette.readTexture(uv);
             if (ref != null) {
-                textureProvider = ref.provider();
+                textureProvider = ref.data();
                 return ref.uv();
             }
             return OpenVector2f.ZERO;
@@ -235,7 +235,7 @@ public class ChunkGeometrySerializerV3 extends ChunkGeometrySerializer {
             for (var vertex : vertices) {
                 stream.writeVector3f(vertex.position());
                 stream.writeVector3f(vertex.normal());
-                stream.writeVariable(palette.writeTexture(vertex.textureCoords(), texturePos.provider()));
+                stream.writeVariable(palette.writeTexture(vertex.textureCoords(), texturePos.data()));
             }
             // indices: int(4B)
             for (var vertexId : indices) {

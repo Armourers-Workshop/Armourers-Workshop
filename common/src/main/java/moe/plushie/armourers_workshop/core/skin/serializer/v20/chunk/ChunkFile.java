@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.serializer.v20.chunk;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,12 +20,20 @@ public class ChunkFile {
         this.bytes = bytes;
     }
 
+    public static ChunkFile image(@Nullable String name, byte[] bytes) {
+        return image(name, SkinProperties.EMPTY, Unpooled.wrappedBuffer(bytes));
+    }
+
     public static ChunkFile image(@Nullable String name, ByteBuf bytes) {
         return image(name, SkinProperties.EMPTY, bytes);
     }
 
     public static ChunkFile image(@Nullable String name, SkinProperties properties, ByteBuf bytes) {
         return new ChunkFile(0, name, properties, bytes);
+    }
+
+    public static ChunkFile audio(@Nullable String name, byte[] bytes) {
+        return audio(name, SkinProperties.EMPTY, Unpooled.wrappedBuffer(bytes));
     }
 
     public static ChunkFile audio(@Nullable String name, ByteBuf bytes) {

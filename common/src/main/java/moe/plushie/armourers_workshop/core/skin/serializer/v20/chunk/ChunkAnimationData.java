@@ -213,24 +213,26 @@ public class ChunkAnimationData {
                 if (stream.fileVersion() < 23) {
                     var effect = stream.readString();
                     var file = stream.readFile();
-                    var sound = new SkinSoundData(file.name(), file.bytes(), SkinSoundProperties.EMPTY);
-                    return new SkinAnimationData.Point.Sound(effect, sound);
+                    var soundData = new SkinSoundData(file.name(), SkinSoundProperties.EMPTY);
+                    soundData.load(file.bytes());
+                    return new SkinAnimationData.Point.Sound(effect, soundData);
                 }
                 var effect = stream.readString();
                 var properties = new SkinSoundProperties();
                 properties.readFromStream(stream);
                 var file = stream.readFile();
-                var sound = new SkinSoundData(file.name(), file.bytes(), properties);
-                return new SkinAnimationData.Point.Sound(effect, sound);
+                var soundData = new SkinSoundData(file.name(), properties);
+                soundData.load(file.bytes());
+                return new SkinAnimationData.Point.Sound(effect, soundData);
             }
 
             @Override
             public void writeToStream(SkinAnimationData.Point.Sound value, ChunkOutputStream stream) throws IOException {
-                var sound = value.provider();
+                var sound = value.data();
                 var properties = sound.properties();
                 stream.writeString(value.effect());
                 properties.writeToStream(stream);
-                stream.writeFile(ChunkFile.audio(sound.name(), sound.buffer()));
+                stream.writeFile(ChunkFile.audio(sound.name(), sound.bytes()));
             }
         };
 
@@ -248,7 +250,7 @@ public class ChunkAnimationData {
 
             @Override
             public void writeToStream(SkinAnimationData.Point.Particle value, ChunkOutputStream stream) throws IOException {
-                var particle = value.provider();
+                var particle = value.data();
                 stream.writeString(value.effect());
                 stream.writeOptionalString(value.locator());
                 stream.writeOptionalString(value.script());

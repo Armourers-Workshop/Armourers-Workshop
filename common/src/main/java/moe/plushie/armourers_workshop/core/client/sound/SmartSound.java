@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.sound;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.annotation.Dist;
 import moe.plushie.armourers_workshop.api.annotation.OnlyIn;
-import moe.plushie.armourers_workshop.api.skin.sound.ISkinSoundProvider;
 import moe.plushie.armourers_workshop.core.client.other.SmartResourceManager;
 import moe.plushie.armourers_workshop.core.data.DataContainer;
 import moe.plushie.armourers_workshop.core.math.OpenMath;
@@ -31,15 +31,15 @@ public class SmartSound extends ReferenceCounted {
 
     private final OpenResourceKey location;
     private final SkinSoundProperties properties;
-    private final Map<OpenResourceKey, ByteBuf> soundBuffers;
+    private final Map<OpenResourceKey, ByteBuf> buffers;
 
     private final Set<SoundEvent> binding = new HashSet<>();
 
-    public SmartSound(SkinSoundData provider) {
-        this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + "." + provider.extension());
-        this.properties = provider.properties();
-        this.soundBuffers = resolveSoundBuffers(location, provider);
-        this.name = provider.name();
+    protected SmartSound(SkinSoundData soundData) {
+        this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + "." + soundData.extension());
+        this.properties = soundData.properties();
+        this.buffers = resolveSoundBuffers(location, soundData);
+        this.name = soundData.name();
     }
 
     public static SmartSound of(SoundEvent soundEvent) {
@@ -57,7 +57,7 @@ public class SmartSound extends ReferenceCounted {
     @Override
     protected void init() {
         RenderSystem.safeCall(() -> {
-            soundBuffers.forEach(SmartResourceManager.getInstance()::register);
+            buffers.forEach(SmartResourceManager.getInstance()::register);
             SmartSoundManager.getInstance().uploadSound(this);
         });
     }
@@ -66,7 +66,20 @@ public class SmartSound extends ReferenceCounted {
     protected void dispose() {
         RenderSystem.safeCall(() -> {
             SmartSoundManager.getInstance().releaseSound(this);
-            soundBuffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+            buffers.keySet().forEach(SmartResourceManager.getInstance()::unregister);
+        });
+    }
+
+    protected void close() {
+        binding.forEach(value -> DataContainer.set(value, KEY, null));
+        RenderSystem.safeCall(() -> {
+            // when unbind the object, we must ensure that all resources release.
+            while (refCnt() > 0) {
+                release();
+            }
+            // release all byte buffers.
+            buffers.values().forEach(ByteBuf::release);
+            buffers.clear();
         });
     }
 
@@ -90,17 +103,9 @@ public class SmartSound extends ReferenceCounted {
         return OpenMath.roundi(properties.attenuationDistance());
     }
 
-    protected void unbind() {
-        binding.forEach(value -> DataContainer.set(value, KEY, null));
-        // when unbind the object, we must ensure that all resources release.
-        while (refCnt() > 0) {
-            release();
-        }
-    }
-
-    private Map<OpenResourceKey, ByteBuf> resolveSoundBuffers(OpenResourceKey key, ISkinSoundProvider provider) {
+    private Map<OpenResourceKey, ByteBuf> resolveSoundBuffers(OpenResourceKey key, SkinSoundData soundData) {
         var results = new LinkedHashMap<OpenResourceKey, ByteBuf>();
-        results.put(key, provider.buffer());
+        results.put(key, Unpooled.wrappedBuffer(soundData.bytes()));
         return results;
     }
 }

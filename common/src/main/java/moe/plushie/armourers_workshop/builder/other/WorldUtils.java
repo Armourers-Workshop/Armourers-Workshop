@@ -289,15 +289,16 @@ public final class WorldUtils {
 
     public static void copyCubes(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, SkinPartType srcType, SkinPartType destType, boolean mirror) throws SkinSaveException {
         var skinPart = saveArmourPart(collector.level(), transform, srcType, false);
-        if (skinPart != null) {
-            var builder = new SkinPart.Builder(destType);
-            builder.name(skinPart.name());
-            builder.transform(skinPart.transform());
-            builder.geometries(skinPart.geometries());
-            builder.markers(skinPart.markers());
-            builder.children(skinPart.children());
-            loadSkinPartIntoWorld(collector, transform, builder.build(), mirror);
+        if (skinPart == null) {
+            return;
         }
+        var builder = new SkinPart.Builder(destType);
+        builder.name(skinPart.name());
+        builder.transform(skinPart.transform());
+        builder.geometries(skinPart.geometries());
+        builder.markers(skinPart.markers());
+        builder.children(skinPart.children());
+        loadSkinPartIntoWorld(collector, transform, builder.build(), mirror);
     }
 
     public static int clearMarkers(CubeChangesCollector collector, CubeTransform transform, SkinType skinType, SkinProperties skinProps, SkinPartType partType) {

@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.init.platform.ReplayManager;
 import net.minecraft.world.entity.player.Player;
 
@@ -29,7 +30,7 @@ public class ServerReplayPacket extends CustomPacket {
         this.event = buffer.readEnum(Event.class);
         int size = buffer.readInt();
         if (size != 0) {
-            this.parameters = Unpooled.wrappedBuffer(buffer.readBytes(size));
+            this.parameters = buffer.readBytes(size);
         } else {
             this.parameters = null;
         }
@@ -45,6 +46,11 @@ public class ServerReplayPacket extends CustomPacket {
         } else {
             buffer.writeInt(0);
         }
+    }
+
+    @Override
+    public void dispose() {
+        Objects.ifPresent(parameters, ByteBuf::release);
     }
 
     @Override

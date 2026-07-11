@@ -19,7 +19,7 @@ public class ChunkTextureData {
 
     protected OpenRectangle2f rect = OpenRectangle2f.ZERO;
     protected OpenRectangle2f usedRect = OpenRectangle2f.ZERO;
-    protected SkinTextureData provider;
+    protected SkinTextureData data;
     protected boolean isResolved = false;
 
     protected int id = 0;
@@ -30,10 +30,10 @@ public class ChunkTextureData {
     public ChunkTextureData() {
     }
 
-    public ChunkTextureData(SkinTextureData provider) {
-        this.rect = new OpenRectangle2f(0, 0, provider.width(), provider.height());
+    public ChunkTextureData(SkinTextureData data) {
+        this.rect = new OpenRectangle2f(0, 0, data.width(), data.height());
         this.usedRect = rect;
-        this.provider = provider;
+        this.data = data;
     }
 
     public void readFromStream(ChunkInputStream stream) throws IOException {
@@ -53,7 +53,7 @@ public class ChunkTextureData {
         var file = stream.readFile();
         var provider = new SkinTextureData(file.name(), width, height, animation, properties);
         provider.load(file.bytes());
-        this.provider = provider;
+        this.data = provider;
     }
 
     public void writeToStream(ChunkOutputStream stream) throws IOException {
@@ -67,14 +67,14 @@ public class ChunkTextureData {
         stream.writeFloat(rect.y());
         stream.writeFloat(rect.width());
         stream.writeFloat(rect.height());
-        stream.writeTextureAnimation(provider.animation());
-        stream.writeTextureProperties(writeAdditionalData(provider.properties()));
-        stream.writeFile(ChunkFile.image(provider.name(), provider.buffer()));
+        stream.writeTextureAnimation(data.animation());
+        stream.writeTextureProperties(writeAdditionalData(data.properties()));
+        stream.writeFile(ChunkFile.image(data.name(), data.bytes()));
     }
 
     public void freeze(float x, float y, Function<SkinTextureData, ChunkTextureData> childProvider) {
         // bind the child -> parent
-        Collections.compactMap(provider.variants(), childProvider).forEach(it -> it.parentId = this.id);
+        Collections.compactMap(data.variants(), childProvider).forEach(it -> it.parentId = this.id);
 
         // alignment the coordinate 16x16.
         float minX = OpenMath.floori((usedRect.minX() - rect.minX()) / 16f) * 16f;
@@ -126,7 +126,7 @@ public class ChunkTextureData {
     }
 
     public SkinTextureData texture() {
-        return provider;
+        return data;
     }
 
     public boolean isResolved() {
@@ -197,8 +197,8 @@ public class ChunkTextureData {
             return uv;
         }
 
-        public SkinTextureData provider() {
-            return list.provider;
+        public SkinTextureData data() {
+            return list.data;
         }
     }
 

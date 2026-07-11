@@ -138,24 +138,13 @@ public class SkinPart implements ISkinPart {
         private String name;
         private SkinGeometrySet<?> geometries = SkinGeometrySetV0.EMPTY;
         private ITransform transform = OpenTransform3f.IDENTITY;
-        private ArrayList<SkinMarker> markers = new ArrayList<>();
-        private ArrayList<SkinPart> children = new ArrayList<>();
+        private final ArrayList<SkinMarker> markers = new ArrayList<>();
+        private final ArrayList<SkinPart> children = new ArrayList<>();
         private SkinProperties properties = SkinProperties.EMPTY;
         private Object blobs;
 
         public Builder(SkinPartType type) {
             this.type = type;
-        }
-
-        public Builder copyFrom(SkinPart part) {
-            this.name(part.name());
-            this.transform(part.transform());
-            this.geometries(part.geometries());
-            this.markers(part.markers());
-            this.children(part.children());
-            this.properties(part.properties());
-            this.blobs(part.blobs());
-            return this;
         }
 
         public Builder name(String name) {
@@ -177,14 +166,14 @@ public class SkinPart implements ISkinPart {
 
         public Builder markers(List<SkinMarker> markers) {
             if (markers != null) {
-                this.markers = new ArrayList<>(markers);
+                this.markers.addAll(markers);
             }
             return this;
         }
 
         public Builder children(List<SkinPart> children) {
             if (children != null) {
-                this.children = new ArrayList<>(children);
+                this.children.addAll(children);
             }
             return this;
         }

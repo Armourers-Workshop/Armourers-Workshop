@@ -52,20 +52,20 @@ import java.util.Map;
 
 public class ChunkParticleData {
 
-    private SkinParticleData particle;
+    private SkinParticleData particleData;
 
     public ChunkParticleData() {
     }
 
-    public ChunkParticleData(SkinParticleData particle) {
-        this.particle = particle;
+    public ChunkParticleData(SkinParticleData particleData) {
+        this.particleData = particleData;
     }
 
     public void readFromStream(ChunkInputStream stream) throws IOException {
         var file = stream.readFile();
         var context = stream.context();
         var inputStream = new DataInputStream(new ByteBufInputStream(file.bytes()));
-        this.particle = readContentFromStream(file.name(), new ChunkInputStream() {
+        this.particleData = readContentFromStream(file.name(), new ChunkInputStream() {
 
             @Override
             public DataInputStream inputStream() {
@@ -83,7 +83,7 @@ public class ChunkParticleData {
         var bytes = Unpooled.buffer(1024);
         var context = stream.context();
         var outputStream = new DataOutputStream(new ByteBufOutputStream(bytes));
-        writeContentToStream(particle, new ChunkOutputStream() {
+        writeContentToStream(particleData, new ChunkOutputStream() {
 
             @Override
             public DataOutputStream outputStream() {
@@ -96,7 +96,7 @@ public class ChunkParticleData {
             }
         });
         outputStream.close();
-        stream.writeFile(ChunkFile.particle(particle.name(), bytes));
+        stream.writeFile(ChunkFile.particle(particleData.name(), bytes));
     }
 
     private SkinParticleData readContentFromStream(String name, ChunkInputStream stream) throws IOException {
@@ -142,7 +142,7 @@ public class ChunkParticleData {
     }
 
     public SkinParticleData particle() {
-        return particle;
+        return particleData;
     }
 
 

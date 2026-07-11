@@ -87,6 +87,7 @@ public class ConcurrentRenderingPipeline {
     }
 
     public void clear() {
+        sortedGroups.forEach(Group::clear);
         sortedGroups.clear();
         unsortedGroups.clear();
     }

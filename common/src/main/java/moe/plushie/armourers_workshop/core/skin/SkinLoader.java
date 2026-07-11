@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.network.RequestSkinPacket;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinFileOptions;
 import moe.plushie.armourers_workshop.core.skin.serializer.SkinSerializer;
+import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinPaintScheme;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Constants;
@@ -212,9 +213,7 @@ public class SkinLoader {
 
     public void removeSkin(String identifier) {
         var entry = removeEntry(identifier);
-        if (entry != null && !entry.isCompleted()) {
-            entry.abort(new CancellationException("removed by user"));
-        }
+        Objects.ifPresent(entry, Entry::close);
     }
 
     public synchronized void prepare(OpenDistributionType type) {
@@ -231,6 +230,7 @@ public class SkinLoader {
         ModLog.debug("stop skin loader");
         workQueue.pause();
         waiting.clear();
+        entries.values().forEach(Entry::close);
         entries.clear();
         globalEntries.clear();
         setup(OpenDistributionType.CLIENT);
@@ -276,6 +276,10 @@ public class SkinLoader {
 
     public enum Status {
         PENDING, LOADING, FINISHED, CANCELLED, ABORTED;
+
+        public boolean isLoading() {
+            return this == PENDING || this == LOADING;
+        }
 
         public boolean isCompleted() {
             return this == FINISHED || this == ABORTED;
@@ -339,6 +343,18 @@ public class SkinLoader {
             if (handler != null) {
                 handlers.add(handler);
             }
+        }
+
+        public void close() {
+            // when the skin is loading, abort it.
+            if (status.isLoading()) {
+                abort(new CancellationException("closed request"));
+                return;
+            }
+            // reset the state to initialize.
+            skin = null;
+            exception = null;
+            status = Status.PENDING;
         }
 
         public boolean isCompleted() {
@@ -970,7 +986,7 @@ public class SkinLoader {
                 throw new RuntimeException("can't load part " + keyPath + " in " + id);
             }
             var builder = new Skin.Builder(SkinTypes.ADVANCED);
-            builder.paintData(skin.paintData());
+            builder.paintData(Objects.flatMap(skin.paintData(), SkinPaintData::copy));
             builder.version(skin.fileVersion());
             builder.parts(Collections.newList(skinPart));
             builder.settings(skin.settings().copy());

@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.texture;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.api.skin.texture.ISkinTextureProvider;
+import moe.plushie.armourers_workshop.api.skin.texture.ISkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.Collections;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
@@ -13,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class SkinTextureData implements ISkinTextureProvider {
+public class SkinTextureData implements ISkinTextureData {
 
     public static final SkinTextureData EMPTY = new SkinTextureData("", 256, 256);
 
@@ -26,7 +24,7 @@ public class SkinTextureData implements ISkinTextureProvider {
     private SkinTextureAnimation animation;
     private SkinTextureProperties properties;
 
-    private ByteBuf bytes = Unpooled.EMPTY_BUFFER;
+    private byte[] bytes = new byte[0];
     private List<SkinTextureData> variants = Collections.emptyList();
 
     public SkinTextureData(String name, float width, float height) {
@@ -42,14 +40,12 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     public void load(ByteBuf buf) {
-        bytes = buf.duplicate();
+        bytes = new byte[buf.readableBytes()];
+        buf.getBytes(buf.readerIndex(), bytes);
     }
 
     public void load(InputStream inputStream) throws IOException {
-        bytes = Unpooled.buffer(1024);
-        try (var outputStream = new ByteBufOutputStream(bytes)) {
-            StreamUtils.transferTo(inputStream, outputStream);
-        }
+        bytes = StreamUtils.readStreamToByteArray(inputStream);
     }
 
     @Override
@@ -86,7 +82,7 @@ public class SkinTextureData implements ISkinTextureProvider {
     }
 
     @Override
-    public ByteBuf buffer() {
+    public byte[] bytes() {
         return bytes;
     }
 

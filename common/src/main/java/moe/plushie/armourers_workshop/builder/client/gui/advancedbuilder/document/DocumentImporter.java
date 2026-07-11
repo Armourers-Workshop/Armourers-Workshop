@@ -187,15 +187,19 @@ public class DocumentImporter {
         for (var part : parts) {
             var node = partMapper.resolve(part.name(), part.type());
             var builder = new SkinPart.Builder(node.type());
-            builder.copyFrom(part);
+            builder.name(node.name());
+            builder.transform(part.transform());
+            builder.geometries(part.geometries());
+            builder.markers(part.markers());
+            builder.children(resolveMappedParts(part.children()));
+            builder.properties(part.properties().copy());
+            builder.blobs(part.blobs());
             // change part properties?
             if (isAdaptMode && USE_ADAPT_MODE.contains(node.type())) {
                 var newProperties = part.properties().copy();
                 newProperties.put(SkinProperty.USE_ADAPT_MODE, true);
                 builder.properties(newProperties);
             }
-            builder.name(node.name());
-            builder.children(resolveMappedParts(part.children()));
             results.add(builder.build());
         }
         return results;
@@ -207,7 +211,8 @@ public class DocumentImporter {
             var animators = new ArrayList<SkinAnimationData.Animator>();
             for (var animator : animation.animators()) {
                 var node = partMapper.resolve(animator.bone(), SkinPartTypes.ADVANCED);
-                animators.add(new SkinAnimationData.Animator(node.name(), animator.options(), animator.keyframes()));
+                var keyframes = animator.keyframes();
+                animators.add(new SkinAnimationData.Animator(node.name(), animator.options(), keyframes));
             }
             var name = animation.name();
             var duration = animation.duration();
@@ -236,8 +241,13 @@ public class DocumentImporter {
                 parentPart.removePart(part);
             }
             var builder = new SkinPart.Builder(entry.type());
-            builder.copyFrom(part);
+            builder.name(part.name());
             builder.transform(convertToLocal(part, entry, parent));
+            builder.geometries(part.geometries());
+            builder.markers(part.markers());
+            builder.children(part.children());
+            builder.properties(part.properties().copy());
+            builder.blobs(part.blobs());
             rootParts.add(builder.build());
         }
     }

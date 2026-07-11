@@ -26,11 +26,11 @@ public class SmartParticleManager {
         INSTANCE.particles.clear();
     }
 
-    public synchronized SmartParticle register(SkinParticleData provider) {
-        var particle = particles.get(provider);
+    public synchronized SmartParticle register(SkinParticleData particleData) {
+        var particle = particles.get(particleData);
         if (particle == null) {
-            particle = new SmartParticle(provider);
-            particles.put(provider, particle);
+            particle = new SmartParticle(particleData);
+            particles.put(particleData, particle);
         }
         return particle;
     }

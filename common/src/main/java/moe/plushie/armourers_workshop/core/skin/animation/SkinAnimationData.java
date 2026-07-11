@@ -171,24 +171,24 @@ public class SkinAnimationData {
         public static class Sound extends Point {
 
             private final String effect;
-            private final SkinSoundData provider;
+            private final SkinSoundData soundData;
 
-            public Sound(String effect, SkinSoundData provider) {
+            public Sound(String effect, SkinSoundData soundData) {
                 this.effect = effect;
-                this.provider = provider;
+                this.soundData = soundData;
             }
 
             public String effect() {
                 return effect;
             }
 
-            public SkinSoundData provider() {
-                return provider;
+            public SkinSoundData data() {
+                return soundData;
             }
 
             @Override
             public String toString() {
-                return Objects.toString(this, "effect", effect, "sound", provider);
+                return Objects.toString(this, "effect", effect, "sound", soundData);
             }
         }
 
@@ -196,13 +196,13 @@ public class SkinAnimationData {
 
             private final String effect;
             private final String locator;
-            private final SkinParticleData provider;
+            private final SkinParticleData particleData;
             private final String script;
 
-            public Particle(String effect, String locator, String script, SkinParticleData provider) {
+            public Particle(String effect, String locator, String script, SkinParticleData particleData) {
                 this.effect = effect;
                 this.locator = locator;
-                this.provider = provider;
+                this.particleData = particleData;
                 this.script = script;
             }
 
@@ -220,13 +220,13 @@ public class SkinAnimationData {
                 return script;
             }
 
-            public SkinParticleData provider() {
-                return provider;
+            public SkinParticleData data() {
+                return particleData;
             }
 
             @Override
             public String toString() {
-                return Objects.toString(this, "effect", effect, "locator", locator, "script", script, "particle", provider);
+                return Objects.toString(this, "effect", effect, "locator", locator, "script", script, "particle", particleData);
             }
         }
     }

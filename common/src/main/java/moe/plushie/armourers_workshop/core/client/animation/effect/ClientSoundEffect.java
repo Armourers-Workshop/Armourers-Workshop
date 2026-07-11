@@ -25,7 +25,7 @@ public class ClientSoundEffect implements ScheduledExpression<Runnable> {
     private final float volume;
 
     public ClientSoundEffect(SkinAnimationData.Point.Sound sound) {
-        var soundProvider = sound.provider();
+        var soundProvider = sound.data();
         var soundProperties = soundProvider.properties();
         this.name = sound.effect();
         this.pitch = soundProperties.pitch();
@@ -63,8 +63,8 @@ public class ClientSoundEffect implements ScheduledExpression<Runnable> {
         }
     }
 
-    private SoundEvent resolveSoundEvent(SkinSoundData provider) {
-        return SmartSoundManager.getInstance().register(provider).create(it -> {
+    private SoundEvent resolveSoundEvent(SkinSoundData soundData) {
+        return SmartSoundManager.getInstance().register(soundData).create(it -> {
             var key = it.location();
             return SoundEvent.createVariableRangeEvent(key.get());
         });

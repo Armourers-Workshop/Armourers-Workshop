@@ -103,13 +103,13 @@ public abstract class ChunkColorSection {
                 }
                 // restore the parent -> child.
                 for (var parent : textureLists) {
-                    var variants = new ArrayList<>(parent.provider.variants());
+                    var variants = new ArrayList<>(parent.data.variants());
                     for (var child : textureLists) {
                         if (parent.id == child.parentId) {
-                            variants.add(child.provider);
+                            variants.add(child.data);
                         }
                     }
-                    parent.provider.setVariants(variants);
+                    parent.data.setVariants(variants);
                 }
             }
         }
@@ -218,10 +218,10 @@ public abstract class ChunkColorSection {
             });
         }
 
-        public ChunkTextureData.TextureRef putTexture(OpenVector2f uv, SkinTextureData provider) {
+        public ChunkTextureData.TextureRef putTexture(OpenVector2f uv, SkinTextureData textureData) {
             // we're also adding all variant textures.
-            var textureList = getOrCreateTextureList(provider);
-            Collections.eachTree(provider.variants(), SkinTextureData::variants, this::getOrCreateTextureList);
+            var textureList = getOrCreateTextureList(textureData);
+            Collections.eachTree(textureData.variants(), SkinTextureData::variants, this::getOrCreateTextureList);
             return textureList.add(uv, this);
         }
 
@@ -239,9 +239,9 @@ public abstract class ChunkColorSection {
             return null;
         }
 
-        protected ChunkTextureData getOrCreateTextureList(SkinTextureData provider) {
+        protected ChunkTextureData getOrCreateTextureList(SkinTextureData textureData) {
             // ..
-            return textureLists.computeIfAbsent(provider, it -> {
+            return textureLists.computeIfAbsent(textureData, it -> {
                 var list = new ChunkTextureData(it);
                 list.setId(textureLists.size() + 1);
                 return list;

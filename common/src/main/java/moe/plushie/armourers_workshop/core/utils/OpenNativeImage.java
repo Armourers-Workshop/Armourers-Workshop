@@ -14,8 +14,7 @@ public abstract class OpenNativeImage {
 
     public abstract void setPixel(int x, int y, int color);
 
-    @Override
-    public abstract OpenNativeImage clone();
+    public abstract OpenNativeImage copy();
 
     public int width() {
         return width;

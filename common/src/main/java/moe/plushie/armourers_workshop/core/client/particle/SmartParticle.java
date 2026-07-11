@@ -44,10 +44,10 @@ public class SmartParticle extends ReferenceCounted {
     private final Renderer renderer;
     private final Generator generator;
 
-    public SmartParticle(SkinParticleData provider) {
-        this.name = provider.name();
-        this.renderer = new Renderer(provider.texture());
-        this.generator = new Generator(provider);
+    public SmartParticle(SkinParticleData particleData) {
+        this.name = particleData.name();
+        this.renderer = new Renderer(particleData.texture());
+        this.generator = new Generator(particleData);
     }
 
     public SmartParticleEmitter spawn(ExecutionContext context) {
@@ -200,8 +200,8 @@ public class SmartParticle extends ReferenceCounted {
         private final ParticleEmitterUpdater.Builder emitter = new ParticleEmitterUpdater.Builder();
         private final ParticleInstanceUpdater.Builder instance = new ParticleInstanceUpdater.Builder();
 
-        private Generator(SkinParticleData provider) {
-            var components = new ArrayList<>(provider.components());
+        private Generator(SkinParticleData particleData) {
+            var components = new ArrayList<>(particleData.components());
             components.sort(Comparator.comparingInt(SkinParticleComponent::priority));
             for (var component : components) {
                 component.compile(this);

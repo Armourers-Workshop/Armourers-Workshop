@@ -96,12 +96,14 @@ public abstract class NetworkManager {
         public void didReceivePacket(IServerPacketHandler packetHandler, IFriendlyByteBuf payload) {
             merge(packetHandler.player().getUUID(), payload, packet -> packetHandler.enqueueWork(() -> {
                 packet.accept(packetHandler, packetHandler.player());
+                packet.dispose();
             }));
         }
 
         public void didReceivePacket(IClientPacketHandler packetHandler, IFriendlyByteBuf payload) {
             merge(clientUUID, payload, packet -> packetHandler.enqueueWork(() -> {
                 packet.accept(packetHandler, packetHandler.player());
+                packet.dispose();
             }));
         }
 

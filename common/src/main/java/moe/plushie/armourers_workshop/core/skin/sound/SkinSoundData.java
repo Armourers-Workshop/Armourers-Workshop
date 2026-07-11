@@ -1,27 +1,37 @@
 package moe.plushie.armourers_workshop.core.skin.sound;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.api.skin.sound.ISkinSoundProvider;
+import moe.plushie.armourers_workshop.api.skin.sound.ISkinSoundData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
+import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 
-public class SkinSoundData implements ISkinSoundProvider {
+public class SkinSoundData implements ISkinSoundData {
 
-    public static final SkinSoundData EMPTY = new SkinSoundData(null, Unpooled.EMPTY_BUFFER, SkinSoundProperties.EMPTY);
+    public static final SkinSoundData EMPTY = new SkinSoundData(null, SkinSoundProperties.EMPTY);
 
     private final int id = OpenRandomSource.nextInt(SkinSoundData.class);
 
     private final String name;
-    private final ByteBuf buffer;
-
     private final SkinSoundProperties properties;
 
-    public SkinSoundData(String name, ByteBuf buffer, SkinSoundProperties properties) {
+    private byte[] bytes = new byte[0];
+
+    public SkinSoundData(String name, SkinSoundProperties properties) {
         this.name = name;
-        this.buffer = buffer;
         this.properties = properties;
+    }
+
+    public void load(ByteBuf buf) {
+        bytes = new byte[buf.readableBytes()];
+        buf.getBytes(buf.readerIndex(), bytes);
+    }
+
+    public void load(InputStream inputStream) throws IOException {
+        bytes = StreamUtils.readStreamToByteArray(inputStream);
     }
 
     public int id() {
@@ -34,13 +44,13 @@ public class SkinSoundData implements ISkinSoundProvider {
     }
 
     @Override
-    public ByteBuf buffer() {
-        return buffer;
+    public SkinSoundProperties properties() {
+        return properties;
     }
 
     @Override
-    public SkinSoundProperties properties() {
-        return properties;
+    public byte[] bytes() {
+        return bytes;
     }
 
     public String extension() {

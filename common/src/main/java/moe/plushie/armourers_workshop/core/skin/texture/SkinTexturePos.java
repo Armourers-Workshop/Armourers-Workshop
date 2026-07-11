@@ -16,21 +16,21 @@ public class SkinTexturePos implements ISkinTexturePos {
     protected final float totalWidth;
     protected final float totalHeight;
     protected final SkinTextureOptions options;
-    protected final SkinTextureData provider;
+    protected final SkinTextureData textureData;
 
-    public SkinTexturePos(float u, float v, float width, float height, SkinTextureData provider) {
-        this(u, v, width, height, provider.width(), provider.height(), null, provider);
+    public SkinTexturePos(float u, float v, float width, float height, SkinTextureData textureData) {
+        this(u, v, width, height, textureData.width(), textureData.height(), null, textureData);
     }
 
-    public SkinTexturePos(float u, float v, float width, float height, SkinTextureOptions options, SkinTextureData provider) {
-        this(u, v, width, height, provider.width(), provider.height(), options, provider);
+    public SkinTexturePos(float u, float v, float width, float height, SkinTextureOptions options, SkinTextureData textureData) {
+        this(u, v, width, height, textureData.width(), textureData.height(), options, textureData);
     }
 
     public SkinTexturePos(float u, float v, float width, float height, float totalWidth, float totalHeight) {
         this(u, v, width, height, totalWidth, totalHeight, null, null);
     }
 
-    public SkinTexturePos(float u, float v, float width, float height, float totalWidth, float totalHeight, SkinTextureOptions options, SkinTextureData provider) {
+    public SkinTexturePos(float u, float v, float width, float height, float totalWidth, float totalHeight, SkinTextureOptions options, SkinTextureData textureData) {
         this.u = u;
         this.v = v;
         this.width = width;
@@ -38,7 +38,7 @@ public class SkinTexturePos implements ISkinTexturePos {
         this.totalWidth = totalWidth;
         this.totalHeight = totalHeight;
         this.options = options;
-        this.provider = provider;
+        this.textureData = textureData;
     }
 
     @Override
@@ -78,8 +78,8 @@ public class SkinTexturePos implements ISkinTexturePos {
 
     @Nullable
     @Override
-    public SkinTextureData provider() {
-        return provider;
+    public SkinTextureData data() {
+        return textureData;
     }
 
     @Override

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import moe.plushie.armourers_workshop.compat.core.data.AbstractPackResources;
 import moe.plushie.armourers_workshop.core.utils.Collections;
+import moe.plushie.armourers_workshop.core.utils.Objects;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -32,15 +33,17 @@ public class SmartResourceManager {
         return INSTANCE;
     }
 
-    public void register(OpenResourceKey key, ByteBuf buffer) {
-        resources.put(key, buffer);
+    public void register(OpenResourceKey key, ByteBuf buf) {
+        var oldValue = resources.put(key, buf.retain());
+        Objects.flatMap(oldValue, ByteBuf::release);
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Registering Resource '{}'", key);
         }
     }
 
     public void unregister(OpenResourceKey key) {
-        resources.remove(key);
+        var oldValue = resources.remove(key);
+        Objects.flatMap(oldValue, ByteBuf::release);
         if (ModConfig.Client.enableResourceDebug) {
             ModLog.debug("Unregistering Resource '{}'", key);
         }

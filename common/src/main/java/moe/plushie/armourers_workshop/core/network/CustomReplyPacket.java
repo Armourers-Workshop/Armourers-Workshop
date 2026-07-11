@@ -117,12 +117,12 @@ public class CustomReplyPacket<R> extends CustomPacket {
             int id = packet.id;
             int timeout = 30;
             REQUESTS.put(id, new Request<>(packet, handler));
-            TIMER.scheduleAtFixedRate(() -> {
+            TIMER.schedule(() -> {
                 var request = REQUESTS.remove(id);
                 if (request != null && request.handler != null) {
                     request.handler.abort(new RuntimeException("Request timeout"));
                 }
-            }, timeout, timeout, TimeUnit.SECONDS);
+            }, timeout, TimeUnit.SECONDS);
         }
 
         @Override

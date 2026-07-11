@@ -170,7 +170,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                     float width = rect.width();
                     float height = rect.height();
                     float depth = rect.depth();
-                    textureBox = new SkinTextureBox(width, height, depth, false, ref.uv(), ref.provider());
+                    textureBox = new SkinTextureBox(width, height, depth, false, ref.uv(), ref.data());
                 }
             }
             for (var dir : OpenDirection.values()) {
@@ -186,7 +186,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                     float v = ref.v();
                     float width = end.x() - start.x();
                     float height = end.y() - start.y();
-                    texturePoss.put(dir, new SkinTexturePos(u, v, width, height, opt, ref.provider()));
+                    texturePoss.put(dir, new SkinTexturePos(u, v, width, height, opt, ref.data()));
                 } else if (textureBox != null) {
                     texturePoss.put(dir, textureBox.getTexture(dir));
                 }
@@ -212,7 +212,7 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
                 if (value == null) {
                     continue;
                 }
-                var provider = value.provider();
+                var provider = value.data();
                 if (value instanceof SkinTextureBox.Entry entry) {
                     startValues.put(0x80, entry.parent(), provider);
                     // box need options?
@@ -285,8 +285,8 @@ public class ChunkGeometrySerializerV2 extends ChunkGeometrySerializer {
             }
         }
 
-        public void put(int face, T pos, SkinTextureData provider) {
-            var index = Pair.of(pos, provider);
+        public void put(int face, T pos, SkinTextureData textureData) {
+            var index = Pair.of(pos, textureData);
             int newFace = impl.getOrDefault(index, 0);
             newFace |= face;
             impl.put(index, newFace);

@@ -209,7 +209,7 @@ public class BakedGeometryFace {
     }
 
     private IRenderType resolveRenderType(SkinGeometryFace face) {
-        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::provider);
+        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::data);
         if (parent != null) {
             return resolveRenderType(parent, face.type());
         }
@@ -217,7 +217,7 @@ public class BakedGeometryFace {
     }
 
     private Collection<IRenderType> resolveRenderTypeVariants(SkinGeometryFace face) {
-        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::provider);
+        var parent = Objects.flatMap(face.texturePos(), SkinTexturePos::data);
         if (parent == null) {
             return null;
         }
@@ -232,8 +232,8 @@ public class BakedGeometryFace {
         return renderTypes;
     }
 
-    private IRenderType resolveRenderType(SkinTextureData provider, SkinGeometryType geometryType) {
-        return SmartTextureManager.getInstance().register(provider).create(it -> {
+    private IRenderType resolveRenderType(SkinTextureData textureData, SkinGeometryType geometryType) {
+        return SmartTextureManager.getInstance().register(textureData).create(it -> {
             var key = it.location();
             return SkinRenderTypes.geometry(geometryType, key, it.isTranslucent(), it.isEmissive());
         });
