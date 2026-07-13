@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.network.IFriendlyByteBuf;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
 
 import java.util.ArrayList;
@@ -30,12 +31,18 @@ public class PacketSplitter {
             var buffer = Unpooled.buffer();
             writePacket(message, buffer);
             buffer.capacity(buffer.readableBytes());
+            message.dispose();
             // when packet exceeds the part size, it will be split automatically
             int bufferSize = buffer.readableBytes();
             if (bufferSize <= partSize) {
                 var packet = builder.apply(IFriendlyByteBuf.wrap(buffer));
                 consumer.accept(packet);
-                message.dispose();
+                buffer.release();
+                return;
+            }
+            if (bufferSize > ModConfig.Common.maxPacketSize * 1024 * 1024) {
+                ModLog.warn("the sent packet is too large!!");
+                buffer.release();
                 return;
             }
             for (int index = 0; index < bufferSize; index += partSize) {
@@ -54,7 +61,6 @@ public class PacketSplitter {
                 consumer.accept(packet);
             }
             buffer.release();
-            message.dispose();
         });
     }
 
@@ -65,12 +71,21 @@ public class PacketSplitter {
             var playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
             if (packetState == SPLIT_BEGIN_FLAG) {
                 if (!playerReceivedBuffers.isEmpty()) {
-                    ModLog.warn("aw2:split received out of order - inbound buffer not empty when receiving first");
+                    ModLog.warn("received packet order is wrong!!");
+                    playerReceivedBuffers.forEach(ByteBuf::release);
                     playerReceivedBuffers.clear();
                 }
             }
             buffer.skipBytes(4); // skip header
             playerReceivedBuffers.add(buffer.retainedDuplicate()); // we need to keep writer/reader index
+            if (packetState == SPLIT_BODY_FLAG) {
+                var bufferSize = playerReceivedBuffers.stream().mapToInt(ByteBuf::readableBytes).sum();
+                if (bufferSize >= ModConfig.Common.maxPacketSize * 1024 * 1024) {
+                    ModLog.warn("received packet is too large!!");
+                    playerReceivedBuffers.forEach(ByteBuf::release);
+                    playerReceivedBuffers.clear();
+                }
+            }
             if (packetState == SPLIT_END_FLAG) {
                 workThread.submit(() -> {
                     // ownership will transfer to full buffer, so don't call release again.

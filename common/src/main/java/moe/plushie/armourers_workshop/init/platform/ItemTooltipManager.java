@@ -189,8 +189,7 @@ public class ItemTooltipManager {
             return;
         }
         var descriptor = SkinDescriptor.of(itemStack);
-        var options = descriptor.options();
-        if (!options.contains(SkinDescriptor.TooltipFlags.PREVIEW)) {
+        if (descriptor.isEmpty() || !descriptor.options().contains(SkinDescriptor.TooltipFlags.PREVIEW)) {
             return;
         }
         var bakedSkin = SkinBakery.getInstance().loadSkin(TicketManager.TOOLTIP.get(descriptor));

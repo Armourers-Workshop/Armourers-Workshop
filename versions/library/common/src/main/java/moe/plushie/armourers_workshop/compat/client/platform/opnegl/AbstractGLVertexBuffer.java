@@ -61,7 +61,9 @@ public class AbstractGLVertexBuffer extends ReferenceCounted implements IVertexB
 
     @Override
     protected void init() {
-        // nop
+        if (id < 0) {
+            throw new IllegalStateException("The vertex buffer is released!!!");
+        }
     }
 
     @Override

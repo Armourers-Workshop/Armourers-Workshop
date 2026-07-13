@@ -108,6 +108,7 @@ public class ModConfig {
         public static boolean enableMatchingByItemId = true;
         public static boolean enableLinkDimensional = true;
         public static int maxLinkDistance = 0;
+        public static int maxPacketSize = 50;
 
         // Tooltip
         public static boolean tooltipHasSkin = true;

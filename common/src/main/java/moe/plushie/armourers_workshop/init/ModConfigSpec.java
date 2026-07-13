@@ -97,6 +97,7 @@ public class ModConfigSpec {
                 defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2, "Using skin renderer to replace the original first person hands renderer.", "0 = use client config", "1 = always disable", "2 = always enable").bind(it -> enableFirstPersonSkinRenderer = it, () -> enableFirstPersonSkinRenderer);
                 define("enableLinkDimensional", true, "If enabled the link tool will allow bind between different dimensions block.").bind(it -> enableLinkDimensional = it, () -> enableLinkDimensional);
                 defineInRange("maxLinkDistance", 0, 0, 100000, "the link tool will allow max range in which blocks can be bound?", "0 = infinite range").bind(it -> maxLinkDistance = it, () -> maxLinkDistance);
+                defineInRange("maxPacketSize", 50, 10, 1000, "the max single packet size", "the unit is mb").bind(it -> maxPacketSize = it, () -> maxPacketSize);
             });
             defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
                 define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.").bind(it -> tooltipHasSkin = it, () -> tooltipHasSkin);

@@ -23,6 +23,7 @@ import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -125,12 +126,12 @@ public class ConcurrentBufferCompiler {
         }
 
         // merge all buffers into a bigger buffer.
-        var mergedByteBuffer = ByteBuffer.allocateDirect(totalBytes);
-        pendingBuffers.forEach(mergedByteBuffer::put);
-        mergedByteBuffer.rewind();
+        var mergedBuffer = MemoryUtil.memAlloc(totalBytes);
+        pendingBuffers.forEach(mergedBuffer::put);
+        mergedBuffer.flip();
 
         // upload only be called in the render thread !!!
-        RenderSystem.safeCall(() -> upload(mergedByteBuffer, cachedTasks));
+        RenderSystem.safeCall(() -> upload(mergedBuffer, cachedTasks));
     }
 
     private void upload(ByteBuffer byteBuffer, ArrayList<Group> cachedTasks) {
@@ -140,6 +141,7 @@ public class ConcurrentBufferCompiler {
             cachedTask.mergedBuffer = mergedBuffer;
             cachedTask.retain();
         }
+        MemoryUtil.memFree(byteBuffer);
     }
 
     private int createOptions(boolean isOutline) {
