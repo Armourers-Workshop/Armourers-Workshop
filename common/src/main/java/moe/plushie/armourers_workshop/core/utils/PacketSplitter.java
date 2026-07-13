@@ -37,7 +37,6 @@ public class PacketSplitter {
             if (bufferSize <= partSize) {
                 var packet = builder.apply(IFriendlyByteBuf.wrap(buffer));
                 consumer.accept(packet);
-                buffer.release();
                 return;
             }
             if (bufferSize > ModConfig.Common.maxPacketSize * 1024 * 1024) {

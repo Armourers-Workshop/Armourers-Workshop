@@ -27,6 +27,9 @@ public class SkinCubeFace extends SkinGeometryFace {
 
     private final OpenRectangle3f boundingBox;
 
+    // the rendering bounding box.
+    private final OpenRectangle3f renderBox;
+
     public SkinCubeFace(int id, SkinGeometryType type, SkinGeometryOptions options, OpenTransform3f transform, SkinTexturePos texturePos, OpenRectangle3f boundingBox, OpenDirection direction, SkinPaintColor color, int alpha) {
         this.id = id;
         this.type = type;
@@ -37,6 +40,7 @@ public class SkinCubeFace extends SkinGeometryFace {
         this.alpha = alpha;
         this.direction = direction;
         this.boundingBox = boundingBox;
+        this.renderBox = resolve(boundingBox, 0.01f);
     }
 
     public static float[][] getBaseUVs(OpenDirection direction, int rot) {
@@ -111,22 +115,18 @@ public class SkinCubeFace extends SkinGeometryFace {
         var texturePos = texturePos();
         var textureRotation = getTextureRotation(texturePos);
 
-        // we need inflate bounding box, which will avoid the size is zero.
-        // when size is zero, it will cause the z-flight problems.
-        var inflate = 0.01f;
-
         // https://learnopengl.com/Getting-started/Coordinate-Systems
-        var x = boundingBox.x() - inflate / 2;
-        var y = boundingBox.y() - inflate / 2;
-        var z = boundingBox.z() - inflate / 2;
-        var w = boundingBox.width() + inflate;
-        var h = boundingBox.height() + inflate;
-        var d = boundingBox.depth() + inflate;
+        var x = renderBox.x();
+        var y = renderBox.y();
+        var z = renderBox.z();
+        var w = renderBox.width();
+        var h = renderBox.height();
+        var d = renderBox.depth();
 
         var u = texturePos.u();
         var v = texturePos.v();
-        var s = texturePos.width() * 0.98f;
-        var t = texturePos.height() * 0.98f;
+        var s = texturePos.width() - 0.02f;
+        var t = texturePos.height() - 0.02f;
 
         var color = new SkinGeometryVertex.Color(paintColor, alpha);
         var vertices = new ArrayList<SkinGeometryVertex>();
@@ -150,6 +150,30 @@ public class SkinCubeFace extends SkinGeometryFace {
             return options.rotation();
         }
         return 0;
+    }
+
+    private OpenRectangle3f resolve(OpenRectangle3f value, float inflate) {
+        // we need inflate bounding box, which will avoid the size is zero.
+        // when size is zero, it will cause the z-flight problems.
+        var x0 = value.minX();
+        var x1 = value.maxX();
+        if (Math.abs(x1 - x0) < 0.001f) {
+            x0 -= inflate;
+            x1 += inflate;
+        }
+        var y0 = value.minY();
+        var y1 = value.maxY();
+        if (Math.abs(y1 - y0) < 0.001f) {
+            y0 -= inflate;
+            y1 += inflate;
+        }
+        var z0 = value.minZ();
+        var z1 = value.maxZ();
+        if (Math.abs(z1 - z0) < 0.001f) {
+            z0 -= inflate;
+            z1 += inflate;
+        }
+        return new OpenRectangle3f(x0, y0, z0, x1 - x0, y1 - y0, z1 - z0);
     }
 
     private static class Helper {
