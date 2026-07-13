@@ -75,6 +75,8 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     private final DataContainer dataStorage = new DataContainer();
     private final SkinAttachmentManager attachmentManager = new SkinAttachmentManager();
 
+    private final ArrayList<Runnable> cleaners = new ArrayList<>();
+
     private int version = 0;
     private int lastVersion = Integer.MAX_VALUE;
 
@@ -94,6 +96,7 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
     protected void clear(T source) {
         invalidateAll();
         animationManager.clear();
+        cleaners.forEach(Runnable::run);
     }
 
     protected void tick(T source, @Nullable SkinWardrobe wardrobe) {
@@ -301,6 +304,14 @@ public class EntitySlotsHandler<T> implements IAssociatedContainer, SkinBakery.I
         if (missingSkins.contains(identifier)) {
             RenderSystem.safeCall(this::invalidateAll);
         }
+    }
+
+    public void addCleaner(Runnable cleaner) {
+        cleaners.add(cleaner);
+    }
+
+    public void removeCleaner(Runnable cleaner) {
+        cleaners.remove(cleaner);
     }
 
     public List<EntitySlot> getHeldSkins(ItemStack itemStack) {

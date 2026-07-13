@@ -29,6 +29,8 @@ public class SmartTexture extends ReferenceCounted {
 
     private static final DataContainer.Key<SmartTexture> KEY = DataContainer.key("SmartTexture");
 
+    private final int id = OpenRandomSource.nextInt(SmartTexture.class);
+
     private final OpenResourceKey location;
 
     private final SkinTextureProperties properties;
@@ -39,7 +41,7 @@ public class SmartTexture extends ReferenceCounted {
     private final Set<IRenderType> binding = new HashSet<>();
 
     protected SmartTexture(SkinTextureData textureData) {
-        this.location = ModConstants.key("textures/dynamic/" + OpenRandomSource.nextInt(SmartTexture.class) + "." + textureData.extension());
+        this.location = ModConstants.key("textures/dynamic/" + id + "." + textureData.extension());
         this.properties = textureData.properties();
         this.buffers = resolveTextureBuffers(location, textureData);
         this.animationController = new TextureAnimationController(textureData.animation());
@@ -85,6 +87,10 @@ public class SmartTexture extends ReferenceCounted {
             buffers.values().forEach(ByteBuf::release);
             buffers.clear();
         });
+    }
+
+    public int id() {
+        return id;
     }
 
     public OpenResourceKey location() {

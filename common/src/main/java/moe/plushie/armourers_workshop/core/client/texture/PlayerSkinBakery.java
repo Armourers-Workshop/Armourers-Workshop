@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.texture.PlayerSkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.TrackableResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;
 
@@ -48,11 +49,13 @@ public class PlayerSkinBakery {
         }
     }
 
+    @Nullable
     public BakedPlayerSkin loadSkin(PlayerSkinDescriptor descriptor) {
         var skin = PlayerSkinLoader.getInstance().loadSkin(descriptor);
         return loadSkin(skin);
     }
 
+    @Nullable
     public BakedPlayerSkin loadSkin(PlayerSkin skin) {
         return skins.getOrCreate(skin).get();
     }

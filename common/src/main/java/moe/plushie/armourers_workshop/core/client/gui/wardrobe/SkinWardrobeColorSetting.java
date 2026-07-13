@@ -158,22 +158,23 @@ public class SkinWardrobeColorSetting extends SkinWardrobeBaseSetting {
         }
 
         private SkinPaintColor getColorFromTexture(PlayerSkin texture) {
-            var skin = PlayerSkinBakery.getInstance().loadSkin(texture).body();
+            var skin = PlayerSkinBakery.getInstance().loadSkin(texture);
             if (skin == null) {
                 return SkinPaintColor.WHITE;
             }
+            var body = skin.body();
             var colors = new ArrayList<SkinPaintColor>();
             if (paintType == SkinPaintTypes.SKIN) {
-                colors.add(skin.getColor(11, 13));
-                colors.add(skin.getColor(12, 13));
+                colors.add(body.getColor(11, 13));
+                colors.add(body.getColor(12, 13));
             }
             if (paintType == SkinPaintTypes.HAIR) {
-                colors.add(skin.getColor(11, 3));
-                colors.add(skin.getColor(12, 3));
+                colors.add(body.getColor(11, 3));
+                colors.add(body.getColor(12, 3));
             }
             if (paintType == SkinPaintTypes.EYES) {
-                colors.add(skin.getColor(10, 12));
-                colors.add(skin.getColor(13, 12));
+                colors.add(body.getColor(10, 12));
+                colors.add(body.getColor(13, 12));
             }
             int r = 0, g = 0, b = 0, c = 0;
             for (var paintColor : colors) {

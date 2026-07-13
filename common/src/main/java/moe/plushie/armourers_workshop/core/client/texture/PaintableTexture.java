@@ -80,11 +80,4 @@ public class PaintableTexture extends ImageTexture {
             }
         }
     }
-
-    // TODO: @SAGESSE replace to new impl.
-//    @Override
-//    protected void finalize() throws Throwable {
-//        close();
-//        super.finalize();
-//    }
 }

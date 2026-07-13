@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.compat.core.AbstractRegistryManager;
 import moe.plushie.armourers_workshop.core.client.animation.AnimationEngine;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderTypes;
 import moe.plushie.armourers_workshop.core.client.render.element.ParticleElement;
+import moe.plushie.armourers_workshop.core.client.sound.SmartSound;
 import moe.plushie.armourers_workshop.core.client.texture.LightmapTexture;
 import moe.plushie.armourers_workshop.core.client.texture.OverlayTexture;
 import moe.plushie.armourers_workshop.core.client.texture.SmartTextureManager;
@@ -24,12 +25,13 @@ import moe.plushie.armourers_workshop.core.math.OpenVector3d;
 import moe.plushie.armourers_workshop.core.math.OpenVector3f;
 import moe.plushie.armourers_workshop.core.skin.molang.core.ExecutionContext;
 import moe.plushie.armourers_workshop.core.skin.molang.core.Expression;
+import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleComponent;
 import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleData;
-import moe.plushie.armourers_workshop.core.skin.particle.SkinParticleCompiler;
 import moe.plushie.armourers_workshop.core.skin.particle.math.ParticleCameraFacing;
 import moe.plushie.armourers_workshop.core.skin.texture.SkinTextureData;
 import moe.plushie.armourers_workshop.core.utils.Objects;
+import moe.plushie.armourers_workshop.core.utils.OpenRandomSource;
 import moe.plushie.armourers_workshop.core.utils.OpenResourceKey;
 import moe.plushie.armourers_workshop.core.utils.ReferenceCounted;
 import moe.plushie.armourers_workshop.init.ModConstants;
@@ -40,7 +42,10 @@ import java.util.Comparator;
 @OnlyIn(Dist.CLIENT)
 public class SmartParticle extends ReferenceCounted {
 
+    private final int id = OpenRandomSource.nextInt(SmartSound.class);
+
     private final String name;
+
     private final Renderer renderer;
     private final Generator generator;
 
@@ -52,6 +57,10 @@ public class SmartParticle extends ReferenceCounted {
 
     public SmartParticleEmitter spawn(ExecutionContext context) {
         return generator.build(renderer, context);
+    }
+
+    public int id() {
+        return id;
     }
 
     public String name() {

@@ -27,6 +27,8 @@ public class SmartSound extends ReferenceCounted {
 
     private static final DataContainer.Key<SmartSound> KEY = DataContainer.key("SmartSound");
 
+    private final int id = OpenRandomSource.nextInt(SmartSound.class);
+
     private final String name;
 
     private final OpenResourceKey location;
@@ -36,7 +38,7 @@ public class SmartSound extends ReferenceCounted {
     private final Set<SoundEvent> binding = new HashSet<>();
 
     protected SmartSound(SkinSoundData soundData) {
-        this.location = ModConstants.key("sounds/dynamic/" + OpenRandomSource.nextInt(SmartSound.class) + "." + soundData.extension());
+        this.location = ModConstants.key("sounds/dynamic/" + id + "." + soundData.extension());
         this.properties = soundData.properties();
         this.buffers = resolveSoundBuffers(location, soundData);
         this.name = soundData.name();
@@ -81,6 +83,10 @@ public class SmartSound extends ReferenceCounted {
             buffers.values().forEach(ByteBuf::release);
             buffers.clear();
         });
+    }
+
+    public int id() {
+        return id;
     }
 
     public String name() {
