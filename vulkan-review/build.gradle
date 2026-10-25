@@ -1,0 +1,59 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+
+group = 'moe.plushie.armourers_workshop'
+version = 'vulkan-review'
+
+repositories { mavenCentral() }
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+neoForge { version = '26.2.0.84' }
+
+def baseJarPath = providers.gradleProperty('awBaseJar')
+if (!baseJarPath.isPresent() || !file(baseJarPath.get()).isFile()) {
+    throw new GradleException('Pass -PawBaseJar=/path/to/the/existing/26.2/AW.jar')
+}
+
+def os = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+def arm = System.getProperty('os.arch').toLowerCase(Locale.ROOT) in ['aarch64', 'arm64']
+def defaultNatives = os.contains('win') ? (arm ? 'natives-windows-arm64' : 'natives-windows') :
+    os.contains('mac') ? (arm ? 'natives-macos-arm64' : 'natives-macos') :
+    (arm ? 'natives-linux-arm64' : 'natives-linux')
+def natives = providers.gradleProperty('lwjglNatives').getOrElse(defaultNatives)
+
+dependencies {
+    compileOnly files(baseJarPath.get())
+    testImplementation files(baseJarPath.get())
+    ['lwjgl', 'lwjgl-jemalloc', 'lwjgl-stb'].each { module ->
+        testRuntimeOnly "org.lwjgl:${module}:3.4.1:${natives}"
+    }
+}
+
+sourceSets.test {
+    compileClasspath += sourceSets.main.compileClasspath
+    runtimeClasspath += sourceSets.main.compileClasspath
+}
+
+// These regression checks expose main methods rather than JUnit tests.
+tasks.named('test') { enabled = false }
+
+def checks = [
+    armourersGuiClipTest: 'NativeGuiClipTest',
+    armourersGuiSubmissionTest: 'NativeGuiSubmissionTest',
+    armourersGuiDepthTest: 'NativeGuiDepthTest',
+    armourersDynamicTextureTest: 'NativeDynamicTextureTest',
+    armourersGuiLayerTest: 'NativeGuiLayerTest',
+    armourersGuiOrderTest: 'NativeGuiOrderTest'
+]
+checks.each { taskName, className ->
+    tasks.register(taskName, JavaExec) {
+        dependsOn tasks.named('testClasses')
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = "moe.plushie.armourers_workshop.compat.client.gui.renderer.${className}"
+        jvmArgs '--enable-native-access=ALL-UNNAMED', '--sun-misc-unsafe-memory-access=allow'
+    }
+}
+tasks.named('check') { dependsOn checks.keySet() }
+// This project builds a source-review overlay, not a complete installable mod JAR.
+tasks.named('jar') { enabled = false }

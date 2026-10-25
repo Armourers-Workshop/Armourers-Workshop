@@ -20,6 +20,12 @@ Support the better combat, epic fight and more!
 
 Elevate your server project to a whole new level of detail!
     
+## Vulkan rendering review
+
+The Minecraft 26.2 / NeoForge Vulkan implementation and regression tests are in
+[`vulkan-review/`](vulkan-review/). This isolated review project preserves the
+existing upstream multi-version sources and build configuration.
+
 ## License
 ![](https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)  
 Armourer's Workshop is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-nc-sa/3.0/)
